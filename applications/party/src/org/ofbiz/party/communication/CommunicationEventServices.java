@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
@@ -82,6 +83,7 @@ public class CommunicationEventServices {
             sendMailParams.put("sendFrom", communicationEvent.getRelatedOne("FromContactMech").getString("infoString"));
             sendMailParams.put("subject", communicationEvent.getString("subject"));
             sendMailParams.put("body", communicationEvent.getString("content"));
+            sendMailParams.put("contentType", communicationEvent.getString("contentMimeTypeId"));
             sendMailParams.put("userLogin", userLogin);
             
             // if there is no contact list, then send look for a contactMechIdTo and partyId
@@ -112,8 +114,12 @@ public class CommunicationEventServices {
                 
                 for (Iterator it = sendToParties.iterator(); it.hasNext(); ) {
                     GenericValue nextSendToParty = (GenericValue) it.next();
-                    sendMailParams.put("sendTo", nextSendToParty.getRelatedOne("PreferredContactMech").getString("infoString"));
-                    sendMailParams.put("partyId", nextSendToParty.getString("partyId"));
+                    if ((nextSendToParty != null) && (nextSendToParty.getRelatedOne("PreferredContactMech") != null)) {
+                        sendMailParams.put("sendTo", nextSendToParty.getRelatedOne("PreferredContactMech").getString("infoString"));
+                        sendMailParams.put("partyId", nextSendToParty.getString("partyId"));
+                    } else {
+                        Debug.logWarning("Cannot find a preferred contact mech for [" + nextSendToParty + "]", module);
+                    }
                     
                     // no communicationEventId here - we want to create a communication event for each member of the contact list
             

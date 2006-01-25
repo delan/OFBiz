@@ -450,6 +450,7 @@
       <field name="datetimeStarted" type="date-time"></field>
       <field name="datetimeEnded" type="date-time"></field>
       <field name="subject" type="long-varchar"></field>
+      <field name="contentMimeTypeId" type="id-long"/>
       <field name="content" type="very-long"></field>
       <field name="note" type="comment"></field>
       <field name="contactListId" type="id"></field>
@@ -491,6 +492,9 @@
       </relation>
       <relation type="one" fk-name="COM_EVNT_CLST" rel-entity-name="ContactList">
         <key-map field-name="contactListId"/>
+      </relation>
+      <relation type="one" fk-name="COM_EVNT_MIMETYPE" rel-entity-name="MimeType">
+          <key-map field-name="contentMimeTypeId" rel-field-name="mimeTypeId"/>
       </relation>
     </entity>
     <view-entity entity-name="CommunicationEventAndRole"

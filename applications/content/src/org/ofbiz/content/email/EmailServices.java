@@ -458,6 +458,7 @@ public class EmailServices {
         String body = (String) serviceContext.get("body");
         String partyId = (String) serviceContext.get("partyId");
         String communicationEventId = (String) serviceContext.get("communicationEventId");
+        String contentType = (String) serviceContext.get("contentType");
         
         // only create a new communication event if the email is not already associated with one
         if (communicationEventId == null) {
@@ -471,6 +472,7 @@ public class EmailServices {
             commEventMap.put("subject", subject);
             commEventMap.put("content", body);
             commEventMap.put("userLogin", userLogin);
+            commEventMap.put("contentMimeTypeId", contentType);
             try {
                 dispatcher.runSync("createCommunicationEvent", commEventMap);
             } catch (Exception e) {

@@ -131,8 +131,15 @@
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><date-time/></field>
         <field name="subject"><text size="60"/></field>
-        <field name="note" title="${uiLabelMap.CommonNote}"><textarea cols="60" rows="3"/></field>
+        <field name="contentMimeTypeId">
+            <drop-down no-current-selected-key="_NA_" allow-empty="false">
+                <entity-options description="${mimeTypeId}" entity-name="MimeType" key-field-name="mimeTypeId">
+                    <entity-order-by field-name="mimeTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="60" rows="10"/></field>
+        <field name="note" title="${uiLabelMap.CommonNote}"><textarea cols="60" rows="3"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ViewCommEvent" default-map-name="communicationEvent" title="" type="single"
@@ -163,7 +170,11 @@
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><display/></field>
         <field name="subject"><display/></field>
         <field map-name="subjectMap" name="eventNote" title="${uiLabelMap.CommonNote}"><display/></field>
-        <field name="content" title="${uiLabelMap.CommonContent}"><display/></field>
+        <field name="contentMimeTypeId"><display/></field>
+        <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="60" rows="10"/></field>
+        <field name="content" title="${uiLabelMap.CommonContent}" use-when="(communicationEvent.getString(&quot;contentMimeTypeId&quot;)!=null)&amp;&amp;(communicationEvent.getString(&quot;contentMimeTypeId&quot;).equals(&quot;text/html&quot;))">
+            <display also-hidden="false"/>  <!-- if not set, it is also hidden, which could cause it to re-dislay -->
+        </field>
     </form>
     <form name="findCommEvents" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" paginate="true" target="ListLookupCommEvents" title="" type="single">
         <field name="communicationEventId" use-when="communicationEvent != null"><text-find/></field>

@@ -72,12 +72,21 @@
         <action service="createWorkEffort" mode="sync" />
     </eca>
     
-    <!-- when an email communictaion event is marked "IN PROGRESS", launch a background process to send them out -->
+    <!-- when an email communictaion event for a contact list is marked "IN PROGRESS", launch a background process to send them out -->
     <eca service="updateCommunicationEvent" event="commit">
         <condition field-name="statusId" operator="equals" value="COM_IN_PROGRESS"/>
         <condition field-name="communicationEventTypeId" operator="equals" value="EMAIL_COMMUNICATION"/>
+        <condition field-name="contactListId" operator="is-not-empty"/>
         <action service="sendCommEventAsEmail" mode="async"/>
     </eca>
+    <!-- if there is no contact list, then send it in the same thread and complete it -->
+    <eca service="updateCommunicationEvent" event="commit">
+        <condition field-name="statusId" operator="equals" value="COM_IN_PROGRESS"/>
+        <condition field-name="communicationEventTypeId" operator="equals" value="EMAIL_COMMUNICATION"/>
+        <condition field-name="contactListId" operator="is-empty"/>
+        <action service="sendCommEventAsEmail" mode="sync"/>
+    </eca>
+
     <!-- when we're done sending a communication event as an email, mark it as complete.  This is helpful when 
         a comm event email is sent to a contact list.  After all the emails have been sent, mark it as complete. -->
     <eca service="sendCommEventAsEmail" event="commit">
