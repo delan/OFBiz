@@ -39,9 +39,8 @@
   <tr><td colspan="9"><div class="head3">Item(s) In Return #${returnId}</div></td></tr>
   <tr><td colspan="9"><hr class="sepbar"></td></tr>
   <tr>
-    <td><div class="tableheadtext">Order #</div></td>
+    <td><div class="tableheadtext">Order # - Item #</div></td>
     <td><div class="tableheadtext">Product Id</div></td>
-    <td><div class="tableheadtext">Item #</div></td>
     <td><div class="tableheadtext">Description</div></td>
     <td><div class="tableheadtext">Return Qty</div></td>
     <td><div class="tableheadtext">Return Price</div></td>
@@ -64,9 +63,8 @@
       </#if>
       
       <tr>
-        <td><a href="<@ofbizUrl>orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a></td>
+        <td class="tabletext"><a href="<@ofbizUrl>orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}</td>
         <td><#if item.get("productId")?exists><a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="buttontext">${item.productId}</a></#if></td>
-        <td><div class="tabletext">${item.orderItemSeqId?default("N/A")}</div></td>
         <td><div class="tabletext">${item.description?default("N/A")}</div></td>
         <td><div class="tabletextright">${item.returnQuantity?string.number}</div></td>
         <td><div class="tabletextright"><@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/></div></td>
@@ -99,9 +97,9 @@
     </#list>
 
     <#-- show the return total -->
-    <tr><td colspan="5"></td><td><hr class="sepbar"/></td></tr>
+    <tr><td colspan="4"></td><td><hr class="sepbar"/></td></tr>
     <tr>
-      <td colspan="3">&nbsp;</td>
+      <td colspan="2">&nbsp;</td>
       <td colspan="2" class="tableheadtext">${uiLabelMap.OrderReturnTotal}</td>
       <td class="tabletextright"><b><@ofbizCurrency amount=returnTotal isoCode=orderHeader.currencyUom/></b></td>
     </tr>
