@@ -18,6 +18,9 @@
     <SecurityPermission description="Update party contact mechs in the Party Manager." permissionId="PARTYMGR_PCM_UPDATE"/>
     <SecurityPermission description="Delete party contact mechs in the Party Manager." permissionId="PARTYMGR_PCM_DELETE"/>
     <SecurityPermission description="Create party to data source relations." permissionId="PARTYMGR_SRC_CREATE"/>
+    <SecurityPermission description="Create communication event." permissionId="PARTYMGR_CME_CREATE"/>
+    <SecurityPermission description="Update communication event." permissionId="PARTYMGR_CME_UPDATE"/>
+    <SecurityPermission description="Delete communication event." permissionId="PARTYMGR_CME_DELETE"/>
 
     <SecurityGroup description="Party Admin group, has all party permissions." groupId="PARTYADMIN"/>
     <SecurityGroupPermission groupId="PARTYADMIN" permissionId="PARTYMGR_ADMIN"/>
@@ -39,6 +42,9 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_PCM_UPDATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_PCM_DELETE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_SRC_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CME_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CME_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CME_DELETE"/>
 
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_NOTE"/>
