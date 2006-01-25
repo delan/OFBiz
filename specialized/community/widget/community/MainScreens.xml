@@ -52,7 +52,7 @@
                            
                            <container style="boxleft">
                              <container style="boxtop">
-                               <label text="${uiLabelMap.CommonRegistred}" style="boxhead"/> 
+                               <label text="${uiLabelMap.CommonRegistered}" style="boxhead"/> 
                              </container>
                              <include-form name="login" location="component://community/widget/community/MainForms.xml"/>
                            </container>
