@@ -101,6 +101,7 @@
         <description>Create a note for a CustRequest</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="note" type="String" mode="IN" optional="false"/>
+        <attribute name="noteId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="createCustRequestItemNote" engine="simple"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestItemNote" auth="true">
@@ -108,6 +109,7 @@
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="note" type="String" mode="IN" optional="false"/>
+        <attribute name="noteId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="createCustRequestFromCart" engine="simple" auth="true"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestFromCart">
