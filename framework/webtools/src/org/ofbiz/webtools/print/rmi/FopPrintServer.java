@@ -25,6 +25,7 @@
 package org.ofbiz.webtools.print.rmi;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
@@ -38,11 +39,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.codec.binary.Base64;
 
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.LocalDispatcher;
@@ -57,7 +60,7 @@ import org.ofbiz.service.LocalDispatcher;
 public class FopPrintServer implements Container {
 
     public static final String module = FopPrintServer.class.getName();
-
+    protected static FopPrintServer instance = null;
     protected FopPrintRemote remote = null;
     protected String configFile = null;
     protected String name = null;
@@ -69,6 +72,7 @@ public class FopPrintServer implements Container {
      */
     public void init(String[] args, String configFile) {
         this.configFile = configFile;
+        instance = this;
     }
 
     public boolean start() throws ContainerException {
@@ -176,6 +180,46 @@ public class FopPrintServer implements Container {
     }
 
     public void stop() throws ContainerException {
+    }
+
+    public FopPrintRemote getRemote() {
+        return this.remote;
+    }
+
+    public static String getXslFo(HttpServletRequest req, HttpServletResponse resp) {
+        FopPrintRemote remote = instance.getRemote();
+        Map reqParams = UtilHttp.getParameterMap(req);
+        reqParams.put("locale", UtilHttp.getLocale(req));
+
+        String screenUri = (String) reqParams.remove("screenUri");
+        if (screenUri != null && reqParams.size() > 0) {
+            String base64String = null;
+            try {
+                byte[] bytes = remote.getXslFo(screenUri, reqParams);
+                base64String = new String(Base64.encodeBase64(bytes));
+            } catch (RemoteException e) {
+                Debug.logError(e, module);
+                try {
+                    resp.sendError(500);
+                } catch (IOException e1) {
+                    Debug.logError(e1, module);
+                }
+            }
+            if (base64String != null) {
+                try {
+                    Writer out = resp.getWriter();
+                    out.write(base64String);
+                } catch (IOException e) {
+                    try {
+                        resp.sendError(500);
+                    } catch (IOException e1) {
+                        Debug.logError(e1, module);
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     public static String readFopPrintServerCookies(HttpServletRequest req, HttpServletResponse resp) {

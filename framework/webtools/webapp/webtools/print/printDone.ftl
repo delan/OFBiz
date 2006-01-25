@@ -29,7 +29,7 @@
 <html>
     <body>
       <script language="javascript">
-            window.close();
+            setTimeout('window.close()', 2000);
         </script>
     </body>
 </html>

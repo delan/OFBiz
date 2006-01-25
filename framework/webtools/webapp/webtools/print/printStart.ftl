@@ -34,9 +34,12 @@
     <body>
       <center>
        <#if screens?has_content>
-        <object align="center" height="200" width="600" classid="java:org.ofbiz.webtools.print.applet.PdfPrintApplet"
-                type="application/x-java-applet" mayscript="true" archive="/webtools/applet/ofbiz-webtools-print.jar, /webtools/applet/14_os_jpedal.jar"
-                codebase="/webtools/applet" server-url= "${serverRoot}" rmi-name="RMIFopPrintServer" rmi-host="${serverHost}" rmi-port="1099"
+        <object align="center" height="50" width="350" classid="java:org.ofbiz.webtools.print.applet.FopPrintApplet"
+                type="application/x-java-applet" mayscript="true" archive="/webtools/applet/ofbiz-webtools-print.jar,
+                /webtools/applet/avalon-framework-4.1.5.jar, /webtools/applet/commons-cli.jar, /webtools/applet/commons-codec.jar,
+                /webtools/applet/barcode4j-fop-ext-0.20.5-complete.jar, /webtools/applet/batik.jar, /webtools/applet/fop.jar"
+                
+                codebase="/webtools/applet" server-url="${serverRoot}" reset-cookies="false"
                 <#assign count = 1>
                 <#list screens as screen>
                   <#assign printer = screenMap.get(screen)?if_exists>
@@ -50,14 +53,15 @@
                 </#list>>
 
             <object align="center" height="200" width="600" classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93">
-	            <param name="archive" value="/webtools/applet/ofbiz-webtools-print.jar, /webtools/applet/14_os_jpedal.jar">
+	            <param name="archive" value="/webtools/applet/ofbiz-webtools-print.jar,
+                /webtools/applet/avalon-framework-4.1.5.jar, /webtools/applet/commons-cli.jar, /webtools/applet/commons-codec.jar,
+                /webtools/applet/barcode4j-fop-ext-0.20.5-complete.jar, /webtools/applet/batik.jar, /webtools/applet/fop.jar">
+
                 <param name="codebase" value="/webtools/applet">
-                <param name="code" value="org.ofbiz.webtools.print.applet.PdfPrintApplet">
+                <param name="code" value="org.ofbiz.webtools.print.applet.FopPrintApplet">
                 <param name="mayscript" value="true">
+                <param name="reset-cookies" value="false">
                 <param name="server-url" value="${serverRoot}">
-                <param name="rmi-name" value="RMIFopPrintServer">
-                <param name="rmi-host" value="${serverHost}">
-                <param name="rmi-port" value="1099">
                 <#assign count = 1>
                 <#list screens as screen>
                   <#assign printer = screenMap.get(screen)?if_exists>
