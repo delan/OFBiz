@@ -114,6 +114,7 @@
         <attribute name="communicationEventId" type="String" mode="IN" optional="true"/>
         <attribute name="subject" type="String" mode="IN" optional="false"/>
         <attribute name="body" type="String" mode="IN" optional="false"/>
+        <attribute name="contentType" type="String" mode="IN" optional="true"/>
     </service>
     
     <!-- WebSite Services -->
