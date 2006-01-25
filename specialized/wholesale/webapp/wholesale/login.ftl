@@ -44,7 +44,7 @@
             <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
-                  <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
+                  <div class="boxhead">${uiLabelMap.CommonRegistered}</div>
                 </td>
               </tr>
             </table>
