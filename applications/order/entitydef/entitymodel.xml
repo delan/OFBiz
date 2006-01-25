@@ -1494,6 +1494,17 @@
         <key-map field-name="productId"/>
       </relation>
     </entity>
+    <entity entity-name="CustRequestNote"
+            package-name="org.ofbiz.order.request"
+            title="Customer Request Note Entity">
+      <field name="custRequestId" type="id-ne"></field>
+      <field name="noteId" type="id-ne"></field>
+      <prim-key field="custRequestId"/>
+      <prim-key field="noteId"/>
+      <relation type="one" fk-name="CRQ_NOTE" rel-entity-name="NoteData">
+        <key-map field-name="noteId"/>
+      </relation>
+    </entity>
     <entity entity-name="CustRequestItemNote"
             package-name="org.ofbiz.order.request"
             title="Customer Request Item Note Entity">

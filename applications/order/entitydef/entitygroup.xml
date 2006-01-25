@@ -109,6 +109,8 @@
     <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="CustRequest" />
+    <entity-group group="org.ofbiz" entity="CustRequestNote" />
+    <entity-group group="org.ofbiz" entity="CustRequestNoteView" />
     <entity-group group="org.ofbiz" entity="CustRequestAndRole" />
     <entity-group group="org.ofbiz" entity="CustRequestAttribute" />
     <entity-group group="org.ofbiz" entity="CustRequestCategory" />
