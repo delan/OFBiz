@@ -1965,6 +1965,7 @@
         <field name="returnReasonId" type="id"></field>    <!-- why item is returned: did not like, wrong item, damaged, etc. etc. -->
         <field name="returnTypeId" type="id"></field>   <!-- actually used for disbursement type: store credit, cash refund, exchange -->
         <field name="returnItemTypeId" type="id"></field>  <!-- what is returned: a product, a service, etc. -->
+        <field name="productId" type="id"></field> <!-- we need this field to be able to figure out net sales of a product-->
         <field name="description" type="description"></field>
         <field name="orderId" type="id-ne"></field>
         <field name="orderItemSeqId" type="id"></field>
@@ -2007,6 +2008,9 @@
         </relation>
         <relation type="one" fk-name="RTN_ITEM_ITSTT" title="Inventory" rel-entity-name="StatusItem">
             <key-map field-name="expectedItemStatus" rel-field-name="statusId"/>
+        </relation>
+        <relation type="one" fk-name="RTN_ITEM_PROD" rel-entity-name="Product">
+            <key-map field-name="productId"/>
         </relation>
         <relation type="many" rel-entity-name="ShipmentReceipt">
             <key-map field-name="returnId"/>

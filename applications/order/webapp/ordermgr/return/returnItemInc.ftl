@@ -65,6 +65,7 @@
                     <div class="tabletext">
                       <#if orderItem.productId?exists>
                       <b>${orderItem.productId}</b>:&nbsp;
+                      <input type="hidden" name="productId_o_${rowCount}" value="${orderItem.productId}">
                       </#if>
                       ${orderItem.itemDescription}
                     </div>
@@ -138,7 +139,6 @@
                   <input type="hidden" name="orderId_o_${rowCount}" value="${adj.orderId}"/>
                   <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
                   <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
-
                   <tr>
                     <td>
                       <div class="tabletext">

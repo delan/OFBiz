@@ -65,6 +65,7 @@
         <override name="receivedQuantity" optional="true"/>
         <override name="statusId" optional="true"/>
         <override name="returnPrice" optional="true"/>
+        <override name="productId" optional="true"/>
     </service>
     <service name="createReturnItem" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnItem">
