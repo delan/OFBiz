@@ -26,6 +26,7 @@
  *@since      3.5
 -->
 <#assign serverRoot = Static["org.ofbiz.base.util.UtilHttp"].getInitialServerRootUrl(request)>
+<#assign resetCookie = request.getParameter("reset-cookies")?default("false)>
 <#assign serverHost = request.getServerName()>
 <#assign screenMap = (requestAttributes.screenPrinterMap)?if_exists>
 <#assign screens = (screenMap.keySet())?if_exists>
@@ -38,8 +39,8 @@
                 type="application/x-java-applet" mayscript="true" archive="/webtools/applet/ofbiz-webtools-print.jar,
                 /webtools/applet/avalon-framework-4.1.5.jar, /webtools/applet/commons-cli.jar, /webtools/applet/commons-codec.jar,
                 /webtools/applet/barcode4j-fop-ext-0.20.5-complete.jar, /webtools/applet/batik.jar, /webtools/applet/fop.jar"
-                
-                codebase="/webtools/applet" server-url="${serverRoot}" reset-cookies="false"
+
+                codebase="/webtools/applet" server-url="${serverRoot}" reset-cookies="${resetCookie}"
                 <#assign count = 1>
                 <#list screens as screen>
                   <#assign printer = screenMap.get(screen)?if_exists>
@@ -60,7 +61,7 @@
                 <param name="codebase" value="/webtools/applet">
                 <param name="code" value="org.ofbiz.webtools.print.applet.FopPrintApplet">
                 <param name="mayscript" value="true">
-                <param name="reset-cookies" value="false">
+                <param name="reset-cookies" value="${resetCookie}">
                 <param name="server-url" value="${serverRoot}">
                 <#assign count = 1>
                 <#list screens as screen>
