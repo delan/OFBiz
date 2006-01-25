@@ -111,14 +111,13 @@ public class importData {
 		// create basis categories
 		String browseCategory = null;
 		String promoCategory = null;
-		// promotion
-		try { 
-			results = dispatcher.runSync("createProductCategory",UtilMisc.toMap(
-					"userLogin",userLogin,
-					"productCategoryTypeId","CATALOG_CATEGORY",
-					"primaryParentCategoryId",organizationPartyId,
-					"description","Promotion Items")); 
-			promoCategory = (String) results.get("productCategoryId");
+			// promotion
+			try { 
+				results = dispatcher.runSync("createProductCategory",UtilMisc.toMap(
+						"userLogin",userLogin,
+						"productCategoryTypeId","CATALOG_CATEGORY",
+						"description","Promotion Items")); 
+				promoCategory = (String) results.get("productCategoryId");
 		// connect to catalog
 			results = dispatcher.runSync("addProductCategoryToProdCatalog",UtilMisc.toMap(
 					"userLogin",userLogin,
@@ -130,7 +129,6 @@ public class importData {
 	    // browseroot
 			results = dispatcher.runSync("createProductCategory",UtilMisc.toMap(
 					"userLogin",userLogin,
-					"primaryParentCategoryId",organizationPartyId,
 					"productCategoryTypeId","CATALOG_CATEGORY",
 					"description","contain the categories to browse"	));
 			browseCategory = (String) results.get("productCategoryId");
@@ -155,8 +153,7 @@ public class importData {
 			Map product = UtilMisc.toMap(
 					"userLogin",userLogin,
 					"productTypeId","FINISHED_GOOD",		
-					"includeInPromotions","Y",						// allow promotions
-					"primaryProductCategoryId", organizationPartyId);
+					"includeInPromotions","Y");						// allow promotions
 			Map productPrice =UtilMisc.toMap(
 					"userLogin",userLogin,
 					"productPricePurposeId","PURCHASE",
@@ -166,7 +163,6 @@ public class importData {
 					"fromDate",nowTimestamp);
 			Map productCategory = UtilMisc.toMap(
 					"userLogin",userLogin,
-					"primaryParentCategoryId",organizationPartyId,
 					"productCategoryTypeId","CATALOG_CATEGORY"); // category itself
 			Map productCategoryMember = UtilMisc.toMap( // connect product to category
 					"userLogin",userLogin,
@@ -231,13 +227,17 @@ public class importData {
 				}
 			}
 
+			if (product.get("productId") == null) { // skip line with empty product number
+				continue;
+			}
 
 			// check is some already exists, do not create link again
 			GenericValue prExist = null;
 			GenericValue catExist = null;
 			try {
 				prExist = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId",prefix.concat((String)product.get("productId"))));
-				catExist = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId",prefix.concat((String)productCategory.get("productCategoryId"))));
+				if (productCategory.get("productCategoryId") != null)
+					catExist = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId",prefix.concat((String)productCategory.get("productCategoryId"))));
 			} catch(GenericEntityException e2) {
 				request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
 				return "error";
@@ -245,15 +245,17 @@ public class importData {
 			
 			// create only if items did not exist
 			try { 
-				if (catExist == null) { 
+				if (catExist == null && productCategory.get("productCategoryId") != null) { 
 					results = dispatcher.runSync("createProductCategory",productCategory);									// add category
 					results = dispatcher.runSync("addProductCategoryToProdCatalog",prodCatalogCategory); 			// link to catalog
 					results = dispatcher.runSync("addProductCategoryToCategory",productCategoryRollup); 			// link to browse category
 				}
 				if(prExist == null) {
 					results = dispatcher.runSync("createProduct",product); 																// create product
-					results = dispatcher.runSync("createProductPrice",productPrice); 												// create product price
-					results = dispatcher.runSync("addProductToCategory",productCategoryMember);						// add to browse category
+					if (productPrice.get("price") != null)									// if price is supplied
+						results = dispatcher.runSync("createProductPrice",productPrice);												// create product price
+					if (productCategory.get("productCategoryId") != null)		// category is supplied 
+						results = dispatcher.runSync("addProductToCategory",productCategoryMember);						// add to browse category
 				}
 				if (promo) 
 					results = dispatcher.runSync("addProductToCategory",productCategoryMemberPromo);				// add product to promo category

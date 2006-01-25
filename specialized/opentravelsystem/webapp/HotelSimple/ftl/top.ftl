@@ -1,5 +1,5 @@
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<div align="center"><img src="/HotelSimple/images/logo.GIF"></div>
+<div align="center"><img src="/hotelsimple/images/logo.GIF"></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td class="credits" style="color:#FFFFFF" height="35" bgcolor="#666666" align="center" valign="bottom"> 
