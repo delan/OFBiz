@@ -515,6 +515,7 @@
             <env-to-env env-name="parameters.defaultPrice" to-env-name="createDefaultPriceMap.price"/>
             <string-to-field string="_NA_" field-name="createDefaultPriceMap.productStoreGroupId"/>
             <string-to-field string="DEFAULT_PRICE" field-name="createDefaultPriceMap.productPriceTypeId"/>
+            <set field="createDefaultPriceMap.productPricePurposeId" value="PURCHASE"/>
             <call-service service-name="createProductPrice" in-map-name="createDefaultPriceMap"/>
         </if-not-empty>
 
@@ -524,6 +525,7 @@
             <env-to-env env-name="parameters.averageCost" to-env-name="createAverageCostMap.price"/>
             <string-to-field string="_NA_" field-name="createAverageCostMap.productStoreGroupId"/>
             <string-to-field string="AVERAGE_COST" field-name="createAverageCostMap.productPriceTypeId"/>
+            <set field="createDefaultPriceMap.productPricePurposeId" value="PURCHASE"/>
             <call-service service-name="createProductPrice" in-map-name="createAverageCostMap"/>
         </if-not-empty>
 
