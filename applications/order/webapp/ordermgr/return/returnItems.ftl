@@ -40,8 +40,8 @@
   <tr><td colspan="9"><hr class="sepbar"></td></tr>
   <tr>
     <td><div class="tableheadtext">Order #</div></td>
-    <td><div class="tableheadtext">Item #</div></td>
     <td><div class="tableheadtext">Product Id</div></td>
+    <td><div class="tableheadtext">Item #</div></td>
     <td><div class="tableheadtext">Description</div></td>
     <td><div class="tableheadtext">Return Qty</div></td>
     <td><div class="tableheadtext">Return Price</div></td>
