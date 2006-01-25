@@ -37,7 +37,7 @@
                 </and>
             </condition>
             <then>
-                <check-permission permission="PARTYMGR" action="_CREATE">
+                <check-permission permission="PARTYMGR" action="_CME_CREATE">
                     <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPermissionError"/>
                 </check-permission>
             </then>
@@ -58,7 +58,7 @@
         <create-value value-name="newEntity"/>    
     </simple-method>
     <simple-method method-name="updateCommunicationEvent" short-description="Update a CommunicationEvent">
-        <check-permission permission="PARTYMGR" action="_UPDATE">
+        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
             <fail-property resource="PartyUiLabels" property="PartyUpdateCommunicationEventPermissionError"/>
         </check-permission>
         <check-errors/>
@@ -68,7 +68,7 @@
         <store-value value-name="event"/>
     </simple-method>
     <simple-method method-name="deleteCommunicationEvent" short-description="Delete a CommunicationEvent">
-        <check-permission permission="PARTYMGR" action="_DELETE">
+        <check-permission permission="PARTYMGR" action="_CME_DELETE">
             <fail-property resource="PartyUiLabels" property="PartyUpdateCommunicationEventPermissionError"/>
         </check-permission>
         <check-errors/>
@@ -76,8 +76,10 @@
         <entity-one entity-name="CommunicationEvent" value-name="event"/>
         <remove-value value-name="event"/>
     </simple-method>
+    <!-- since these ancillary operations on communication event cause them to be updated,
+        they will all use the CME_UPDATE permission -->
     <simple-method method-name="createCommunicationEventPurpose" short-description="Create a CommunicationEventPurpose">
-        <check-permission permission="PARTYMGR" action="_CREATE">
+        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
             <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPurposePermissionError"/>
         </check-permission>
         <check-errors/>
@@ -88,7 +90,7 @@
         <create-value value-name="newEntity"/>    
     </simple-method>
     <simple-method method-name="removeCommunicationEventPurpose" short-description="Remove a CommunicationEventPurpose">
-        <check-permission permission="PARTYMGR" action="_DELETE">
+        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
             <fail-property resource="PartyUiLabels" property="PartyRemoveCommunicationEventPurposePermissionError"/>
         </check-permission>
         <check-errors/>
@@ -97,7 +99,7 @@
         <remove-value value-name="eventPurpose"/>
     </simple-method>
     <simple-method method-name="createCommunicationEventRole" short-description="Create a CommunicationEventRole">
-        <check-permission permission="PARTYMGR" action="_CREATE">
+        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
             <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventRolePermissionError"/>
         </check-permission>
         <check-errors/>
@@ -108,7 +110,7 @@
         <create-value value-name="newEntity"/>    
     </simple-method>
     <simple-method method-name="removeCommunicationEventRole" short-description="Remove a CommunicationEventRole">
-        <check-permission permission="PARTYMGR" action="_DELETE">
+        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
             <fail-property resource="PartyUiLabels" property="PartyRemoveCommunicationEventRolePermissionError"/>
         </check-permission>
         <check-errors/>
@@ -127,7 +129,7 @@
             <condition>
                 <or>
                     <if-compare-field field-name="partyIdTo" map-name="event" to-map-name="userLogin" to-field-name="partyId" operator="equals"/>
-                    <if-has-permission permission="PARTYMGR" action="_UPDATE"/>
+                    <if-has-permission permission="PARTYMGR" action="_CME_UPDATE"/>
                 </or>
             </condition>
             <then>
