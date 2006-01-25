@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -118,15 +119,15 @@ public class ServiceMultiEventHandler implements EventHandler {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 
         // get the service model to generate context(s)
-        ModelService model = null;
+        ModelService modelService = null;
 
         try {
-            model = dctx.getModelService(serviceName);
+            modelService = dctx.getModelService(serviceName);
         } catch (GenericServiceException e) {
             throw new EventHandlerException("Problems getting the service model", e);
         }
 
-        if (model == null) {
+        if (modelService == null) {
             throw new EventHandlerException("Problems getting the service model");
         }
 
@@ -189,16 +190,19 @@ public class ServiceMultiEventHandler implements EventHandler {
                 }
 
                 // build the context
-                Map serviceContext = new HashMap();
-                Iterator modelParmInIter = model.getInModelParamList().iterator();
+                Map serviceContext = FastMap.newInstance();
+                List modelParmInList = modelService.getInModelParamList();
+                Iterator modelParmInIter = modelParmInList.iterator();
                 while (modelParmInIter.hasNext()) {
                     ModelParam modelParam = (ModelParam) modelParmInIter.next();
-                    String name = (String) modelParam.name;
+                    String paramName = (String) modelParam.name;
+                    
+                    // Debug.logInfo("In ServiceMultiEventHandler processing input parameter [" + modelParam.name + (modelParam.optional?"(optional):":"(required):") + modelParam.mode + "] for service [" + serviceName + "]", module);
 
                     // don't include userLogin, that's taken care of below
-                    if ("userLogin".equals(name)) continue;
+                    if ("userLogin".equals(paramName)) continue;
                     // don't include locale, that is also taken care of below
-                    if ("locale".equals(name)) continue;
+                    if ("locale".equals(paramName)) continue;
 
                     Object value = null;
                     if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
@@ -209,7 +213,7 @@ public class ServiceMultiEventHandler implements EventHandler {
                         value = paramList;
                     } else {
                         // first check for request parameters
-                        String[] paramArr = request.getParameterValues(name + curSuffix);
+                        String[] paramArr = request.getParameterValues(paramName + curSuffix);
                         if (paramArr != null) {
                             if (paramArr.length > 1) {
                                 value = Arrays.asList(paramArr);
@@ -220,16 +224,16 @@ public class ServiceMultiEventHandler implements EventHandler {
 
                         // if the parameter wasn't passed and no other value found, don't pass on the null
                         if (value == null) {
-                            value = request.getAttribute(name + curSuffix);
+                            value = request.getAttribute(paramName + curSuffix);
                         }
                         if (value == null) {
-                            value = session.getAttribute(name + curSuffix);
+                            value = session.getAttribute(paramName + curSuffix);
                         }
 
                         // now check global scope
                         if (value == null) {
                             if (checkGlobalScope) {
-                                String[] gParamArr = request.getParameterValues(name);
+                                String[] gParamArr = request.getParameterValues(paramName);
                                 if (gParamArr != null) {
                                     if (gParamArr.length > 1) {
                                         value = Arrays.asList(gParamArr);
@@ -238,10 +242,10 @@ public class ServiceMultiEventHandler implements EventHandler {
                                     }
                                 }                            
                                 if (value == null) {
-                                    value = request.getAttribute(name);
+                                    value = request.getAttribute(paramName);
                                 }
                                 if (value == null) {
-                                    value = session.getAttribute(name);
+                                    value = session.getAttribute(paramName);
                                 }
                             }
                         }
@@ -257,11 +261,13 @@ public class ServiceMultiEventHandler implements EventHandler {
                         }
                     }
                     // set even if null so that values will get nulled in the db later on
-                    serviceContext.put(name, value);
+                    serviceContext.put(paramName, value);
+
+                    // Debug.logInfo("In ServiceMultiEventHandler got value [" + value + "] for input parameter [" + paramName + "] for service [" + serviceName + "]", module);
                 }
 
                 // get only the parameters for this service - converted to proper type
-                serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, null, locale);
+                serviceContext = modelService.makeValid(serviceContext, ModelService.IN_PARAM, true, null, locale);
 
                 // include the UserLogin value object
                 if (userLogin != null) {
@@ -273,12 +279,10 @@ public class ServiceMultiEventHandler implements EventHandler {
                     serviceContext.put("locale", locale);
                 }
 
+                // Debug.logInfo("ready to call " + serviceName + " with context " + serviceContext, module);
+
                 // invoke the service
                 Map result = null;
-                if (Debug.verboseOn()) {
-                    Debug.logInfo("ready to call " + serviceName + " with context " + serviceContext, module);
-                }
-
                 try {
                     result = dispatcher.runSync(serviceName, serviceContext);
                 } catch (ServiceAuthException e) {
