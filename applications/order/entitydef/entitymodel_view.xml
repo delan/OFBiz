@@ -1008,9 +1008,30 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </view-entity>
+    <view-entity entity-name="CustRequestNoteView"
+            package-name="org.ofbiz.order.request"
+            title="Customer Request and Note View Entity">
+      <member-entity entity-alias="PR" entity-name="Person"/>
+      <member-entity entity-alias="CR" entity-name="CustRequestNote"/>
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
+      <alias entity-alias="CR" name="custRequestId"/>
+      <alias entity-alias="ND" name="noteId"/>
+      <alias entity-alias="ND" name="noteName"/>
+      <alias entity-alias="ND" name="noteInfo"/>
+      <alias entity-alias="ND" name="noteDateTime"/>
+      <alias entity-alias="PR" name="noteParty" field="partyId"/>
+      <alias entity-alias="PR" name="firstName"/>
+      <alias entity-alias="PR" name="lastName"/>
+      <view-link entity-alias="CR" rel-entity-alias="ND">
+        <key-map field-name="noteId"/>
+      </view-link>
+      <view-link entity-alias="ND" rel-entity-alias="PR">
+        <key-map field-name="noteParty" rel-field-name="partyId"/>
+      </view-link>
+    </view-entity>
     <view-entity entity-name="CustRequestItemNoteView"
             package-name="org.ofbiz.order.request"
-            title="Customer Request Item View Entity">
+            title="Customer Request Item and Note View Entity">
       <member-entity entity-alias="PR" entity-name="Person"/>
       <member-entity entity-alias="CR" entity-name="CustRequestItemNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>

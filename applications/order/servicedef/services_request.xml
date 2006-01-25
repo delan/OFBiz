@@ -96,9 +96,15 @@
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
     </service>
 
+    <service name="createCustRequestNote" engine="simple"
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestNote" auth="true">
+        <description>Create a note for a CustRequest</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="note" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="createCustRequestItemNote" engine="simple"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestItemNote" auth="true">
-        <description>Create a CustRequestRole record</description>
+        <description>Create a note for a CustRequestItem</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="note" type="String" mode="IN" optional="false"/>
