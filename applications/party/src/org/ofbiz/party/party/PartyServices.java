@@ -579,28 +579,32 @@ public class PartyServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String noteString = (String) context.get("note");
         String partyId = (String) context.get("partyId");
+        String noteId = (String) context.get("noteId");
         String errMsg = null;
         Locale locale = (Locale) context.get("locale");
         //Map noteCtx = UtilMisc.toMap("note", noteString, "userLogin", userLogin);
 
-        // create and associate the note with the userLogin
-        Map noteRes = null;
-        try {
-            noteRes = dispatcher.runSync("createNote", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "note", noteString, "userLogin", userLogin, "locale", locale));
-        } catch (GenericServiceException e) {
-            Debug.logError(e, e.getMessage(), module);
-            return ServiceUtil.returnError("Unable to create Note: " + e.getMessage());
+        // if no noteId is specified, then create and associate the note with the userLogin
+        if (noteId == null) {
+            Map noteRes = null;
+            try {
+                noteRes = dispatcher.runSync("createNote", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "note", noteString, "userLogin", userLogin, "locale", locale));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, e.getMessage(), module);
+                return ServiceUtil.returnError("Unable to create Note: " + e.getMessage());
+            }
+
+            if (noteRes.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
+                return noteRes;
+
+            noteId = (String) noteRes.get("noteId");
+
+            if (noteId == null || noteId.length() == 0) {
+                errMsg = UtilProperties.getMessage(resource,"partyservices.problem_creating_note_no_noteId_returned", locale);
+                return ServiceUtil.returnError(errMsg);
+            }
         }
-
-        if (noteRes.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
-            return noteRes;
-
-        String noteId = (String) noteRes.get("noteId");
-
-        if (noteId == null || noteId.length() == 0) {
-            errMsg = UtilProperties.getMessage(resource,"partyservices.problem_creating_note_no_noteId_returned", locale);
-            return ServiceUtil.returnError(errMsg);
-        }
+        result.put("noteId", noteId);
 
         // Set the party info
         try {
