@@ -48,7 +48,6 @@
                     <set field="parameters.productCategoryId" value="${partyAcctgPreference.invoiceIdPrefix}${parameters.productCategoryId}"/>
                 </else>
             </if-empty>
-            <set field="parameters.detailScreen" value="component://${parameters.userLogin.partyId}/includes/categorydetail.ftl"/>
         </if-not-empty>
         <!-- call original ofbiz service with preset ProductCategoryId -->
         <set-service-fields service-name="createProductCategoryOfbiz" map-name="parameters" to-map-name="createProductCategory"/>
@@ -76,7 +75,6 @@
                     <set field="parameters.productId" value="${partyAcctgPreference.invoiceIdPrefix}${parameters.productId}"/>
                 </else>
             </if-empty>
-            <set field="parameters.detailScreen" value="component://${parameters.userLogin.partyId}/includes/productdetail.ftl"/>
         </if-not-empty>
         <!-- call original ofbiz service with preset ProductId -->
         <set-service-fields service-name="createProductOfbiz" map-name="parameters" to-map-name="createProduct"/>
