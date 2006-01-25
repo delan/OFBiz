@@ -88,20 +88,11 @@
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,classpath">
-        <condition property="noapplet" value="PdfPrintApplet.java">
-            <not>
-                <and>
-                    <available classname="org.jpedal.PdfDecoder" classpathref="local.class.path" property="jpedel.avail"/>
-                    <available classname="netscape.javascript.JSObject" classpathref="local.class.path" property="jsobject.avail"/>
-                </and>
-            </not>
-        </condition>
         <javac debug="on" source="1.4" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
                 <path refid="local.class.path"/>
             </classpath>
             <src path="${src.dir}"/>
-            <exclude name="**/${noapplet}"/>
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
@@ -128,11 +119,21 @@
         <jar jarfile="${build.dir}/lib/${name}-print.jar">
             <fileset dir="${build.dir}/classes" includes="org/ofbiz/webtools/print/**"/>
         </jar>
-        <signjar sectionsonly="true" keystore="../../base/config/ofbizssl.jks" storepass="changeit" keypass="changeit"
-                storetype="jks" jar="${build.dir}/lib/${name}-print.jar" alias="ssl"/>
         <copy todir="webapp/webtools/applet">
             <fileset file="${build.dir}/lib/${name}-print.jar"/>
+            <fileset file="../../base/lib/avalon-framework-4.1.5.jar"/>
+            <fileset file="../../base/lib/commons/commons-codec.jar"/>
+            <fileset file="../../base/lib/commons/commons-cli.jar"/>
+            <fileset file="../webapp/lib/barcode4j-fop-ext-0.20.5-complete.jar"/>
+            <fileset file="../webapp/lib/batik.jar"/>
+            <fileset file="../webapp/lib/fop.jar"/>
         </copy>
+
+        <!-- change this to use your personal certificate -->
+        <signjar sectionsonly="true" keystore="../../base/config/ofbizssl.jks"
+                 storepass="changeit" keypass="changeit" storetype="jks" alias="ssl">
+            <fileset dir="webapp/webtools/applet" includes="*.jar"/>
+        </signjar>
     </target>
 
     <target name="jar" depends="main-jar, print-jar"/>
