@@ -41,6 +41,7 @@
   <tr>
     <td><div class="tableheadtext">Order #</div></td>
     <td><div class="tableheadtext">Item #</div></td>
+    <td><div class="tableheadtext">Product Id</div></td>
     <td><div class="tableheadtext">Description</div></td>
     <td><div class="tableheadtext">Return Qty</div></td>
     <td><div class="tableheadtext">Return Price</div></td>
@@ -50,18 +51,25 @@
     <td>&nbsp;</td>
   </tr>
   <tr><td colspan="9"><hr class="sepbar"></td></tr>
+  <#assign returnTotal = 0.0>
   <#if returnItems?has_content>
     <#list returnItems as item>
       <#assign orderItem = item.getRelatedOne("OrderItem")?if_exists>
       <#assign orderHeader = item.getRelatedOne("OrderHeader")?if_exists>
       <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
       <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
+
+      <#if (item.get("returnQuantity")?exists && item.get("returnPrice")?exists)>
+         <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
+      </#if>
+      
       <tr>
         <td><a href="<@ofbizUrl>orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a></td>
+        <td><#if item.get("productId")?exists><a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="buttontext">${item.productId}</a></#if></td>
         <td><div class="tabletext">${item.orderItemSeqId?default("N/A")}</div></td>
         <td><div class="tabletext">${item.description?default("N/A")}</div></td>
-        <td><div class="tabletext">${item.returnQuantity?string.number}</div></td>
-        <td><div class="tabletext"><@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/></div></td>
+        <td><div class="tabletextright">${item.returnQuantity?string.number}</div></td>
+        <td><div class="tabletextright"><@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/></div></td>
         <td><div class="tabletext">${returnReason.description?default("N/A")}</div></td>
         <td><div class="tabletext">${returnType.description?default("N/A")}</div></td>
         <td>
@@ -89,9 +97,18 @@
         </#if>
       </tr>
     </#list>
+
+    <#-- show the return total -->
+    <tr><td colspan="5"></td><td><hr class="sepbar"/></td></tr>
+    <tr>
+      <td colspan="3">&nbsp;</td>
+      <td colspan="2" class="tableheadtext">${uiLabelMap.OrderReturnTotal}</td>
+      <td class="tabletextright"><b><@ofbizCurrency amount=returnTotal isoCode=orderHeader.currencyUom/></b></td>
+    </tr>
+    
   <#else>
     <tr>
-      <td colspan="9"><div class="tabletext">No item(s) in return.</div>
+      <td colspan="9"><div class="tabletext">No item(s) in return.</div></td>
     </tr>
   </#if>
 </table>

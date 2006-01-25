@@ -497,6 +497,11 @@
             <field-to-field field-name="returnId" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="newItemCtx"/>
+
+            <if-not-empty field-name="orderItem.productId">
+                <env-to-field env-name="orderItem.productId" field-name="productId"  map-name="newItemCtx"/>
+            </if-not-empty>
+
             <env-to-field env-name="orderItem.orderId" field-name="orderId" map-name="newItemCtx"/>
             <env-to-field env-name="orderItem.orderItemSeqId" field-name="orderItemSeqId" map-name="newItemCtx"/>
             <env-to-field env-name="orderItem.itemDescription" field-name="description" map-name="newItemCtx"/>
