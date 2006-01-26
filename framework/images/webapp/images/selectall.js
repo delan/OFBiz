@@ -110,7 +110,7 @@ function popUpPrint(serverRoot, screen1, screen2, screen3) {
         }
     }
 
-    popUp(url, "PrintWindow", '250', '650');
+    popupWindow = window.open(url, name, 'location=no,statusbar=1,menubar=0,scrollbars,width=375,height=75,top=0,left=0');    
 }
 
 // hidden div functions
