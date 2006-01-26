@@ -119,6 +119,9 @@
         <jar jarfile="${build.dir}/lib/${name}-print.jar">
             <fileset dir="${build.dir}/classes" includes="org/ofbiz/webtools/print/**"/>
         </jar>
+        <delete>
+            <fileset dir="webapp/webtools/applet" includes="*.jar"/>
+        </delete>
         <copy todir="webapp/webtools/applet">
             <fileset file="${build.dir}/lib/${name}-print.jar"/>
             <fileset file="../../base/lib/avalon-framework-4.1.5.jar"/>

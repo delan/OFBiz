@@ -29,6 +29,7 @@
 <#assign resetCookie = request.getParameter("reset-cookies")?default("false")>
 <#assign serverHost = request.getServerName()>
 <#assign screenMap = (requestAttributes.screenPrinterMap)?if_exists>
+<#assign sessionId = (requestAttributes.sessionId)?if_exists>
 <#assign screens = (screenMap.keySet())?if_exists>
 <#assign auto = "true">
 <html>
@@ -40,7 +41,7 @@
                 /webtools/applet/avalon-framework-4.1.5.jar, /webtools/applet/commons-cli.jar, /webtools/applet/commons-codec.jar,
                 /webtools/applet/barcode4j-fop-ext-0.20.5-complete.jar, /webtools/applet/batik.jar, /webtools/applet/fop.jar"
 
-                codebase="/webtools/applet" server-url="${serverRoot}" reset-cookies="${resetCookie}"
+                codebase="/webtools/applet" server-url="${serverRoot}" session-id="${sessionId}" reset-cookies="${resetCookie}"
                 <#assign count = 1>
                 <#list screens as screen>
                   <#assign printer = screenMap.get(screen)?if_exists>
@@ -62,7 +63,8 @@
                 <param name="code" value="org.ofbiz.webtools.print.applet.FopPrintApplet">
                 <param name="mayscript" value="true">
                 <param name="reset-cookies" value="${resetCookie}">
-                <param name="server-url" value="${serverRoot}">
+                <param name="session-id" value="${sessionId}">
+                <param name="server-url" value="${serverRoot}">                
                 <#assign count = 1>
                 <#list screens as screen>
                   <#assign printer = screenMap.get(screen)?if_exists>
