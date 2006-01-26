@@ -30,6 +30,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
+import java.rmi.server.UID;
 import java.util.Locale;
 import java.util.Map;
 import javax.naming.InitialContext;
@@ -38,14 +39,17 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.map.LinkedMap;
+import javolution.util.FastMap;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.map.LinkedMap;
 
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.LocalDispatcher;
@@ -60,6 +64,8 @@ import org.ofbiz.service.LocalDispatcher;
 public class FopPrintServer implements Container {
 
     public static final String module = FopPrintServer.class.getName();
+    private static UtilCache settingsCache = new UtilCache("printer.applet.settings", 50, 50, 0, false, true);
+
     protected static FopPrintServer instance = null;
     protected FopPrintRemote remote = null;
     protected String configFile = null;
@@ -222,62 +228,112 @@ public class FopPrintServer implements Container {
         return null;
     }
 
-    public static String readFopPrintServerCookies(HttpServletRequest req, HttpServletResponse resp) {
+    public static String readFopPrintServerSettings(HttpServletRequest req, HttpServletResponse resp) {
         Map screenPrinterMap = new LinkedMap();
         Cookie[] cookies = req.getCookies();
+        String sessionId = null;
+
+        for (int i = 0; i < cookies.length; i++) {
+            if ("ofbiz.print.session".equals(cookies[i].getName())) {
+                String value = cookies[i].getValue();
+                if (value.startsWith("\"")) {
+                    value = value.substring(1);
+                }
+                if (value.endsWith("\"")) {
+                    value = value.substring(0, value.length() - 1);
+                }
+                if (UtilValidate.isNotEmpty(value)) {
+                    sessionId = value;
+                }
+            }
+        }
+
+        Map settingsMap = null;
+        if (sessionId != null) {
+            settingsMap = (Map) settingsCache.get(sessionId);
+        } else {
+            sessionId = new UID().toString();
+            Debug.log("Created new session ID: " + sessionId, module);
+        }
+
+        if (settingsMap == null) {
+            settingsMap = FastMap.newInstance();
+            Debug.log("Empty settings map created for ID: " + sessionId, module);
+        } else {
+            Debug.log("Found settings [" + settingsMap.size() + "] for ID: " + sessionId, module);
+        }
 
         String[] screens = req.getParameterValues("screen");
         for (int i = 0; i < screens.length; i++) {
-            for (int x = 0; x < cookies.length; x++) {
-                String screen = screens[i].indexOf("?") != -1 ?
-                    screens[i].substring(0, screens[i].indexOf("?")) : screens[i];
-                Debug.log("Checking for cookie for FOP report: " + screen, module);
+            String screen = screens[i].indexOf("?") != -1 ?
+                screens[i].substring(0, screens[i].indexOf("?")) : screens[i];
+            Debug.log("Checking setting for FOP report: " + screen, module);
 
-                if (cookies[x].getName().equals("ofbiz.print." + screen)) {
-                    String value = cookies[x].getValue();
-                    if (value.startsWith("\"")) {
-                        value = value.substring(1);
-                    }
-                    if (value.endsWith("\"")) {
-                        value = value.substring(0, value.length() - 1);
-                    }
-                    screenPrinterMap.put(screens[i], value);
-                    Debug.log("Found matching cookie", module);
-                    printCookie(cookies[x]);
-                } else if (cookies[x].getName().startsWith("ofbiz.print")) {
-                    printCookie(cookies[x]);
-                }
+            String reportSetting = (String) settingsMap.get(screen);
+            if (reportSetting != null) {
+                screenPrinterMap.put(screens[i], reportSetting);
+                Debug.log("Found matching setting", module);
             }
+
             if (!screenPrinterMap.containsKey(screens[i])) {
-                Debug.log("No matching cookie found; setting printer to null");
-                screenPrinterMap.put(screens[i], null);
+               Debug.log("No matching setting found; using null");
+               screenPrinterMap.put(screens[i], null);
             }
         }
 
         req.setAttribute("screenPrinterMap", screenPrinterMap);
-        Debug.log("Screen Printer Map - " + screenPrinterMap, module);
+        req.setAttribute("sessionId", sessionId);
+        //Debug.log("Screen Printer Map ID [" + sessionId + "] - " + screenPrinterMap, module);
+
         return "success";
     }
 
-    public static String writeFopPrintServerCookies(HttpServletRequest req, HttpServletResponse resp) {
-        // get the screens used
-        for (int i = 1; i < 11; i++) {
-            // get the screens/printers used
-            String printer = req.getParameter("printer." + i);
-            String screen = req.getParameter("screen." + i);
-            if (screen != null) {
-                screen = screen.indexOf("?") != -1 ?
-                        screen.substring(0, screen.indexOf("?")) : screen;
-
-                Cookie printCookie = new Cookie("ofbiz.print." + screen, printer);
-                printCookie.setMaxAge(60 * 60 * 24 * 365);
-                printCookie.setPath("/");
-                resp.addCookie(printCookie);
-                printCookie(printCookie);
-            }
+    public static String writeFopPrintServerSettings(HttpServletRequest req, HttpServletResponse resp) {
+        String sessionId = req.getParameter("sessionId");
+        if (sessionId != null) {
+            Cookie printCookie = new Cookie("ofbiz.print.session", sessionId);
+            printCookie.setMaxAge(60 * 60 * 24 * 365);
+            printCookie.setPath("/");
+            resp.addCookie(printCookie);
+            printCookie(printCookie);
+        } else {
+            Debug.logError("No session ID returned from applet", module);
         }
 
         return "success";
+    }
+
+    public static String receiveUpdateAppletSettings(HttpServletRequest req, HttpServletResponse resp) {
+        Map paramMap = UtilHttp.getParameterMap(req);
+        String sessionId = (String) paramMap.remove("sessionId");
+        String message = "OK";
+        if (sessionId != null) {
+            settingsCache.put(sessionId, paramMap);
+            //Debug.log("Received Settings:", module);
+            //Debug.log("" + paramMap, module);
+            Debug.log("Stored settings for session: " + sessionId, module);
+        } else {
+            message = "FAIL";
+        }
+
+        Writer out = null;
+        try {
+            out = resp.getWriter();
+            out.write(message);
+        } catch (IOException e) {
+            Debug.logError(e, module);
+        } finally {
+            if (out != null) {
+                try {
+                    out.flush();
+                    out.close();
+                } catch (IOException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+
+        return null;
     }
 
     public static String return404(HttpServletRequest req, HttpServletResponse resp) {

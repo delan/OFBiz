@@ -28,6 +28,9 @@
 
 <html>
     <body>
+      <center>
+          <p>Auto-Printer Finished</p>
+      </center>
       <script language="javascript">
             setTimeout('window.close()', 2000);
         </script>
