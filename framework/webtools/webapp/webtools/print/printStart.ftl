@@ -25,7 +25,7 @@
  *@version    $Rev$
  *@since      3.5
 -->
-<#assign serverRoot = Static["org.ofbiz.base.util.UtilHttp"].getInitialServerRootUrl(request)>
+<#assign serverRoot = Static["org.ofbiz.webapp.control.RequestHandler"].getDefaultServerRootUrl(request, false)>
 <#assign resetCookie = request.getParameter("reset-cookies")?default("false")>
 <#assign serverHost = request.getServerName()>
 <#assign screenMap = (requestAttributes.screenPrinterMap)?if_exists>
