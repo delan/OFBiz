@@ -36,6 +36,9 @@ import java.util.Map;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 import org.ofbiz.widget.screen.ScreenRenderer;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.base.util.UtilMisc;
 
 /**
  * FopPrintRemoteImpl
@@ -48,7 +51,7 @@ import org.ofbiz.widget.screen.ScreenRenderer;
 public class FopPrintRemoteImpl extends UnicastRemoteObject implements FopPrintRemote {
 
     public static final String module = FopPrintRemoteImpl.class.getName();
-    
+
     protected HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
     protected DispatchContext dctx = null;
     protected Locale locale = null;
@@ -57,9 +60,24 @@ public class FopPrintRemoteImpl extends UnicastRemoteObject implements FopPrintR
         super(0, csf, ssf);
         this.locale = locale;
         this.dctx = dctx;
+        if (this.locale == null) {
+            this.locale = Locale.getDefault();
+        }
     }
 
     public byte[] getXslFo(String screen, Map parameters) throws RemoteException {
+        // run as the system user
+        GenericValue system = null;
+        try {
+            system = dctx.getDelegator().findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "system"));
+        } catch (GenericEntityException e) {
+            throw new RemoteException(e.getMessage());
+        }
+        parameters.put("userLogin", system);
+        if (!parameters.containsKey("locale")) {
+            parameters.put("locale", locale);
+        }
+
         // render and obtain the XSL-FO
         Writer writer = new StringWriter();
         try {
