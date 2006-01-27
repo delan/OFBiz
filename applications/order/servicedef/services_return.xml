@@ -163,7 +163,7 @@
 
     <service name="getOrderAvailableReturnedTotal" engine="java"
             location="org.ofbiz.order.order.OrderReturnServices" invoke="getOrderAvailableReturnedTotal">
-        <description>Get the total amount of all returns for an order</description>
+        <description>Get the total amount of all returns for an order: orderTotal, returnTotal - totals so far.  availableReturnTotal = orderTotal - returnTotal - adjustment.  Used for checking if the return total has gone over the order total.</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="adjustment" type="Double" mode="IN" optional="true"/>
         <attribute name="orderTotal" type="Double" mode="OUT" optional="false"/>
