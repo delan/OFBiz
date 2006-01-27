@@ -247,6 +247,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListRoutingTaskRoutings"/>
     </request-map>
+    <request-map uri="ListRoutingTaskProducts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListRoutingTaskProducts"/>
+    </request-map>
+    <request-map uri="EditRoutingTaskProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRoutingTaskProduct"/>
+    </request-map>
     <request-map uri="CreateRoutingTask">
         <security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffort"/>
@@ -331,6 +339,18 @@
         <event type="service" invoke="updateWorkEffortGoodStandard"/>
         <response name="success" type="view" value="EditRoutingProductLink"/>
         <response name="error" type="view" value="EditRoutingProductLink"/>
+    </request-map>
+    <request-map uri="addRoutingTaskProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditRoutingTaskProduct"/>
+        <response name="error" type="view" value="EditRoutingTaskProduct"/>
+    </request-map>
+    <request-map uri="updateRoutingTaskProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditRoutingTaskProduct"/>
+        <response name="error" type="view" value="EditRoutingTaskProduct"/>
     </request-map>
     <!-- BOM request mappings -->
     <request-map uri="BomSimulation">
@@ -450,6 +470,12 @@
         <response name="success" type="view" value="EditRoutingProductLink"/>
         <response name="error" type="view" value="EditRoutingProductLink"/>
     </request-map>
+    <request-map uri="removeRoutingTaskProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="ListRoutingTaskProducts"/>
+        <response name="error" type="view" value="ListRoutingTaskProducts"/>
+    </request-map>
     <request-map uri="deleteProductionRunRoutingTask">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteWorkEffort"/>
@@ -484,6 +510,18 @@
     <request-map uri="issueProductionRunRoutingTask">
         <security https="true" auth="true"/>
         <event type="service" invoke="issueProductionRunTask"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
+    <request-map uri="createProductionRunTaskProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="productionRunTaskProduce"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+        <response name="error" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
+    <request-map uri="productionRunTaskReturnMaterials">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="productionRunTaskReturnMaterial"/>
         <response name="success" type="view" value="ProductionRunDeclaration"/>
         <response name="error" type="view" value="ProductionRunDeclaration"/>
     </request-map>
@@ -606,6 +644,8 @@
     <view-map name="FindRoutingTask" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#FindRoutingTask" type="screen"/>
     <view-map name="EditRoutingTask" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingTask" type="screen"/>
     <view-map name="ListRoutingTaskRoutings" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#ListRoutingTaskRoutings" type="screen"/>
+    <view-map name="ListRoutingTaskProducts" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#ListRoutingTaskProducts" type="screen"/>
+    <view-map name="EditRoutingTaskProduct" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingTaskProduct" type="screen"/>
     <view-map name="FindRouting" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#FindRouting" type="screen"/>
     <view-map name="EditRouting" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRouting" type="screen"/>
     <view-map name="EditRoutingTaskAssoc" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingTaskAssoc" type="screen"/>
