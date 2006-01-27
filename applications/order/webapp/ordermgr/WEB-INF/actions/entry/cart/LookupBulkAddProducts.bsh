@@ -39,7 +39,7 @@ mainConditionList = new LinkedList();
 
 //make sure the look up is case insensitive
 conditionList.add(new EntityExpr(new EntityFunction.UPPER(new EntityFieldValue("productId")),
-        EntityOperator.LIKE, "%" + productId.toUpperCase() + "%"));
+        EntityOperator.LIKE, productId.toUpperCase() + "%"));
 
 // do not include configurabl products
 conditionList.add(new EntityExpr("productTypeId", EntityOperator.NOT_EQUAL, "AGGREGATED"));

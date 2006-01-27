@@ -51,7 +51,10 @@
   </tr>
   <tr><td colspan="9"><hr class="sepbar"></td></tr>
   <#assign returnTotal = 0.0>
+  <#assign rowCount = 0>
+  <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED")>
   <#if returnItems?has_content>
+    <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
     <#list returnItems as item>
       <#assign orderItem = item.getRelatedOne("OrderItem")?if_exists>
       <#assign orderHeader = item.getRelatedOne("OrderHeader")?if_exists>
@@ -61,15 +64,69 @@
       <#if (item.get("returnQuantity")?exists && item.get("returnPrice")?exists)>
          <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
       </#if>
-      
+
       <tr>
         <td class="tabletext"><a href="<@ofbizUrl>orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}</td>
-        <td><#if item.get("productId")?exists><a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="buttontext">${item.productId}</a></#if></td>
-        <td><div class="tabletext">${item.description?default("N/A")}</div></td>
-        <td><div class="tabletextright">${item.returnQuantity?string.number}</div></td>
-        <td><div class="tabletextright"><@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/></div></td>
-        <td><div class="tabletext">${returnReason.description?default("N/A")}</div></td>
-        <td><div class="tabletext">${returnType.description?default("N/A")}</div></td>
+          <input name="orderId_o_${rowCount}" value="${item.orderId}" type="hidden">
+          <input name="returnId_o_${rowCount}" value="${item.returnId}" type="hidden">
+          <input name="returnItemTypeId_o_${rowCount}" value="${item.returnItemTypeId}" type="hidden">
+          <input name="returnItemSeqId_o_${rowCount}" value="${item.returnItemSeqId}" type="hidden">
+        <td><div class="tabletext">
+            <#if item.get("productId")?exists>
+                <a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="buttontext">${item.productId}</a>
+            <#else>
+                N/A
+            </#if></div></td>
+        <td><div class="tabletext">
+            <#if readOnly>
+                ${item.description?default("N/A")}
+            <#else>
+                <input name="description_o_${rowCount}" value="${item.description}" type="text" class='inputBox' size="15">
+            </#if>
+            </div></td>
+        <td><div class="tabletextright">
+            <#if readOnly>
+                ${item.returnQuantity?string.number}
+            <#else>
+                <input name="returnQuantity_o_${rowCount}" value="${item.returnQuantity}" type="text" class='inputBox' size="8" align="right">
+            </#if>
+            </div></td>
+        <td><div class="tabletextright">
+            <#if readOnly>
+                <@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/>
+            <#else>
+                <input name="returnPrice_o_${rowCount}" value="${item.returnPrice}" type="text" class='inputBox' size="8" align="right">
+            </#if>
+            </div></td>
+        <td><div class="tabletext">
+            <#if readOnly>
+                ${returnReason.description?default("N/A")}
+            <#else>
+                <select name="returnReasonId_o_${rowCount}"  class='selectBox'>
+                    <#if (returnReason?has_content)>
+                        <option value="${returnReason.returnReasonId}">${returnReason.description?if_exists}[${returnReason.returnReasonId}]</option>
+                        <option value="${returnReason.returnReasonId}">--</option>
+                    </#if>
+                    <#list returnReasons as returnReasonItem>
+                        <option value="${returnReasonItem.returnReasonId}">${returnReasonItem.description?if_exists}[${returnReasonItem.returnReasonId}]</option>
+                    </#list>
+                </select>
+            </#if>
+            </div></td>
+        <td><div class="tabletext">
+            <#if (readOnly)>
+                ${returnType.description?default("N/A")}
+            <#else>
+                <select name="returnTypeId_o_${rowCount}" class="selectBox">
+                    <#if (returnType?has_content)>
+                        <option value="${returnType.returnTypeId}">${returnType.description?if_exists}[${returnType.returnTypeId}]</option>
+                        <option value="${returnType.returnTypeId}">--</option>
+                    </#if>
+                    <#list returnTypes as returnTypeItem>
+                        <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.description?if_exists}[${returnTypeItem.returnTypeId}]</option>
+                    </#list>
+                </select>
+            </#if></div></td>
         <td>
           <#if returnHeader.statusId == "RETURN_COMPLETED">
             <#assign itemResp = item.getRelatedOne("ReturnItemResponse")?if_exists>
@@ -94,6 +151,7 @@
           <td>&nbsp;</td>
         </#if>
       </tr>
+      <#assign rowCount = rowCount + 1>
     </#list>
 
     <#-- show the return total -->
@@ -103,12 +161,20 @@
       <td colspan="2" class="tableheadtext">${uiLabelMap.OrderReturnTotal}</td>
       <td class="tabletextright"><b><@ofbizCurrency amount=returnTotal isoCode=orderHeader.currencyUom/></b></td>
     </tr>
-    
+    <#if (!readOnly)>
+       <tr>
+          <input name="_rowCount" value="${rowCount}" type="hidden">
+          <input name="returnId" value="${returnHeader.returnId}" type="hidden">
+          <td colspan="7" class="tabletext" align="center"><input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}"></td>
+      </tr>
+  </form>
+   </#if>
   <#else>
     <tr>
       <td colspan="9"><div class="tabletext">No item(s) in return.</div></td>
     </tr>
   </#if>
+
 </table>
 <#if returnHeader.statusId == "RETURN_REQUESTED">
 <br/>
