@@ -57,7 +57,8 @@ public class VisitHandler {
     public static void setInitialVisit(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
 
-        GenericValue visitor = getVisitor(request, response);
+        // init the visitor
+        getVisitor(request, response);
         
         String webappName = UtilHttp.getApplicationName(request);
         StringBuffer fullRequestUrl = UtilHttp.getFullRequestUrl(request);
@@ -82,7 +83,11 @@ public class VisitHandler {
             if (initialReferrer != null) visit.set("initialReferrer", initialReferrer.length() > 250 ? initialReferrer.substring(0, 250) : initialReferrer);
             if (initialUserAgent != null) visit.set("initialUserAgent", initialUserAgent.length() > 250 ? initialUserAgent.substring(0, 250) : initialUserAgent);
             visit.set("webappName", webappName);
-            visit.set("clientIpAddress", request.getRemoteAddr());
+            if (UtilProperties.propertyValueEquals("serverstats", "stats.proxy.enabled", "true")){
+                visit.set("clientIpAddress", request.getHeader("X-Forwarded-For"));
+            } else {
+                visit.set("clientIpAddress", request.getRemoteAddr());
+            }
             visit.set("clientHostName", request.getRemoteHost());
             visit.set("clientUser", request.getRemoteUser());
 
