@@ -803,6 +803,11 @@
         <event type="service-multi" invoke="createReturnItem"/>
         <response name="success" type="view" value="returnitems"/>
     </request-map>
+    <request-map uri="updateReturnItems">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateReturnItem"/>
+        <response name="success" type="view" value="returnitems"/>
+    </request-map>
     <request-map uri="removeReturnItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeReturnItem"/>
