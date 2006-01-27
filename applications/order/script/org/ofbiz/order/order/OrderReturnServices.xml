@@ -109,7 +109,7 @@
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
 
         <create-value value-name="newEntity"/>
-        <set field="responseMessage" value="Return Request #${returnId} was created successfully."/>
+        <set field="responseMessage" value="Return Request #${newEntity.returnId} was created successfully."/>
         <field-to-result field-name="responseMessage" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
@@ -121,29 +121,31 @@
 
         <!-- test the total return amount vs the total order amount -->
         <if-compare field-name="parameters.statusId" value="RETURN_ACCEPTED" operator="equals">
-            <!-- get orderId form one of ReturnItem, we assume that all returnItem assosicate to the same order -->
-            <!-- TODO: search for a list of DISTINCT orderId from ReturnItem and check this for all of them -->
-            <entity-condition entity-name="ReturnItem" list-name="returnItems">
+            <!-- get orderId from each ReturnItem: return may be assosicated with many different orders -->
+            <entity-condition entity-name="ReturnItem" list-name="returnItems" distinct="true">
                 <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
+                <select-field field-name="orderId"/>
             </entity-condition>
-            <first-from-list entry-name="returnItem" list-name="returnItems"/>
-            <if-not-empty field-name="returnItem.orderId">
-                <set field="returnTotalCtx.orderId" from-field="returnItem.orderId"/>
-                <!-- no adjustment needed: adjustment is passed in to calculate the effect of an additional item on return total.  -->
-                <calculate field-name="returnTotalCtx.adjustment"><number value="0.0"/></calculate>
-                <call-service service-name="getOrderAvailableReturnedTotal" in-map-name="returnTotalCtx">
-                    <result-to-field result-name="availableReturnTotal" field-name="availableReturnTotal"/>
-                    <result-to-field result-name="returnTotal" field-name="returnTotal"/>
-                    <result-to-field result-name="orderTotal" field-name="orderTotal"/>
-                </call-service>
-                <log level="info" message="Available amount for return (order #${returnItem.orderId}) : ${availableReturnTotal} [orderTotal = ${orderTotal} / returnTotal = ${returnTotal}]"/>
-                <if-compare field-name="availableReturnTotal" operator="less" value="0" type="Double">
-                    <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
-            </if-compare>
-            <else>
-                <log level="info" message="Not an order based return; unable to check valid amounts!"/>
-            </else>
-            </if-not-empty>
+            <!-- check them all to make sure that the return total does not exceed order total.  -->
+            <iterate entry-name="returnItem" list-name="returnItems">
+                <if-not-empty field-name="returnItem.orderId">
+                    <set field="returnTotalCtx.orderId" from-field="returnItem.orderId"/>
+                    <!-- no adjustment needed: adjustment is passed in to calculate the effect of an additional item on return total.  -->
+                    <calculate field-name="returnTotalCtx.adjustment"><number value="0.0"/></calculate>
+                    <call-service service-name="getOrderAvailableReturnedTotal" in-map-name="returnTotalCtx">
+                        <result-to-field result-name="availableReturnTotal" field-name="availableReturnTotal"/>
+                        <result-to-field result-name="returnTotal" field-name="returnTotal"/>
+                        <result-to-field result-name="orderTotal" field-name="orderTotal"/>
+                    </call-service>
+                    <log level="info" message="Available amount for return (order #${returnItem.orderId}) : ${availableReturnTotal} [orderTotal = ${orderTotal} / returnTotal = ${returnTotal}]"/>
+                    <if-compare field-name="availableReturnTotal" operator="less" value="0" type="Double">
+                        <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
+                    </if-compare>
+                    <else>
+                        <log level="info" message="Not an order based returnItem; unable to check valid amounts!"/>
+                    </else>
+                </if-not-empty>    
+            </iterate>
             <check-errors/>
         </if-compare>
 
