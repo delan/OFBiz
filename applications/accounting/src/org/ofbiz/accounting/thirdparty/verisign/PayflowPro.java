@@ -319,6 +319,7 @@ public class PayflowPro {
     }
 
     private static void parseAuthResponse(String resp, Map result, String resource) {
+        Debug.logInfo("Verisign response string: " + resp, module);
         Map parameters = new LinkedMap();
         List params = StringUtil.split(resp, "&");
         Iterator i = params.iterator();
