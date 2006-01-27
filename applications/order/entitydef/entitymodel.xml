@@ -2381,4 +2381,19 @@
         <prim-key field="opportunityStageId"/>
     </entity>
     
+    <entity entity-name="SalesOpportunityWorkEffort"
+            package-name="org.ofbiz.order.opportunity"
+            title="Relates sales opportunities to their work efforts.">
+        <field name="salesOpportunityId" type="id-ne"></field>
+        <field name="workEffortId" type="id-ne"></field>
+        <prim-key field="salesOpportunityId"/>
+        <prim-key field="workEffortId"/>
+        <relation type="one" fk-name="SOPPWEFF_SOPP" rel-entity-name="SalesOpportunity">
+            <key-map field-name="salesOpportunityId"/>
+        </relation>
+        <relation type="one" fk-name="SOPPWEFF_WEFF" rel-entity-name="WorkEffort">
+            <key-map field-name="workEffortId"/>
+        </relation>            
+    </entity>
+    
 </entitymodel>
