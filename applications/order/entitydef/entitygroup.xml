@@ -185,5 +185,6 @@
     <entity-group group="org.ofbiz" entity="SalesOpportunityHistory" />
     <entity-group group="org.ofbiz" entity="SalesOpportunityRole" />
     <entity-group group="org.ofbiz" entity="SalesOpportunityStage" />
+    <entity-group group="org.ofbiz" entity="SalesOpportunityWorkEffort" />
     
 </entitygroup>
