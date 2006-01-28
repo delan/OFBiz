@@ -36,9 +36,6 @@
     <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
-    <handler name="datavision" type="view" class="org.ofbiz.webapp.view.DataVisionViewHandler"/>
-    <handler name="jasperreportspdf" type="view" class="org.ofbiz.webapp.view.JasperReportsPdfViewHandler"/>
-    <handler name="jasperreportsxml" type="view" class="org.ofbiz.webapp.view.JasperReportsXmlViewHandler"/>
 
     <preprocessor>
         <!-- Events to run on every request before security (chains exempt) -->
