@@ -132,7 +132,8 @@ public class ViewFactory {
             handler = (ViewHandler) ObjectType.getInstance(handlerClass);
             handler.init(context);
         } catch (ClassNotFoundException cnf) {
-            throw new ViewHandlerException("Cannot load handler class", cnf);
+            //throw new ViewHandlerException("Cannot load handler class", cnf);
+        	Debug.logWarning("Warning: could not load view handler class because it was not found; note that some views may not work: " + cnf.toString(), module);
         } catch (InstantiationException ie) {
             throw new ViewHandlerException("Cannot get instance of the handler", ie);
         } catch (IllegalAccessException iae) {
