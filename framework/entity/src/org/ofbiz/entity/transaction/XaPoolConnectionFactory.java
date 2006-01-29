@@ -45,9 +45,9 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      2.1
  */
-public class JotmConnectionFactory {
+public class XaPoolConnectionFactory {
         
-    public static final String module = JotmConnectionFactory.class.getName();                
+    public static final String module = XaPoolConnectionFactory.class.getName();                
         
     protected static Map dsCache = new HashMap();
     
@@ -58,7 +58,7 @@ public class JotmConnectionFactory {
             return TransactionFactory.getCursorConnection(helperName, pds.getConnection());
         }
         
-        synchronized (JotmConnectionFactory.class) {            
+        synchronized (XaPoolConnectionFactory.class) {            
             pds = (StandardXAPoolDataSource) dsCache.get(helperName);
             if (pds != null) {                           
                 return pds.getConnection();
