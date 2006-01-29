@@ -98,7 +98,7 @@ public class ConnectionFactory {
         /* DEJ20040103 XAPool still seems to have some serious issues and isn't working right, of course we may not be using it right, but I don't really feel like trying to track it down now
         // XAPool & JOTM Based
         try {
-            Connection con = JotmConnectionFactory.getConnection(helperName, inlineJdbcElement);
+            Connection con = XaPoolConnectionFactory.getConnection(helperName, inlineJdbcElement);
             if (con != null) return con;
         } catch (Exception ex) {
             Debug.logError(ex, "There was an error getting a Minerva datasource.", module);

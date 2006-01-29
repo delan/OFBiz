@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  */
 public class MinervaConnectionFactory {
         
-    public static final String module = JotmConnectionFactory.class.getName();                
+    public static final String module = MinervaConnectionFactory.class.getName();                
         
     protected static Map dsCache = new HashMap();
     
@@ -56,7 +56,7 @@ public class MinervaConnectionFactory {
             return TransactionFactory.getCursorConnection(helperName, pds.getConnection());
         }
         
-        synchronized (JotmConnectionFactory.class) {            
+        synchronized (MinervaConnectionFactory.class) {
             pds = (XAPoolDataSource) dsCache.get(helperName);
             if (pds != null) {                           
                 return pds.getConnection();
