@@ -1859,6 +1859,8 @@
         <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
         <attribute name="templateContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
         <attribute name="instanceContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
+        <attribute name="templateApprovalList" type="List" mode="OUT" optional="true"/>
+        <attribute name="instanceApprovalList" type="List" mode="OUT" optional="true"/>
     </service>
 
     <service name="checkForOpenApprovals" engine="simple"
@@ -1867,6 +1869,25 @@
         <description>Set ContentApprovals for approval process</description>
         <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
         <attribute name="openApprovalExists" type="Boolean" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="getApprovalsWithPermissions" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="getApprovalsWithPermissions" auth="false" >
+        <description>Get a list of ContentApprovals and permission indicators</description>
+        <attribute name="rootContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
+        <attribute name="contentApprovalList" type="List" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="hasApprovalPermission" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="hasApprovalPermission" auth="false">
+        <description>Determine permission status for record</description>
+        <attribute name="contentApprovalId" type="String" mode="IN" optional="false"/>
+        <attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
+        <attribute name="approvalPermExists" type="String" mode="OUT" optional="true"/>
     </service>
 
 </services>

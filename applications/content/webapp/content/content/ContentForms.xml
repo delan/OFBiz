@@ -323,13 +323,13 @@
     </form>
     <form name="EditContentRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="updateContentRole" title="" type="single">
+        target="Edit${contentRoleTarget}ContentRole" title="" type="single">
         <auto-fields-service service-name="createContentRole"/>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContentRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="updateContentRole" title="" type="list">
+        target="update${contentRoleTarget}ContentRole" title="" type="list">
         <actions>
           <entity-and entity-name="ContentRole" use-cache="true">
             <field-map env-name="contentId" field-name="contentId" />
@@ -342,7 +342,7 @@
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeContentRole?contentId=${contentId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"/>
+            <hyperlink also-hidden="false" description="[Delete]" target="remove${contentRoleTarget}ContentRole?contentId=${contentId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"/>
         </field>
     </form>
 

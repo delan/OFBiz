@@ -47,6 +47,7 @@
      <#assign cmsTarget=menuContext.cms.cmsRequestName/>
   </#if>
   <div class="col"><a href="<@ofbizUrl>${cmsTarget}</@ofbizUrl>" class="${selectedLeftClassMap.CMS?default(unselectedLeftClassName)}">CMS</a></div>
+  <div class="col"><a href="<@ofbizUrl>FindCompDocRoot</@ofbizUrl>" class="${selectedLeftClassMap.CompDoc?default(unselectedLeftClassName)}">CompDoc</a></div>
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">Logout</a></div>

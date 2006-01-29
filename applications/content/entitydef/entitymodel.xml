@@ -1372,10 +1372,12 @@
                 title="Latest Revision Children">
       <member-entity entity-alias="CRI" entity-name="ContentRevisionItem"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
-      <alias entity-alias="CA" name="contentIdTo" group-by="false"/>
-      <alias entity-alias="CA" name="contentAssocTypeId" group-by="false"/>
-      <alias entity-alias="CA" name="thruDate" group-by="false"/>
-      <alias entity-alias="CA" name="fromDate" group-by="false"/>
+      <alias entity-alias="CA" name="contentId" group-by="true"/>
+      <alias entity-alias="CA" name="contentIdTo" group-by="true"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" group-by="true"/>
+      <alias entity-alias="CA" name="thruDate" group-by="true"/>
+      <alias entity-alias="CA" name="fromDate" group-by="true"/>
+      <alias entity-alias="CA" name="sequenceNum" group-by="true"/>
       <alias entity-alias="CRI" name="rootRevisionContentId" field="contentId" group-by="true"/>
       <alias entity-alias="CRI" name="itemContentId" group-by="true"/>
       <alias entity-alias="CRI" name="contentRevisionSeqId" group-by="false"/>
@@ -1384,5 +1386,35 @@
         <key-map field-name="contentId" rel-field-name="itemContentId"/>
       </view-link>
     </view-entity>
+    
+    <view-entity entity-name="ContentAssocOptViewFrom"
+                package-name="org.ofbiz.content.content"
+                title="Main Assoc To">
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="CA" prefix="ca"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentIdTo"/>
+      <view-link entity-alias="CO" rel-entity-alias="CA" rel-optional="true">
+        <key-map field-name="contentId"/>
+      </view-link>
+    </view-entity>
+<!--     
+    <view-entity entity-name="ContentRevisionItemAndContentApprovalView"
+                package-name="org.ofbiz.content.content"
+                title="ContentRevisionItem and ContentApproval">
+      <member-entity entity-alias="CRI" entity-name="ContentRevisionItem"/>
+      <member-entity entity-alias="CA" entity-name="ContentApproval"/>
+      <alias-all entity-alias="CRI" />
+      <alias entity-alias="CA" name="caContentId" field="contentId" group-by="true" />
+      <alias entity-alias="CA" name="caContentRevisionSeqId" name="contentRevisionSeqId" group-by="true"/>
+      <alias entity-alias="CA" name="approvalCount" field="contentId" function="count"/>
+      <view-link entity-alias="CRI" rel-entity-alias="CA" rel-optional="true">
+        <key-map field-name="contentId"/>
+        <key-map field-name="contentRevisionSeqId"/>
+      </view-link>
+    </view-entity>
+-->
+
 </entitymodel>
 
