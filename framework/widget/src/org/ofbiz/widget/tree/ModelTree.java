@@ -88,6 +88,7 @@ public class ModelTree {
     protected int [] nodeIndices = new int[20];
     protected String defaultEntityName;
     protected String defaultPkName;
+    protected boolean forceChildCheck;
     
 // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -111,6 +112,7 @@ public class ModelTree {
         this.trailNameExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(treeElement.getAttribute("trail-name"), "trail"));
         this.delegator = delegator;
         this.dispatcher = dispatcher;
+        this.forceChildCheck = !"false".equals(treeElement.getAttribute("force-child-check"));
         setDefaultEntityName(treeElement.getAttribute("entity-name"));
         try {
             openDepth = Integer.parseInt(treeElement.getAttribute("open-depth"));
@@ -527,7 +529,7 @@ public class ModelTree {
          	 if (modelEntity.isField(countFieldName)) {
                  modelField = modelEntity.getField(countFieldName); 
         	 }
-             if (nodeCount == null && modelField != null) {
+             if (nodeCount == null && modelField != null || this.modelTree.forceChildCheck) {
                  getChildren(context);
                  /*
                  String id = (String)context.get(modelTree.getPkName());
@@ -554,7 +556,7 @@ public class ModelTree {
                     id = (String) context.get(pkName);
                 }
                  try {
-                	 if (id != null) {
+                	 if (id != null && modelEntity.getPksSize() == 1) {
                 		 GenericValue entity = delegator.findByPrimaryKey(entName, UtilMisc.toMap(pkName, id));
                          if (modelEntity.isField("childBranchCount")) {
                     		 entity.put("childBranchCount", nodeCount);
