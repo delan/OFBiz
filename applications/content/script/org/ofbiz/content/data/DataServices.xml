@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project and repective authors.
  * Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -571,7 +571,7 @@
     Not that this service does not now do permission checking.
     -->
 
-    <simple-method method-name="getElectronicText" short-description="Get Electronic Text">
+    <simple-method method-name="getElectronicText" short-description="Get Electronic Text" login-required="false">
         <field-to-env field-name="userLogin" map-name="parameters" env-name="userLogin"/>
         <field-to-env field-name="content" map-name="parameters" env-name="currentContent"/>
         <log level="always" message="GETELECTRONICTEXT, currentContent:${currentContent}"/>

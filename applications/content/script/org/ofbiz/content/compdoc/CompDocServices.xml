@@ -30,6 +30,7 @@
 
 
     <!-- Methods for ContentApproval -->
+    
     <simple-method method-name="createContentApproval" short-description="Create ContentApproval">
         <log level="always" message="got into createContentApproval(4)"></log>
         <check-permission action="_CREATE" permission="CONTENTMGR">
@@ -119,6 +120,7 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
+    
     <simple-method method-name="removeContentRevisionItem" short-description="Remove ContentRevisionItem">
         <check-permission action="_DELETE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run removeContentRevisionItem you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
@@ -148,29 +150,40 @@
         <log level="info" message="incrementedSeq(0): ${incrementedSeq}"/>
         <log level="info" message="ContentRevision(0): ${newEntity}"/>
         <if-not-empty field-name="incrementedSeq">
-            <calculate field-name="incrementedSeq" type="String">
+            <calculate field-name="incrementedSeq" type="Long">
                 <calcop operator="add">
                     <calcop operator="get" field-name="incrementedSeq"/>
                     <number value="1"/>
                 </calcop>
             </calculate>
         <else>
-            <set field="incrementedSeq" value="1" type="String"/>
+            <set field="incrementedSeq" value="1" type="Long"/>
         </else>
         </if-not-empty>
+        <calculate field-name="numericPadding" type="Integer">
+            <number value="6"/>
+        </calculate>
+        <call-class-method method-name="padNumberWithLeadingZeros" class-name="org.ofbiz.content.compdoc.CompDocEvents"
+                    ret-field-name="paddedSeqId">
+            <field field-name="incrementedSeq" type="Long"/>
+            <field field-name="numericPadding" type="Integer"/>
+        </call-class-method>
         <log level="info" message="incrementedSeq(1): ${incrementedSeq}"/>
+        <log level="info" message="numericPadding(1): ${numericPadding}"/>
+        <log level="info" message="paddedSeqId: ${paddedSeqId}"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <set field="newEntity.contentRevisionSeqId" from-field="incrementedSeq"/>
+        <set field="newEntity.contentRevisionSeqId" from-field="paddedSeqId"/>
         <log level="info" message="ContentRevision(1): ${newEntity}"/>
         <create-value value-name="newEntity"/>
         
         <make-value entity-name="ContentRevisionItem" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set field="newEntity.contentRevisionSeqId" from-field="incrementedSeq"/>
+        <set field="newEntity.contentRevisionSeqId" from-field="paddedSeqId"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
         <log level="info" message="ContentRevisionItem(1): ${newEntity}"/>
+        <field-to-result field-name="paddedSeqId" result-name="contentRevisionSeqId"/>
     </simple-method>
     
     <simple-method method-name="getRevisionDataResource" short-description="Get version of DataResource that fits overall revision">
@@ -195,6 +208,7 @@
             </if-not-empty>
         </if-not-empty>
     </simple-method>
+    
     <simple-method method-name="getRevisionItemDataResource" short-description="Get version of DataResource that fits overall revision">
         <entity-one entity-name="ContentRevisionItem" value-name="contentRevisionItem" use-cache="true">
                 <field-map field-name="contentId" env-name="parameters.contentId"/>
@@ -211,4 +225,188 @@
                 <field-to-result field-name="dataResource" result-name="dataResource"/>
         </if-not-empty>
     </simple-method>
+    
+    <simple-method method-name="getApprovalsWithPermissions" short-description="Get ContentApprovals for approval process">
+        
+        <entity-and entity-name="ContentApproval" list-name="instanceApprovalList" use-cache="true">
+            <field-map field-name="contentId" env-name="parameters.rootContentId"/>
+            <field-map field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId"/>
+        </entity-and>
+        <log level="info" message="instanceApprovalList: ${instanceApprovalList}"/>
+        <log level="info" message="rootContentId: ${parameters.rootContentId}"/>
+        <log level="info" message="contentRevisionSeqId: ${parameters.contentRevisionSeqId}"/>
+        <set field="inMap2.userLogin" from-field="userLogin"/>
+        <iterate list-name="instanceApprovalList" entry-name="contentApproval">
+            <set field="inMap2.contentApprovalId" from-field="contentApproval.contentApprovalId"/>
+            <call-service  service-name="hasApprovalPermission" in-map-name="inMap2">
+                <result-to-field result-name="approvalPermExists"/>
+            </call-service>
+            <set field="gvAndPerm" from-field="contentApproval"/>
+            <set field="gvAndPerm.permission" from-field="openApprovalExists"/>
+            <set field="contentApprovalList[]" from-field="gvAndPerm"/>
+        </iterate>
+        <field-to-result field-name="contentApprovalList"/>
+</simple-method>
+    
+    <simple-method method-name="hasApprovalPermission" short-description="Determine ContentApproval permission from passed value">
+        <make-value  entity-name="ContentApproval" value-name="contentApprovalPK"/>
+        <set field="contentApprovalPK.contentApprovalId" from-field="parameters.contentApprovalId"/>
+        <find-by-primary-key entity-name="ContentApproval" value-name="contentApproval" map-name="contentApprovalPK" use-cache="true"/>
+        <set field="partyId" from-field="parameters.userLogin.partyId"/>
+        <log level="info" message="contentApproval: ${contentApproval}"/>
+        <if-compare field-name="contentApproval.partyId" value="${partyId}" operator="equals">
+            <set field="approvalPermExists" value="true"/>
+        <log level="info" message="approvalPermExists: ${approvalPermExists}"/>
+            <field-to-result result-name="approvalPermExists" field-name="approvalPermExists"/>
+            <return/>
+        </if-compare>
+        <if-not-empty field-name="contentApproval.roleTypeId">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <entity-condition entity-name="ContentRole" list-name="contentRoleList">
+                <condition-list combine="and">
+                    <condition-expr field-name="contentId" env-name="contentId" operator="equals"/>
+                    <condition-expr field-name="partyId" env-name="partyId" operator="equals"/>
+                    <condition-expr field-name="fromDate" env-name="nowTimestamp" operator="less-equals"/>
+                    <condition-list combine="or">
+                        <condition-expr field-name="thruDate" env-name="nowTimestamp" operator="greater"/>
+                        <condition-expr field-name="thruDate" value="" operator="equals"/>
+                    </condition-list>
+                </condition-list>
+            </entity-condition>
+            <if-not-empty field-name="contentRoleList">
+                <set field="approvalPermExists" value="true"/>
+                <field-to-result result-name="approvalPermExists"/>
+                <return/>
+            </if-not-empty>
+        </if-not-empty>
+        <set field="approvalPermExists" value="false"/>
+        <field-to-result result-name="approvalPermExists"/>
+        <return/>
+    </simple-method>
+
+    <simple-method method-name="prepForApproval" short-description="Set ContentApprovals for approval process">
+        <log level="info" message="got into prepForApproval"></log>
+        <set field="rootTemplateContentId"  from-field="parameters.rootTemplateContentId" />
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run prepForApproval you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        
+        <set field="context.rootTemplateContentId"  from-field="parameters.rootTemplateContentId" />
+        
+        <!--  check for open approvals -->
+        <call-service service-name="checkForOpenApprovals" in-map-name="context">
+        </call-service>
+        
+        <!--  bump CDT/I up one for new approval -->
+        <!-- 
+        <set field="context2.contentId"  from-field="parameters.rootTemplateContentId" />
+        <set field="context2.itemContentId"  from-field="parameters.rootTemplateContentId" />
+        <call-service service-name="persistContentRevisionAndItem" in-map-name="context2">
+            <result-to-field result-name="contentRevisionSeqId" field-name="templateContentRevisionSeqId"/>
+            <result-to-result result-name="contentRevisionSeqId" service-result-name="templateContentRevisionSeqId"/>
+        </call-service>
+        
+        <entity-condition entity-name="Content" list-name="contentList">
+            <condition-expr field-name="instanceOfContentId" operator="equals" env-name="parameters.rootTemplateContentId"/>
+        </entity-condition>
+        <if-not-empty field-name="contentList">
+            <set field="newEntity" from-field="contentList[0]" />
+            <set field="context3.contentId" from-field="newEntity.contentId"/>
+            <set field="rootInstanceContentId" from-field="newEntity.contentId"/>
+        <else>
+            <add-error>
+                <fail-message message="No ContentRevision entity for CDI related to CDT with contentId: ${parameters.rootTemplateContentId}"/>
+            </add-error>
+            <check-errors/>
+        </else>
+        </if-not-empty>
+        -->
+
+        <call-service service-name="persistContentRevisionAndItem" in-map-name="context3">
+            <result-to-field result-name="contentRevisionSeqId" field-name="instanceContentRevisionSeqId"/>
+            <result-to-result result-name="contentRevisionSeqId" service-result-name="instanceContentRevisionSeqId"/>
+        </call-service>
+        
+        <!--  create instance approval records for current CDI -->
+        <entity-condition entity-name="ContentApproval" list-name="contentApprovalList">
+            <condition-expr field-name="contentId" operator="equals" env-name="parameters.rootTemplateContentId"/>
+            <order-by field-name="sequenceNum DESC"/>
+        </entity-condition>
+        <if-not-empty field-name="contentApprovalList">
+            <field-to-result field-name="contentApprovalList" result-name="templateApprovalList"/>
+            <iterate list-name="contentApprovalList" entry-name="templateContentApproval">
+                <make-value entity-name="ContentApproval" value-name="contentApproval"/>
+                <make-next-seq-id seq-field-name="contentApprovalId" value-name="contentApproval"/>
+                <set field="contentApproval.contentId" from-field="rootInstanceContentId"/>
+                <set field="contentApproval.contentRevisionSeqId" from-field="instanceContentRevisionSeqId"/>
+                <set field="contentApproval.approvalStatusId" value="CNTAP_READY"/>
+                <set field="contentApproval.partyId" from-field="templateContentApproval.partyId" />
+                <set field="contentApproval.roleTypeId" from-field="templateContentApproval.roleTypeId" />
+                <create-value value-name="contentApproval"/>
+                <set field="instanceApprovalList[]" from-field="contentApproval"/>
+            </iterate>
+            <field-to-result field-name="instanceApprovalList" result-name="instanceApprovalList"/>
+        <else>
+            <add-error>
+                <fail-message message="No ContentApproval entities for CDI related to CDT with contentId: ${parameters.rootTemplateContentId}"/>
+            </add-error>
+            <check-errors/>
+        </else>
+        </if-not-empty>
+        
+    </simple-method>
+    
+    <simple-method method-name="checkForOpenApprovals" short-description="Check to see if any open approval conditions exist">
+    
+        <!-- Find CDI tied to root CDT -->
+        <set field="rootTemplateContentId"  from-field="parameters.rootTemplateContentId" />
+        <entity-condition entity-name="Content" list-name="contentList">
+            <condition-expr field-name="instanceOfContentId" operator="equals" env-name="parameters.rootTemplateContentId"/>
+        </entity-condition>
+        <if-not-empty field-name="contentList">
+            <set field="rootInstanceContentId" from-field="contentList[0].contentId"/>
+        <else>
+            <add-error>
+                <fail-message message="No ContentRevision entity for CDI related to CDT with contentId: ${parameters.rootTemplateContentId}"/>
+            </add-error>
+            <check-errors/>
+        </else>
+        </if-not-empty>
+        
+        <!-- Look for most recent ContentApproval tied to CDI -->
+        <entity-condition entity-name="ContentApproval" list-name="contentApprovalList">
+            <condition-expr field-name="contentId" operator="equals" env-name="rootInstanceContentId"/>
+            <order-by field-name="contentRevisionSeqId DESC"/>
+            <order-by field-name="sequenceNum DESC"/>
+        </entity-condition>
+        <if-not-empty field-name="contentApprovalList">
+            <string-to-field string="true" field-name="openApprovalExists"/>
+            <field-to-result  field-name="openApprovalExists" result-name="openApprovalExists"/>
+            <set field="targetContentRevisionSeqId" from-field="contentApprovalList[0].contentRevisionSeqId"/>
+            <iterate list-name="contentApprovalList" entry-name="contentApproval">
+                <if-compare field-name="contentApproval.contentRevisionSeqId" operator="equals" value="${targetContentRevisionSeqId}">
+                    <if>
+                        <condition>
+                            <or>
+                                <if-compare field-name="contentApproval.approvalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                <if-compare field-name="contentApproval.approvalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                            </or>
+                        </condition>
+                        <then>
+                            <string-to-field string="false" field-name="openApprovalExists"/>
+                            <field-to-result  field-name="openApprovalExists" result-name="openApprovalExists"/>
+                        </then>
+                    </if>
+                </if-compare>
+            </iterate>
+        <else>
+            <add-error>
+                <fail-message message="No ContentApprovals entities for  contentId: ${rootInstanceContentId}"/>
+            </add-error>
+            <check-errors/>
+        </else>
+        </if-not-empty>
+     </simple-method>
+    
 </simple-methods>

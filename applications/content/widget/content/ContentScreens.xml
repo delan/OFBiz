@@ -198,6 +198,7 @@
                 <set field="defaultContentId" from-field="contentId" from-scope="user"/>
                 <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
                 <set field="contentId" from-field="contentId" to-scope="user"/>
+                <set field="contentRoleTarget" value=""/>
             </actions>
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
