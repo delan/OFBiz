@@ -1,0 +1,16 @@
+
+
+--Scripting:
+
+JavaScript/Rhino (NPL 1.1):
+  http://www.mozilla.org/js
+  base/build.xml:org/ofbiz/base/util/OfbizJsBsfEngine.java
+
+--Reporting:
+
+JasperReports (LGPL):
+  http://sourceforge.net/projects/jasperreports
+  framework/webapp/build.xml:org/ofbiz/webapp/view/JasperReportsPdfViewHandler.java,org/ofbiz/webapp/view/JasperReportsXmlViewHandler.java
+  applications/content/build.xml:org/ofbiz/content/report/JREntityListIteratorDataSource.java,org/ofbiz/content/report/JRMapCollectionDataSource.java
+
+
