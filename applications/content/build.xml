@@ -96,6 +96,8 @@
                 <path refid="local.class.path"/>
             </classpath>
             <src path="${src.dir}"/>
+            <exclude name="org/ofbiz/content/report/JREntityListIteratorDataSource.java"/>
+            <exclude name="org/ofbiz/content/report/JRMapCollectionDataSource.java"/>
         </javac>
         <copy todir="${build.dir}/classes">
             <!-- don't put the DTDs in the jar file... -->
