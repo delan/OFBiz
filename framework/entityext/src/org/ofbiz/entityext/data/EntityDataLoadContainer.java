@@ -64,6 +64,7 @@ public class EntityDataLoadContainer implements Container {
     protected String directory = null;
     protected String file = null;
     protected boolean useDummyFks = false;
+    protected boolean maintainTxs = false;
     protected int txTimeout = -1;
 
     public EntityDataLoadContainer() {
@@ -128,6 +129,8 @@ public class EntityDataLoadContainer implements Container {
                         this.directory = argumentVal;
                     } else if ("createfks".equalsIgnoreCase(argumentName)) {
                         this.useDummyFks = "true".equalsIgnoreCase(argumentVal);
+                    } else if ("maintainTxs".equalsIgnoreCase(argumentName)) {
+                        this.maintainTxs = "true".equalsIgnoreCase(argumentVal);
                     }
                 }
     
@@ -247,7 +250,7 @@ public class EntityDataLoadContainer implements Container {
             while (urlIter.hasNext()) {
                 URL dataUrl = (URL) urlIter.next();
                 try {
-                    int rowsChanged = EntityDataLoader.loadData(dataUrl, helperName, delegator, errorMessages, txTimeout, useDummyFks);
+                    int rowsChanged = EntityDataLoader.loadData(dataUrl, helperName, delegator, errorMessages, txTimeout, useDummyFks, maintainTxs);
                     totalRowsChanged += rowsChanged;
                     infoMessages.add(changedFormat.format(rowsChanged) + " of " + changedFormat.format(totalRowsChanged) + " from " + dataUrl.toExternalForm());
                 } catch (GenericEntityException e) {
