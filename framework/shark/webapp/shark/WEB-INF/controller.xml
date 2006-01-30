@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -41,11 +41,7 @@
     <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
     <handler name="fop" type="view" class="org.ofbiz.webapp.view.FopPdfViewHandler"/>
     <handler name="screenfop" type="view" class="org.ofbiz.widget.screen.ScreenFopPdfViewHandler"/>
-    
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
-    <handler name="datavision" type="view" class="org.ofbiz.webapp.view.DataVisionViewHandler"/>
-    <handler name="jasperpdf" type="view" class="org.ofbiz.webapp.view.JasperReportsPdfViewHandler"/>
-    <handler name="jasperxml" type="view" class="org.ofbiz.webapp.view.JasperReportsXmlViewHandler"/>
         
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
