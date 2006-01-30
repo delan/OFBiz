@@ -192,10 +192,10 @@ public class EntityDataLoader {
     }
 
     public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout) throws GenericEntityException {
-        return loadData(dataUrl, helperName, delegator, errorMessages, txTimeout, false, false);
+        return loadData(dataUrl, helperName, delegator, errorMessages, txTimeout, false, false, false);
     }
 
-    public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout, boolean dummyFks, boolean maintainTxs) throws GenericEntityException {
+    public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout, boolean dummyFks, boolean maintainTxs, boolean tryInsert) throws GenericEntityException {
         int rowsChanged = 0;
         
         if (dataUrl == null) {
