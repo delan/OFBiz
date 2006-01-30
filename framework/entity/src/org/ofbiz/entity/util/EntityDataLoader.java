@@ -33,6 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.w3c.dom.Element;
+
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
@@ -48,7 +50,6 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.model.ModelViewEntity;
-import org.w3c.dom.Element;
 
 /**
  * Some utility routines for loading seed data.
@@ -191,10 +192,10 @@ public class EntityDataLoader {
     }
 
     public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout) throws GenericEntityException {
-        return loadData(dataUrl, helperName, delegator, errorMessages, txTimeout, false);
+        return loadData(dataUrl, helperName, delegator, errorMessages, txTimeout, false, false);
     }
 
-    public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout, boolean dummyFks) throws GenericEntityException {
+    public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout, boolean dummyFks, boolean maintainTxs) throws GenericEntityException {
         int rowsChanged = 0;
         
         if (dataUrl == null) {
@@ -220,6 +221,7 @@ public class EntityDataLoader {
                 reader = new EntitySaxReader(delegator);
             }
             reader.setCreateDummyFks(dummyFks);
+            reader.setMaintainTxStamps(maintainTxs);
             rowsChanged += reader.parse(dataUrl);
         } catch (Exception e) {
             String xmlError = "[install.loadData]: Error loading XML Resource \"" + dataUrl.toExternalForm() + "\"; Error was: " + e.getMessage();
