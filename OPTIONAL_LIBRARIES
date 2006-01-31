@@ -13,4 +13,9 @@ JasperReports (LGPL):
   framework/webapp/build.xml:org/ofbiz/webapp/view/JasperReportsPdfViewHandler.java,org/ofbiz/webapp/view/JasperReportsXmlViewHandler.java
   applications/content/build.xml:org/ofbiz/content/report/JREntityListIteratorDataSource.java,org/ofbiz/content/report/JRMapCollectionDataSource.java
 
+-- POS L&F
+GTK Swing (LGPL):
+  http://sourceforge.net/projects/gtkswing/
+  base/config/pos-containers.xml:org.gtk.java.swing.plaf.gtk.GtkLookAndFeel for look and feel
+
 
