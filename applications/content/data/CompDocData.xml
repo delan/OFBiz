@@ -1,110 +1,97 @@
 <entity-engine-xml>
-    <Content contentId="CD0001" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Coordination Record" description=""/>
-    <Content contentId="CD0101" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Task" description=""/>
-    <Content contentId="CD1001" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="DD 1423" description=""/>
-    <Content contentId="CD1002" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Specification" description=""/>
-    <Content contentId="CD1003" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Cost Breakout Summary" description=""/>
-    <Content contentId="CD1004" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="J &amp; A (Sole Source Procurement)" description=""/>
-    <Content contentId="CD1005" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Engineering Source Determination (Corporate Contract Sole Source Determination)" description=""/>
-    <Content contentId="CD1006" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Statement of Urgency" description=""/>
-    <Content contentId="CD1007" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="ODC Statement" description=""/>
-    <Content contentId="CD1008" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Non-Personal Services" description=""/>
-    <Content contentId="CD1009" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Scope, Cost and Schedule Impacts" description=""/>
-    <Content contentId="CD1010" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="DD 254" description=""/>
-    <Content contentId="CD1011" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Request for Option Award" description=""/>
-    <Content contentId="CD1012" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="TM 86-01" description=""/>
-    <Content contentId="CD1013" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Visitor Group Security Agreement (VGSA)" description=""/>
-    <Content contentId="CD1014" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Surveillance Agreement" description=""/>
-    <Content contentId="CD1015" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Performance Plan" description=""/>
-    <Content contentId="CD1016" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Other Upload" description=""/>
-    <ContentAssoc contentIdTo="CD0001" contentId="CD0101" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1001" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1002" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1003" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1004" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1005" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1006" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1007" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1008" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1009" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1010" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1011" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1012" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1013" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1014" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1015" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1016" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentRevision contentId="CD0001" contentRevisionSeqId="000002" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD0101" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1001" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1002" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1003" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1004" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1005" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1006" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1007" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1008" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1009" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1010" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1011" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1012" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1013" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1014" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1015" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000002" itemContentId="CD1016" />
-    <ContentRevision contentId="CD0001" contentRevisionSeqId="000013" />
-    <Content contentId="CD1021" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Request for Option Award 2j" description=""/>
-    <Content contentId="CD1022" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="TM 86-01 2j" description=""/>
-    <Content contentId="CD1023" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Visitor Group Security Agreement (VGSA) 2j" description=""/>
-    <Content contentId="CD1024" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Surveillance Agreement 2j" description=""/>
-    <Content contentId="CD1025" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Performance Plan 2j" description=""/>
-    <Content contentId="CD1026" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" 
-    contentName="Other Upload 2j" description=""/>
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1021" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1022" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1023" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1024" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1025" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentAssoc contentIdTo="CD0101" contentId="CD1026" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000013" itemContentId="CD1021" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000013" itemContentId="CD1022" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000013" itemContentId="CD1023" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000013" itemContentId="CD1024" />
-
-    <ContentRevision contentId="CD0001" contentRevisionSeqId="000004" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000004" itemContentId="CD1004" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000004" itemContentId="CD1005" />
-    <ContentRevisionItem contentId="CD0001" contentRevisionSeqId="000004" itemContentId="CD1006" />
+    <!-- A CDT (Composite Document Template) that can be used independently, or as part of CD0001 defined below -->
+    <Content contentId="CDT0101" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" contentName="2J Placeholder" description=""/>
     
-    <ContentApproval contentApprovalId="CA0001" contentId="CD0001" contentRevisionSeqId="000002" partyId="admin"/>
-    <ContentApproval contentApprovalId="CA0002" contentId="CD0001" contentRevisionSeqId="000002" partyId="TESTING"/>
-    <ContentApproval contentApprovalId="CA0003" contentId="CD0001" contentRevisionSeqId="000002" roleTypeId="MANAGER"/>
-    <ContentApproval contentApprovalId="CA0004" contentId="CD0001" contentRevisionSeqId="000002" roleTypeId="BUYER"/>
-    <ContentApproval contentApprovalId="CA0011" contentId="CD0001" contentRevisionSeqId="000013" partyId="admin"/>
-    <ContentApproval contentApprovalId="CA0012" contentId="CD0001" contentRevisionSeqId="000013" partyId="TESTING"/>
-    <ContentApproval contentApprovalId="CA0013" contentId="CD0001" contentRevisionSeqId="000013" roleTypeId="MANAGER"/>
-    <ContentApproval contentApprovalId="CA0014" contentId="CD0001" contentRevisionSeqId="000013" roleTypeId="BUYER"/>
+    <Content contentId="CDT1021" contentTypeId="COMPDOC_TEMPLATE" contentName="Request for Option Award 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1022" contentTypeId="COMPDOC_TEMPLATE" contentName="TM 86-01 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1023" contentTypeId="COMPDOC_TEMPLATE" contentName="Visitor Group Security Agreement (VGSA) 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1024" contentTypeId="COMPDOC_TEMPLATE" contentName="Surveillance Agreement 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1025" contentTypeId="COMPDOC_TEMPLATE" contentName="Performance Plan 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1026" contentTypeId="COMPDOC_TEMPLATE" contentName="Other Upload 2j" description="" ownerContentId="" dataResourceId=""/>
+    <ContentAssoc contentIdTo="CDT0101" contentId="CDT1021" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0101" contentId="CDT1022" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0101" contentId="CDT1023" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0101" contentId="CDT1024" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0101" contentId="CDT1025" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0101" contentId="CDT1026" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    
+    <!-- A CDT that is a larger example and that includes a sub-CDT of CD0101 -->
+    <Content contentId="CDT0001" contentTypeId="COMPDOC_TEMPLATE" contentName="Coordination Record" description="" ownerContentId="" dataResourceId=""/>
+
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT0101" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    
+    <Content contentId="CDT1001" contentTypeId="TEMPLATE" contentName="DD 1423" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1002" contentTypeId="TEMPLATE" contentName="Specification" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1003" contentTypeId="TEMPLATE" contentName="Cost Breakout Summary" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1004" contentTypeId="TEMPLATE" contentName="J &amp; A (Sole Source Procurement)" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1005" contentTypeId="TEMPLATE" contentName="Engineering Source Determination (Corporate Contract Sole Source Determination)" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1006" contentTypeId="TEMPLATE" contentName="Statement of Urgency" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1007" contentTypeId="TEMPLATE" contentName="ODC Statement" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1008" contentTypeId="TEMPLATE" contentName="Non-Personal Services" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1009" contentTypeId="TEMPLATE" contentName="Scope, Cost and Schedule Impacts" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1010" contentTypeId="TEMPLATE" contentName="DD 254" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1011" contentTypeId="TEMPLATE" contentName="Request for Option Award" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1012" contentTypeId="TEMPLATE" contentName="TM 86-01" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1013" contentTypeId="TEMPLATE" contentName="Visitor Group Security Agreement (VGSA)" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1014" contentTypeId="TEMPLATE" contentName="Surveillance Agreement" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1015" contentTypeId="TEMPLATE" contentName="Performance Plan" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1016" contentTypeId="TEMPLATE" contentName="Other Upload" description="" ownerContentId="" dataResourceId=""/>
+
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1001" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1002" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1003" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1004" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1005" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1006" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1007" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1008" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1009" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1010" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1011" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1012" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1013" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1014" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1015" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+    <ContentAssoc contentIdTo="CDT0001" contentId="CDT1016" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
+
+    <!-- sample revision entries for CDT CD0001 -->
+    <ContentRevision contentId="CDT0001" contentRevisionSeqId="000002"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT0101"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1001"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1002"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1003"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1004"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1005"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1006"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1007"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1008"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1009"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1010"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1011"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1012"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1013"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1014"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1015"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000002" itemContentId="CDT1016"/>
+
+    <ContentRevision contentId="CDT0001" contentRevisionSeqId="000013"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000013" itemContentId="CDT1021"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000013" itemContentId="CDT1022"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000013" itemContentId="CDT1023"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000013" itemContentId="CDT1024"/>
+
+    <ContentRevision contentId="CDT0001" contentRevisionSeqId="000004"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000004" itemContentId="CDT1004"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000004" itemContentId="CDT1005"/>
+    <ContentRevisionItem contentId="CDT0001" contentRevisionSeqId="000004" itemContentId="CDT1006"/>
+    
+    <!-- sample approval entries for CDT CD0001 -->
+    <ContentApproval contentApprovalId="CA0001" contentId="CDT0001" contentRevisionSeqId="000002" partyId="admin"/>
+    <ContentApproval contentApprovalId="CA0002" contentId="CDT0001" contentRevisionSeqId="000002" partyId="TESTING"/>
+    <ContentApproval contentApprovalId="CA0003" contentId="CDT0001" contentRevisionSeqId="000002" roleTypeId="MANAGER"/>
+    <ContentApproval contentApprovalId="CA0004" contentId="CDT0001" contentRevisionSeqId="000002" roleTypeId="BUYER"/>
+    <ContentApproval contentApprovalId="CA0011" contentId="CDT0001" contentRevisionSeqId="000013" partyId="admin"/>
+    <ContentApproval contentApprovalId="CA0012" contentId="CDT0001" contentRevisionSeqId="000013" partyId="TESTING"/>
+    <ContentApproval contentApprovalId="CA0013" contentId="CDT0001" contentRevisionSeqId="000013" roleTypeId="MANAGER"/>
+    <ContentApproval contentApprovalId="CA0014" contentId="CDT0001" contentRevisionSeqId="000013" roleTypeId="BUYER"/>
 </entity-engine-xml>
