@@ -436,32 +436,36 @@
                         <!--<list-to-list list-name="relatedRes" to-list-name="reservations"/>-->
 
                         <iterate list-name="relatedRes" entry-name="oneRelatedRes">
-                            <if>
-                                <!-- only cancel/re-reserve when there are backorders; otherwise this can cause orders
-                                     to appear on duplicate pick lists -->
-                                <condition>
-                                    <and>
-                                        <not><if-empty field-name="relatedRes.quantityNotAvailable"/></not>
-                                         <if-compare field-name="relatedRes.quantityNotAvailable" operator="greater" value="0" type="Double"/>
-                                    </and>
-                                </condition>
-                                <then>
-                                    <if>
-                                        <condition>
-                                            <and>
-                                                <if-compare-field field-name="parameters.priorityOrderId" operator="equals" to-field-name="oneRelatedRes.orderId"/>
-                                                <if-compare-field field-name="parameters.priorityOrderItemSeqId" operator="equals" to-field-name="oneRelatedRes.orderItemSeqId"/>
-                                            </and>
-                                        </condition>
-                                        <then>
-                                            <field-to-list field-name="oneRelatedRes" list-name="privilegedReservations"/>
-                                        </then>
-                                        <else>
-                                            <field-to-list field-name="oneRelatedRes" list-name="reservations"/>
-                                        </else>
-                                    </if>
-                                </then>
-                            </if>
+                            <entity-condition entity-name="PicklistAndBinAndItem" list-name="picklistItemList">
+                                <condition-list combine="and">
+                                    <condition-expr field-name="orderId" env-name="oneRelatedRes.orderId"/>
+                                    <condition-expr field-name="shipGroupSeqId" env-name="oneRelatedRes.shipGroupSeqId"/>
+                                    <condition-expr field-name="orderItemSeqId" env-name="oneRelatedRes.orderItemSeqId"/>
+                                    <condition-expr field-name="inventoryItemId" env-name="oneRelatedRes.inventoryItemId"/>
+                                    <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_CANCELLED"/>
+                                </condition-list>
+                            </entity-condition>
+
+                            <!-- only cancel/re-reserve when there are no picklists associated; this will prevent
+                                     orders appearing on duplicate pick lists -->
+
+                            <if-empty field-name="picklistItemList">
+                                <log level="always" message="Order #${oneRelatedRes.orderId} was not found on any picklist for this item [${oneRelatedRes.inventoryItemId}]"/>                                                                   
+                                <if>
+                                    <condition>
+                                        <and>
+                                            <if-compare-field field-name="parameters.priorityOrderId" operator="equals" to-field-name="oneRelatedRes.orderId"/>
+                                            <if-compare-field field-name="parameters.priorityOrderItemSeqId" operator="equals" to-field-name="oneRelatedRes.orderItemSeqId"/>
+                                        </and>
+                                    </condition>
+                                    <then>
+                                        <field-to-list field-name="oneRelatedRes" list-name="privilegedReservations"/>
+                                    </then>
+                                    <else>
+                                        <field-to-list field-name="oneRelatedRes" list-name="reservations"/>
+                                    </else>
+                                </if>
+                            </if-empty>
                         </iterate>
                     </then>
                 </if>
