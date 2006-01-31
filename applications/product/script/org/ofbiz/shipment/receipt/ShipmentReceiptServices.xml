@@ -46,6 +46,15 @@
 
         <set field="newEntity.receivedByUserLoginId" from-field="userLogin.userLoginId"/>
         <create-value value-name="newEntity"/>
+
+        <if-not-empty field-name="inventoryItemDetailSeqId" map-name="parameters">
+            <entity-one entity-name="InventoryItemDetail" value-name="invDet">
+                <field-map field-name="inventoryItemDetailSeqId" env-name="parameters.inventoryItemDetailSeqId"/>
+                <field-map field-name="inventoryItemId" env-name="parameters.inventoryItemId"/>
+            </entity-one>
+            <set field="invDet.receiptId" from-field="receiptId"/>
+            <store-value value-name="invDet"/>
+        </if-not-empty>
     </simple-method>
     
     <simple-method method-name="createShipmentReceiptRole" short-description="Create a ShipmentReceipt Role">
