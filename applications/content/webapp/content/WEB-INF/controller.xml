@@ -1005,7 +1005,7 @@
    </request-map>
    <request-map uri="createRootCompDoc">
        <security auth="true" https="true"/>
-        <event invoke="persistContentAndAssoc"  path="" type="service"/>
+        <event invoke="persistRootCompDoc"  path="org.ofbiz.content.compdoc.CompDocEvents" type="java"/>
        <response name="success" type="view" value="EditRootCompDoc"/>
        <response name="error" type="view" value="EditRootCompDoc"/>
    </request-map>
