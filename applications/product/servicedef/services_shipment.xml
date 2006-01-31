@@ -420,6 +420,7 @@
     <service name="interfaceShipmentReceipt" engine="interface" location="" invoke="">
         <description>ShipmentReceipt Interface</description>
         <auto-attributes entity-name="ShipmentReceipt" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="inventoryItemDetailSeqId" type="String" mode="IN" optional="true"/>
         <override name="inventoryItemId" optional="false"/>
         <override name="productId" optional="false"/>
         <override name="quantityAccepted" optional="false"/>
