@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -33,9 +33,10 @@
                security/build.xml,service/build.xml,entityext/build.xml,
                datafile/build.xml,minilang/build.xml,
                tests/build.xml,
-               common/build.xml,workflow/build.xml,shark/build.xml,
+               common/build.xml,workflow/build.xml,
                webapp/build.xml,guiapp/build.xml,widget/build.xml,
                appserver/build.xml,webtools/build.xml"/>
+      <!-- For Shark add "shark/build.xml" to the list above, in the framework-builds list (after workflow, before webapp works fine)  -->
 
     <filelist id="application-builds" dir="applications"
         files="content/build.xml,party/build.xml,
