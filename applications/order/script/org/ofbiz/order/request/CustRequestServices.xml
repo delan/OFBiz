@@ -70,6 +70,10 @@
             <set value="REQ_TAKER" field="takerMap.roleTypeId"/>
             <call-service service-name="createCustRequestRole" in-map-name="takerMap"/>
         </if-compare-field>
+        
+        <!-- save the created status in the history -->
+        <set-service-fields to-map-name="statusMap" service-name="createCustRequestStatus" map-name="newEntity"/>
+        <call-service service-name="createCustRequestStatus" in-map-name="statusMap"/>
 
         <!-- This code is commented because the requester party is no more maintained in the CustRequestRole entity.
              There is now the fromPartyId field in the CustRequest entity for this. -->
@@ -88,6 +92,12 @@
     <simple-method method-name="updateCustRequest" short-description="Update Customer Request">
         <set from-field="parameters.custRequestId" field="lookupPKMap.custRequestId"/>
         <find-by-primary-key entity-name="CustRequest" map-name="lookupPKMap" value-name="custRequest"/>
+        <if-compare-field field-name="custRequest.statusId" operator="not-equals" to-field-name="parameters.statusId">
+            <!-- save the changed status in the history -->
+            <set field="custRequest.statusId" from-field="parameters.statusId"/>
+            <set-service-fields to-map-name="statusMap" service-name="createCustRequestStatus" map-name="custRequest"/>
+            <call-service service-name="createCustRequestStatus" in-map-name="statusMap"/>
+        </if-compare-field>
         <now-timestamp-to-env env-name="nowTimestamp"/>
         <set from-field="nowTimestamp" field="custRequest.lastModifiedDate"/>
         <set from-field="userLogin.userLoginId" field="custRequest.lastModifiedByUserLogin"/>
@@ -273,6 +283,18 @@
         </if-compare>
 
         <check-errors/>
+    </simple-method>
+
+    <simple-method method-name="createCustRequestStatus" short-description="Create Customer Request Status">
+        <make-value value-name="newEntity" entity-name="CustRequestStatus"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="custRequestStatusId"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="newEntity.statusDatetime">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <set from-field="nowTimestamp" field="newEntity.statusDatetime"/>
+        </if-empty>
+        <create-value value-name="newEntity"/>
+        <field-to-result field-name="newEntity.custRequestStatusId" result-name="custRequestStatusId"/>
     </simple-method>
 
 </simple-methods>
