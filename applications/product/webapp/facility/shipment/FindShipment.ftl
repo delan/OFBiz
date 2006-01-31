@@ -180,15 +180,15 @@ function lookupShipments() {
           <td width="50%">
             <div class="boxhead" align="right">
               <#if 0 < shipmentList?size>             
-                <#if 0 < viewIndex>
+                <#if (viewIndex > 1)>
                   <a href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}${paramList}&lookupFlag=Y</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
-                <#if 0 < listSize>
-                  <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+                <#if (listSize > 0)>
+                  <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${listSize}</span>
                 </#if>
-                <#if highIndex < listSize>
+                <#if (listSize > highIndex)>
                   <a href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${paramList}&lookupFlag=Y</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 <#else>
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
@@ -214,7 +214,7 @@ function lookupShipments() {
         </tr>
         <#if shipmentList?has_content>
           <#assign rowClass = "viewManyTR2">
-          <#list shipmentList[lowIndex..highIndex-1] as shipment>
+          <#list shipmentList as shipment>
             <#assign originFacility = shipment.getRelatedOneCache("OriginFacility")?if_exists>
             <#assign destinationFacility = shipment.getRelatedOneCache("DestinationFacility")?if_exists>
             <#assign statusItem = shipment.getRelatedOneCache("StatusItem")>
