@@ -1,20 +1,63 @@
 
+-=-Workflow
 
---Scripting:
+-Shark (LGPL):
+  http://www.enhydra.org/workflow/shark/
+  framework/shark/lib:
+    sharkassignment-historyrelated.jar
+    sharkassignment-standard.jar
+    sharkassignment-xpdlstraightparticipantmapping.jar
+    sharkauthentication-ldap.jar
+    sharkcaching-lru.jar
+    sharkclientapi.jar
+    sharkcommonapi.jar
+    sharkcorbaclientapi.jar
+    sharkcorbaserver.jar
+    sharkeventaudit-smtp.jar
+    sharkinternalapi.jar
+    sharkinteroperability-wfxml.jar
+    sharkkernel-standard.jar
+    sharklimitagent-standard.jar
+    sharklimitagent-timer.jar
+    sharklogging-standard.jar
+    sharkprocesslocking-memory.jar
+    sharkrepositorypersistence-filesystem.jar
+    sharkscripting-standard.jar
+    sharksecurity-standard.jar
+    sharktoolagent-standard.jar
+    sharkusergroup-ldap.jar
+    sharkutilities-common.jar
+    sharkutilities-map.jar
+    sharkutilities-misc.jar
+    sharkwebservice-asap.jar
+    sharkwebservice-asapapi.jar
+    sharkwebservice-asaputils.jar
+    sharkwebservice-wfxmlapi.jar
+    sharkwebservice-wfxmlutils.jar
+    sharkxpdl-standard.jar
+    wrd.jar
+  NOTE: these jars are based on a build from source done on 03 May 2005 (see old SVN rev 4944). 
+    For an updated version some changes to the integration code in the shark component may be necessary.
+  TO BUILD: once the jars are in place you can build from the ofbiz/framework/shark directory, or
+    you can add it to the build list in the ofbiz/build.xml file in the framework-builds file list.
+  TO DEPLOY: once the build is done the Shark container must be setup in the ofbiz-containers.xml
+    file or other containers file being used. The shark-container container should be un-commented.
 
-JavaScript/Rhino (NPL 1.1):
+-=-Scripting:
+
+-JavaScript/Rhino (NPL 1.1):
   http://www.mozilla.org/js
   base/build.xml:org/ofbiz/base/util/OfbizJsBsfEngine.java
 
---Reporting:
+-=-Reporting:
 
-JasperReports (LGPL):
+-JasperReports (LGPL):
   http://sourceforge.net/projects/jasperreports
   framework/webapp/build.xml:org/ofbiz/webapp/view/JasperReportsPdfViewHandler.java,org/ofbiz/webapp/view/JasperReportsXmlViewHandler.java
   applications/content/build.xml:org/ofbiz/content/report/JREntityListIteratorDataSource.java,org/ofbiz/content/report/JRMapCollectionDataSource.java
 
--- POS L&F
-GTK Swing (LGPL):
+-=- POS L&F
+-GTK Swing (LGPL):
   http://sourceforge.net/projects/gtkswing/
   base/config/pos-containers.xml:org.gtk.java.swing.plaf.gtk.GtkLookAndFeel for look and feel
 
