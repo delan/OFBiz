@@ -175,7 +175,6 @@
                 <get-related value-name="quote" relation-name="QuoteRole" list-name="quoteRoles"/>
 
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -197,7 +196,6 @@
                 <set field="titleProperty" value="PageTitleQuoteReport"/>
 
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
