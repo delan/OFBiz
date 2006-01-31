@@ -203,16 +203,17 @@
             </tr>
 
             <#list itemInfos as orderItem>
+              <#assign orderItemQuantity = orderItem.quantity - orderItem.cancelQuantity>
               <tr>
                 <td><input type="checkbox" name="sel_${orderItem.orderItemSeqId}" value="Y"/></td>
                 <td><div class="tabletext">${orderItem.orderItemSeqId}</td>
                 <td><div class="tabletext">${orderItem.productId?default("N/A")}</td>
                 <td><div class="tabletext">${orderItem.itemDescription?if_exists}</td>
-                <td align="right"><div class="tabletext">${orderItem.quantity}</td>
+                <td align="right"><div class="tabletext">${orderItemQuantity}</td>
                 <td align="right"><div class="tabletext">${packingSession.getPackedQuantity(orderId, orderItem.orderItemSeqId, shipGroupSeqId)}</td>
                 <td>&nbsp;&nbsp;</td>
                 <td align="center">
-                  <#assign inputQty = (orderItem.quantity - packingSession.getPackedQuantity(orderId, orderItem.orderItemSeqId, shipGroupSeqId))>
+                  <#assign inputQty = (orderItemQuantity - packingSession.getPackedQuantity(orderId, orderItem.orderItemSeqId, shipGroupSeqId))>
                   <input type="text" class="inputBox" size="7" name="qty_${orderItem.orderItemSeqId}" value="${inputQty}">
                 </td>
                 <td align="center">
