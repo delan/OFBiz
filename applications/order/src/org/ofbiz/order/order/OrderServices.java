@@ -965,7 +965,11 @@ public class OrderServices {
                     GenericValue orderItemShipGroupAssoc = (GenericValue) osiInfos.next();
                     if ("OrderItemShipGroupAssoc".equals(orderItemShipGroupAssoc.getEntityName())) {
                         GenericValue orderItem = (GenericValue) itemValuesBySeqId.get(orderItemShipGroupAssoc.get("orderItemSeqId"));
-
+                        String itemStatus = orderItem.getString("statusId");
+                        if ("ITEM_REJECTED".equals(itemStatus) || "ITEM_CANCELLED".equals(itemStatus) || "ITEM_COMPLETED".equals(itemStatus)) {
+                            Debug.logInfo("Order item [" + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + "] is not in a proper status for reservation", module);
+                            continue;
+                        }
                         if (UtilValidate.isNotEmpty(orderItem.getString("productId")) && !"RENTAL_ORDER_ITEM".equals(orderItem.getString("orderItemTypeId")))
                         { // ignore for rental
                             // only reserve product items; ignore non-product items
