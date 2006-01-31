@@ -605,7 +605,7 @@
     <simple-method method-name="createWorkEffortRequest" short-description="Create a CustRequestWorkEffort">
         <make-value entity-name="CustRequestWorkEffort" value-name="lookupMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupMap"/>
-        <find-by-primary-key entity-name="QuoteWorkEffort" map-name="lookupMap" value-name="custRequestWorkEffort"/>
+        <find-by-primary-key entity-name="CustRequestWorkEffort" map-name="lookupMap" value-name="custRequestWorkEffort"/>
         <if-not-empty field-name="custRequestWorkEffort">
             <add-error><fail-message message="ERROR: CustRequestWorkEffort [${parameters.custRequestId}][${parameters.workEffortId}] already exists."/></add-error>
             <check-errors/>
