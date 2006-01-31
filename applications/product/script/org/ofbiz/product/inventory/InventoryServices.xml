@@ -83,11 +83,11 @@
         <field-to-result field-name="newEntity.inventoryItemDetailSeqId" result-name="inventoryItemDetailSeqId"/>
 
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <!-- if availableToPromiseDiff or quantityOnHandDiff are empty set to 0 -->
         <if-empty field-name="newEntity.availableToPromiseDiff"><set field="newEntity.availableToPromiseDiff" value="0" type="Double"/></if-empty>
         <if-empty field-name="newEntity.quantityOnHandDiff"><set field="newEntity.quantityOnHandDiff" value="0" type="Double"/></if-empty>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateInventoryItemFromDetail" short-description="Update an InventoryItem From the Associated Detail Records" login-required="false">
@@ -437,18 +437,30 @@
 
                         <iterate list-name="relatedRes" entry-name="oneRelatedRes">
                             <if>
+                                <!-- only cancel/re-reserve when there are backorders; otherwise this can cause orders
+                                     to appear on duplicate pick lists -->
                                 <condition>
                                     <and>
-                                        <if-compare-field field-name="parameters.priorityOrderId" operator="equals" to-field-name="oneRelatedRes.orderId"/>
-                                        <if-compare-field field-name="parameters.priorityOrderItemSeqId" operator="equals" to-field-name="oneRelatedRes.orderItemSeqId"/>
+                                        <not><if-empty field-name="relatedRes.quantityNotAvailable"/></not>
+                                         <if-compare field-name="relatedRes.quantityNotAvailable" operator="greater" value="0" type="Double"/>
                                     </and>
                                 </condition>
                                 <then>
-                                    <field-to-list field-name="oneRelatedRes" list-name="privilegedReservations"/>
+                                    <if>
+                                        <condition>
+                                            <and>
+                                                <if-compare-field field-name="parameters.priorityOrderId" operator="equals" to-field-name="oneRelatedRes.orderId"/>
+                                                <if-compare-field field-name="parameters.priorityOrderItemSeqId" operator="equals" to-field-name="oneRelatedRes.orderItemSeqId"/>
+                                            </and>
+                                        </condition>
+                                        <then>
+                                            <field-to-list field-name="oneRelatedRes" list-name="privilegedReservations"/>
+                                        </then>
+                                        <else>
+                                            <field-to-list field-name="oneRelatedRes" list-name="reservations"/>
+                                        </else>
+                                    </if>
                                 </then>
-                                <else>
-                                    <field-to-list field-name="oneRelatedRes" list-name="reservations"/>
-                                </else>
                             </if>
                         </iterate>
                     </then>
