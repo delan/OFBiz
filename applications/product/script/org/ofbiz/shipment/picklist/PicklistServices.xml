@@ -89,6 +89,7 @@
         </else>
         </if-empty>
 
+        <calculate field-name="numberSoFar" type="Long"><number value="0"/></calculate>
         <iterate entry-name="orderHeader" list-name="orderHeaderList">
             <!-- get all ship groups, and iterate over them for each order -->
             <entity-and entity-name="OrderItemShipGroup" list-name="orderItemShipGroupList">
@@ -192,6 +193,10 @@
                                 <and>
                                     <if-compare field-name="pickThisOrder" operator="equals" value="Y"/>
                                     <if-compare field-name="allPickStarted" operator="equals" value="N"/>
+                                    <or>
+                                        <if-empty field-name="parameters.maxNumberOfOrders"/>
+                                        <if-compare-field field-name="numberSoFar" operator="less" to-field-name="parameters.maxNumberOfOrders"></if-compare-field>
+                                    </or>
                                 </and>
                             </condition>
                             <then>
@@ -221,6 +226,10 @@
                                 </else>
                                 </if-compare>
                                 <clear-field field-name="orderHeaderInfo"/>
+
+                                <calculate field-name="numberSoFar" type="Long">
+                                    <calcop field-name="numberSoFar" operator="add"><number value="1"/></calcop>
+                                </calculate>
                             </then>
                         </if>
 
