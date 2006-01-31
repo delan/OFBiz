@@ -23,32 +23,25 @@
  */
 package org.ofbiz.shipment.shipment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.TreeMap;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.common.geo.GeoWorker;
-import javolution.util.FastMap;
 
 /**
  * ShipmentServices
@@ -638,93 +631,99 @@ public class ShipmentServices {
                 String packageSeqId = pkgInfo.getString("shipmentPackageSeqId");
                 String shipmentId = pkgInfo.getString("shipmentId");
 
-                if ("00001".equals(packageSeqId)) {
-                    // only need to do this for the first package
-                    GenericValue rtSeg = null;
-                    try {
-                        rtSeg = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", "00001"));
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, module);
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
+                // locate the shipment package
+                GenericValue shipmentPackage = delegator.findByPrimaryKey("ShipmentPackage",
+                        UtilMisc.toMap("shipmentId", shipmentId, "shipmentPackageSeqId", packageSeqId));
 
-                    if (rtSeg == null) {
-                        rtSeg = delegator.makeValue("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", "00001"));
+                if (shipmentPackage != null) {
+                    if ("00001".equals(packageSeqId)) {
+                        // only need to do this for the first package
+                        GenericValue rtSeg = null;
                         try {
-                            delegator.create(rtSeg);
+                            rtSeg = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", "00001"));
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, module);
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+
+                        if (rtSeg == null) {
+                            rtSeg = delegator.makeValue("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", "00001"));
+                            try {
+                                delegator.create(rtSeg);
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, module);
+                                return ServiceUtil.returnError(e.getMessage());
+                            }
+                        }
+
+                        rtSeg.set("actualStartDate", pkgInfo.get("shippedDate"));
+                        rtSeg.set("billingWeight", pkgInfo.get("billingWeight"));
+                        rtSeg.set("actualCost", pkgInfo.get("shippingTotal"));
+                        rtSeg.set("trackingIdNumber", pkgInfo.get("externalShipmentId"));
+                        try {
+                            delegator.store(rtSeg);
                         } catch (GenericEntityException e) {
                             Debug.logError(e, module);
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     }
 
-                    rtSeg.set("actualStartDate", pkgInfo.get("shippedDate"));
-                    rtSeg.set("billingWeight", pkgInfo.get("billingWeight"));
-                    rtSeg.set("actualCost", pkgInfo.get("shippingTotal"));
-                    rtSeg.set("trackingIdNumber", pkgInfo.get("externalShipmentId"));
+                    Map pkgCtx = FastMap.newInstance();
+                    pkgCtx.put("shipmentId", shipmentId);
+                    pkgCtx.put("shipmentPackageSeqId", packageSeqId);
+
+                    // first update the weight of the package
+                    GenericValue pkg = null;
                     try {
-                        delegator.store(rtSeg);
+                        pkg = delegator.findByPrimaryKey("ShipmentPackage", pkgCtx);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
                     }
-                }
 
-                Map pkgCtx = FastMap.newInstance();
-                pkgCtx.put("shipmentId", shipmentId);
-                pkgCtx.put("shipmentPackageSeqId", packageSeqId);
+                    if (pkg == null) {
+                        return ServiceUtil.returnError("Package not found! - " + pkgCtx);
+                    }
 
-                // first update the weight of the package
-                GenericValue pkg = null;
-                try {
-                    pkg = delegator.findByPrimaryKey("ShipmentPackage", pkgCtx);
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError(e.getMessage());
-                }
-
-                if (pkg == null) {
-                    return ServiceUtil.returnError("Package not found! - " + pkgCtx);
-                }
-
-                pkg.set("weight", pkgInfo.get("packageWeight"));
-                try {
-                    delegator.store(pkg);
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError(e.getMessage());
-                }
-
-                // need if we are the first package (only) update the route seg info
-                pkgCtx.put("shipmentRouteSegmentId", "00001");
-                GenericValue pkgRtSeg = null;
-                try {
-                    pkgRtSeg = delegator.findByPrimaryKey("ShipmentPackageRouteSeg", pkgCtx);
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError(e.getMessage());
-                }
-
-                if (pkgRtSeg == null) {
-                    pkgRtSeg = delegator.makeValue("ShipmentPackageRouteSeg", pkgCtx);
+                    pkg.set("weight", pkgInfo.get("packageWeight"));
                     try {
-                        delegator.create(pkgRtSeg);
+                        delegator.store(pkg);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
                     }
-                }
 
-                pkgRtSeg.set("trackingCode", pkgInfo.get("trackingNumber"));
-                pkgRtSeg.set("boxNumber", pkgInfo.get("shipmentPackageSeqId"));
-                pkgRtSeg.set("packageServiceCost", pkgInfo.get("packageTotal"));
-                try {
-                    delegator.store(pkgRtSeg);
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError(e.getMessage());
+                    // need if we are the first package (only) update the route seg info
+                    pkgCtx.put("shipmentRouteSegmentId", "00001");
+                    GenericValue pkgRtSeg = null;
+                    try {
+                        pkgRtSeg = delegator.findByPrimaryKey("ShipmentPackageRouteSeg", pkgCtx);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+
+                    if (pkgRtSeg == null) {
+                        pkgRtSeg = delegator.makeValue("ShipmentPackageRouteSeg", pkgCtx);
+                        try {
+                            delegator.create(pkgRtSeg);
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, module);
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+                    }
+
+                    pkgRtSeg.set("trackingCode", pkgInfo.get("trackingNumber"));
+                    pkgRtSeg.set("boxNumber", pkgInfo.get("shipmentPackageSeqId"));
+                    pkgRtSeg.set("packageServiceCost", pkgInfo.get("packageTotal"));
+                    try {
+                        delegator.store(pkgRtSeg);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                    shipmentMap.put(shipmentId, pkgInfo.get("voidIndicator"));
                 }
-                shipmentMap.put(shipmentId, pkgInfo.get("voidIndicator"));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
