@@ -701,22 +701,25 @@ public class OrderReturnServices {
                     do {
                         GenericValue pref = (GenericValue) payPrefIter.next();
                         Double maxAmount = pref.getDouble("maxAmount");
-                        if (maxAmount == null || maxAmount.doubleValue() == 0.00) {
-                            prefsToUse.add(pref);
-                            prefsAmount.put(pref, orderTotal);
-                            neededAmount = 0.00;
-                        } else if (maxAmount.doubleValue() > orderTotal.doubleValue()) {
-                            prefsToUse.add(pref);
-                            prefsAmount.put(pref, orderTotal);
-                            neededAmount = 0.00;
-                        } else {
-                            prefsToUse.add(pref);
-                            if (maxAmount.doubleValue() > neededAmount) {
-                                prefsAmount.put(pref, new Double(maxAmount.doubleValue() - neededAmount));
+                        String statusId = pref.getString("statuId");
+                        if ("PAYMENT_SETTLED".equals(statusId)) {
+                            if (maxAmount == null || maxAmount.doubleValue() == 0.00) {
+                                prefsToUse.add(pref);
+                                prefsAmount.put(pref, orderTotal);
+                                neededAmount = 0.00;
+                            } else if (maxAmount.doubleValue() > orderTotal.doubleValue()) {
+                                prefsToUse.add(pref);
+                                prefsAmount.put(pref, orderTotal);
+                                neededAmount = 0.00;
                             } else {
-                                prefsAmount.put(pref, maxAmount);
+                                prefsToUse.add(pref);
+                                if (maxAmount.doubleValue() > neededAmount) {
+                                    prefsAmount.put(pref, new Double(maxAmount.doubleValue() - neededAmount));
+                                } else {
+                                    prefsAmount.put(pref, maxAmount);
+                                }
+                                neededAmount -= maxAmount.doubleValue();
                             }
-                            neededAmount -= maxAmount.doubleValue();
                         }
                     } while (neededAmount > 0 && payPrefIter.hasNext());
                 }
@@ -772,7 +775,7 @@ public class OrderReturnServices {
                     Timestamp now = UtilDateTime.nowTimestamp();
 
                     // create a new response entry
-                    String responseId = delegator.getNextSeqId("ReturnItemResponse").toString();
+                    String responseId = delegator.getNextSeqId("ReturnItemResponse");
                     GenericValue response = delegator.makeValue("ReturnItemResponse", UtilMisc.toMap("returnItemResponseId", responseId));
                     response.set("orderPaymentPreferenceId", orderPayPref.getString("orderPaymentPreferenceId"));
                     response.set("responseAmount", thisRefundAmount);
