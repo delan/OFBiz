@@ -49,12 +49,26 @@
         <check/>
         </field>
         <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="addCompDocTemplate" title="">
-            <hyperlink also-hidden="false" description="Create" target="EditCompDocTemplate"/> 
-        </field>
     </form>
     
     <form name="ListCompDocRoot" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+        default-widget-style="tabletext" title="" type="list" list-name="compDocFindList"
+        target=""  paginate-target="ListCompDocRoot">
+        <field name="contentId" title="Content Id" ><display/></field>
+        <field name="contentTypeId" title="Content Type Id" ><display/></field>
+        <field name="contentName" title="Name" ><display/></field>
+        <field name="edit" title="" >
+           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
+        </field>
+        <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)">
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?rootTemplateContentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/> 
+        </field>
+        <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootInstanceContentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/> 
+        </field>
+    </form>
+    
+    <form name="ListCompDoc" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
         default-widget-style="tabletext" title="" type="list" list-name="compDocFindList"
         target=""  paginate-target="ListCompDocRoot">
         <field name="contentId" title="Content Id" ><display/></field>
@@ -71,12 +85,6 @@
         -->
         <field name="edit" title="" >
            <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
-        </field>
-        <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?rootTemplateContentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/> 
-        </field>
-        <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootTemplateContentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/> 
         </field>
     </form>
     
@@ -221,9 +229,8 @@
         </field>
     </form>
 
-    <form name="CompDocRoot" default-map-name="content" title="" type="single" target="updateRootCompDoc"
+    <form name="CompDocBasic" default-map-name="content" title="" type="single" target="updateRootCompDoc"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <alt-target use-when="content==null" target="createRootCompDoc"/>
        <field name="contentId"  field-name="contentId" map-name="content" 
               use-when="content==null || (content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(content.getString(&quot;contentId&quot;)))"><text/></field>
        <field name="contentId"  field-name="contentId" map-name="content" 
@@ -293,26 +300,6 @@
        <field name="lastModifiedDate"  field-name="lastModifiedDate" map-name="content"><text/></field>
        <field name="lastModifiedByUserLogin"  field-name="lastModifiedByUserLogin" map-name="content"><text/></field>
 
-       <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    
-    
-    <form name="CompDocWithContentAssoc" default-map-name="content" title="" type="single" target=""
-        extends="CompDocRoot"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        
-       <field name="contentIdTo"  field-name="contentIdTo" map-name="contentAssoc"><text/></field>
-       <field name="contentAssocTypeId"  field-name="contentAssocTypeId" map-name="contentAssoc"><text/></field>
-       <field use-when="contentAssoc!=null" name="fromDate"  field-name="fromDate" map-name="contentAssoc"><display/></field>
-       <field use-when="contentAssoc==null" name="fromDate" field-name="fromDate"><hidden value="${nowTimestamp}"/></field>
-       <field name="thruDate"  field-name="thruDate" map-name="contentAssoc"><date-time/></field>
-       <field name="contentAssocPredicateId"  field-name="contentAssocPredicateId" map-name="contentAssoc"><text/></field>
-       <field name="sequenceNum"  field-name="sequenceNum" map-name="contentAssoc"><text/></field>
-       <field use-when="contentAssoc!=null" name="sequenceNum" field-name="sequenceNum"><hidden value="${sequenceNum}"/></field>
-       <field name="mapKey"  field-name="mapKey" map-name="contentAssoc"><text/></field>
-       <field name="upperCoordinate"  field-name="upperCoordinate" map-name="contentAssoc"><text/></field>
-       <field name="leftCoordinate"  field-name="leftCoordinate" map-name="contentAssoc"><text/></field>
-
        <field name="dataResourceTypeId"  field-name="dataResourceTypeId" map-name="DataResource"><hidden value=""/></field>
        <field name="dataTemplateTypeId"  field-name="dataTemplateTypeId" map-name="DataResource"><text/></field>
        <field name="dataCategoryId"  field-name="dataCategoryId" map-name="DataResource"><text/></field>
@@ -321,8 +308,33 @@
        <field name="objectInfo"  field-name="objectInfo" map-name="DataResource"><text/></field>
 
        <field name="imageData" map-name="dummy"><file/></field>
+
+    </form>
+    
+    <form name="CompDocRoot" default-map-name="content" title="" type="single" target="updateRootCompDoc"
+        extends="CompDocBasic" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <alt-target use-when="content==null" target="createRootCompDoc"/>
+       <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="CompDocWithContentAssoc" default-map-name="" title="" type="single" target="updateCompDoc"
+        extends="CompDocBasic"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <alt-target use-when="contentId==null" target="createCompDoc"/>
         
-        
+       <field name="contentIdTo"  field-name="contentIdTo" ><text/></field>
+       <field name="contentAssocTypeId"  field-name="contentAssocTypeId" ><text/></field>
+       <field use-when="contentAssoc!=null" name="fromDate"   ><display/></field>
+       <field use-when="contentAssoc==null" name="fromDate" ><hidden value="${nowTimestamp}"/></field>
+       <field name="thruDate"   ><date-time/></field>
+       <field name="contentAssocPredicateId"   ><text/></field>
+       <field name="sequenceNum"   ><text/></field>
+       <field name="mapKey"   ><text/></field>
+       <field name="upperCoordinate"   ><text/></field>
+       <field name="leftCoordinate"   ><text/></field>
+
+       <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 
