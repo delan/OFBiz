@@ -91,6 +91,7 @@
 
     <!-- These ContentTypes are primarily for structuring knowledge -->
     <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="TEMPLATE" description="Template or Form" hasTable="N" parentTypeId=""/>
     <ContentType contentTypeId="ANNOTATION" description="Annotation" hasTable="N" parentTypeId=""/>
     <ContentType contentTypeId="CONTENT_LIST" description="Content List" hasTable="N" parentTypeId=""/>
     <ContentType contentTypeId="TREE_ROOT" description="Tree Root" hasTable="N" parentTypeId=""/>
