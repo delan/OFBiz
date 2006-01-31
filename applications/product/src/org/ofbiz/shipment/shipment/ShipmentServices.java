@@ -659,7 +659,7 @@ public class ShipmentServices {
                         rtSeg.set("actualStartDate", pkgInfo.get("shippedDate"));
                         rtSeg.set("billingWeight", pkgInfo.get("billingWeight"));
                         rtSeg.set("actualCost", pkgInfo.get("shippingTotal"));
-                        rtSeg.set("trackingIdNumber", pkgInfo.get("externalShipmentId"));
+                        rtSeg.set("trackingIdNumber", pkgInfo.get("trackingNumber"));
                         try {
                             delegator.store(rtSeg);
                         } catch (GenericEntityException e) {
