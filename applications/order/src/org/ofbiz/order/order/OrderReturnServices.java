@@ -701,7 +701,7 @@ public class OrderReturnServices {
                     do {
                         GenericValue pref = (GenericValue) payPrefIter.next();
                         Double maxAmount = pref.getDouble("maxAmount");
-                        String statusId = pref.getString("statuId");
+                        String statusId = pref.getString("statusId");
                         if ("PAYMENT_SETTLED".equals(statusId)) {
                             if (maxAmount == null || maxAmount.doubleValue() == 0.00) {
                                 prefsToUse.add(pref);
