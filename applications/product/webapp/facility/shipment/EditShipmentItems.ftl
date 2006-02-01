@@ -54,7 +54,7 @@
 	<#list orderShipments as orderShipment>
 		<tr>
 			<td><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext">${uiLabelMap.ProductOrderItem} :<a href="/ordermgr/control/orderview?order_id=${orderShipment.orderId?if_exists}" class="buttontext">${orderShipment.orderId?if_exists}</a>:${orderShipment.orderItemSeqId?if_exists}</div></td>
+			<td><div class="tabletext">${uiLabelMap.ProductOrderItem} :<a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId?if_exists}" class="buttontext">${orderShipment.orderId?if_exists}</a>:${orderShipment.orderItemSeqId?if_exists}</div></td>
 			<td><div class="tabletext">&nbsp;</div></td>
 			<td><div class="tabletext">${orderShipment.quantity?if_exists}</div></td>
 			<td><div class="tabletext">&nbsp;</div></td>
@@ -65,7 +65,7 @@
 	<#list itemIssuances as itemIssuance>
 		<tr>
 			<td><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext">${uiLabelMap.ProductOrderItem} :<a href="/ordermgr/control/orderview?order_id=${itemIssuance.orderId?if_exists}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
+			<td><div class="tabletext">${uiLabelMap.ProductOrderItem} :<a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId?if_exists}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
 			<td><div class="tabletext">${uiLabelMap.ProductInventory} :<a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
 			<td><div class="tabletext">${itemIssuance.quantity?if_exists}</div></td>
 			<td><div class="tabletext">${itemIssuance.issuedDateTime?if_exists}</div></td>
