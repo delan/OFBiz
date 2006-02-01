@@ -542,7 +542,7 @@
         <alt-target use-when="supplierProduct==null" target="createSupplierProduct"/>
         <auto-fields-service service-name="updateSupplierProduct" map-name=""/>
         <field name="productId"><hidden value="${productId}"/></field>
-        <field name="partyId" title="${uiLabelMap.CommonPartyId}">
+        <field name="partyId" title="${uiLabelMap.ProductSupplier}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName} ${firstName} ${lastName} [${partyId}]">
                     <entity-constraint name="roleTypeId" value="SUPPLIER"/>
@@ -576,7 +576,7 @@
             header-row-style="boxtop">
         <!--<auto-fields-service service-name="updateSupplierProduct"/>-->
 
-        <field name="partyId" title="${uiLabelMap.CommonPartyId}" widget-style="tabletext"
+        <field name="partyId" title="${uiLabelMap.ProductSupplier}" widget-style="tabletext"
             header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=partyId" header-link-style="buttontext">
             <display-entity entity-name="PartyNameView" also-hidden="true" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" link-style="buttontext"/>
@@ -587,17 +587,19 @@
             header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=minimumOrderQuantity" header-link-style="buttontext">
                 <display/>
         </field>
+        <field name="availableFromDate" title="${uiLabelMap.ProductAvailableFromDate}" red-when="after-now"><date-time/></field>
+        <field name="availableThruDate" title="${uiLabelMap.ProductAvailableThruDate}" red-when="after-now"><date-time/></field>
         <field name="quantityUomId"><display/></field>
         <field name="lastPrice" widget-area-style="tabletextright"
             header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=lastPrice"  header-link-style="buttontext">
                 <display type="currency" currency="${currencyUomId}"/>
         </field>
         <field name="updateLink" title=" " widget-style="buttontext">
-            <hyperlink target="EditProductSuppliers?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}"
+            <hyperlink target="EditProductSuppliers?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}&amp;availableFromDate=${availableFromDate}"
                 description="${uiLabelMap.CommonUpdate}" also-hidden="false"/>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="removeSupplierProduct?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}"
+            <hyperlink target="removeSupplierProduct?productId=${productId}&amp;partyId=${partyId}&amp;currencyUomId=${currencyUomId}&amp;minimumOrderQuantity=${minimumOrderQuantity}&amp;availableFromDate=${availableFromDate}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
@@ -940,7 +942,7 @@
 
     <form name="OutstandingPurchaseOrders" type="list" list-name="purchaseOrders" default-title-style="tableheadtext" default-widget-style="tabletext">
         <field name="orderDate"><display/></field>
-        <field name="orderId"><hyperlink also-hidden="false" description="${orderId}" target="/ordermgr/control/orderview?order_id=${orderId}" target-type="inter-app"/></field>
+        <field name="orderId"><hyperlink also-hidden="false" description="${orderId}" target="/ordermgr/control/orderview?orderId=${orderId}" target-type="inter-app"/></field>
         <field name="orderItemSeqId"><display/></field>
         <field name="quantity"><display/></field>
         <field name="itemStatusId"><display/></field>

@@ -3454,6 +3454,7 @@
       <prim-key field="partyId"/>
       <prim-key field="currencyUomId"/>
       <prim-key field="minimumOrderQuantity"/>
+      <prim-key field="availableFromDate"/>
       <relation type="one" fk-name="SUPPL_PROD_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
