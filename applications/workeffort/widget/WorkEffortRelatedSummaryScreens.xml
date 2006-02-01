@@ -135,7 +135,7 @@
                             <section>
                                 <widgets>
                                     <container>
-                                        <link target="/ordermgr/control/orderview?orderId=${orderHeader.orderId}&amp;order_id=${orderHeader.orderId}" url-mode="inter-app" text="[${orderHeader.orderId}]" style="linktext"/>
+                                        <link target="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" url-mode="inter-app" text="[${orderHeader.orderId}]" style="linktext"/>
                                         <label text="Type: " style="tableheadtext"/><label text="${orderHeader.orderTypeDescription}" style="tabletext"/>
                                         <label text=", Status: " style="tableheadtext"/><label text="${orderHeader.statusItemDescription}" style="tabletext"/>
                                         <label text=", Total: " style="tableheadtext"/><label text="${orderHeader.grandTotal}" style="tabletext"/>

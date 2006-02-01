@@ -88,7 +88,7 @@
                         <#assign statusItem = orderHeaderAndRole.getRelatedOneCache("StatusItem")>
                         <#assign placingParty = orh.getPlacingParty()?if_exists>
                         <tr>
-                          <td><a href="<@ofbizUrl>orderview?order_id=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='buttontext'>${orderHeaderAndRole.orderId}</a></td>                          
+                          <td><a href="<@ofbizUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='buttontext'>${orderHeaderAndRole.orderId}</a></td>                          
                           <td>
                             <div class='tabletext'>
                               <#assign partyId = "_NA_">
@@ -149,7 +149,7 @@
                       <#list partyTasks as task>
                         <tr>
                           <td>               
-                            <#assign orderStr = "order_id=" + task.orderId + "&partyId=" + userLogin.partyId + "&roleTypeId=" + task.roleTypeId + "&workEffortId=" + task.workEffortId + "&fromDate=" + task.get("fromDate").toString()>           
+                            <#assign orderStr = "orderId=" + task.orderId + "&partyId=" + userLogin.partyId + "&roleTypeId=" + task.roleTypeId + "&workEffortId=" + task.workEffortId + "&fromDate=" + task.get("fromDate").toString()>           
                             <a href="<@ofbizUrl>orderview?${orderStr}</@ofbizUrl>" class="buttontext">
                               ${task.orderId}
                             </a>
@@ -215,7 +215,7 @@
                       <tr><td colspan='11'><hr class='sepbar'></td></tr>
                       <#list roleTasks as task>
                         <form method="get" name="F${task.workEffortId}">
-                          <input type="hidden" name="order_id" value="${task.orderId}">
+                          <input type="hidden" name="orderId" value="${task.orderId}">
                           <input type="hidden" name="workEffortId" value="${task.workEffortId}">
                           <input type="hidden" name="taskStatus" value="${task.currentStatusId}">                    
                           <#if task.statusId?exists && task.statusId == "CAL_SENT">

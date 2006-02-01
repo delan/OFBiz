@@ -66,7 +66,7 @@
       </#if>
 
       <tr>
-        <td class="tabletext"><a href="<@ofbizUrl>orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}</td>
+        <td class="tabletext"><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}</td>
           <input name="orderId_o_${rowCount}" value="${item.orderId}" type="hidden">
           <input name="returnId_o_${rowCount}" value="${item.returnId}" type="hidden">
           <input name="returnItemTypeId_o_${rowCount}" value="${item.returnItemTypeId}" type="hidden">
@@ -134,7 +134,7 @@
               <#if itemResp.paymentId?has_content>
                 <div class="tabletext">Payment #<a href="/accounting/control/editPayment?paymentId=${itemResp.paymentId}${externalKeyParam}" class="buttontext">${itemResp.paymentId}</a></div>
               <#elseif itemResp.replacementOrderId?has_content>
-                <div class="tabletext">Order #<a href="<@ofbizUrl>orderview?order_id=${itemResp.replacementOrderId}</@ofbizUrl>" class="buttontext">${itemResp.replacementOrderId}</a></div>
+                <div class="tabletext">Order #<a href="<@ofbizUrl>orderview?orderId=${itemResp.replacementOrderId}</@ofbizUrl>" class="buttontext">${itemResp.replacementOrderId}</a></div>
               <#elseif itemResp.billingAccountId?has_content>
                 <div class="tabletext">Acct #<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${externalKeyParam}" class="buttontext">${itemResp.billingAccountId}</a></div>
               </#if>

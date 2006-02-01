@@ -40,13 +40,13 @@
           <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
           <input type="hidden" name="toPartyId" value="${toPartyId?if_exists}"/>
-          <input type="hidden" name="order_id" value="${orderId}"/>
+          <input type="hidden" name="orderId" value="${orderId}"/>
           <#if (orderHeader.currencyUom)?has_content>
           <input type="hidden" name="currencyUomId" value="${orderHeader.currencyUom}"/>
           </#if>
           <table border="0" width="100%" cellpadding="2" cellspacing="0">
             <tr>
-              <td colspan="5"><div class="head3">${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.OrderNbr}<a href="<@ofbizUrl>orderstatus?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
+              <td colspan="5"><div class="head3">${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.OrderNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
               <td align="right">
                 <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
                 <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');"/>

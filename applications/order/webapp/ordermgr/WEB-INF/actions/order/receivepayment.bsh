@@ -29,7 +29,7 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
 
 delegator = request.getAttribute("delegator");
-orderId = request.getParameter("order_id");
+orderId = request.getParameter("orderId");
 pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "EXT_OFFLINE"));
 paymentMethodTypes = delegator.findByAnd("PaymentMethodType", pmtFields);
 context.put("paymentMethodTypes", paymentMethodTypes); 
@@ -41,7 +41,7 @@ fromDate = request.getParameter("fromDate");
     
 donePage = request.getParameter("DONE_PAGE");
 if (donePage == null || donePage.length() <= 0) 
-    donePage="orderview?order_id=" + orderId;
+    donePage="orderview?orderId=" + orderId;
 if (workEffortId != null && workEffortId.length() > 0)
     donePage = donePage + "&workEffortId=" + workEffortId;
 if (partyId != null && partyId.length() > 0)

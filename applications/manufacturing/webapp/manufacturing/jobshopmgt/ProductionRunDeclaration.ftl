@@ -138,7 +138,7 @@
                                 <td width="80%" align="left">
                                     <span class="tabletext">
                                         <#list orderItems as orderItem>
-                                            <a href="/ordermgr/control/orderview?order_id=${orderItem.getString("orderId")}" class="buttontext" target="_blank">
+                                            <a href="/ordermgr/control/orderview?orderId=${orderItem.getString("orderId")}" class="buttontext" target="_blank">
                                                 ${orderItem.getString("orderId")}/${orderItem.getString("orderItemSeqId")}
                                             </a>&nbsp;
                                         </#list>

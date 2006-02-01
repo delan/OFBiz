@@ -32,7 +32,6 @@
   &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
 
   <form method="post" action="<@ofbizUrl>createordernote/${donePage}</@ofbizUrl>" name="createnoteform">
-    <input type="hidden" name="orderId" value="${orderId?if_exists}">
     <table width="90%" border="0" cellpadding="2" cellspacing="0">
       <tr>
         <td width="26%" align="right"><div class="tabletext">${uiLabelMap.OrderNote}</div></td>

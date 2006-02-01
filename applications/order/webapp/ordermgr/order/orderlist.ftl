@@ -123,7 +123,7 @@
                     <div class="tabletext"><nobr>${orderHeader.orderDate.toString()}</nobr></div>
                   </td>
                   <td>
-                    <div class="tabletext"><a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">${orderHeader.orderId}</a>
+                    <div class="tabletext"><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">${orderHeader.orderId}</a>
                     </div>
                   </td>
                   <td>

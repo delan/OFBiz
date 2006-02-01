@@ -73,7 +73,7 @@ public class OrderManagerEvents {
         Locale locale = UtilHttp.getLocale(request);
 
         if (session.getAttribute("OFFLINE_PAYMENTS") != null) {
-            String orderId = (String) request.getAttribute("order_id");
+            String orderId = (String) request.getAttribute("orderId");
             List toBeStored = new LinkedList();
             List paymentPrefs = null;
             GenericValue placingCustomer = null;

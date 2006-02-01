@@ -28,7 +28,7 @@
 <script language="JavaScript" type="text/javascript">
 <!-- //
 function lookupOrders(click) {
-    orderIdValue = document.lookuporder.order_id.value;
+    orderIdValue = document.lookuporder.orderId.value;
     if (orderIdValue.length > 1) {
         document.lookuporder.action = "<@ofbizUrl>orderview</@ofbizUrl>";
         document.lookuporder.method = "get";
@@ -100,7 +100,7 @@ function runAction() {
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderOrderId}</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='order_id'></td>
+                <td><input type='text' class='inputBox' name='orderId'></td>
               </tr>
              <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderExternalId}</div></td>
@@ -299,7 +299,7 @@ function runAction() {
 <#if requestParameters.hideFields?default("N") != "Y">
 <script language="JavaScript" type="text/javascript">
 <!--//
-document.lookuporder.order_id.focus();
+document.lookuporder.orderId.focus();
 //-->
 </script>
 </#if>
@@ -387,7 +387,7 @@ document.lookuporder.order_id.focus();
                  <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}"</td>
               </td>
               <td><div class='tabletext'>${orderType.description?default(orderType.orderTypeId?default(""))}</div></td>
-              <td><a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
+              <td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
               <td>
                 <div class="tabletext">
                   <#if displayParty?has_content>
@@ -439,7 +439,7 @@ document.lookuporder.order_id.focus();
                 </#if>
               </td>
               <td align='right'>
-                <a href="<@ofbizUrl>orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
+                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
               </td>
             </tr>
             <#-- toggle the row color -->

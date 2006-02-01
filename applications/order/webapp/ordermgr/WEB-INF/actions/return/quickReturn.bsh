@@ -32,7 +32,7 @@ import org.ofbiz.product.store.*;
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
-orderId = request.getParameter("order_id");
+orderId = request.getParameter("orderId");
 context.put("orderId", orderId);
 
 partyId = request.getParameter("party_id");

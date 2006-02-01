@@ -153,7 +153,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         
         request.setAttribute("delegator", delegator);
         request.setAttribute("dispatcher", dispatcher);
-        request.setAttribute("order_id", orderId);
+        request.setAttribute("orderId", orderId);
         request.setAttribute("notifyEmail", request.getParameter("M_notifyEmail"));
         request.setAttribute("confirmEmail", request.getParameter("M_confirmEmail"));        
         request.setAttribute("_CONTROL_PATH_", request.getParameter("M_controlPath"));

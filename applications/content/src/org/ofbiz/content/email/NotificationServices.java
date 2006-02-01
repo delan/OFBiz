@@ -85,7 +85,7 @@ import org.ofbiz.service.ServiceUtil;
  * <pre>
  *     Please use the following link to schedule a delivery date:
  *     &lt;p&gt;
- *     ${baseUrl}/ordermgr/control/schedulepo?order_id=${orderId}"
+ *     ${baseUrl}/ordermgr/control/schedulepo?orderId=${orderId}"
  * </pre>
  * </blockquote> 
  * <p>

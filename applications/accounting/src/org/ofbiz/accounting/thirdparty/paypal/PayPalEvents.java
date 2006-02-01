@@ -82,7 +82,7 @@ public class PayPalEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin"); 
                 
         // get the orderId
-        String orderId = (String) request.getAttribute("order_id");
+        String orderId = (String) request.getAttribute("orderId");
         
         // get the order header
         GenericValue orderHeader = null;

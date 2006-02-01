@@ -590,7 +590,6 @@ public class CheckOutHelper {
 
         // set the orderId for use by chained events
         Map result = ServiceUtil.returnSuccess();
-        result.put("order_id", orderId);
         result.put("orderId", orderId);
         result.put("orderAdditionalEmails", this.cart.getOrderAdditionalEmails());
 

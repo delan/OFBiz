@@ -87,7 +87,7 @@ public class CheckOutEvents {
     public static String cancelOrderItem(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        String orderId = request.getParameter("order_id");
+        String orderId = request.getParameter("orderId");
         String itemSeqId = request.getParameter("item_seq");
         String groupSeqId = request.getParameter("group_seq");
         Locale locale = UtilHttp.getLocale(request);
@@ -431,7 +431,6 @@ public class CheckOutEvents {
             if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS)) {
                 // set the orderId for use by chained events
                 String orderId = cart.getOrderId();
-                request.setAttribute("order_id", orderId);
                 request.setAttribute("orderId", orderId);
                 request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
             }
@@ -580,7 +579,7 @@ public class CheckOutEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         String result;
 
-        String orderId = (String) request.getAttribute("order_id");
+        String orderId = (String) request.getAttribute("orderId");
         CheckOutHelper checkOutHelper = new CheckOutHelper(null, delegator, null);
         Map callResult = checkOutHelper.checkExternalPayment(orderId);
 
