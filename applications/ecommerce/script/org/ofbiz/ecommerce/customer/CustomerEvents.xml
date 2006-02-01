@@ -48,7 +48,7 @@
         <if-compare field-name="allowPassword" operator="not-equals" value="Y">
             <field-to-field field-name="defaultPassword" to-field-name="PASSWORD" to-map-name="parameters"/>
             <field-to-field field-name="defaultPassword" to-field-name="CONFIRM_PASSWORD" to-map-name="parameters"/>
-            <string-to-field string="No hint set, accout not yet enabled" field-name="PASSWORD_HINT" map-name="parameters"/>
+            <string-to-field string="No hint set, account not yet enabled" field-name="PASSWORD_HINT" map-name="parameters"/>
         </if-compare>
         
         <if-compare field-name="productStore.usePrimaryEmailUsername" operator="equals" value="Y">
