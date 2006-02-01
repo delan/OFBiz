@@ -587,8 +587,8 @@
             header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=minimumOrderQuantity" header-link-style="buttontext">
                 <display/>
         </field>
-        <field name="availableFromDate" title="${uiLabelMap.ProductAvailableFromDate}" red-when="after-now"><date-time/></field>
-        <field name="availableThruDate" title="${uiLabelMap.ProductAvailableThruDate}" red-when="after-now"><date-time/></field>
+        <field name="availableFromDate" title="${uiLabelMap.ProductAvailableFromDate}" red-when="after-now"><display/></field>
+        <field name="availableThruDate" title="${uiLabelMap.ProductAvailableThruDate}" red-when="after-now"><display/></field>
         <field name="quantityUomId"><display/></field>
         <field name="lastPrice" widget-area-style="tabletextright"
             header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=lastPrice"  header-link-style="buttontext">
