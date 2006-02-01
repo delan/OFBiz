@@ -167,9 +167,9 @@ if (lookupFlag != null) {
     entityName = "OrderHeader";
 
     // check for a orderId (happens in some browsers)
-    orderId = request.getParameter("order_id");
+    orderId = request.getParameter("orderId");
     if (orderId != null && orderId.length() > 0) {
-        paramList = paramList + "&order_id=" + orderId;
+        paramList = paramList + "&orderId=" + orderId;
         andExprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, orderId));
     }
 

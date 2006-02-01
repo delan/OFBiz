@@ -34,9 +34,8 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
 delegator = request.getAttribute("delegator");
-orderId = request.getParameter("order_id");
-if (orderId == null)
-    orderId = request.getAttribute("order_id");
+orderId = request.getParameter("orderId");
+if (orderId == null) orderId = request.getAttribute("orderId");
 orderHeader = null;
 
 if (orderId != null && orderId.length() > 0) {

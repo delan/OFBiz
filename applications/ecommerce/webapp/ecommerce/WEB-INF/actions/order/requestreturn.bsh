@@ -30,7 +30,7 @@ import org.ofbiz.party.contact.*;
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
-orderId = request.getParameter("order_id");
+orderId = request.getParameter("orderId");
 context.put("orderId", orderId);
 
 userLogin = session.getAttribute("userLogin");

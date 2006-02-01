@@ -137,7 +137,7 @@ public class TaskEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String partyId = request.getParameter("partyId");
         String roleTypeId = request.getParameter("roleTypeId");
-        String orderId = request.getParameter("order_id");
+        String orderId = request.getParameter("orderId");
         Map context = UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleTypeId);
         Map result = null;
         try {

@@ -363,7 +363,7 @@ public class ShoppingCartEvents {
     }
 
     public static String addToCartFromOrder(HttpServletRequest request, HttpServletResponse response) {
-        String orderId = request.getParameter("order_id");
+        String orderId = request.getParameter("orderId");
         String[] itemIds = request.getParameterValues("item_id");
         // not used yet: Locale locale = UtilHttp.getLocale(request);
 

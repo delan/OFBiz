@@ -31,9 +31,7 @@ import org.ofbiz.order.order.OrderReadHelper;
 delegator = request.getAttribute("delegator");
 
 orderId = request.getParameter("orderId");
-if (orderId == null) {
-    orderId = parameters.get("order_id");
-}
+if (orderId == null) orderId = parameters.get("orderId");
 context.put("orderId", orderId);
  
 partyId = request.getParameter("partyId");
@@ -44,5 +42,5 @@ context.put("sendTo", sendTo);
 
 donePage = request.getParameter("DONE_PAGE");
 if (donePage == null || donePage.length() <= 0) 
-    donePage="orderview?order_id=" + orderId;
+    donePage="orderview?orderId=" + orderId;
 context.put("donePage", donePage);

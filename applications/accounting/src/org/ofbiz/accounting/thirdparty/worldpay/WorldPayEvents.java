@@ -76,7 +76,7 @@ public class WorldPayEvents {
         String webSiteId = CatalogWorker.getWebSiteId(request);
         
         // get the orderId from the request, stored by previous event(s)
-        String orderId = (String) request.getAttribute("order_id");
+        String orderId = (String) request.getAttribute("orderId");
         
         if (orderId == null) {
             Debug.logError("Problems getting orderId, was not found in request", module);

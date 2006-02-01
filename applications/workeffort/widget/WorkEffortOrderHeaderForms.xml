@@ -32,7 +32,7 @@
         </actions>
         <field name="workEffortId"><hidden/></field>
         <field name="orderId" widget-style="buttontext">
-            <hyperlink description="${orderId}" target="/ordermgr/control/orderview?order_id=${orderId}&amp;orderId=${orderId}&amp;workEffortId=${workEffortId}" target-type="inter-app"/>
+            <hyperlink description="${orderId}" target="/ordermgr/control/orderview?orderId=${orderId}&amp;workEffortId=${workEffortId}" target-type="inter-app"/>
         </field>
         <field name="statusItemDescription"><display/></field>
         <field name="orderTypeDescription"><display/></field>

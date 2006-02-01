@@ -35,9 +35,6 @@ import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.*;
 
 orderId = parameters.get("orderId");
-if (orderId == null) {
-    orderId = parameters.get("order_id");
-}
 context.put("orderId", orderId);
 
 workEffortId = parameters.get("workEffortId");
@@ -244,7 +241,7 @@ if (orderHeader != null) {
 }
 
 paramString = "";
-if (orderId != null) paramString = paramString + "order_id=" + orderId;
+if (orderId != null) paramString = paramString + "orderId=" + orderId;
 if (workEffortId != null) paramString = paramString + "&workEffortId=" + workEffortId;
 if (assignPartyId != null) paramString = paramString + "&partyId=" + assignPartyId;
 if (assignRoleTypeId != null) paramString = paramString + "&roleTypeId=" + assignRoleTypeId;

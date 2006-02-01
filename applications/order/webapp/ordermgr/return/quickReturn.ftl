@@ -36,7 +36,7 @@
           <input type="hidden" name="_useRowSubmit" value="Y"/>
           <input type="hidden" name="fromPartyId" value="${party.partyId}"/>
           <input type="hidden" name="toPartyId" value="${toPartyId?if_exists}"/>
-          <input type="hidden" name="order_id" value="${orderId}"/>
+          <input type="hidden" name="orderId" value="${orderId}"/>
           <input type="hidden" name="needsInventoryReceive" value="Y"/>
           <input type="hidden" name="destinationFacilityId" value="${destinationFacilityId}"/>
           <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
