@@ -203,7 +203,11 @@
             </tr>
 
             <#list itemInfos as orderItem>
-              <#assign orderItemQuantity = orderItem.quantity - orderItem.cancelQuantity>
+              <#if orderItem.cancelQuantity?exists>
+                <#assign orderItemQuantity = orderItem.quantity - orderItem.cancelQuantity>
+              <#else>
+                <#assign orderItemQuantity = orderItem.quantity>
+              </#if>
               <tr>
                 <td><input type="checkbox" name="sel_${orderItem.orderItemSeqId}" value="Y"/></td>
                 <td><div class="tabletext">${orderItem.orderItemSeqId}</td>
