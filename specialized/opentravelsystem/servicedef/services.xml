@@ -169,6 +169,7 @@
         location="org/ofbiz/opentravelsystem/ReportServices.xml" invoke="vatReport" auth="true">
         <description>Report on in/out going VAT for a certain time period</description>
         <attribute name="organizationPartyId" type="String" mode="IN"/>
+        <attribute name="year" type="String" mode="IN" optional="false"/>
         <attribute name="monthList" type="java.util.List" mode="OUT" optional="true"/>
     </service>
 

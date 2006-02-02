@@ -40,9 +40,9 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="productStoreId" from-field="parameters.userLogin.partyId" global="true"/>
-                <set field="prodCatalogId" from-field="parameters.userLogin.partyId" global="true"/>
-                <set field="organizationPartyId" from-field="parameters.userLogin.partyId" global="true"/>
+                <set field="productStoreId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
+                <set field="prodCatalogId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
+                <set field="organizationPartyId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
                 <set field="activeApp" value="hotelbackend" global="true"/>
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
                 <entity-one entity-name="PartyGroup" value-name="partyGroup" use-cache="true">
