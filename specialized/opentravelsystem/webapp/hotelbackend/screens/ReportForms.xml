@@ -67,14 +67,13 @@
     <form name="VatReportOptions" type="single" target="VatReport" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <!--field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
-        <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field-->
+        <field name="year" title="Year"><text size="4" maxlength="4" default-value="2005"/></field>
         <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="VatReport" type="list" list-name="monthList" 
         default-title-style="tableheadtext" default-widget-style="tabletext" 
-        default-tooltip-style="tabletext" target="updateCategoryProductMember">
+        default-tooltip-style="tabletext">
         <field name="monthNr"><display/></field>
         <field name="revenue" widget-area-style="tabletextright"><display/></field>
         <field name="salesTaxIn" widget-area-style="tabletextright"><display/></field>

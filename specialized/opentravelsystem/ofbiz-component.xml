@@ -50,6 +50,9 @@
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 
+    <webapp name="Root"  title="Root Page redirector from domainname to domainpath"  server="default-server"
+        location="root"  mount-point="/"  app-bar-display="false"/> <!-- see webapp/root/index.jsp for configuration -->
+    
     <webapp name="hotelbackend"
         title="Hotel demo site Admininstrator backend, the same for all frontends"
         server="default-server"
