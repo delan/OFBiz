@@ -110,19 +110,17 @@
     </target>
 
     <target name="main-jar" depends="stubs">
-        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes">
-            <fileset dir="${build.dir}/classes" excludes="org/ofbiz/webtools/print/**"/>            
-        </jar>
+        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>
     </target>
 
     <target name="print-jar" depends="stubs">
-        <jar jarfile="${build.dir}/lib/${name}-print.jar">
-            <fileset dir="${build.dir}/classes" includes="org/ofbiz/webtools/print/**"/>
-        </jar>
         <delete>
             <fileset dir="webapp/webtools/applet" includes="*.jar"/>
         </delete>
-        <copy todir="webapp/webtools/applet">
+
+        <!-- unjar the required libraries -->
+        <mkdir dir="${build.dir}/tmp"/>
+        <unjar dest="${build.dir}/tmp">
             <fileset file="${build.dir}/lib/${name}-print.jar"/>
             <fileset file="../../base/lib/avalon-framework-4.1.5.jar"/>
             <fileset file="../../base/lib/commons/commons-codec.jar"/>
@@ -130,8 +128,18 @@
             <fileset file="../webapp/lib/barcode4j-fop-ext-0.20.5-complete.jar"/>
             <fileset file="../webapp/lib/batik.jar"/>
             <fileset file="../webapp/lib/fop.jar"/>
-        </copy>
+        </unjar>
 
+        <!-- re-jar everything together -->
+        <jar jarfile="${build.dir}/lib/${name}-print.jar">
+            <fileset dir="${build.dir}/classes" includes="org/ofbiz/webtools/print/**"/>
+            <fileset dir="${build.dir}/tmp" includes="**"/>
+        </jar>
+
+        <!-- move the new complete archive to the applet directory -->
+        <move file="${build.dir}/lib/${name}-print.jar" todir="webapp/webtools/applet"/>
+        <delete dir="${build.dir}/tmp"/>
+        
         <!-- change this to use your personal certificate -->
         <signjar sectionsonly="true" keystore="../../base/config/ofbizssl.jks"
                  storepass="changeit" keypass="changeit" storetype="jks" alias="ssl">
