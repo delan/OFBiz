@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- A CDT (Composite Document Template) that can be used independently, or as part of CD0001 defined below -->
     <Content contentId="CDT0101" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" contentName="2J Placeholder" description=""/>
@@ -87,11 +88,11 @@
     
     <!-- sample approval entries for CDT CD0001 -->
     <ContentApproval contentApprovalId="CA0001" contentId="CDT0001" contentRevisionSeqId="000002" partyId="admin"/>
-    <ContentApproval contentApprovalId="CA0002" contentId="CDT0001" contentRevisionSeqId="000002" partyId="TESTING"/>
+    <ContentApproval contentApprovalId="CA0002" contentId="CDT0001" contentRevisionSeqId="000002" partyId="BLOG_EDITOR"/>
     <ContentApproval contentApprovalId="CA0003" contentId="CDT0001" contentRevisionSeqId="000002" roleTypeId="MANAGER"/>
     <ContentApproval contentApprovalId="CA0004" contentId="CDT0001" contentRevisionSeqId="000002" roleTypeId="BUYER"/>
     <ContentApproval contentApprovalId="CA0011" contentId="CDT0001" contentRevisionSeqId="000013" partyId="admin"/>
-    <ContentApproval contentApprovalId="CA0012" contentId="CDT0001" contentRevisionSeqId="000013" partyId="TESTING"/>
+    <ContentApproval contentApprovalId="CA0012" contentId="CDT0001" contentRevisionSeqId="000013" partyId="BLOG_EDITOR"/>
     <ContentApproval contentApprovalId="CA0013" contentId="CDT0001" contentRevisionSeqId="000013" roleTypeId="MANAGER"/>
     <ContentApproval contentApprovalId="CA0014" contentId="CDT0001" contentRevisionSeqId="000013" roleTypeId="BUYER"/>
 </entity-engine-xml>
