@@ -144,6 +144,9 @@
                 <decorator-screen name="CommonFeatureDecorator">
                     <decorator-section name="body">
                         <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/feature/CreateFeatureCategory.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/feature/EditFeatureCategories.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
@@ -210,6 +213,28 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/feature/EditFeatureGroupAppls.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="QuickAddProductFeatures">
+        <section>
+            <actions>
+                <set field="title" value="Bulk Feature Category Features"/>
+                <set field="titleProperty" value="ProductAddProductFeatureInBulk"/>
+                <set field="headerItem" value="featurecats"/>
+                <set field="featureNum" from-field="parameters.featureNum" type="Integer"/>
+                <set field="productFeatureCategoryId" from-field="parameters.productFeatureCategoryId"/>
+                <set field="tabButtonItem" value="FeatureCategory"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/feature/QuickAddProductFeatures.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFeatureDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/feature/BulkAddFeature.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

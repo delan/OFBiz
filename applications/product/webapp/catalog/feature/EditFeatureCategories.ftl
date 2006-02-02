@@ -74,26 +74,3 @@
 </table>
 <br/>
 
-<form method="post" action="<@ofbizUrl>CreateFeatureCategory</@ofbizUrl>" style="margin: 0;">
-  <div class="head2">${uiLabelMap.ProductCreateAProductFeatureCategory}:</div>
-  <br/>
-  <table>
-    <tr>
-      <td><div class="tabletext">${uiLabelMap.CommonDescription}:</div></td>
-      <td><input type="text" class="inputBox" size="30" name="description" value=""></td>
-    </tr>
-    <tr>
-      <td><div class="tabletext">${uiLabelMap.ProductParentCategory}:</div></td>
-      <td><select name="parentCategoryId" size="1" class="selectbox">
-        <option value="">&nbsp;</option>
-        <#list productFeatureCategories as productFeatureCategory>
-          <option value="${productFeatureCategory.productFeatureCategoryId}">${productFeatureCategory.description?if_exists} [${productFeatureCategory.productFeatureCategoryId}]</option>
-        </#list>
-      </select></td>
-    </tr>
-    <tr>
-      <td colspan="2"><input type="submit" value="${uiLabelMap.CommonCreate}"></td>
-    </tr>
-  </table>
-</form>
-<br/>
