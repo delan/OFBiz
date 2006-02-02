@@ -23,6 +23,16 @@
  */
 package org.ofbiz.order.shoppingcart;
 
+import java.text.NumberFormat;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -48,16 +58,6 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.RequestHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.text.NumberFormat;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * Shopping cart events.
@@ -547,8 +547,13 @@ public class ShoppingCartEvents {
     /** Gets or creates the shopping cart object */
     public static ShoppingCart getCartObject(HttpServletRequest request, Locale locale, String currencyUom) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCart cart = (ShoppingCart) request.getAttribute("shoppingCart");
         HttpSession session = request.getSession(true);
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
+        if (cart == null) {
+            cart = (ShoppingCart) session.getAttribute("shoppingCart");
+        } else {
+            session.setAttribute("shoppingCart", cart);
+        }
 
         if (cart == null) {
             if (locale == null) {

@@ -506,9 +506,12 @@ public class CheckOutEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
+        // check if the order is to be held (processing)
+        boolean holdOrder = cart.getHoldOrder();
+
         // load the ProductStore settings
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
-        Map callResult = checkOutHelper.processPayment(productStore, userLogin);
+        Map callResult = checkOutHelper.processPayment(productStore, userLogin, false, holdOrder);
 
         // generate any messages required
         ServiceUtil.getMessages(request, callResult, null);
