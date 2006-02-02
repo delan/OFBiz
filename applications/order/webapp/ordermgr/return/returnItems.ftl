@@ -41,11 +41,12 @@
   <tr>
     <td><div class="tableheadtext">Order # - Item #</div></td>
     <td><div class="tableheadtext">Product Id</div></td>
-    <td><div class="tableheadtext">Description</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
     <td><div class="tableheadtext">Return Qty</div></td>
     <td><div class="tableheadtext">Return Price</div></td>
     <td><div class="tableheadtext">Reason</div></td>
-    <td><div class="tableheadtext">Type</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.CommonReturnStatus}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>
     <td><div class="tableheadtext">Response</div></td>
     <td>&nbsp;</td>
   </tr>
@@ -60,7 +61,7 @@
       <#assign orderHeader = item.getRelatedOne("OrderHeader")?if_exists>
       <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
       <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
-
+      <#assign status = item.getRelatedOne("StatusItem")?if_exists>
       <#if (item.get("returnQuantity")?exists && item.get("returnPrice")?exists)>
          <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
       </#if>
@@ -104,26 +105,41 @@
             <#else>
                 <select name="returnReasonId_o_${rowCount}"  class='selectBox'>
                     <#if (returnReason?has_content)>
-                        <option value="${returnReason.returnReasonId}">${returnReason.description?if_exists}[${returnReason.returnReasonId}]</option>
+                        <option value="${returnReason.returnReasonId}">${returnReason.description?if_exists}</option>
                         <option value="${returnReason.returnReasonId}">--</option>
                     </#if>
                     <#list returnReasons as returnReasonItem>
-                        <option value="${returnReasonItem.returnReasonId}">${returnReasonItem.description?if_exists}[${returnReasonItem.returnReasonId}]</option>
+                        <option value="${returnReasonItem.returnReasonId}">${returnReasonItem.description?if_exists}</option>
                     </#list>
                 </select>
             </#if>
             </div></td>
+        <td><div class="tabletext">
+          <#if readOnly>
+              ${status.description?default("N/A")}
+          <#else>
+              <select name="statusId_o_${rowCount}"  class='selectBox'>
+                  <#if (status?has_content)>
+                      <option value="${status.statusId}">${status.description?if_exists}</option>
+                      <option value="${status.statusId}">--</option>
+                  </#if>
+                  <#list returnStatus as returnStatusItem>
+                      <option value="${returnStatusItem.statusId}">${returnStatusItem.description?if_exists}</option>
+                  </#list>
+              </select>
+          </#if>
+          </div></td>
         <td><div class="tabletext">
             <#if (readOnly)>
                 ${returnType.description?default("N/A")}
             <#else>
                 <select name="returnTypeId_o_${rowCount}" class="selectBox">
                     <#if (returnType?has_content)>
-                        <option value="${returnType.returnTypeId}">${returnType.description?if_exists}[${returnType.returnTypeId}]</option>
+                        <option value="${returnType.returnTypeId}">${returnType.description?if_exists}</option>
                         <option value="${returnType.returnTypeId}">--</option>
                     </#if>
                     <#list returnTypes as returnTypeItem>
-                        <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.description?if_exists}[${returnTypeItem.returnTypeId}]</option>
+                        <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.description?if_exists}</option>
                     </#list>
                 </select>
             </#if></div></td>
