@@ -157,9 +157,9 @@
 
     <eca service="updateReturnStatusFromReceipt" event="global-commit">
         <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>
-        <action service="processReplacementReturn" mode="async" persist="true"/>
-        <action service="processCreditReturn" mode="async" persist="true"/>
-        <action service="processRefundReturn" mode="async" persist="true"/>
+        <action service="processReplacementReturn" mode="sync" persist="true"/>
+        <action service="processCreditReturn" mode="sync" persist="true"/>
+        <action service="processRefundReturn" mode="sync" persist="true"/>
     </eca>
 
     <eca service="processReplacementReturn" event="commit">
