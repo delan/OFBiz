@@ -41,18 +41,22 @@
     <screen name="OrderFindReturn">
         <section>
             <actions>
-                <set field="title" value="Return"/>
+                <set field="title" value="Find Return"/>
                 <set field="headerItem" value="return"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/findReturn.bsh"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderReturnDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://order/webapp/ordermgr/return/findReturn.ftl"/>
-                            </html>
-                        </platform-specific>
+                        <container>
+                            <label style="head1">${uiLabelMap.OrderOrderReturns}</label>
+                        </container>
+                        <container>                            
+                            <link style="buttontext" target="returnMain" text="${uiLabelMap.OrderCreateNewReturn}"></link>
+                        </container>
+                        <include-form name="FindReturns" location="component://order/webapp/ordermgr/return/ReturnForms.xml"/>
+                        <include-form name="ListReturns" location="component://order/webapp/ordermgr/return/ReturnForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
