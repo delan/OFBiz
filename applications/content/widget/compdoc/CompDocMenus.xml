@@ -88,6 +88,29 @@
 
     </menu>
         
+    <menu name="treecdt" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="content"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        selected-menuitem-context-field-name="currentMenuItemName"
+        title="" type="simple">
+        <menu-item name="viewtree" title="View Tree" >
+            <link target="ViewCompDocTemplateTree?contentRevisionSeqId=${currentContentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+        </menu-item>
+        <menu-item name="editcd" title="Edit" >
+            <link target="EditRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+        </menu-item>
+        <menu-item name="approval" title="Approvals" >
+            <link target="ListContentApproval?contentId=${contentId}&amp;rootRevisionSeqId=${rootRevisionSeqId}"/>
+        </menu-item>
+        <menu-item name="rev-cdt" title="Template Revisions" >
+            <link target="ListTemplateRevisions?contentId=${contentId}&amp;templateRevisionSeqId=${templateRevisionSeqId}"/>
+        </menu-item>
+
+    </menu>
+        
     <menu name="treeline" default-title-style="tabButton"
         default-selected-style="tabButtonSelected"
         default-menu-item-name="content"
@@ -128,19 +151,10 @@
             <link target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}"/>
         </menu-item>
         <menu-item name="child" title="+Child" >
-            <link target="EditChildCompDoc?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;currentContentTypeId=COMPDOC_TEMPLATE"/>
+            <link target="AddChildCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;currentContentTypeId=COMPDOC_TEMPLATE"/>
         </menu-item>
         <menu-item name="addinst" title="Add Instance" >
-            <condition>
-                <if-empty field-name="rootInstanceContentId"/>
-            </condition>
-            <link target="EditRootCompDoc?contentId=${contentId}&amp;instanceOfContentId=${contentId}&amp;currentContentTypeId=COMPDOC_INSTANCE"/>
-        </menu-item>
-        <menu-item name="editinst" title="Edit Instance" >
-            <condition>
-                <not><if-empty field-name="rootInstanceContentId"/></not>
-            </condition>
-            <link target="EditRootCompDoc?contentId=${rootInstanceContentId}&amp;instanceOfContentId=${contentId}&amp;currentContentTypeId=COMPDOC_INSTANCE"/>
+            <link target="AddCompDocInstance?instanceOfContentId=${contentId}"/>
         </menu-item>
     </menu>
         

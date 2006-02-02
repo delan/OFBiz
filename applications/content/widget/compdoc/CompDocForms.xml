@@ -33,7 +33,7 @@
         <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <form name="FindCompDocRoot" default-title-style="tableheadtext"
+    <form name="FindCompDoc" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         default-entity-name="Content"
         target="ListCompDoc" title=" " type="single" > 
@@ -45,19 +45,24 @@
                 <option key="COMPDOC_INSTANCE" description="Instance"/>             
             </radio>
         </field>
+        <!-- 
         <field name="rootonly" map-name="dummy" title="Root CompDocs Only" >
         <check/>
         </field>
+        -->
         <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <form name="ListCompDocRoot" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+    <form name="ListCompDoc" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
         default-widget-style="tabletext" title="" type="list" list-name="compDocFindList"
-        target=""  paginate-target="ListCompDocRoot">
+        target=""  paginate-target="ListCompDoc">
         <field name="contentId" title="Content Id" ><display/></field>
         <field name="contentTypeId" title="Content Type Id" ><display/></field>
         <field name="contentName" title="Name" ><display/></field>
-        <field name="edit" title="" >
+        <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)" >
+           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
+        </field>
+        <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)" >
            <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
         <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)">
@@ -65,26 +70,6 @@
         </field>
         <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
             <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootInstanceContentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/> 
-        </field>
-    </form>
-    
-    <form name="ListCompDoc" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-        default-widget-style="tabletext" title="" type="list" list-name="compDocFindList"
-        target=""  paginate-target="ListCompDocRoot">
-        <field name="contentId" title="Content Id" ><display/></field>
-        <field name="contentTypeId" title="Content Type Id" ><display/></field>
-        <field name="contentName" title="Name" ><display/></field>
-        <field name="caContentIdTo" title="Content Id To" ><display/></field>
-        <field name="caContentAssocTypeId" title="Content Assoc Type ID" ><display/></field>
-        <field name="caFromDate" title="From Date" ><display/></field>
-        <field name="caThruDate"><hidden/></field>
-        <!-- 
-        <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)">
-           <hyperlink also-hidden="false" description="Edit" target="EditRootTemplateCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
-        </field>
-        -->
-        <field name="edit" title="" >
-           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
     </form>
     
@@ -240,15 +225,15 @@
        <field name="contentTypeId" entry-name="currentContentTypeId" map-name="dummy" 
            use-when="content==null || (content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(content.getString(&quot;contentTypeId&quot;)))" >
             <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
-                <option key="COMPDOC_TEMPLATE" description="Template"/>             
-                <option key="COMPDOC_INSTANCE" description="Instance"/>             
-            </drop-down>
+                <option key="COMPDOC_TEMPLATE" description="CompDoc Template"/>             
+                <option key="COMPDOC_INSTANCE" description="CompDoc Instance"/>             
+           </drop-down>
        </field>
        <field name="contentTypeId"  map-name="content" 
            use-when="content != null " >
             <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
-                <option key="COMPDOC_TEMPLATE" description="Template"/>             
-                <option key="COMPDOC_INSTANCE" description="Instance"/>             
+                <option key="COMPDOC_TEMPLATE" description="CompDoc Template"/>             
+                <option key="COMPDOC_INSTANCE" description="CompDoc Instance"/>             
             </drop-down>
        </field>
        <field name="ownerContentId"  field-name="ownerContentId" map-name="content" 
@@ -334,9 +319,72 @@
        <field name="upperCoordinate"   ><text/></field>
        <field name="leftCoordinate"   ><text/></field>
 
+       <field name="contentTypeId" entry-name="currentContentTypeId" map-name="dummy" 
+           use-when="content==null || (content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(content.getString(&quot;contentTypeId&quot;)))" >
+            <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
+                <option key="TEMPLATE" description="Member Template"/>             
+                <option key="DOCUMENT" description="Document"/>             
+            </drop-down>
+       </field>
+       <field name="contentTypeId"  map-name="content" 
+           use-when="content != null " >
+            <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
+                <option key="TEMPLATE" description="Member Template"/>             
+                <option key="DOCUMENT" description="Document"/>             
+            </drop-down>
+       </field>
        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+    <form name="AddRootCompDocInstance" default-map-name="" title="" type="single" target="genCompDocInstance"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="contentId"><text/></field>
+        <field name="contentName"><text/></field>
+        <field name="rootTemplateContentId" entry-name="instanceOfContentId" map-name="parameters"><hidden/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="AddRootCompDocTemplate" default-map-name="" title="" type="single" target="createRootCompDocTemplate"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="contentId"><text/></field>
+        <field name="contentName"><text/></field>
+        <field name="contentTypeId" ><hidden value="COMPDOC_TEMPLATE"/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="EditRootCompDocTemplate" default-map-name="" title="" type="single" target="updateRootCompDocTemplate"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="contentId"><text/></field>
+        <field name="contentName"><text/></field>
+        <field name="contentTypeId" ><hidden value="COMPDOC_TEMPLATE"/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="AddChildCompDocTemplate" default-map-name="" title="" type="single" target="createChildCompDocTemplate"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="contentId"><text/></field>
+        <field name="contentName"><text/></field>
+        <field name="contentTypeId" ><hidden value="TEMPLATE"/></field>
+       <field name="contentIdTo" ><display/></field>
+       <field name="contentAssocTypeId"  ><display/></field>
+       <field name="fromDate" ><display/></field>
+       <field name="thruDate"   ><date-time/></field>
+       <field name="sequenceNum"   ><text/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="EditChildCompDocTemplate" default-map-name="" title="" type="single" target="updateChildCompDocTemplate"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="contentId"><text/></field>
+        <field name="contentName"><text/></field>
+        <field name="contentTypeId" ><hidden value="TEMPLATE"/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 
     <!-- ================ CompDoc Requests ================= -->
 

@@ -29,8 +29,134 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
 
 
-    <!-- Methods for ContentApproval -->
     
+    <simple-method method-name="genCompDocInstance" short-description="Create CompDoc">
+    
+        <entity-one entity-name="Content" value-name="rootTemplateContent">
+            <field-map field-name="contentId" env-name="parameters.rootTemplateContentId"/>
+        </entity-one>
+        
+        <if-empty field-name="parameters.contentRevisionSeqId">
+            <entity-condition entity-name="ContentRevision" list-name="contentRevisionList">
+                <condition-list>
+                    <condition-expr field-name="contentId" operator="equals" env-name="parameters.rootTemplateContentId"/>
+                </condition-list>
+                <order-by field-name="-contentRevisionSeqId"/>
+            </entity-condition>
+            <if-not-empty field-name="contentRevisionList">
+                <set from-field="contentRevisionList[0].contentRevisionSeqId" field="contentRevisionSeqId"/>
+                <else>
+                    <set value="" field="contentRevisionSeqId"/>
+                </else>
+            </if-not-empty>
+            <else>
+                <set from-field="parameters.contentRevisionSeqId" field="contentRevisionSeqId" />
+            </else>
+        </if-empty>
+
+        <make-value entity-name="Content" value-name="rootInstanceContent"/>        
+        <if-empty field-name="parameters.rootInstanceContentId">
+            <make-next-seq-id seq-field-name="contentId" value-name="rootInstanceContent"/>
+            <else>
+                <entity-one entity-name="Content" value-name="existingContent">
+                    <field-map field-name="contentId" env-name="parameters.rootInstanceContentId"/>
+                </entity-one>
+                <if-not-empty field-name="existingContent">
+                    <add-error>
+                        <fail-message message="Instance compdoc Content for ${parameters.rootInstanceContentId} already exists"/>
+                    </add-error>
+                    <check-errors/>
+                </if-not-empty>
+                <set from-field="parameters.rootInstanceContentId" field="rootInstanceContent.contentId"/>
+            </else>
+        </if-empty>
+        <set from-field="parameters.contentName" field="rootInstanceContent.contentName" default-value="rootTemplateContent.contentName"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <set from-field="nowTimestamp" field="rootInstanceContent.createdDate"/>
+        <set from-field="nowTimestamp" field="rootInstanceContent.lastModifiedDate"/>
+        <set from-field="rootInstanceContent.createdByUserLogin" field="parameters.userLogin.userLoginId"/>
+        <set from-field="rootInstanceContent.lastModifiedByUserLogin" field="parameters.userLogin.userLoginId"/>
+        <set value="COMPDOC_INSTANCE" field="rootInstanceContent.contentTypeId"/>
+        <create-value value-name="rootInstanceContent"/>
+        
+        <field-to-result result-name="rootInstanceContentId" field-name="rootInstanceContent.contentId"/>
+        
+        <set from-field="parameters.rootTemplateContentId" field="parentTemplateContentId"/>
+        <set from-field="rootInstanceContent.contentId" field="parentInstanceContentId"/>
+        
+        <call-simple-method method-name="genInstanceChildCompDocs"/>
+        
+    </simple-method>
+    
+    <simple-method method-name="genInstanceChildCompDocs" short-description="Create CompDoc">
+        
+        <set from-field="parentTemplateContentId" field="thisTemplateContentId"/>
+        <set from-field="parentInstanceContentId" field="thisInstanceContentId"/>
+        <entity-condition entity-name="ContentAssoc" list-name="contentAssocList">
+            <condition-list combine="and" >
+                <condition-expr field-name="contentIdTo" operator="equals" env-name="thisTemplateContentId" />
+                <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART"/>                  
+                <condition-list combine="or">
+                    <condition-expr field-name="thruDate" operator="greater" env-name="nowTimestamp"/>
+                    <condition-expr field-name="thruDate" operator="equals" value=""/>
+                </condition-list>
+            </condition-list>
+        </entity-condition>
+        
+        <iterate list-name="contentAssocList" entry-name="templateContentAssoc">
+            <clone-value value-name="templateContent" new-value-name="instanceContent"/>
+            <make-next-seq-id seq-field-name="contentId" value-name="instanceContent"/>
+            <set value="TEMPLATE" field="instanceContent.contentTypeId"/>
+            <create-value value-name="instanceContent"/>
+            
+            <make-value entity-name="ContentAssoc" value-name="instanceContentAssoc"/>
+            <set from-field="thisInstanceContentId" field="instanceContentAssoc.contentIdTo" />
+            <set from-field="instanceContent.contentId" field="instanceContentAssoc.contentId" />
+            <set value="COMPDOC_PART" field="instanceContentAssoc.contentAssocTypeId" />
+            <set from-field="nowTimestamp" field="instanceContentAssoc.fromDate"/>
+            <create-value value-name="instanceContent"/>
+            
+            <!--  recursively call this method -->
+            <set from-field="templateContentAssoc.contentId" field="parentTemplateContentId"/>
+            <set from-field="instanceContent.contentId" field="parentInstanceContentId"/>
+            <call-simple-method method-name="genInstanceChildCompDocs"/>
+        </iterate>
+        
+    </simple-method>
+    
+    <simple-method method-name="persistRootCompDoc" short-description="Create CompDoc">
+    
+        <if-not-empty field-name="parameters.contentId">
+            <entity-one entity-name="Content" value-name="content"/>
+            <if-not-empty field-name="content">
+                <add-error>
+                    <fail-message message="Compdoc Content for ${parameters.contentId} already exists"/>
+                </add-error>
+                <check-errors/>
+            </if-not-empty>
+        </if-not-empty>
+        
+        <!--  create the compdoc Content entity -->
+        <set-service-fields service-name="persistContentAndAssoc" map-name="parameters" to-map-name="persistMap"/>
+        <set from-field="parameters.userLogin" field="persistMap.userLogin"/>
+        <call-service service-name="persistContentAndAssoc" in-map-name="persistMap">
+            <results-to-map map-name="pResults"/>
+        </call-service>
+        <!--  put all the result fields in this service's result -->
+        <iterate-map map-name="pResults" key-name="key" value-name="val">
+            <field-to-result field-name="pResults.${key}" result-name="${key}"/>
+        </iterate-map>
+        <log level="info" message="pResults : ${pResults}"/>
+        
+        <set from-field="pResults.contentId" field="revisionMap.itemContentId"/>
+        <set from-field="pResults.contentId" field="revisionMap.contentId"/>
+        <set from-field="parameters.userLogin" field="revisionMap.userLogin"/>
+        <call-service service-name="persistContentRevisionAndItem" in-map-name="revisionMap">
+            <result-to-result result-name="contentRevisionSeqId"/>
+        </call-service>
+    </simple-method>
+    
+    <!-- Methods for ContentApproval -->
     <simple-method method-name="createContentApproval" short-description="Create ContentApproval">
         <log level="always" message="got into createContentApproval(4)"></log>
         <check-permission action="_CREATE" permission="CONTENTMGR">
