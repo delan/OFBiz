@@ -136,7 +136,7 @@
                         <result-to-field result-name="availableReturnTotal" field-name="availableReturnTotal"/>
                         <result-to-field result-name="returnTotal" field-name="returnTotal"/>
                         <result-to-field result-name="orderTotal" field-name="orderTotal"/>
-                    </call-service>
+                    </call-service>                    
                     <log level="info" message="Available amount for return (order #${returnItem.orderId}) : ${availableReturnTotal} [orderTotal = ${orderTotal} / returnTotal = ${returnTotal}]"/>
                     <if-compare field-name="availableReturnTotal" operator="less" value="0" type="Double">
                         <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
