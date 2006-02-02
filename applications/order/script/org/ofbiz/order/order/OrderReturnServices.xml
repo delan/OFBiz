@@ -191,12 +191,13 @@
         <set field="returnableQuantity" value="0" type="Double"/>
         <set field="returnablePrice" value="0" type="Double"/>
 
+        <!-- if an orderItemSeqId or orderAdjustmentId is provided, then find the corresponding orderItem or orderAdjustment -->
         <if-not-empty field-name="parameters.orderItemSeqId">
             <make-value value-name="itemLookup" entity-name="OrderItem"/>
             <set-pk-fields map-name="parameters" value-name="itemLookup"/>
             <if-not-empty field-name="parameters.orderItemSeqId">
                 <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
-                <log level="always" message="Return item is an OrderItem - ${orderItem.orderItemSeqId}"/>
+                <log level="info" message="Return item is an OrderItem - ${orderItem.orderItemSeqId}"/>
             </if-not-empty>
         </if-not-empty>
 
@@ -205,10 +206,12 @@
             <set-pk-fields value-name="adjLookup" map-name="parameters"/>
             <if-not-empty field-name="parameters.orderAdjustmentId">
                 <find-by-primary-key map-name="adjLookup" value-name="orderAdjustment" entity-name="OrderAdjustment"/>
-                <log level="always" message="Return item is an OrderAdjustment - ${orderAdjustment.orderAdjustmentId}"/>
+                <log level="info" message="Return item is an OrderAdjustment - ${orderAdjustment.orderAdjustmentId}"/>
             </if-not-empty>
         </if-not-empty>
 
+        <!-- get the returnableQuantity and returnablePrice: for orderItems, it's found by getReturnableQuantity; for adjustments, 
+             either order adjustments or manual adjustments, it's always 1 and based on input parameter --> 
         <if-not-empty field-name="orderItem">
             <set field="serviceContext.orderItem" from-field="orderItem"/>
             <call-service service-name="getReturnableQuantity" in-map-name="serviceContext">
@@ -220,16 +223,18 @@
         <if-not-empty field-name="orderAdjustment">
             <set field="returnableQuantity" value="1" type="Double"/>
             <set field="returnablePrice" from-field="parameters.returnPrice" type="Double"/>
-            <log level="always" message="set return price to the input amount : ${returnablePrice}"/>
+            <log level="info" message="set return price to the input amount : ${returnablePrice}"/>
         </if-not-empty>
 
         <if-compare field-name="returnItemTypeId" value="RETURN_MAN_ADJ" operator="equals">
             <set field="returnableQuantity" value="1" type="Double"/>
             <set field="returnablePrice" from-field="orderAdjustment.amount" type="Double"/>
-            <log level="always" message="set return price to adjustment amount : ${returnablePrice}"/>
+            <log level="info" message="set return price to adjustment amount : ${returnablePrice}"/>
         </if-compare>
 
         <if-compare field-name="returnableQuantity" value="0" operator="greater" type="Double">
+            <!-- the user is only allowed to set a returnPrice if he has ORDERMGR_CREATE privilege, otherwise only the returnablePrice
+                 calculated by service is used -->
             <if>
                 <condition>
                       <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
@@ -239,10 +244,12 @@
                 </then>
             </if>
 
+            <!-- make sure the returnQuantity is not greater than the returnableQuantity from service or the quantity on the original orderItem -->
             <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="returnableQuantity" type="Double">
                 <add-error><fail-property resource="OrderErrorUiLabels" property="OrderRequestedReturnQuantityNotAvailablePreviousReturnsMayExist"/></add-error>
             </if-compare-field>
 
+            <!-- SC 20060202: Is this really needed?  Or does the above duplicate it.  If not, we should remove it -->
             <if-not-empty field-name="orderItem">
                 <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
                     <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnQuantityCannotExceedTheOrderedQuantity"/></add-error>
@@ -287,6 +294,8 @@
         </if-compare>
 
         <make-value value-name="newEntity" entity-name="ReturnItem"/>
+        <!-- do a lookup to find the existing returnItems on this return, order by returnItemSeqId DESC, then get the first one
+             and add 1 to returnItemSeqId to get the new returnItemSeqId -->
         <set from-field="parameters.returnId" field="newEntity.returnId"/>
         <set from-field="parameters.returnId" field="lookupMap.returnId"/>
         <string-to-list string="-returnItemSeqId" list-name="orderBy"/>
@@ -305,9 +314,9 @@
         <to-string field-name="returnItemSeqId" map-name="newEntity" numeric-padding="5"/>
 
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <set field="newEntity.statusId" value="RETURN_REQUESTED"/>
+        <set field="newEntity.statusId" value="RETURN_REQUESTED"/>  <!-- default status for new return items -->
         <field-to-result field-name="returnItemSeqId" map-name="newEntity" result-name="returnItemSeqId"/>
-        <log level="always" message="Return Item Seq ID: ${newEntity.returnItemSeqId}"/>
+        <log level="info" message="Return Item Seq ID: ${newEntity.returnItemSeqId}"/>
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateReturnItem" short-description="Update Return Item">
