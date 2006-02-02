@@ -47,6 +47,10 @@ context.put("returnItems", returnItems);
 returnTypes = delegator.findAll("ReturnType", UtilMisc.toList("sequenceId"));
 context.put("returnTypes", returnTypes);
 
+returnStatus = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_RETURN_STTS"),
+                       UtilMisc.toList("statusId", "description"));
+context.put("returnStatus", returnStatus);
+
 returnReasons = delegator.findAll("ReturnReason", UtilMisc.toList("sequenceId"));
 context.put("returnReasons", returnReasons);
 
