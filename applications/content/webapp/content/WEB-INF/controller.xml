@@ -1034,15 +1034,21 @@
     </request-map>
    <request-map uri="updateRootCompDocTemplate">
        <security auth="true" https="true"/>
-        <event invoke="persistRootCompDoc"  path="" type="service"/>
+        <event invoke="persistCompDoc"  path="" type="service"/>
        <response name="success" type="view" value="EditRootCompDocTemplate"/>
        <response name="error" type="view" value="EditRootCompDocTemplate"/>
    </request-map>
    <request-map uri="createRootCompDocTemplate">
        <security auth="true" https="true"/>
-        <event invoke="persistRootCompDoc"  path="" type="service"/>
+        <event invoke="persistCompDoc"  path="" type="service"/>
        <response name="success" type="view" value="EditRootCompDocTemplate"/>
        <response name="error" type="view" value="AddRootCompDocTemplate"/>
+   </request-map>
+   <request-map uri="createChildCompDocTemplate">
+       <security auth="true" https="true"/>
+        <event invoke="persistCompDoc"  path="" type="service"/>
+       <response name="success" type="view" value="EditChildCompDocTemplate"/>
+       <response name="error" type="view" value="AddChildCompDocTemplate"/>
    </request-map>
    <request-map uri="genCompDocInstance">
        <security auth="true" https="true"/>

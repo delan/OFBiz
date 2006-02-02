@@ -148,10 +148,38 @@
             <link target="EditRootCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="edit-link" title="Edit" >
-            <link target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}"/>
+            <link target="EditRootCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="child" title="+Child" >
-            <link target="AddChildCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;currentContentTypeId=COMPDOC_TEMPLATE"/>
+            <link target="AddChildCompDocTemplate?contentIdTo=${contentId}&amp;sequenceNum=9999&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+        </menu-item>
+        <menu-item name="addinst" title="Add Instance" >
+            <link target="AddCompDocInstance?instanceOfContentId=${contentId}"/>
+        </menu-item>
+    </menu>
+        
+    <menu name="childTemplateLine" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="content"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        selected-menuitem-context-field-name="currentMenuItemName"
+        title="" type="simple">
+        <menu-item name="edit-inplace" title="${contentName}[${contentId}]" >
+            <link target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+        </menu-item>
+        <menu-item name="edit-link" title="Edit" >
+            <link target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+        </menu-item>
+        <menu-item name="child" title="+Child" >
+            <link target="AddChildCompDocTemplate?contentIdTo=${contentId}&amp;sequenceNum=9999&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+        </menu-item>
+        <menu-item name="child" title="+Bef" >
+            <link target="AddChildCompDocTemplate?contentIdTo=${contentId}&amp;sequenceNum=9999&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+        </menu-item>
+        <menu-item name="child" title="+Aft" >
+            <link target="AddChildCompDocTemplate?contentIdTo=${contentId}&amp;sequenceNum=9999&amp;rootTemplateContentId=${rootTemplateContentId}"/>
         </menu-item>
         <menu-item name="addinst" title="Add Instance" >
             <link target="AddCompDocInstance?instanceOfContentId=${contentId}"/>

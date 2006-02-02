@@ -36,7 +36,7 @@
             <entity-one entity-name="Content"  use-cache="false">
                 <field-map field-name="contentId" env-name="itemContentId"/>
             </entity-one>
-            <include-screen name="responseTreeLine" 
+            <include-screen name="childTemplateLine" 
                 location="component://content/widget/compdoc/CompDocScreens.xml" />
             <sub-node node-name="node-body">
                 <entity-condition entity-name="AssocRevisionItemView" use-cache="false" >
@@ -96,7 +96,7 @@
             <entity-one entity-name="Content"  use-cache="false">
                 <field-map field-name="contentId" env-name="itemContentId"/>
             </entity-one>
-            <include-screen name="responseTreeLine" 
+            <include-screen name="childInstanceLine" 
                 location="component://content/widget/compdoc/CompDocScreens.xml" />
             <sub-node node-name="node-body">
                 <entity-condition entity-name="AssocRevisionItemView" use-cache="false" >

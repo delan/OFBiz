@@ -368,21 +368,28 @@
         
         <field name="contentId"><text/></field>
         <field name="contentName"><text/></field>
-        <field name="contentTypeId" ><hidden value="TEMPLATE"/></field>
+        <field name="contentTypeId" ><display description="Template"/></field>
        <field name="contentIdTo" ><display/></field>
-       <field name="contentAssocTypeId"  ><display/></field>
+       <field name="contentAssocTypeId"  ><display /></field>
        <field name="fromDate" ><display/></field>
        <field name="thruDate"   ><date-time/></field>
        <field name="sequenceNum"   ><text/></field>
+        <field name="rootTemplateContentId"><hidden /></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="EditChildCompDocTemplate" default-map-name="" title="" type="single" target="updateChildCompDocTemplate"
+    <form name="EditChildCompDocTemplate" default-map-name="contentAssocView" title="" type="single" target="updateChildCompDocTemplate"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentId"><text/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId" ><hidden value="TEMPLATE"/></field>
+       <field name="caContentIdTo" title="ContentId To" ><display/></field>
+       <field name="caContentAssocTypeId" title="Content Assoc Type Id"  ><display /></field>
+       <field name="caFromDate" title="From Date" ><display/></field>
+       <field name="caThruDate" title="Thru Date"   ><date-time/></field>
+       <field name="caSequenceNum" title="Sequence Num"   ><text/></field>
+        <field name="rootTemplateContentId"><hidden /></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
