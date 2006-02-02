@@ -73,14 +73,28 @@
       <field name="productFeatureId" type="id"></field>
       <field name="correspondingProductId" type="id"></field>
       <field name="sourceReferenceId" type="id-long"></field>
-      <field name="sourcePercentage" type="floating-point"><!-- for tax entries this is the tax percentage --></field>
-      <field name="customerReferenceId" type="id-long"><!-- for tax entries this is partyTaxId --></field>
-      <field name="primaryGeoId" type="id"><!-- for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city) --></field>
-      <field name="secondaryGeoId" type="id"><!-- for tax entries this is the secondary jurisdiction Geo (usually a country, or other Geo that the primary is within) --></field>
-      <field name="exemptAmount" type="currency-amount"><!-- an amount that would normally apply, but not to this order; for tax exemption represents the what the tax would have been --></field>
-      <field name="taxAuthGeoId" type="id"></field><!-- these taxAuth fields deprecate the primaryGeoId and secondaryGeoId fields and will be used with the newer tax calc stuff -->
+      <field name="sourcePercentage" type="floating-point">
+          <description>for tax entries this is the tax percentage</description>          
+      </field>
+      <field name="customerReferenceId" type="id-long">
+          <description>for tax entries this is partyTaxId</description>          
+      </field>
+      <field name="primaryGeoId" type="id">
+          <description>for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city)</description>          
+       </field>
+      <field name="secondaryGeoId" type="id">
+          <description>for tax entries this is the secondary jurisdiction Geo (usually a country, or other Geo that the primary is within)</description>          
+      </field>
+      <field name="exemptAmount" type="currency-amount">
+          <description>an amount that would normally apply, but not to this order; for tax exemption represents the what the tax would have been</description>          
+      </field>
+      <field name="taxAuthGeoId" type="id">
+          <description>these taxAuth fields deprecate the primaryGeoId and secondaryGeoId fields and will be used with the newer tax calc stuff</description>          
+      </field>
       <field name="taxAuthPartyId" type="id"></field>
-      <field name="overrideGlAccountId" type="id"><!-- used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc --></field>
+      <field name="overrideGlAccountId" type="id">
+          <description>used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc</description>          
+      </field>
       <field name="includeInTax" type="indicator"></field>
       <field name="includeInShipping" type="indicator"></field>
       <field name="createdDate" type="date-time"></field>
@@ -1962,20 +1976,49 @@
             title="Return Item Entity">
         <field name="returnId" type="id-ne"></field>
         <field name="returnItemSeqId" type="id-ne"></field>
-        <field name="returnReasonId" type="id"></field>    <!-- why item is returned: did not like, wrong item, damaged, etc. etc. -->
-        <field name="returnTypeId" type="id"></field>   <!-- actually used for disbursement type: store credit, cash refund, exchange -->
-        <field name="returnItemTypeId" type="id"></field>  <!-- what is returned: a product, a service, etc. -->
-        <field name="productId" type="id"></field> <!-- we need this field to be able to figure out net sales of a product-->
+        <field name="returnReasonId" type="id">
+            <description>why item is returned: did not like, wrong item, damaged, etc. etc.</description>
+        </field>
+        <field name="returnTypeId" type="id">
+            <description>actually used for disbursement type: store credit, cash refund, exchange</description>
+        </field>
+        <field name="returnItemTypeId" type="id">
+            <description>what is returned: a product, a service, etc</description>
+        </field>
+        <field name="productId" type="id">
+            <description>we need this field to be able to figure out net sales of a product</description>
+        </field>
         <field name="description" type="description"></field>
         <field name="orderId" type="id-ne"></field>
         <field name="orderItemSeqId" type="id"></field>
         <field name="orderAdjustmentId" type="id"></field>
         <field name="statusId" type="id"></field>
         <field name="expectedItemStatus" type="id"></field>
-        <field name="returnQuantity" type="floating-point"></field>  <!-- promised by the customer -->
-        <field name="receivedQuantity" type="floating-point"></field> <!-- actually received from the customer -->
+        <field name="returnQuantity" type="floating-point">
+            <description>promised by the customer</description>
+        </field>
+        <field name="receivedQuantity" type="floating-point">
+            <description>actually received from the customer</description>
+        </field>
         <field name="returnPrice" type="currency-amount"></field>
         <field name="returnItemResponseId" type="id"></field>
+        <field name="sourcePercentage" type="floating-point">
+            <description> for tax entries this is the tax percentage </description>
+        </field>
+        <field name="primaryGeoId" type="id">
+            <description>for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city)</description>
+        </field>
+        <field name="taxAuthGeoId" type="id">
+            <description>these taxAuth fields deprecate the primaryGeoId and secondaryGeoId fields and will be used with the newer tax calc stuff</description>
+        </field>
+        <field name="taxAuthPartyId" type="id"></field>
+        <field name="overrideGlAccountId" type="id">
+            <description>used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc</description>
+         </field>
+        <field name="parentItemSeqId" type="id">
+            <description>used to track the return item for which the sales tax is recorded</description>
+        </field>
+
         <prim-key field="returnId"/>
         <prim-key field="returnItemSeqId"/>
         <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="ReturnHeader">
@@ -2019,6 +2062,24 @@
         <relation type="many" rel-entity-name="OrderItemShipGrpInvRes">
             <key-map field-name="orderId"/>
             <key-map field-name="orderItemSeqId"/>
+        </relation>
+        <relation type="one" fk-name="RTN_ITEM_PRGEO" title="Primary" rel-entity-name="Geo">
+          <key-map field-name="primaryGeoId" rel-field-name="geoId"/>
+        </relation>
+        <relation type="one" fk-name="RTN_ITEM_TXA" rel-entity-name="TaxAuthority">
+          <key-map field-name="taxAuthGeoId"/>
+          <key-map field-name="taxAuthPartyId"/>
+        </relation>
+        <relation type="one" fk-name="RTN_ITEM_OGLA" title="Override" rel-entity-name="GlAccount">
+          <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+        </relation>
+        <relation type="one" fk-name="RTN_ITEM_PAR" title="Parent" rel-entity-name="ReturnItem">
+            <key-map field-name="returnId"/>
+            <key-map field-name="parentItemSeqId" rel-field-name="returnItemSeqId"/>
+        </relation>
+        <relation type="many" fk-name="RTN_ITEM_CHD" title="Child" rel-entity-name="ReturnItem">
+            <key-map field-name="returnId"/>
+            <key-map field-name="returnItemSeqId"  rel-field-name="parentItemSeqId"/>
         </relation>
     </entity>
     <entity entity-name="ReturnItemResponse"
