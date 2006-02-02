@@ -804,7 +804,7 @@ public class OrderReturnServices {
                         item.set("statusId", "RETURN_COMPLETED");
 
                         // create the status history
-                        String returnStatusId = delegator.getNextSeqId("ReturnStatus").toString();
+                        String returnStatusId = delegator.getNextSeqId("ReturnStatus");
                         GenericValue returnStatus = delegator.makeValue("ReturnStatus", UtilMisc.toMap("returnStatusId", returnStatusId));
                         returnStatus.set("statusId", item.get("statusId"));
                         returnStatus.set("returnId", item.get("returnId"));
