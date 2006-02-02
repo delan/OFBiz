@@ -47,18 +47,36 @@
 
 -JavaScript/Rhino (NPL 1.1):
   http://www.mozilla.org/js
-  base/build.xml:org/ofbiz/base/util/OfbizJsBsfEngine.java
+  TO BUILD comment out exclude: base/build.xml:org/ofbiz/base/util/OfbizJsBsfEngine.java
 
 -=-Reporting:
 
 -JasperReports (LGPL):
   http://sourceforge.net/projects/jasperreports
-  framework/webapp/build.xml:org/ofbiz/webapp/view/JasperReportsPdfViewHandler.java,org/ofbiz/webapp/view/JasperReportsXmlViewHandler.java
-  applications/content/build.xml:org/ofbiz/content/report/JREntityListIteratorDataSource.java,org/ofbiz/content/report/JRMapCollectionDataSource.java
+  TO BUILD comment out excludes:
+    framework/webapp/build.xml:org/ofbiz/webapp/view/JasperReportsPdfViewHandler.java,org/ofbiz/webapp/view/JasperReportsXmlViewHandler.java
+    applications/content/build.xml:org/ofbiz/content/report/JREntityListIteratorDataSource.java,org/ofbiz/content/report/JRMapCollectionDataSource.java
 
 -=- POS L&F
 -GTK Swing (LGPL):
   http://sourceforge.net/projects/gtkswing/
-  base/config/pos-containers.xml:org.gtk.java.swing.plaf.gtk.GtkLookAndFeel for look and feel
+  TO DEPLOY: base/config/pos-containers.xml:org.gtk.java.swing.plaf.gtk.GtkLookAndFeel for look and feel
 
-
+-=- Office (Word, etc) File Handling
+-OpenOffice UNO (LGPL)
+  http://udk.openoffice.org/
+  applications/content/lib/uno:
+    XFlatXml.jar
+    XMergeBridge.jar
+    XSLTFilter.jar
+    XSLTValidate.jar
+    htmlsoff.jar
+    java_uno.jar
+    java_uno_accessbridge.jar
+    juh.jar
+    jurt.jar
+    jut.jar
+    officebean.jar
+    ridl.jar
+    unoil.jar    
+  TO BUILD comment out exclude: applications/content/build.xml:org/ofbiz/content/openoffice/*
