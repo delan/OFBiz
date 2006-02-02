@@ -972,7 +972,7 @@
     <request-map uri="CreateFeatureCategory">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductFeatureCategory"/>
-        <response name="success" type="view" value="EditFeatureCategories"/>
+        <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
         <response name="error" type="view" value="EditFeatureCategories"/>
     </request-map>
     <request-map uri="UpdateFeatureCategory">
@@ -991,6 +991,16 @@
         <event type="service-multi" path="" invoke="updateProductFeature"/>
         <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
         <response name="error" type="view" value="EditFeatureCategoryFeatures"/>
+    </request-map>
+    <request-map uri="BulkAddProductFeatures">
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="createProductFeature"/>
+        <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
+        <response name="error" type="view" value="QuickAddProductFeatures"/>
+    </request-map>
+    <request-map uri="QuickAddProductFeatures">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuickAddProductFeatures"/>
     </request-map>
 
     <request-map uri="EditFeature">
@@ -2060,6 +2070,7 @@
     <view-map name="EditFeatureGroupAppls" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureGroupAppls"/>
     <view-map name="EditFeatureTypes" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureTypes"/>
     <view-map name="EditFeatureType" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureType"/>
+    <view-map name="QuickAddProductFeatures" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#QuickAddProductFeatures"/>
     
     <view-map name="FindProdCatalog" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#FindProdCatalog"/>
     <view-map name="EditProdCatalog" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalog"/>

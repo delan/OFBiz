@@ -27,7 +27,16 @@
 
 <div class="head1">${uiLabelMap.ProductEditFeaturesForFeatureCategory} "${(curProductFeatureCategory.description)?if_exists}"</div>
 <a href="<@ofbizUrl>EditFeature?productFeatureCategoryId=${productFeatureCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewFeature}]</a>
-
+<br>
+<form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
+  <div class="tabletext">
+    ${uiLabelMap.CommonAdd}
+    <input class="inputBox" name="featureNum" value="1" size="3">
+    ${uiLabelMap.ProductAddFeatureToCategory}
+    <input class="smallSubmit" type="submit" value="${uiLabelMap.CommonCreate}">
+  </div>
+  <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}">
+</form>
 <br/>
 <p class="head2">${uiLabelMap.ProductProductFeatureMaintenance}</p>
 <#if (listSize > 0)>
