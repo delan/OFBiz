@@ -733,7 +733,7 @@
             <actions>
                 <set field="menuName" value="treecdt"/>
                 <set field="title" value="Composite Document Template Edit Page"/>
-                <set from-field="parameters.contentIdTo" field="rootTemplateContentId" />
+                <set from-field="parameters.rootTemplateContentId" default-value="${parameters.caContentIdTo}" field="rootTemplateContentId" />
                 <set value="" field="rootInstanceContentId" />
                 <!-- 
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
@@ -741,10 +741,10 @@
                 <entity-one entity-name="ContentAssocViewFrom" value-name="contentAssocView" use-cache="true">
                     <field-map field-name="contentId" env-name="parameters.contentId"/>
                     <field-map field-name="caContentId" env-name="parameters.contentId"/>
-                    <field-map field-name="caContentIdTo" env-name="parameters.contentIdTo"/>
+                    <field-map field-name="caContentIdTo" env-name="parameters.caContentIdTo"/>
                     <field-map field-name="caContentAssocTypeId" env-name="parameters.caContentAssocTypeId"/>
                     <field-map field-name="caFromDate" env-name="parameters.caFromDate"/>
-                    <field-map field-name="contentIdStart" env-name="parameters.contentIdTo"/>
+                    <field-map field-name="contentIdStart" env-name="parameters.caContentIdTo"/>
                 </entity-one>
             </actions>
             <widgets>
@@ -800,7 +800,7 @@
             
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="menuName" value="tree"/>
+                <set field="menuName" value="treecdt"/>
                 <set field="title" value="Composite Document Root Template Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentMenuItemName" value="viewtree"/>
@@ -928,18 +928,6 @@
             </actions>
             <widgets>
                 <include-menu name="childTemplateLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
-              <container style="responseSelected">
-                  <link text="${contentName}[${contentId}]"  target="EditCompDocContent?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}" style="responseheader" />
-                  <link text="Edit" target="EditCompDocContent?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}" style="tabButton" />
-                  <link text="Approval" target="ListApprovalTemplateAndHistory?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}" style="tabButton" />
-                  <link  text="+Child" target="AddCompDocTemplate?caContentIdTo=${contentId}&amp;caSequenceNum=9999&amp;rootTemplateContentId=${rootTemplateContentId}" style="tabButton" target-window="_top" />
-                  <link  text="+Bef" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${caFromDate}&amp;rootTemplateContentId=${rootTemplateContentId}" style="tabButton" target-window="_top" />
-                  <link  text="+Aft" target="EditCompDocTemplate?caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${caFromDate}&amp;rootTemplateContentId=${rootTemplateContentId}" style="tabButton" target-window="_top" />
-                  <link  text="Instance" target="EditCompDocInstance?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}" style="tabButton" />
-                  <container style="responsetext">
-                      <label text="${description}" style="responsetext" />
-                  </container>
-              </container>    
             </widgets>
         </section>
     </screen>

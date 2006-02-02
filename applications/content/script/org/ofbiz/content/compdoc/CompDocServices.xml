@@ -126,6 +126,7 @@
     
     <simple-method method-name="persistCompDoc" short-description="Create CompDoc">
     
+        <!-- 
         <if-not-empty field-name="parameters.contentId">
             <entity-one entity-name="Content" value-name="content"/>
             <if-not-empty field-name="content">
@@ -135,6 +136,7 @@
                 <check-errors/>
             </if-not-empty>
         </if-not-empty>
+        -->
         
         <!--  create the compdoc Content entity -->
         <set-service-fields service-name="persistContentAndAssoc" map-name="parameters" to-map-name="persistMap"/>
@@ -148,6 +150,12 @@
             <field-to-result field-name="pResults.${key}" result-name="${key}"/>
         </iterate-map>
         <log level="info" message="pResults : ${pResults}"/>
+        <if-not-empty field-name="pResults.contentIdTo">
+            <set from-field="pResults.contentIdTo" field="resequenceMap.contentIdTo"/>
+            <set value="COMPDOC_PART" field="resequenceMap.typeList[]"/>
+            <set value="10" field="resequenceMap.seqInc" type="Integer"/>
+            <call-service service-name="resequence" in-map-name="resequenceMap"/>
+        </if-not-empty>
         
         <if>
             <condition>
