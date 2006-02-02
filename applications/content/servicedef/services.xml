@@ -1814,7 +1814,7 @@
     <!-- ================ CompDoc Requests ================= -->
     <service name="persistContentRevisionAndItem" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="persistContentRevisionAndItem" auth="false">
+        invoke="persistContentRevisionAndItem" auth="true">
         <description>Update a ContentRevision and ContentRevisionItem</description>
         <auto-attributes entity-name="ContentRevision" include="all" mode="IN" optional="true">
         </auto-attributes>
@@ -1854,7 +1854,7 @@
     
     <service name="prepForApproval" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="prepForApproval" auth="false">
+        invoke="prepForApproval" auth="true">
         <description>Set ContentApprovals for approval process</description>
         <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
         <attribute name="templateContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
@@ -1865,7 +1865,7 @@
 
     <service name="checkForOpenApprovals" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="prepForApproval" auth="false">
+        invoke="prepForApproval" auth="true">
         <description>Set ContentApprovals for approval process</description>
         <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
         <attribute name="openApprovalExists" type="Boolean" mode="OUT" optional="false"/>
@@ -1873,7 +1873,7 @@
 
     <service name="getApprovalsWithPermissions" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="getApprovalsWithPermissions" auth="false" >
+        invoke="getApprovalsWithPermissions" auth="true" >
         <description>Get a list of ContentApprovals and permission indicators</description>
         <attribute name="rootContentId" type="String" mode="IN" optional="false"/>
         <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
@@ -1883,11 +1883,27 @@
 
     <service name="hasApprovalPermission" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="hasApprovalPermission" auth="false">
+        invoke="hasApprovalPermission" auth="true">
         <description>Determine permission status for record</description>
         <attribute name="contentApprovalId" type="String" mode="IN" optional="false"/>
         <attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
         <attribute name="approvalPermExists" type="String" mode="OUT" optional="true"/>
     </service>
 
+    <service name="genCompDocInstance" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="genCompDocInstance" auth="true">
+        <description>Generate parallel CompDoc Instance tree</description>
+        <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="rootInstanceContentId" type="String" mode="INOUT" optional="false"/>
+    </service>
+
+    <service name="persistRootCompDoc" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="persistRootCompDoc" auth="true">
+        <description>Create a CompDoc Template entity and associated ContentRevision/Item entities</description>
+        <implements service="persistContentAndAssoc"/>
+        <attribute name="contentRevisionSeqId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
 </services>

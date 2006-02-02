@@ -979,6 +979,41 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditRootCompDocContent"/>
     </request-map>
+    
+    <request-map uri="AddRootCompDocInstance">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="AddRootCompDocInstance"/>
+    </request-map>
+    <request-map uri="AddRootCompDocTemplate">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="AddRootCompDocTemplate"/>
+    </request-map>
+   <request-map uri="EditRootCompDocInstance">
+       <security auth="true" https="true"/>
+       <response name="success" type="view" value="EditRootCompDocInstance"/>
+   </request-map>
+   <request-map uri="EditRootCompDocTemplate">
+       <security auth="true" https="true"/>
+       <response name="success" type="view" value="EditRootCompDocTemplate"/>
+   </request-map>
+   
+    <request-map uri="AddChildCompDocInstance">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="AddChildCompDocInstance"/>
+    </request-map>
+    <request-map uri="AddChildCompDocTemplate">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="AddChildCompDocTemplate"/>
+    </request-map>
+   <request-map uri="EditChildCompDocInstance">
+       <security auth="true" https="true"/>
+       <response name="success" type="view" value="EditChildCompDocInstance"/>
+   </request-map>
+   <request-map uri="EditChildCompDocTemplate">
+       <security auth="true" https="true"/>
+       <response name="success" type="view" value="EditChildCompDocTemplate"/>
+   </request-map>
+   
     <request-map uri="createCompDocTemplate">
         <security auth="true" https="true"/>
         <event invoke="persistContentAndAssoc" path="" type="service"/>
@@ -997,17 +1032,23 @@
         <response name="success" type="view" value="EditChildCompDoc"/>
         <response name="error" type="view" value="EditChildCompDoc"/>
     </request-map>
-   <request-map uri="updateRootCompDoc">
+   <request-map uri="updateRootCompDocTemplate">
        <security auth="true" https="true"/>
-        <event invoke="persistContentAndAssoc"  path="" type="service"/>
-       <response name="success" type="view" value="EditRootCompDoc"/>
-       <response name="error" type="view" value="EditRootCompDoc"/>
+        <event invoke="persistRootCompDoc"  path="" type="service"/>
+       <response name="success" type="view" value="EditRootCompDocTemplate"/>
+       <response name="error" type="view" value="EditRootCompDocTemplate"/>
    </request-map>
-   <request-map uri="createRootCompDoc">
+   <request-map uri="createRootCompDocTemplate">
        <security auth="true" https="true"/>
-        <event invoke="persistRootCompDoc"  path="org.ofbiz.content.compdoc.CompDocEvents" type="java"/>
-       <response name="success" type="view" value="EditRootCompDoc"/>
-       <response name="error" type="view" value="EditRootCompDoc"/>
+        <event invoke="persistRootCompDoc"  path="" type="service"/>
+       <response name="success" type="view" value="EditRootCompDocTemplate"/>
+       <response name="error" type="view" value="AddRootCompDocTemplate"/>
+   </request-map>
+   <request-map uri="genCompDocInstance">
+       <security auth="true" https="true"/>
+        <event invoke="genCompDocInstance"  path="" type="service"/>
+       <response name="success" type="view" value="EditRootCompDocInstance"/>
+       <response name="error" type="view" value="AddCompDocInstance"/>
    </request-map>
 
     <!-- ================ CompDoc ContentRole Requests ================= -->
@@ -1656,11 +1697,22 @@
     <view-map name="ListCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#ListCompDoc" type="screen"/>
     <view-map name="EditCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDoc" type="screen"/>
     <view-map name="EditRootCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDoc" type="screen"/>
-    <view-map name="EditChildCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#EditChildCompDoc" type="screen"/>
+
+    <view-map name="EditChildCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#EditChildCompDocInstance" type="screen"/>
+    <view-map name="EditChildCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditChildCompDocTemplate" type="screen"/>
+    <view-map name="AddChildCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#AddChildCompDocInstance" type="screen"/>
+    <view-map name="AddChildCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#AddChildCompDocTemplate" type="screen"/>
+
+    <view-map name="EditRootCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocInstance" type="screen"/>
+    <view-map name="EditRootCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocTemplate" type="screen"/>
+    <view-map name="AddRootCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#AddRootCompDocInstance" type="screen"/>
+    <view-map name="AddRootCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#AddRootCompDocTemplate" type="screen"/>
+
     <view-map name="ViewCompDocTemplateTree" page="component://content/widget/compdoc/CompDocScreens.xml#ViewCompDocTemplateTree" type="screen"/>
     <view-map name="ViewCompDocInstanceTree" page="component://content/widget/compdoc/CompDocScreens.xml#ViewCompDocInstanceTree" type="screen"/>
     <view-map name="ViewCompDocTree" page="component://content/widget/compdoc/CompDocScreens.xml#ViewCompDocTree" type="screen"/>
     <view-map name="EditCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocInstance" type="screen"/>
+    <view-map name="EditCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocTemplate" type="screen"/>
     <view-map name="CompDocTemplateTree" page="component://content/widget/compdoc/CompDocScreens.xml#CompDocTemplateTree" type="screen"/>
     <view-map name="EditCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocContent" type="screen"/>
     <view-map name="EditRootCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocContent" type="screen"/>
