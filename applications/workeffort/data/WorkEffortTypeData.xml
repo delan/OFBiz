@@ -164,6 +164,10 @@
     <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_ABORTED" transitionName="Abort"/>
     <StatusValidChange condition="" statusId="WF_SUSPENDED" statusIdTo="WF_RUNNING" transitionName="Un-suspend"/>
 
+    <!-- Status items for WorkEffortPartyAssignment.availabilityStatusId -->
+    <StatusItem description="Available" sequenceId="01" statusCode="AVAILABLE" statusId="WEPA_AV_AVAILABLE" statusTypeId="WEPA_AVAILABILITY"/>
+    <StatusItem description="Busy" sequenceId="02" statusCode="BUSY" statusId="WEPA_AV_BUSY" statusTypeId="WEPA_AVAILABILITY"/>
+
     <WorkEffortAssocType description="Breakdown/Detail" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_BREAKDOWN"/>
     <WorkEffortAssocType description="Dependency" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_DEPENDENCY"/>
     <WorkEffortAssocType description="Concurrency" hasTable="N" parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_CONCURRENCY"/>
