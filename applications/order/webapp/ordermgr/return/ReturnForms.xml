@@ -65,4 +65,56 @@
 		<field name="orderItemSeqId"><hidden/></field>
 		<field name="statusId"><ignored/></field>		
 	</form>
+
+    <form name="FindReturns" type="single"  target="findreturn" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="returnId" title="${uiLabelMap.OrderReturnId}"><text-find/></field>
+        <field name="fromPartyId" title="${uiLabelMap.OrderReturnFromParty}">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="billingAccountId" title="${uiLabelMap.AccountingBillingAccount}">
+            <text-find/>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="ORDER_RETURN_STTS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="entryDate" title="${uiLabelMap.OrderEntryDate}">
+            <date-find/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListReturns" type="list"  target="findreturn" title=""
+                list-iterator-name="listIt" paginate-target="findreturn"
+                default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <service service-name="performFind"  result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" value="ReturnHeader"/>
+            </service>
+        </actions>
+        <field name="returnId"  widget-style="buttontext" title="${uiLabelMap.OrderReturnId}">
+            <hyperlink description="${returnId}" target="returnMain?returnId=${returnId}"/>
+        </field>
+        <field name="entryDate" title="${uiLabelMap.OrderEntryDate}">
+            <display/>
+        </field>
+        <field name="fromPartyId" widget-style="buttontext" title="${uiLabelMap.OrderReturnFromParty}">
+            <hyperlink target-type="inter-app" description="${fromPartyId}" target="/partymgr/control/viewprofile?partyId=${fromPartyId}${externalKeyParam}"/>
+        </field>        
+        <field name="destinationFacilityId" widget-style="buttontext" title="${uiLabelMap.OrderReturnDestinationFacility}">
+            <hyperlink target-type="inter-app" description="${destinationFacilityId}" target="/facility/control/EditFacility?facilityId=${destinationFacilityId}${externalKeyParam}"/>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+    </form>
+
 </forms>
