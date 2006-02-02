@@ -522,6 +522,7 @@ public class ShoppingCart implements Serializable {
 
     protected Locale locale;  // holds the locale from the user session
     protected String currencyUom = null;
+    protected boolean holdOrder = false;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -695,6 +696,14 @@ public class ShoppingCart implements Serializable {
 
     public String getOrderAttribute(String name) {
         return (String) this.orderAttributes.get(name);
+    }
+
+    public void setHoldOrder(boolean b) {
+        this.holdOrder = b;
+    }
+
+    public boolean getHoldOrder() {
+        return this.holdOrder;
     }
 
     /** Sets the currency for the cart. */
