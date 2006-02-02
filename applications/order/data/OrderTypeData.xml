@@ -90,6 +90,7 @@
     <StatusValidChange condition="" statusId="ORDER_PROCESSING" statusIdTo="ORDER_REJECTED" transitionName="Reject Order"/>
     <StatusValidChange condition="" statusId="ORDER_PROCESSING" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
     <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_SENT" transitionName="Send Order"/>
+    <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_PROCESSING" transitionName="Hold Order"/>
     <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_COMPLETED" transitionName="Complete Order"/>
     <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
     <StatusValidChange condition="" statusId="ORDER_SENT" statusIdTo="ORDER_COMPLETED" transitionName="Order Completed"/>
@@ -99,6 +100,7 @@
     <StatusValidChange condition="" statusId="ITEM_CREATED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
     <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_COMPLETED" transitionName="Complete Item"/>
     <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
+
 
     <!-- order delivery schedule status -->
     <StatusType description="Order Delivery Schedule" hasTable="N" parentTypeId="" statusTypeId="ORDER_DEL_SCH"/>
