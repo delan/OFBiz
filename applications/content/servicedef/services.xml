@@ -1373,6 +1373,7 @@
             <exclude field-name="contentId"/>
             <exclude field-name="fromDate"/>
             <exclude field-name="contentAssocTypeId"/>
+            <exclude field-name="sequenceNum"/>
         </auto-attributes>
         <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all" mode="IN" optional="true">
         </auto-attributes>
@@ -1382,11 +1383,13 @@
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentAssocTypeId" optional="true" type="String"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="fromDate" optional="true" type="Timestamp"/>
+        <attribute mode="INOUT" entity-name="ContentAssoc" name="sequenceNum" optional="true" type="Long"/>
 
         <attribute mode="INOUT" entity-name="DataResource" name="drDataResourceId" optional="true" type="String"/>
         <attribute mode="INOUT" name="caContentIdTo" optional="true" type="String"/>
         <attribute mode="INOUT" name="caContentAssocTypeId" optional="true" type="String"/>
         <attribute mode="INOUT" name="caFromDate" optional="true" type="Timestamp"/>
+        <attribute mode="INOUT" name="caSequenceNum" optional="true" type="Long"/>
         <attribute mode="IN" name="rootDir" optional="true" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
@@ -1898,12 +1901,14 @@
         <attribute name="rootInstanceContentId" type="String" mode="INOUT" optional="false"/>
     </service>
 
-    <service name="persistRootCompDoc" engine="simple"
+    <service name="persistCompDoc" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="persistRootCompDoc" auth="true">
+        invoke="persistCompDoc" auth="true">
         <description>Create a CompDoc Template entity and associated ContentRevision/Item entities</description>
         <implements service="persistContentAndAssoc"/>
         <attribute name="contentRevisionSeqId" type="String" mode="OUT" optional="false"/>
+        <attribute name="rootTemplateContentId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="rootInstanceContentId" type="String" mode="INOUT" optional="true"/>
     </service>
     
 </services>

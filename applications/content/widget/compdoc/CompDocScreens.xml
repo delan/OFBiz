@@ -708,7 +708,12 @@
             <actions>
                 <set field="menuName" value="treecdt"/>
                 <set field="title" value="Composite Document Instance Add Page"/>
-                <set from-field="parameters.instanceOfContentId" field="rootTemplateContentId" />
+                <set from-field="parameters.contentId" field="contentIdTo" />
+                <set from-field="nowTimestamp" field="fromDate" />
+                <set value="COMPDOC_PART" field="contentAssocTypeId" />
+                <set value="9999" field="sequenceNum" />
+                <set value="TEMPLATE" field="contentTypeId" />
+                <set value="" field="rootInstanceContentId" />
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -728,9 +733,19 @@
             <actions>
                 <set field="menuName" value="treecdt"/>
                 <set field="title" value="Composite Document Template Edit Page"/>
-                <set from-field="parameters.contentId" field="rootTemplateContentId" />
+                <set from-field="parameters.contentIdTo" field="rootTemplateContentId" />
                 <set value="" field="rootInstanceContentId" />
+                <!-- 
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
+                -->
+                <entity-one entity-name="ContentAssocViewFrom" value-name="contentAssocView" use-cache="true">
+                    <field-map field-name="contentId" env-name="parameters.contentId"/>
+                    <field-map field-name="caContentId" env-name="parameters.contentId"/>
+                    <field-map field-name="caContentIdTo" env-name="parameters.contentIdTo"/>
+                    <field-map field-name="caContentAssocTypeId" env-name="parameters.caContentAssocTypeId"/>
+                    <field-map field-name="caFromDate" env-name="parameters.caFromDate"/>
+                    <field-map field-name="contentIdStart" env-name="parameters.contentIdTo"/>
+                </entity-one>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -807,7 +822,6 @@
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                    <label text="rootTemplateContentId : ${rootTemplateContentId}"/>
                         <include-tree  name="CompDocTemplateTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -880,6 +894,23 @@
         </section>
     </screen>
     
+    
+     <screen name="rootTemplateLine">
+        <section>
+            <widgets>
+                <include-menu name="rootTemplateLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="rootInstanceLine">
+        <section>
+            <widgets>
+                <include-menu name="rootInstanceLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="responseTreeLine">
         <section>
             <actions>
@@ -890,12 +921,13 @@
              </widgets>
         </section>
     </screen>
-    <screen name="responseTemplateLine">
+    <screen name="childTemplateLine">
         <section>
             <actions>
                 <script location="component://content/webapp/content/WEB-INF/actions/content/prepseqno.bsh"/>
             </actions>
             <widgets>
+                <include-menu name="childTemplateLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
               <container style="responseSelected">
                   <link text="${contentName}[${contentId}]"  target="EditCompDocContent?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}" style="responseheader" />
                   <link text="Edit" target="EditCompDocContent?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}" style="tabButton" />
@@ -954,23 +986,6 @@
             </widgets>
         </section>
     </screen>
-    
-     <screen name="rootTemplateLine">
-        <section>
-            <widgets>
-                <include-menu name="rootTemplateLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    
-     <screen name="rootInstanceLine">
-        <section>
-            <widgets>
-                <include-menu name="rootInstanceLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    
      <screen name="AddCompDocTemplate">
         <section>
             <condition>

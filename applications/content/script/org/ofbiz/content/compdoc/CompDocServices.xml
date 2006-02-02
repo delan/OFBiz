@@ -124,7 +124,7 @@
         
     </simple-method>
     
-    <simple-method method-name="persistRootCompDoc" short-description="Create CompDoc">
+    <simple-method method-name="persistCompDoc" short-description="Create CompDoc">
     
         <if-not-empty field-name="parameters.contentId">
             <entity-one entity-name="Content" value-name="content"/>
@@ -139,6 +139,7 @@
         <!--  create the compdoc Content entity -->
         <set-service-fields service-name="persistContentAndAssoc" map-name="parameters" to-map-name="persistMap"/>
         <set from-field="parameters.userLogin" field="persistMap.userLogin"/>
+        <log level="info" message="persistMap : ${persistMap}"/>
         <call-service service-name="persistContentAndAssoc" in-map-name="persistMap">
             <results-to-map map-name="pResults"/>
         </call-service>
@@ -148,9 +149,33 @@
         </iterate-map>
         <log level="info" message="pResults : ${pResults}"/>
         
+        <if>
+            <condition>
+                <or>
+                    <if-compare field-name="persistMap.contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>
+                    <if-compare field-name="persistMap.contentTypeId" operator="equals" value="TEMPLATE"/>
+                </or>
+            </condition>
+            <then>
+                <!--  if no rootTemplateContentId exists, this must be a root op, so set contentId = itemContentId -->
+                <set from-field="parameters.rootTemplateContentId" default-value="${pResults.contentId}" field="revisionMap.contentId"/>
+            </then>
+        </if>
+        <if>
+            <condition>
+                <or>
+                    <if-compare field-name="persistMap.contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
+                    <if-compare field-name="persistMap.contentTypeId" operator="equals" value="DOCUMENT"/>
+                </or>
+            </condition>
+            <then>
+                <!--  if no rootTemplateContentId exists, this must be a root op, so set contentId = itemContentId -->
+                <set from-field="parameters.rootInstanceContentId" default-value="${pResults.contentId}" field="revisionMap.contentId"/>
+            </then>
+        </if>
         <set from-field="pResults.contentId" field="revisionMap.itemContentId"/>
-        <set from-field="pResults.contentId" field="revisionMap.contentId"/>
         <set from-field="parameters.userLogin" field="revisionMap.userLogin"/>
+        <log level="info" message="revisionMap : ${revisionMap}"/>
         <call-service service-name="persistContentRevisionAndItem" in-map-name="revisionMap">
             <result-to-result result-name="contentRevisionSeqId"/>
         </call-service>

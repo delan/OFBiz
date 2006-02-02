@@ -429,10 +429,12 @@ public class ContentManagementServices {
                     //result.put("contentId", thisResult.get("contentIdFrom"));
                     result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
                     result.put("fromDate", thisResult.get("fromDate"));
+                    result.put("sequenceNum", thisResult.get("sequenceNum"));
                     
                     result.put("caContentIdTo", thisResult.get("contentIdTo"));
                     result.put("caContentAssocTypeId", thisResult.get("contentAssocTypeId"));
                     result.put("caFromDate", thisResult.get("fromDate"));
+                    result.put("caSequenceNum", thisResult.get("sequenceNum"));
                 } else {
                     if ("true".equalsIgnoreCase(deactivateExisting)) {
                         Map deactivateContext = UtilMisc.toMap("contentId", contentId, "contentAssocTypeId", contentAssocTypeId );
