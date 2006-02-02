@@ -1548,7 +1548,14 @@ public class ShoppingCart implements Serializable {
     }
 
     public String getPaymentRef(String id) {
-        return this.getPaymentInfo(id).refNum[0];
+        Iterator i = paymentInfo.iterator();
+        while (i.hasNext()) {
+            CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            if (inf.paymentMethodId.equals(id) || inf.paymentMethodTypeId.equals(id)) {
+                return inf.refNum[0];
+            }
+        }
+        return null;
     }
     
     /** returns the total payment amounts */
