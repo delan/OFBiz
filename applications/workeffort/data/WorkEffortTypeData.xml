@@ -165,6 +165,7 @@
     <StatusValidChange condition="" statusId="WF_SUSPENDED" statusIdTo="WF_RUNNING" transitionName="Un-suspend"/>
 
     <!-- Status items for WorkEffortPartyAssignment.availabilityStatusId -->
+    <StatusType description="Work Effort Party Availability" hasTable="N" parentTypeId="" statusTypeId="WEPA_AVAILABILITY"/>
     <StatusItem description="Available" sequenceId="01" statusCode="AVAILABLE" statusId="WEPA_AV_AVAILABLE" statusTypeId="WEPA_AVAILABILITY"/>
     <StatusItem description="Busy" sequenceId="02" statusCode="BUSY" statusId="WEPA_AV_BUSY" statusTypeId="WEPA_AVAILABILITY"/>
 
