@@ -114,6 +114,12 @@
                 </if-empty>
 
                 <now-timestamp-to-env env-name="nowTimestamp"/>
+
+                <entity-count entity-name="ReturnItem" count-name="returnItemCount">
+                    <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
+                </entity-count>
+                <set field="nonProductItems" type="Long" value="0"/>
+
                 <iterate entry-name="returnItem" list-name="returnItems">
                     <if-empty field-name="expectedItemStatus" map-name="returnItem">
                         <set value="INV_RETURNED" field="returnItem.expectedItemStatus" type="String"/>
@@ -155,6 +161,13 @@
 
                             <call-service service-name="receiveInventoryProduct" in-map-name="receiveCtx"/>
                         </loop>
+                    <else>
+                        <calculate field-name="nonProductItems" type="Long">
+                            <calcop operator="add">
+                                <number value="1"/>
+                            </calcop>
+                        </calculate>
+                    </else>
                     </if-not-empty>
                 </iterate>
 
@@ -162,6 +175,13 @@
                 <refresh-value value-name="returnHeader"/>
                 <set field="returnHeader.needsInventoryReceive" value="N"/>
                 <store-value value-name="returnHeader"/>
+
+                <!-- check if we need to manually update the status -->
+                <if-compare-field field-name="nonProductItems" operator="equals" to-field-name="returnItemCount" type="Long">                
+                    <set field="retStCtx.returnId" from-field="returnHeader.returnId"/>
+                    <set field="retStCtx.statusId" value="RETURN_RECEIVED"/>
+                    <call-service service-name="updateReturnHeader" in-map-name="retStCtx"/>
+                </if-compare-field>
             <else>
                 <log level="info" message="Not receiving inventory for returnId ${returnHeader.returnId}, no inventory information available."/>
             </else>
