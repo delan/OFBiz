@@ -28,6 +28,8 @@
                    <select-field field-name="contentAssocTypeId"/>
                    <select-field field-name="fromDate"/>
                    <select-field field-name="sequenceNum"/>
+                   
+                   <order-by field-name="-sequenceNum"/>
                   
                 </entity-condition>
             </sub-node>
@@ -56,6 +58,8 @@
                    <select-field field-name="contentAssocTypeId"/>
                    <select-field field-name="fromDate"/>
                    <select-field field-name="sequenceNum"/>
+
+                   <order-by field-name="-sequenceNum"/>
                 </entity-condition>
            </sub-node>
         </node>
@@ -89,6 +93,7 @@
                    <select-field field-name="fromDate"/>
                    <select-field field-name="sequenceNum"/>
                   
+                   <order-by field-name="-sequenceNum"/>
                 </entity-condition>
             </sub-node>
         </node>
@@ -116,6 +121,8 @@
                    <select-field field-name="contentAssocTypeId"/>
                    <select-field field-name="fromDate"/>
                    <select-field field-name="sequenceNum"/>
+                   
+                   <order-by field-name="-sequenceNum"/>
                 </entity-condition>
            </sub-node>
         </node>

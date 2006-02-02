@@ -345,6 +345,15 @@
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+    <form name="EditRootCompDocInstance" default-map-name="content" title="" type="single" target="updateRootCompDocTemplate"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="contentId"><text/></field>
+        <field name="contentName"><text/></field>
+        <field name="contentTypeId" ><hidden value="COMPDOC_TEMPLATE"/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
     <form name="AddRootCompDocTemplate" default-map-name="" title="" type="single" target="createRootCompDocTemplate"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
@@ -354,7 +363,7 @@
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="EditRootCompDocTemplate" default-map-name="" title="" type="single" target="updateRootCompDocTemplate"
+    <form name="EditRootCompDocTemplate" default-map-name="content" title="" type="single" target="updateRootCompDocTemplate"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentId"><text/></field>
@@ -389,7 +398,7 @@
        <field name="caFromDate" title="From Date" ><display/></field>
        <field name="caThruDate" title="Thru Date"   ><date-time/></field>
        <field name="caSequenceNum" title="Sequence Num"   ><text/></field>
-        <field name="rootTemplateContentId"><hidden /></field>
+        <field name="rootTemplateContentId" entry-name="rootTemplateContentId" map-name="parameters"><hidden /></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
