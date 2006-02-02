@@ -69,7 +69,9 @@
     </service>
     <service name="createReturnItem" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnItem">
-        <description>Create a new ReturnItem</description>
+        <description>Create a new ReturnItem in the RETURN_REQUESTED status, based on returnableQuantity and returnablePrice from the
+                     getReturnableQuantity service.  This can be called by the customer to request a return for himself or by a user with
+                     ORDERMGR_CREATE, but, if the former, the returnPrice will be overriden by the returnablePrice from getReturnableQuantity.</description>
         <implements service="returnItemInterface"/>
         <attribute name="returnItemMapKey" type="String" mode="IN" optional="true"/>
         <attribute name="returnItemSeqId" type="String" mode="OUT" optional="false"/>
