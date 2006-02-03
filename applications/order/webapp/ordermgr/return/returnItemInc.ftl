@@ -41,7 +41,7 @@
               <td><div class="tableheadtext">Return Price*</div></td>
               <td><div class="tableheadtext">Return Reason</div></td>
               <td><div class="tableheadtext">Return Type</div></td>
-              <td><div class="tableheadtext">Item Status</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderItemStatus}</div></td>
               <td align="right"><div class="tableheadtext">Include?</div></td>
             </tr>
             <tr><td colspan="9"><hr class="sepbar"></td></tr>

@@ -45,7 +45,7 @@
     <td><div class="tableheadtext">Return Qty</div></td>
     <td><div class="tableheadtext">Return Price</div></td>
     <td><div class="tableheadtext">Reason</div></td>
-    <td><div class="tableheadtext">${uiLabelMap.CommonReturnStatus}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.OrderItemStatus}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>
     <td><div class="tableheadtext">Response</div></td>
     <td>&nbsp;</td>
@@ -61,7 +61,7 @@
       <#assign orderHeader = item.getRelatedOne("OrderHeader")?if_exists>
       <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
       <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
-      <#assign status = item.getRelatedOne("StatusItem")?if_exists>
+      <#assign status = item.getRelatedOne("InventoryStatusItem")?if_exists>
       <#if (item.get("returnQuantity")?exists && item.get("returnPrice")?exists)>
          <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
       </#if>
@@ -118,13 +118,13 @@
           <#if readOnly>
               ${status.description?default("N/A")}
           <#else>
-              <select name="statusId_o_${rowCount}"  class='selectBox'>
+              <select name="expectedItemStatus_o_${rowCount}"  class='selectBox'>
                   <#if (status?has_content)>
                       <option value="${status.statusId}">${status.description?if_exists}</option>
                       <option value="${status.statusId}">--</option>
                   </#if>
-                  <#list returnStatus as returnStatusItem>
-                      <option value="${returnStatusItem.statusId}">${returnStatusItem.description?if_exists}</option>
+                  <#list itemStatus as returnItemStatus>
+                      <option value="${returnItemStatus.statusId}">${returnItemStatus.description?if_exists}</option>
                   </#list>
               </select>
           </#if>

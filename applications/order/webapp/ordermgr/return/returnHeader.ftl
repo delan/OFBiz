@@ -191,26 +191,32 @@
       <td width='14%'>&nbsp;</td>
       <td width='6%' align='right' valign='top' nowrap><div class="tabletext">${uiLabelMap.OrderReturnFromAddress}</div></td>
       <td width='6%'>&nbsp;</td>
+      <td width='74%'><div class='tabletext'>
+        <#if (addressEditable)>
+          <#list addresses as address >
+            <@displayAddress postalAddress = address.postalAddress editable = true/>
+          </#list>             
+          <input type='radio' name="originContactMechId" value="" <#if (!postalAddressFrom?has_content)> checked="checked"</#if>>${uiLabelMap.CommonNoAddress}
+        <#else>
+            <#if (postalAddressFrom?has_content)>
+              <@displayAddress postalAddress = postalAddressFrom editable = false />  
+            <#else>
+              ${uiLabelMap.CommonNoAddress}
+            </#if>
+        </#if>
+      </div>
+      </td>
+    </tr>
+     <tr>
+      <td width='14%'>&nbsp;</td>
+      <td width='6%' align='right' valign='top' nowrap><div class="tabletext">${uiLabelMap.OrderReturnToAddress}</div></td>
+      <td width='6%'>&nbsp;</td>
       <td width='74%'>
-        <#if postalAddresses?has_content>
-          <#list postalAddresses as postalAddressInfo>
-            <#assign postalAddress = postalAddressInfo.postalAddress>           
-            <div class="tabletext">
-              <input type='radio' name="originContactMechId" value="${postalAddress.contactMechId}" <#if returnHeader.originContactMechId?default("") == postalAddress.contactMechId>checked="checked"</#if>>
-              <#if postalAddress.toName?has_content><b>To:</b>&nbsp;${postalAddress.toName}<br/></#if>
-              <#if postalAddress.attnName?has_content>&nbsp;&nbsp;&nbsp;&nbsp;<b>Attn:</b>&nbsp;${postalAddress.attnName}<br/></#if>
-              <#if postalAddress.address1?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address1}<br/></#if>
-              <#if postalAddress.address2?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address2}<br/></#if>
-              <#if postalAddress.city?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.city}</#if>
-              <#if postalAddress.stateProvinceGeoId?has_content><br/>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.stateProvinceGeoId}</#if>
-              <#if postalAddress.postalCode?has_content><br/>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.postalCode}</#if>
-              <#if postalAddress.countryGeoId?has_content><br/>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.countryGeoId}</#if>                                                                                     
-            </div>
-          </#list>
-        </#if>          
-        <div class='tabletext'><input type='radio' name="originContactMechId" value="">${uiLabelMap.CommonNoAddress}</div>
-      </td>                
-    </tr>     
+      <#if (postalAddressTo?has_content)>
+        <@displayAddress postalAddress = postalAddressTo editable=false />
+      </#if>
+      </td>
+    </tr>    
     <tr>
       <td width='14%'>&nbsp;</td>
       <td width='6%'>&nbsp;</td>
@@ -231,3 +237,21 @@
   </tr>     
   </#if>
 </table>
+<#macro displayAddress postalAddress editable>
+    <#if postalAddress?has_content>
+            <div class="tabletext">
+              <#if (editable)>
+                <input type='radio' name="originContactMechId" value="${postalAddress.contactMechId?if_exists}" 
+                  <#if ( postalAddressFrom?has_content && postalAddressFrom.contactMechId?default("") == postalAddress.contactMechId)>checked="checked"</#if>>        
+              </#if>              
+              <#if postalAddress.toName?has_content><b>To:</b>&nbsp;${postalAddress.toName}<br/></#if>
+              <#if postalAddress.attnName?has_content><b>Attn:</b>&nbsp;${postalAddress.attnName}<br/></#if>
+              <#if postalAddress.address1?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address1}<br/></#if>
+              <#if postalAddress.address2?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address2}<br/></#if>
+              <#if postalAddress.city?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.city}</#if>
+              <#if postalAddress.stateProvinceGeoId?has_content>&nbsp;${postalAddress.stateProvinceGeoId}</#if>
+              <#if postalAddress.postalCode?has_content>&nbsp;${postalAddress.postalCode}</#if>
+              <#if postalAddress.countryGeoId?has_content><br/>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.countryGeoId}</#if>
+            </div>
+    </#if>
+</#macro>
