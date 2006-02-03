@@ -299,6 +299,27 @@ public class RequestHandler implements Serializable {
         String previousRequest = (String) request.getSession().getAttribute("_PREVIOUS_REQUEST_");
         String loginPass = (String) request.getAttribute("_LOGIN_PASSED_");
 
+        // restore previous redirected request's attribute, so redirected page can display previous request's error msg etc.
+        String preReqAttStr = (String) request.getSession().getAttribute("_REQ_ATTR_MAP_");
+        Map preRequestMap = null;
+        if(preReqAttStr!=null){
+            request.getSession().removeAttribute("_REQ_ATTR_MAP_");
+            byte [] reqAttrMapBytes = StringUtil.fromHexString(preReqAttStr);
+            preRequestMap = (java.util.Map)org.ofbiz.base.util.UtilObject.getObject(reqAttrMapBytes);
+            java.util.Iterator keys= preRequestMap.keySet().iterator();
+            while(keys.hasNext()){
+                String key = (String) keys.next();
+                if("_ERROR_MESSAGE_LIST_".equals(key) ||
+                        "_ERROR_MESSAGE_MAP_".equals(key) ||
+                        "_ERROR_MESSAGE_".equals(key) ||
+                        "_EVENT_MESSAGE_LIST_".equals(key) ||
+                        "_EVENT_MESSAGE_".equals(key)){
+                    Object value = preRequestMap.get(key);
+                    request.setAttribute(key, value);
+               }
+            }
+        }
+
         if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")", module);
 
         // if previous request exists, and a login just succeeded, do that now.
