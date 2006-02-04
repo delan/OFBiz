@@ -53,6 +53,7 @@
 
     </menu>
         
+        
     <menu name="tree" default-title-style="tabButton"
         default-selected-style="tabButtonSelected"
         default-menu-item-name="content"
@@ -61,52 +62,26 @@
         default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="viewtree" title="View Tree" >
-            <link target="ViewCompDocTree?contentRevisionSeqId=${currentContentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
+        <menu-item name="viewtree" title="View Tree">
+            <condition>
+                <if-empty field-name="rootInstanceContentId"/>
+            </condition>
+            <link target="ViewCompDocTemplateTree?rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
         </menu-item>
-        <menu-item name="editcd" title="Edit" >
-            <link target="EditCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+        <menu-item name="viewtree" title="View Tree">
+            <condition>
+                <not><if-empty field-name="rootInstanceContentId"/></not>
+            </condition>
+            <link target="ViewCompDocInstanceTree?rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
-        <menu-item name="role" title="Roles" >
-            <link target="EditCompDocContentRole?contentId=${contentId}"/>
-        </menu-item>
-        <menu-item name="approval" title="Approvals" >
-            <link target="ListContentApproval?contentId=${contentId}&amp;rootRevisionSeqId=${rootRevisionSeqId}"/>
-        </menu-item>
-        <menu-item name="rev-cdt" title="Template Revisions" >
-            <link target="ListTemplateRevisions?contentId=${contentId}&amp;templateRevisionSeqId=${templateRevisionSeqId}"/>
-        </menu-item>
-        <menu-item name="approval-cdi" title="Instance Approval" >
-            <link target="ListInstanceApprovals?contentId=${contentId}&amp;templateRevisionSeqId=${templateRevisionSeqId}"/>
-        </menu-item>
-        <menu-item name="rev-cdi" title="Instance Revisions" >
-            <link target="ListInstanceRevisions?contentId=${contentId}&amp;templateRevisionSeqId=${templateRevisionSeqId}"/>
-        </menu-item>
-        <menu-item name="edit-data" title="Edit Data" >
-            <link target="EditInstanceData?contentId=${contentId}&amp;templateRevisionSeqId=${templateRevisionSeqId}"/>
-        </menu-item>
-
-    </menu>
-        
-    <menu name="treecdt" default-title-style="tabButton"
-        default-selected-style="tabButtonSelected"
-        default-menu-item-name="content"
-        orientation="horizontal"
-        menu-width="100%"
-        default-tooltip-style="tabletext" default-widget-style="tabButton"
-        selected-menuitem-context-field-name="currentMenuItemName"
-        title="" type="simple">
-        <menu-item name="viewtree" title="View Tree" >
-            <link target="ViewCompDocTemplateTree?contentRevisionSeqId=${currentContentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
-        </menu-item>
-        <menu-item name="editcd" title="Edit" >
-            <link target="EditRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+        <menu-item name="edit" title="Edit" >
+            <link target="EditCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </menu-item>
         <menu-item name="approval" title="Approvals" >
-            <link target="ListContentApproval?contentId=${contentId}&amp;rootRevisionSeqId=${rootRevisionSeqId}"/>
+            <link target="ListContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </menu-item>
-        <menu-item name="rev-cdt" title="Template Revisions" >
-            <link target="ListTemplateRevisions?contentId=${contentId}&amp;templateRevisionSeqId=${templateRevisionSeqId}"/>
+        <menu-item name="revision" title="Template Revisions" >
+            <link target="ListContentRevisions?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </menu-item>
 
     </menu>
@@ -210,8 +185,6 @@
         orientation="horizontal"
         menu-width="100%"
         default-tooltip-style="tabletext" default-widget-style="tabButton"
-        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
-        default-permission-entity-action="_ADMIN"
         default-associated-content-id="${userLogin.userLoginId}"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">

@@ -1881,6 +1881,7 @@
         <attribute name="rootContentId" type="String" mode="IN" optional="false"/>
         <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
+        <attribute name="checkPermission" type="String" mode="IN" optional="true"/>
         <attribute name="contentApprovalList" type="List" mode="OUT" optional="true"/>
     </service>
 

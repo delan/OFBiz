@@ -109,11 +109,9 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
     </form>
 
-    <form name="ListContentRevision" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
+    <form name="ListContentRevisions" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+           list-name="contentRevisionList" default-widget-style="tabletext" title="" type="list">
         <actions>
-            <entity-and entity-name="ContentRevision" use-cache="true">
-                <field-map env-name="contentId" field-name="contentId" />
-            </entity-and>
         </actions>
         <field name="contentId"><display/></field>
         <field name="contentRevisionSeqId"><display/></field>
@@ -144,12 +142,10 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
     </form>
 
-    <form name="ListContentRevisionItem" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
+    <form name="ListContentRevisionItem" default-title-style="tableheadtext" 
+        list-name="contentRevisionItemList"
+        default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
         <actions>
-            <entity-and entity-name="ContentRevisionItem" use-cache="true">
-                <field-map env-name="contentId" field-name="contentId" />
-                <field-map env-name="contentRevisionSeqId" field-name="contentRevisionSeqId" />
-            </entity-and>
         </actions>
         <field name="contentId"><display/></field>
         <field name="contentRevisionSeqId"><display/></field>
@@ -360,6 +356,8 @@
         <field name="contentId"><text/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId" ><hidden value="COMPDOC_TEMPLATE"/></field>
+        <field name="rootTemplateContentId"><hidden /></field>
+        <field name="rootTemplateRevSeqId"><hidden /></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -369,6 +367,8 @@
         <field name="contentId"><text/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId" ><hidden value="COMPDOC_TEMPLATE"/></field>
+        <field name="rootTemplateContentId"><hidden /></field>
+        <field name="rootTemplateRevSeqId"><hidden /></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -384,6 +384,7 @@
        <field name="thruDate"   ><date-time/></field>
        <field name="sequenceNum"   ><text/></field>
         <field name="rootTemplateContentId"><hidden /></field>
+        <field name="rootTemplateRevSeqId"><hidden /></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -393,12 +394,13 @@
         <field name="contentId"><text/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId" ><hidden value="TEMPLATE"/></field>
-       <field name="caContentIdTo" title="ContentId To" ><display/></field>
-       <field name="caContentAssocTypeId" title="Content Assoc Type Id"  ><display /></field>
-       <field name="caFromDate" title="From Date" ><display/></field>
-       <field name="caThruDate" title="Thru Date"   ><date-time/></field>
-       <field name="caSequenceNum" title="Sequence Num"   ><text/></field>
-        <field name="rootTemplateContentId" entry-name="rootTemplateContentId" map-name="parameters"><hidden /></field>
+        <field name="caContentIdTo" title="ContentId To" ><display/></field>
+        <field name="caContentAssocTypeId" title="Content Assoc Type Id"  ><display /></field>
+        <field name="caFromDate" title="From Date" ><display/></field>
+        <field name="caThruDate" title="Thru Date"   ><date-time/></field>
+        <field name="caSequenceNum" title="Sequence Num"   ><text/></field>
+        <field name="rootTemplateContentId"><hidden /></field>
+        <field name="rootTemplateRevSeqId"><hidden /></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
