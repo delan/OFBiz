@@ -34,6 +34,8 @@
 <div>
     <a href="<@ofbizUrl>return.pdf?returnId=${returnId?if_exists}</@ofbizUrl>" class="buttontext">PDF</a>
 </div>
+
+<!-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
 <#if !requestParameters.orderId?exists>
 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
   <tr><td colspan="9"><div class="head3">Item(s) In Return #${returnId}</div></td></tr>
@@ -243,6 +245,7 @@
   </table>
 </form>
 </#if>
+<!-- if no requestParameters.orderId exists, then show list of items -->
 <#else>
 <#assign selectAllFormName = "returnItems"/>
 <form name="returnItems" method="post" action="<@ofbizUrl>createReturnItems</@ofbizUrl>">
