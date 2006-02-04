@@ -978,6 +978,13 @@ public class OrderReturnServices {
                 adj.set("createdByUserLogin", userLogin.getString("userLoginId"));
                 orderMap.put("orderAdjustments", UtilMisc.toList(adj));
 
+                // we'll assume new order is under same terms as original.  note orderTerms is a required parameter of storeOrder
+                try {
+                    orderMap.put("orderTerms", orderHeader.getRelated("OrderTerm"));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot create replacement order because order terms for original order is not available", module);
+                }
+                        
                 // create the order
                 String createdOrderId = null;
                 Map orderResult = null;
