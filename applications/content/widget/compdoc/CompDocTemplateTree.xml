@@ -14,7 +14,7 @@
                    <condition-list combine="and">
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="rootTemplateContentId" />
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootTemplateContentId" />
-                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="currentContentRevisionSeqId" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootTemplateRevSeqId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
                         <condition-expr field-name="thruDate" operator="equals" value=""/>
                    </condition-list> 
@@ -46,7 +46,7 @@
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="contentId" />
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootTemplateContentId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
-                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="currentContentRevisionSeqId" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootTemplateRevSeqId" />
                         <condition-expr field-name="thruDate" operator="equals" value=""/>
                    </condition-list> 
                    
@@ -78,7 +78,7 @@
                    <condition-list combine="and">
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="rootTemplateContentId" />
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootTemplateContentId" />
-                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="currentContentRevisionSeqId" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootInstanceRevSeqId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
                         <condition-expr field-name="thruDate" operator="equals" value=""/>
                    </condition-list> 
@@ -109,7 +109,7 @@
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="contentId" />
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootTemplateContentId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
-                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="currentContentRevisionSeqId" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootInstanceRevSeqId" />
                         <condition-expr field-name="thruDate" operator="equals" value=""/>
                    </condition-list> 
                    

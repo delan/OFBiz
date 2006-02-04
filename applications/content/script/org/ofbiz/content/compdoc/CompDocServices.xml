@@ -387,15 +387,41 @@
     
     <simple-method method-name="getApprovalsWithPermissions" short-description="Get ContentApprovals for approval process">
         
-        <entity-and entity-name="ContentApproval" list-name="instanceApprovalList" use-cache="true">
-            <field-map field-name="contentId" env-name="parameters.rootContentId"/>
-            <field-map field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId"/>
-        </entity-and>
+        <entity-condition entity-name="MaxContentApprovalView" list-name="instanceApprovalList" use-cache="false">
+            <condition-list>
+                <condition-expr field-name="contentId" env-name="parameters.rootContentId" operator="equals"/>
+                <condition-expr field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId" operator="less-equals"/>
+            </condition-list>
+            <select-field field-name="contentId"/>
+            <select-field field-name="partyId"/>
+            <select-field field-name="roleTypeId"/>
+            <select-field field-name="maxContentRevisionSeqId"/>
+        </entity-condition>
         <log level="info" message="instanceApprovalList: ${instanceApprovalList}"/>
         <log level="info" message="rootContentId: ${parameters.rootContentId}"/>
         <log level="info" message="contentRevisionSeqId: ${parameters.contentRevisionSeqId}"/>
         <set field="inMap2.userLogin" from-field="userLogin"/>
-        <iterate list-name="instanceApprovalList" entry-name="contentApproval">
+        <iterate list-name="instanceApprovalList" entry-name="maxContentApproval">
+         <log level="info" message="maxContentApproval: ${maxContentApproval}"/>
+            <entity-condition entity-name="ContentApproval" list-name="contentApprovalList2" use-cache="false">
+                <condition-list>
+                    <condition-expr field-name="contentId" env-name="maxContentApproval.contentId" operator="equals"/>
+                    <condition-expr field-name="contentRevisionSeqId" env-name="maxContentApproval.maxContentRevisionSeqId" operator="equals"/>
+                    <condition-expr field-name="partyId" env-name="maxContentApproval.partyId" operator="equals" ignore-if-empty="true"/>
+                    <condition-expr field-name="roleTypeId" env-name="maxContentApproval.roleTypeId" operator="equals" ignore-if-empty="true"/>
+                </condition-list>
+                <order-by field-name="-sequenceNum"/>
+            </entity-condition>
+        <log level="info" message="contentApprovalList2: ${contentApprovalList2}"/>
+            <if-not-empty field-name="contentApprovalList2">
+                <set from-field="contentApprovalList2[0].contentApprovalId" field="contentApprovalId"/>
+                <entity-one entity-name="ContentApproval" value-name="contentApproval">
+                    <field-map env-name="contentApprovalId"/>
+                </entity-one>
+         <log level="info" message="contentApproval: ${contentApproval}"/>
+                <set field="contentApprovalList[]" from-field="contentApproval"/>
+            </if-not-empty>
+            <!-- 
             <set field="inMap2.contentApprovalId" from-field="contentApproval.contentApprovalId"/>
             <call-service  service-name="hasApprovalPermission" in-map-name="inMap2">
                 <result-to-field result-name="approvalPermExists"/>
@@ -403,9 +429,10 @@
             <set field="gvAndPerm" from-field="contentApproval"/>
             <set field="gvAndPerm.permission" from-field="openApprovalExists"/>
             <set field="contentApprovalList[]" from-field="gvAndPerm"/>
+            -->
         </iterate>
         <field-to-result field-name="contentApprovalList"/>
-</simple-method>
+    </simple-method>
     
     <simple-method method-name="hasApprovalPermission" short-description="Determine ContentApproval permission from passed value">
         <make-value  entity-name="ContentApproval" value-name="contentApprovalPK"/>

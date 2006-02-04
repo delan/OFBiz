@@ -971,9 +971,9 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="CompDocTemplateTree"/>
     </request-map>
-    <request-map uri="EditCompDocContent">
+    <request-map uri="EditCompDoc">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditCompDocContent"/>
+        <response name="success" type="view" value="EditCompDoc"/>
     </request-map>
     <request-map uri="EditRootCompDocContent">
         <security auth="true" https="true"/>
@@ -1111,9 +1111,9 @@
     </request-map>
 
     <!-- ================ ContentRevision Requests ================= -->
-    <request-map uri="ListContentRevision">
+    <request-map uri="ListContentRevisions">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="ListContentRevision"/>
+        <response name="success" type="view" value="ListContentRevisions"/>
     </request-map>
     <request-map uri="EditContentRevision">
         <security auth="true" https="true"/>
@@ -1692,7 +1692,7 @@
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
 
-    <view-map name="ListContentRevision" page="component://content/widget/compdoc/CompDocScreens.xml#ListContentRevision" type="screen"/>
+    <view-map name="ListContentRevisions" page="component://content/widget/compdoc/CompDocScreens.xml#ListContentRevisions" type="screen"/>
     <view-map name="EditContentRevision" page="component://content/widget/compdoc/CompDocScreens.xml#EditContentRevision" type="screen"/>
     <view-map name="ListContentRevisionItem" page="component://content/widget/compdoc/CompDocScreens.xml#ListContentRevisionItem" type="screen"/>
     <view-map name="EditContentRevisionItem" page="component://content/widget/compdoc/CompDocScreens.xml#EditContentRevisionItem" type="screen"/>
@@ -1720,7 +1720,7 @@
     <view-map name="EditCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocInstance" type="screen"/>
     <view-map name="EditCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocTemplate" type="screen"/>
     <view-map name="CompDocTemplateTree" page="component://content/widget/compdoc/CompDocScreens.xml#CompDocTemplateTree" type="screen"/>
-    <view-map name="EditCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocContent" type="screen"/>
+    <view-map name="EditCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDoc" type="screen"/>
     <view-map name="EditRootCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocContent" type="screen"/>
     <view-map name="EditCompDocContentRole" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocContentRole" type="screen"/>
 

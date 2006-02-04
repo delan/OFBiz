@@ -108,10 +108,15 @@
         <section>
             <actions>
                 <set field="headerItem" value="CompDoc"/>
-                <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" />
+                <set from-field="rootTemplateContentId" default-value="${parameters.rootTemplateContentId}" field="rootTemplateContentId" global="true"/>
+                <set from-field="rootInstanceContentId" default-value="${parameters.rootInstanceContentId}" field="rootInstanceContentId" global="true" />
+                <set from-field="rootTemplateRevSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId" global="true" />
+                <set from-field="rootInstanceRevSeqId" default-value="${parameters.rootInstanceRevSeqId}" field="rootInstanceRevSeqId" global="true" />
+                <set from-field="contentId" default-value="${parameters.contentId}" field="contentId" global="true" />
+                <set from-field="contentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="contentRevisionSeqId" global="true" />
             </actions>
             <widgets>
-                <decorator-screen name="mainContentDecorator">
+                <decorator-screen name="mainContentDecorator" >
                     <decorator-section name="body">
                         <label text="${title}" style="head1"/>
                         <include-menu name="${menuName}" location="component://content/widget/compdoc/CompDocMenus.xml"/>
