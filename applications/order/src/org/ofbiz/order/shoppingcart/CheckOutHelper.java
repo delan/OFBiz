@@ -458,6 +458,7 @@ public class CheckOutHelper {
             return null;
         }
         String orderId = this.cart.getOrderId();
+        this.cart.clearAllItemStatus();
 
         // format the grandTotal
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
