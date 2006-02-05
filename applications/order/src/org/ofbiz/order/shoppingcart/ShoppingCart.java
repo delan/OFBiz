@@ -2721,6 +2721,14 @@ public class ShoppingCart implements Serializable {
         }
     }
 
+    public void clearAllItemStatus() {
+        Iterator lineIter = this.iterator();
+        while (lineIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) lineIter.next();
+            item.setStatusId(null);
+        }
+    }
+
     /** Adds a promotion code to the cart, checking if it is valid. If it is valid this will return null, otherwise it will return a message stating why it was not valid
      * @param productPromoCodeId The promotion code to check and add
      * @return String that is null if valid, and added to cart, or an error message of the code was not valid and not added to the cart.
