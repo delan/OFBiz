@@ -619,7 +619,7 @@ public class ModelViewEntity extends ModelEntity {
                     }
                     
                     //already exists, oh well... probably an override, but log just in case
-                    String warnMsg = "Throwing out field alias in view entity " + this.getEntityName() + " because one already exists with the name: " + aliasName;
+                    String warnMsg = "Throwing out field alias in view entity " + this.getEntityName() + " because one already exists with the alias name [" + aliasName + "] and field name [" + modelMemberEntity.getEntityAlias() + "(" + aliasedEntity.getEntityName() + ")." + fieldName + "], existing field name is [" + existingAlias.getEntityAlias() + "." + existingAlias.getField() + "]";
                     if (isInViewLink) {
                         Debug.logVerbose(warnMsg, module);
                     } else {
