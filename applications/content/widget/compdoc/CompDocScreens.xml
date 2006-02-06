@@ -174,7 +174,7 @@
         </section>
     </screen>
 
-    <screen name="FindCompDocRoot">
+    <screen name="FindCompDoc">
         <section>
             <condition>
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
@@ -194,7 +194,7 @@
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="FindCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                        <link target="AddRootCompDocTemplate?currentContentTypeId=COMPDOC_TEMPLATE" text="Create New Root CompDoc Template" style="buttontext"/>
+                        <link target="AddRootCompDocTemplate?contentTypeId=COMPDOC_TEMPLATE" text="Create New Root CompDoc Template" style="buttontext"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -214,29 +214,51 @@
                 <set field="currentContentMenuItemName" value="" />
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <entity-condition entity-name="Content"  list-name="compDocFindList">
+                    <condition-list combine="and" >
+                        <condition-expr field-name="contentName" operator="equals" env-name="parameters.contentName" ignore-if-empty="true"/>
+                        <condition-expr field-name="contentId" operator="equals" env-name="parameters.contentId" ignore-if-empty="true"/>
+                        <condition-expr field-name="contentTypeId" operator="equals" env-name="parameters.contentTypeId"/>                  
+                   </condition-list>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-compare operator="not-equals" field-name="parameters.rootonly" value="Y"/>
-                            </condition>
-                            <actions>
-                                <entity-condition entity-name="Content"  list-name="compDocFindList">
-                                    <condition-list combine="and" >
-                                        <condition-expr field-name="contentName" operator="equals" env-name="parameters.contentName" ignore-if-empty="true"/>
-                                        <condition-expr field-name="contentId" operator="equals" env-name="parameters.contentId" ignore-if-empty="true"/>
-                                        <condition-expr field-name="contentTypeId" operator="equals" env-name="parameters.contentTypeId"/>                  
-                                   </condition-list>
-                                </entity-condition>
-                            </actions>                      
-                            <widgets>
-                                <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                                <link target="FindCompDocRoot" text="Find" />
-                                <link target="EditCompDocTemplate" text="Create New" />
-                            </widgets>
-                        </section>
+                        <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                        <link target="FindCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Find"  style="buttontext"/>
+                        <link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/>
+                    </decorator-section>
+                </decorator-screen>
+             </widgets>
+        </section>
+    </screen>
+
+    <screen name="ViewInstances">
+        <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+            </condition>
+            <actions>
+                <set field="menuName" value="empty"/>
+                <set field="title" value="View CompDoc Instances of ${parameters.rootTemplateContentId}"/>
+                <set field="entityName" value="ContentAssocViewFrom"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="currentContentMenuItemName" value="" />
+                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <entity-and entity-name="Content"  list-name="compDocFindList">
+                    <field-map field-name="instanceOfContentId" env-name="parameters.rootTemplateContentId"/>
+                    <field-map field-name="contentTypeId" value="COMPDOC_INSTANCE"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                        <link target="FindCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Find"  style="buttontext"/>
+                        <link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -252,7 +274,10 @@
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="edit"/>
-                 <entity-one entity-name="Content" value-name="content"/>
+                
+                <set from-field="parameters.contentId" default-value="${parameters.rootInstanceContentId}" field="contentId"/>
+                <set from-field="contentId" default-value="${parameters.rootTemplateContentId}" field="contentId"/>
+                <entity-one entity-name="Content" value-name="content"/>
                 <entity-condition entity-name="ContentAssoc" list-name="contentAssocList">
                     <condition-list>
                         <condition-expr field-name="contentId" operator="equals" env-name="content.contentId"/>
@@ -264,53 +289,73 @@
                         </condition-list>
                     </condition-list>
                 </entity-condition>
+                <set from-field="content.contentTypeId" field="dummy.contentTypeId"/>
             </actions>
              
             <widgets>
-                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>
-                                </and>
-                            </condition>
-                            <widgets>
+                <section>
+                    <condition>
+                        <and>
+                            <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>
+                        </and>
+                    </condition>
+                    <actions>
+                        <set from-field="content.contentId" field="rootTemplateContentId"/>
+                    </actions>
+                    <widgets>
+                        <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
+                            <decorator-section name="body">
                                 <include-form name="EditRootCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                            </widgets>
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>
-                                </and>
-                            </condition>
-                            <widgets>
+                                <link target="AddRootCompDocInstance?contentId=${rootTemplateContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Instance" style="buttontext"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <and>
+                            <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
+                        </and>
+                    </condition>
+                    <actions>
+                        <set from-field="content.contentId" field="rootInstanceContentId"/>
+                    </actions>
+                    <widgets>
+                        <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
+                            <decorator-section name="body">
                                 <include-form name="EditRootCompDocInstance" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                            </widgets>
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-compare field-name="content.contentTypeId" operator="equals" value="TEMPLATE"/>
-                                </and>
-                            </condition>
-                            <widgets>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <and>
+                            <if-compare field-name="content.contentTypeId" operator="equals" value="TEMPLATE"/>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
+                            <decorator-section name="body">
                                 <include-form name="EditChildCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                            </widgets>
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-compare field-name="content.contentTypeId" operator="equals" value="DOCUMENT"/>
-                                </and>
-                            </condition>
-                            <widgets>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <and>
+                            <if-compare field-name="content.contentTypeId" operator="equals" value="DOCUMENT"/>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
+                            <decorator-section name="body">
                                 <include-form name="EditChildCompDocInstance" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                </section>
             </widgets>
        </section>
     </screen>
@@ -324,7 +369,8 @@
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Composite Document Instance Add Page"/>
-                <set from-field="parameters.instanceOfContentId" field="rootTemplateContentId" />
+                <set value="COMPDOC_INSTANCE" field="contentTypeId" />
+                <set value="" field="dummy2.contentId" />
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -344,6 +390,7 @@
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Composite Document Instance Add Page"/>
+                <set value="COMPDOC_TEMPLATE" field="dummy.contentTypeId"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -475,7 +522,7 @@
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Root Template Edit Page"/>
+                <set field="title" value="Composite Document Root Template View Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentMenuItemName" value="viewtree"/>
                 <entity-condition entity-name="ContentRevision" list-name="contentRevisions" use-cache="true">
@@ -508,12 +555,11 @@
             <actions>
                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Root Template Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentMenuItemName" value="viewtree"/>
+                <set field="currentMenuItemName" value="viewtree2"/>
                  <entity-condition entity-name="ContentRevision" list-name="contentRevisions" use-cache="true">
                     <condition-list combine="and">
-                        <condition-expr field-name="contentId" env-name="rootInstanceContentId" operator="equals"/>
+                        <condition-expr field-name="contentId" env-name="parameters.rootInstanceContentId" operator="equals"/>
                         <condition-expr field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId" operator="less-equals" ignore-if-empty="true"/>
                     </condition-list>
                     <order-by field-name="-contentRevisionSeqId"/>
@@ -521,10 +567,12 @@
                 <set  field="rootInstanceRevSeqId" from-field="parameters.rootInstanceRevSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}"/>
 
                 <entity-one entity-name="Content" value-name="content" use-cache="true">
-                    <field-map field-name="contentId" env-name="rootInstanceContentId"/>
+                    <field-map field-name="contentId" env-name="parameters.rootInstanceContentId"/>
                 </entity-one>
                 <set field="rootTemplateContentId" from-field="content.instanceOfContentId"/>
-                <set  field="currentContentTypeId" value="COMPDOC_INSTANCE" to-scope="user"/>
+               <set  field="contentRevisionSeqId" from-field="parameters.rootInstanceRevSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}"/>
+               <set  field="contentId" from-field="parameters.rootTemplateContentId" />
+               <set field="title" value="Composite Document Root Instance View Page for Id: ${parameters.rootInstanceContentId} instance of ${rootTemplateContentId}"/>
 
             </actions>
             <widgets>
@@ -644,32 +692,6 @@
     </screen>
     
      
-    <screen name="EditCompDocContent">
-        <section>
-            <condition>
-                <if-has-permission permission="CONTENTMGR" action="CREATE"/>
-            </condition>
-            <actions>
-                <set field="headerItem" value="Content"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="Composite Document Instance Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="find" />
-                <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
-                <set  field="rootEntityId" from-field="parameters.caContentIdTo" />
-                <set  field="ownerContentId" from-field="parameters.ownerContentId" />
-                <set  field="sequenceNum" from-field="parameters.caSequenceNum" />
-            </actions>
-            <widgets>
-                <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
-                <decorator-section name="body">
-                    <include-form name="EditCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
     <!-- ================ CompDoc Requests ================= -->
     
     <screen name="EditContentRevisionAndItem">

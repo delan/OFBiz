@@ -33,13 +33,13 @@
     <simple-method method-name="genCompDocInstance" short-description="Create CompDoc">
     
         <entity-one entity-name="Content" value-name="rootTemplateContent">
-            <field-map field-name="contentId" env-name="parameters.rootTemplateContentId"/>
+            <field-map field-name="contentId" env-name="parameters.instanceOfContentId"/>
         </entity-one>
-        
+        <log message="genCompDocInstance> rootTemplateContent: ${rootTemplateContent}" level="info"/>
         <if-empty field-name="parameters.contentRevisionSeqId">
             <entity-condition entity-name="ContentRevision" list-name="contentRevisionList">
                 <condition-list>
-                    <condition-expr field-name="contentId" operator="equals" env-name="parameters.rootTemplateContentId"/>
+                    <condition-expr field-name="contentId" operator="equals" env-name="parameters.instanceOfContentId"/>
                 </condition-list>
                 <order-by field-name="-contentRevisionSeqId"/>
             </entity-condition>
@@ -53,10 +53,12 @@
                 <set from-field="parameters.contentRevisionSeqId" field="contentRevisionSeqId" />
             </else>
         </if-empty>
+        <log message="genCompDocInstance> contentRevisionSeqId: ${contentRevisionSeqId}" level="info"/>
 
         <make-value entity-name="Content" value-name="rootInstanceContent"/>        
         <if-empty field-name="parameters.rootInstanceContentId">
             <make-next-seq-id seq-field-name="contentId" value-name="rootInstanceContent"/>
+        <log message="genCompDocInstance 2> rootInstanceContent: ${rootInstanceContent}"/>
             <else>
                 <entity-one entity-name="Content" value-name="existingContent">
                     <field-map field-name="contentId" env-name="parameters.rootInstanceContentId"/>
@@ -70,21 +72,34 @@
                 <set from-field="parameters.rootInstanceContentId" field="rootInstanceContent.contentId"/>
             </else>
         </if-empty>
-        <set from-field="parameters.contentName" field="rootInstanceContent.contentName" default-value="rootTemplateContent.contentName"/>
+        <set from-field="parameters.contentName" field="rootInstanceContent.contentName" default-value="${rootTemplateContent.contentName}"/>
         <now-timestamp-to-env env-name="nowTimestamp"/>
+        <set from-field="parameters.instanceOfContentId" field="rootInstanceContent.instanceOfContentId"/>
         <set from-field="nowTimestamp" field="rootInstanceContent.createdDate"/>
         <set from-field="nowTimestamp" field="rootInstanceContent.lastModifiedDate"/>
         <set from-field="rootInstanceContent.createdByUserLogin" field="parameters.userLogin.userLoginId"/>
         <set from-field="rootInstanceContent.lastModifiedByUserLogin" field="parameters.userLogin.userLoginId"/>
         <set value="COMPDOC_INSTANCE" field="rootInstanceContent.contentTypeId"/>
         <create-value value-name="rootInstanceContent"/>
+        <log message="genCompDocInstance 3> rootInstanceContent: ${rootInstanceContent}" level="info"/>
         
         <field-to-result result-name="rootInstanceContentId" field-name="rootInstanceContent.contentId"/>
         
-        <set from-field="parameters.rootTemplateContentId" field="parentTemplateContentId"/>
+        <set from-field="parameters.instanceOfContentId" field="parentTemplateContentId"/>
         <set from-field="rootInstanceContent.contentId" field="parentInstanceContentId"/>
+        <log message="genCompDocInstance 4> parentTemplateContentId: ${parentTemplateContentId}" level="info"/>
+        <log message="genCompDocInstance 5> parentInstanceContentId: ${parentInstanceContentId}" level="info"/>
         
+        <set from-field="parentInstanceContentId"  field="revisionMap.contentId"/>
+        <set from-field="parentInstanceContentId" field="revisionMap.itemContentId"/>
+        <set from-field="parameters.userLogin" field="revisionMap.userLogin"/>
+        <log level="info" message="revisionMap : ${revisionMap}"/>
+        <call-service service-name="persistContentRevisionAndItem" in-map-name="revisionMap">
+            <result-to-result result-name="contentRevisionSeqId"/>
+        </call-service>
+        <!--  This is for traversing tree and creating empty instance content entities
         <call-simple-method method-name="genInstanceChildCompDocs"/>
+        -->
         
     </simple-method>
     
@@ -92,6 +107,8 @@
         
         <set from-field="parentTemplateContentId" field="thisTemplateContentId"/>
         <set from-field="parentInstanceContentId" field="thisInstanceContentId"/>
+        <log message="genInstanceChildCompDocs 0> thisTemplateContentId: ${thisTemplateContentId}" level="info"/>
+        <log message="genInstanceChildCompDocs 1> thisInstanceContentId: ${thisInstanceContentId}" level="info"/>
         <entity-condition entity-name="ContentAssoc" list-name="contentAssocList">
             <condition-list combine="and" >
                 <condition-expr field-name="contentIdTo" operator="equals" env-name="thisTemplateContentId" />
@@ -102,6 +119,7 @@
                 </condition-list>
             </condition-list>
         </entity-condition>
+        <log message="genInstanceChildCompDocs 1> contentAssocList: ${contentAssocList}" level="info"/>
         
         <iterate list-name="contentAssocList" entry-name="templateContentAssoc">
             <clone-value value-name="templateContent" new-value-name="instanceContent"/>

@@ -114,6 +114,13 @@
                 <set from-field="rootInstanceRevSeqId" default-value="${parameters.rootInstanceRevSeqId}" field="rootInstanceRevSeqId" global="true" />
                 <set from-field="contentId" default-value="${parameters.contentId}" field="contentId" global="true" />
                 <set from-field="contentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="contentRevisionSeqId" global="true" />
+                
+                <set from-field="rootTemplateContentId" field="dummy.rootTemplateContentId" />
+                <set from-field="rootInstanceContentId" field="dummy.rootInstanceContentId" />
+                <set from-field="rootTemplateRevSeqId" field="dummy.rootTemplateRevSeqId" />
+                <set from-field="rootInstanceRevSeqId" field="dummy.rootInstanceRevSeqId" />
+                <set from-field="contentId" field="dummy.contentId" />
+                <set from-field="contentRevisionSeqId" field="dummy.contentRevisionSeqId" />
             </actions>
             <widgets>
                 <decorator-screen name="mainContentDecorator" >

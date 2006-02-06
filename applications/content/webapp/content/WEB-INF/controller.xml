@@ -935,9 +935,9 @@
     </request-map>
 
     <!-- ================ CompDoc Requests ================= -->
-    <request-map uri="FindCompDocRoot">
+    <request-map uri="FindCompDoc">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="FindCompDocRoot"/>
+        <response name="success" type="view" value="FindCompDoc"/>
     </request-map>
     <request-map uri="ListCompDoc">
         <security auth="true" https="true"/>
@@ -987,6 +987,10 @@
     <request-map uri="AddRootCompDocTemplate">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="AddRootCompDocTemplate"/>
+    </request-map>
+    <request-map uri="ViewInstances">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="ViewInstances"/>
     </request-map>
    <request-map uri="EditRootCompDocInstance">
        <security auth="true" https="true"/>
@@ -1053,8 +1057,8 @@
    <request-map uri="genCompDocInstance">
        <security auth="true" https="true"/>
         <event invoke="genCompDocInstance"  path="" type="service"/>
-       <response name="success" type="view" value="EditRootCompDocInstance"/>
-       <response name="error" type="view" value="AddCompDocInstance"/>
+       <response name="success" type="view" value="EditCompDoc"/>
+       <response name="error" type="view" value="AddRootCompDocInstance"/>
    </request-map>
 
     <!-- ================ CompDoc ContentRole Requests ================= -->
@@ -1699,7 +1703,7 @@
     <view-map name="ListContentApproval" page="component://content/widget/compdoc/CompDocScreens.xml#ListContentApproval" type="screen"/>
     <view-map name="EditContentApproval" page="component://content/widget/compdoc/CompDocScreens.xml#EditContentApproval" type="screen"/>
 
-    <view-map name="FindCompDocRoot" page="component://content/widget/compdoc/CompDocScreens.xml#FindCompDocRoot" type="screen"/>
+    <view-map name="FindCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#FindCompDoc" type="screen"/>
     <view-map name="ListCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#ListCompDoc" type="screen"/>
     <view-map name="EditCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDoc" type="screen"/>
     <view-map name="EditRootCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDoc" type="screen"/>
@@ -1723,6 +1727,7 @@
     <view-map name="EditCompDoc" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDoc" type="screen"/>
     <view-map name="EditRootCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocContent" type="screen"/>
     <view-map name="EditCompDocContentRole" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocContentRole" type="screen"/>
+    <view-map name="ViewInstances" page="component://content/widget/compdoc/CompDocScreens.xml#ViewInstances" type="screen"/>
 
     <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
     <!-- end of view mappings -->
