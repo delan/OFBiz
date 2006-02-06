@@ -760,6 +760,10 @@ public class OrderReturnServices {
                         // call the refund service to refund the payment
                         try {
                             Map serviceResult = dispatcher.runSync("refundPayment", UtilMisc.toMap("orderPaymentPreference", orderPayPref, "refundAmount", thisRefundAmount, "userLogin", userLogin));
+                            if (ServiceUtil.isError(serviceResult)) {
+                                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                            }
+                            
                             paymentId = (String) serviceResult.get("paymentId");
                         } catch (GenericServiceException e) {
                             Debug.logError(e, "Problem running the refundPayment service", module);
