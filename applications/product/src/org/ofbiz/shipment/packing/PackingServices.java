@@ -24,14 +24,14 @@
  */
 package org.ofbiz.shipment.packing;
 
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilValidate;
 
 /**
  *
@@ -173,7 +173,13 @@ public class PackingServices {
             return ServiceUtil.returnError(e.getMessage(), e.getMessageList());
         }
 
-        Map resp = ServiceUtil.returnSuccess("Shipment #" + shipmentId + " created and marked as PACKED.");
+        Map resp;
+        if ("EMPTY".equals(shipmentId)) {
+            resp = ServiceUtil.returnError("No items currently set to be shipped. Cannot complete!");
+        } else {
+            resp = ServiceUtil.returnSuccess("Shipment #" + shipmentId + " created and marked as PACKED.");
+        }
+        
         resp.put("shipmentId", shipmentId);
         return resp;
     }
