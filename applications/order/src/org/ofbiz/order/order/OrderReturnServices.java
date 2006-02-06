@@ -726,13 +726,13 @@ public class OrderReturnServices {
 
                 if (neededAmount != 0) {
                     Debug.logError("Was not able to find needed payment preferences for the order RTN: " + returnId + " ORD: " + orderId, module);
-                    continue;
+                    return ServiceUtil.returnError("Unable to refund order #" + orderId + "; there are no available payment preferences.");
                 }
 
                 Map prefSplitMap = new HashMap();
                 if (prefsToUse == null || prefsToUse.size() == 0) {
                     Debug.logError("We didn't find any possible payment prefs to use for RTN: " + returnId + " ORD: " + orderId, module);
-                    continue;
+                    return ServiceUtil.returnError("Unable to refund order #" + orderId + "; there are no available payment preferences.");                     
                 } else if (prefsToUse.size() > 1) {
                     // we need to spit the items up to log which pref it was refunded to
                     // TODO: add the split of items for multiple payment prefs
@@ -763,7 +763,7 @@ public class OrderReturnServices {
                             if (ServiceUtil.isError(serviceResult)) {
                                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                             }
-                            
+
                             paymentId = (String) serviceResult.get("paymentId");
                         } catch (GenericServiceException e) {
                             Debug.logError(e, "Problem running the refundPayment service", module);
@@ -988,7 +988,7 @@ public class OrderReturnServices {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Cannot create replacement order because order terms for original order is not available", module);
                 }
-                        
+
                 // create the order
                 String createdOrderId = null;
                 Map orderResult = null;
