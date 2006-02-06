@@ -35,8 +35,8 @@
     <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
 
-    <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
-    <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>    
+    <!--handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
+    <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/-->    
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>    
@@ -79,20 +79,11 @@
         <response name="error" type="view" value="EditSecurityGroupUserLogins"/>
     </request-map>
     
-    <request-map uri="checkProductStore" edit="false">
-        <description>Check if a valid product store is selected.</description>
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.opentravelsystem.otsEvents" invoke="checkProductStore"/> 
-        <response name="selectStore" type="view" value="selectStore"/>
-        <response name="success" type="view" value="main" />
-        <response name="error" type="view" value="noAccess" />
-    </request-map>
-
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>
         <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="storeCheckLogin"/>
         <response name="success" type="request" value="main" />
         <response name="error" type="view" value="login" />
     </request-map>
@@ -1019,11 +1010,48 @@
         <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
     </request-map>
+
+
+    <!-- ================ Virtual variant products ================= -->
     <request-map uri="UpdateProductVariants">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="copyToProductVariants"/>
         <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
+    </request-map>
+
+    <request-map uri="CreateVirtualWithVariantsForm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateVirtualWithVariantsForm"/>
+    </request-map>
+    <request-map uri="quickCreateVirtualWithVariants">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="quickCreateVirtualWithVariants"/>
+        <response name="success" type="view" value="EditProduct"/>
+        <response name="error" type="view" value="CreateVirtualWithVariantsForm"/>
+    </request-map>
+    <request-map uri="addVariantsToVirtual">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="quickCreateVirtualWithVariants"/>
+        <response name="success" type="view" value="EditProductAssoc"/>
+        <response name="error" type="view" value="QuickAddVariants"/>
+    </request-map>
+    
+    <request-map uri="QuickAddVariants">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuickAddVariants"/>
+    </request-map>
+    <request-map uri="QuickAddChosenVariant">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.VariantEvents" invoke="quickAddChosenVariant"/>
+        <response name="success" type="view" value="QuickAddVariants"/>
+        <response name="error" type="view" value="QuickAddVariants"/>
+    </request-map>
+    <request-map uri="QuickAddChosenVariants">
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="quickAddVariant"/>
+        <response name="success" type="view" value="QuickAddVariants"/>
+        <response name="error" type="view" value="QuickAddVariants"/>
     </request-map>
 
     <!-- ================ Product Asset Usage (rental) Requests ================= -->
@@ -2985,7 +3013,7 @@
     <!-- View Mappings -->
     <!-- Main Screens -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#main"/>
+    <view-map name="main" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#main"/>
     <view-map name="setStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#setStore"/>
     <view-map name="noAccess" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#noAccess"/>
     <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
@@ -3010,6 +3038,8 @@
     <view-map name="EditProductStoreEmails" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreEmails"/>
     <view-map name="EditProductStoreTaxSetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStoreTaxSetup"/>
     <view-map name="EditProductStorePaySetup" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePaySetup"/>
+    <view-map name="QuickAddVariants" type="screen" page="component://product/widget/catalog/ProductScreens.xml#QuickAddVariants"/>
+    <view-map name="CreateVirtualWithVariantsForm" type="screen" page="component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsForm"/>
     <!--view-map name="selectStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#selectStore"/-->
     <view-map name="ImportProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ImportProduct"/>
     <view-map name="EditProductCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/>

@@ -36,7 +36,7 @@
 <#if requestAttributes.userLogin?has_content>
 	<#assign displayApps = [
  		{"title":"Product",				"url":"mainCatalog"}
-		,{"title":"Reservations",		"url":"findorders"}
+		,{"title":"OrdersReservations",	"url":"findorders"}
 		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
 		,{"title":"Accounting",			"url":"mainAccounting"}
 		,{"title":"Website", 			"url":"/${parameters.userLogin.partyId}"}

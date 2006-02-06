@@ -107,12 +107,12 @@
 
         <field use-when="product!=null" name="productId"><hidden value="productId"/></field>
 
-        <!--field position="1" name="isVirtual" title="${uiLabelMap.ProductVirtualProduct}" widget-style="selectBox">
+        <field position="1" name="isVirtual" title="${uiLabelMap.ProductVirtualProduct}" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}" /><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
         <field position="2" name="isVariant" title="${uiLabelMap.ProductVariantProduct}" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
-        </field-->
+        </field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}" widget-style="selectBox">
             <drop-down>
                 <entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
