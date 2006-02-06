@@ -61,14 +61,12 @@
     </container>
     -->
 
-    <!-- load JUnnit test container -->
+    <!-- load JUnit test container -->
     <container name="junit-container" class="org.ofbiz.base.container.JunitContainer">
         <property name="base-test" value="org.ofbiz.base.test.BaseUnitTests"/>
         <property name="entity-test" value="org.ofbiz.entity.test.EntityTestSuite"/>
         <property name="service-test" value="org.ofbiz.service.test.ServiceEngineTests"/>
-        <!--
-        <property name="usps-test" value="org.ofbiz.shipment.thirdparty.usps.UspsServicesTests"/>
-        <property name="jxunit-test" value="net.sourceforge.jxunit.JXTestCase"/>
-        -->
+        <!-- <property name="usps-test" value="org.ofbiz.shipment.thirdparty.usps.UspsServicesTests"/> -->
+        <!-- For the jxtests component: <property name="jxunit-test" value="net.sourceforge.jxunit.JXTestCase"/> -->
     </container>
 </ofbiz-containers>
