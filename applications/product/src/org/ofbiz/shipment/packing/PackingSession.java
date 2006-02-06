@@ -354,6 +354,10 @@ public class PackingSession implements java.io.Serializable {
     }
 
     public String complete(boolean force) throws GeneralException {
+        if (this.getLines().size() == 0) {
+            return "EMPTY";
+        }
+
         // check for errors
         this.checkReservations(force);
         // set the status to 0
@@ -375,7 +379,7 @@ public class PackingSession implements java.io.Serializable {
     }
 
     protected void checkReservations(boolean ignore) throws GeneralException {
-        List errors = FastList.newInstance();
+        List errors = FastList.newInstance();        
         Iterator i = this.getLines().iterator();
         while (i.hasNext()) {
             PackingSessionLine line = (PackingSessionLine) i.next();
