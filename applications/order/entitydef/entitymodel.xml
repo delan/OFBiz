@@ -1994,17 +1994,11 @@
         <field name="orderAdjustmentId" type="id"></field>
         <field name="statusId" type="id"></field>
         <field name="expectedItemStatus" type="id"></field>
-        <field name="returnQuantity" type="floating-point">
-            <description>promised by the customer</description>
-        </field>
-        <field name="receivedQuantity" type="floating-point">
-            <description>actually received from the customer</description>
-        </field>
+        <field name="returnQuantity" type="floating-point"><description>promised by the customer</description></field>
+        <field name="receivedQuantity" type="floating-point"><description>actually received from the customer</description></field>
         <field name="returnPrice" type="currency-amount"></field>
         <field name="returnItemResponseId" type="id"></field>
-        <field name="sourcePercentage" type="floating-point">
-            <description> for tax entries this is the tax percentage </description>
-        </field>
+        <field name="sourcePercentage" type="floating-point"><description>for tax entries this is the tax percentage</description></field>
         <field name="primaryGeoId" type="id">
             <description>for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city)</description>
         </field>
@@ -2018,7 +2012,6 @@
         <field name="parentItemSeqId" type="id">
             <description>used to track the return item for which the sales tax is recorded</description>
         </field>
-
         <prim-key field="returnId"/>
         <prim-key field="returnItemSeqId"/>
         <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="ReturnHeader">
@@ -2076,10 +2069,6 @@
         <relation type="one" fk-name="RTN_ITEM_PAR" title="Parent" rel-entity-name="ReturnItem">
             <key-map field-name="returnId"/>
             <key-map field-name="parentItemSeqId" rel-field-name="returnItemSeqId"/>
-        </relation>
-        <relation type="many" fk-name="RTN_ITEM_CHD" title="Child" rel-entity-name="ReturnItem">
-            <key-map field-name="returnId"/>
-            <key-map field-name="returnItemSeqId"  rel-field-name="parentItemSeqId"/>
         </relation>
     </entity>
     <entity entity-name="ReturnItemResponse"
