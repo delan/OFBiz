@@ -198,10 +198,10 @@ public class LoginEvents {
         
         // allow a username and/or password in a request attribute to override the request parameter or the session attribute; this way a preprocessor can play with these a bit...
         if (UtilValidate.isNotEmpty((String) request.getAttribute("USERNAME"))) {
-        	username = (String) request.getAttribute("USERNAME");
+            username = (String) request.getAttribute("USERNAME");
         }
         if (UtilValidate.isNotEmpty((String) request.getAttribute("PASSWORD"))) {
-        	password = (String) request.getAttribute("PASSWORD");
+            password = (String) request.getAttribute("PASSWORD");
         }
 
         List unpwErrMsgList = FastList.newInstance();
