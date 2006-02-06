@@ -64,6 +64,7 @@
       <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
       <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
       <#assign status = item.getRelatedOne("InventoryStatusItem")?if_exists>
+      <#assign isSalesTax = item.get("returnItemTypeId").equals("RITM_SALES_TAX")>
       <#if (item.get("returnQuantity")?exists && item.get("returnPrice")?exists)>
          <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
       </#if>
@@ -81,28 +82,28 @@
                 N/A
             </#if></div></td>
         <td><div class="tabletext">
-            <#if readOnly>
-                ${item.description?default("N/A")}
+            <#if readOnly || isSalesTax>
+                ${item.description?default("N/A")}            
             <#else>
                 <input name="description_o_${rowCount}" value="${item.description}" type="text" class='inputBox' size="15">
             </#if>
             </div></td>
         <td><div class="tabletextright">
-            <#if readOnly>
+            <#if readOnly || isSalesTax>
                 ${item.returnQuantity?string.number}
             <#else>
                 <input name="returnQuantity_o_${rowCount}" value="${item.returnQuantity}" type="text" class='inputBox' size="8" align="right">
             </#if>
             </div></td>
         <td><div class="tabletextright">
-            <#if readOnly>
+            <#if readOnly || isSalesTax>
                 <@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/>
             <#else>
                 <input name="returnPrice_o_${rowCount}" value="${item.returnPrice}" type="text" class='inputBox' size="8" align="right">
             </#if>
             </div></td>
         <td><div class="tabletext">
-            <#if readOnly>
+            <#if readOnly || isSalesTax>
                 ${returnReason.description?default("N/A")}
             <#else>
                 <select name="returnReasonId_o_${rowCount}"  class='selectBox'>
@@ -117,7 +118,7 @@
             </#if>
             </div></td>
         <td><div class="tabletext">
-          <#if readOnly>
+          <#if readOnly || isSalesTax>
               ${status.description?default("N/A")}
           <#else>
               <select name="expectedItemStatus_o_${rowCount}"  class='selectBox'>
@@ -132,7 +133,7 @@
           </#if>
           </div></td>
         <td><div class="tabletext">
-            <#if (readOnly)>
+            <#if (readOnly || isSalesTax)>
                 ${returnType.description?default("N/A")}
             <#else>
                 <select name="returnTypeId_o_${rowCount}" class="selectBox">
