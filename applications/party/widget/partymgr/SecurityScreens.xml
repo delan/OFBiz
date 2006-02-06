@@ -37,7 +37,7 @@
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -61,45 +61,6 @@
             </widgets>
         </section>
     </screen>
-    <screen name="SecurityGroupDecorator">
-        <section>
-            <actions>
-                <set field="headerItem" value="security"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="SECURITY" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field-name="groupId"/></not></condition>
-                                    <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://party/webapp/partymgr/security/SecurityGroupTabBar.ftl"/></html>
-                                        </platform-specific>
-                                    </widgets>
-                                </section>
-                                <container>
-                                    <label style="head1" text="${uiLabelMap.${labelTitleProperty}} [${groupId}]"/>
-                                </container>
-                                <container>
-                                    <link target="EditSecurityGroup" style="buttontext" text="[${uiLabelMap.PartyNewSecurityGroup}]"/>
-                                </container>
-                                
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.PartySecurityViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="EditSecurityGroup">
         <section>
             <actions>
@@ -111,7 +72,7 @@
                 <entity-one entity-name="SecurityGroup" value-name="securityGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityGroupDecorator">
+                <decorator-screen name="SecurityGroupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditSecurityGroup" location="component://party/widget/partymgr/SecurityForms.xml"/>
                     </decorator-section>
@@ -130,7 +91,7 @@
                 <entity-one entity-name="SecurityGroup" value-name="securityGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityGroupDecorator">
+                <decorator-screen name="SecurityGroupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListSecurityGroupPermissions" location="component://party/widget/partymgr/SecurityForms.xml"/>
                         <container><label style="head2" text="${uiLabelMap.PartyAddPermissionToSecurityGroup}"/></container>
@@ -153,7 +114,7 @@
                 <entity-one entity-name="SecurityGroup" value-name="securityGroup"/>
             </actions>
             <widgets>
-                <decorator-screen name="SecurityGroupDecorator">
+                <decorator-screen name="SecurityGroupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListSecurityGroupUserLogins" location="component://party/widget/partymgr/SecurityForms.xml"/>
                         <container><label style="head2" text="${uiLabelMap.PartyAddUserLoginToSecurityGroup}"/></container>

@@ -50,7 +50,7 @@
                                 </platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label style="head3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="head3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>
