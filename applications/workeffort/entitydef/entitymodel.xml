@@ -1254,10 +1254,16 @@
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <alias-all entity-alias="CRWE"/>
       <alias-all entity-alias="CR"/>
-      <alias-all entity-alias="WE"/>
+      <alias-all entity-alias="WE">
+        <exclude field="priority"/>
+        <exclude field="description"/>
+        <exclude field="createdDate"/>
+        <exclude field="createdByUserLogin"/>
+        <exclude field="lastModifiedDate"/>
+        <exclude field="lastModifiedByUserLogin"/>
+      </alias-all>
       <alias name="custRequestTypeDescription" field="description" entity-alias="CRT"/>
       <alias name="statusItemDescription" field="description" entity-alias="SI"/>
-      <!-- These explicit aliases add fields discarded by the above alias-alls. The entity engine will continue to throw warnings, but it's ok. -->
       <alias name="workEffortPriority" field="priority" entity-alias="WE"/>
       <alias name="workEffortDescription" field="description" entity-alias="WE"/>
       <alias name="workEffortCreatedDate" field="createdDate" entity-alias="WE"/>
@@ -1360,7 +1366,10 @@
       <member-entity entity-alias="SO" entity-name="SalesOpportunity"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <alias-all entity-alias="SO"/>
-      <alias-all entity-alias="WE"/>
+      <alias-all entity-alias="WE">
+        <exclude field="description"/>
+        <exclude field="createdByUserLogin"/>
+      </alias-all>
       <alias name="workEffortDescription" field="description" entity-alias="WE"/>
       <alias name="workEffortCreatedByUserLogin" field="createdByUserLogin" entity-alias="WE"/>
       <view-link entity-alias="SOWE" rel-entity-alias="SO">

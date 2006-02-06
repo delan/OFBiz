@@ -3,7 +3,7 @@
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -1601,7 +1601,9 @@
       <member-entity entity-alias="PS" entity-name="PartyStatus"/>
       <alias-all entity-alias="PTY"/>
       <alias-all entity-alias="PR"/>
-      <alias-all entity-alias="PS"/>
+      <alias-all entity-alias="PS">
+        <exclude field="statusId"/>
+      </alias-all>
       <alias-all entity-alias="PERSON">
         <exclude field="comments"/>
       </alias-all>
@@ -1610,6 +1612,7 @@
       </alias-all>
       <alias entity-alias="PERSON" name="personComments" field="comments"/>
       <alias entity-alias="PTYGRP" name="partyGroupComments" field="comments"/>
+      <alias entity-alias="PS" name="previousStatusId" field="statusId"/>
       <view-link entity-alias="PTY" rel-entity-alias="PR">
         <key-map field-name="partyId"/>
       </view-link>
