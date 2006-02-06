@@ -46,54 +46,6 @@
             </widgets>
         </section>
     </screen>
-    <screen name="setStore"><!-- called by the selectStore screen  -->
-        <section>
-            <actions>
-                <set field="page.appTabButtonItem" value="Main"/>
-                <set field="page.headerItem" value="main"/>
-                <!-- gets called from the store selection list and expect the productStorId to be passed to main. -->
-                <set field="productStoreId" to-scope="user"  from-field="parameters.productStoreId"   global="true"/> 
-                <set field="prodCatalogId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
-                <set field="webSiteId" to-scope="user" from-field="parameters.productStoreId" global="true"/>
-
-                <set field="productStoreId" from-scope="user" from-field="productStoreId" global="true"/>
-                <set field="prodCatalogId" from-scope="user" from-field="prodCatalogId"  global="true"/>
-                <set field="webSiteId" from-scope="user" from-field="webSiteId" global="true"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <!--content content-id="otsfrontpage"/--> <!-- get page from internal cms instead of main.ftl below-->
-                        <!--content content-id="otsxmlxsl"/--> <!-- xml/xsl test-->
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://opentravelsystem/webapp/hotelbackend/main.ftl"/>
-                            </html>
-                        </platform-specific>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="noAccess">
-        <section>
-            <actions>
-                <set field="page.appTabButtonItem" value="Main"/>
-                <set field="page.headerItem" value="intro"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://opentravelsystem/webapp/hotelbackend/noAccess.ftl"/>
-                            </html>
-                        </platform-specific>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="login">
         <section>
             <actions>

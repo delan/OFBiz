@@ -16,8 +16,8 @@
         <tr>
           <td>
             <DIV class='tabletext'><br/><br/><br/><br/><br/><br/><br/><br/>
-            <center><h1> Download Order Page<br/><br/>
-            Depending on your requirements we will provide here a download facility for you.</h1></center></DIV>  
+            <center><h1> Download Order Page<br/><br/></h1>
+            Depending on your requirements we will provide here a download facility for you.</center></DIV>  
             <br/><br/><br/><br/><br/><br/><br/><br/>
           </td>
         </tr>

@@ -60,7 +60,7 @@ while (p.hasNext())	{
 	List rel = delegator.findByAnd("PartyRelationship",UtilMisc.toMap("partyIdTo",party.getString("partyId")));
 	if (rel == null || rel.size() == 0)	{
 		invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyIdFrom",party.getString("partyId")));
-		if (invoices != null && invoices.size() != 0) Debug.logInfo("!!!!!!!!!!(partyIdFrom)" + party.getString("partyId") + " InvoiceId:" + invoices.get(0).getString("invoiceId"),"???????");
+		if (invoices != null && invoices.size() != 0) Debug.logInfo("!!!!!!!!!!(partyIdFrom)" + party.getString("partyId") + " InvoiceId:" + invoices.get(0).getString("invoiceId"),"ListInvoices.bsh");
 		invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyId",party.getString("partyId")));
 		if (invoices != null  && invoices.size() != 0) Debug.logInfo("!!!!!!!!!!(party)" + party.getString("partyId") + " InvoiceId:" + invoices.get(0).getString("invoiceId"),"???????");
 	}
@@ -111,7 +111,7 @@ while (comp.hasNext())	{
 				MiscOut = MiscOut.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
 				MiscOutTot = MiscOutTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
 			}
-			else	{	Debug.logInfo(" not registered payment: " + invoiceItem.getString("invoiceItemTypeId"),"????????"); }
+			else	{	Debug.logInfo(" not registered invoiceItem: " + invoiceItem.getString("invoiceItemTypeId") + " invoiceId: " + invoiceItem.getString("invoiceId") + " itemId: " + invoiceItem.getString("invoiceItemSeqId") ,"ListInvoices.bsh"); }
 		}
 	}
 			
