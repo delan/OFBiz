@@ -38,21 +38,22 @@
 <!-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
 <#if !requestParameters.orderId?exists>
 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-  <tr><td colspan="9"><div class="head3">Item(s) In Return #${returnId}</div></td></tr>
-  <tr><td colspan="9"><hr class="sepbar"></td></tr>
+  <tr><td colspan="10"><div class="head3">${uiLabelMap.OrderItemsReturned} ${uiLabelMap.CommonIn} ${uiLabelMap.OrderOrderReturn} #${returnId}</div></td></tr>
+  <tr><td colspan="10"><hr class="sepbar"></td></tr>
   <tr>
-    <td><div class="tableheadtext">Order # - Item #</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.OrderOrderItems}</div></td>
     <td><div class="tableheadtext">Product Id</div></td>
     <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
-    <td><div class="tableheadtext">Return Qty</div></td>
-    <td><div class="tableheadtext">Return Price</div></td>
-    <td><div class="tableheadtext">Reason</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.OrderPrice}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.OrderSubTotal}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.OrderReturnReason}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.OrderItemStatus}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>
-    <td><div class="tableheadtext">Response</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.OrderReturnResponse}</div></td>
     <td>&nbsp;</td>
   </tr>
-  <tr><td colspan="9"><hr class="sepbar"></td></tr>
+  <tr><td colspan="10"><hr class="sepbar"></td></tr>
   <#assign returnTotal = 0.0>
   <#assign rowCount = 0>
   <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED")>
@@ -67,6 +68,9 @@
       <#assign isSalesTax = item.get("returnItemTypeId").equals("RITM_SALES_TAX")>
       <#if (item.get("returnQuantity")?exists && item.get("returnPrice")?exists)>
          <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
+         <#assign returnItemSubTotal = item.get("returnQuantity") * item.get("returnPrice") >
+      <#else>
+         <#assign returnItemSubTotal = null >  <#-- otherwise the last item's might carry over -->
       </#if>
 
       <tr>
@@ -102,6 +106,9 @@
                 <input name="returnPrice_o_${rowCount}" value="${item.returnPrice}" type="text" class='inputBox' size="8" align="right">
             </#if>
             </div></td>
+        <td class="tabletextright">
+            <#if returnItemSubTotal?exists><@ofbizCurrency amount=returnItemSubTotal isoCode=orderHeader.currencyUom/></#if>
+        </td>
         <td><div class="tabletext">
             <#if readOnly || isSalesTax>
                 ${returnReason.description?default("N/A")}
@@ -174,10 +181,10 @@
     </#list>
 
     <#-- show the return total -->
-    <tr><td colspan="4"></td><td><hr class="sepbar"/></td></tr>
+    <tr><td colspan="5"></td><td><hr class="sepbar"/></td></tr>
     <tr>
       <td colspan="2">&nbsp;</td>
-      <td colspan="2" class="tableheadtext">${uiLabelMap.OrderReturnTotal}</td>
+      <td colspan="3" class="tableheadtext">${uiLabelMap.OrderReturnTotal}</td>
       <td class="tabletextright"><b><@ofbizCurrency amount=returnTotal isoCode=orderHeader.currencyUom/></b></td>
     </tr>
     <#if (!readOnly)>
