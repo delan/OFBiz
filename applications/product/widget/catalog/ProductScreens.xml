@@ -25,54 +25,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="CommonProductDecorator">
-        <section>
-            <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="MainColumnStyle" value="leftonly"/>
-    
-                <set field="productId" from-field="parameters.productId"/>
-                <entity-one entity-name="Product" value-name="product"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field-name="productId"/></not></condition>
-                                    <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://product/webapp/catalog/product/ProductTabBar.ftl"/></html>
-                                        </platform-specific>
-                                        <container>
-                                            <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
-                                        </container>
-                                        
-                                        <!-- add Create Product and View Product (in ecommerce) links -->
-                                        <container>
-                                            <link target="EditProduct" text="${uiLabelMap.ProductNewProduct}" style="buttontext"/>
-                                            <link target="CreateVirtualWithVariantsForm" text="${uiLabelMap.ProductNewVirtualProduct}" style="buttontext"/>
-                                            <link target="ecommerce/control/product?product_id=${productId}" url-mode="plain" text="${uiLabelMap.ProductProductPage}" style="buttontext"/>
-                                        </container>
-                                    </widgets>
-                                </section>
-
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>                    
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     
     <screen name="EditProduct">
         <section>
@@ -85,7 +37,7 @@
                 <entity-one entity-name="Product" value-name="product"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         
@@ -119,7 +71,7 @@
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <include-form name="AddProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -145,7 +97,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="UpdateProductCategoryMemeber" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <include-form name="AddProductCategoryMember" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -172,7 +124,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="UpdateProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <include-form name="AddProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -195,7 +147,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditProductAssetUsage" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <container>
@@ -223,7 +175,7 @@
                 <entity-one entity-name="FixedAssetProduct" value-name="fixedAssetProduct"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="showFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
@@ -242,7 +194,7 @@
                 <set field="productId" from-field="parameters.productId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="addFixedAssetProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
@@ -277,7 +229,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--<include-form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>-->
                         <container><label style="head2">${uiLabelMap.ProductRoutings}</label></container>    
@@ -308,7 +260,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head2">${uiLabelMap.ProductCosts}</label></container>    
                         <include-form name="ListCostComponents" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -332,7 +284,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/QuickAddVariants.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/QuickAddVariants.ftl"/></html>
@@ -355,7 +307,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductQuickAdmin.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductQuickAdmin.ftl"/></html>
@@ -385,7 +337,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductFacilities.ftl"/></html>
@@ -415,7 +367,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductFacilityLocations.ftl"/></html>
@@ -436,7 +388,7 @@
                 <entity-one entity-name="Product" value-name="product"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductKeyword.ftl"/></html>
@@ -458,7 +410,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductInventoryItems.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductInventoryItems.ftl"/></html>
@@ -490,7 +442,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductGoodIdentifications.ftl"/></html>
@@ -522,7 +474,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductGlAccounts.ftl"/></html>
@@ -549,7 +501,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="UpdateProductPaymentMethodType" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <include-form name="AddProductPaymentMethodType" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -571,7 +523,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductFeatures.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductFeatures.ftl"/></html>
@@ -600,7 +552,7 @@
                 <entity-one entity-name="SupplierProduct" value-name="supplierProduct" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListSupplierProducts" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <section>
@@ -625,7 +577,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContent.bsh"/>   
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductContent.ftl"/></html>
@@ -647,7 +599,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContentContent.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductContentContent.ftl"/></html>
@@ -673,7 +625,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductAttributes.ftl"/></html>
@@ -695,7 +647,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductAssoc.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductAssoc.ftl"/></html>
@@ -724,7 +676,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListProductAssocs" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <include-form name="ListProductAssocsTo" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -743,7 +695,7 @@
                 <entity-one entity-name="Product" value-name="product"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/createVirtualWithVariantsForm.ftl"/></html>
@@ -769,7 +721,7 @@
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/ApplyFeaturesFromGroup.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator">
+                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/ApplyFeaturesFromCategory.ftl"/></html>

@@ -148,6 +148,45 @@
             </widgets>
         </section>
     </screen>
+    <screen name="SecurityGroupDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="security"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="SECURITY" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field-name="groupId"/></not></condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html><html-template location="component://party/webapp/partymgr/security/SecurityGroupTabBar.ftl"/></html>
+                                        </platform-specific>
+                                    </widgets>
+                                </section>
+                                <container>
+                                    <label style="head1" text="${uiLabelMap.${labelTitleProperty}} [${groupId}]"/>
+                                </container>
+                                <container>
+                                    <link target="EditSecurityGroup" style="buttontext" text="[${uiLabelMap.PartyNewSecurityGroup}]"/>
+                                </container>
+                                
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.PartySecurityViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="login">
         <section>
             <widgets>
