@@ -761,7 +761,7 @@ public class OrderReturnServices {
                         try {
                             Map serviceResult = dispatcher.runSync("refundPayment", UtilMisc.toMap("orderPaymentPreference", orderPayPref, "refundAmount", thisRefundAmount, "userLogin", userLogin));
                             if (ServiceUtil.isError(serviceResult)) {
-                                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                                return ServiceUtil.returnError("Error in refund payment", null, null, serviceResult);
                             }
 
                             paymentId = (String) serviceResult.get("paymentId");
