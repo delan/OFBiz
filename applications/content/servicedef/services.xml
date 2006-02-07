@@ -1322,6 +1322,7 @@
         <description>Create a CompDoc Template entity and associated ContentRevision/Item entities</description>
         <implements service="persistContentAndAssoc"/>
         <attribute name="contentRevisionSeqId" type="String" mode="OUT" optional="false"/>
+        <attribute name="rootTemplateContentId" type="String" mode="IN" optional="true"/>
         <attribute name="rootInstanceContentId" type="String" mode="INOUT" optional="true"/>
     </service>
 </services>

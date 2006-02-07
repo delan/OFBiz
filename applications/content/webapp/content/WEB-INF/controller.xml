@@ -1054,6 +1054,12 @@
        <response name="success" type="view" value="EditChildCompDocTemplate"/>
        <response name="error" type="view" value="AddChildCompDocTemplate"/>
    </request-map>
+   <request-map uri="updateChildCompDocTemplate">
+       <security auth="true" https="true"/>
+        <event invoke="persistCompDoc"  path="" type="service"/>
+       <response name="success" type="view" value="EditChildCompDocTemplate"/>
+       <response name="error" type="view" value="EditChildCompDocTemplate"/>
+   </request-map>
    <request-map uri="genCompDocInstance">
        <security auth="true" https="true"/>
         <event invoke="genCompDocInstance"  path="" type="service"/>

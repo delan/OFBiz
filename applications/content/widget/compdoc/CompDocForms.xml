@@ -43,10 +43,12 @@
         <field name="contentName" title="Name" ><text/></field>
         <field name="contentId" title="Content Id" ><text/></field>
         <field name="contentTypeId" title="Content Type Id">
-            <radio no-current-selected-key="COMPDOC_TEMPLATE">
-                <option key="COMPDOC_TEMPLATE" description="Template"/>             
-                <option key="COMPDOC_INSTANCE" description="Instance"/>             
-            </radio>
+            <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
+                <option key="COMPDOC_TEMPLATE" description="Root Template"/>             
+                <option key="COMPDOC_INSTANCE" description="Root Instance"/>             
+                <option key="TEMPLATE" description="Template Child"/>             
+                <option key="DOCUMENT" description="Instance Child"/>             
+            </drop-down>
         </field>
         <!-- 
         <field name="rootonly" map-name="dummy" title="Root CompDocs Only" >
@@ -402,7 +404,7 @@
         <field name="contentName"><text/></field>
         <field name="contentTypeId" ><hidden value="TEMPLATE"/></field>
         <field name="caContentIdTo" title="ContentId To" ><display/></field>
-        <field name="caContentAssocTypeId" title="Content Assoc Type Id"  ><display /></field>
+        <field name="caContentAssocTypeId" title="Content Assoc Type Id"  ><display also-hidden="false"/></field>
         <field name="caFromDate" title="From Date" ><display/></field>
         <field name="caThruDate" title="Thru Date"   ><date-time/></field>
         <field name="caSequenceNum" title="Sequence Num"   ><text/></field>
