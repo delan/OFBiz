@@ -243,14 +243,14 @@ public class FindServices {
 
             if (opString != null) {
                 if (opString.equals("contains")) {
-                    fieldOp = (EntityOperator) entityOperators.get("like");
+                    fieldOp = EntityOperator.LIKE;
                 } else if (opString.equals("empty")) {
-                    fieldOp = (EntityOperator) entityOperators.get("equals");
+                    fieldOp = EntityOperator.EQUALS;
                 } else {
                     fieldOp = (EntityOperator) entityOperators.get(opString);
                 }
             } else {
-                fieldOp = (EntityOperator) entityOperators.get("equals");
+                fieldOp = EntityOperator.EQUALS;
             }
 
             fieldValue = (String) subMap2.get("value");
@@ -260,23 +260,23 @@ public class FindServices {
 
             if (opString != null) {
                 if (opString.equals("contains")) {
-                    fieldOp = (EntityOperator) entityOperators.get("like");
+                    fieldOp = EntityOperator.LIKE;
                     fieldValue = "%" + fieldValue + "%";
                 } else if (opString.equals("empty")) {
-                    fieldOp = (EntityOperator) entityOperators.get("equals");
+                    fieldOp = EntityOperator.EQUALS;
                     fieldValue = null;
                     ignoreCase = null;
                 } else if (opString.equals("like")) {
-                    fieldOp = (EntityOperator) entityOperators.get("like");
+                    fieldOp = EntityOperator.LIKE;
                     fieldValue += "%";
                 } else if (opString.equals("greaterThanFromDayStart")) {
                     fieldValue = dayStart(fieldValue, 0);
-                    fieldOp = (EntityOperator) entityOperators.get("greaterThan");
+                    fieldOp = EntityOperator.GREATER_THAN;
                     ignoreCase = null;
                 } else if (opString.equals("sameDay")) {
                     String timeStampString = fieldValue;
                     fieldValue = dayStart(timeStampString, 0);
-                    fieldOp = (EntityOperator) entityOperators.get("greaterThan");
+                    fieldOp = EntityOperator.GREATER_THAN_EQUAL_TO;
                     ignoreCase = null;
                     // Set up so next part finds ending conditions for same day
                     subMap2 = (HashMap) subMap.get("fld1");
@@ -291,7 +291,7 @@ public class FindServices {
                     fieldOp = (EntityOperator) entityOperators.get(opString);
                 }
             } else {
-                fieldOp = (EntityOperator) entityOperators.get("equals");
+                fieldOp = EntityOperator.EQUALS;
             }
 
             if (ignoreCase != null && ignoreCase.equals("Y")) {
@@ -311,14 +311,14 @@ public class FindServices {
 
             if (opString != null) {
                 if (opString.equals("contains")) {
-                    fieldOp = (EntityOperator) entityOperators.get("like");
+                    fieldOp = EntityOperator.LIKE;
                 } else if (opString.equals("empty")) {
-                    fieldOp = (EntityOperator) entityOperators.get("equals");
+                    fieldOp = EntityOperator.EQUALS;
                 } else {
                     fieldOp = (EntityOperator) entityOperators.get(opString);
                 }
             } else {
-                fieldOp = (EntityOperator) entityOperators.get("equals");
+                fieldOp = EntityOperator.EQUALS;
             }
 
             fieldValue = (String) subMap2.get("value");
@@ -330,14 +330,14 @@ public class FindServices {
             } else if (opString.equals("contains")) {
                 fieldValue += "%" + fieldValue + "%";
             } else if (opString.equals("empty")) {
-                fieldOp = (EntityOperator) entityOperators.get("equals");
+                fieldOp = EntityOperator.EQUALS;
                 fieldValue = null;
             } else if (opString.equals("upToDay")) {
                 fieldValue = dayStart(fieldValue, 0);
-                fieldOp = (EntityOperator) entityOperators.get("lessThan");
+                fieldOp = EntityOperator.LESS_THAN;
             } else if (opString.equals("upThruDay")) {
                 fieldValue = dayStart(fieldValue, 1);
-                fieldOp = (EntityOperator) entityOperators.get("lessThan");
+                fieldOp = EntityOperator.LESS_THAN;
             }
             // String rhs = fieldValue.toString();
             cond = new EntityExpr(fieldName, (EntityComparisonOperator) fieldOp, fieldValue);
