@@ -1207,7 +1207,7 @@
         invoke="createContentApproval"
         default-entity-name="ContentApproval" auth="true">
         <description>Create a ContentApproval</description>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateContentApproval" engine="simple"
