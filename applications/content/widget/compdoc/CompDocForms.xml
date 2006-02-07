@@ -123,18 +123,19 @@
         <field name="committedByPartyId"><display/></field>
         <field name="comments"><display/></field>
         <field name="editLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevision?&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
         <field name="itemLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Item]" target="ListContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <hyperlink also-hidden="false" description="[Item]" target="ListContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
         <field name="create" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision"/>
+            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
     </form>
     
     <!-- ContentRevisionItem forms -->
     <form name="EditContentRevisionItem" default-map-name="contentRevisionItem" target="updateContentRevisionItem" title="" type="single"
+        extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="ContentRevisionItem" />
         <alt-target target="createContentRevisionItem" use-when="contentRevisionItem==null"/>
@@ -158,10 +159,10 @@
         <field name="oldDataResourceId"><display/></field>
         <field name="newDataResourceId"><display/></field>
         <field name="editLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
         <field name="create" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevisionItem"/>
+            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
     </form>
 
@@ -211,7 +212,7 @@
         <field name="sequenceNum"><display/></field>
         <field name="comments"><display/></field>
         <field name="Edit" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
     </form>
 

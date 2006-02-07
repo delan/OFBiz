@@ -50,6 +50,7 @@
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                        <link target="EditContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Content Approval" style="buttontext"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -63,8 +64,10 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="Content Edit Page"/>
+                <set field="title" value="Content Approval Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="menuName" value="tree"/>
+                <set field="currentMenuItemName" value="approval"/>
                  
                 <entity-one entity-name="ContentApproval" value-name="contentApproval" use-cache="true">
                     <field-map env-name="parameters.contentApprovalId" field-name="contentApprovalId" />
@@ -114,6 +117,8 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="menuName" value="tree"/>
+                <set field="currentMenuItemName" value="revision"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 
@@ -137,10 +142,15 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="menuName" value="tree"/>
+                <set field="currentMenuItemName" value="revision"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 
-            <entity-and entity-name="ContentRevisionItem" list-name="contentRevisionItemList" use-cache="true"/>
+            <entity-and entity-name="ContentRevisionItem" list-name="contentRevisionItemList" use-cache="true">
+                <field-map field-name="contentId" env-name="parameters.contentId"/>
+                <field-map field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId"/>
+            </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -159,6 +169,8 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
+                <set field="menuName" value="tree"/>
+                <set field="currentMenuItemName" value="revision"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 
