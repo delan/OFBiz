@@ -1,5 +1,5 @@
 <hr/>
-    <form method="post"  action="/ecommerce/control/searchContent"  name="searchQuery" style="margin: 0;">
+    <form method="post"  action="<@ofbizUrl>searchContent</@ofbizUrl>"  name="searchQuery" style="margin: 0;">
 <table border="0" cellpadding="2" cellspacing="0">
 
 <tr>
