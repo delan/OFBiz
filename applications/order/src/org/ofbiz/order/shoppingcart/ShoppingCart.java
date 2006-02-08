@@ -523,6 +523,7 @@ public class ShoppingCart implements Serializable {
     protected Locale locale;  // holds the locale from the user session
     protected String currencyUom = null;
     protected boolean holdOrder = false;
+    protected Timestamp orderDate = null;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -706,6 +707,14 @@ public class ShoppingCart implements Serializable {
         return this.holdOrder;
     }
 
+    public void setOrderDate(Timestamp t) {
+        this.orderDate = t;
+    }
+
+    public Timestamp getOrderDate() {
+        return this.orderDate;
+    }
+    
     /** Sets the currency for the cart. */
     public void setCurrency(LocalDispatcher dispatcher, String currencyUom) throws CartItemModifyException {
         if (isReadOnlyCart()) {
