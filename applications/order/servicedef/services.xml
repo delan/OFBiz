@@ -122,6 +122,7 @@
         <attribute name="currencyUom" type="String" mode="IN" optional="false"/>
         <attribute name="grandTotal" type="Double" mode="IN" optional="true"/>
         <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="orderDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="orderItemShipGroupInfo" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemAttributes" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderAttributes" type="java.util.List" mode="IN" optional="true"/>
