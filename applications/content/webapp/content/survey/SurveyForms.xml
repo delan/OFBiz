@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,6 +23,33 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+
+    <form name="FindSurvey" default-map-name="survey" target="FindSurvey" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="Survey" default-field-type="find"/>
+        
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="isAnonymous"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="allowMultiple"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="allowUpdate"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListFindSurvey" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" 
+        target="" title="" type="list" paginate-target="FindSurvey" paginate="true">
+        <actions>
+            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="Survey"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="Survey" default-field-type="display"/>
+        <field name="surveyId" title="${uiLabelMap.SurveySurveyId}" widget-style="buttontext">
+            <hyperlink description="${surveyId}" target="EditSurvey?surveyId=${surveyId}" also-hidden="false"/>
+        </field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]"/></field>
+    </form>
     <form name="EditSurvey" type="single" 
         target="updateSurvey" title="" default-map-name="survey"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -31,15 +58,17 @@
         
         <auto-fields-service service-name="updateSurvey"/>
         
-        <field use-when="survey!=null" name="surveyId" tooltip="This cannot be changed without re-creating the Survey"><display/></field>
-        <field use-when="survey==null&amp;&amp;surveyId!=null" name="surveyId" tooltip="Could not find Survey with ID [${surveyId}]"><display description="" also-hidden="false"/></field>
+        <field use-when="survey!=null" name="surveyId" tooltip="This cannot be changed without re-creating the Survey" widget-style="tabletext"><display/></field>
+        <field use-when="survey==null&amp;&amp;surveyId!=null" name="surveyId" tooltip="Could not find Survey with ID [${surveyId}]" widget-style="tabletext"><display description="" also-hidden="false"/></field>
         <field use-when="survey==null&amp;&amp;surveyId==null" name="surveyId"><ignored/></field>
 
         <field name="isAnonymous"><drop-down no-current-selected-key="N" allow-empty="false"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="allowMultiple"><drop-down no-current-selected-key="N" allow-empty="false"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="allowUpdate"><drop-down no-current-selected-key="N" allow-empty="false"><option key="Y"/><option key="N"/></drop-down></field>
         
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="EditSurveyQuestions" type="list" 
+    <form name="ListSurveyQuestions" type="list" 
         target="updateSurveyQuestion" title="" list-name="surveyQuestionList" list-entry-name="surveyQuestion"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         

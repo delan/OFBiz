@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,11 +23,6 @@
  *@version    $Rev$
  *@since      3.1
 -->
-
-<#if hasPermission>
-  ${pages.get("/survey/SurveyTabBar.ftl")}
-  <div class="head1">Survey Responses - <span class="head2">ID: ${requestParameters.surveyId?if_exists} (${surveyWrapper.getNumberResponses()} Responses)</span></div>
-  <br/>
 
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <#assign questions = surveyWrapper.getSurveyQuestions()>
@@ -132,7 +127,3 @@
       </tr>
     </#if>
   </table>
-
-<#else>
-  <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
-</#if>

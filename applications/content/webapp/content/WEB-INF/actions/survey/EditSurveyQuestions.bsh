@@ -30,20 +30,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.widget.html.*;
 
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-surveyId = request.getParameter("surveyId");
-surveyQuestionId = request.getParameter("surveyQuestionId");
-if (surveyQuestionId == null) {
-    surveyQuestionId = request.getAttribute("surveyQuestionId");
-}
+surveyQuestionId = parameters.get("surveyQuestionId");
 context.put("surveyQuestionId", surveyQuestionId);
 
 surveyQuestionAndApplList = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId), UtilMisc.toList("sequenceNum"));
@@ -58,7 +45,6 @@ createSurveyQuestionWrapper.putInContext("surveyQuestion", surveyQuestion);
 HtmlFormWrapper createSurveyQuestionCategoryWrapper = new HtmlFormWrapper("/survey/SurveyForms.xml", "CreateSurveyQuestionCategory", request, response);
 createSurveyQuestionCategoryWrapper.putInContext("surveyId", surveyId);
 
-context.put("surveyId", surveyId);
 context.put("surveyQuestionAndApplList", surveyQuestionAndApplList);
 context.put("createSurveyQuestionWrapper", createSurveyQuestionWrapper);
 context.put("createSurveyQuestionCategoryWrapper", createSurveyQuestionCategoryWrapper);
@@ -71,7 +57,7 @@ if (surveyQuestion != null && surveyQuestion.get("surveyQuestionTypeId") != null
     HtmlFormWrapper createSurveyOptionWrapper = new HtmlFormWrapper("/survey/SurveyForms.xml", "CreateSurveyQuestionOption", request, response);
 
     // survey question option
-    optionSeqId = request.getParameter("surveyOptionSeqId");
+    optionSeqId = parameters.get("surveyOptionSeqId");
     surveyQuestionOption = null;
     if (optionSeqId != null) {
         surveyQuestionOption = delegator.findByPrimaryKey("SurveyQuestionOption", UtilMisc.toMap("surveyQuestionId", surveyQuestionId, "surveyOptionSeqId", optionSeqId));
@@ -84,7 +70,7 @@ if (surveyQuestion != null && surveyQuestion.get("surveyQuestionTypeId") != null
     context.put("createSurveyOptionWrapper", createSurveyOptionWrapper);
 }
 
-surveyQuestionCategoryId = request.getParameter("surveyQuestionCategoryId");
+surveyQuestionCategoryId = parameters.get("surveyQuestionCategoryId");
 surveyQuestionCategory = null;
 categoryQuestions = null;
 if (!UtilValidate.isEmpty(surveyQuestionCategoryId)) {
@@ -98,6 +84,3 @@ context.put("categoryQuestions", categoryQuestions);
 
 questionCategories = delegator.findAll("SurveyQuestionCategory", UtilMisc.toList("description"));
 context.put("questionCategories", questionCategories);
-
-
-

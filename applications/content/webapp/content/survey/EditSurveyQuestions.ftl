@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,11 +25,6 @@
  *@since      3.0
 -->
 
-<#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
-
-  ${pages.get("/survey/SurveyTabBar.ftl")}
-  <div class="head1">Survey Questions - <span class="head2">ID: ${requestParameters.surveyId?if_exists}</div>
-  <br/><br/>
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
       <td><div class="tableheadtext">ID</div></td>
@@ -71,8 +66,8 @@
           <td><input type="text" name="withSurveyQuestionId" size="5" class="textBox" value="${surveyQuestionAndAppl.withSurveyQuestionId?if_exists}">
           <td><input type="text" name="withSurveyOptionSeqId" size="5" class="textBox" value="${surveyQuestionAndAppl.withSurveyOptionSeqId?if_exists}">
           <td><input type="submit" value="Update">
-          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
-          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">[Remove]</a>
+          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">Edit</a>
+          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">Remove</a>
         </tr>
       </form>
     </#list>
@@ -192,6 +187,3 @@
     </#if>
     ${createSurveyOptionWrapper.renderFormString()}
   </#if>
-<#else>
-  <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
-</#if>
