@@ -204,6 +204,14 @@
         <log level="info" message="revisionMap : ${revisionMap}"/>
         <call-service service-name="persistContentRevisionAndItem" in-map-name="revisionMap">
             <result-to-result result-name="contentRevisionSeqId"/>
+            <result-to-field result-name="contentRevisionSeqId"/>
+        </call-service>
+        
+        <set from-field="revisionMap.contentId" field="cloneMap.contentId"/>
+        <set from-field="contentRevisionSeqId" field="cloneMap.contentRevisionSeqId"/>
+        <set from-field="parameters.userLogin" field="cloneMap.userLogin"/>
+        <log level="info" message="cloneMap : ${cloneMap}"/>
+        <call-service service-name="cloneContentApprovals" in-map-name="cloneMap">
         </call-service>
     </simple-method>
     
@@ -410,6 +418,10 @@
     
     <simple-method method-name="getApprovalsWithPermissions" short-description="Get ContentApprovals for approval process">
         
+        <!--  this seems like an awkward way to get the previous ContentApproval entities, but
+              if you are not sure what previous contentRevisionSeqId is, then it is necessary to ask.
+              I think it is worth not assuming it is 1 less than the passed in value, just for ruggedness.
+          -->
         <entity-condition entity-name="MaxContentApprovalView" list-name="instanceApprovalList" use-cache="false">
             <condition-list>
                 <condition-expr field-name="contentId" env-name="parameters.rootContentId" operator="equals"/>
@@ -424,6 +436,8 @@
         <log level="info" message="rootContentId: ${parameters.rootContentId}"/>
         <log level="info" message="contentRevisionSeqId: ${parameters.contentRevisionSeqId}"/>
         <set field="inMap2.userLogin" from-field="userLogin"/>
+        
+        <!--  since we don't have a primary key from above, go get one -->
         <iterate list-name="instanceApprovalList" entry-name="maxContentApproval">
          <log level="info" message="maxContentApproval: ${maxContentApproval}"/>
             <entity-condition entity-name="ContentApproval" list-name="contentApprovalList2" use-cache="false">
@@ -455,6 +469,142 @@
             -->
         </iterate>
         <field-to-result field-name="contentApprovalList"/>
+    </simple-method>
+    
+    <simple-method method-name="cloneContentApprovals" short-description="Bump the previous ContentApproval approvals up to current CDT or CDI">
+
+        <entity-one entity-name="Content" value-name="content">
+            <field-map field-name="contentId" env-name="parameters.contentId"/>
+        </entity-one>
+        <set from-field="parameters.previousContentRevisionSeqId" field="previousContentRevisionSeqId" />
+        <if-empty field-name="previousContentRevisionSeqId">
+            <calculate field-name="previousContentRevisionSeqId" type="Long">
+                <calcop operator="add">
+                    <calcop operator="get" field-name="parameters.contentRevisionSeqId" />
+                    <number value="-1"/>
+                </calcop>
+            </calculate>
+            <calculate field-name="numericPadding" type="Integer">
+                <number value="6"/>
+            </calculate>
+            <call-class-method method-name="padNumberWithLeadingZeros" class-name="org.ofbiz.content.compdoc.CompDocEvents"
+                        ret-field-name="previousContentRevisionSeqId">
+                <field field-name="previousContentRevisionSeqId" type="Long"/>
+                <field field-name="numericPadding" type="Integer" />
+            </call-class-method>
+        </if-empty>     
+        
+        <!--  get previous list of ContentApproval -->
+        <entity-and entity-name="ContentApproval" list-name="contentApprovalList">
+            <field-map field-name="contentId" env-name="parameters.contentId"/>
+            <field-map field-name="contentRevisionSeqId" env-name="previousContentRevisionSeqId"/>
+        </entity-and>   
+        
+        <!--  determine status of previous approvals -->
+        
+        <set value="CNTAP_IN_PROCESS" field="primaryApprovalStatusId"/>
+        <iterate list-name="contentApprovalList" entry-name="existingContentApproval">
+            <set from-field="existingContentApproval.approvalStatusId" field="approvalStatusId"/>
+            <if>
+                <condition>
+                    <or>
+                        <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                        <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                    </or>
+                </condition>
+                <then>
+                    <!--  do nothing -->
+                </then>
+                <else-if>
+                    <condition>
+                        <or>
+                            <if-compare field-name="approvalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                            <if-compare field-name="approvalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <set from-field="approvalStatusId" field="primaryApprovalStatusId"/>
+                    </then>
+                </else-if>
+                <else-if>
+                    <condition>
+                        <if-compare field-name="approvalStatusId" operator="equals" value="CNTAP_APPROVED"/>
+                        <not>
+                            <or>
+                                <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                            </or>
+                        </not>
+                    </condition>
+                    <then>
+                        <set from-field="approvalStatusId" field="primaryApprovalStatusId"/>
+                    </then>
+                </else-if>
+            </if>
+        </iterate>
+        
+        <!--  conditionally set the contentApprovalId status of each entity -->
+        <iterate list-name="contentApprovalList" entry-name="existingContentApproval">
+            <clone-value value-name="existingContentApproval" new-value-name="contentApproval"/>
+         <log level="info" message="contentApproval 0: ${contentApproval}"/>
+            <set from-field="parameters.contentRevisionSeqId" field="contentApproval.contentRevisionSeqId" />
+            <clear-field  field-name="contentApproval.contentApprovalId" />
+         <log level="info" message="contentApproval 1: ${contentApproval}"/>
+            <make-next-seq-id seq-field-name="contentApprovalId" value-name="contentApproval"/>
+         <log level="info" message="contentApproval 2: ${contentApproval}"/>
+            
+            <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE">
+                <if>
+                    <!-- not rejected, soft rejected or approved, reset to ready -->
+                    <condition>
+                        <not>
+                            <or>
+                                <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                                <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_APPROVED"/>
+                            </or>
+                        </not>
+                    </condition>
+                    <then>
+                        <set value="CNTAP_READY" field="contentApproval.approvalStatusId" />
+                    </then>
+                    <else-if>
+                        <!-- soft rejected, reset rejected (shouldn't be any) and soft rejected entities to ready -->
+                        <condition>
+                            <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                            <or>
+                                <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                            </or>
+                        </condition>
+                        <then>
+                            <set value="CNTAP_READY" field="contentApproval.approvalStatusId" />
+                        </then>
+                    </else-if>
+                    <else-if>
+                        <condition>
+                            <!-- soft rejected and current record is not soft/rejected, keep currentstatus -->
+                            <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                            <not>
+                                <or>
+                                    <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                    <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                                </or>
+                            </not>
+                        </condition>
+                        <then>
+                            <set from-field="existingContentApproval.approvalStatusId" field="contentApproval.approvalStatusId" />
+                        </then>
+                    </else-if>
+                </if>
+                <else>
+                    <!--  if a COMPDOC_TEMPLATE -->
+                    <set value="CNTAP_READY" field="contentApproval.approvalStatusId" />
+                </else>
+            </if-compare>
+            
+            <create-value value-name="contentApproval"/>
+        </iterate>
     </simple-method>
     
     <simple-method method-name="hasApprovalPermission" short-description="Determine ContentApproval permission from passed value">

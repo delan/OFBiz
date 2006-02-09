@@ -996,9 +996,9 @@
        <security auth="true" https="true"/>
        <response name="success" type="view" value="EditRootCompDocInstance"/>
    </request-map>
-   <request-map uri="EditRootCompDocTemplate">
+   <request-map uri="EditCompDoc">
        <security auth="true" https="true"/>
-       <response name="success" type="view" value="EditRootCompDocTemplate"/>
+       <response name="success" type="view" value="EditCompDoc"/>
    </request-map>
    
     <request-map uri="AddChildCompDocInstance">
@@ -1039,13 +1039,13 @@
    <request-map uri="updateRootCompDocTemplate">
        <security auth="true" https="true"/>
         <event invoke="persistCompDoc"  path="" type="service"/>
-       <response name="success" type="view" value="EditRootCompDocTemplate"/>
-       <response name="error" type="view" value="EditRootCompDocTemplate"/>
+       <response name="success" type="view" value="EditCompDoc"/>
+       <response name="error" type="view" value="EditCompDoc"/>
    </request-map>
    <request-map uri="createRootCompDocTemplate">
        <security auth="true" https="true"/>
         <event invoke="persistCompDoc"  path="" type="service"/>
-       <response name="success" type="view" value="EditRootCompDocTemplate"/>
+       <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="AddRootCompDocTemplate"/>
    </request-map>
    <request-map uri="createChildCompDocTemplate">
@@ -1720,7 +1720,6 @@
     <view-map name="AddChildCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#AddChildCompDocTemplate" type="screen"/>
 
     <view-map name="EditRootCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocInstance" type="screen"/>
-    <view-map name="EditRootCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocTemplate" type="screen"/>
     <view-map name="AddRootCompDocInstance" page="component://content/widget/compdoc/CompDocScreens.xml#AddRootCompDocInstance" type="screen"/>
     <view-map name="AddRootCompDocTemplate" page="component://content/widget/compdoc/CompDocScreens.xml#AddRootCompDocTemplate" type="screen"/>
 
