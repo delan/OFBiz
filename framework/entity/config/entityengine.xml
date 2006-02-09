@@ -108,7 +108,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
       2. Embedded (JOTM) if available (uses jdbc.driver, jdbc.uri, jdbc.username, jdbc.password, isolation.level)
       3. Direct to manually laoded JDBC driver (uses jdbc.driver, jdbc.uri, jdbc.username, jdbc.password)
 
-    Transaction Isolation Levels - For Tyrex (<helperName>.isolation.level) can be as follows:
+    Transaction Isolation Levels - (<helperName>.isolation.level) can be as follows:
      * None
      * ReadCommitted (Recommended)
      * ReadUncommitted
