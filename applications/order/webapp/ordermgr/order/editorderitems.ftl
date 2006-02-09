@@ -239,7 +239,6 @@
           <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">
             <tr>
               <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>addOrderAdjustment?${paramString}</@ofbizUrl>">
-                <input type="hidden" name="orderId" value="${orderId}"/>
                 <input type="hidden" name="comments" value="Added manually by [${userLogin.userLoginId}]"/>
                 <td align="right" colspan="5">
                   <select name="orderAdjustmentTypeId" class="selectBox">
