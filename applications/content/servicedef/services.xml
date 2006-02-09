@@ -1325,4 +1325,12 @@
         <attribute name="rootTemplateContentId" type="String" mode="IN" optional="true"/>
         <attribute name="rootInstanceContentId" type="String" mode="INOUT" optional="true"/>
     </service>
+    
+    <service name="cloneContentApprovals" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="cloneContentApprovals" auth="true">
+        <description>Bump the previous ContentApproval approvals up to current CDT or CDI</description>
+        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

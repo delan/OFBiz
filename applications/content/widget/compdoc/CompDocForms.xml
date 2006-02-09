@@ -131,6 +131,9 @@
         <field name="create" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
+        <field name="tree" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Tree]" target="ViewCompDocTemplateTree?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${contentId}&amp;rootTemplateRevSeqId=${contentRevisionSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+        </field>
     </form>
     
     <!-- ContentRevisionItem forms -->
@@ -168,6 +171,7 @@
 
     <!-- ContentApproval forms -->
     <form name="EditContentApproval" default-map-name="contentApproval" target="updateContentApproval" title="" type="single"
+        extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
             <alt-target target="createContentApproval" use-when="contentApproval==null"/>
         <auto-fields-entity entity-name="ContentApproval"/>
@@ -180,7 +184,7 @@
         <field name="roleTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
-                    <entity-constraint name="parentTypeId" value="CALENDAR_ROLE"/>
+                    <entity-constraint name="parentTypeId" value="ORGANIZATION_ROLE"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -188,7 +192,7 @@
         <field name="approvalStatusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
-                    <entity-constraint name="statusTypeId" value="CALENDAR_STATUS"/>
+                    <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
                     <entity-order-by field-name="sequenceId"/>
                 </entity-options>
             </drop-down>
@@ -206,8 +210,12 @@
         <field name="contentId"><display/></field>
         <field name="contentRevisionSeqId"><display/></field>
         <field name="partyId"><display/></field>
-        <field name="roleTypeId"><display/></field>
-        <field name="approvalStatusId"><display/></field>
+        <field name="roleTypeId">
+            <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
+        </field>
+        <field name="approvalStatusId">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
         <field name="approvalDate"><display/></field>
         <field name="sequenceNum"><display/></field>
         <field name="comments"><display/></field>
