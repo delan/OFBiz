@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -30,6 +30,7 @@
     <handler name="java" type="request" class="org.ofbiz.webapp.event.JavaEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.webapp.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.webapp.event.ServiceEventHandler"/>
+    <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/> 
     <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
 
@@ -39,7 +40,6 @@
     <handler name="fop" type="view" class="org.ofbiz.webapp.view.FopPdfViewHandler"/>
     
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
-    <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/> 
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
     <handler name="simplecontent" type="view" class="org.ofbiz.content.view.SimpleContentViewHandler"/>
 
@@ -1277,19 +1277,19 @@
     <!-- SurveyResponse Requests -->
     <request-map uri="ViewSurveyResponses">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="SurveyResponse"/>
-        <response name="error" type="view" value="SurveyResponse"/>
+        <response name="success" type="view" value="ViewSurveyResponses"/>
+        <response name="error" type="view" value="ViewSurveyResponses"/>
     </request-map>
-    <request-map uri="ViewSurveyResponse">
+    <request-map uri="EditSurveyResponse">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="ViewSurveyResponse"/>
-        <response name="error" type="view" value="ViewSurveyResponse"/>
+        <response name="success" type="view" value="EditSurveyResponse"/>
+        <response name="error" type="view" value="EditSurveyResponse"/>
     </request-map>
     <request-map uri="updateSurveyResponse">
         <security auth="true" https="true"/>
         <event type="service" invoke="createSurveyResponse"/>
-        <response name="success" type="view" value="ViewSurveyResponse"/>
-        <response name="error" type="view" value="ViewSurveyResponse"/>
+        <response name="success" type="view" value="EditSurveyResponse"/>
+        <response name="error" type="view" value="EditSurveyResponse"/>
     </request-map>
 
     <!-- end of request mappings -->
@@ -1671,11 +1671,11 @@
     <view-map name="LayoutMenu" page="/layout/LayoutMenu.ftl" type="jpublish"/>
     <view-map name="subcontent" page="/subcontent.ftl" type="jpublish"/>
 
-    <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
-    <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
-    <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
-    <view-map name="SurveyResponse" page="/survey/SurveyResponse.ftl" type="jpublish"/>
-    <view-map name="ViewSurveyResponse" page="/survey/ViewResponse.ftl" type="jpublish"/>
+    <view-map name="FindSurvey" page="component://content/widget/SurveyScreens.xml#FindSurvey" type="screen"/>
+    <view-map name="EditSurvey" page="component://content/widget/SurveyScreens.xml#EditSurvey" type="screen"/>
+    <view-map name="EditSurveyQuestions" page="component://content/widget/SurveyScreens.xml#EditSurveyQuestions" type="screen"/>
+    <view-map name="ViewSurveyResponses" page="component://content/widget/SurveyScreens.xml#ViewSurveyResponses" type="screen"/>
+    <view-map name="EditSurveyResponse" page="component://content/widget/SurveyScreens.xml#EditSurveyResponse" type="screen"/>
 
     <view-map name="CMSSiteFind" page="component://content/widget/cms/CMSScreens.xml#CMSSiteFind" type="screen"/>
     <view-map name="CMSSiteEdit" page="component://content/widget/cms/CMSScreens.xml#CMSSiteEdit" type="screen"/>

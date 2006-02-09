@@ -41,7 +41,7 @@
         list-name="contentList" 
         target="updateContentType" title="" type="list">
         <actions>
-          <entity-and entity-name="ContentType" use-cache="true" />
+          <entity-condition entity-name="ContentType" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="updateContentType"/>
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
@@ -79,7 +79,7 @@
         list-name="contentList" 
         target="updateContentTypeAttr" title="" type="list">
         <actions>
-        <entity-and entity-name="ContentTypeAttr" use-cache="true" />
+        <entity-condition entity-name="ContentTypeAttr" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="createContentTypeAttr"/>
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
@@ -111,7 +111,7 @@
         list-name="contentList" 
         target="updateContentAssocType" title="" type="list">
         <actions>
-        <entity-and entity-name="ContentAssocType" use-cache="true" />
+            <entity-condition entity-name="ContentAssocType" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="updateContentAssocType"/>
         <field name="contentAssocTypeId" title="ContentAssocTypeId" widget-style="buttontext">
@@ -143,7 +143,7 @@
         list-name="contentList" 
         target="updateContentPurposeType" title="" type="list">
         <actions>
-        <entity-and entity-name="ContentPurposeType" use-cache="true" />
+            <entity-condition entity-name="ContentPurposeType" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="updateContentPurposeType"/>
         <field name="contentPurposeTypeId" title="ContentPurposeTypeId" widget-style="buttontext">
@@ -176,7 +176,7 @@
         list-name="contentList" 
         target="updateContentAssocPredicate" title="" type="list">
         <actions>
-        <entity-and entity-name="ContentAssocPredicate" use-cache="true" />
+            <entity-condition entity-name="ContentAssocPredicate" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="updateContentAssocPredicate"/>
         <field name="contentAssocPredicateId"
@@ -209,7 +209,7 @@
         list-name="contentList" 
         target="updateContentOperation" title="" type="list">
         <actions>
-        <entity-and entity-name="ContentOperation" use-cache="true" />
+            <entity-condition entity-name="ContentOperation" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="updateContentOperation"/>
         <field name="contentOperationId" title="ContentOperationId" widget-style="buttontext">
@@ -258,7 +258,7 @@
         list-name="contentList" 
         target="" title="" type="list">
         <actions>
-        <entity-and entity-name="ContentPurposeOperation" use-cache="true" />
+            <entity-and entity-name="ContentPurposeOperation" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
         <field name="deleteLink" title=" " widget-style="buttontext">

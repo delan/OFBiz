@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Rev$
- *@since      3.2
+ *@since      3.1
  */
 
 import java.util.*;
@@ -29,30 +29,8 @@ import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.content.survey.*;
 
-security = request.getAttribute("security");
-if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
+if (survey != null) {
+    surveyWrapper = new SurveyWrapper(delegator, surveyId);
+    context.put("surveyWrapper", surveyWrapper);
+    context.put("sequenceSort", UtilMisc.toList("sequenceNum"));
 }
-
-delegator = request.getAttribute("delegator");
-userLogin = session.getAttribute("userLogin");
-
-surveyResponseId = request.getParameter("surveyResponseId");
-surveyId = request.getParameter("surveyId");
-partyId = request.getParameter("partyId");
-
-if ((surveyId == null) && (surveyResponseId != null)) {
-   surveyResponse = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
-   surveyId = surveyResponse.getString("surveyId");
-}
-
-surveyWrapper = new SurveyWrapper(delegator, surveyResponseId, partyId, surveyId, null);
-surveyWrapper.setEdit(true);
-
-ctx = request.getSession().getServletContext();
-templatePath = ctx.getRealPath("/survey/genericsurvey.ftl");
-
-surveyString = surveyWrapper.render(templatePath).toString();
-context.put("surveyString", surveyString);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Rev$
- *@since      3.1
+ *@since      3.2
  */
 
 import java.util.*;
@@ -29,24 +29,19 @@ import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.content.survey.*;
 
-security = request.getAttribute("security");
-if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
+surveyResponseId = parameters.get("surveyResponseId");
+partyId = parameters.get("partyId");
+
+if ((surveyId == null) && (surveyResponseId != null)) {
+   surveyResponse = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+   surveyId = surveyResponse.getString("surveyId");
 }
 
-delegator = request.getAttribute("delegator");
-surveyId = request.getParameter("surveyId");
-if (UtilValidate.isEmpty(surveyId)) surveyId = request.getAttribute("surveyId");
-survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
+surveyWrapper = new SurveyWrapper(delegator, surveyResponseId, partyId, surveyId, null);
+surveyWrapper.setEdit(true);
 
-context.put("surveyId", surveyId);
-context.put("survey", survey);
+ctx = session.getServletContext();
+templatePath = ctx.getRealPath("/survey/genericsurvey.ftl");
 
-if (survey != null) {
-    surveyWrapper = new SurveyWrapper(delegator, surveyId);
-    context.put("surveyWrapper", surveyWrapper);
-    context.put("sequenceSort", UtilMisc.toList("sequenceNum"));
-}
-
+surveyString = surveyWrapper.render(templatePath).toString();
+context.put("surveyString", surveyString);

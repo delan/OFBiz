@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -62,7 +62,7 @@
                 <entity-one entity-name="ProdCatalog" value-name="prodCatalog"/>
                 
                 <entity-and entity-name="ProdCatalogCategory" list-name="prodCatalogCategories">
-                    <field-map env-name="prodCatalogId"/>
+                    <field-map field-name="prodCatalogId"/>
                     <order-by field-name="prodCatalogCategoryTypeId"/>
                     <order-by field-name="sequenceNum"/>
                     <order-by field-name="productCategoryId"/>
@@ -98,7 +98,7 @@
                 <entity-one entity-name="ProdCatalog" value-name="prodCatalog"/>
                 
                 <entity-and entity-name="ProdCatalogRole" list-name="prodCatalogRoleList">
-                    <field-map env-name="prodCatalogId"/>
+                    <field-map field-name="prodCatalogId"/>
                     <order-by field-name="sequenceNum"/>
                     <order-by field-name="partyId"/>
                 </entity-and>
@@ -129,7 +129,7 @@
                 <entity-one entity-name="ProdCatalog" value-name="prodCatalog"/>
                 
                 <entity-and entity-name="ProductStoreCatalog" list-name="productStoreCatalogList">
-                    <field-map env-name="prodCatalogId"/>
+                    <field-map field-name="prodCatalogId"/>
                     <order-by field-name="sequenceNum"/>
                     <order-by field-name="productStoreId"/>
                 </entity-and>
