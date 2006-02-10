@@ -24,7 +24,6 @@
  *@since      2.1
 -->
 
-<#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
@@ -52,7 +51,7 @@
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">Logout</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>

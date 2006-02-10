@@ -24,8 +24,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if requestAttributes.uiLabelMap?has_content><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {(page.headerItem)?default("void") : "headerButtonLeftSelected"}>
@@ -38,10 +36,10 @@
   <div class="col"><a href="<@ofbizUrl>FindFacilityGroup</@ofbizUrl>" class="${selectedLeftClassMap.facilityGroup?default(unselectedLeftClassName)}">${uiLabelMap.ProductFacilityGroups}</a></div>
   <div class="col"><a href="<@ofbizUrl>FindShipment</@ofbizUrl>" class="${selectedLeftClassMap.shipment?default(unselectedLeftClassName)}">${uiLabelMap.ProductShipments}</a></div> 
   
-  <#if requestAttributes.userLogin?has_content>
+  <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
   </#if>
   <div class="col-right"><a href="<@ofbizUrl>InventoryReports</@ofbizUrl>" class="${selectedRightClassMap.reports?default(unselectedRightClassName)}">${uiLabelMap.CommonReports}</a></div>
   <div class="col-fill">&nbsp;</div>

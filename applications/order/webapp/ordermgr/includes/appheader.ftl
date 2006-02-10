@@ -58,10 +58,10 @@
   <div class="col"><a href="<@ofbizUrl>tasklist</@ofbizUrl>" class="${selectedLeftClassMap.tasklist?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderTasks}</a></div>
   </#if>
 
-  <#if requestAttributes.userLogin?has_content>
+  <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
   </#if>  
   <div class="col-right"><a href='<@ofbizUrl>OrderPurchaseReportOptions</@ofbizUrl>' class="${selectedRightClassMap.reports?default(unselectedRightClassName)}">${uiLabelMap.CommonReports}</a></div>
   <div class="col-right"><a href='<@ofbizUrl>orderstats</@ofbizUrl>' class="${selectedRightClassMap.stats?default(unselectedRightClassName)}">${uiLabelMap.CommonStats}</a></div>
