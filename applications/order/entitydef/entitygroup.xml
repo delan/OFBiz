@@ -150,7 +150,8 @@
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.return -->
     <!-- ========================================================= -->
-
+    <entity-group group="org.ofbiz" entity="ReturnAdjustment" />
+    <entity-group group="org.ofbiz" entity="ReturnAdjustmentType" />
     <entity-group group="org.ofbiz" entity="ReturnHeader" />
     <entity-group group="org.ofbiz" entity="ReturnHeaderType" />
     <entity-group group="org.ofbiz" entity="ReturnItem" />
