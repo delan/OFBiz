@@ -421,7 +421,7 @@
             <make-value value-name="contentRole" entity-name="ContentRole"/>
             <set from-field="content.contentId" field="contentRole.contentId"/>
             <set from-field="parameters.partyId" field="contentRole.partyId"/>
-            <set from-field="nowTimestamp" field="contentRolefromDate"/>
+            <set from-field="nowTimestamp" field="contentRole.fromDate"/>
             <set value="OWNER" field="contentRole.roleTypeId"/>
 
             <!-- check party role -->
