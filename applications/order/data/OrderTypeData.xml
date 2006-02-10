@@ -169,35 +169,27 @@
     <StatusValidChange condition="" statusId="QUO_APPROVED" statusIdTo="QUO_ORDERED" transitionName="Order Quote"/>
     <StatusValidChange condition="" statusId="QUO_APPROVED" statusIdTo="QUO_REJECTED" transitionName="Reject Quote"/>
 
+    <!-- Return Adjustment Types-->
+    <ReturnAdjustmentType description="Return Promotion" hasTable="N" returnAdjustmentTypeId="RET_PROMOTION_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Replacement" hasTable="N" returnAdjustmentTypeId="RET_REPLACE_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Discount" hasTable="N" returnAdjustmentTypeId="RET_DISCOUNT_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Fee" hasTable="N" returnAdjustmentTypeId="RET_FEE_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Miscellaneous Charges" hasTable="N" returnAdjustmentTypeId="RET_MISC_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Sales Tax" hasTable="N" returnAdjustmentTypeId="RET_SALES_TAX_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Shipping and Handling" hasTable="N" returnAdjustmentTypeId="RET_SHIPPING_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Surcharge" hasTable="N" returnAdjustmentTypeId="RET_SURCHARGE_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Additional Feature" hasTable="N" returnAdjustmentTypeId="RET_ADD_FEATURE_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Warranty" hasTable="N" returnAdjustmentTypeId="RET_WARRANTY_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Marketing Package Adjustment" hasTable="N" returnAdjustmentTypeId="RET_MKTG_PKG_ADJ" parentTypeId=""/>
+    <ReturnAdjustmentType description="Return Manual Adjustment" hasTable="N" returnAdjustmentTypeId="RET_MAN_ADJ" parentTypeId=""/>
+    
+    
+    
     <!-- Return Header Types -->
     <ReturnHeaderType description="Return from Customer" returnHeaderTypeId="CUSTOMER_RETURN"/>
     <ReturnHeaderType description="Return to Vendor" returnHeaderTypeId="VENDOR_RETURN"/>  <!-- not supported yet -->
     
     <!-- return item types for sales (AR) returns -->
-    <ReturnItemType description="Return Adjustment" returnItemTypeId="RETURN_ADJ" parentTypeId=""/>
-    <ReturnItemType description="Return Manual Adjustment" returnItemTypeId="RETURN_MAN_ADJ" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Promotion" returnItemTypeId="RET_PROMOTION_ADJ" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Discount" returnItemTypeId="RET_DISCOUNT_ADJ" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Fee" returnItemTypeId="RET_FEE" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Miscellaneous Charges" returnItemTypeId="RET_MISC_CHARGE" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Sales Tax" returnItemTypeId="RET_SALES_TAX" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Shipping and Handling" returnItemTypeId="RET_SHIPPING_CHARGES" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Surcharge" returnItemTypeId="RET_SURCHARGE_ADJ" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Additional Feature" returnItemTypeId="RET_ADD_FEATURE" parentTypeId="RETURN_ADJ"/>
-    <ReturnItemType description="Return Warranty" returnItemTypeId="RET_WARRANTY_ADJ" parentTypeId="RETURN_ADJ"/>
-
-    <ReturnItemType description="Return Item Adjustment" returnItemTypeId="RETURN_ITM_ADJ" parentTypeId=""/>
-    <ReturnItemType description="Return Item Promotion" returnItemTypeId="RITM_PROMOTION_ADJ" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Replacement" returnItemTypeId="RITM_REPLACE_ADJ" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Discount" returnItemTypeId="RITM_DISCOUNT_ADJ" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Fee" returnItemTypeId="RITM_FEE" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Miscellaneous Charges" returnItemTypeId="RITM_MISC_CHARGE" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Sales Tax" returnItemTypeId="RITM_SALES_TAX" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Shipping and Handling" returnItemTypeId="RITM_SHIPPING_CHRG" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Surcharge" returnItemTypeId="RITM_SURCHARGE_ADJ" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Additional Feature" returnItemTypeId="RITM_ADD_FEATURE" parentTypeId="RETURN_ITM_ADJ"/>
-    <ReturnItemType description="Return Item Warranty" returnItemTypeId="RITM_WARRANTY_ADJ" parentTypeId="RETURN_ITM_ADJ"/>
-
     <ReturnItemType description="Return Product Item" returnItemTypeId="RET_PROD_ITEM" parentTypeId=""/>
     <ReturnItemType description="Return Finished Good Item" returnItemTypeId="RET_FPROD_ITEM" parentTypeId="RET_PROD_ITEM"/>
     <ReturnItemType description="Return Digital Good Item" returnItemTypeId="RET_DPROD_ITEM" parentTypeId="RET_PROD_ITEM"/>
@@ -212,16 +204,16 @@
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="FINISHED_GOOD" returnItemTypeId="RET_FPROD_ITEM"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="DIGITAL_GOOD" returnItemTypeId="RET_DPROD_ITEM"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="FINDIG_GOOD" returnItemTypeId="RET_FDPROD_ITEM"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="PROMOTION_ADJUSTMENT" returnItemTypeId="RITM_PROMOTION_ADJ"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="REPLACE_ADJUSTMENT" returnItemTypeId="RITM_REPLACE_ADJ"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="DISCOUNT_ADJUSTMENT" returnItemTypeId="RITM_DISCOUNT_ADJ"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="FEE" returnItemTypeId="RITM_FEE"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="MISCELLANEOUS_CHARGE" returnItemTypeId="RITM_MISC_CHARGE"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SALES_TAX" returnItemTypeId="RITM_SALES_TAX"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SHIPPING_CHARGES" returnItemTypeId="RITM_SHIPPING_CHRG"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SURCHARGE_ADJUSTMENT" returnItemTypeId="RITM_SURCHARGE_ADJ"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="ADDITIONAL_FEATURE" returnItemTypeId="RITM_ADD_FEATURE"/>
-    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="WARRANTY_ADJUSTMENT" returnItemTypeId="RITM_WARRANTY_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="PROMOTION_ADJUSTMENT" returnItemTypeId="RET_PROMOTION_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="REPLACE_ADJUSTMENT" returnItemTypeId="RET_REPLACE_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="DISCOUNT_ADJUSTMENT" returnItemTypeId="RET_DISCOUNT_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="FEE" returnItemTypeId="RET_FEE_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="MISCELLANEOUS_CHARGE" returnItemTypeId="RET_MISC_CHARGE_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SALES_TAX" returnItemTypeId="RET_SALES_TAX_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SHIPPING_CHARGES" returnItemTypeId="RET_SHIPPING_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="SURCHARGE_ADJUSTMENT" returnItemTypeId="RET_SURCHARGE_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="ADDITIONAL_FEATURE" returnItemTypeId="RET_ADD_FEATURE_ADJ"/>
+    <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="WARRANTY_ADJUSTMENT" returnItemTypeId="RET_WARRANTY_ADJ"/>
 
     <!-- Return Reasons -->
     <ReturnReason sequenceId="01" returnReasonId="RTN_NOT_WANT" description="Did Not Want Item"/>

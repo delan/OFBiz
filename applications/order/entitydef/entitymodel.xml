@@ -1912,7 +1912,103 @@
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.return -->
     <!-- ========================================================= -->
-
+    <entity entity-name="ReturnAdjustment"
+            package-name="org.ofbiz.order.return"
+            never-cache="true"
+            title="Return Adjustment Entity">
+      <description>Note that both includeInTax and includeInShipping should default to true, except in the case where this adjustment is a tax or shipping adjustment then should be ignored.</description>
+      <field name="returnAdjustmentId" type="id-ne"></field>
+      <field name="returnAdjustmentTypeId" type="id"></field>
+      <field name="returnId" type="id"></field>
+      <field name="returnItemSeqId" type="id"></field>
+      <field name="shipGroupSeqId" type="id"></field>
+      <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
+      <field name="amount" type="currency-precise"></field>
+      <field name="productPromoId" type="id"></field>
+      <field name="productPromoRuleId" type="id"></field>
+      <field name="productPromoActionSeqId" type="id"></field>
+      <field name="productFeatureId" type="id"></field>
+      <field name="correspondingProductId" type="id"></field>
+      <field name="sourceReferenceId" type="id-long"></field>
+      <field name="sourcePercentage" type="floating-point">
+          <description>for tax entries this is the tax percentage</description>          
+      </field>
+      <field name="customerReferenceId" type="id-long">
+          <description>for tax entries this is partyTaxId</description>          
+      </field>
+      <field name="primaryGeoId" type="id">
+          <description>for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city)</description>          
+       </field>
+      <field name="secondaryGeoId" type="id">
+          <description>for tax entries this is the secondary jurisdiction Geo (usually a country, or other Geo that the primary is within)</description>          
+      </field>
+      <field name="exemptAmount" type="currency-amount">
+          <description>an amount that would normally apply, but not to this order; for tax exemption represents the what the tax would have been</description>          
+      </field>
+      <field name="taxAuthGeoId" type="id">
+          <description>these taxAuth fields deprecate the primaryGeoId and secondaryGeoId fields and will be used with the newer tax calc stuff</description>          
+      </field>
+      <field name="taxAuthPartyId" type="id"></field>
+      <field name="overrideGlAccountId" type="id">
+          <description>used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc</description>          
+      </field>
+      <field name="includeInTax" type="indicator"></field>
+      <field name="includeInShipping" type="indicator"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <prim-key field="returnAdjustmentId"/>
+      <relation type="one" fk-name="RETURN_ADJ_TYPE" rel-entity-name="ReturnAdjustmentType">
+        <key-map field-name="returnAdjustmentTypeId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_RHEAD" rel-entity-name="ReturnHeader">
+        <key-map field-name="returnId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_USERL" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ReturnItem">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_PROMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductPromoAction">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+        <key-map field-name="productPromoActionSeqId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_PRGEO" title="Primary" rel-entity-name="Geo">
+        <key-map field-name="primaryGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_SCGEO" title="Secondary" rel-entity-name="Geo">
+        <key-map field-name="secondaryGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_TXA" rel-entity-name="TaxAuthority">
+        <key-map field-name="taxAuthGeoId"/>
+        <key-map field-name="taxAuthPartyId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_OGLA" title="Override" rel-entity-name="GlAccount">
+        <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ReturnAdjustmentType"
+            package-name="org.ofbiz.order.return"
+            title="Return Adjustment Type Entity">
+      <field name="returnAdjustmentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="returnAdjustmentTypeId"/>
+      <relation type="one" fk-name="RETURN_ADJ_TYPPAR" title="Parent" rel-entity-name="ReturnAdjustmentType">
+        <key-map field-name="parentTypeId" rel-field-name="returnAdjustmentTypeId"/>
+      </relation>
+    </entity> 
     <entity entity-name="ReturnHeader"
             package-name="org.ofbiz.order.return"
             title="Return Entity">
@@ -1991,27 +2087,12 @@
         <field name="description" type="description"></field>
         <field name="orderId" type="id-ne"></field>
         <field name="orderItemSeqId" type="id"></field>
-        <field name="orderAdjustmentId" type="id"></field>
         <field name="statusId" type="id"></field>
         <field name="expectedItemStatus" type="id"></field>
         <field name="returnQuantity" type="floating-point"><description>promised by the customer</description></field>
         <field name="receivedQuantity" type="floating-point"><description>actually received from the customer</description></field>
         <field name="returnPrice" type="currency-amount"></field>
         <field name="returnItemResponseId" type="id"></field>
-        <field name="sourcePercentage" type="floating-point"><description>for tax entries this is the tax percentage</description></field>
-        <field name="primaryGeoId" type="id">
-            <description>for tax entries this is the primary jurisdiction Geo (the smallest or most local Geo that this tax is for, usually a state/province, perhaps a county or a city)</description>
-        </field>
-        <field name="taxAuthGeoId" type="id">
-            <description>these taxAuth fields deprecate the primaryGeoId and secondaryGeoId fields and will be used with the newer tax calc stuff</description>
-        </field>
-        <field name="taxAuthPartyId" type="id"></field>
-        <field name="overrideGlAccountId" type="id">
-            <description>used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc</description>
-         </field>
-        <field name="parentItemSeqId" type="id">
-            <description>used to track the return item for which the sales tax is recorded</description>
-        </field>
         <prim-key field="returnId"/>
         <prim-key field="returnItemSeqId"/>
         <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="ReturnHeader">
@@ -2036,9 +2117,6 @@
             <key-map field-name="orderId"/>
             <key-map field-name="orderItemSeqId"/>
         </relation>
-        <relation type="one" fk-name="RTN_ITEM_ODADJ" rel-entity-name="OrderAdjustment">
-            <key-map field-name="orderAdjustmentId"/>            
-        </relation>
         <relation type="one" fk-name="RTN_ITEM_STTSIT" rel-entity-name="StatusItem">
             <key-map field-name="statusId"/>
         </relation>
@@ -2055,21 +2133,7 @@
         <relation type="many" rel-entity-name="OrderItemShipGrpInvRes">
             <key-map field-name="orderId"/>
             <key-map field-name="orderItemSeqId"/>
-        </relation>
-        <relation type="one" fk-name="RTN_ITEM_PRGEO" title="Primary" rel-entity-name="Geo">
-          <key-map field-name="primaryGeoId" rel-field-name="geoId"/>
-        </relation>
-        <relation type="one" fk-name="RTN_ITEM_TXA" rel-entity-name="TaxAuthority">
-          <key-map field-name="taxAuthGeoId"/>
-          <key-map field-name="taxAuthPartyId"/>
-        </relation>
-        <relation type="one" fk-name="RTN_ITEM_OGLA" title="Override" rel-entity-name="GlAccount">
-          <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
-        </relation>
-        <relation type="one" fk-name="RTN_ITEM_PAR" title="Parent" rel-entity-name="ReturnItem">
-            <key-map field-name="returnId"/>
-            <key-map field-name="parentItemSeqId" rel-field-name="returnItemSeqId"/>
-        </relation>
+        </relation>           
     </entity>
     <entity entity-name="ReturnItemResponse"
             package-name="org.ofbiz.order.return"
@@ -2112,17 +2176,21 @@
     <entity entity-name="ReturnItemTypeMap"
             package-name="org.ofbiz.order.return"
             title="Return Item Type Map Entity">
+        <description>mapping between returnItemType and productType,returnAdjustmentType and orderAdjustmentType</description>
       <field name="returnItemMapKey" type="id-ne"></field>
       <field name="returnHeaderTypeId" type="id-ne"></field>
       <field name="returnItemTypeId" type="id-ne"></field>
       <prim-key field="returnItemMapKey"/>
       <prim-key field="returnHeaderTypeId"/>
-      <relation type="one" fk-name="RETURN_ITEM_MAP" rel-entity-name="ReturnItemType">
+      <relation type="one-nofk" rel-entity-name="ReturnItemType">
         <key-map field-name="returnItemTypeId"/>
       </relation>
       <relation type="one" fk-name="RETITMMAP_RETTYP" rel-entity-name="ReturnHeaderType">
         <key-map field-name="returnHeaderTypeId"/>
-      </relation>      
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ReturnAdjustmentType">
+        <key-map field-name="returnItemTypeId" rel-field-name="returnAdjustmentTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="ReturnReason"
             package-name="org.ofbiz.order.return"
