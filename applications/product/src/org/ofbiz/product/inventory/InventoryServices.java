@@ -308,11 +308,13 @@ public class InventoryServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");        
 
+        /* TODO: NOTE: This method has been updated, but testing requires many eyes. See http://jira.undersunconsulting.com/browse/OFBIZ-662
         boolean skipThisNeedsUpdating = true;
         if (skipThisNeedsUpdating) {
             Debug.logWarning("NOT Running the checkInventoryAvailability service, no backorders or such will be automatically created; the reason is that this serice needs to be updated to use OrderItemShipGroup instead of OrderShipmentPreference which it currently does.", module);
             return ServiceUtil.returnSuccess();
         }
+        */
         
         Map ordersToUpdate = new HashMap();
         Map ordersToCancel = new HashMap();       
@@ -438,8 +440,7 @@ public class InventoryServices {
                             // we cannot ship until >30 days after promised; using cancel rule
                             Debug.log("Ship date is >30 past the promised date", module);
                             needToCancel = true;
-                        }
-                        if (currentPromiseDate != null && actualPromiseDate.equals(currentPromiseDate)) {
+                        } else if (currentPromiseDate != null && actualPromiseDate.equals(currentPromiseDate)) {
                             // this is the second notification; using cancel rule
                             needToCancel = true;
                         }
@@ -470,7 +471,7 @@ public class InventoryServices {
                 availableBeforeReserved -= reservation.getDouble("quantity").doubleValue();
             }
         }
-                                        
+               
         // all items to cancel will also be in the notify list so start with that
         List ordersToNotify = new ArrayList();
         Set orderSet = ordersToUpdate.keySet();
@@ -479,82 +480,109 @@ public class InventoryServices {
             String orderId = (String) orderIter.next();
             Map backOrderedItems = (Map) ordersToUpdate.get(orderId);
             Map cancelItems = (Map) ordersToCancel.get(orderId);
-            
-            // TODO: change to get all OrderItemShipGroup records for the order, then get items per ship group
-            
-            GenericValue orderShipPref = null;
-            List orderItems = null;
-            try {
-                orderShipPref = delegator.findByPrimaryKey("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", "_NA_"));
-                orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));                
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot get order shipment preference or items", module);
-            }
-            
-            // check the split pref
-            boolean maySplit = false;
-            if (orderShipPref != null && orderShipPref.get("maySplit") != null) {
-                maySplit = orderShipPref.getBoolean("maySplit").booleanValue();
-            }
-            
-            // figure out if we must cancel all items
             boolean cancelAll = false;
-            Timestamp cancelAllTime = null;            
-            if (!maySplit && cancelItems != null) {
-                cancelAll = true;                
-                Set cancelSet = cancelItems.keySet();
-                cancelAllTime = (Timestamp) cancelItems.get(cancelSet.iterator().next());
+            Timestamp cancelAllTime = null;
+            
+            List orderItemShipGroups = null;
+            try {
+                orderItemShipGroups= delegator.findByAnd("OrderItemShipGroup",
+                        UtilMisc.toMap("orderId", orderId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot get OrderItemShipGroups from orderId" + orderId, module);
             }
             
-            // if there are none to cancel just create an empty map
-            if (cancelItems == null) {
-                cancelItems = new HashMap();
-            }
-            
-            if (orderItems != null) {            
-                List toBeStored = new ArrayList();
-                Iterator orderItemsIter = orderItems.iterator();
-                while (orderItemsIter.hasNext()) {
-                    GenericValue orderItem = (GenericValue) orderItemsIter.next();
-                    String orderItemSeqId = orderItem.getString("orderItemSeqId");
-                    Timestamp shipDate = (Timestamp) backOrderedItems.get(orderItemSeqId);
-                    Timestamp cancelDate = (Timestamp) cancelItems.get(orderItemSeqId);
-                    Timestamp currentCancelDate = (Timestamp) orderItem.getTimestamp("autoCancelDate");
+            Iterator orderItemShipGroupsIter = orderItemShipGroups.iterator();
+            while (orderItemShipGroupsIter.hasNext()) {
+                GenericValue orderItemShipGroup = (GenericValue)orderItemShipGroupsIter.next();
+                List orderItems = new java.util.Vector();
+                List orderItemShipGroupAssoc = null;
+                try {                    
+                    orderItemShipGroupAssoc =
+                        delegator.findByAnd("OrderItemShipGroupAssoc",
+                                UtilMisc.toMap("shipGroupSeqId",
+                                        orderItemShipGroup.get("shipGroupSeqId"),
+                                        "orderId",
+                                        orderId));
                     
-                    if (backOrderedItems.containsKey(orderItemSeqId)) {
-                        orderItem.set("estimatedShipDate", shipDate);
-                    
-                        if (currentCancelDate == null) {                        
-                            if (cancelAll || cancelDate != null) {
-                                if (orderItem.get("dontCancelSetUserLogin") == null && orderItem.get("dontCancelSetDate") == null) {                            
-                                    if (cancelAllTime != null) {
-                                        orderItem.set("autoCancelDate", cancelAllTime);
-                                    } else {
-                                        orderItem.set("autoCancelDate", cancelDate);
+                    Iterator assocIter = orderItemShipGroupAssoc.iterator();
+                    while (assocIter.hasNext()) {
+                        GenericValue assoc = (GenericValue)assocIter.next();
+                        GenericValue orderItem = assoc.getRelatedOne("OrderItem");
+                        if (orderItem != null) {
+                            orderItems.add(orderItem);
+                        }
+                    }
+                } catch (GenericEntityException e) {
+                     Debug.logError(e, "Problem fetching OrderItemShipGroupAssoc", module);
+                }
+                
+    
+                /* Check the split preference. */
+                boolean maySplit = false;
+                if (orderItemShipGroup != null && orderItemShipGroup.get("maySplit") != null) {
+                    maySplit = orderItemShipGroup.getBoolean("maySplit").booleanValue();
+                }
+                
+                /* Figure out if we must cancel all items. */
+                if (!maySplit && cancelItems != null) {
+                    cancelAll = true;
+                    Set cancelSet = cancelItems.keySet();
+                    cancelAllTime = (Timestamp) cancelItems.get(cancelSet.iterator().next());
+                }
+                
+                // if there are none to cancel just create an empty map
+                if (cancelItems == null) {
+                    cancelItems = new HashMap();
+                }
+                
+                if (orderItems != null) {            
+                    List toBeStored = new ArrayList();
+                    Iterator orderItemsIter = orderItems.iterator();
+                    while (orderItemsIter.hasNext()) {
+                        GenericValue orderItem = (GenericValue) orderItemsIter.next();
+                        String orderItemSeqId = orderItem.getString("orderItemSeqId");
+                        Timestamp shipDate = (Timestamp) backOrderedItems.get(orderItemSeqId);
+                        Timestamp cancelDate = (Timestamp) cancelItems.get(orderItemSeqId);
+                        Timestamp currentCancelDate = (Timestamp) orderItem.getTimestamp("autoCancelDate");
+                        
+                        Debug.logError("OI: " + orderId + " SEQID: "+ orderItemSeqId + " cancelAll: " + cancelAll + " cancelDate: " + cancelDate, module);
+                        if (backOrderedItems.containsKey(orderItemSeqId)) {
+                            orderItem.set("estimatedShipDate", shipDate);
+                            
+                            if (currentCancelDate == null) {                        
+                                if (cancelAll || cancelDate != null) {
+                                    if (orderItem.get("dontCancelSetUserLogin") == null && orderItem.get("dontCancelSetDate") == null) {                            
+                                        if (cancelAllTime != null) {
+                                            orderItem.set("autoCancelDate", cancelAllTime);
+                                        } else {
+                                            orderItem.set("autoCancelDate", cancelDate);
+                                        }
                                     }
                                 }
+                                // only notify orders which have not already sent the final notice
+                                ordersToNotify.add(orderId);                        
                             }
-                            // only notify orders which have not already sent the final notice
-                            ordersToNotify.add(orderId);                        
+                            toBeStored.add(orderItem);                        
                         }
-                        toBeStored.add(orderItem);                        
+                    }
+                    if (toBeStored.size() > 0) {
+                        try {
+                            delegator.storeAll(toBeStored);
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Problem storing order items", module);
+                        }
                     }
                 }
-                if (toBeStored.size() > 0) {
-                    try {
-                        delegator.storeAll(toBeStored);
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Problem storing order items", module);
-                    }
-                }
-            }
+                
+                
+            }            
         }
         
         // send off a notification for each order        
         Iterator orderNotifyIter = ordersToNotify.iterator();
         while (orderNotifyIter.hasNext()) {                       
             String orderId = (String) orderNotifyIter.next();                                  
-                       
+            
             try {
                 dispatcher.runAsync("sendOrderBackorderNotification", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
             } catch (GenericServiceException e) {
@@ -562,7 +590,7 @@ public class InventoryServices {
                 continue;
             }
         }        
-                                                          
+        
         return ServiceUtil.returnSuccess();
     }
     
