@@ -53,7 +53,6 @@
             <tr><td><font color="red">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</font></td></tr>
           <#else>
             <form name="updateItemInfo" method="post" action="<@ofbizUrl>updateOrderItems?${paramString}</@ofbizUrl>"/>
-            <input type="hidden" name="orderId" value="${orderId}"/>
             <#list orderItemList as orderItem>
               <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
               <tr><td colspan="8"><hr class="sepbar"></td></tr>
