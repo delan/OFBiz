@@ -409,7 +409,7 @@
         <set from-field="contentId" field="content.contentId"/>
         <set from-field="parameters._uploadedFile_fileName" field="content.contentName"/>
         <set from-field="parameters._uploadedFile_contentType" field="content.mimeTypeId"/>
-        <set from-field="parameters.dataResourceId" field="content.dataResourceId"/>
+        <set from-field="dataResource.dataResourceId" field="content.dataResourceId"/>
         <set from-field="parameters.contentTypeId" field="content.contentTypeId"/>
         <set from-field="parameters.statusId" field="content.statusId"/>
         <set value="${parameters.locale}" field="content.localeString"/>
