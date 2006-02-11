@@ -93,6 +93,8 @@
 
     <entity-group group="org.ofbiz" entity="Affiliate" />
     <entity-group group="org.ofbiz" entity="Party" />
+    <entity-group group="org.ofbiz" entity="PartyAndGroup" />
+    <entity-group group="org.ofbiz" entity="PartyAndPerson" />
     <entity-group group="org.ofbiz" entity="PartyAndUserLogin" />
     <entity-group group="org.ofbiz" entity="PartyAndUserLoginAndPerson" />
     <entity-group group="org.ofbiz" entity="PartyAttribute" />
