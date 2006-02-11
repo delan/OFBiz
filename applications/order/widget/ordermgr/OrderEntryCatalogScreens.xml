@@ -84,10 +84,6 @@
     <screen name="category">
         <section>
             <actions>
-<!--                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
-                <set field="MainColumnStyle" value="center"/>-->
-
                 <set field="title-property" value="PageTitleCategoryPage"/>
             </actions>
             <widgets>

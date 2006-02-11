@@ -40,31 +40,10 @@
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="accounting" global="true"/>
+                <set field="appheaderTemplate" value="component://accounting/webapp/accounting/includes/appheader.ftl" global="true"/>
             </actions>
             <widgets>
-                <!-- render header -->
-                <platform-specific><html><html-template location="component://common/webcommon/includes/header.ftl"/></html></platform-specific>
-                <!-- render appbar -->
-                <platform-specific><html><html-template location="component://common/webcommon/includes/appbar.ftl"/></html></platform-specific>
-                
-                <container style="centerarea">
-                    <!-- render appheader -->
-                    <platform-specific><html><html-template location="component://accounting/webapp/accounting/includes/appheader.ftl"/></html></platform-specific>
-                    
-                    <container style="contentarea">
-                        <!-- by default will render left-bar only if leftbarScreen value not empty -->
-                        <!-- include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/ -->
-                    
-                        <container style="column-main">
-                            <!-- render messages -->
-                            <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
-                            <decorator-section-include name="body"/>
-                        </container>
-                    </container>
-                </container>
-                
-                <!-- render footer -->
-                <platform-specific><html><html-template location="component://common/webcommon/includes/footer.ftl"/></html></platform-specific>
+                <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

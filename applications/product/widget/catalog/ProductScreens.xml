@@ -736,6 +736,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
+                <set field="leftbarScreenLocation" value="component://product/widget/catalog/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">

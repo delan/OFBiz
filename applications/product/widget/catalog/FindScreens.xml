@@ -29,6 +29,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
+                <set field="leftbarScreenLocation" value="component://product/widget/catalog/CommonScreens.xml"/>
                 <set field="MainColumnStyle" value="leftonly"/>
             </actions>
             <widgets>
@@ -96,6 +97,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
+                <set field="leftbarScreenLocation" value="component://product/widget/catalog/CommonScreens.xml"/>
                 <set field="MainColumnStyle" value="leftonly"/>
     
                 <set field="title" value="Find Product By ID"/>
