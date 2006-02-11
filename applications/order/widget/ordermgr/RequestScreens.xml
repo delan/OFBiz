@@ -85,7 +85,6 @@
     <screen name="ViewRequest">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="tabButtonItem" value="ViewRequest"/>
                 <set field="title-property" value="PageTitleViewRequest"/>

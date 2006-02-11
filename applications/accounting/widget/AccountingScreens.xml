@@ -65,9 +65,6 @@
     <screen name="CommonAccountDecorator">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <!-- <set field="leftbarScreenLocation" value=""/> -->
-    
                 <set field="glAccountId" from-field="parameters.glAccountId"/>
                 <entity-one entity-name="GlAccount" value-name="glAccount"/>
             </actions>
