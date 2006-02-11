@@ -257,22 +257,26 @@ public class PartyServices {
             return result;
 
         GenericValue person = null;
+        GenericValue party = null;
 
         try {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
+            party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.read_failure", new Object[] { e.getMessage() }, locale));
         }
 
-        if (person == null) {
+        if (person == null || party == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.not_found", locale));
         }
 
         person.setNonPKFields(context);
+        party.setNonPKFields(context);
 
         try {
             person.store();
+            party.store();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.write_failure", new Object[] { e.getMessage() }, locale));
@@ -407,7 +411,7 @@ public class PartyServices {
 
         try {
             partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
-            party = partyGroup.getRelatedOne("Party");
+            party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
             Map messageMap = UtilMisc.toMap("errMessage", e.getMessage());

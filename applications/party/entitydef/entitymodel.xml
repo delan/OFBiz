@@ -1178,6 +1178,28 @@
         <index-field name="externalId"/>
       </index>
     </entity>
+    <view-entity entity-name="PartyAndGroup"
+        package-name="org.ofbiz.party.party"
+        title="Party and Party Group View Entity">
+        <member-entity entity-alias="PTY" entity-name="Party"/>
+        <member-entity entity-alias="PGRP" entity-name="PartyGroup"/>
+        <alias-all entity-alias="PTY"/>
+        <alias-all entity-alias="PGRP"/>
+        <view-link entity-alias="PTY" rel-entity-alias="PGRP">
+            <key-map field-name="partyId"/>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="PartyAndPerson"
+        package-name="org.ofbiz.party.party"
+        title="Party and Person View Entity">
+        <member-entity entity-alias="PTY" entity-name="Party"/>
+        <member-entity entity-alias="PERS" entity-name="Person"/>
+        <alias-all entity-alias="PTY"/>
+        <alias-all entity-alias="PERS"/>
+        <view-link entity-alias="PTY" rel-entity-alias="PERS">
+            <key-map field-name="partyId"/>
+        </view-link>
+    </view-entity>
     <view-entity entity-name="PartyAndUserLogin"
             package-name="org.ofbiz.party.party"
             title="Party and Contact Mech View Entity">

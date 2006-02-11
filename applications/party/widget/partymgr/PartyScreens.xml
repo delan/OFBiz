@@ -324,7 +324,7 @@
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
-                <entity-one entity-name="Person" value-name="person"/>
+                <entity-one entity-name="PartyAndPerson" value-name="person"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -344,7 +344,7 @@
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
-                <entity-one entity-name="PartyGroup" value-name="partyGroup"/>
+                <entity-one entity-name="PartyAndGroup" value-name="partyGroup"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
