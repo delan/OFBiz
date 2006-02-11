@@ -73,9 +73,19 @@
                 <platform-specific><html><html-template location="component://common/webcommon/includes/appbar.ftl"/></html></platform-specific>
                 
                 <container style="centerarea">
-                    <!-- render appheader -->
-                    <platform-specific><html><html-template location="${appheaderTemplate}"/></html></platform-specific>
-                    
+                    <!-- render appheader: both menu widget style and ftl template style menus are supported-->
+                    <section>
+                        <condition>
+                            <if-empty field-name="applicationMenuName"/>
+                        </condition>
+                        <widgets>
+                            <platform-specific><html><html-template location="${appheaderTemplate}"/></html></platform-specific>
+                        </widgets>
+                        <fail-widgets>
+                            <label style="apptitle">${applicationTitle}</label>
+                            <include-menu name="${applicationMenuName}" location="${applicationMenuLocation}"/>
+                        </fail-widgets>
+                    </section>
                     <container style="contentarea">
                         <container id="column-container">
                             <!-- by default will render left-bar only if leftbarScreen value not empty -->
