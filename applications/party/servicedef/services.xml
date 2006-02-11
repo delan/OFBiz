@@ -601,7 +601,7 @@
     </service>
 
     <service name="createPartyContent" engine="simple"
-            location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyContent" auth="false">
+        location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyContent" auth="false">
         <description>Create Party Associated Content</description>
         <attribute name="uploadedFile" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="false"/>
         <attribute name="_uploadedFile_fileName" type="String" mode="IN" optional="false"/>
@@ -611,5 +611,11 @@
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="contentId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="getPartyEmail" engine="simple"
+        location="org/ofbiz/party/party/PartyServices.xml" invoke="getPartyEmail" auth="false">
+        <description>Get the main party Email address</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="emailAddress" type="String" mode="OUT" optional="true"/>
     </service>
 </services>

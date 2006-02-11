@@ -662,4 +662,18 @@
             <call-simple-method method-name="getChildRoleTypesInline"/>
         </if-not-empty>
     </simple-method>    
+
+    <simple-method method-name="getPartyEmail" short-description="Get the email of the party">
+        <set field="findMap.partyId" from-field="parameters.partyId"/>
+        <set field="findMap.contactMechTypeId" value="EMAIL_ADDRESS"/>
+        <find-by-and entity-name="PartyAndContactMech" map-name="findMap" list-name="emailAddressesAll"/>
+        <if-empty field-name="emailAddressesAll">
+            <set field="findMap.contactMechTypeId" value="ELECTRONIC_ADDRESS"/>
+            <find-by-and entity-name="PartyAndContactMech" map-name="findMap" list-name="emailAddressesAll"/>
+        </if-empty>
+        <now-date-to-env env-name="fromDate"/>
+        <filter-list-by-date list-name="emailAddressesAll" from-field-name="fromDate" to-list-name="emailAddresses"/>
+        <first-from-list entry-name="emailAddress" list-name="emailAddresses"/>
+        <field-to-result field-name="emailAddress.infoString" result-name="emailAddress"/>
+    </simple-method>
 </simple-methods>
