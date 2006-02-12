@@ -38,32 +38,12 @@
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="catalogmgr" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.ContentContentManagerApplication" global="true"/>
+                <set field="applicationMenuName" value="ContentAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://content/widget/ContentMenus.xml" global="true"/>
             </actions>
             <widgets>
-                <!-- render header -->
-                <platform-specific><html><html-template location="component://common/webcommon/includes/header.ftl"/></html></platform-specific>
-                <!-- render appbar -->
-                <platform-specific><html><html-template location="component://common/webcommon/includes/appbar.ftl"/></html></platform-specific>
-                
-                <container style="centerarea">
-                    <!-- render appheader -->
-                    <container style="apptitle"><label text="Content Manager Application"/></container>
-                    <include-menu name="ContentAppBar" location="component://content/widget/ContentMenus.xml"/>
-                    
-                    <container style="contentarea">
-                        <!-- by default will render left-bar only if leftbarScreen value not empty -->
-                        <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
-                    
-                        <container style="column-main">
-                            <!-- render messages -->
-                            <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
-                            <decorator-section-include name="body"/>
-                        </container>
-                    </container>
-                </container>
-                
-                <!-- render footer -->
-                <platform-specific><html><html-template location="component://common/webcommon/includes/footer.ftl"/></html></platform-specific>
+                <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>
