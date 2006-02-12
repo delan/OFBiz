@@ -64,16 +64,42 @@
         <field name="submitButton" title="Run Product Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
+    <form name="ListInvoices" target="ListInvoices" title="List invoices" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="year" title="Year"><text size="4" maxlength="4"/></field>
+        <field name="submitButton" title="submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="InvoicesList" target="InvoicesList" title="Invoice List" type="list" list-name="invoiceList" default-widget-style="tabletext"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext">
+        <field name="company" widget-style="buttontext" >
+            <hyperlink description="${company}" target="partyFinancialHistory?partyId=${company}" target-window="new"/>
+        </field>
+        <field name="name"><display/></field>
+        <field name="revenue" widget-area-style="tabletextright"><display/></field>
+        <field name="salesTaxIn" widget-area-style="tabletextright"><display/></field>
+        <field name="expenses" widget-area-style="tabletextright"><display/></field>
+        <field name="salesTaxOut" widget-area-style="tabletextright"><display/></field>
+        <!--field name="miscIn"><display/></field>
+            <field name="miscOut"><display/></field-->
+        <field name="totalValue" widget-area-style="tabletextright"><display currency="ss"/></field>
+    </form>
+    
     <form name="VatReportOptions" type="single" target="VatReport" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="year" title="Year"><text size="4" maxlength="4" default-value="2005"/></field>
+        <field name="year" title="Year"><text size="4" maxlength="4"/></field>
         <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="VatReport" type="list" list-name="monthList" 
         default-title-style="tableheadtext" default-widget-style="tabletext" 
         default-tooltip-style="tabletext">
+        <actions>
+            <service service-name="otsVatReport" result-map-list-name="monthList">
+                <field-map field-name="year" env-name="parameters.year"/>
+            </service>
+        </actions>
         <field name="monthNr"><display/></field>
         <field name="revenue" widget-area-style="tabletextright"><display/></field>
         <field name="salesTaxIn" widget-area-style="tabletextright"><display/></field>
@@ -82,7 +108,7 @@
         <field name="salesTaxDue" widget-area-style="tabletextright"><display/></field>
     </form>
 
-    <form name="OpenSalesInvoices" type="single" target="OpenSalesInvoices.pdf" title=""
+    <form name="OpenInvoices" type="single" target="OpenSalesInvoices.pdf" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

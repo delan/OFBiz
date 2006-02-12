@@ -33,9 +33,22 @@ import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 import org.ofbiz.webapp.control.*;
 import org.ofbiz.accounting.invoice.*;
+import org.ofbiz.entity.condition.*;
 
 delegator = parameters.get("delegator");
-organizationPartyId = parameters.get("organizationPartyId");
+String organizationPartyId = parameters.get("organizationPartyId");
+GenericValue partyAcctgPreference = delegator.findByPrimaryKey("PartyAcctgPreference",UtilMisc.toMap("partyId",organizationPartyId));
+String prefix = partyAcctgPreference.getString("invoiceIdPrefix");
+
+String year = parameters.get("year");
+if (year.equals("")) {
+	year = UtilDateTime.nowTimestamp().toString().substring(0,4);
+}
+
+Timestamp startDate = null;
+Timestamp endDate = null;
+startDate = Timestamp.valueOf(year.concat("-01-01 00:00:00"));
+endDate = Timestamp.valueOf(year.concat("-12-31 23:59:59"));
 
 // Create totals:
 BigDecimal salesTaxInTot = new BigDecimal("0");
@@ -46,31 +59,38 @@ BigDecimal MiscInTot = new BigDecimal("0");
 BigDecimal MiscOutTot = new BigDecimal("0");
 BigDecimal totalValueTot = new BigDecimal("0");
 
-// first get the list of companies
-List invoiceList = new LinkedList();
+// set up basic search condition for the invoiceTable
+// avoid invoices which are cancelled and only select with the according prefixes
+EntityExpr invoiceNotCancelled = new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED");
+EntityExpr invoicePrefixExpr = new EntityExpr("invoiceId", EntityOperator.LIKE, prefix.concat("%"));
+// the date of the requested year
+List dateExprs = new LinkedList();
+	dateExprs.add(new EntityExpr("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
+	dateExprs.add(new EntityExpr("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
 
-
-
-// check companies who have invoices from/to thye organizationParty but no relation
-
-parties = delegator.findAll("Party");
-Iterator p = parties.iterator();
-while (p.hasNext())	{
-	party = p.next();
-	List rel = delegator.findByAnd("PartyRelationship",UtilMisc.toMap("partyIdTo",party.getString("partyId")));
-	if (rel == null || rel.size() == 0)	{
-		invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyIdFrom",party.getString("partyId")));
-		if (invoices != null && invoices.size() != 0) Debug.logInfo("!!!!!!!!!!(partyIdFrom)" + party.getString("partyId") + " InvoiceId:" + invoices.get(0).getString("invoiceId"),"ListInvoices.bsh");
-		invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyId",party.getString("partyId")));
-		if (invoices != null  && invoices.size() != 0) Debug.logInfo("!!!!!!!!!!(party)" + party.getString("partyId") + " InvoiceId:" + invoices.get(0).getString("invoiceId"),"???????");
-	}
+// set up basic search condition for the party Table
+List partyExp = new LinkedList();
+// only selected partyIds with invoiceprefix
+partyExp.add(new EntityExpr("partyId", EntityOperator.LIKE, prefix.concat("%")));
+if (organizationPartyId.equals("anet")) {
+	partyExp.add(new EntityExpr("partyId", EntityOperator.EQUALS, "BelastingDienst"));
+	partyExp.add(new EntityExpr("partyId", EntityOperator.EQUALS, "Sidin"));
+	partyExp.add(new EntityExpr("partyId", EntityOperator.EQUALS, "Stulemeijer"));
 }
+EntityCondition partyCond = new EntityConditionList(partyExp, EntityOperator.OR);
 
-companies = delegator.findByAnd("PartyRelationshipAndPartyDetail",UtilMisc.toMap("partyIdFrom",organizationPartyId));
+List orderList = new LinkedList();
+orderList.add("partyId");
+
+companies = delegator.findByCondition("PartyNameView",partyCond, null, orderList);
+List invoiceList = new LinkedList(); // list to put on screen
+List compCheck = new LinkedList();	// for crosschecking totals
 Iterator comp = companies.iterator();
 while (comp.hasNext())	{
 	company = comp.next();
 	partyId = company.getString("partyId");
+	compCheck.add(partyId);
+	if (partyId.equals(organizationPartyId)) continue;  // do not process own company
 	name = company.getString("groupName");
 	if (name == null) 	{
 		if (company.getString("lastName") != null)	{
@@ -89,56 +109,69 @@ while (comp.hasNext())	{
 	BigDecimal totalValue = new BigDecimal("0");
 
 	// purchase invoices
-	invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyIdFrom",partyId));
+	List pExprs = new LinkedList();
+		pExprs.add(invoicePrefixExpr);												// prefix
+		pExprs.add(new EntityExpr("partyIdFrom", EntityOperator.EQUALS, partyId));	// party
+		pExprs.add(new EntityConditionList(dateExprs, EntityOperator.AND));			// date limitation
+		pExprs.add(invoiceNotCancelled);											// not cancelled
+	EntityCondition pinvoiceCond = new EntityConditionList(pExprs, EntityOperator.AND);
+	invoices = delegator.findByCondition("Invoice",pinvoiceCond,null,null);
 	Iterator inv = invoices.iterator();
 	while (inv.hasNext())	{
 		invoice = inv.next();
-		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue;
-
 		invoiceItems = invoice.getRelated("InvoiceItem");
 		Iterator invit = invoiceItems.iterator();
 		while (invit.hasNext())	{
 			invoiceItem = invit.next();
+			BigDecimal total = new BigDecimal("0");
+			if (invoiceItem.getBigDecimal("amount") != null) {
+				if (invoiceItem.getBigDecimal("quantity") != null)
+					total = invoiceItem.getBigDecimal("amount").multiply(invoiceItem.getBigDecimal("quantity")).setScale(2,4);
+				else
+					total = invoiceItem.getBigDecimal("amount").setScale(2,4);
+			}
 			if (invoiceItem.getString("invoiceItemTypeId").equals("PINV_SALES_TAX"))	{
-				salesTaxOut = salesTaxOut.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
-				salesTaxOutTot = salesTaxOutTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+				salesTaxOut = salesTaxOut.add(total);
+				salesTaxOutTot = salesTaxOutTot.add(total);
 			}
-			else if (invoiceItem.getString("invoiceItemTypeId").equals("PINV_SPROD_ITEM"))	{
-				expenses = expenses.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
-				expensesTot = expensesTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+			else {
+				expenses = expenses.add(total);
+				expensesTot = expensesTot.add(total);
 			}
-			else if (invoiceItem.getString("invoiceItemTypeId").equals("PINV_MISC_CHARGE"))	{
-				MiscOut = MiscOut.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
-				MiscOutTot = MiscOutTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
-			}
-			else	{	Debug.logInfo(" not registered invoiceItem: " + invoiceItem.getString("invoiceItemTypeId") + " invoiceId: " + invoiceItem.getString("invoiceId") + " itemId: " + invoiceItem.getString("invoiceItemSeqId") ,"ListInvoices.bsh"); }
 		}
 	}
 			
 	// Sales invoices
-	invoices = delegator.findByAnd("Invoice",UtilMisc.toMap("partyId",partyId));
+	List sExprs = new LinkedList();
+		sExprs.add(invoicePrefixExpr);												// prefix
+		sExprs.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));		// party
+		sExprs.add(new EntityConditionList(dateExprs, EntityOperator.AND));			// date limitation
+		sExprs.add(invoiceNotCancelled);											// not cancelled
+	EntityCondition sinvoiceCond = new EntityConditionList(sExprs, EntityOperator.AND);
+	
+	invoices = delegator.findByCondition("Invoice",sinvoiceCond,null,null);
 	Iterator inv = invoices.iterator();
 	while (inv.hasNext())	{
 		invoice = inv.next();
-		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue; // ignore cancelled invoices
 		invoiceItems = invoice.getRelated("InvoiceItem");
 		Iterator invit = invoiceItems.iterator();
 		while (invit.hasNext())	{
 			invoiceItem = invit.next();
+			BigDecimal total = new BigDecimal("0");
+			if (invoiceItem.getBigDecimal("amount") != null) {
+				if (invoiceItem.getBigDecimal("quantity") != null)
+					total = invoiceItem.getBigDecimal("amount").multiply(invoiceItem.getBigDecimal("quantity")).setScale(2,4);
+				else
+					total = invoiceItem.getBigDecimal("amount").setScale(2,4);
+			}
 			if (invoiceItem.getString("invoiceItemTypeId").equals("INV_SALES_TAX"))	{
-				salesTaxIn = salesTaxIn.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
-				salesTaxInTot = salesTaxInTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+				salesTaxIn = salesTaxIn.add(total);
+				salesTaxInTot = salesTaxInTot.add(total);
 			}
-			else if (invoiceItem.getString("invoiceItemTypeId").equals("INV_SPROD_ITEM"))	{
-				revenue = revenue.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
-				revenueTot = revenueTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+			else {
+				revenue = revenue.add(total);
+				revenueTot = revenueTot.add(total);
 			}
-			else if (invoiceItem.getString("invoiceItemTypeId").equals("INV_MISC_CHARGE"))	{
-				MiscIn = MiscIn.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
-				MiscInTot = MiscInTot.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
-			}
-			 else	{	Debug.logInfo(" not registered payment: " + 
-			 					invoiceItem.getString("invoiceItemTypeId") + "Id:" + invoiceItem.getString("invoiceId") +"/" + invoiceItem.getString("invoiceItemSeqId"),"??"); }
 		}
 	}
 			
@@ -149,7 +182,7 @@ while (comp.hasNext())	{
 	listItem.put("miscOut", MiscOut.toString());
 	BigDecimal totalValue = salesTaxIn.add(salesTaxOut).add(revenue).add(expenses).add(MiscOut).add(MiscIn);
 	listItem.put("totalValue", totalValue.toString());
-	invoiceList.add(listItem);
+	if (!totalValue.equals(new BigDecimal("0"))) invoiceList.add(listItem);
 }
 
 Map listItem = UtilMisc.toMap("company","Total.","name", " ", "salesTaxIn",salesTaxInTot,"salesTaxOut",salesTaxOutTot);
@@ -163,19 +196,53 @@ invoiceList.add(listItem);
 
 // create total check of all values
 BigDecimal generalTotal = new BigDecimal("0");
-ii = delegator.findAll("InvoiceItem");
+ii = delegator.findByCondition("InvoiceItem",invoicePrefixExpr,null,null);
 	Iterator it = ii.iterator();
 	while (it.hasNext())	{
 		invoiceItem = it.next();
 		GenericValue invoice = invoiceItem.getRelatedOne("Invoice");
-			if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue; // ignore cancelled items
 		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue; // ignore cancelled items
-		if (!invoice.getString("partyIdFrom").equals(organizationPartyId) &&
-					!invoice.getString("partyId").equals(organizationPartyId)) continue; // only items from organization party id
-		if (invoiceItem.getBigDecimal("amount") != null)
-			generalTotal = generalTotal.add(invoiceItem.getBigDecimal("amount")).setScale(2,4);
+		if (invoice.getTimestamp("invoiceDate").before(startDate)) continue;
+		if (invoice.getTimestamp("invoiceDate").after(endDate)) continue;
+		BigDecimal total = new BigDecimal("0");
+		if (invoiceItem.getBigDecimal("amount") != null) {
+			if (invoiceItem.getBigDecimal("quantity") != null)
+				total = invoiceItem.getBigDecimal("amount").multiply(invoiceItem.getBigDecimal("quantity")).setScale(2,4);
+			else
+				total = invoiceItem.getBigDecimal("amount").setScale(2,4);
+		}
+		if (compCheck.indexOf(invoice.getString("partyId")) == -1) {
+			Debug.logInfo(" not found to Party (" + invoice.getString("partyId") + ") in list: " + 
+			 					invoiceItem.getString("invoiceItemTypeId") + " Id:" + invoiceItem.getString("invoiceId") +"/" + invoiceItem.getString("invoiceItemSeqId")  + " value: " + total,"ListInvoices.bsh");
+			continue;
+		}
+		if (compCheck.indexOf(invoice.getString("partyIdFrom")) == -1) {
+			Debug.logInfo(" not found from Party (" + invoice.getString("partyIdFrom") + ") in list: " + 
+			 					invoiceItem.getString("invoiceItemTypeId") + " Id:" + invoiceItem.getString("invoiceId") +"/" + invoiceItem.getString("invoiceItemSeqId") + " value: " + total,"ListInvoices.bsh");
+			continue;
+		}
+		generalTotal = generalTotal.add(total);
 	}
-Map listItem = UtilMisc.toMap("company","GeneralTotal","totalValue", generalTotal);
-invoiceList.add(listItem);
+invoiceList.add(UtilMisc.toMap("company","GeneralTotal","totalValue", generalTotal));
+
+/*  testing
+BigDecimal invoiceTotal = new BigDecimal("0");
+	List invExprs = new LinkedList();
+		invExprs.add(invoicePrefixExpr);												// prefix
+		invExprs.add(new EntityExpr("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+		invExprs.add(new EntityConditionList(dateExprs, EntityOperator.AND));			// date limitation
+		invExprs.add(invoiceNotCancelled);											// not cancelled
+	EntityCondition invCond = new EntityConditionList(invExprs, EntityOperator.AND);
+jj = delegator.findByCondition("Invoice",invCond,null,null);
+	Iterator inv = jj.iterator();
+	while (inv.hasNext())	{
+		invoice = inv.next();
+		invoiceTotal = invoiceTotal.add(InvoiceWorker.getInvoiceTotalBd(invoice));
+	}
+	Debug.logInfo("Invoice file total for prefix :" + prefix + " -- " + invoiceTotal,"");	
+*/
+
 
 context.put("invoiceList",invoiceList);
+context.put("year",year);
+context.put("organizationPartyId",organizationPartyId);

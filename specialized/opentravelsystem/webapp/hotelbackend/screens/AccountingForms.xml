@@ -62,29 +62,4 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="ListInvoices" target="ListInvoices" title="List invoices" type="single"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="submitButton" title="submit" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-    <form name="InvoicesList" target="InvoicesList" title="Invoice List" type="list" list-name="invoiceList" default-widget-style="tabletext"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext">
-        <actions>
-            <script location="component://opentravelsystem/webapp/hotelbackend/script/ListInvoices.bsh"/>
-        </actions>
-        <field name="company" widget-style="buttontext" >
-            <hyperlink description="${company}" target="partyFinancialHistory?partyId=${company}" target-window="new"/>
-        </field>
-        <field name="name"><display/></field>
-        <field name="revenue" widget-area-style="tabletextright"><display/></field>
-            <field name="salesTaxIn" widget-area-style="tabletextright"><display/></field>
-        <field name="expenses" widget-area-style="tabletextright"><display/></field>
-        <field name="salesTaxOut" widget-area-style="tabletextright"><display/></field>
-        <!--field name="miscIn"><display/></field>
-        <field name="miscOut"><display/></field-->
-        <field name="totalValue" widget-area-style="tabletextright"><display currency="ss"/></field>
-    </form>
-    
 </forms>

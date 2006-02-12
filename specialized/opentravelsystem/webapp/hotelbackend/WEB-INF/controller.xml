@@ -995,7 +995,7 @@
     <request-map uri="createProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProduct"/>
-        <response name="success" type="view" value="EditProducts"/>
+        <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
     </request-map>
     <request-map uri="updateProduct">
@@ -2832,7 +2832,6 @@
     
     <request-map uri="VatReport">
         <security https="true" auth="true"/>
-        <event type="service" invoke="otsVatReport"/>
         <response name="success" type="view" value="VatReport"/>
         <response name="error" type="view" value="AccountingReports"/>
     </request-map>

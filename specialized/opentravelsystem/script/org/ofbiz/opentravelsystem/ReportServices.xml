@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- * Copyright (c) 2001-2005 The Open For Business Project and repective authors.
- * Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
- * @version 1.0
- -->
+    * Copyright (c) 2001-2005 The Open For Business Project and repective authors.
+    * Permission is hereby granted, free of charge, to any person obtaining a
+    *  copy of this software and associated documentation files (the "Software"),
+    *  to deal in the Software without restriction, including without limitation
+    *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    *  and/or sell copies of the Software, and to permit persons to whom the
+    *  Software is furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included
+    *  in all copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+    *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    *
+    * @author <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
+    * @version 1.0
+-->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
-
+    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    
     <!-- ================================================================ -->
     <!-- Opentravelsystem reporting Services -->
     <!-- ================================================================ -->
@@ -34,129 +34,127 @@
         <!--check-permission permission="CATALOG" action="_CREATE">
             <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
             <fail-message message="Security Error: to update you need CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
-        </check-permission>        
-        <check-errors/-->
-
+            </check-permission>        
+            <check-errors/-->
+        
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
+            <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
+        </entity-one>
+        
         <if-empty field-name="parameters.year">
-            <set field="respond_code" value="error"/>
-            <set field="error_message" value="Please enter a 4 digit year"/>
-            <field-to-list field-name="error_message" list-name="error_list"/>
-            <check-errors/>
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <call-bsh><![CDATA[parameters.put("year",nowTimestamp.toString().substring(0,4))]]></call-bsh>
         </if-empty>
-
-        <!--set field="parameters.year" value="2006"/-->
+        
         <set field="start" from-field="parameters.year"/>
         <string-append field-name="start" string="-01-01 00:00:00"/>
         <set field="period.start" from-field="start" type="Timestamp"/>
         <set field="end" from-field="parameters.year"/>
-        <string-append field-name="end" string="-12-31 23:59:99"/>
+        <string-append field-name="end" string="-12-31 23:59:59"/>
         <set field="period.end" from-field="end" type="Timestamp"/>
         
+        <set field="searchPrefix" from-field="partyAcctgPreference.invoiceIdPrefix"/>
+        <string-append field-name="searchPrefix" string="%"/>
         <entity-condition entity-name="Invoice" list-name="invoices">
             <condition-list combine="and">
+                <condition-expr field-name="invoiceId" operator="like" value="${searchPrefix}"/>
                 <condition-expr field-name="invoiceDate" operator="greater-equals" value="${period.start}"/>
                 <condition-expr field-name="invoiceDate" operator="less-equals" value="${period.end}"/>
                 <condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
-                <condition-list combine="or">
-                    <condition-expr field-name="partyId" value="${parameters.organizationPartyId}"/>
-                    <condition-expr field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
-                </condition-list>
             </condition-list>            
             <order-by field-name="invoiceDate"/>
         </entity-condition>
-
+        
         <log level="always" message="Preparing VAT report for organization: ${parameters.organizationPartyId} for year ${parameters.year}"/>
         <if-empty field-name="invoices">
-            <log level="always" message="==== could find an invoice...."/>
+            <log level="always" message="==== could not find an invoice...."/>
         </if-empty>
 
-        <set field="current.monthNr" value="0000-00"/>
-        <set field="month.monthNr" value="0000-00"/>
-        <set field="invoiceYear.year" value="0000"/>
+        <set field="invoiceTotalP" value="0" type="Double"/>        
+        <set field="invoiceTotalS" value="0" type="Double"/>        
+        <set field="current.monthNr" value="0000-00"/>  <!-- read in from record -->
+        <set field="month.monthNr" value="0000-00"/> <!-- report line value -->
         <iterate entry-name="invoice" list-name="invoices">
+            <!-- get the month number -->
             <set field="invoiceDate" from-field="invoice.invoiceDate"/>
-            <call-bsh><![CDATA[invoiceYear.put("year",invoiceDate.toString().substring(0,4))]]></call-bsh>
-            <if-compare-field field-name="parameters.year" operator="equals" to-field-name="invoiceYear.year">
-                <!-- get the month number -->
-                <set field="invoiceDate" from-field="invoice.invoiceDate"/>
-                <call-bsh><![CDATA[current.put("monthNr",invoiceDate.toString().substring(0,7))]]></call-bsh>
-                <!-- store in list if changed -->
-                <if-compare-field field-name="month.monthNr" operator="not-equals" to-field-name="current.monthNr">
-                    <if-compare field-name="month.monthNr" operator="not-equals" value="0000-00">
-                        <calculate field-name="month.salesTaxDue">
-                            <calcop operator="get" field-name="month.salesTaxIn"/>
-                            <calcop operator="negative" field-name="month.salesTaxOut"/>
-                        </calculate>
-                        <calculate field-name="monthTotal.salesTaxDue">
-                            <calcop operator="get" field-name="month.salesTaxIn"/>
-                            <calcop operator="negative" field-name="month.salesTaxOut"/>
-                            <calcop operator="get" field-name="monthTotal.salesTaxDue"/>
-                        </calculate>
-                        <log level="always" message="=========adding ${month.monthNr} from invoicedate: ${invoice.invoiceDate}"></log>
-                        <field-to-list field-name="month" list-name="monthList"/>
-                        <clear-field field-name="month"/>
-                    </if-compare>
-                </if-compare-field>
-                <set field="month.monthNr" from-field="current.monthNr"/>
-                <get-related value-name="invoice" relation-name="InvoiceItem" list-name="invoiceItems"/>
-                <iterate entry-name="invoiceItem" list-name="invoiceItems">
-                    <!-- calculate amount -->
-                    <if-empty field-name="invoiceItem.quantity">
-                        <set field="invoiceItem.quantity" value="1" type="Double"/>
-                    </if-empty>
-                    <calculate field-name="totalAmount" decimal-scale="2" type="BigDecimal">
-                        <calcop operator="multiply" field-name="invoiceItem.quantity"/>
-                        <calcop operator="get" field-name="invoiceItem.amount"/>
+            <call-bsh><![CDATA[current.put("monthNr",invoiceDate.toString().substring(0,7))]]></call-bsh>
+            <!-- store in list if changed however not the first line-->
+            <if-compare-field field-name="month.monthNr" operator="not-equals" to-field-name="current.monthNr">
+                <if-compare field-name="month.monthNr" operator="not-equals" value="0000-00">
+                    <calculate field-name="month.salesTaxDue">
+                        <calcop operator="get" field-name="month.salesTaxIn"/>
+                        <calcop operator="negative" field-name="month.salesTaxOut"/>
                     </calculate>
-                    <!-- store in appropriate total month value -->
-                    <if-compare field-name="invoice.invoiceTypeId" value="SALES_INVOICE" operator="equals">
-                        <if-compare field-name="invoiceItem.invoiceItemTypeId" value="INV_SALES_TAX" operator="equals">
-                            <calculate field-name="month.salesTaxIn">
-                                <calcop operator="add" field-name="totalAmount"></calcop>
-                                <calcop operator="get" field-name="month.salesTaxIn"></calcop>
-                            </calculate>
-                            <calculate field-name="monthTotal.salesTaxIn">
-                                <calcop operator="add" field-name="totalAmount"></calcop>
-                                <calcop operator="get" field-name="monthTotal.salesTaxIn"></calcop>
-                            </calculate>
-                            <else>
-                                <calculate field-name="month.revenue">
-                                    <calcop operator="add" field-name="totalAmount"></calcop>
-                                    <calcop operator="get" field-name="month.revenue"></calcop>
-                                </calculate>
-                                <calculate field-name="monthTotal.revenue">
-                                    <calcop operator="add" field-name="totalAmount"></calcop>
-                                    <calcop operator="get" field-name="monthTotal.revenue"></calcop>
-                                </calculate>
-                            </else>
-                        </if-compare>
-                    </if-compare>
-                    <if-compare field-name="invoice.invoiceTypeId" value="PURCHASE_INVOICE" operator="equals">
-                        <if-compare field-name="invoiceItem.invoiceItemTypeId" value="PINV_SALES_TAX" operator="equals">
-                            <calculate field-name="month.salesTaxOut">
-                                <calcop operator="add" field-name="totalAmount"></calcop>
-                                <calcop operator="get" field-name="month.salesTaxOut"></calcop>
-                            </calculate>
-                            <calculate field-name="monthTotal.salesTaxOut">
-                                <calcop operator="add" field-name="totalAmount"></calcop>
-                                <calcop operator="get" field-name="monthTotal.salesTaxOut"></calcop>
-                            </calculate>
-                            <else>
-                                <calculate field-name="month.expenses">
-                                    <calcop operator="add" field-name="totalAmount"></calcop>
-                                    <calcop operator="get" field-name="month.expenses"></calcop>
-                                </calculate>
-                                <calculate field-name="monthTotal.expenses">
-                                    <calcop operator="add" field-name="totalAmount"></calcop>
-                                    <calcop operator="get" field-name="monthTotal.expenses"></calcop>
-                                </calculate>
-                            </else>
-                        </if-compare>
-                    </if-compare>
-                </iterate>
+                    <calculate field-name="monthTotal.salesTaxDue">
+                        <calcop operator="get" field-name="month.salesTaxIn"/>
+                        <calcop operator="negative" field-name="month.salesTaxOut"/>
+                        <calcop operator="add" field-name="monthTotal.salesTaxDue"/>
+                    </calculate>
+                    <field-to-list field-name="month" list-name="monthList"/>
+                    <clear-field field-name="month"/>
+                </if-compare>
             </if-compare-field>
+            <set field="month.monthNr" from-field="current.monthNr"/>
+            <get-related value-name="invoice" relation-name="InvoiceItem" list-name="invoiceItems"/>
+            <iterate entry-name="invoiceItem" list-name="invoiceItems">
+                <!-- calculate amount -->
+                <if-empty field-name="invoiceItem.quantity">
+                    <set field="invoiceItem.quantity" value="1" type="Double"/>
+                </if-empty>
+                <calculate field-name="totalAmount" decimal-scale="2" type="BigDecimal">
+                    <calcop operator="multiply">
+                        <calcop operator="get" field-name="invoiceItem.quantity"/>
+                        <calcop operator="get" field-name="invoiceItem.amount"/>
+                    </calcop>
+                </calculate>
+                <!-- store in appropriate total month value -->
+                <if-compare field-name="invoice.invoiceTypeId" value="SALES_INVOICE" operator="equals">
+                    <if-compare field-name="invoiceItem.invoiceItemTypeId" value="INV_SALES_TAX" operator="equals">
+                        <calculate field-name="month.salesTaxIn">
+                                <calcop operator="get" field-name="totalAmount"/>
+                                <calcop operator="get" field-name="month.salesTaxIn"/>
+                        </calculate>
+                        <calculate field-name="monthTotal.salesTaxIn">
+                            <calcop operator="add" field-name="totalAmount"/>
+                            <calcop operator="get" field-name="monthTotal.salesTaxIn"/>
+                        </calculate>
+                        <else>
+                            <calculate field-name="month.revenue">
+                                <calcop operator="add" field-name="totalAmount"></calcop>
+                                <calcop operator="get" field-name="month.revenue"></calcop>
+                            </calculate>
+                            <calculate field-name="monthTotal.revenue">
+                                <calcop operator="add" field-name="totalAmount"></calcop>
+                                <calcop operator="get" field-name="monthTotal.revenue"></calcop>
+                            </calculate>
+                        </else>
+                    </if-compare>
+                </if-compare>
+                <if-compare field-name="invoice.invoiceTypeId" value="PURCHASE_INVOICE" operator="equals">
+                    <if-compare field-name="invoiceItem.invoiceItemTypeId" value="PINV_SALES_TAX" operator="equals">
+                        <calculate field-name="month.salesTaxOut">
+                            <calcop operator="add" field-name="totalAmount"></calcop>
+                            <calcop operator="get" field-name="month.salesTaxOut"></calcop>
+                        </calculate>
+                        <calculate field-name="monthTotal.salesTaxOut">
+                            <calcop operator="add" field-name="totalAmount"></calcop>
+                            <calcop operator="get" field-name="monthTotal.salesTaxOut"></calcop>
+                        </calculate>
+                        <else>
+                            <calculate field-name="month.expenses">
+                                <calcop operator="add" field-name="totalAmount"></calcop>
+                                <calcop operator="get" field-name="month.expenses"></calcop>
+                            </calculate>
+                            <calculate field-name="monthTotal.expenses">
+                                <calcop operator="add" field-name="totalAmount"></calcop>
+                                <calcop operator="get" field-name="monthTotal.expenses"></calcop>
+                            </calculate>
+                        </else>
+                    </if-compare>
+                </if-compare>
+            </iterate>
         </iterate>    
-        <if-compare field-name="month.monthNr" operator="not-equals" value="0000-00">
+        <if-compare field-name="month.monthNr" operator="not-equals" value="0000-00"><!-- process last line -->
             <calculate field-name="month.salesTaxDue">
                 <calcop operator="get" field-name="month.salesTaxIn"/>
                 <calcop operator="negative" field-name="month.salesTaxOut"/>
