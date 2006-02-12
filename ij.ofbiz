@@ -4,7 +4,7 @@
 HM='-Dderby.system.home=data/derby'
 PR='-Dij.protocol=jdbc:derby:'
 DB='-Dij.database=ofbiz;create=true'
-EE='components/entity/lib/jdbc'
+EE='framework/entity/lib/jdbc'
 CP="-cp $EE/derby.jar:$EE/derbytools.jar"
 
 # Command
