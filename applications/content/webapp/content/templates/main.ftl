@@ -150,34 +150,12 @@
 </head>
 
 <body <#if primaryHTMLField?exists && (primaryHTMLField?length >0)>onLoad="initEditor()"</#if> >
-<table border="0" width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
-        <tr>
-          <#if layoutSettings.headerImageUrl?exists>
-          <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
-          </#if>       
-          <td align='right' width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='${layoutSettings.headerRightBackgroundUrl}'</#if>>
-            <#if requestAttributes.person?has_content>
-              <div class="insideHeaderText">Welcome&nbsp;${requestAttributes.person.firstName?if_exists}&nbsp;${requestAttributes.person.lastName?if_exists}!</div>
-            <#elseif requestAttributes.partyGroup?has_content>
-              <div class="insideHeaderText">Welcome&nbsp;${requestAttributes.partyGroup.groupName?if_exists}!</div>
-            <#else>
-              <div class="insideHeaderText">Welcome!</div>
-            </#if>
-            <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
 
-${pages.get("/includes/appbar.ftl")}
+${common.get("/includes/header.ftl")}
+${common.get("/includes/appbar.ftl")}
 
 <div class="centerarea">
-  ${pages.get("/includes/header.ftl")}
+  ${pages.get("/includes/appheader.ftl")}
   <div class="contentarea">
     <div style='border: 0; margin: 0; padding: 0; width: 100%;'>
       <table style='border: 0; margin: 0; padding: 0; width: 100%;' cellpadding='0' cellspacing='0'>
@@ -208,7 +186,7 @@ ${pages.get("/includes/appbar.ftl")}
   </div>
 </div>
 
-${pages.get("/includes/footer.ftl")}
+${common.get("/includes/footer.ftl")}
 
 </body>
 </html>
