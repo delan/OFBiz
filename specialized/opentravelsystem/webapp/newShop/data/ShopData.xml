@@ -127,6 +127,10 @@
     <ProductAssoc productId="shop10002" productIdTo="shop1000002" productAssocTypeId="PRODUCT_VARIANT" fromDate="2006-01-23 09:54:21.076" reason="" instruction="" lastUpdatedStamp="2006-01-23 09:54:21.098" lastUpdatedTxStamp="2006-01-23 09:54:21.096" createdStamp="2006-01-23 09:54:21.098" createdTxStamp="2006-01-23 09:54:21.096"/>
     <ProductAssoc productId="shop10002" productIdTo="shop1000003" productAssocTypeId="PRODUCT_VARIANT" fromDate="2006-01-23 09:54:21.076" reason="" instruction="" lastUpdatedStamp="2006-01-23 09:54:21.098" lastUpdatedTxStamp="2006-01-23 09:54:21.096" createdStamp="2006-01-23 09:54:21.098" createdTxStamp="2006-01-23 09:54:21.096"/>
     <ProductAssoc productId="shop10002" productIdTo="shop1000004" productAssocTypeId="PRODUCT_VARIANT" fromDate="2006-01-23 09:54:21.076" reason="" instruction="" lastUpdatedStamp="2006-01-23 09:54:21.098" lastUpdatedTxStamp="2006-01-23 09:54:21.096" createdStamp="2006-01-23 09:54:21.098" createdTxStamp="2006-01-23 09:54:21.096"/>
+
+    <!-- set next to be used sequence number for new products/categories -->
+    <SequenceValueItem seqName="shopProductCategory" seqId="10003"/> 
+    <SequenceValueItem seqName="shopProduct" seqId="10003"/> 
     
     <!-- security -->
     <SecurityGroup groupId="shop" description="full access to shop information"/><!-- same as the organizationPartyId -->

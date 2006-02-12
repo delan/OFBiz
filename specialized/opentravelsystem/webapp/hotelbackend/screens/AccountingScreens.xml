@@ -100,17 +100,17 @@
                             <label style="head1" text="Accounting Reports for ${organizationPartyId}"/>
                         </container>
                         <container>
-                            <label style="head2" text="Invoices Test report"/>
-                            <include-form name="ListInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                            <label style="head2" text="Invoices report by customer/supplier"/>
+                            <include-form name="ListInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
                         <container>
                             <label style="head2" text="VAT report"/>
                             <include-form name="VatReportOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
-                        <container>
+                        <!--container>
                             <label style="head2" text="Open Sales invoices."/>
                             <include-form name="OpenSalesInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
-                        </container>
+                        </container-->
                         <container>
                             <label style="head2" text="Reports from accounting module."/>
                             <platform-specific>
@@ -127,14 +127,15 @@
             <actions>
                 <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="salesTaxIn" from-field="requestAttributes.salesTaxIn"/> 
-                <set field="salesTaxOut" from-field="requestAttributes.salesTaxOut"/> 
+                <set field="salesTaxOut" from-field="requestAttributes.salesTaxOut"/>
+                <script location="component://opentravelsystem/webapp/hotelbackend/script/ListInvoices.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1" text="List of invoices"/>
-                            <include-form name="InvoicesList" location="component://opentravelsystem/webapp/hotelbackend/screens/AccountingForms.xml"/>
+                            <label style="head1" text="List of invoices from: ${organizationPartyId} for: ${year}"/>
+                            <include-form name="InvoicesList" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
                     </decorator-section>
                 </decorator-screen>
