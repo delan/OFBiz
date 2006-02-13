@@ -2612,7 +2612,16 @@
         <response name="success" type="view" value="invoiceOverview"/>
         <response name="error" type="view" value="invoiceOverview"/>
     </request-map>
-    
+    <request-map uri="sendPerEmail">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="sendPerEmail"/>
+    </request-map>
+    <request-map uri="executeSendPerEmail">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendInvoicePerEmail"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
     <!-- payment requests -->
     <request-map uri="findPayments">
         <security https="true" auth="true"/>
@@ -3168,6 +3177,7 @@
     <view-map name="invoiceStatus" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#InvoiceStatus"/>
     <view-map name="editInvoiceApplications" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceApplications"/>
     <view-map name="invoiceRoles" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#InvoiceRoles"/>
+    <view-map name="sendPerEmail" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#SendPerEmail"/>
     <!-- payments -->
     <view-map name="findPayments" type="screen" page="component://accountingext/widget/PaymentScreens.xml#FindPayments"/>
     <view-map name="paymentOverview" type="screen" page="component://accountingext/widget/PaymentScreens.xml#PaymentOverview"/>
