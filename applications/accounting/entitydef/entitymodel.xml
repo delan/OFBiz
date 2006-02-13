@@ -1636,6 +1636,24 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="BillingAccountRoleAndAddress"
+        package-name="org.ofbiz.accounting.payment"
+        title="Billing Account Role and Address Entity">
+        <description>Note that the ContactMech is not linked into this view and the PADDR is not optional, this way we naturally only get postal address entries</description>
+        <member-entity entity-alias="BAR" entity-name="BillingAccountRole"/>
+        <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
+        <member-entity entity-alias="PADDR" entity-name="PostalAddress"/>
+        <alias-all entity-alias="BAR"/>
+        <alias-all entity-alias="PADDR"/>
+        <alias entity-alias="PCM" name="pcmFromDate" field="fromDate"/>
+        <alias entity-alias="PCM" name="pcmThruDate" field="thruDate"/>
+        <view-link entity-alias="BAR" rel-entity-alias="PCM">
+            <key-map field-name="partyId"/>
+        </view-link>
+        <view-link entity-alias="PCM" rel-entity-alias="PADDR">
+            <key-map field-name="contactMechId"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="BillingAccountTerm"
             package-name="org.ofbiz.accounting.payment"
             title="Billing Account Term Entity">

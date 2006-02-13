@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -81,14 +81,13 @@
                 <set field="headerItem" value="billingaccount"/>
                 <set field="tabButtonItem" value="EditBillingAccount"/>
                 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/billingaccount/EditBillingAccount.bsh"/>
+                <set field="billingAccountId" from-field="parameters.billingAccountId"/>
+                <entity-one entity-name="BillingAccount" value-name="billingAccount"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBillingAccountDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://accounting/webapp/accounting/billingaccount/EditBillingAccount.ftl"/></html>
-                        </platform-specific>
+                        <include-form name="EditBillingAccount" location="component://accounting/widget/BillingAccountForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -102,14 +101,14 @@
                 <set field="headerItem" value="billingaccount"/>
                 <set field="tabButtonItem" value="EditBillingAccountRoles"/>
                 
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/billingaccount/EditBillingAccountRoles.bsh"/>
+                <set field="billingAccountId" from-field="parameters.billingAccountId"/>
+                <entity-one entity-name="BillingAccount" value-name="billingAccount"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBillingAccountDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://accounting/webapp/accounting/billingaccount/EditBillingAccountRoles.ftl"/></html>
-                        </platform-specific>
+                        <include-form name="ListBillingAccountRoles" location="component://accounting/widget/BillingAccountForms.xml"/>
+                        <include-form name="AddBillingAccountRole" location="component://accounting/widget/BillingAccountForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -178,6 +177,4 @@
             </widgets>
          </section>
     </screen>
-       
 </screens>
-
