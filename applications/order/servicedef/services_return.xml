@@ -79,7 +79,7 @@
     </service>
     <service name="updateReturnItem" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnItem">
-        <description>Update a ReturnItem</description>
+        <description>Update a ReturnItem and related adjustments</description>
         <implements service="returnItemInterface"/>
         <attribute entity-name="ReturnItem" name="returnItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="currentStatusId" type="String" mode="OUT" optional="false"/>
@@ -93,8 +93,54 @@
     </service>
     <service name="removeReturnItem" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="removeReturnItem">
-        <description>Remove a ReturnItem</description>
+        <description>Remove a ReturnItem and related adjustments</description>
         <auto-attributes entity-name="ReturnItem" include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- services for return adjustments -->
+    <service name="returnAdjustmentInterface" engine="interface" location="" invoke="">
+        <description>Return Adjustment Interface</description>
+        <auto-attributes mode="IN" include="all" entity-name="ReturnAdjustment" optional="true"/>
+    </service>
+    <service name="createReturnAdjustment" engine="java" location="org.ofbiz.order.order.OrderReturnServices"
+             invoke="createReturnAdjustment">
+         <description>Simple create service</description>
+         <implements service="returnAdjustmentInterface"/>
+         <attribute name="orderAdjustmentId" type="String" mode="IN" optional="true"/>
+         <override name="returnAdjustmentId" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateReturnAdjustment" engine="java" location="org.ofbiz.order.order.OrderReturnServices"
+             invoke="updateReturnAdjustment">
+        <description></description>
+        <implements service="returnAdjustmentInterface"/>
+        <attribute name="originalReturnPrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="originalReturnQuantity" type="Double" mode="IN" optional="true"/>
+        <override name="returnAdjustmentId" optional="false"/>        
+    </service>
+    <service name="removeReturnAdjustment" engine="simple" location="org/ofbiz/order/order/OrderReturnServices.xml"
+                 invoke="removeReturnAdjustment">
+        <description>Simple remove service</description>
+        <auto-attributes entity-name="ReturnAdjustment" include="pk" mode="IN" optional="false"/>        
+    </service>
+    <service name="createAdjustmentForReturnItem" engine="java"
+             location="org.ofbiz.order.order.OrderReturnServices" invoke="createAdjustmentForReturnItem">
+        <description></description>
+        <implements service="returnItemInterface"/>
+        <attribute name="returnItemSeqId" type="String" mode="OUT" optional="false"/>
+        <override name="orderAdjustmentId" optional="false"/>        
+    </service>
+    
+    <!-- services to verify that returns refunds aren't issued more than once -->
+    <service name="getReturnAmountByOrder" engine="java" 
+             location="org.ofbiz.order.order.OrderReturnServices" invoke="getReturnAmountByOrder">
+        <description>Finds the refunded or credited payment amounts for each order on a return</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderReturnAmountMap" type="Map" mode="OUT"/>
+    </service>
+    <service name="checkPaymentAmountForRefund" engine="java" 
+             location="org.ofbiz.order.order.OrderReturnServices" invoke="checkPaymentAmountForRefund">
+        <description>Makes sure the return is not over-refunding/crediting any order, or return an error</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="getReturnItemInitialCost" engine="java"
