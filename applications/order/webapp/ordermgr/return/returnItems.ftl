@@ -181,32 +181,20 @@
         <input type="hidden" name="_rowCount" value="${rowCount}"/>
         
 <#if (returnAdjustments?has_content)>                  
-        <#assign rowCount = 0>
-        <tr><td colspan="9"><hr class="sepbar"></td></tr>
-             <tr>
-               <td colspan="9"><div class="head3">Return Order Adjustment(s) </div></td>
-             </tr>
-             <tr><td colspan="9"><hr class="sepbar"></td></tr>
-    <tr><td colspan="2"><div class="tableheadtext">${uiLabelMap.OrderReturnItems}</div></td>
-        <td colspan="3"><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
-        <td><div class="tableheadtext">${uiLabelMap.CommonAmount}</div></td>
-        <td align="center"><div class="tableheadtext">Source %</div></td>
-        <td colspan="2" align="center"><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>        
-    </tr>    
+    <#assign rowCount = 0>
     <#list returnAdjustments as returnAdjustment>
         <#assign returnHeader = returnAdjustment.getRelatedOne("ReturnHeader")>
         <tr class="tabletext">
-            <td colspan="2"><div class="tabletext">${returnAdjustment.returnItemSeqId?default("N/A")}</div></td>
+            <td class="tabletext" colspan="2">${uiLabelMap.OrderReturnAdjustmentForReturnItem}
+            ${returnAdjustment.returnItemSeqId?default("N/A")}</td>
             <td colspan="3"><div class="tabletext">${returnAdjustment.description?default("N/A")}</div></td>
             <#if (!readOnly && !returnAdjustment.returnItemSeqId?has_content)>
               <td>
                  <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}_adj" value="${adj.amount?string("##0.00")}"/>
               </td>
             <#else>
-                <td><div class="tabletext"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUom/></div></td>
+                <td class="tabletextright"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUom/></td>
             </#if>
-            <td align="right"><div class="tabletext">${returnAdjustment.sourcePercentage?default("N/A")}</div></td>
-            <td colspan="2" align="center"><div class="tabletext">${returnAdjustment.returnAdjustmentTypeId?default("N/A")}</div></td>
             <#assign rowCount = rowCount + 1>
             <#assign returnTotal = returnTotal + returnAdjustment.get("amount")>
         </tr>    
