@@ -111,132 +111,85 @@
                 </tr>
                 <#assign rowCount = rowCount + 1>
               </#list>
+                     <!-- final row count -->
+             <input type="hidden" name="_rowCount" value="${rowCount}"/>
 
-              <tr><td colspan="9"><hr class="sepbar"></td></tr>
-              <tr>
-                <td colspan="9"><div class="head3">Return Order Adjustment(s) From Order #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
-              </tr>
-              <tr><td colspan="9"><hr class="sepbar"></td></tr>
-              <#if orderHeaderAdjustments?has_content>
-                <tr>
-                  <td><div class="tableheadtext">Description</div></td>
-                  <td><div class="tableheadtext">Order Qty</div></td>
-                  <td><div class="tableheadtext">Return Qty</div></td>
-                  <td><div class="tableheadtext">Unit Price</div></td>
-                  <td><div class="tableheadtext">Return Price</div></td>
-                  <td><div class="tableheadtext">Return Reason</div></td>
-                  <td><div class="tableheadtext">Return Type</div></td>
-                  <td><div class="tableheadtext">Item Status</div></td>
-                  <td align="right"><div class="tableheadtext">Include?</div></td>
-                </tr>
-                <tr><td colspan="9"><hr class="sepbar"></td></tr>
-                <#list orderHeaderAdjustments as adj>
-                  <#assign returnItemType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
-                  <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType")/>
-                  <#assign description = adj.description?default(adjustmentType.description)/>
-
-                  <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="${returnItemType}"/>
-                  <input type="hidden" name="orderId_o_${rowCount}" value="${adj.orderId}"/>
-                  <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
-                  <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
-                  <tr>
-                    <td>
-                      <div class="tabletext">
-                        ${description?default("N/A")}
-                      </div>
-                    </td>
-
-                    <td align='center'>
-                      <div class="tabletext">-</div>
-                    </td>
-                    <td>
-                      <div class="tabletext">-</div>
-                      <input type="hidden" name="returnQuantity_o_${rowCount}" value="1"/>
-                    </td>
-                    <td align='left'>
-                      <div class="tabletext"><@ofbizCurrency amount=adj.amount isoCode=orderHeader.currencyUom/></div>
-                    </td>
-                    <td>
-                      <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${adj.amount?string("##0.00")}"/>
-                    </td>
-                    <td align="center"><div class='tabletext'>-</div></td>
-                    <td>
-                      <select name="returnTypeId_o_${rowCount}" class="selectBox">
-                        <#list returnTypes as type>
-                          <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
-                        </#list>
-                      </select>
-                    </td>
-                    <td align='center'>
-                      <div class="tabletext">-</div>
-                    </td>
-                    <td align="right">
-                      <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
-                    </td>
-                  </tr>
-                  <#assign rowCount = rowCount + 1>
-                </#list>
-              <#else>
-                <tr><td colspan="9"><div class="tableheadtext">No adjustments on this order.</div></td></tr>
-              </#if>
-
-              <#assign manualAdjRowNum = rowCount/>
-              <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RETURN_MAN_ADJ"/>
-              <input type="hidden" name="orderId_o_${rowCount}" value="${orderId}"/>
-
-              <tr><td colspan="9"><hr class="sepbar"></td></tr>
-              <tr>
-                <td colspan="9">
-                  <div class="head3">Manual Return Adjustment For Order #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td></div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <input type="text" class="inputBox" size="30" name="description_o_${rowCount}">
-                </td>
-                <td align='center'>
-                  <div class="tabletext">-</div>
-                </td>
-                <td>
-                  <div class="tabletext">-</div>
-                  <input type="hidden" name="returnQuantity_o_${rowCount}" value="1"/>
-                </td>
-                <td align='left'>
-                  <div class="tabletext"><@ofbizCurrency amount=0.00 isoCode=orderHeader.currencyUom/></div>
-                </td>
-                <td>
-                  <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${0.00?string("##0.00")}"/>
-                </td>
-                <td align="center"><div class='tabletext'>-</div></td>
-                <td>
-                  <select name="returnTypeId_o_${rowCount}" class="selectBox">
-                    <#list returnTypes as type>
-                      <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
-                    </#list>
-                  </select>
-                </td>
-                <td align='center'>
-                  <div class="tabletext">-</div>
-                </td>
-                <td align="right">
-                  <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
-                </td>
-              </tr>
-              <#assign rowCount = rowCount + 1>
-
-              <!-- final row count -->
-              <input type="hidden" name="_rowCount" value="${rowCount}"/>
-
-              <tr><td colspan="9"><hr class="sepbar"></td></tr>
-              <tr>
-                <td colspan="9" align="right">
-                  <a href="javascript:document.${selectAllFormName}.submit();" class="buttontext">Return Selected Item(s)</a>
-                </td>
-              </tr>
-            <#else>
-              <tr><td colspan="9"><div class="tabletext">No returnable items found for order #${orderId}</div></td></tr>
-            </#if>
+             <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <tr>
-              <td colspan="9"><div class="tabletext">*Price includes tax & adjustments</div></td>
+              <td colspan="9"><div class="head3">Return Order Adjustment(s) From Order #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
             </tr>
-          </table>
+            <tr><td colspan="9"><hr class="sepbar"></td></tr>
+            <#if orderHeaderAdjustments?has_content>
+              <tr>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonAmount}</div></td>                                                
+                      
+                <td align="right"><div class="tableheadtext">Include?</div></td>
+              </tr>
+              <tr><td colspan="9"><hr class="sepbar"></td></tr>
+              <#assign rowCount = 0>
+              <#list orderHeaderAdjustments as adj>
+                <#assign returnAdjustmentType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
+                <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType")/>
+                <#assign description = adj.description?default(adjustmentType.description)/>
+
+                <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}_adj" value="${returnAdjustmentType}"/>                
+                <input type="hidden" name="orderAdjustmentId_o_${rowCount}_adj" value="${adj.orderAdjustmentId}"/>
+                <input type="hidden" name="description_o_${rowCount}_adj" value="${description}"/>
+                <tr>
+                  <td>
+                    <div class="tabletext">
+                      ${description?default("N/A")}
+                    </div>
+                  </td>                                     
+                  <td>
+                    <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}_adj" value="${adj.amount?string("##0.00")}"/>
+                  </td>
+                                     
+                  <td align="right">
+                    <input type="checkbox" name="_rowSubmit_o_${rowCount}_adj" value="Y" onclick="javascript:checkToggle(this, 'returnAdjustments');"/>
+                  </td>
+                </tr>
+                <#assign rowCount = rowCount + 1>
+              </#list>
+            <#else>
+              <tr><td colspan="9"><div class="tableheadtext">No adjustments on this order.</div></td></tr>
+            </#if>
+
+            <#assign manualAdjRowNum = rowCount/>
+            <input type="hidden" name="returnItemTypeId_o_${rowCount}_adj" value="RET_MAN_ADJ"/>            
+            <tr><td colspan="9"><hr class="sepbar"></td></tr>
+            <tr>
+              <td colspan="9">
+                <div class="head3">Manual Return Adjustment For Order #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="text" class="inputBox" size="30" name="description_o_${rowCount}_adj">
+              </td>
+              <td>
+                <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}_adj" value="${0.00?string("##0.00")}"/>
+              </td>
+              <td align="right">
+                <input type="checkbox" name="_rowSubmit_o_${rowCount}_adj" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
+              </td>
+            </tr>
+            <#assign rowCount = rowCount + 1>
+
+            <!-- final row count -->
+            <input type="hidden" name="_rowCount_adj" value="${rowCount}"/>
+        
+             <tr>
+               <td colspan="9" align="right">
+                 <a href="javascript:document.${selectAllFormName}.submit()" class="buttontext">Return Selected Item(s)</a>                 
+               </td>
+             </tr>
+           <#else>
+             <tr><td colspan="9"><div class="tabletext">No returnable items found for order #${orderId}</div></td></tr>
+           </#if>
+           <tr>
+             <td colspan="9"><div class="tabletext">*Price not includes tax & adjustments</div></td>
+           </tr>
+           </table>
+

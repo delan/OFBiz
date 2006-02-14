@@ -65,7 +65,6 @@
       <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
       <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
       <#assign status = item.getRelatedOne("InventoryStatusItem")?if_exists>
-      <#assign isSalesTax = item.get("returnItemTypeId").equals("RITM_SALES_TAX")>
       <#if (item.get("returnQuantity")?exists && item.get("returnPrice")?exists)>
          <#assign returnTotal = returnTotal + item.get("returnQuantity") * item.get("returnPrice") >
          <#assign returnItemSubTotal = item.get("returnQuantity") * item.get("returnPrice") >
@@ -86,21 +85,21 @@
                 N/A
             </#if></div></td>
         <td><div class="tabletext">
-            <#if readOnly || isSalesTax>
+            <#if readOnly>
                 ${item.description?default("N/A")}            
             <#else>
                 <input name="description_o_${rowCount}" value="${item.description}" type="text" class='inputBox' size="15">
             </#if>
             </div></td>
         <td><div class="tabletextright">
-            <#if readOnly || isSalesTax>
+            <#if readOnly>
                 ${item.returnQuantity?string.number}
             <#else>
                 <input name="returnQuantity_o_${rowCount}" value="${item.returnQuantity}" type="text" class='inputBox' size="8" align="right">
             </#if>
             </div></td>
         <td><div class="tabletextright">
-            <#if readOnly || isSalesTax>
+            <#if readOnly>
                 <@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/>
             <#else>
                 <input name="returnPrice_o_${rowCount}" value="${item.returnPrice}" type="text" class='inputBox' size="8" align="right">
@@ -110,7 +109,7 @@
             <#if returnItemSubTotal?exists><@ofbizCurrency amount=returnItemSubTotal isoCode=orderHeader.currencyUom/></#if>
         </td>
         <td><div class="tabletext">
-            <#if readOnly || isSalesTax>
+            <#if readOnly>
                 ${returnReason.description?default("N/A")}
             <#else>
                 <select name="returnReasonId_o_${rowCount}"  class='selectBox'>
@@ -125,7 +124,7 @@
             </#if>
             </div></td>
         <td><div class="tabletext">
-          <#if readOnly || isSalesTax>
+          <#if readOnly>
               ${status.description?default("N/A")}
           <#else>
               <select name="expectedItemStatus_o_${rowCount}"  class='selectBox'>
@@ -140,7 +139,7 @@
           </#if>
           </div></td>
         <td><div class="tabletext">
-            <#if (readOnly || isSalesTax)>
+            <#if (readOnly)>
                 ${returnType.description?default("N/A")}
             <#else>
                 <select name="returnTypeId_o_${rowCount}" class="selectBox">
@@ -179,7 +178,41 @@
       </tr>
       <#assign rowCount = rowCount + 1>
     </#list>
-
+        <input type="hidden" name="_rowCount" value="${rowCount}"/>
+        
+<#if (returnAdjustments?has_content)>                  
+        <#assign rowCount = 0>
+        <tr><td colspan="9"><hr class="sepbar"></td></tr>
+             <tr>
+               <td colspan="9"><div class="head3">Return Order Adjustment(s) </div></td>
+             </tr>
+             <tr><td colspan="9"><hr class="sepbar"></td></tr>
+    <tr><td colspan="2"><div class="tableheadtext">${uiLabelMap.OrderReturnItems}</div></td>
+        <td colspan="3"><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonAmount}</div></td>
+        <td align="center"><div class="tableheadtext">Source %</div></td>
+        <td colspan="2" align="center"><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>        
+    </tr>    
+    <#list returnAdjustments as returnAdjustment>
+        <#assign returnHeader = returnAdjustment.getRelatedOne("ReturnHeader")>
+        <tr class="tabletext">
+            <td colspan="2"><div class="tabletext">${returnAdjustment.returnItemSeqId?default("N/A")}</div></td>
+            <td colspan="3"><div class="tabletext">${returnAdjustment.description?default("N/A")}</div></td>
+            <#if (!readOnly && !returnAdjustment.returnItemSeqId?has_content)>
+              <td>
+                 <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}_adj" value="${adj.amount?string("##0.00")}"/>
+              </td>
+            <#else>
+                <td><div class="tabletext"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUom/></div></td>
+            </#if>
+            <td align="right"><div class="tabletext">${returnAdjustment.sourcePercentage?default("N/A")}</div></td>
+            <td colspan="2" align="center"><div class="tabletext">${returnAdjustment.returnAdjustmentTypeId?default("N/A")}</div></td>
+            <#assign rowCount = rowCount + 1>
+            <#assign returnTotal = returnTotal + returnAdjustment.get("amount")>
+        </tr>    
+    </#list>
+          <input name="_rowCount_adj" value="${rowCount}" type="hidden">
+    </#if>
     <#-- show the return total -->
     <tr><td colspan="5"></td><td><hr class="sepbar"/></td></tr>
     <tr>
@@ -189,12 +222,12 @@
     </tr>
     <#if (!readOnly)>
        <tr>
-          <input name="_rowCount" value="${rowCount}" type="hidden">
+          
           <input name="returnId" value="${returnHeader.returnId}" type="hidden">
           <td colspan="7" class="tabletext" align="center"><input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}"></td>
       </tr>
   </form>
-   </#if>
+   </#if>        
   <#else>
     <tr>
       <td colspan="9"><div class="tabletext">No item(s) in return.</div></td>
@@ -261,4 +294,5 @@
   <input type="hidden" name="_useRowSubmit" value="Y">
   <#include "returnItemInc.ftl"/>
 </form>
+    
 </#if>
