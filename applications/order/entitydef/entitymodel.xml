@@ -1916,7 +1916,9 @@
             package-name="org.ofbiz.order.return"
             never-cache="true"
             title="Return Adjustment Entity">
-      <description>Note that both includeInTax and includeInShipping should default to true, except in the case where this adjustment is a tax or shipping adjustment then should be ignored.</description>
+      <description>Tax, shipping, and promotional adjustments which are carried over from the order to the return.
+        Note that both includeInTax and includeInShipping should default to true, except in the case where this adjustment is a tax or shipping adjustment 
+        then should be ignored.</description>
       <field name="returnAdjustmentId" type="id-ne"></field>
       <field name="returnAdjustmentTypeId" type="id"></field>
       <field name="returnId" type="id"></field>
@@ -2176,7 +2178,8 @@
     <entity entity-name="ReturnItemTypeMap"
             package-name="org.ofbiz.order.return"
             title="Return Item Type Map Entity">
-        <description>mapping between returnItemType and productType,returnAdjustmentType and orderAdjustmentType</description>
+        <description>Mapping between productTypeId and returnItemTypeId for product order items, orderItemTypeId and returnItemTypeId for other
+          order items, or orderAdjustmentTypeId and returnAdjustmentTypeId.  Separate mappings for different types of returns (customer vs. vendor)</description>
       <field name="returnItemMapKey" type="id-ne"></field>
       <field name="returnHeaderTypeId" type="id-ne"></field>
       <field name="returnItemTypeId" type="id-ne"></field>
