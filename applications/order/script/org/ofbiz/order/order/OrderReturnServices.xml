@@ -550,7 +550,6 @@
         <!-- create the return items -->
         <calculate field-name="returnTotal" type="Double"><number value="0.0"/></calculate>
         <iterate entry-name="orderItem" list-name="orderItems">
-<!--            <set value="ITEM" field="newItemCtx.returnItemType"/> -->
             <field-to-field field-name="returnId" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="newItemCtx"/>
@@ -579,7 +578,6 @@
                     </calcop>
                 </calcop>
             </calculate>
-
             <!-- get the matching return item type from the order item type -->
 
             <set from-field="orderItem.orderItemTypeId" field="orderItemTypeId"/>
@@ -617,25 +615,25 @@
             <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
         </iterate>
 
-        <!-- get the order shipping total -->
-        <set from-field="orderHeader.orderId"  field="shippingAdjCtx.orderId"/>
-        <call-service service-name="getOrderShippingAmount" in-map-name="shippingAdjCtx" include-user-login="true">
-            <result-to-field result-name="shippingAmount"/>
-        </call-service>
-        <log level="always" message="Order #${orderHeader.orderId} shipping total - ${shippingAmount}"/>
+        <!-- create a return adjustment for all SHIPPING_CHARGES and PROMOTION_ADJUSTMENTs not attached to a particular orderItem -->
+        <entity-condition entity-name="OrderAdjustment" list-name="orderAdjustments">
+            <condition-list combine="and">
+                <condition-list combine="or">
+                    <condition-expr field-name="orderAdjustmentTypeId" operator="equals" value="SHIPPING_CHARGES"/>
+                    <condition-expr field-name="orderAdjustmentTypeId" operator="equals" value="PROMOTION_ADJUSTMENT"/>
+                </condition-list>
+                <condition-expr field-name="orderId" operator="equals" env-name="orderHeader.orderId"/>
+                <condition-expr field-name="orderItemSeqId" operator="equals" value="_NA_"/>
+            </condition-list>
+        </entity-condition>
+        <iterate entry-name="orderAdjustment" list-name="orderAdjustments">
+            <clear-field field-name="returnAdjCtx"/>
+            <set from-field="orderAdjustment.orderAdjustmentId" field="returnAdjCtx.orderAdjustmentId"/>
+            <set from-field="returnId" field="returnAdjCtx.returnId"/>
+            <log level="info" message="Create new return adjustment: ${returnAdjCtx}"/>
+            <call-service service-name="createReturnAdjustment" in-map-name="returnAdjCtx" include-user-login="true"/>
+        </iterate>
 
-        <!-- create the shipping return adjustment -->
-        <if-compare field-name="shippingAmount" operator="greater" value="0.00" type="Double">
-            <log level="always" message="shipping amount is greater than 0"/>
-
-            <set value="Shipping Adjustment" field="shippingAdjCtx.description"/>
-            <set value="RET_SHIPPING_ADJ" field="shippingAdjCtx.returnAdjustmentTypeId"/>
-            <set from-field="returnId" field="shippingAdjCtx.returnId"/>
-            <set from-field="shippingAmount" field="shippingAdjCtx.amount"/>
-            <!-- create the shipping adjustment-->
-            <call-service service-name="createReturnAdjustment" in-map-name="shippingAdjCtx" include-user-login="true"/>
-        </if-compare>
-        
         <!-- find adjustments for the order-->
         
         <entity-and entity-name="ReturnAdjustment" list-name="returnAdjustments">
@@ -647,7 +645,6 @@
                     <calcop operator="get" field-name="returnAdjustment.amount"/>                                                
                 </calcop>
             </calculate>            
-            <log level="info" message="Order-level adjustment amount is ${orderLevelAdjTotal}"/>
         </iterate>
 
         <!-- get the order total - return total diff -->
