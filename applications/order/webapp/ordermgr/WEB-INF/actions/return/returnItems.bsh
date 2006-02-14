@@ -44,6 +44,9 @@ context.put("returnHeader", returnHeader);
 returnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("returnId", returnId));
 context.put("returnItems", returnItems);
 
+returnAdjustments = delegator.findByAnd("ReturnAdjustment", UtilMisc.toMap("returnId", returnId), UtilMisc.toList("returnItemSeqId", "returnAdjustmentTypeId"));
+context.put("returnAdjustments", returnAdjustments);
+
 returnTypes = delegator.findAll("ReturnType", UtilMisc.toList("sequenceId"));
 context.put("returnTypes", returnTypes);
 
