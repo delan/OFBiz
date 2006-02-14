@@ -153,7 +153,7 @@
         <set-nonpk-fields map-name="parameters" value-name="returnHeader"/>
         <store-value value-name="returnHeader"/>
     </simple-method>
-
+    
     <simple-method method-name="createReturnItem" short-description="Create Return Item">
         <set field="lookupPKMap.returnId" from-field="parameters.returnId"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
@@ -191,22 +191,13 @@
         <set field="returnableQuantity" value="0" type="Double"/>
         <set field="returnablePrice" value="0" type="Double"/>
 
-        <!-- if an orderItemSeqId or orderAdjustmentId is provided, then find the corresponding orderItem or orderAdjustment -->
+        <!-- if an orderItemSeqId  is provided, then find the corresponding orderItem  -->
         <if-not-empty field-name="parameters.orderItemSeqId">
             <make-value value-name="itemLookup" entity-name="OrderItem"/>
             <set-pk-fields map-name="parameters" value-name="itemLookup"/>
             <if-not-empty field-name="parameters.orderItemSeqId">
                 <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
                 <log level="info" message="Return item is an OrderItem - ${orderItem.orderItemSeqId}"/>
-            </if-not-empty>
-        </if-not-empty>
-
-        <if-not-empty field-name="parameters.orderAdjustmentId">
-            <make-value value-name="adjLookup" entity-name="OrderAdjustment"/>
-            <set-pk-fields value-name="adjLookup" map-name="parameters"/>
-            <if-not-empty field-name="parameters.orderAdjustmentId">
-                <find-by-primary-key map-name="adjLookup" value-name="orderAdjustment" entity-name="OrderAdjustment"/>
-                <log level="info" message="Return item is an OrderAdjustment - ${orderAdjustment.orderAdjustmentId}"/>
             </if-not-empty>
         </if-not-empty>
 
@@ -220,17 +211,6 @@
             </call-service>
         </if-not-empty>
 
-        <if-not-empty field-name="orderAdjustment">
-            <set field="returnableQuantity" value="1" type="Double"/>
-            <set field="returnablePrice" from-field="parameters.returnPrice" type="Double"/>
-            <log level="info" message="set return price to the input amount : ${returnablePrice}"/>
-        </if-not-empty>
-
-        <if-compare field-name="returnItemTypeId" value="RETURN_MAN_ADJ" operator="equals">
-            <set field="returnableQuantity" value="1" type="Double"/>
-            <set field="returnablePrice" from-field="orderAdjustment.amount" type="Double"/>
-            <log level="info" message="set return price to adjustment amount : ${returnablePrice}"/>
-        </if-compare>
 
         <if-compare field-name="returnableQuantity" value="0" operator="greater" type="Double">
             <!-- the user is only allowed to set a returnPrice if he has ORDERMGR_CREATE privilege, otherwise only the returnablePrice
@@ -309,7 +289,7 @@
                    <number value="1"/>
                </calcop>
            </calculate>
-        </else>
+        </else>            
         </if-empty>
         <to-string field-name="returnItemSeqId" map-name="newEntity" numeric-padding="5"/>
 
@@ -318,6 +298,21 @@
         <field-to-result field-name="returnItemSeqId" map-name="newEntity" result-name="returnItemSeqId"/>
         <log level="info" message="Return Item Seq ID: ${newEntity.returnItemSeqId}"/>
         <create-value value-name="newEntity"/>
+        <refresh-value value-name="newEntity"/>
+        <if-not-empty field-name="orderItem">
+            
+            <entity-and entity-name="OrderAdjustment" list-name="orderAdjustments">                
+                <field-map field-name="orderId" env-name="orderItem.orderId"/>
+                <field-map field-name="orderItemSeqId" env-name="orderItem.orderItemSeqId"/>                
+            </entity-and>
+            <iterate entry-name="orderAdjustment" list-name="orderAdjustments">
+                <clear-field field-name="returnAdjCtx"/>
+                <set field="returnAdjCtx.returnId" from-field="parameters.returnId"/>
+                <set field="returnAdjCtx.returnItemSeqId" from-field="newEntity.returnItemSeqId"/>
+                <set field="returnAdjCtx.orderAdjustmentId" from-field="orderAdjustment.orderAdjustmentId"/>
+                <call-service service-name="createReturnAdjustment" in-map-name="returnAdjCtx"/>
+            </iterate>            
+        </if-not-empty>
     </simple-method>
     <simple-method method-name="updateReturnItem" short-description="Update Return Item">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
@@ -326,10 +321,26 @@
         <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
         <set from-field="parameters.returnItemSeqId" field="lookupPKMap.returnItemSeqId"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
-
+        <set field="originalReturnPrice" from-field="returnItem.returnPrice"/> 
+        <set field="originalReturnQuantity" from-field="returnItem.returnQuantity"/>
         <field-to-result field-name="returnItem.statusId" result-name="currentStatusId"/>
+        
         <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
         <store-value value-name="returnItem"/>
+        
+        <!-- now update all return adjustments associated with this return item -->
+        <entity-and entity-name="ReturnAdjustment" list-name="returnAdjustments">
+            <field-map field-name="returnItemSeqId" env-name="returnItem.returnItemSeqId"/>
+            <field-map field-name="returnId" env-name="returnItem.returnId"/>
+        </entity-and>
+        
+        <iterate entry-name="returnAdjustment" list-name="returnAdjustments">
+            <set field="ctx" from-field="returnAdjustment"/>
+            <set field="ctx.originalReturnPrice" from-field="returnItem.returnPrice"/> 
+            <set field="ctx.originalReturnQuantity" from-field="returnItem.returnQuantity"/>                  
+            <call-service service-name="updateReturnAdjustment" in-map-name="ctx" include-user-login="true"/>
+        </iterate>
+        
     </simple-method>
     <simple-method method-name="updateReturnItemsStatus" short-description="Update Return Items Status">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
@@ -356,10 +367,45 @@
         <set from-field="parameters.returnId" field="lookupPKMap.returnId"/>
         <set from-field="parameters.returnItemSeqId" field="lookupPKMap.returnItemSeqId"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
-
+        <!--remove related  adjustments-->
+        <entity-and entity-name="ReturnAdjustment" list-name="returnAdjustments">
+            <field-map field-name="returnItemSeqId" env-name="returnItem.returnItemSeqId"/>
+            <field-map field-name="returnId" env-name="returnItem.returnId"/>
+        </entity-and>        
+        <iterate entry-name="returnAdjustment" list-name="returnAdjustments">                                
+            <call-service service-name="removeReturnAdjustment" in-map-name="returnAdjustment" include-user-login="true"/>
+        </iterate>
         <remove-value value-name="returnItem"/>
     </simple-method>
 
+    <simple-method method-name="createReturnAdjustment" short-description="Create Return Adjustment">
+        <if>
+            <condition>
+                <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+            </condition>
+            <then>
+                <add-error><fail-message message="Security error to run createReturnAdjustment"/></add-error>
+            </then>
+        </if>       
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="ReturnAdjustment"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <sequenced-id-to-env sequence-name="ReturnAdjustment" env-name="newEntity.returnAdjustmentId"/>
+        <field-to-result field-name="newEntity.returnAdjustmentId" result-name="returnAdjustmentId"/>
+        <create-value value-name="newEntity"/>
+        <set field="responseMessage" value="Return Adjustment #${newEntity.returnAdjustmentId} was created successfully."/>
+        <field-to-result field-name="responseMessage" result-name="successMessage"/>    
+    </simple-method>    
+    <simple-method method-name="removeReturnAdjustment" short-description="Remove Return Adjustment">
+        <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Order security ErrorToRunUpdateReturnAdjustment"/></check-permission>
+        <check-errors/>
+
+        <set from-field="parameters.returnAdjustmentId" field="lookupPKMap.returnAdjustmentId"/>
+        <find-by-primary-key entity-name="ReturnAdjustment" map-name="lookupPKMap" value-name="returnAdjustment"/>        
+        <set-nonpk-fields map-name="parameters" value-name="returnAdjustment"/>
+        <remove-value value-name="returnAdjustment"/>    
+    </simple-method>
     <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
         <check-errors/>
@@ -564,12 +610,16 @@
             </if-empty>
 
             <!-- create the return item -->
+            <if-not-empty field-name="newItemCtx.orderAdjustmentId">
+                <log level="info" message="Found unexpected orderAdjustment:${newItemCtx.orderAdjustmentId}"/>
+                <clear-field field-name="newItemCtx.orderAdjustmentId"/>
+            </if-not-empty>
             <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
         </iterate>
 
         <!-- get the order shipping total -->
-        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="shippingCtx"/>
-        <call-service service-name="getOrderShippingAmount" in-map-name="shippingCtx" include-user-login="true">
+        <set from-field="orderHeader.orderId"  field="shippingAdjCtx.orderId"/>
+        <call-service service-name="getOrderShippingAmount" in-map-name="shippingAdjCtx" include-user-login="true">
             <result-to-field result-name="shippingAmount"/>
         </call-service>
         <log level="always" message="Order #${orderHeader.orderId} shipping total - ${shippingAmount}"/>
@@ -578,34 +628,27 @@
         <if-compare field-name="shippingAmount" operator="greater" value="0.00" type="Double">
             <log level="always" message="shipping amount is greater than 0"/>
 
-            <string-to-field string="Shipping Adjustment" field-name="description" map-name="shipItemCtx"/>
-            <string-to-field string="RITM_SHIPPING_CHRG" field-name="returnItemTypeId" map-name="shipItemCtx"/>
-
-            <field-to-field field-name="returnId" to-map-name="shipItemCtx"/>
-            <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="shipItemCtx"/>
-            <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="shipItemCtx"/>
-            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="shipItemCtx"/>
-
-            <env-to-field env-name="orderHeader.orderId" field-name="orderId" map-name="shipItemCtx"/>
-            <env-to-field env-name="shippingAmount" field-name="returnPrice" map-name="shipItemCtx"/>
-
-            <calculate field-name="returnQuantity" map-name="shipItemCtx" type="Double">
-                <number value="1"/>
-            </calculate>
-
-            <!-- add in the item amount for a calc total -->
-            <calculate field-name="returnTotal" type="Double">
-                <calcop field-name="returnTotal" operator="add">
-                    <calcop operator="multiply">
-                        <calcop operator="get" field-name="returnPrice" map-name="shipItemCtx"/>
-                        <calcop operator="get" field-name="returnQuantity" map-name="shipItemCtx"/>
-                    </calcop>
-                </calcop>
-            </calculate>
-
-            <!-- create the shipping adjustment return item -->
-            <call-service service-name="createReturnItem" in-map-name="shipItemCtx" include-user-login="true"/>
+            <set value="Shipping Adjustment" field="shippingAdjCtx.description"/>
+            <set value="RET_SHIPPING_ADJ" field="shippingAdjCtx.returnAdjustmentTypeId"/>
+            <set from-field="returnId" field="shippingAdjCtx.returnId"/>
+            <set from-field="shippingAmount" field="shippingAdjCtx.amount"/>
+            <!-- create the shipping adjustment-->
+            <call-service service-name="createReturnAdjustment" in-map-name="shippingAdjCtx" include-user-login="true"/>
         </if-compare>
+        
+        <!-- find adjustments for the order-->
+        
+        <entity-and entity-name="ReturnAdjustment" list-name="returnAdjustments">
+            <field-map field-name="returnId"/>
+        </entity-and>                
+        <iterate entry-name="returnAdjustment" list-name="returnAdjustments">                                        
+            <calculate field-name="returnTotal">
+                <calcop  field-name="returnTotal" operator="add">
+                    <calcop operator="get" field-name="returnAdjustment.amount"/>                                                
+                </calcop>
+            </calculate>            
+            <log level="info" message="Order-level adjustment amount is ${orderLevelAdjTotal}"/>
+        </iterate>
 
         <!-- get the order total - return total diff -->
         <calculate field-name="totalDiff" type="Double" decimal-format="##0.00">
@@ -616,27 +659,20 @@
         </calculate>
         <log level="always" message="OrderTotal [${orderHeader.grandTotal}] - ReturnTotal [${returnTotal}] Diff = [${totalDiff}]"/>
 
-        <!-- create the balance adjustment -->
+        <!-- create a manual balance adjustment based on the difference between order total and return total -->
+        
         <if-compare field-name="totalDiff" operator="not-equals" value="0" type="Double">
             <log level="always" message="diff amount is not 0"/>
 
             <string-to-field string="Balance Adjustment" field-name="description" map-name="balanceItemCtx"/>
-            <string-to-field string="RETURN_MAN_ADJ" field-name="returnItemTypeId" map-name="balanceItemCtx"/>
+            <string-to-field string="RET_MAN_ADJ" field-name="returnAdjustmentTypeId" map-name="balanceItemCtx"/>
 
             <field-to-field field-name="returnId" to-map-name="balanceItemCtx"/>
-            <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="balanceItemCtx"/>
-            <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="balanceItemCtx"/>
-            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="balanceItemCtx"/>
-
-            <env-to-field env-name="orderHeader.orderId" field-name="orderId" map-name="balanceItemCtx"/>
-            <env-to-field env-name="totalDiff" field-name="returnPrice" map-name="balanceItemCtx"/>
-
-            <calculate field-name="returnQuantity" map-name="balanceItemCtx" type="Double">
-                <number value="1"/>
-            </calculate>
+            <set field="balanceItemCtx.returnItemSeqId" value="_NA_"/>
+            <set from-field="totalDiff" field="balanceItemCtx.amount" />
 
             <!-- create the shipping adjustment return item -->
-            <call-service service-name="createReturnItem" in-map-name="balanceItemCtx" include-user-login="true"/>
+            <call-service service-name="createReturnAdjustment" in-map-name="balanceItemCtx" include-user-login="true"/>
         </if-compare>
 
         <!-- update the header status -->

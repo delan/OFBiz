@@ -330,24 +330,11 @@ public class OrderReturnServices {
             }
         }
 
-        // get the returnable price
-        double returnablePrice = 0.00;
-        if (returnableQuantity > 0) {
-            // get all order adjustments
-            List orderAdjustments = null;
-            try {
-                orderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderItem.get("orderId")));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderErrorUnableToGetOrderAdjustmentsFromItem", locale));
-            }
-            returnablePrice = OrderReadHelper.getOrderItemTotal(orderItem, orderAdjustments);
-            returnablePrice = (returnablePrice / orderQty);
-        }
+        // get the returnable price now equals to orderItem.unitPrice, since adjustments are booked separately
 
         Map result = ServiceUtil.returnSuccess();
         result.put("returnableQuantity", new Double(returnableQuantity));
-        result.put("returnablePrice", new Double(returnablePrice));
+        result.put("returnablePrice", orderItem.get("unitPrice"));
         return result;
     }
 
@@ -523,6 +510,18 @@ public class OrderReturnServices {
             String billingAccountId = returnHeader.getString("billingAccountId");
             String fromPartyId = returnHeader.getString("fromPartyId");
             String toPartyId = returnHeader.getString("toPartyId");
+            
+            // make sure total refunds on a return don't exceed amount of returned orders
+            Map serviceResult = null;
+            try {
+                serviceResult = dispatcher.runSync("checkPaymentAmountForRefund", UtilMisc.toMap("returnId", returnId));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem running the checkPaymentAmountForRefund service", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemsWithCheckPaymentAmountForRefund", locale));                
+            }
+            if (ServiceUtil.isError(serviceResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+            }                        
             if (billingAccountId == null) {
                 // create new BillingAccount w/ 0 balance
                 try {
@@ -669,7 +668,20 @@ public class OrderReturnServices {
         if (returnHeader != null && returnItems != null && returnItems.size() > 0) {
             Map itemsByOrder = new HashMap();
             Map totalByOrder = new HashMap();
-            groupReturnItemsByOrder(returnItems, itemsByOrder, totalByOrder);
+            
+            // make sure total refunds on a return don't exceed amount of returned orders
+            Map serviceResult = null;
+            try {
+                serviceResult = dispatcher.runSync("checkPaymentAmountForRefund", UtilMisc.toMap("returnId", returnId));
+            } catch (GenericServiceException e){
+                Debug.logError(e, "Problem running the checkPaymentAmountForRefund service", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemsWithCheckPaymentAmountForRefund", locale));                
+            }
+            if (ServiceUtil.isError(serviceResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+            }                                    
+            
+            groupReturnItemsByOrder(returnItems, itemsByOrder, totalByOrder, delegator, returnId);
 
             // process each one by order
             Set itemSet = itemsByOrder.entrySet();
@@ -696,12 +708,14 @@ public class OrderReturnServices {
                 List prefsToUse = new ArrayList();
                 Map prefsAmount = new HashMap();
                 double neededAmount = orderTotal.doubleValue();
+                Debug.logInfo("before orderTotal:" + neededAmount, module);
                 if (orderPayPrefs != null && orderPayPrefs.size() > 0) {
                     Iterator payPrefIter = orderPayPrefs.iterator();
                     do {
                         GenericValue pref = (GenericValue) payPrefIter.next();
                         Double maxAmount = pref.getDouble("maxAmount");
                         String statusId = pref.getString("statusId");
+                        Debug.logInfo("maxAmount:" + maxAmount +", statusId:" + statusId, module);
                         if ("PAYMENT_SETTLED".equals(statusId)) {
                             if (maxAmount == null || maxAmount.doubleValue() == 0.00) {
                                 prefsToUse.add(pref);
@@ -723,7 +737,7 @@ public class OrderReturnServices {
                         }
                     } while (neededAmount > 0 && payPrefIter.hasNext());
                 }
-
+                Debug.logInfo("after orderTotal:"+ neededAmount, module);
                 if (neededAmount != 0) {
                     Debug.logError("Was not able to find needed payment preferences for the order RTN: " + returnId + " ORD: " + orderId, module);
                     return ServiceUtil.returnError("Unable to refund order #" + orderId + "; there are no available payment preferences.");
@@ -759,7 +773,7 @@ public class OrderReturnServices {
                     if (electronicTypes.contains(orderPayPref.getString("paymentMethodTypeId"))) {
                         // call the refund service to refund the payment
                         try {
-                            Map serviceResult = dispatcher.runSync("refundPayment", UtilMisc.toMap("orderPaymentPreference", orderPayPref, "refundAmount", thisRefundAmount, "userLogin", userLogin));
+                            serviceResult = dispatcher.runSync("refundPayment", UtilMisc.toMap("orderPaymentPreference", orderPayPref, "refundAmount", thisRefundAmount, "userLogin", userLogin));
                             if (ServiceUtil.isError(serviceResult)) {
                                 return ServiceUtil.returnError("Error in refund payment", null, null, serviceResult);
                             }
@@ -858,7 +872,7 @@ public class OrderReturnServices {
         if (returnHeader != null && returnItems != null && returnItems.size() > 0) {
             Map itemsByOrder = new HashMap();
             Map totalByOrder = new HashMap();
-            groupReturnItemsByOrder(returnItems, itemsByOrder, totalByOrder);
+            groupReturnItemsByOrder(returnItems, itemsByOrder, totalByOrder, delegator, returnId);
 
             // process each one by order
             Set itemSet = itemsByOrder.entrySet();
@@ -1026,7 +1040,15 @@ public class OrderReturnServices {
         return ServiceUtil.returnSuccess(successMessage.toString());
     }
 
-    public static void groupReturnItemsByOrder(List returnItems, Map itemsByOrder, Map totalByOrder) {
+    /**
+     * Takes a List of returnItems and returns a Map of orderId -> items and a Map of orderId -> orderTotal 
+     * @param returnItems
+     * @param itemsByOrder
+     * @param totalByOrder
+     * @param delegator
+     * @param returnId
+     */
+    public static void groupReturnItemsByOrder(List returnItems, Map itemsByOrder, Map totalByOrder, GenericDelegator delegator, String returnId) {
         Iterator itemIt = returnItems.iterator();
         while (itemIt.hasNext()) {
             GenericValue item = (GenericValue) itemIt.next();
@@ -1061,12 +1083,280 @@ public class OrderReturnServices {
                         }
                         double thisTotal = amount.doubleValue() * quantity.doubleValue();
                         double existingTotal = totalForOrder.doubleValue();
-                        Double newTotal = new Double(existingTotal + thisTotal);
+                        Map condition = UtilMisc.toMap("returnId", item.get("returnId"), "returnItemSeqId", item.get("returnItemSeqId"));
+                        Double newTotal = new Double(existingTotal + thisTotal + getReturnAdjustmentTotal(delegator, condition) );
                         totalByOrder.put(orderId, newTotal);
                     }
                 }
             }
         }
+
+        // We may also have some order-level adjustments, so we need to go through each order again and add those as well
+        if ((totalByOrder != null) && (totalByOrder.keySet() != null)) {
+            Iterator orderIterator = totalByOrder.keySet().iterator();
+            while (orderIterator.hasNext()) {
+                String orderId = (String) orderIterator.next();                
+                // find returnAdjustment for returnHeader
+                Map condition = UtilMisc.toMap("returnId", returnId, "returnItemSeqId", org.ofbiz.common.DataModelConstants.SEQ_ID_NA);
+                double existingTotal = ((Double) totalByOrder.get(orderId)).doubleValue() + getReturnAdjustmentTotal(delegator, condition);
+                totalByOrder.put(orderId, new Double(existingTotal));
+            }
+        }
     }
 
+   
+    public static Map getReturnAmountByOrder(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String returnId = (String) context.get("returnId");
+        Locale locale = (Locale) context.get("locale");
+        List returnItems = null;
+        Map returnAmountByOrder = new HashMap();
+        try {
+            returnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("returnId", returnId));
+            
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems looking up return information", module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorGettingReturnHeaderItemInformation", locale));
+        }
+        if ((returnItems != null) && (returnItems.size() > 0)) {
+            Iterator returnItemIterator = returnItems.iterator();
+            GenericValue returnItem = null;
+            GenericValue returnItemResponse = null;
+            GenericValue payment = null;
+            String orderId;
+            while (returnItemIterator.hasNext()) {
+                returnItem = (GenericValue) returnItemIterator.next();
+                orderId = returnItem.getString("orderId");
+                try {
+                    returnItemResponse = returnItem.getRelatedOne("ReturnItemResponse");
+                    if (returnItemResponse != null && orderId != null) {
+                        // TODO should we filter on payment's status (PMNT_SENT,PMNT_RECEIVED)
+                        payment = returnItemResponse.getRelatedOne("Payment");
+                        if (payment != null && payment.getDouble("amount") != null) {
+                            UtilMisc.addToDoubleInMap(returnAmountByOrder, orderId, payment.getDouble("amount"));
+                        }
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problems looking up return item related information", module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderErrorGettingReturnHeaderItemInformation", locale));
+                }
+            }
+        }
+        return UtilMisc.toMap("orderReturnAmountMap", returnAmountByOrder);
+    }
+
+    public static Map checkPaymentAmountForRefund(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+        String returnId = (String) context.get("returnId");
+        Locale locale = (Locale) context.get("locale");
+        Map returnAmountByOrder = null;
+        Map serviceResult = null;
+        GenericValue orderHeader = null;
+        try {
+            serviceResult = dispatcher.runSync("getReturnAmountByOrder", org.ofbiz.base.util.UtilMisc.toMap("returnId", returnId));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem running the getReturnAmountByOrder service", module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemsWithGetReturnAmountByOrder", locale));
+        }
+        if (ServiceUtil.isError(serviceResult)) {
+            return ServiceUtil.returnError((String) serviceResult.get(ModelService.ERROR_MESSAGE));
+        } else {
+            returnAmountByOrder = (Map) serviceResult.get("orderReturnAmountMap");
+        }
+
+        if ((returnAmountByOrder != null) && (returnAmountByOrder.keySet() != null)) {
+            Iterator orderIterator = returnAmountByOrder.keySet().iterator();
+            while (orderIterator.hasNext()) {
+                String orderId = (String) orderIterator.next();
+                Double returnAmount = (Double) returnAmountByOrder.get(orderId);
+                // TODO: Use OrderReadHelper instead
+                try {
+                    orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                } catch (org.ofbiz.entity.GenericEntityException e) {
+                    Debug.logError(e, "Can't get OrderHeader with orderId:" + orderId, module);
+                }
+                if (orderHeader != null) {
+                    Double orderGrandTotal = orderHeader.getDouble("grandTotal");
+                    if (returnAmount == null) {
+                        Debug.logWarning("No returnAmount found for order:" + orderId, module);
+                    } else {
+                        if (orderGrandTotal.doubleValue() < returnAmount.doubleValue()) {
+                            Debug.logError("Order [" + orderId + "] refund amount exceeds order total", module);
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderRefundAmountExceedsOrderTotal", locale));
+                        }
+                    }
+                }
+            }
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map createReturnAdjustment(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String orderAdjustmentId = (String) context.get("orderAdjustmentId");
+        String returnAdjustmentTypeId = (String) context.get("returnAdjustmentTypeId");
+        String returnId = (String) context.get("returnId");
+        String returnItemSeqId = (String) context.get("returnItemSeqId");         
+        String description = (String) context.get("description");
+        
+        GenericValue returnItemTypeMap = null;
+        GenericValue orderAdjustment = null;
+        GenericValue returnAdjustmentType = null;
+        GenericValue orderItem = null;
+        GenericValue returnItem = null;
+        Double amount;
+        
+        // if orderAdjustment is not empty, then copy most return adjustment information from orderAdjustment's
+        if (orderAdjustmentId != null) {
+            try {
+                orderAdjustment = delegator.findByPrimaryKey("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", orderAdjustmentId));
+                returnItemTypeMap = delegator.findByPrimaryKey("ReturnItemTypeMap",
+                        UtilMisc.toMap("returnHeaderTypeId", "CUSTOMER_RETURN", "returnItemMapKey", orderAdjustment.get("orderAdjustmentTypeId")));
+                returnAdjustmentType = returnItemTypeMap.getRelatedOne("ReturnAdjustmentType");
+                if (returnAdjustmentType != null && UtilValidate.isEmpty(description)) {
+                    description = returnAdjustmentType.getString("description");
+                }
+                if (UtilValidate.isNotEmpty(returnItemSeqId)) {
+                    returnItem = delegator.findByPrimaryKey("ReturnItem",
+                            UtilMisc.toMap("returnId", returnId, "returnItemSeqId", returnItemSeqId));
+                    Debug.log("returnId:" + returnId + ",returnItemSeqId:" + returnItemSeqId);
+                    orderItem = returnItem.getRelatedOne("OrderItem");
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                throw new GeneralRuntimeException(e.getMessage());
+            }
+            Map orderAdjustmentValue = orderAdjustment.getAllFields();
+            orderAdjustmentValue.remove("oldAmountPerQuantity");
+            orderAdjustmentValue.remove("oldPercentage");
+            orderAdjustmentValue.remove("orderId");
+            orderAdjustmentValue.remove("orderItemSeqId");
+            context.putAll(orderAdjustment.getAllFields());
+
+        }
+
+        // if orderAdjustmentTypeId is empty, ie not found from orderAdjustmentId, then try to get returnAdjustmentTypeId from returnItemTypeMap, 
+        // if still empty, use default RET_MAN_ADJ
+        if (returnAdjustmentTypeId == null) {
+            String mappingTypeId = returnItemTypeMap != null ? returnItemTypeMap.get("returnItemTypeId").toString() : null;
+            returnAdjustmentTypeId = mappingTypeId != null ? mappingTypeId : "RET_MAN_ADJ";
+        }
+        // calculate the returnAdjustment amount
+        if (returnItem != null) {  // returnAdjustment for returnItem
+            if (needRecalculate(returnAdjustmentTypeId)) {
+                Debug.logInfo("returnPrice:" + returnItem.getDouble("returnPrice") + ",returnQuantity:" + returnItem.getDouble("returnQuantity") + ",sourcePercentage:" + orderAdjustment.getDouble("sourcePercentage"), module);
+                if (orderAdjustment == null) {
+                    Debug.logError("orderAdjustment [" + orderAdjustmentId + "] not found", module);
+                    return ServiceUtil.returnError("orderAdjustment [" + orderAdjustmentId + "] not found");
+                }
+                amount = new Double(returnItem.getDouble("returnPrice").doubleValue() * returnItem.getDouble("returnQuantity").doubleValue() / (orderItem.getDouble("quantity").doubleValue() * orderItem.getDouble("unitPrice").doubleValue() ) * orderAdjustment.getDouble("amount").doubleValue());
+            } else {
+                amount = (Double) context.get("amount");
+            }
+        } else { // returnAdjustment for returnHeader
+            amount = (Double) context.get("amount");
+        }
+
+        // store the return adjustment
+        String seqId = delegator.getNextSeqId("ReturnAdjustment");
+        GenericValue newReturnAdjustment = delegator.makeValue("ReturnAdjustment",
+                UtilMisc.toMap("returnAdjustmentId", seqId));
+
+        try {
+            newReturnAdjustment.setNonPKFields(context);
+            newReturnAdjustment.set("amount", amount);
+            newReturnAdjustment.set("returnAdjustmentTypeId", returnAdjustmentTypeId);
+            newReturnAdjustment.set("description", description);
+            newReturnAdjustment.set("returnItemSeqId", UtilValidate.isEmpty(returnItemSeqId) ? "_NA_" : returnItemSeqId);
+
+            delegator.create(newReturnAdjustment);
+            Map result = ServiceUtil.returnSuccess("Create ReturnItem with Id:" + seqId + " successfully.");
+            result.put("returnAdjustmentId", seqId);
+            return result;
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Failed to store returnItem", module);
+            return ServiceUtil.returnError("Failed to store returnItem");
+        }
+    }
+
+    public static Map updateReturnAdjustment(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        double originalReturnPrice = ((Double) context.get("originalReturnPrice")).doubleValue();
+        double originalReturnQuantity = ((Double) context.get("originalReturnQuantity")).doubleValue();
+        
+        GenericValue orderItem = null;
+        GenericValue returnItem = null;
+        GenericValue returnAdjustment = null;
+        
+        double originReturnAmount = originalReturnPrice * originalReturnQuantity;
+        Double amount;
+        
+        String returnAdjustmentTypeId = (String) context.get("returnAdjustmentTypeId");
+        String returnItemSeqId = (String) context.get("returnItemSeqId");
+        try {
+            returnAdjustment = delegator.findByPrimaryKey("ReturnAdjustment", UtilMisc.toMap("RetutnAjustmentId", context.get("returnAdjustmentId")));
+            if (returnItemSeqId != null) {
+                returnItem = delegator.findByPrimaryKey("ReturnItem",
+                        UtilMisc.toMap("returnId", context.get("returnId"), "returnItemSeqId", returnItemSeqId));
+                orderItem = returnItem.getRelatedOne("OrderItem");
+            }
+            // calculate the returnAdjustment amount
+            if (returnItem != null) {  // returnAdjustment for returnItem
+                if (needRecalculate(returnAdjustmentTypeId)) {
+                    amount = new Double(returnItem.getDouble("returnPrice").doubleValue() * returnItem.getDouble("returnQuantity").doubleValue()  / originReturnAmount * returnAdjustment.getDouble("amount").doubleValue());
+                } else {
+                    amount = (Double) context.get("amount");
+                }
+            } else { // returnAdjustment for returnHeader
+                amount = (Double) context.get("amount");
+            }
+
+            returnAdjustment.setNonPKFields(context);
+            returnAdjustment.set("amount", amount);
+            delegator.store(returnAdjustment);
+            Map result = ServiceUtil.returnSuccess("Update ReturnItem with Id:" + context.get("returnAdjustmentId") + " to amount " + amount +" successfully.");
+            return result;
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Failed to store returnItem", module);
+            return ServiceUtil.returnError("Failed to store returnItem");
+        }
+    }
+
+    /**
+     * These return adjustment types need to be recalculated when the return item is updated
+     * @param returnAdjustmentTypeId
+     * @return
+     */
+    public static boolean needRecalculate(String returnAdjustmentTypeId) {
+        return "RET_PROMOTION_ADJ".equals(returnAdjustmentTypeId) ||
+                "RET_DISCOUNT_ADJ".equals(returnAdjustmentTypeId) ||
+                "RET_SALES_TAX_ADJ".equals(returnAdjustmentTypeId);
+
+    }
+
+    /**
+     * Get the total return adjustments for a set of key -> value condition pairs.  Done for code efficiency.
+     * @param delegator
+     * @param condition
+     * @return
+     */
+    public static double getReturnAdjustmentTotal(GenericDelegator delegator, Map condition) {
+        double total = 0.0;
+        List adjustments;
+        try {
+            // TODO: find on a view-entity with a sum is probably more efficient
+            adjustments = delegator.findByAnd("ReturnAdjustment", condition);
+            if (adjustments != null) {
+                Iterator adjustmentIterator = adjustments.iterator();
+                while (adjustmentIterator.hasNext()) {
+                    GenericValue returnAdjustment = (GenericValue) adjustmentIterator.next();
+                    total += returnAdjustment.getDouble("amount").doubleValue();
+                }
+            }
+        } catch (org.ofbiz.entity.GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return total;
+    }
 }
