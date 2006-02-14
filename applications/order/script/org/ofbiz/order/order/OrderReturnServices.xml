@@ -299,12 +299,10 @@
         <log level="info" message="Return Item Seq ID: ${newEntity.returnItemSeqId}"/>
         <create-value value-name="newEntity"/>
         <refresh-value value-name="newEntity"/>
+
+        <!-- create return adjustments for all adjustments associated with the order item -->
         <if-not-empty field-name="orderItem">
-            
-            <entity-and entity-name="OrderAdjustment" list-name="orderAdjustments">                
-                <field-map field-name="orderId" env-name="orderItem.orderId"/>
-                <field-map field-name="orderItemSeqId" env-name="orderItem.orderItemSeqId"/>                
-            </entity-and>
+            <get-related value-name="orderItem" relation-name="OrderAdjustment" list-name="orderAdjustments"/>
             <iterate entry-name="orderAdjustment" list-name="orderAdjustments">
                 <clear-field field-name="returnAdjCtx"/>
                 <set field="returnAdjCtx.returnId" from-field="parameters.returnId"/>
@@ -329,11 +327,7 @@
         <store-value value-name="returnItem"/>
         
         <!-- now update all return adjustments associated with this return item -->
-        <entity-and entity-name="ReturnAdjustment" list-name="returnAdjustments">
-            <field-map field-name="returnItemSeqId" env-name="returnItem.returnItemSeqId"/>
-            <field-map field-name="returnId" env-name="returnItem.returnId"/>
-        </entity-and>
-        
+        <get-related value-name="returnItem" relation-name="ReturnAdjustment" list-name="returnAdjustments"/>
         <iterate entry-name="returnAdjustment" list-name="returnAdjustments">
             <set field="ctx" from-field="returnAdjustment"/>
             <set field="ctx.originalReturnPrice" from-field="returnItem.returnPrice"/> 
@@ -615,13 +609,9 @@
             <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
         </iterate>
 
-        <!-- create a return adjustment for all SHIPPING_CHARGES and PROMOTION_ADJUSTMENTs not attached to a particular orderItem -->
+        <!-- create a return adjustment for all order adjustments not attached to a particular orderItem (orderItemSeqId = "_NA_") -->
         <entity-condition entity-name="OrderAdjustment" list-name="orderAdjustments">
             <condition-list combine="and">
-                <condition-list combine="or">
-                    <condition-expr field-name="orderAdjustmentTypeId" operator="equals" value="SHIPPING_CHARGES"/>
-                    <condition-expr field-name="orderAdjustmentTypeId" operator="equals" value="PROMOTION_ADJUSTMENT"/>
-                </condition-list>
                 <condition-expr field-name="orderId" operator="equals" env-name="orderHeader.orderId"/>
                 <condition-expr field-name="orderItemSeqId" operator="equals" value="_NA_"/>
             </condition-list>
