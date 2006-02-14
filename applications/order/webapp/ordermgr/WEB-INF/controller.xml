@@ -811,7 +811,23 @@
         <event type="service" invoke="removeReturnItem"/>
         <response name="success" type="view" value="returnitems"/>
     </request-map>
-
+    <request-map uri="createReturnAdjustments">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="createReturnAdjustment"/>
+        <response name="success" type="view" value="returnitems"/>
+    </request-map>
+    <request-map uri="updateReturnAdjustments">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateReturnItem"/>
+        <response name="success" type="view" value="returnitems"/>
+    </request-map>
+    <request-map uri="removeReturnAdjustment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeReturnItem"/>
+        <response name="success" type="view" value="returnitems"/>
+    </request-map>
+    
+    
     <!-- Payment Processor Setup Requests -->
     <request-map uri="paysetup">
         <security https="true" auth="true"/>

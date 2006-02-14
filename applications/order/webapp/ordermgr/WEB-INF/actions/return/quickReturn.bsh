@@ -43,6 +43,9 @@ if (partyId != null) {
     context.put("party", party);
 }
 
+returnHeaders = delegator.findByAnd("ReturnHeader", UtilMisc.toMap("statusId", "RETURN_REQUESTED"), UtilMisc.toList("entryDate"));
+context.put("returnHeaders", returnHeaders);
+
 // put in the return to party information from the order header
 if (orderId != null) {
     order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
