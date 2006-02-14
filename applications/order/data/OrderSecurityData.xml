@@ -21,6 +21,8 @@
     <SecurityPermission description="Send order confirmation notification." permissionId="ORDERMGR_SEND_CONFIRMATION"/>
     <SecurityPermission description="Quote price manager in the Order Manager." permissionId="ORDERMGR_QUOTE_PRICE"/>
     <SecurityPermission description="Create Customer Requests in the Order Manager." permissionId="ORDERMGR_CRQ_CREATE"/>
+    <SecurityPermission description="Create sales forecasts in the Order Manager." permissionId="ORDERMGR_4C_CREATE"/>
+    <SecurityPermission description="Update sales forecasts in the Order Manager." permissionId="ORDERMGR_4C_UPDATE"/>
     
     <SecurityGroup description="Admin group for restricted order processing." groupId="ORDERPROC"/>
     <SecurityGroup description="Order Entry Admin group; permissions for creating orders." groupId="ORDERENTRY"/>
@@ -77,6 +79,8 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_QUOTE_PRICE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_CRQ_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_4C_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_4C_UPDATE"/>
 
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_NOTE"/>
