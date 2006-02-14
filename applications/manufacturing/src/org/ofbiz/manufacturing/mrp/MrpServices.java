@@ -645,7 +645,7 @@ public class MrpServices {
                         try {
                             serviceResponse = dispatcher.runSync("getManufacturingComponents", UtilMisc.toMap("productId", product.getString("productId"), "quantity", new Double(positiveEventQuantity), "userLogin", userLogin));
                         } catch (Exception e) {
-                            return ServiceUtil.returnError("Problem, can not find the product for a event, for more detail look at the log");
+                            return ServiceUtil.returnError("An error occurred exploding the product [" + product.getString("productId") + "]");
                         }
                         components = (List)serviceResponse.get("components");
                         if (components != null && components.size() > 0) {
@@ -675,9 +675,9 @@ public class MrpServices {
                         // The components are also loaded thru the configurator
                         Map serviceResponse = null;
                         try {
-                            serviceResponse = dispatcher.runSync("getManufacturingComponents", UtilMisc.toMap("productId", product.getString("productId"), "quantity", new Double(proposedOrder.getQuantity())));
+                            serviceResponse = dispatcher.runSync("getManufacturingComponents", UtilMisc.toMap("productId", product.getString("productId"), "quantity", new Double(proposedOrder.getQuantity()), "userLogin", userLogin));
                         } catch (Exception e) {
-                            return ServiceUtil.returnError("Problem, can not find the product for a event, for more detail look at the log");
+                            return ServiceUtil.returnError("An error occurred exploding the product [" + product.getString("productId") + "]");
                         }
                         components = (List)serviceResponse.get("components");
                         String routingId = (String)serviceResponse.get("workEffortId");
