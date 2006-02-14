@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -74,12 +74,10 @@ public class PaymentMethodServices {
         GenericValue paymentMethod = null;
 
         try {
-            paymentMethod =
-                delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+            paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.toString(), module);
-            return ServiceUtil.returnError(
-                "ERROR: Could not find Payment Method to delete (read failure: " + e.getMessage() + ")");
+            return ServiceUtil.returnError("ERROR: Could not find Payment Method to delete (read failure: " + e.getMessage() + ")");
         }
 
         if (paymentMethod == null) {
@@ -87,8 +85,7 @@ public class PaymentMethodServices {
         }
 
         // <b>security check</b>: userLogin partyId must equal paymentMethod partyId, or must have PAY_INFO_DELETE permission
-        if (paymentMethod.get("partyId") == null
-            || !paymentMethod.getString("partyId").equals(userLogin.getString("partyId"))) {
+        if (paymentMethod.get("partyId") == null || !paymentMethod.getString("partyId").equals(userLogin.getString("partyId"))) {
             if (!security.hasEntityPermission("PAY_INFO", "_DELETE", userLogin)) {
                 return ServiceUtil.returnError("You do not have permission to delete Payment Method for this partyId");
             }
@@ -135,11 +132,9 @@ public class PaymentMethodServices {
 
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId =
-            ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
 
-        if (result.size() > 0)
-            return result;
+        if (result.size() > 0) return result;
 
         // do some more complicated/critical validation...
         List messages = new LinkedList();
@@ -206,19 +201,8 @@ public class PaymentMethodServices {
             GenericValue tempVal = null;
 
             try {
-                List allPCMPs =
-                    EntityUtil.filterByDate(
-                        delegator.findByAnd(
-                            "PartyContactMechPurpose",
-                            UtilMisc.toMap(
-                                "partyId",
-                                partyId,
-                                "contactMechId",
-                                contactMechId,
-                                "contactMechPurposeTypeId",
-                                contactMechPurposeTypeId),
-                            null),
-                        true);
+                List allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose",
+                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
 
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
@@ -228,23 +212,12 @@ public class PaymentMethodServices {
 
             if (tempVal == null) {
                 // no value found, create a new one
-                newPartyContactMechPurpose =
-                    delegator.makeValue(
-                        "PartyContactMechPurpose",
-                        UtilMisc.toMap(
-                            "partyId",
-                            partyId,
-                            "contactMechId",
-                            contactMechId,
-                            "contactMechPurposeTypeId",
-                            contactMechPurposeTypeId,
-                            "fromDate",
-                            now));
+                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
+                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
             }
         }
 
-        if (newPartyContactMechPurpose != null)
-            toBeStored.add(newPartyContactMechPurpose);
+        if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
 
         try {
             delegator.storeAll(toBeStored);
@@ -273,11 +246,9 @@ public class PaymentMethodServices {
 
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId =
-            ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
 
-        if (result.size() > 0)
-            return result;
+        if (result.size() > 0) return result;
 
         List toBeStored = new LinkedList();
         boolean isModified = false;
@@ -290,8 +261,7 @@ public class PaymentMethodServices {
 
         try {
             creditCard = delegator.findByPrimaryKey("CreditCard", UtilMisc.toMap("paymentMethodId", paymentMethodId));
-            paymentMethod =
-                delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+            paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(
@@ -299,8 +269,10 @@ public class PaymentMethodServices {
         }
 
         if (creditCard == null || paymentMethod == null) {
-            return ServiceUtil.returnError(
-                "ERROR: Could not find credit card to update with payment method id " + paymentMethodId);
+            return ServiceUtil.returnError("ERROR: Could not find credit card to update with payment method id " + paymentMethodId);
+        }
+        if (!paymentMethod.getString("partyId").equals(partyId) && !security.hasEntityPermission("PAY_INFO", "_UPDATE", userLogin)) {
+            return ServiceUtil.returnError("Party Id [" + partyId + "] is not the owner of payment method [" + paymentMethodId + "] and does not have permission to change it.");
         }
         
         // do some more complicated/critical validation...
@@ -328,14 +300,9 @@ public class PaymentMethodServices {
         context.put("cardNumber", updatedCardNumber);
         
         if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
-            messages.add(
-                (String) context.get("cardNumber")
-                    + UtilValidate.isCreditCardPrefixMsg
-                    + (String) context.get("cardType")
-                    + UtilValidate.isCreditCardSuffixMsg
-                    + " (It appears to be a "
-                    + UtilValidate.getCardType((String) context.get("cardNumber"))
-                    + " credit card number)");
+            messages.add((String) context.get("cardNumber")
+                    + UtilValidate.isCreditCardPrefixMsg + (String) context.get("cardType") + UtilValidate.isCreditCardSuffixMsg
+                    + " (It appears to be a " + UtilValidate.getCardType((String) context.get("cardNumber")) + " credit card number)");
         if (!UtilValidate.isDateAfterToday((String) context.get("expireDate")))
             messages.add("The expiration date " + (String) context.get("expireDate") + " is before today.");
         if (messages.size() > 0) {
@@ -393,19 +360,8 @@ public class PaymentMethodServices {
             GenericValue tempVal = null;
 
             try {
-                List allPCMPs =
-                    EntityUtil.filterByDate(
-                        delegator.findByAnd(
-                            "PartyContactMechPurpose",
-                            UtilMisc.toMap(
-                                "partyId",
-                                partyId,
-                                "contactMechId",
-                                contactMechId,
-                                "contactMechPurposeTypeId",
-                                contactMechPurposeTypeId),
-                            null),
-                        true);
+                List allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose",
+                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
 
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
@@ -415,25 +371,14 @@ public class PaymentMethodServices {
 
             if (tempVal == null) {
                 // no value found, create a new one
-                newPartyContactMechPurpose =
-                    delegator.makeValue(
-                        "PartyContactMechPurpose",
-                        UtilMisc.toMap(
-                            "partyId",
-                            partyId,
-                            "contactMechId",
-                            contactMechId,
-                            "contactMechPurposeTypeId",
-                            contactMechPurposeTypeId,
-                            "fromDate",
-                            now));
+                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
+                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
             }
         }
 
         if (isModified) {
             // Debug.logInfo("yes, is modified", module);
-            if (newPartyContactMechPurpose != null)
-                toBeStored.add(newPartyContactMechPurpose);
+            if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
 
             // set thru date on old paymentMethod
             paymentMethod.set("thruDate", now);
@@ -443,8 +388,7 @@ public class PaymentMethodServices {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
-                return ServiceUtil.returnError(
-                    "ERROR: Could not update credit card (write failure): " + e.getMessage());
+                return ServiceUtil.returnError("ERROR: Could not update credit card (write failure): " + e.getMessage());
             }
         } else {
             result.put("newPaymentMethodId", paymentMethodId);
@@ -546,7 +490,11 @@ public class PaymentMethodServices {
         if (giftCard == null || paymentMethod == null) {
             return ServiceUtil.returnError("ERROR: Could not find GiftCard to update with id " + paymentMethodId);
         }
-
+        if (!paymentMethod.getString("partyId").equals(partyId) && !security.hasEntityPermission("PAY_INFO", "_UPDATE", userLogin)) {
+            return ServiceUtil.returnError("Party Id [" + partyId + "] is not the owner of payment method [" + paymentMethodId + "] and does not have permission to change it.");
+        }
+ 
+ 
         // card number (masked)
         String cardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
         if (cardNumber.startsWith("*")) {
@@ -639,11 +587,9 @@ public class PaymentMethodServices {
 
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId =
-            ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
 
-        if (result.size() > 0)
-            return result;
+        if (result.size() > 0) return result;
 
         List toBeStored = new LinkedList();
         GenericValue newPm = delegator.makeValue("PaymentMethod", null);
@@ -683,21 +629,9 @@ public class PaymentMethodServices {
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
             GenericValue tempVal = null;
-
             try {
-                List allPCMPs =
-                    EntityUtil.filterByDate(
-                        delegator.findByAnd(
-                            "PartyContactMechPurpose",
-                            UtilMisc.toMap(
-                                "partyId",
-                                partyId,
-                                "contactMechId",
-                                contactMechId,
-                                "contactMechPurposeTypeId",
-                                contactMechPurposeTypeId),
-                            null),
-                        true);
+                List allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose",
+                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null), true);
 
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
@@ -707,18 +641,8 @@ public class PaymentMethodServices {
 
             if (tempVal == null) {
                 // no value found, create a new one
-                newPartyContactMechPurpose =
-                    delegator.makeValue(
-                        "PartyContactMechPurpose",
-                        UtilMisc.toMap(
-                            "partyId",
-                            partyId,
-                            "contactMechId",
-                            contactMechId,
-                            "contactMechPurposeTypeId",
-                            contactMechPurposeTypeId,
-                            "fromDate",
-                            now));
+                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", 
+                		UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
             }
         }
 
@@ -752,11 +676,9 @@ public class PaymentMethodServices {
 
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId =
-            ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
 
-        if (result.size() > 0)
-            return result;
+        if (result.size() > 0) return result;
 
         List toBeStored = new LinkedList();
         boolean isModified = false;
@@ -780,7 +702,10 @@ public class PaymentMethodServices {
         if (eftAccount == null || paymentMethod == null) {
             return ServiceUtil.returnError("ERROR: Could not find EFT Account to update with id " + paymentMethodId);
         }
-
+        if (!paymentMethod.getString("partyId").equals(partyId) && !security.hasEntityPermission("PAY_INFO", "_UPDATE", userLogin)) {
+            return ServiceUtil.returnError("Party Id [" + partyId + "] is not the owner of payment method [" + paymentMethodId + "] and does not have permission to change it.");
+        }
+ 
         newPm = GenericValue.create(paymentMethod);
         toBeStored.add(newPm);
         newEa = GenericValue.create(eftAccount);
@@ -807,7 +732,6 @@ public class PaymentMethodServices {
         if (!newEa.equals(eftAccount) || !newPm.equals(paymentMethod)) {
             newPm.set("paymentMethodId", newPmId);
             newEa.set("paymentMethodId", newPmId);
-
             newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
             isModified = true;
         }
@@ -822,20 +746,8 @@ public class PaymentMethodServices {
             GenericValue tempVal = null;
 
             try {
-                List allPCMPs =
-                    EntityUtil.filterByDate(
-                        delegator.findByAnd(
-                            "PartyContactMechPurpose",
-                            UtilMisc.toMap(
-                                "partyId",
-                                partyId,
-                                "contactMechId",
-                                contactMechId,
-                                "contactMechPurposeTypeId",
-                                contactMechPurposeTypeId),
-                            null),
-                        true);
-
+                List allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
+                    		UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId",contactMechPurposeTypeId), null), true);
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
@@ -844,18 +756,8 @@ public class PaymentMethodServices {
 
             if (tempVal == null) {
                 // no value found, create a new one
-                newPartyContactMechPurpose =
-                    delegator.makeValue(
-                        "PartyContactMechPurpose",
-                        UtilMisc.toMap(
-                            "partyId",
-                            partyId,
-                            "contactMechId",
-                            contactMechId,
-                            "contactMechPurposeTypeId",
-                            contactMechPurposeTypeId,
-                            "fromDate",
-                            now));
+                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
+                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
             }
         }
 
@@ -889,4 +791,3 @@ public class PaymentMethodServices {
         return result;
     }
 }
-
