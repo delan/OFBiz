@@ -240,6 +240,14 @@
     <CountryCode countryAbbr="YEM" countryCode="YE" countryName="YEMEN" countryNumber="887"/>
     <CountryCode countryAbbr="YUG" countryCode="YU" countryName="YUGOSLAVIA" countryNumber="891"/>
     <CountryCode countryAbbr="ZMB" countryCode="ZM" countryName="ZAMBIA" countryNumber="894"/>
+    <CountryCode countryAbbr="SCOT" countryCode="SCT" countryName="SCOTLAND" countryNumber="895"/>
+    <CountryCode countryAbbr="ENGL" countryCode="ENG" countryName="ENGLAND" countryNumber="896"/>
+    <CountryCode countryAbbr="NIRL" countryCode="NIR" countryName="N.IRELAND" countryNumber="897"/>
+    <CountryCode countryAbbr="WALS" countryCode="WLS" countryName="WALES" countryNumber="898"/>
+    <CountryCapital countryCapital="Edinburgh" countryCode="SCT"/>
+    <CountryCapital countryCapital="London" countryCode="ENG"/>
+    <CountryCapital countryCapital="Belfast" countryCode="NIR"/>
+    <CountryCapital countryCapital="Cardiff" countryCode="WLS"/>
     <CountryCapital countryCapital="Andorra" countryCode="AD"/>
     <CountryCapital countryCapital="Abu Dhabi" countryCode="AE"/>
     <CountryCapital countryCapital="Kabul" countryCode="AF"/>
