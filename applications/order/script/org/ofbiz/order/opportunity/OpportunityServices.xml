@@ -46,7 +46,7 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         <create-value value-name="salesForecast"/>
 
         <!-- save the value in the history (this method expects a salesForecast map) -->
-        <call-simple-method method-name="saveSalesForecastHistory">
+        <call-simple-method method-name="saveSalesForecastHistory"/>
 
         <!-- return the ID -->
         <field-to-result result-name="salesForecastId" field-name="salesForecastId"/>
