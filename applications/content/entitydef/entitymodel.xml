@@ -1188,7 +1188,7 @@
       <field name="thruDate" type="date-time"/>
       <field name="requiredField" type="indicator"/>
       <field name="sequenceNum" type="numeric"/>
-      <field name="withSurveyQuestionId" type="id"/>
+      <field name="withSurveyQuestionId" type="id"><description>These two with* fields are used to specify that this question should only appear if the with option has been selected for the with question.</description></field>
       <field name="withSurveyOptionSeqId" type="id"/>
       <prim-key field="surveyId"/>
       <prim-key field="surveyQuestionId"/>
