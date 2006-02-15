@@ -36,6 +36,8 @@
             <field-map field-name="contentId" env-name="parameters.instanceOfContentId"/>
         </entity-one>
         <log message="genCompDocInstance> rootTemplateContent: ${rootTemplateContent}" level="info"/>
+        
+        <!--  if not passed in, get latest template contentRevisionSeqId from db -->
         <if-empty field-name="parameters.contentRevisionSeqId">
             <entity-condition entity-name="ContentRevision" list-name="contentRevisionList">
                 <condition-list>
@@ -58,8 +60,9 @@
         <make-value entity-name="Content" value-name="rootInstanceContent"/>        
         <if-empty field-name="parameters.rootInstanceContentId">
             <make-next-seq-id seq-field-name="contentId" value-name="rootInstanceContent"/>
-        <log message="genCompDocInstance 2> rootInstanceContent: ${rootInstanceContent}"/>
+            <log message="genCompDocInstance 2> rootInstanceContent: ${rootInstanceContent}"/>
             <else>
+                <!--  check to see if it already exists, error if so -->
                 <entity-one entity-name="Content" value-name="existingContent">
                     <field-map field-name="contentId" env-name="parameters.rootInstanceContentId"/>
                 </entity-one>
@@ -72,6 +75,8 @@
                 <set from-field="parameters.rootInstanceContentId" field="rootInstanceContent.contentId"/>
             </else>
         </if-empty>
+        
+        <!--  populate fields -->
         <set from-field="parameters.contentName" field="rootInstanceContent.contentName" default-value="${rootTemplateContent.contentName}"/>
         <now-timestamp-to-env env-name="nowTimestamp"/>
         <set from-field="parameters.instanceOfContentId" field="rootInstanceContent.instanceOfContentId"/>
@@ -158,6 +163,36 @@
         
         <!--  create the compdoc Content entity -->
         <set-service-fields service-name="persistContentAndAssoc" map-name="parameters" to-map-name="persistMap"/>
+        <if-not-empty field-name="parameters.mimeTypeId">
+        <if>
+            <condition>
+              <or>
+                <if-compare field-name="parameters.mimeTypeId" operator="equals" value="application/msword"/>
+                <if-compare field-name="parameters.mimeTypeId" operator="equals" value="application/pdf"/>
+                <if-compare field-name="parameters.mimeTypeId" operator="equals" value="application/octet-stream"/>
+              </or>
+            </condition>
+            <then>
+                <set value="ELECTRONIC_TEXT" field="persistMap.dataResourceTypeId"/>
+            </then>
+            <else-if>
+                <condition>
+                  <or>
+                    <if-compare field-name="parameters.mimeTypeId" operator="equals" value="image/jpeg"/>
+                    <if-compare field-name="parameters.mimeTypeId" operator="equals" value="image/gif"/>
+                    <if-compare field-name="parameters.mimeTypeId" operator="equals" value="image/tiff"/>
+                    <if-compare field-name="parameters.mimeTypeId" operator="equals" value="image/png"/>
+                  </or>
+                </condition>
+                <then>
+                    <set value="IMAGE_OBJECT" field="persistMap.dataResourceTypeId"/>
+                </then>
+            </else-if>
+            <else>
+                <set value="ELECTRONIC_TEXT" field="persistMap.dataResourceTypeId"/>
+            </else>
+        </if>
+        </if-not-empty>
         <set from-field="parameters.userLogin" field="persistMap.userLogin"/>
         <log level="info" message="persistMap : ${persistMap}"/>
         <call-service service-name="persistContentAndAssoc" in-map-name="persistMap">
@@ -452,10 +487,8 @@
         <log level="info" message="contentApprovalList2: ${contentApprovalList2}"/>
             <if-not-empty field-name="contentApprovalList2">
                 <set from-field="contentApprovalList2[0].contentApprovalId" field="contentApprovalId"/>
-                <entity-one entity-name="ContentApproval" value-name="contentApproval">
-                    <field-map env-name="contentApprovalId"/>
-                </entity-one>
-         <log level="info" message="contentApproval: ${contentApproval}"/>
+                <set from-field="contentApprovalList2[0]" field="contentApproval"/>
+                <log level="info" message="contentApproval: ${contentApproval}"/>
                 <set field="contentApprovalList[]" from-field="contentApproval"/>
             </if-not-empty>
             <!-- 
@@ -528,6 +561,7 @@
                 </else-if>
                 <else-if>
                     <condition>
+                        <and>
                         <if-compare field-name="approvalStatusId" operator="equals" value="CNTAP_APPROVED"/>
                         <not>
                             <or>
@@ -535,6 +569,7 @@
                                 <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_REJECTED"/>
                             </or>
                         </not>
+                        </and>
                     </condition>
                     <then>
                         <set from-field="approvalStatusId" field="primaryApprovalStatusId"/>
@@ -768,4 +803,61 @@
         </if-not-empty>
      </simple-method>
     
+     <simple-method method-name="checkForWaitingApprovals" short-description="Check to see if any approval conditions exist for the passed in user">
+        <set from-field="userLogin.partyId" field="partyId"/>
+        <entity-and entity-name="PartyRole" list-name="partyRoleList">
+            <field-map field-name="partyId" env-name="partyId"/>
+        </entity-and>
+        <log level="info" message="userLogin.partyId: ${partyId}"/>        
+        <iterate list-name="partyRoleList" entry-name="partyRole">
+            <set from-field="partyRole.roleTypeId" field="roles[]" />
+        </iterate>
+        <log level="info" message="roles: ${roles}"/>        
+        
+        <entity-condition entity-name="MaxContentApprovalView" list-name="compdocApprovalList" use-cache="false">
+            <condition-list>
+                <condition-expr field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId" operator="less-equals" ignore-if-empty="true"/>
+                <condition-expr field-name="contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
+                <condition-expr field-name="roleTypeId" operator="in" env-name="roles"/>
+            </condition-list>
+            <select-field field-name="contentId"/>
+            <select-field field-name="partyId"/>
+            <select-field field-name="roleTypeId"/>
+            <select-field field-name="maxContentRevisionSeqId"/>
+        </entity-condition>
+        <log level="info" message="compdocApprovalList: ${compdocApprovalList}"/>        
+        
+        <iterate list-name="compdocApprovalList" entry-name="maxContentApproval">
+            <log level="info" message="maxContentApproval: ${maxContentApproval}"/>
+            <entity-condition entity-name="ContentApproval" list-name="contentApprovalList2" use-cache="false">
+                <condition-list>
+                    <condition-expr field-name="contentId" env-name="maxContentApproval.contentId" operator="equals"/>
+                    <condition-expr field-name="contentRevisionSeqId" env-name="maxContentApproval.maxContentRevisionSeqId" operator="equals"/>
+                    <condition-expr field-name="partyId" env-name="maxContentApproval.partyId" operator="equals" ignore-if-empty="true"/>
+                    <condition-expr field-name="roleTypeId" env-name="maxContentApproval.roleTypeId" operator="equals" ignore-if-empty="true"/>
+                </condition-list>
+                <order-by field-name="-sequenceNum"/>
+            </entity-condition>
+            <log level="info" message="contentApprovalList2: ${contentApprovalList2}"/>
+            <if-not-empty field-name="contentApprovalList2">
+                <set from-field="contentApprovalList2[0].contentApprovalId" field="contentApprovalId"/>
+                <log level="info" message="contentApproval: ${contentApproval}"/>
+                <set field="contentApprovalIdList[]" from-field="contentApprovalId"/>
+            </if-not-empty>
+        </iterate>
+        <log level="info" message="contentApprovalIdList: ${contentApprovalIdList}"/>        
+        
+        <entity-condition entity-name="ContentApproval" list-name="contentApprovalList">
+            <condition-list combine="and">
+                <condition-expr field-name="contentApprovalId" operator="in" env-name="contentApprovalIdList"/>
+                <condition-list combine="or">
+                    <condition-expr field-name="partyId" operator="equals" env-name="partyId"/>
+                    <condition-expr field-name="roleTypeId" operator="in" env-name="roles"/>
+                </condition-list>
+            </condition-list>
+        </entity-condition>
+        <log level="info" message="contentApprovalList: ${contentApprovalList}"/>        
+        
+        <field-to-result result-name="contentApprovalList"/>
+     </simple-method>
 </simple-methods>

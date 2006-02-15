@@ -123,13 +123,13 @@
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="edit-inplace" title="${contentName}[${contentId}]" >
-            <link target="EditRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="EditCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
         <menu-item name="edit-link" title="Edit" >
-            <link target="EditRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="EditCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
         <menu-item name="child" title="+Child" >
-            <link target="AddChildCompDocTemplate?contentIdTo=${contentId}&amp;sequenceNum=9999&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+            <link target="AddChildCompDocTemplate?contentIdTo=${contentId}&amp;sequenceNum=9999&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
         <menu-item name="viewinst" title="View Instances" >
             <link target="ViewInstances?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
@@ -148,10 +148,10 @@
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="edit-inplace" title="${contentName}[${contentId}]" >
-            <link target="EditChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+            <link target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
         </menu-item>
         <menu-item name="edit-link" title="Edit" >
-            <link target="EditChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+            <link target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
         </menu-item>
         <!--  only one level for now 
         <menu-item name="child" title="+Child" >
@@ -159,11 +159,47 @@
         </menu-item>
         -->
         <menu-item name="bef" title="+Bef" >
-            <link target="AddChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="AddChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
         </menu-item>
         <menu-item name="aft" title="+Aft" >
-            <link target="AddChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="AddChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
         </menu-item>
+    </menu>
+        
+    <menu name="childInstanceLine" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="content"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        selected-menuitem-context-field-name="currentMenuItemName"
+        title="" type="simple">
+        <menu-item name="edit-inplace" title="${contentName}[${assocRevisionItemView.itemContentId}]" >
+            <condition>
+                <not><if-empty field-name="assocRevisionItemView"/></not>
+            </condition>
+            <link target="EditCompDoc?contentId=${assocRevisionItemView.contentId}&amp;caContentIdTo=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+        </menu-item>
+        <menu-item name="edit-link" title="Edit" >
+            <condition>
+                <not><if-empty field-name="assocRevisionItemView"/></not>
+            </condition>
+            <link target="EditCompDoc?contentId=${assocRevisionItemView.contentId}&amp;caContentIdTo=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}"/>
+        </menu-item>
+        
+        <menu-item name="edit-inplace-add" title="${contentName}[${assocRevisionItemView.itemContentId}]" >
+            <condition>
+                <if-empty field-name="assocRevisionItemView"/>
+            </condition>
+            <link target="AddChildCompDocInstance?contentId=${contentId}&amp;caSequenceNum=${sequenceNum}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
+        </menu-item>
+        <menu-item name="edit-link-add" title="Edit" >
+            <condition>
+                <if-empty field-name="assocRevisionItemView"/>
+            </condition>
+            <link target="AddChildCompDocInstance?contentId=${contentId}&amp;caSequenceNum=${sequenceNum}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
+        </menu-item>
+        
     </menu>
         
     <menu name="rootInstanceLine" default-title-style="tabButton"
