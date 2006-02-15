@@ -1333,4 +1333,12 @@
         <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <service name="checkForWaitingApprovals" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="checkForWaitingApprovals" auth="true">
+        <description>Check to see if there are any ContentApproval records awaiting this user's action</description>
+        <attribute name="thisUserLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="contentApprovalList" type="List" mode="OUT" optional="true"/>
+    </service>
 </services>

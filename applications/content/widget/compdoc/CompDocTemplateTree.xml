@@ -16,7 +16,11 @@
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootTemplateContentId" />
                         <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootTemplateRevSeqId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
-                        <condition-expr field-name="thruDate" operator="equals" value=""/>
+                        <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="thruDate" operator="equals" value=""/>
+                            <condition-expr field-name="thruDate" operator="greater"  env-name="nowTimestamp"/>
+                        </condition-list>
                    </condition-list> 
                   
                    <select-field field-name="rootRevisionContentId"/>
@@ -47,7 +51,11 @@
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootTemplateContentId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
                         <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootTemplateRevSeqId" />
-                        <condition-expr field-name="thruDate" operator="equals" value=""/>
+                        <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="thruDate" operator="equals" value=""/>
+                            <condition-expr field-name="thruDate" operator="greater"  env-name="nowTimestamp"/>
+                        </condition-list>
                    </condition-list> 
                    
                    <select-field field-name="rootRevisionContentId"/>
@@ -78,9 +86,13 @@
                    <condition-list combine="and">
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="rootTemplateContentId" />
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootTemplateContentId" />
-                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootInstanceRevSeqId" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootTemplateRevSeqId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
-                        <condition-expr field-name="thruDate" operator="equals" value=""/>
+                        <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="thruDate" operator="equals" value=""/>
+                            <condition-expr field-name="thruDate" operator="greater"  env-name="nowTimestamp"/>
+                        </condition-list>
                    </condition-list> 
                   
                    <select-field field-name="rootRevisionContentId"/>
@@ -92,8 +104,9 @@
                    <select-field field-name="contentAssocTypeId"/>
                    <select-field field-name="fromDate"/>
                    <select-field field-name="sequenceNum"/>
-                  
+                   
                    <order-by field-name="-sequenceNum"/>
+                  
                 </entity-condition>
             </sub-node>
         </node>
@@ -109,8 +122,12 @@
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="contentId" />
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootTemplateContentId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
-                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootInstanceRevSeqId" />
-                        <condition-expr field-name="thruDate" operator="equals" value=""/>
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootTemplateRevSeqId" />
+                        <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="thruDate" operator="equals" value=""/>
+                            <condition-expr field-name="thruDate" operator="greater"  env-name="nowTimestamp"/>
+                        </condition-list>
                    </condition-list> 
                    
                    <select-field field-name="rootRevisionContentId"/>
@@ -121,10 +138,11 @@
                    <select-field field-name="contentAssocTypeId"/>
                    <select-field field-name="fromDate"/>
                    <select-field field-name="sequenceNum"/>
-                   
+
                    <order-by field-name="-sequenceNum"/>
                 </entity-condition>
            </sub-node>
         </node>
     </tree>
+    
 </trees>
