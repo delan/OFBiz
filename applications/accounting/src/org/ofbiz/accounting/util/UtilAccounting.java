@@ -211,14 +211,16 @@ public class UtilAccounting {
 
     /**
      * Method to get BigDecimal scale factor from a property
+     * @param   file     - Name of the property file
      * @param   property - Name of the config property from arithmeticPropertiesFile (e.g., "invoice.decimals")
      * @return  int - Scale factor to pass to BigDecimal's methods. Defaults to DEFAULT_BD_SCALE (2)
      */
-    public static int getBigDecimalScale(String property) {
+    public static int getBigDecimalScale(String file, String property) {
+        if ((file == null) || (file.length() == 0)) return DEFAULT_BD_SCALE;
         if ((property == null) || (property.length() == 0)) return DEFAULT_BD_SCALE;
 
         int scale = -1;
-        String value = UtilProperties.getPropertyValue(arithmeticPropertiesFile, property);
+        String value = UtilProperties.getPropertyValue(file, property);
         if (value != null) {
             try {
                 scale = Integer.parseInt(value);
@@ -233,20 +235,36 @@ public class UtilAccounting {
     }
     
     /**
+     * As above, but use the default properties file
+     */
+    public static int getBigDecimalScale(String property) {
+        return getBigDecimalScale(arithmeticPropertiesFile, property);
+    }
+
+    /**
      * Method to get BigDecimal rounding mode from a property
+     * @param   file     - Name of the property file
      * @param   property - Name of the config property from arithmeticPropertiesFile (e.g., "invoice.rounding")
      * @return  int - Rounding mode to pass to BigDecimal's methods. Defaults to DEFAULT_BD_ROUNDING_MODE (BigDecimal.ROUND_HALF_UP)
      */
-    public static int getBigDecimalRoundingMode(String property) {
+    public static int getBigDecimalRoundingMode(String file, String property) {
+        if ((file == null) || (file.length() == 0)) return DEFAULT_BD_SCALE;
         if ((property == null) || (property.length() == 0)) return DEFAULT_BD_ROUNDING_MODE;
 
-        String value = UtilProperties.getPropertyValue(arithmeticPropertiesFile, property);
+        String value = UtilProperties.getPropertyValue(file, property);
         int mode = roundingModeFromString(value);
         if (mode == -1) {
             Debug.logWarning("Could not set decimal rounding mode from " + property + "=" + value + ". Using default mode of " + DEFAULT_BD_SCALE + ".", module);
             return DEFAULT_BD_ROUNDING_MODE;
         }
         return mode;
+    }
+
+    /**
+     * As above, but use the default properties file
+     */
+    public static int getBigDecimalRoundingMode(String property) {
+        return getBigDecimalRoundingMode(arithmeticPropertiesFile, property);
     }
 
     /**
