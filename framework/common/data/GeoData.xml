@@ -242,6 +242,10 @@
     <Geo abbreviation="YEM" geoCode="YE" geoId="YEM" geoName="Yemen" geoSecCode="887" geoTypeId="COUNTRY"/>
     <Geo abbreviation="YUG" geoCode="YU" geoId="YUG" geoName="Yugoslavia" geoSecCode="891" geoTypeId="COUNTRY"/>
     <Geo abbreviation="ZMB" geoCode="ZM" geoId="ZMB" geoName="Zambia" geoSecCode="894" geoTypeId="COUNTRY"/>
+    <Geo abbreviation="SCOT" geoCode="SCT" geoId="SCOT" geoName="Scotland" geoSecCode="895" geoTypeId="COUNTRY"/>
+    <Geo abbreviation="ENGL" geoCode="ENG" geoId="ENGL" geoName="England" geoSecCode="896" geoTypeId="COUNTRY"/>
+    <Geo abbreviation="NIRL" geoCode="NIR" geoId="NIRL" geoName="N.Ireland" geoSecCode="897" geoTypeId="COUNTRY"/>
+    <Geo abbreviation="WALS" geoCode="WLS" geoId="WALS" geoName="Wales" geoSecCode="898" geoTypeId="COUNTRY"/>
 
     <Geo abbreviation="EU" geoCode="EU" geoTypeId="GROUP" geoId="EU" geoName="European Union"/>
     <GeoAssoc geoAssocTypeId="GROUP_MEMBER" geoId="EU" geoIdTo="DEU"/>
@@ -269,76 +273,10 @@
     <GeoAssoc geoAssocTypeId="GROUP_MEMBER" geoId="EU" geoIdTo="SVK"/>
     <GeoAssoc geoAssocTypeId="GROUP_MEMBER" geoId="EU" geoIdTo="SVN"/>
     <GeoAssoc geoAssocTypeId="GROUP_MEMBER" geoId="EU" geoIdTo="SWE"/>
-    
-    <!-- The Geo records need to be defined for these assocs, leaving out for now
-      <GeoAssoc geoId="GBR" geoIdTo="Avon" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Bfd" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Bkh" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Bor" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Brk" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="CI" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Cbs" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Cen" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Che" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Cle" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Clw" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Cnw" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Cum" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="DandG" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Dby" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Dev" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Dor" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Drm" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Dyf" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="ES" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Esx" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Fife" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="GL" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="GM" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Glo" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Grm" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Gwe" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Gwy" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Ham" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="HandW" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Hfs" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Hgh" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Hum" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="IoM" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="IoS" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="IoW" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Kent" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Lan" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Lcn" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Lei" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Ltn" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="MG" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Mer" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="NYorks" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Nfk" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Nmp" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Nor" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Not" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Ork" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Oxf" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Pow" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="SG" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="SY" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Sfk" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="She" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Shr" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Som" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Sry" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Stf" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Str" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="TandW" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Tay" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="WG" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="WIsles" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="WM" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="WS" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="WYorks" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="War" geoAssocTypeId="REGIONS" />
-      <GeoAssoc geoId="GBR" geoIdTo="Wts" geoAssocTypeId="REGIONS" />
-    -->
+
+	<!-- Countries of the UK -->
+    <GeoAssoc geoAssocTypeId="GROUP_MEMBER" geoId="GBR" geoIdTo="SCOT"/>
+    <GeoAssoc geoAssocTypeId="GROUP_MEMBER" geoId="GBR" geoIdTo="ENGL"/>
+    <GeoAssoc geoAssocTypeId="GROUP_MEMBER" geoId="GBR" geoIdTo="NIRL"/>
+    <GeoAssoc geoAssocTypeId="GROUP_MEMBER" geoId="GBR" geoIdTo="WALS"/>
 </entity-engine-xml>
