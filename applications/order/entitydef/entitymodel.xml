@@ -2521,8 +2521,10 @@
             package-name="org.ofbiz.order.opportunity"
             title="Stores sales forecast data for sales opportunities.">
         <field name="salesForecastId" type="id-ne"></field>
+        <field name="organizationPartyId" type="id"></field>
         <field name="internalPartyId" type="id"></field>
         <field name="customTimePeriodId" type="id"></field>
+        <field name="currencyUomId" type="id"></field>
         <field name="quotaAmount" type="currency-amount"></field>
         <field name="forecastAmount" type="currency-amount"></field>
         <field name="bestCaseAmount" type="currency-amount"></field>
@@ -2532,11 +2534,17 @@
         <field name="createdByUserLoginId" type="id-vlong"></field>
         <field name="modifiedByUserLoginId" type="id-vlong"></field>
         <prim-key field="salesForecastId"/>
+        <relation type="one" fk-name="SALES4C_ORG_PARTY" rel-entity-name="Party">
+            <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+        </relation>
         <relation type="one" fk-name="SALES4C_INT_PARTY" rel-entity-name="Party">
             <key-map field-name="internalPartyId" rel-field-name="partyId"/>
         </relation>
         <relation type="one" fk-name="SALES4C_TIME_PER" rel-entity-name="CustomTimePeriod">
             <key-map field-name="customTimePeriodId"/>
+        </relation>
+        <relation type="one" fk-name="SALES4C_CUR_UOM" rel-entity-name="Uom">
+            <key-map field-name="currencyUomId" rel-field-name="uomId"/>
         </relation>
         <relation type="one" fk-name="SALES4C_CRT_USER" rel-entity-name="UserLogin">
             <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
@@ -2551,8 +2559,10 @@
             title="Keeps a record of changes to a sales forecast.">
         <field name="salesForecastHistoryId" type="id-ne"></field>
         <field name="salesForecastId" type="id-ne"></field>
+        <field name="organizationPartyId" type="id"></field>
         <field name="internalPartyId" type="id"></field>
         <field name="customTimePeriodId" type="id"></field>
+        <field name="currencyUomId" type="id"></field>
         <field name="quotaAmount" type="currency-amount"></field>
         <field name="forecastAmount" type="currency-amount"></field>
         <field name="bestCaseAmount" type="currency-amount"></field>
@@ -2568,11 +2578,17 @@
         <relation type="one" fk-name="SALES4CH_SALES4C" rel-entity-name="SalesForecast">
             <key-map field-name="salesForecastId"/>
         </relation>
+        <relation type="one" fk-name="SALES4CH_ORG_PARTY" rel-entity-name="Party">
+            <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+        </relation>
         <relation type="one" fk-name="SALES4CH_INT_PARTY" rel-entity-name="Party">
             <key-map field-name="internalPartyId" rel-field-name="partyId"/>
         </relation>
         <relation type="one" fk-name="SALES4CH_TIME_PER" rel-entity-name="CustomTimePeriod">
             <key-map field-name="customTimePeriodId"/>
+        </relation>
+        <relation type="one" fk-name="SALES4CH_CUR_UOM" rel-entity-name="Uom">
+            <key-map field-name="currencyUomId" rel-field-name="uomId"/>
         </relation>
         <relation type="one" fk-name="SALES4CH_MOD_USER" rel-entity-name="UserLogin">
             <key-map field-name="modifiedByUserLogin" rel-field-name="userLoginId"/>
