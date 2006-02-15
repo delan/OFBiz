@@ -44,7 +44,12 @@
         <description>Delete Survey</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-
+    
+    <service name="cloneSurvey" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="cloneSurvey">
+        <description>Clone a Survey</description>
+    </service>
+    
     <!-- SurveyApplType Services -->
     <service name="createSurveyApplType" default-entity-name="SurveyApplType" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyApplType">
