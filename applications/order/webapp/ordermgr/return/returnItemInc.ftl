@@ -111,7 +111,7 @@
                 </tr>
                 <#assign rowCount = rowCount + 1>
               </#list>
-                     <!-- final row count -->
+                     
 
              <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <tr>
@@ -126,7 +126,6 @@
                 <td align="right"><div class="tableheadtext">Include?</div></td>
               </tr>
               <tr><td colspan="9"><hr class="sepbar"></td></tr>
-              <#assign rowCount = 0>
               <#list orderHeaderAdjustments as adj>
                 <#assign returnAdjustmentType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
                 <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType")/>
@@ -146,7 +145,7 @@
                   </td>
                                      
                   <td align="right">
-                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'returnAdjustments');"/>
+                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
                   </td>
                 </tr>
                 <#assign rowCount = rowCount + 1>
