@@ -60,6 +60,8 @@ public class PayflowPro {
      * @return Response map, including RESPMSG, and RESULT keys.
      */
     public static Map ccProcessor(DispatchContext dctx, Map context) {
+        GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
+        GenericValue authTrans = (GenericValue) context.get("authTrans");
         String orderId = (String) context.get("orderId");
         String cvv2 = (String) context.get("cardSecurityCode");
         Double processAmount = (Double) context.get("processAmount");
@@ -71,7 +73,12 @@ public class PayflowPro {
             configString = "payment.properties";
         }
 
+        if (authTrans == null){
+        	authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
+        }
+
         // set the orderId as comment1 so we can query in PF Manager
+        boolean isReAuth = false;
         Map data = UtilMisc.toMap("COMMENT1", orderId);
         data.put("PONUM", orderId);
         data.put("CUSTCODE", party.getString("partyId"));
@@ -79,6 +86,12 @@ public class PayflowPro {
         // transaction type
         if (UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.verisign.preAuth", "Y")) {
             data.put("TRXTYPE", "A");
+            // only support re-auth for auth types; sale types don't do it
+            if (authTrans != null) {
+                String refNum = authTrans.getString("referenceNum");
+                data.put("ORIGID", refNum);
+                isReAuth = true;
+            }
         } else {
             data.put("TRXTYPE", "S");
         }
@@ -139,7 +152,7 @@ public class PayflowPro {
 
         // check the response
         Map result = ServiceUtil.returnSuccess();
-        parseAuthResponse(resp, result, configString);
+        parseAuthResponse(resp, result, configString, isReAuth);
         result.put("processAmount", processAmount);
         return result;
     }
@@ -316,7 +329,7 @@ public class PayflowPro {
         return result;
     }
 
-    private static void parseAuthResponse(String resp, Map result, String resource) {
+    private static void parseAuthResponse(String resp, Map result, String resource, boolean isReAuth) {
         Debug.logInfo("Verisign response string: " + resp, module);
         Map parameters = new LinkedMap();
         List params = StringUtil.split(resp, "&");
@@ -338,36 +351,40 @@ public class PayflowPro {
         // txType
         boolean isSale = !UtilProperties.propertyValueEqualsIgnoreCase(resource, "payment.verisign.preAuth", "Y");
 
-        // avs checking
+        // avs checking - ignore on re-auth
         boolean avsCheckOkay = true;
         String avsCode = null;
-        boolean checkAvs = UtilProperties.propertyValueEqualsIgnoreCase(resource, "payment.verisign.checkAvs", "Y");
-        if (checkAvs && !isSale) {
-            String addAvs = (String) parameters.get("AVSADDR");
-            String zipAvs = (String) parameters.get("AVSZIP");
-            avsCode = addAvs + zipAvs;
-            if ("N".equals(addAvs) || "N".equals(zipAvs)) {
-                avsCheckOkay = false;
+        if (!isReAuth) {
+            boolean checkAvs = UtilProperties.propertyValueEqualsIgnoreCase(resource, "payment.verisign.checkAvs", "Y");
+            if (checkAvs && !isSale) {
+                String addAvs = (String) parameters.get("AVSADDR");
+                String zipAvs = (String) parameters.get("AVSZIP");
+                avsCode = addAvs + zipAvs;
+                if ("N".equals(addAvs) || "N".equals(zipAvs)) {
+                    avsCheckOkay = false;
+                }
             }
         }
 
-        // cvv2 checking
+        // cvv2 checking - ignore on re-auth
         boolean cvv2CheckOkay = true;
         String cvvCode = null;
-        boolean checkCvv2 = UtilProperties.propertyValueEqualsIgnoreCase(resource, "payment.verisign.checkAvs", "Y");
-        if (checkCvv2 && !isSale) {
-            cvvCode = (String) parameters.get("CVV2MATCH");
-            if ("N".equals(cvvCode)) {
-                cvv2CheckOkay = false;
+        if (!isReAuth) {
+            boolean checkCvv2 = UtilProperties.propertyValueEqualsIgnoreCase(resource, "payment.verisign.checkAvs", "Y");
+            if (checkCvv2 && !isSale) {
+                cvvCode = (String) parameters.get("CVV2MATCH");
+                if ("N".equals(cvvCode)) {
+                    cvv2CheckOkay = false;
+                }
             }
         }
 
         String respCode = (String) parameters.get("RESULT");
         if (respCode.equals("0") && avsCheckOkay && cvv2CheckOkay) {
-            result.put("authResult", new Boolean(true));
+            result.put("authResult", Boolean.TRUE);
             result.put("authCode", parameters.get("AUTHCODE"));
         } else {
-            result.put("authResult", new Boolean(false));
+            result.put("authResult", Boolean.FALSE);
         }
         result.put("cvCode", cvvCode);
         result.put("avsCode", avsCode);
@@ -396,10 +413,10 @@ public class PayflowPro {
         String respCode = (String) parameters.get("RESULT");
 
         if (respCode.equals("0")) {
-            result.put("captureResult", new Boolean(true));
+            result.put("captureResult", Boolean.TRUE);
             result.put("captureCode", parameters.get("AUTHCODE"));
         } else {
-            result.put("captureResult", new Boolean(false));
+            result.put("captureResult", Boolean.FALSE);
         }
         result.put("captureRefNum", parameters.get("PNREF"));
         result.put("captureFlag", parameters.get("RESULT"));
@@ -426,10 +443,10 @@ public class PayflowPro {
         String respCode = (String) parameters.get("RESULT");
 
         if (respCode.equals("0")) {
-            result.put("releaseResult", new Boolean(true));
+            result.put("releaseResult", Boolean.TRUE);
             result.put("releaseCode", parameters.get("AUTHCODE"));
         } else {
-            result.put("releaseResult", new Boolean(false));
+            result.put("releaseResult", Boolean.FALSE);
         }
         result.put("releaseRefNum", parameters.get("PNREF"));
         result.put("releaseFlag", parameters.get("RESULT"));
@@ -456,10 +473,10 @@ public class PayflowPro {
         String respCode = (String) parameters.get("RESULT");
 
         if (respCode.equals("0")) {
-            result.put("refundResult", new Boolean(true));
+            result.put("refundResult", Boolean.TRUE);
             result.put("refundCode", parameters.get("AUTHCODE"));
         } else {
-            result.put("refundResult", new Boolean(false));
+            result.put("refundResult", Boolean.FALSE);
         }
         result.put("refundRefNum", parameters.get("PNREF"));
         result.put("refundFlag", parameters.get("RESULT"));
