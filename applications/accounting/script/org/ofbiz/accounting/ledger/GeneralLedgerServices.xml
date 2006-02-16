@@ -98,56 +98,34 @@
     </simple-method>
 
     <!-- ========= GlJournal methods ========= -->
-    <simple-method method-name="createGlJournalEntry" short-description="Creates GlJournal, acctgTrans, and 2 acctgTransEntry">
+    <simple-method method-name="createGlJournalEntry" short-description="Creates an AcctgTrans and two offsetting AcctgTransEntry records">
+        <!-- TODO: Do we need to create a GlJournal record here? -->
     
-        <log level="info" message="XXXX - Copying paramter map to appropriate maps: [${paramters}]"/>
-        
-        <set from-field="parameters.organizationPartyId" field="newGlJournal.organizationPartyId"/>
-        <set from-field="parameters.glJournalName" field="newGlJournal.glJournalName"/>
-        
-        <log level="info" message="XXXX - Here is the newGlJournal map: [${newGlJournal}]"/>
-        <set from-field="parameters.description" field="newAcctgTrans.description"/>
-        <set from-field="parameters.acctgTransTypeId" field="newAcctgTrans.acctgTransTypeId"/>
-        <set from-field="parameters.glFiscalTypeId" field="newAcctgTrans.glFiscalTypeId"/>
-        <set from-field="parameters.transactionDate" field="newAcctgTrans.transactionDate"/>
-        <log level="info" message="XXXX - Here is the newAcctgTrans map: [${newAcctgTrans}]"/>
-        
-        
-        <call-service service-name="createGlJournal" in-map-name="newGlJournal">
-            <result-to-field result-name="glJournalId"/>
-        </call-service>
-        <log level="info" message="XXXX - Finished calling createGlJournal. Return glJournalId: [${glJournalId}]"/>
-        
-        <call-service service-name="createAcctgTrans" in-map-name="newAcctgTrans">
+        <!-- first, create the AcctgTrans -->
+        <set-service-fields service-name="createAcctgTrans" to-map-name="createAcctgTransParams" map-name="parameters"/>
+        <now-timestamp-to-env env-name="createAcctgTransParams.transactionDate"/>
+        <call-service service-name="createAcctgTrans" in-map-name="createAcctgTransParams">
             <result-to-field result-name="acctgTransId"/>
         </call-service>
-        <log level="info" message="XXXX - Finished calling createAcctgTrans. Return acctgTransId: [${acctgTransId}]"/>
-    
-        <!-- set from-field="newAcctgTrans.acctgTransId" field="newAcctgTransEntryCredit.acctgTransId"/ -->
-        <set field="newAcctgTransEntryCredit.acctgTransId" from-field="acctgTransId"/>
-        <set field="newAcctgTransEntryCredit.acctgTransEntryTypeId" from-field="parameters.acctgTransEntryTypeId"/>
-        <set field="newAcctgTransEntryCredit.partyId" from-field="parameters.partyId"/>
-        <set field="newAcctgTransEntryCredit.glAccountId" from-field="parameters.creditGlAccountId"/>
-        <set field="newAcctgTransEntryCredit.organizationPartyId" from-field="parameters.organizationPartyId"/>
-        <set field="newAcctgTransEntryCredit.debitCreditFlag" value="C"/>
-        <set field="newAcctgTransEntryCredit.amount" from-field="parameters.amount"/>
-        <log level="info" message="XXXX - Creating AcctgTransEntry for credit side: [${newAcctgTransEntryCredit}]"/>
-        <call-service service-name="createAcctgTransEntry" in-map-name="newAcctgTransEntryCredit"/>
-    
+
+        <!-- TODO: if someday there are more than one type of acctgTransEntryTypeId (other than _NA_, we should get rid of the lines below
+            that fix those values -->
+        <!-- now, create the debit AcctgTransEntry -->
+        <set-service-fields service-name="createAcctgTransEntry" map-name="parameters" to-map-name="createAcctgTransEntryParams"/>
+        <set field="createAcctgTransEntryParams.acctgTransId" from-field="acctgTransId"/>
+        <set field="createAcctgTransEntryParams.glAccountId" from-field="parameters.debitGlAccountId"/>
+        <set field="createAcctgTransEntryParams.debitCreditFlag" value="D"/>
+        <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
+        <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
         
-        <!-- set from-field="acctgTransId" map-name="newAcctgTrans" to-map-name="newAcctgTransEntryDebit"/ -->
-        <set field="newAcctgTransEntryDebit.acctgTransId" from-field="acctgTransId"/>
-        <set field="newAcctgTransEntryDebit.acctgTransEntryTypeId" from-field="parameters.acctgTransEntryTypeId"/>
-        <set field="newAcctgTransEntryDebit.partyId" from-field="parameters.partyId"/>
-        <set field="newAcctgTransEntryDebit.glAccountId" from-field="parameters.debitGlAccountId"/>
-        <set field="newAcctgTransEntryDebit.organizationPartyId" from-field="parameters.organizationPartyId"/>
-        <set field="newAcctgTransEntryDebit.debitCreditFlag" value="D"/>
-        <set field="newAcctgTransEntryDebit.amount" from-field="parameters.amount"/>
-        <log level="info" message="XXXX - Creating AcctgTransEntry for debit side: [${newAcctgTransEntryDebit}]"/>
-        <call-service service-name="createAcctgTransEntry" in-map-name="newAcctgTransEntryDebit"/>
-    
+        <!-- now the credit AcctgTransEntry -->
+        <set-service-fields service-name="createAcctgTransEntry" map-name="parameters" to-map-name="createAcctgTransEntryParams"/>
+        <set field="createAcctgTransEntryParams.acctgTransId" from-field="acctgTransId"/>
+        <set field="createAcctgTransEntryParams.glAccountId" from-field="parameters.creditGlAccountId"/>
+        <set field="createAcctgTransEntryParams.debitCreditFlag" value="C"/>
+        <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
+        <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
         
-        <field-to-result field-name="glJournalId" result-name="glJournalId"/>
         <field-to-result field-name="acctgTransId" result-name="acctgTransId"/>
     </simple-method> 
        
@@ -178,6 +156,73 @@
 
         <entity-one entity-name="GlJournal" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+        
+    <!-- GlJournal Trial Balance and Post routines -->
+    <simple-method method-name="calculateGlJournalTrialBalance" short-description="Calculate Trial Balance for a GlJournal">
+        <check-permission permission="ACCOUNTING" action="_VIEW"><fail-message message="Security Error: to run calculateGlJournalTrialBalance you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <!-- iterate through all AcctgTrans in this journal and that are not yet posted, and get totals of all debits and of all credits -->
+        <entity-condition entity-name="AcctgTrans" list-name="acctgTransList">
+            <condition-list combine="and">
+                <condition-expr field-name="glJournalId" env-name="parameters.glJournalId"/>
+                <condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
+            </condition-list>
+        </entity-condition>
+        
+        <iterate entry-name="acctgTrans" list-name="acctgTransList">
+            <clear-field field-name="callServiceMap"/>
+            <clear-field field-name="serviceResults"/>
+            <set from-field="acctgTrans.acctgTransId" field="callServiceMap.acctgTransId"/>
+            <call-service service-name="calculateAcctgTransTrialBalance" in-map-name="callServiceMap">
+                <results-to-map map-name="serviceResults"/>
+            </call-service>
+            <calculate field-name="debitTotal" type="Double">
+                <calcop operator="get" field-name="debitTotal"/>
+                <calcop operator="get" field-name="serviceResults.debitTotal"/>
+            </calculate>
+            <calculate field-name="creditTotal" type="Double">
+                <calcop operator="get" field-name="creditTotal"/>
+                <calcop operator="get" field-name="serviceResults.creditTotal"/>
+            </calculate>
+            <calculate field-name="debitCreditDifference" type="Double">
+                <calcop operator="get" field-name="debitCreditDifference"/>
+                <calcop operator="get" field-name="serviceResults.debitCreditDifference"/>
+            </calculate>
+        </iterate>
+        
+        <field-to-result field-name="debitTotal"/>
+        <field-to-result field-name="creditTotal"/>
+        <field-to-result field-name="debitCreditDifference"/>
+    </simple-method>
+
+    <simple-method method-name="postGlJournal" short-description="Post a GlJournal">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run postGlJournal you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+        <!-- first calculate the trial balance for the journal and make sure debits and credits match -->
+        <set from-field="parameters.glJournalId" field="trialBalanceCallMap.glJournalId"/>
+        <call-service service-name="calculateGlJournalTrialBalance" in-map-name="trialBalanceCallMap">
+            <results-to-map map-name="trialBalanceResultMap"/>
+        </call-service>
+        
+        <if-compare field-name="trialBalanceResultMap.debitCreditDifference" operator="not-equals" value="0" type="Double">
+            <add-error><fail-message message="Not posting GL Journal with ID [${parameters.glJournalId}] because the trial balance failed: Debit Total=${trialBalanceResultMap.debitTotal} Credit Total=${trialBalanceResultMap.creditTotal} Debit/Credit Difference=${trialBalanceResultMap.debitCreditDifference}"/></add-error>
+            <check-errors/>
+        </if-compare>
+        
+        <!-- iterate through all AcctgTrans in this journal and that are not yet posted, and post each one -->
+        <entity-condition entity-name="AcctgTrans" list-name="acctgTransList">
+            <condition-list combine="and">
+                <condition-expr field-name="glJournalId" env-name="parameters.glJournalId"/>
+                <condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
+            </condition-list>
+        </entity-condition>
+        <iterate entry-name="acctgTrans" list-name="acctgTransList">
+            <clear-field field-name="callServiceMap"/>
+            <set from-field="acctgTrans.acctgTransId" field="callServiceMap.acctgTransId"/>
+            <call-service service-name="postAcctgTrans" in-map-name="callServiceMap"/>
+        </iterate>
     </simple-method>
 
     <!-- ========= GlReconciliation methods ========= -->
@@ -255,4 +300,120 @@
         <!-- when changing entries, also update the last modified info for the GlReconciliation -->
         <call-simple-method method-name="updateGlReconciliationLastModified"/>
     </simple-method>
+
+    <!-- ========== GL Posting Services ========== -->
+    <simple-method method-name="createAcctgTransAndEntries" short-description="Verifies and posts a set of AcctgTransEntries">
+        <!-- TODO: move permission checking to service definition.  For some reason it didn't work -->
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to post accounting transaction entries you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <!-- first loop through and make sure all the entries are valid  -->
+        <iterate list-name="parameters.acctgTransEntries" entry-name="acctgTransEntry">
+            <!-- the organization party must be an internal organization -->
+            <entity-one entity-name="PartyRole" value-name="partyRole" use-cache="true" auto-field-map="false">
+                <field-map field-name="partyId" env-name="acctgTransEntry.organizationPartyId"/>
+                <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+            </entity-one>
+            <if-empty field-name="partyRole">
+                <add-error><fail-message message="${acctgTransEntry.organizationPartyId} for transaction ${acctgTransEntry.acctgTransId} entry ${acctgTransEntry.acctTransEntrySeqId} is not an internal organization "/></add-error>
+                <check-errors/>
+            </if-empty>
+            <!-- add up debits and credits -->
+            <if-compare field-name="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
+                <calculate field-name="debitTotal">
+                    <calcop operator="get" field-name="acctgTransEntry.amount"/>
+                    <calcop operator="get" field-name="debitTotal"/>
+                </calculate>
+            </if-compare>
+            <if-compare field-name="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
+                <calculate field-name="creditTotal">
+                    <calcop operator="get" field-name="acctgTransEntry.amount"/>
+                    <calcop operator="get" field-name="creditTotal"/>
+                </calculate>
+            </if-compare>
+        </iterate>
+        <calculate field-name="debitCreditDifference">
+            <calcop operator="get" field-name="debitTotal"/>
+            <calcop operator="negative" field-name="creditTotal"/>
+        </calculate>
+
+        <!-- if the debit and credit totals do not balance, return an error -->
+        <if-compare field-name="debitCreditDifference" operator="greater-equals" value="0.000001" type="Double">
+            <add-error><fail-property resource="AccountingUiLabels" property="AccountingDebitCreditMustEqual"/></add-error>
+        </if-compare>
+        <if-compare field-name="debitCreditDifference" operator="less-equals" value="-0.000001" type="Double">
+            <add-error><fail-property resource="AccountingUiLabels" property="AccountingDebitCreditMustEqual"/></add-error>
+        </if-compare>
+        <check-errors/>
+        
+        <!-- now do the posting. First, create the AcctgTrans entity -->
+        <set-service-fields service-name="createAcctgTrans" map-name="parameters" to-map-name="createAcctgTransParams"/>
+        <if-empty field-name="createAcctgTransParams.transactionDate">
+            <now-timestamp-to-env env-name="createAcctgTransParams.transactionDate"/>
+        </if-empty>
+        <call-service service-name="createAcctgTrans" in-map-name="createAcctgTransParams">
+            <result-to-field result-name="acctgTransId"/>
+        </call-service>
+        
+        <!-- Next, create the AcctgTransEntry entities one by one -->
+        <iterate list-name="parameters.acctgTransEntries" entry-name="acctgTransEntry">
+            <!-- if any amount is negative, then get the absolute (positive) value of that amount, and flip the Debit/Credit flag  -->
+            <if-compare field-name="amount" map-name="acctgTransEntry" operator="less" value="0">
+                <log level="info" message="${acctgTransEntry} is going to get inverted"/>
+                <calculate field-name="acctgTransEntry.amount">
+                    <calcop field-name="acctgTransEntry.amount" operator="negative"/>
+                </calculate>
+                <if-compare field-name="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
+                    <set value="C" field="acctgTransEntry.debitCreditFlag"/>
+                <else>
+                    <if-compare field-name="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
+                        <set value="D" field="acctgTransEntry.debitCreditFlag"/>
+                    </if-compare>
+                </else>
+                </if-compare>
+                <log level="info" message="result: ${acctgTransEntry}"/>
+            </if-compare>
+            
+            <!-- now create the AcctgTransEntry using the acctgTransId we already have from above -->    
+            <set-service-fields service-name="createAcctgTransEntry" map-name="acctgTransEntry" to-map-name="createAcctgTransEntryParams"/>
+            <set from-field="acctgTransId" field="createAcctgTransEntryParams.acctgTransId"/>
+            <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+        </iterate>
+        
+        <!-- all done -->
+        <field-to-result field-name="acctgTransId"/>
+    </simple-method>
+
+    <!-- Miscellaneous services for product and inventory -->
+
+    <simple-method method-name="getProductOrgGlAccount" short-description="Look up a GlAccountId from ProductGlAccount, then GlAccountTypeDefault"> 
+        <!-- if parameters for ProductGlAccount were passed, then try there first -->
+        <if>
+            <condition>
+                <not>
+                    <or>
+                        <if-empty field-name="parameters.productId"/>
+                        <if-empty field-name="parameters.productGlAccountTypeId"/>
+                    </or>
+                </not>
+            </condition>
+            <then>
+                <entity-one entity-name="ProductGlAccount" value-name="lookedUpValue" use-cache="true"/> 
+            </then>
+        </if>
+        <!-- if nothing found or if no such parameters were passed (lookedUpValue empty in both cases), try GlAccountTypeDefault -->
+        <if-empty field-name="lookedUpValue.glAccountId">
+            <entity-one entity-name="GlAccountTypeDefault" value-name="lookedUpValue" use-cache="true"/> 
+        </if-empty>
+        <field-to-result field-name="lookedUpValue.glAccountId" result-name="glAccountId"/> 
+    </simple-method>
+
+    <simple-method method-name="getInventoryItemOwner" short-description="Get an ownerPartyId from inventoryItemId">
+        <entity-one entity-name="InventoryItem" value-name="item"/>
+        <get-related-one  relation-name="Facility" value-name="item" to-value-name="facility"/>
+        <field-to-result field-name="facility.ownerPartyId" result-name="ownerPartyId"/>
+   </simple-method>
+
+
+
 </simple-methods>
