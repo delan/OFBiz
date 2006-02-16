@@ -1,6 +1,7 @@
 /* $$ID$ */
 package org.ofbiz.order.order;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,15 +11,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.math.BigDecimal;
+
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -26,12 +28,11 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.accounting.util.UtilAccounting;
 
 /**
  * OrderReturnServices
@@ -1154,7 +1155,7 @@ public class OrderReturnServices {
         Locale locale = (Locale) context.get("locale");
         Map returnAmountByOrder = null;
         Map serviceResult = null;
-        GenericValue orderHeader = null;
+        //GenericValue orderHeader = null;
         try {
             serviceResult = dispatcher.runSync("getReturnAmountByOrder", org.ofbiz.base.util.UtilMisc.toMap("returnId", returnId));
         } catch (GenericServiceException e) {
@@ -1251,8 +1252,8 @@ public class OrderReturnServices {
                     Debug.logError("orderAdjustment [" + orderAdjustmentId + "] not found", module);
                     return ServiceUtil.returnError("orderAdjustment [" + orderAdjustmentId + "] not found");
                 }
-                int decimals = UtilAccounting.getBigDecimalScale("invoice.decimals");
-                int rounding = UtilAccounting.getBigDecimalRoundingMode("invoice.rounding");
+                int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+                int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
                 BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity")).setScale(decimals, rounding);
                 BigDecimal orderTotal = orderItem.getBigDecimal("quantity").multiply(orderItem.getBigDecimal("unitPrice"));
                 BigDecimal newAmount = returnTotal.divide(orderTotal, decimals, rounding).multiply(orderAdjustment.getBigDecimal("amount")).setScale(decimals, rounding);
@@ -1309,8 +1310,8 @@ public class OrderReturnServices {
             // calculate the returnAdjustment amount
             if (returnItem != null) {  // returnAdjustment for returnItem
                 if (needRecalculate(returnAdjustmentTypeId)) {
-                    int decimals = UtilAccounting.getBigDecimalScale("invoice.decimals");
-                    int rounding = UtilAccounting.getBigDecimalRoundingMode("invoice.rounding");
+                    int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+                    int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
                     BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity")).setScale(decimals, rounding);
                     BigDecimal originalReturnTotal = new BigDecimal(originalReturnPrice).multiply(new BigDecimal(originalReturnQuantity)).setScale(decimals, rounding);
                     BigDecimal newAmount = returnTotal.divide(originalReturnTotal, decimals, rounding).multiply(returnAdjustment.getBigDecimal("amount")).setScale(decimals, rounding); 
