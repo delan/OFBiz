@@ -64,9 +64,11 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <delegator name="test" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main">
         <group-map group-name="org.ofbiz" datasource-name="localderby"/>
+        <group-map group-name="org.ofbiz.odbc" datasource-name="localderbyodbc"/>
     </delegator>
     <delegator name="other" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main">
         <group-map group-name="org.ofbiz" datasource-name="localpostgres"/>
+        <group-map group-name="org.ofbiz.odbc" datasource-name="localderbyodbc"/>
     </delegator>
 
     <!-- need to at least define a name for each component to use -->
