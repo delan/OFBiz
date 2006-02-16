@@ -135,6 +135,7 @@
         <description>update Return Item or Adjustment based on the parameters passed in</description>
         <auto-attributes mode="IN" include="all" entity-name="ReturnAdjustment" optional="true"/>
         <auto-attributes mode="IN" include="all" entity-name="ReturnItem" optional="true"/>
+        <attribute name="currentStatusId" type="String" mode="OUT" optional="true"/>
     </service>
     
     <!-- services to verify that returns refunds aren't issued more than once -->

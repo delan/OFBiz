@@ -328,8 +328,13 @@
         
         <!-- now update all return adjustments associated with this return item -->
         <get-related value-name="returnItem" relation-name="ReturnAdjustment" list-name="returnAdjustments"/>
+        <entity-and entity-name="ReturnAdjustment" list-name="returnAdjustments">
+            <field-map field-name="returnId" env-name="returnItem.returnId"/>
+            <field-map field-name="returnItemSeqId" env-name="returnItem.returnItemSeqId"/>
+        </entity-and>
         <iterate entry-name="returnAdjustment" list-name="returnAdjustments">
-            <set field="ctx" from-field="returnAdjustment"/>
+            <log level="info" message="updating returnAdjustment with Id:[${returnAdjustment.returnAdjustmentId}]"/>
+            <set-service-fields service-name="updateReturnAdjustment" map-name="returnAdjustment" to-map-name="ctx"/>            
             <set field="ctx.originalReturnPrice" from-field="returnItem.returnPrice"/> 
             <set field="ctx.originalReturnQuantity" from-field="returnItem.returnQuantity"/>                  
             <call-service service-name="updateReturnAdjustment" in-map-name="ctx" include-user-login="true"/>

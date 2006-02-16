@@ -1252,12 +1252,9 @@ public class OrderReturnServices {
                     Debug.logError("orderAdjustment [" + orderAdjustmentId + "] not found", module);
                     return ServiceUtil.returnError("orderAdjustment [" + orderAdjustmentId + "] not found");
                 }
-                int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-                int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
-                BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity")).setScale(decimals, rounding);
-                BigDecimal orderTotal = orderItem.getBigDecimal("quantity").multiply(orderItem.getBigDecimal("unitPrice"));
-                BigDecimal newAmount = returnTotal.divide(orderTotal, decimals, rounding).multiply(orderAdjustment.getBigDecimal("amount")).setScale(decimals, rounding);
-                amount = new Double(newAmount.doubleValue());
+                BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity"));
+                BigDecimal orderTotal = orderItem.getBigDecimal("quantity").multiply(orderItem.getBigDecimal("unitPrice"));                
+                amount = getAdjustmentAmount("RET_SALES_TAX_ADJ".equals(returnAdjustmentType), returnTotal, orderTotal, orderAdjustment.getBigDecimal("amount"));
             } else {
                 amount = (Double) context.get("amount");
             }
@@ -1278,12 +1275,12 @@ public class OrderReturnServices {
             newReturnAdjustment.set("returnItemSeqId", UtilValidate.isEmpty(returnItemSeqId) ? "_NA_" : returnItemSeqId);
 
             delegator.create(newReturnAdjustment);
-            Map result = ServiceUtil.returnSuccess("Create ReturnItem with Id:" + seqId + " successfully.");
+            Map result = ServiceUtil.returnSuccess("Create ReturnAdjustment with Id:" + seqId + " successfully.");
             result.put("returnAdjustmentId", seqId);
             return result;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failed to store returnItem", module);
-            return ServiceUtil.returnError("Failed to store returnItem");
+            Debug.logError(e, "Failed to store returnAdjustment", module);
+            return ServiceUtil.returnError("Failed to store returnAdjustment");
         }
     }
 
@@ -1291,8 +1288,7 @@ public class OrderReturnServices {
         GenericDelegator delegator = dctx.getDelegator();
         double originalReturnPrice = ((Double) context.get("originalReturnPrice")).doubleValue();
         double originalReturnQuantity = ((Double) context.get("originalReturnQuantity")).doubleValue();
-        
-        GenericValue orderItem = null;
+                
         GenericValue returnItem = null;
         GenericValue returnAdjustment = null;
         
@@ -1301,21 +1297,17 @@ public class OrderReturnServices {
         String returnAdjustmentTypeId = (String) context.get("returnAdjustmentTypeId");
         String returnItemSeqId = (String) context.get("returnItemSeqId");
         try {
-            returnAdjustment = delegator.findByPrimaryKey("ReturnAdjustment", UtilMisc.toMap("RetutnAjustmentId", context.get("returnAdjustmentId")));
+            returnAdjustment = delegator.findByPrimaryKey("ReturnAdjustment", UtilMisc.toMap("returnAdjustmentId", context.get("returnAdjustmentId")));
             if (returnItemSeqId != null) {
                 returnItem = delegator.findByPrimaryKey("ReturnItem",
                         UtilMisc.toMap("returnId", context.get("returnId"), "returnItemSeqId", returnItemSeqId));
-                orderItem = returnItem.getRelatedOne("OrderItem");
             }
             // calculate the returnAdjustment amount
             if (returnItem != null) {  // returnAdjustment for returnItem
                 if (needRecalculate(returnAdjustmentTypeId)) {
-                    int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-                    int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
-                    BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity")).setScale(decimals, rounding);
-                    BigDecimal originalReturnTotal = new BigDecimal(originalReturnPrice).multiply(new BigDecimal(originalReturnQuantity)).setScale(decimals, rounding);
-                    BigDecimal newAmount = returnTotal.divide(originalReturnTotal, decimals, rounding).multiply(returnAdjustment.getBigDecimal("amount")).setScale(decimals, rounding); 
-                    amount = new Double(newAmount.doubleValue());
+                    BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity"));
+                    BigDecimal originalReturnTotal = new BigDecimal(originalReturnPrice).multiply(new BigDecimal(originalReturnQuantity));                    
+                    amount = getAdjustmentAmount("RET_SALES_TAX_ADJ".equals(returnAdjustmentTypeId), returnTotal, originalReturnTotal, returnAdjustment.getBigDecimal("amount"));
                 } else {
                     amount = (Double) context.get("amount");
                 }
@@ -1326,11 +1318,12 @@ public class OrderReturnServices {
             returnAdjustment.setNonPKFields(context);
             returnAdjustment.set("amount", amount);
             delegator.store(returnAdjustment);
-            Map result = ServiceUtil.returnSuccess("Update ReturnItem with Id:" + context.get("returnAdjustmentId") + " to amount " + amount +" successfully.");
+            Debug.logInfo("Update ReturnAdjustment with Id:" + context.get("returnAdjustmentId") + " to amount " + amount +" successfully.", module);
+            Map result = ServiceUtil.returnSuccess("Update ReturnAdjustment with Id:" + context.get("returnAdjustmentId") + " to amount " + amount +" successfully.");
             return result;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failed to store returnItem", module);
-            return ServiceUtil.returnError("Failed to store returnItem");
+            Debug.logError(e, "Failed to store returnAdjustment", module);
+            return ServiceUtil.returnError("Failed to store returnAdjustment");
         }
     }
 
@@ -1432,5 +1425,25 @@ public class OrderReturnServices {
             }             
         }
         return serviceContext;
+    }
+
+    /**
+     * Calculate new returnAdjustment amount and set scale and rounding mode based on returnAdjustmentType: RET_SALES_TAX_ADJ use sales.tax._ and others use order._
+     * @param isSalesTax  if returnAdjustmentType is SaleTax  
+     * @param returnTotal
+     * @param originalTotal
+     * @param amount
+     * @return  new returnAdjustment amount
+     */
+    public static Double getAdjustmentAmount(boolean isSalesTax, BigDecimal returnTotal, BigDecimal originalTotal, BigDecimal amount) {
+        String settingPrefix = isSalesTax ? "salestax" : "order";
+        String decimalsPrefix = isSalesTax ? ".calc" : "";
+        int decimals = UtilNumber.getBigDecimalScale(settingPrefix + decimalsPrefix + ".decimals");
+        int rounding = UtilNumber.getBigDecimalRoundingMode(settingPrefix + ".rounding");
+        int finalDecimals = isSalesTax ? UtilNumber.getBigDecimalScale(settingPrefix + ".final.decimals") : decimals;
+        returnTotal = returnTotal.setScale(decimals, rounding);
+        originalTotal = originalTotal.setScale(decimals, rounding);
+        BigDecimal newAmount = returnTotal.divide(originalTotal, decimals, rounding).multiply(amount).setScale(finalDecimals, rounding);
+        return new Double(newAmount.doubleValue());
     }
 }
