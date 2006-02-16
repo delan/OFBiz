@@ -38,6 +38,8 @@
 <!-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
 <#if !requestParameters.orderId?exists>
 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
+  <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED")>
+    
   <tr><td colspan="10"><div class="head3">${uiLabelMap.OrderItemsReturned} ${uiLabelMap.CommonIn} ${uiLabelMap.OrderOrderReturn} #${returnId}</div></td></tr>
   <tr><td colspan="10"><hr class="sepbar"></td></tr>
   <tr>
@@ -50,15 +52,17 @@
     <td><div class="tableheadtext">${uiLabelMap.OrderReturnReason}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.OrderItemStatus}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>
-    <td><div class="tableheadtext">${uiLabelMap.OrderReturnResponse}</div></td>
+    <#if (readOnly)>
+    <td><div class="tableheadtext">${uiLabelMap.OrderReturnResponse}</div></td>    
+    </#if>    
     <td>&nbsp;</td>
   </tr>
   <tr><td colspan="10"><hr class="sepbar"></td></tr>
   <#assign returnTotal = 0.0>
   <#assign rowCount = 0>
-  <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED")>
+  <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
+  <input type="hidden" name="_useRowSubmit" value="Y">      
   <#if returnItems?has_content>
-    <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
     <#list returnItems as item>
       <#assign orderItem = item.getRelatedOne("OrderItem")?if_exists>
       <#assign orderHeader = item.getRelatedOne("OrderHeader")?if_exists>
@@ -78,6 +82,7 @@
           <input name="returnId_o_${rowCount}" value="${item.returnId}" type="hidden">
           <input name="returnItemTypeId_o_${rowCount}" value="${item.returnItemTypeId}" type="hidden">
           <input name="returnItemSeqId_o_${rowCount}" value="${item.returnItemSeqId}" type="hidden">
+          <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
         <td><div class="tabletext">
             <#if item.get("productId")?exists>
                 <a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="buttontext">${item.productId}</a>
@@ -152,7 +157,8 @@
                     </#list>
                 </select>
             </#if></div></td>
-        <td>
+        <#if (readOnly)>
+          <td>
           <#if returnHeader.statusId == "RETURN_COMPLETED">
             <#assign itemResp = item.getRelatedOne("ReturnItemResponse")?if_exists>
             <#if itemResp?has_content>
@@ -169,7 +175,8 @@
           <#else>
             <div class="tabletext">N/A</div>
           </#if>
-        </td>
+        </td>                  
+        </#if>
         <#if returnHeader.statusId == "RETURN_REQUESTED">
           <td align='right'><a href="<@ofbizUrl>removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
         <#else>
@@ -178,39 +185,37 @@
       </tr>
       <#assign rowCount = rowCount + 1>
     </#list>
-        <input type="hidden" name="_rowCount" value="${rowCount}"/>
         
 <#if (returnAdjustments?has_content)>                  
-    <#assign rowCount = 0>
     <#list returnAdjustments as returnAdjustment>
         <#assign returnHeader = returnAdjustment.getRelatedOne("ReturnHeader")>
         <tr class="tabletext">
             <td class="tabletext" colspan="2">${uiLabelMap.OrderReturnAdjustmentForReturnItem}
             ${returnAdjustment.returnItemSeqId?default("N/A")}</td>
             <td colspan="3"><div class="tabletext">${returnAdjustment.description?default("N/A")}</div></td>
-            <#if (!readOnly && !returnAdjustment.returnItemSeqId?has_content)>
+            <#if (!readOnly && returnAdjustment.returnItemSeqId.equals("N/A"))>
               <td>
-                 <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}_adj" value="${adj.amount?string("##0.00")}"/>
+                 <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}" value="${adj.amount?string("##0.00")}"/>
+                 <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
               </td>
             <#else>
-                <td class="tabletextright"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUom/></td>
+                <td class="tabletextright"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUomId/></td>
             </#if>
             <#assign rowCount = rowCount + 1>
             <#assign returnTotal = returnTotal + returnAdjustment.get("amount")>
         </tr>    
     </#list>
-          <input name="_rowCount_adj" value="${rowCount}" type="hidden">
+          <input name="_rowCount" value="${rowCount}" type="hidden">
     </#if>
     <#-- show the return total -->
     <tr><td colspan="5"></td><td><hr class="sepbar"/></td></tr>
     <tr>
       <td colspan="2">&nbsp;</td>
       <td colspan="3" class="tableheadtext">${uiLabelMap.OrderReturnTotal}</td>
-      <td class="tabletextright"><b><@ofbizCurrency amount=returnTotal isoCode=orderHeader.currencyUom/></b></td>
+      <td class="tabletextright"><b><@ofbizCurrency amount=returnTotal isoCode=returnHeader.currencyUomId/></b></td>
     </tr>
     <#if (!readOnly)>
-       <tr>
-          
+       <tr>          
           <input name="returnId" value="${returnHeader.returnId}" type="hidden">
           <td colspan="7" class="tabletext" align="center"><input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}"></td>
       </tr>
@@ -228,7 +233,6 @@
 <form name="acceptReturn" method="post" action="<@ofbizUrl>/updateReturn</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${returnId}">
   <input type="hidden" name="statusId" value="RETURN_ACCEPTED">
-  <input type="hidden" name="currentStatusId" value="${returnHeader.statusId?if_exists}">
   <div class="tabletext" align="right"><input type="submit" value="Accept Return"></div>
 </form>
 </#if>
