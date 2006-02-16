@@ -767,7 +767,7 @@
     </request-map>
     <request-map uri="setQuickReturnItems">
         <security https="true" auth="true" direct-request="false"/>
-        <event type="service-multi" invoke="createReturnItem"/>
+        <event type="service-multi" invoke="createReturnItemOrAdjustment"/>
         <response name="success" type="view" value="returnitems"/>
         <response name="error" type="view" value="returnhead"/>
     </request-map>
@@ -798,27 +798,17 @@
     </request-map>
     <request-map uri="createReturnItems">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="createReturnItem"/>
+        <event type="service-multi" invoke="createReturnItemOrAdjustment"/>
         <response name="success" type="view" value="returnitems"/>
     </request-map>
     <request-map uri="updateReturnItems">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateReturnItem"/>
+        <event type="service-multi" invoke="updateReturnItemOrAdjustment"/>
         <response name="success" type="view" value="returnitems"/>
     </request-map>
     <request-map uri="removeReturnItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeReturnItem"/>
-        <response name="success" type="view" value="returnitems"/>
-    </request-map>
-    <request-map uri="createReturnAdjustments">
-        <security https="true" auth="true"/>
-        <event type="service-multi" invoke="createReturnAdjustment"/>
-        <response name="success" type="view" value="returnitems"/>
-    </request-map>
-    <request-map uri="updateReturnAdjustments">
-        <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updateReturnItem"/>
         <response name="success" type="view" value="returnitems"/>
     </request-map>
     <request-map uri="removeReturnAdjustment">
