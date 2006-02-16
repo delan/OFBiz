@@ -575,9 +575,19 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
   
   public static Map persistDataResourceAndData(DispatchContext dctx, Map context) {
       
+      GenericDelegator delegator = dctx.getDelegator();
+      LocalDispatcher dispatcher = dctx.getDispatcher();
+      String contentId = (String)context.get("contentId");
       Map result = new HashMap();
       try {
-          result = persistDataResourceAndDataMethod(dctx, context);
+          GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+          ModelService checkPermModel = dispatcher.getDispatchContext().getModelService("checkContentPermission");
+          Map ctx = checkPermModel.makeValid(context, "IN");
+          Map thisResult = dispatcher.runSync("checkContentPermission", ctx);
+          String permissionStatus = (String)thisResult.get("permissionStatus");
+          if (UtilValidate.isNotEmpty(permissionStatus) && permissionStatus.equalsIgnoreCase("granted")) {
+              result = persistDataResourceAndDataMethod(dctx, context);
+          }
       } catch (GenericServiceException e) {
           return ServiceUtil.returnError(e.getMessage());
       } catch (GenericEntityException e) {

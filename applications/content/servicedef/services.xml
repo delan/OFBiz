@@ -835,6 +835,35 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     
+    <service name="persistDataResourceAndData" engine="java"
+        transaction-timout="72000" 
+            location="org.ofbiz.content.ContentManagementServices" invoke="persistContentAndAssoc" auth="true">
+        <description>Persist a  DataResource and data</description>
+        <auto-attributes entity-name="DataResource" include="all" mode="IN" optional="true">
+            <exclude field-name="dataResourceId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="ElectronicText" include="all" mode="IN" optional="true">
+            <exclude field-name="dataResourceId"/>
+        </auto-attributes>
+        <attribute mode="INOUT" entity-name="Content" name="contentId" optional="true" type="String"/>
+        <attribute mode="INOUT" entity-name="DataResource" name="dataResourceId" optional="true" type="String"/>
+
+        <attribute mode="INOUT" entity-name="DataResource" name="drDataResourceId" optional="true" type="String"/>
+        <attribute mode="IN" name="rootDir" optional="true" type="String"/>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <!-- it was a mistake to pass in List objects because it makes it difficult to use
+             the service in a request event, so I added new ones without removing lists -->
+        <attribute mode="IN" name="targetOperationString" optional="true" type="String"/>
+        <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="imageData" optional="true" type="org.ofbiz.entity.util.ByteWrapper"/>
+        <attribute mode="IN" name="_imageData_contentType" optional="true" type="String"/>
+        <attribute mode="IN" name="_imageData_fileName" optional="true" type="String"/>
+        <attribute mode="IN" name="forceElectronicText" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
+    </service>
+    
     <service name="persistContentWithRevision" engine="java"
         transaction-timout="72000" 
             location="org.ofbiz.content.ContentManagementServices" invoke="persistContentWithRevision" auth="true">
