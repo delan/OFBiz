@@ -2521,6 +2521,7 @@
             package-name="org.ofbiz.order.opportunity"
             title="Stores sales forecast data for sales opportunities.">
         <field name="salesForecastId" type="id-ne"></field>
+        <field name="parentSalesForecastId" type="id"></field>
         <field name="organizationPartyId" type="id"></field>
         <field name="internalPartyId" type="id"></field>
         <field name="customTimePeriodId" type="id"></field>
@@ -2534,6 +2535,9 @@
         <field name="createdByUserLoginId" type="id-vlong"></field>
         <field name="modifiedByUserLoginId" type="id-vlong"></field>
         <prim-key field="salesForecastId"/>
+        <relation type="one" fk-name="SALES4C_PARENT" title="Parent" rel-entity-name="SalesForecast">
+            <key-map field-name="parentSalesForecastId" rel-field-name="salesForecastId"/>
+        </relation>
         <relation type="one" fk-name="SALES4C_ORG_PARTY" rel-entity-name="Party">
             <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
         </relation>
@@ -2559,6 +2563,7 @@
             title="Keeps a record of changes to a sales forecast.">
         <field name="salesForecastHistoryId" type="id-ne"></field>
         <field name="salesForecastId" type="id-ne"></field>
+        <field name="parentSalesForecastId" type="id"></field>
         <field name="organizationPartyId" type="id"></field>
         <field name="internalPartyId" type="id"></field>
         <field name="customTimePeriodId" type="id"></field>
@@ -2594,5 +2599,5 @@
             <key-map field-name="modifiedByUserLogin" rel-field-name="userLoginId"/>
         </relation>
     </entity>
-    
+
 </entitymodel>
