@@ -74,25 +74,30 @@
     <service name="createGlJournalEntry" engine="simple" 
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlJournalEntry" auth="true">
         <description>Calls three services: createGlJournal, createAcctTrans, createAcctgTransEntry</description>
-        <implements service="interfaceAcctgTrans"/>
-        <implements service="interfaceAcctgTransEntry"/>
-        <!-- Didn't work.  Had to use attribute name="acctgTransId" 
-			auto-attributes entity-name="acctgTrans" include="pk" mode="OUT" optional="false"/ -->
-		
-        <!-- implements service="interfaceAcctgTrans"/ -->
-        <auto-attributes entity-name="GlJournal" include="pk" mode="OUT" optional="false"/>
-        <auto-attributes entity-name="GlJournal" include="nonpk" mode="IN" optional="true">
-            <exclude field-name="isPosted"/>
-            <exclude field-name="postedDate"/>
+        <auto-attributes mode="IN" entity-name="AcctgTrans" include="nonpk" optional="true"/>
+        <auto-attributes mode="IN" entity-name="AcctgTransEntry" include="nonpk" optional="true">
+            <exclude field-name="debitCreditFlag"/>
+            <exclude field-name="glAccountId"/>
         </auto-attributes>
-       
-        <attribute name="creditGlAccountId" type="String" mode="IN" optional="false"/>
         <attribute name="debitGlAccountId" type="String" mode="IN" optional="false"/>
-        <attribute name="acctgTransId" type="String" mode="OUT" optional="true"/>
-        <override name="glAccountId" optional="true"/>
-        <override name="debitCreditFlag" optional="true"/>
+        <attribute name="creditGlAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="acctgTransId" type="String" mode="OUT" optional="false"/>
+        <override name="amount" optional="false"/>
     </service>
     
+    <service name="calculateGlJournalTrialBalance" default-entity-name="GlJournal" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="calculateGlJournalTrialBalance" auth="true">
+        <description>Calculate Trial Balance for a GlJournal</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="debitTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="creditTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="debitCreditDifference" type="Double" mode="OUT" optional="false"/>
+    </service>
+    <service name="postGlJournal" default-entity-name="GlJournal" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="postGlJournal" auth="true">
+        <description>Post a GlJournal</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     <service name="createGlJournal" default-entity-name="GlJournal" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlJournal" auth="true">
         <description>Create a GlJournal record</description>
@@ -220,4 +225,52 @@
         <description>Remove an Entry from a AcctgTrans</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+
+    <!-- ====== Services for posting business transactions (invoices, payments, inventory adjustments, etc.) to the General Ledger ======= -->
+    <service name="createAcctgTransAndEntries" engine="simple"
+        location="org/ofbiz/accounting/ledger/GeneralLedgerServicesExt.xml" invoke="createAcctgTransAndEntries" default-entity-name="AcctgTrans">
+        <description>
+            Takes a list of AcctgTransEntry entries, verifies that the list of entries are valid (GL account and organizationParty exist),
+            and then creates an AcctgTrans entry and stores all the AcctgTransEntries with the acctgTransId.  Note that this does not actually
+            check that the debits and credits balance out.  The idea is that unbalanced transactions can be created here, but they will need
+            to be created before they are actually posted, and a later posting service will actually check that the transaction is balanced.
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="acctgTransEntries" type="java.util.List" mode="IN" optional="false"/>
+        <attribute name="acctgTransId" type="String" mode="OUT"/>
+        <!-- TODO: make required-permissions tag work here rather than inside the simple XML -->
+    </service>
+    <service name="calculateAcctgTransTrialBalance" default-entity-name="AcctgTrans" engine="simple"
+            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="calculateAcctgTransTrialBalance" auth="true">
+        <description>Calculate Trial Balance for a AcctgTrans</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="debitTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="creditTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="debitCreditDifference" type="Double" mode="OUT" optional="false"/>
+    </service>
+    <service name="postAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
+            location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="postAcctgTrans" auth="true">
+        <description>Post a AcctgTrans and related entries.  This will make sure that the time period is not closed and that 
+         the sum of the debits and credits are equal. 
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Miscellaneous Ledger-related services -->
+    <service name="getProductOrgGlAccount" engine="simple" 
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="getProductOrgGlAccount" auth="true"> 
+        <description>Look up a GlAccountId first in ProductGlAccount by productId and productGlAccountTypeId, if not found, 
+            then in organizationPartyId and glAccountTypeId </description> 
+        <auto-attributes include="pk" entity-name="ProductGlAccount" mode="IN" optional="true"/> 
+        <auto-attributes include="pk" entity-name="GlAccountTypeDefault" mode="IN" optional="true"/>
+        <attribute name="glAccountId" type="String" mode="OUT" optional="true"/> 
+    </service>
+    <service name="getInventoryItemOwner" default-entity-name="InventoryItem" engine="simple" 
+        location="org/ofbiz/accounting/ledger/GeneralLedgerServicesExt.xml" invoke="getInventoryItemOwner" auth="true"> 
+        <description>get an ownerPartyId from inventoryItemId </description> 
+        <auto-attributes include="pk" mode="IN" optional="false"/> 
+        <attribute name="ownerPartyId" type="String" mode="OUT" optional="false"/> 
+    </service>
+
 </services>
