@@ -262,23 +262,21 @@ public class PayflowPro {
 
     public static Map ccRefund(DispatchContext dctx, Map context) {
         GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
-        GenericValue authTrans = (GenericValue) context.get("authTrans");
         Double amount = (Double) context.get("refundAmount");
         String configString = (String) context.get("paymentConfig");
         if (configString == null) {
             configString = "payment.properties";
         }
 
-        if (authTrans == null){
-        	authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
-        }
+        GenericValue captureTrans = PaymentGatewayServices.getCaptureTransaction(paymentPref);
 
-        if (authTrans == null) {
-            return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot capture");
+
+        if (captureTrans == null) {
+            return ServiceUtil.returnError("No capture transaction found for the OrderPaymentPreference; cannot refund");
         }
 
         // auth ref number
-        String refNum = authTrans.getString("referenceNum");
+        String refNum = captureTrans.getString("referenceNum");
         Map data = UtilMisc.toMap("ORIGID", refNum);
 
         // tx type (Credit)
