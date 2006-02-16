@@ -1139,6 +1139,47 @@
       <field name="description" type="description"/>
       <prim-key field="surveyApplTypeId"/>
     </entity>
+    <entity entity-name="SurveyMultiResp"
+        package-name="org.ofbiz.content.survey"
+        title="Survey Multi-Response Group Entity">
+        <field name="surveyId" type="id-ne"/>
+        <field name="surveyMultiRespId" type="id-ne"/>
+        <field name="multiRespTitle" type="name"/>
+        <prim-key field="surveyId"/>
+        <prim-key field="surveyMultiRespId"/>
+        <relation type="one" fk-name="SRVYMRSP_SRVY" rel-entity-name="Survey">
+            <key-map field-name="surveyId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SurveyMultiRespColumn"
+        package-name="org.ofbiz.content.survey"
+        title="Survey Multi-Response Group Column/Category Entity">
+        <field name="surveyId" type="id-ne"/>
+        <field name="surveyMultiRespId" type="id-ne"/>
+        <field name="surveyMultiRespColId" type="id-ne"/>
+        <field name="columnTitle" type="name"/>
+        <field name="sequenceNum" type="numeric"/>
+        <prim-key field="surveyId"/>
+        <prim-key field="surveyMultiRespId"/>
+        <prim-key field="surveyMultiRespColId"/>
+        <relation type="one" fk-name="SRVYMRSPCL_SMRESP" rel-entity-name="SurveyMultiResp">
+            <key-map field-name="surveyId"/>
+            <key-map field-name="surveyMultiRespId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SurveyPage"
+        package-name="org.ofbiz.content.survey"
+        title="Survey Page Type Entity">
+        <field name="surveyId" type="id-ne"/>
+        <field name="surveyPageSeqId" type="id-ne"/>
+        <field name="pageName" type="name"/>
+        <field name="sequenceNum" type="numeric"/>
+        <prim-key field="surveyId"/>
+        <prim-key field="surveyPageSeqId"/>
+        <relation type="one" fk-name="SRVYPAGE_SRVY" rel-entity-name="Survey">
+            <key-map field-name="surveyId"/>
+        </relation>
+    </entity>
     <entity entity-name="SurveyQuestion"
             package-name="org.ofbiz.content.survey"
             title="Survey Question Entity">
@@ -1186,6 +1227,8 @@
       <field name="surveyQuestionId" type="id-ne"/>
       <field name="fromDate" type="date-time"/>
       <field name="thruDate" type="date-time"/>
+      <field name="surveyPageSeqId" type="id-ne"/>
+      <field name="surveyMultiRespId" type="id-ne"/>
       <field name="requiredField" type="indicator"/>
       <field name="sequenceNum" type="numeric"/>
       <field name="withSurveyQuestionId" type="id"><description>These two with* fields are used to specify that this question should only appear if the with option has been selected for the with question.</description></field>
@@ -1202,6 +1245,11 @@
       <relation type="one" fk-name="SRVYQSTAPL_SVQO" title="With" rel-entity-name="SurveyQuestionOption">
         <key-map field-name="withSurveyQuestionId" rel-field-name="surveyQuestionId"/>
         <key-map field-name="withSurveyOptionSeqId" rel-field-name="surveyOptionSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="SurveyPage">
+        <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyPageSeqId to be optional.</description>
+        <key-map field-name="surveyId"/>
+        <key-map field-name="surveyPageSeqId"/>
       </relation>
     </entity>
     <entity entity-name="SurveyQuestionCategory"
