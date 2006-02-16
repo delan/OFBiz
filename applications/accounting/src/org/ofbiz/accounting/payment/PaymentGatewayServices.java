@@ -1818,6 +1818,23 @@ public class PaymentGatewayServices {
         return ServiceUtil.returnSuccess();
     }
 
+    public static GenericValue getCaptureTransaction(GenericValue orderPaymentPreference) {
+        GenericValue capTrans = null;
+        try {
+            List order = UtilMisc.toList("-transactionDate");
+            List transactions = orderPaymentPreference.getRelated("PaymentGatewayResponse", null, order);
+
+            List exprs = UtilMisc.toList(new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_CAPTURE"));
+
+            List capTransactions = EntityUtil.filterByAnd(transactions, exprs);
+
+            capTrans = EntityUtil.getFirst(capTransactions);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "ERROR: Problem getting capture information from PaymentGatewayResponse", module);
+        }
+        return capTrans;
+    }
+
     public static GenericValue getAuthTransaction(GenericValue orderPaymentPreference) {
         GenericValue authTrans = null;
         try {
@@ -2211,20 +2228,33 @@ public class PaymentGatewayServices {
         return result;
     }
 
-     /**
-      * Test refund service (returns true)
-      */
-     public static Map testRefund(DispatchContext dctx, Map context) {
-         Map result = ServiceUtil.returnSuccess();
-         long nowTime = new Date().getTime();
-         Debug.logInfo("Test Refund Process", module);
+    /**
+     * Test refund service (returns true)
+     */
+    public static Map testRefund(DispatchContext dctx, Map context) {
+        Map result = ServiceUtil.returnSuccess();
+        long nowTime = new Date().getTime();
+        Debug.logInfo("Test Refund Process", module);
 
-         result.put("refundResult", new Boolean(true));
-         result.put("refundAmount", context.get("refundAmount"));
-         result.put("refundRefNum", new Long(nowTime).toString());
-         result.put("refundFlag", "R");
-         result.put("refundMessage", "This is a test refund; no money was transferred");
-         return result;
-     }
+        result.put("refundResult", new Boolean(true));
+        result.put("refundAmount", context.get("refundAmount"));
+        result.put("refundRefNum", new Long(nowTime).toString());
+        result.put("refundFlag", "R");
+        result.put("refundMessage", "This is a test refund; no money was transferred");
+        return result;
+    }
+
+    public static Map testRefundFailure(DispatchContext dctx, Map context) {
+        Map result = ServiceUtil.returnSuccess();
+        long nowTime = new Date().getTime();
+        Debug.logInfo("Test Refund Process", module);
+
+        result.put("refundResult", new Boolean(false));
+        result.put("refundAmount", context.get("refundAmount"));
+        result.put("refundRefNum", new Long(nowTime).toString());
+        result.put("refundFlag", "R");
+        result.put("refundMessage", "This is a test refund failure; no money was transferred");
+        return result;
+    }
 
 }
