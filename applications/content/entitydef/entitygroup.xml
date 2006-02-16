@@ -106,6 +106,9 @@
 
     <entity-group group="org.ofbiz" entity="Survey" />
     <entity-group group="org.ofbiz" entity="SurveyApplType" />
+    <entity-group group="org.ofbiz" entity="SurveyMultiResp" />
+    <entity-group group="org.ofbiz" entity="SurveyMultiRespColumn" />
+    <entity-group group="org.ofbiz" entity="SurveyPage" />
     <entity-group group="org.ofbiz" entity="SurveyQuestion" />
     <entity-group group="org.ofbiz" entity="SurveyQuestionAndAppl" />
     <entity-group group="org.ofbiz" entity="SurveyQuestionAppl" />
