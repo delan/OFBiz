@@ -509,8 +509,20 @@
         <entity-one entity-name="Content" value-name="content">
             <field-map field-name="contentId" env-name="parameters.contentId"/>
         </entity-one>
-        <set from-field="parameters.previousContentRevisionSeqId" field="previousContentRevisionSeqId" />
-        <if-empty field-name="previousContentRevisionSeqId">
+        <set from-field="parameters.contentId" field="thisContentId" />
+        <set from-field="parameters.contentRevisionSeqId" field="thisContentRevisionSeqId" />
+        <log level="info" message="cloneContentApprovals(0)- previousContentRevisionSeqId : ${previousContentRevisionSeqId} "/>
+        <entity-condition entity-name="ContentRevision" list-name="contentRevisionList" use-cache="true">
+            <condition-list>
+                <condition-expr field-name="contentId" env-name="parameters.contentId" operator="equals"/>
+                <condition-expr field-name="contentRevisionSeqId" env-name="thisContentRevisionSeqId" operator="less"/>
+            </condition-list>
+            <order-by field-name="-contentRevisionSeqId"/>
+        </entity-condition>
+        <set from-field="contentRevisionList[0].contentRevisionSeqId" field="previousContentRevisionSeqId" />
+        <log level="info" message="cloneContentApprovals(1)- previousContentRevisionSeqId : ${previousContentRevisionSeqId} "/>
+            
+            <!-- 
             <calculate field-name="previousContentRevisionSeqId" type="Long">
                 <calcop operator="add">
                     <calcop operator="get" field-name="parameters.contentRevisionSeqId" />
@@ -525,16 +537,16 @@
                 <field field-name="previousContentRevisionSeqId" type="Long"/>
                 <field field-name="numericPadding" type="Integer" />
             </call-class-method>
-        </if-empty>     
+            -->
         
         <!--  get previous list of ContentApproval -->
         <entity-and entity-name="ContentApproval" list-name="contentApprovalList">
-            <field-map field-name="contentId" env-name="parameters.contentId"/>
+            <field-map field-name="contentId" env-name="thisContentId"/>
             <field-map field-name="contentRevisionSeqId" env-name="previousContentRevisionSeqId"/>
         </entity-and>   
         
         <!--  determine status of previous approvals -->
-        
+        <!-- primaryApprovalStatusId is the applicable status from previous approvals -->
         <set value="CNTAP_IN_PROCESS" field="primaryApprovalStatusId"/>
         <iterate list-name="contentApprovalList" entry-name="existingContentApproval">
             <set from-field="existingContentApproval.approvalStatusId" field="approvalStatusId"/>
@@ -577,12 +589,14 @@
                 </else-if>
             </if>
         </iterate>
+        <log level="info" message="cloneContentApprovals(2)- primaryApprovalStatusId : ${primaryApprovalStatusId} "/>
+        <log level="info" message="cloneContentApprovals(2)- contentApprovalList : ${contentApprovalList} "/>
         
         <!--  conditionally set the contentApprovalId status of each entity -->
         <iterate list-name="contentApprovalList" entry-name="existingContentApproval">
             <clone-value value-name="existingContentApproval" new-value-name="contentApproval"/>
          <log level="info" message="contentApproval 0: ${contentApproval}"/>
-            <set from-field="parameters.contentRevisionSeqId" field="contentApproval.contentRevisionSeqId" />
+            <set from-field="thisContentRevisionSeqId" field="contentApproval.contentRevisionSeqId" />
             <clear-field  field-name="contentApproval.contentApprovalId" />
          <log level="info" message="contentApproval 1: ${contentApproval}"/>
             <make-next-seq-id seq-field-name="contentApprovalId" value-name="contentApproval"/>
@@ -640,6 +654,47 @@
             
             <create-value value-name="contentApproval"/>
         </iterate>
+        
+        <!--  if an instance track, check to see if there any new or deleted records on the template -->
+        <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE">
+            <set from-field="content.instanceOfContentId" field="rootTemplateContentId" />
+            <entity-condition entity-name="ContentRevision" list-name="templateContentRevisionList" use-cache="true">
+                <condition-list>
+                    <condition-expr field-name="contentId" env-name="rootTemplateContentId" operator="equals"/>
+                </condition-list>
+                <order-by field-name="-contentRevisionSeqId"/>
+            </entity-condition>
+            <set from-field="templateContentRevisionList[0].contentRevisionSeqId" field="latestContentRevisionSeqId" />
+            <entity-and entity-name="ContentApproval" list-name="templateContentApprovalList">
+                <field-map field-name="contentId" env-name="rootTemplateContentId"/>
+                <field-map field-name="contentRevisionSeqId" env-name="latestContentRevisionSeqId"/>
+            </entity-and>
+            <iterate list-name="templateContentApprovalList" entry-name="templateContentApproval">
+                <!--  look for this entity in newly created entities -->
+                <entity-condition entity-name="ContentApproval" list-name="newContentApprovalList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="contentId" operator="equals" env-name="thisContentId"/>
+                        <condition-expr field-name="contentRevisionSeqId" operator="equals" env-name="thisContentRevisionSeqId"/>
+                        <condition-expr field-name="partyId" operator="equals" env-name="templateContentApproval.partyId" ignore-if-empty="false"/>
+                        <condition-expr field-name="roleTypeId" operator="equals" env-name="templateContentApproval.roleTypeId" ignore-if-empty="false"/>
+                    </condition-list>
+                </entity-condition>
+                <if-empty field-name="newContentApprovalList">
+                    <clone-value value-name="templateContentApproval" new-value-name="contentApproval"/>
+                 <log level="info" message="contentApproval 0b: ${contentApproval}"/>
+                    <set from-field="thisContentRevisionSeqId" field="contentApproval.contentRevisionSeqId" />
+                    <set from-field="thisContentId" field="contentApproval.contentId" />
+                    <clear-field  field-name="contentApproval.contentApprovalId" />
+                 <log level="info" message="contentApproval 1b: ${contentApproval}"/>
+                    <make-next-seq-id seq-field-name="contentApprovalId" value-name="contentApproval"/>
+                    <set value="CNTAP_READY" field="contentApproval.approvalStatusId" />
+                 <log level="info" message="contentApproval 2b: ${contentApproval}"/>
+                    <create-value value-name="contentApproval"/>
+                </if-empty>
+            </iterate>
+            
+            <!--  TODO: remove instance approvals that have been deleted from the template set -->
+        </if-compare>
     </simple-method>
     
     <simple-method method-name="hasApprovalPermission" short-description="Determine ContentApproval permission from passed value">

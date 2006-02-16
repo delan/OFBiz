@@ -389,6 +389,15 @@
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                             <decorator-section name="body">
                                 <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <link target="ViewCompDocContent?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View CompDoc Content" style="buttontext"/>
+                                        <include-form name="UploadCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                                    </widgets>
+                                </section>
                             </decorator-section>
                         </decorator-screen>
                     </widgets>
@@ -410,7 +419,7 @@
                            </condition-list> 
                           
                            <select-field field-name="rootRevisionContentId"/>
-                           <select-field field-name="itemContentId"/>
+                           <select-field fieldViewCompDocContent-name="itemContentId"/>
                            <select-field field-name="maxRevisionSeqId"/>
                            
                            <order-by field-name="-maxRevisionSeqId"/>
@@ -421,6 +430,15 @@
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                             <decorator-section name="body">
                                 <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <link target="ViewCompDocContent?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View CompDoc Content" style="buttontext"/>
+                                        <include-form name="UploadCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                                    </widgets>
+                                </section>
                             </decorator-section>
                         </decorator-screen>
                     </widgets>
@@ -856,6 +874,41 @@
                         <include-form name="AddContentRole" location="component://content/webapp/content/content/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ViewCompDocContent">
+        <section>
+            <actions>
+                <entity-one entity-name="Content" value-name="content" use-cache="true"/>
+                <entity-one entity-name="DataResource" value-name="dataResource" use-cache="true">
+                    <field-map field-name="dataResourceId" env-name="content.dataResourceId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY"/>
+                            <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
+                        </or>
+                    </condition>
+                    <widgets>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <not>
+                            <or>
+                                <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY"/>
+                                <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
+                            </or>
+                        </not>
+                    </condition>
+                    <widgets>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

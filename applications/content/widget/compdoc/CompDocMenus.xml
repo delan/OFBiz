@@ -211,7 +211,10 @@
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="edit-inplace" title="${contentName}[${rootInstanceContentId}]" >
-            <link target="EditRootComp?contentId=${rootInstanceContentId}&amp;instanceOfContentId=${contentId}&amp;currentContentTypeId=COMPDOC_INSTANCE"/>
+            <link target="EditCompDoc?contentId=${rootInstanceContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
+        </menu-item>
+        <menu-item name="edit" title="[Edit]" >
+            <link target="EditCompDoc?contentId=${rootInstanceContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
         <menu-item name="viewtree" title="View Template Tree">
             <link target="ViewCompDocTemplateTree?rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${contentId}"/>

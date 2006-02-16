@@ -1058,6 +1058,17 @@
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="EditCompDoc"/>
    </request-map>
+   <request-map uri="uploadCompDocContent">
+       <security auth="true" https="true"/>
+        <event invoke="persistDataResourceAndData"  path="" type="service"/>
+       <response name="success" type="view" value="ViewCompDocContent"/>
+       <response name="error" type="view" value="ViewCompDocContent"/>
+   </request-map>
+   <request-map uri="ViewCompDocContent">
+       <security auth="true" https="true"/>
+       <response name="success" type="view" value="ViewCompDocContent"/>
+       <response name="error" type="view" value="ViewCompDocContent"/>
+   </request-map>
    <request-map uri="updateChildCompDocInstance">
        <security auth="true" https="true"/>
         <event invoke="persistCompDoc"  path="" type="service"/>
@@ -1740,6 +1751,7 @@
     <view-map name="EditRootCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#EditRootCompDocContent" type="screen"/>
     <view-map name="EditCompDocContentRole" page="component://content/widget/compdoc/CompDocScreens.xml#EditCompDocContentRole" type="screen"/>
     <view-map name="ViewInstances" page="component://content/widget/compdoc/CompDocScreens.xml#ViewInstances" type="screen"/>
+    <view-map name="ViewCompDocContent" page="component://content/widget/compdoc/CompDocScreens.xml#ViewCompDocContent" type="screen"/>
 
     <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
     <!-- end of view mappings -->
