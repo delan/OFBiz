@@ -112,7 +112,6 @@
                 <#assign rowCount = rowCount + 1>
               </#list>
                      <!-- final row count -->
-             <input type="hidden" name="_rowCount" value="${rowCount}"/>
 
              <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <tr>
@@ -133,9 +132,9 @@
                 <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType")/>
                 <#assign description = adj.description?default(adjustmentType.description)/>
 
-                <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}_adj" value="${returnAdjustmentType}"/>                
-                <input type="hidden" name="orderAdjustmentId_o_${rowCount}_adj" value="${adj.orderAdjustmentId}"/>
-                <input type="hidden" name="description_o_${rowCount}_adj" value="${description}"/>
+                <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>                
+                <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
+                <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
                 <tr>
                   <td>
                     <div class="tabletext">
@@ -143,11 +142,11 @@
                     </div>
                   </td>                                     
                   <td>
-                    <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}_adj" value="${adj.amount?string("##0.00")}"/>
+                    <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}" value="${adj.amount?string("##0.00")}"/>
                   </td>
                                      
                   <td align="right">
-                    <input type="checkbox" name="_rowSubmit_o_${rowCount}_adj" value="Y" onclick="javascript:checkToggle(this, 'returnAdjustments');"/>
+                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'returnAdjustments');"/>
                   </td>
                 </tr>
                 <#assign rowCount = rowCount + 1>
@@ -157,7 +156,7 @@
             </#if>
 
             <#assign manualAdjRowNum = rowCount/>
-            <input type="hidden" name="returnItemTypeId_o_${rowCount}_adj" value="RET_MAN_ADJ"/>            
+            <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RET_MAN_ADJ"/>            
             <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <tr>
               <td colspan="9">
@@ -166,19 +165,19 @@
             </tr>
             <tr>
               <td>
-                <input type="text" class="inputBox" size="30" name="description_o_${rowCount}_adj">
+                <input type="text" class="inputBox" size="30" name="description_o_${rowCount}">
               </td>
               <td>
-                <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}_adj" value="${0.00?string("##0.00")}"/>
+                <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}" value="${0.00?string("##0.00")}"/>
               </td>
               <td align="right">
-                <input type="checkbox" name="_rowSubmit_o_${rowCount}_adj" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
+                <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
               </td>
             </tr>
             <#assign rowCount = rowCount + 1>
 
             <!-- final row count -->
-            <input type="hidden" name="_rowCount_adj" value="${rowCount}"/>
+            <input type="hidden" name="_rowCount" value="${rowCount}"/>
         
              <tr>
                <td colspan="9" align="right">

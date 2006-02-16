@@ -122,12 +122,19 @@
         <description>Simple remove service</description>
         <auto-attributes entity-name="ReturnAdjustment" include="pk" mode="IN" optional="false"/>        
     </service>
-    <service name="createAdjustmentForReturnItem" engine="java"
-             location="org.ofbiz.order.order.OrderReturnServices" invoke="createAdjustmentForReturnItem">
-        <description></description>
-        <implements service="returnItemInterface"/>
-        <attribute name="returnItemSeqId" type="String" mode="OUT" optional="false"/>
-        <override name="orderAdjustmentId" optional="false"/>        
+    <service name="createReturnItemOrAdjustment" engine="java"
+             location="org.ofbiz.order.order.OrderReturnServices" invoke="createReturnItemOrAdjustment">
+        <description>create Return Item or Adjustment based on the parameters passed in</description>
+        <auto-attributes mode="IN" include="all" entity-name="ReturnAdjustment" optional="true"/>
+        <auto-attributes mode="IN" include="all" entity-name="ReturnItem" optional="true"/>
+        <attribute name="returnAdjustmentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="returnItemSeqId" type="String" mode="OUT" optional="true"/>                
+    </service>
+    <service name="updateReturnItemOrAdjustment" engine="java"
+             location="org.ofbiz.order.order.OrderReturnServices" invoke="updateReturnItemOrAdjustment">
+        <description>update Return Item or Adjustment based on the parameters passed in</description>
+        <auto-attributes mode="IN" include="all" entity-name="ReturnAdjustment" optional="true"/>
+        <auto-attributes mode="IN" include="all" entity-name="ReturnItem" optional="true"/>
     </service>
     
     <!-- services to verify that returns refunds aren't issued more than once -->

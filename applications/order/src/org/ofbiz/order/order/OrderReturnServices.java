@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
+import java.math.BigDecimal;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
@@ -26,10 +26,12 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.accounting.util.UtilAccounting;
 
 /**
  * OrderReturnServices
@@ -1170,21 +1172,14 @@ public class OrderReturnServices {
             while (orderIterator.hasNext()) {
                 String orderId = (String) orderIterator.next();
                 Double returnAmount = (Double) returnAmountByOrder.get(orderId);
-                // TODO: Use OrderReadHelper instead
-                try {
-                    orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-                } catch (org.ofbiz.entity.GenericEntityException e) {
-                    Debug.logError(e, "Can't get OrderHeader with orderId:" + orderId, module);
-                }
-                if (orderHeader != null) {
-                    Double orderGrandTotal = orderHeader.getDouble("grandTotal");
-                    if (returnAmount == null) {
-                        Debug.logWarning("No returnAmount found for order:" + orderId, module);
-                    } else {
-                        if (orderGrandTotal.doubleValue() < returnAmount.doubleValue()) {
-                            Debug.logError("Order [" + orderId + "] refund amount exceeds order total", module);
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderRefundAmountExceedsOrderTotal", locale));
-                        }
+                OrderReadHelper helper = new OrderReadHelper(OrderReadHelper.getOrderHeader(delegator, orderId));
+                double grandTotal = helper.getOrderGrandTotal();
+                if (returnAmount == null) {
+                    Debug.logInfo("No returnAmount found for order:" + orderId, module);
+                } else {
+                    if (grandTotal < returnAmount.doubleValue()) {
+                        Debug.logError("Order [" + orderId + "] refund amount exceeds order total", module);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderRefundAmountExceedsOrderTotal", locale));
                     }
                 }
             }
@@ -1205,14 +1200,20 @@ public class OrderReturnServices {
         GenericValue returnAdjustmentType = null;
         GenericValue orderItem = null;
         GenericValue returnItem = null;
+        GenericValue returnHeader = null;
+        
         Double amount;
         
         // if orderAdjustment is not empty, then copy most return adjustment information from orderAdjustment's
         if (orderAdjustmentId != null) {
             try {
                 orderAdjustment = delegator.findByPrimaryKey("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", orderAdjustmentId));
+
+                // get returnHeaderTypeId from ReturnHeader and then use it to figure out return item type mapping
+                returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
+                String returnHeaderTypeId = ((returnHeader != null) && (returnHeader.getString("returnHeaderTypeId") != null)) ? returnHeader.getString("returnHeaderTypeId") : "CUSTOMER_RETURN";
                 returnItemTypeMap = delegator.findByPrimaryKey("ReturnItemTypeMap",
-                        UtilMisc.toMap("returnHeaderTypeId", "CUSTOMER_RETURN", "returnItemMapKey", orderAdjustment.get("orderAdjustmentTypeId")));
+                        UtilMisc.toMap("returnHeaderTypeId", returnHeaderTypeId, "returnItemMapKey", orderAdjustment.get("orderAdjustmentTypeId")));
                 returnAdjustmentType = returnItemTypeMap.getRelatedOne("ReturnAdjustmentType");
                 if (returnAdjustmentType != null && UtilValidate.isEmpty(description)) {
                     description = returnAdjustmentType.getString("description");
@@ -1250,7 +1251,12 @@ public class OrderReturnServices {
                     Debug.logError("orderAdjustment [" + orderAdjustmentId + "] not found", module);
                     return ServiceUtil.returnError("orderAdjustment [" + orderAdjustmentId + "] not found");
                 }
-                amount = new Double(returnItem.getDouble("returnPrice").doubleValue() * returnItem.getDouble("returnQuantity").doubleValue() / (orderItem.getDouble("quantity").doubleValue() * orderItem.getDouble("unitPrice").doubleValue() ) * orderAdjustment.getDouble("amount").doubleValue());
+                int decimals = UtilAccounting.getBigDecimalScale("invoice.decimals");
+                int rounding = UtilAccounting.getBigDecimalRoundingMode("invoice.rounding");
+                BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity")).setScale(decimals, rounding);
+                BigDecimal orderTotal = orderItem.getBigDecimal("quantity").multiply(orderItem.getBigDecimal("unitPrice"));
+                BigDecimal newAmount = returnTotal.divide(orderTotal, decimals, rounding).multiply(orderAdjustment.getBigDecimal("amount")).setScale(decimals, rounding);
+                amount = new Double(newAmount.doubleValue());
             } else {
                 amount = (Double) context.get("amount");
             }
@@ -1289,7 +1295,6 @@ public class OrderReturnServices {
         GenericValue returnItem = null;
         GenericValue returnAdjustment = null;
         
-        double originReturnAmount = originalReturnPrice * originalReturnQuantity;
         Double amount;
         
         String returnAdjustmentTypeId = (String) context.get("returnAdjustmentTypeId");
@@ -1304,7 +1309,12 @@ public class OrderReturnServices {
             // calculate the returnAdjustment amount
             if (returnItem != null) {  // returnAdjustment for returnItem
                 if (needRecalculate(returnAdjustmentTypeId)) {
-                    amount = new Double(returnItem.getDouble("returnPrice").doubleValue() * returnItem.getDouble("returnQuantity").doubleValue()  / originReturnAmount * returnAdjustment.getDouble("amount").doubleValue());
+                    int decimals = UtilAccounting.getBigDecimalScale("invoice.decimals");
+                    int rounding = UtilAccounting.getBigDecimalRoundingMode("invoice.rounding");
+                    BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity")).setScale(decimals, rounding);
+                    BigDecimal originalReturnTotal = new BigDecimal(originalReturnPrice).multiply(new BigDecimal(originalReturnQuantity)).setScale(decimals, rounding);
+                    BigDecimal newAmount = returnTotal.divide(originalReturnTotal, decimals, rounding).multiply(returnAdjustment.getBigDecimal("amount")).setScale(decimals, rounding); 
+                    amount = new Double(newAmount.doubleValue());
                 } else {
                     amount = (Double) context.get("amount");
                 }
@@ -1323,6 +1333,40 @@ public class OrderReturnServices {
         }
     }
 
+    //  used as a dispatch service, invoke different service based on the parameters passed in
+    public static Map createReturnItemOrAdjustment(DispatchContext dctx, Map context){
+        Debug.logInfo("createReturnItemOrAdjustment's context:" + context, module);
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+        Debug.logInfo("orderItemSeqId:" + orderItemSeqId +"#", module);
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //if the request is to create returnItem, orderItemSeqId should not be empty
+        String serviceName = UtilValidate.isNotEmpty(orderItemSeqId) ? "createReturnItem" : "createReturnAdjustment";
+        Debug.logInfo("serviceName:" + serviceName, module);
+        try {
+            return dispatcher.runSync(serviceName, filterServiceContext(dctx, serviceName, context));
+        } catch (org.ofbiz.service.GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+    
+    //  used as a dispatch service, invoke different service based on the parameters passed in
+    public static Map updateReturnItemOrAdjustment(DispatchContext dctx, Map context){
+        Debug.logInfo("updateReturnItemOrAdjustment's context:" + context, module);
+        String returnAdjustmentId = (String) context.get("returnAdjustmentId");
+        Debug.logInfo("returnAdjustmentId:" + returnAdjustmentId +"#", module);
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //if the request is to create returnItem, orderItemSeqId should not be empty
+        String serviceName = UtilValidate.isEmpty(returnAdjustmentId) ? "updateReturnItem" : "updateReturnAdjustment";
+        Debug.logInfo("serviceName:" + serviceName, module);
+        try {
+            return dispatcher.runSync(serviceName, filterServiceContext(dctx, serviceName, context));
+        } catch (org.ofbiz.service.GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }        
+    }
+    
     /**
      * These return adjustment types need to be recalculated when the return item is updated
      * @param returnAdjustmentTypeId
@@ -1358,5 +1402,34 @@ public class OrderReturnServices {
             Debug.logError(e, module);
         }
         return total;
+    }
+
+    /**
+     *  Get rid of unnecessary parameters based on the given service name  
+     * @param dctx Service DispatchContext
+     * @param serviceName  
+     * @param context   context before clean up
+     * @return filtered context
+     * @throws GenericServiceException 
+     */
+    public static Map filterServiceContext(DispatchContext dctx, String serviceName, Map context) throws GenericServiceException {
+        ModelService modelService = dctx.getModelService(serviceName);
+
+        if (modelService == null) {
+            throw new GenericServiceException("Problems getting the service model");
+        }
+        Map serviceContext = FastMap.newInstance();
+        List modelParmInList = modelService.getInModelParamList();
+        Iterator modelParmInIter = modelParmInList.iterator();
+        while (modelParmInIter.hasNext()) {
+            ModelParam modelParam = (ModelParam) modelParmInIter.next();
+            String paramName =  modelParam.name;
+ 
+            Object value = context.get(paramName);
+            if(value != null){
+                serviceContext.put(paramName, value);
+            }             
+        }
+        return serviceContext;
     }
 }
