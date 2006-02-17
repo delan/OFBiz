@@ -295,11 +295,12 @@ public class EmailServices {
     public static Map sendMailFromScreen(DispatchContext dctx, Map serviceContext) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String webSiteId = (String) serviceContext.remove("webSiteId");
+        String bodyText = (String) serviceContext.remove("bodyText");
         String bodyScreenUri = (String) serviceContext.remove("bodyScreenUri");
         String xslfoAttachScreenLocation = (String) serviceContext.remove("xslfoAttachScreenLocation");
         Map bodyParameters = (Map) serviceContext.remove("bodyParameters");
         String partyId = (String) bodyParameters.get("partyId");
-        NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);        
+        NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
 
         StringWriter bodyWriter = new StringWriter();
 
@@ -308,24 +309,26 @@ public class EmailServices {
         screens.populateContextForService(dctx, bodyParameters);
         screenContext.putAll(bodyParameters);
 
-        try {
-            screens.render(bodyScreenUri);
-        } catch (GeneralException e) {
-            String errMsg = "Error rendering screen for email: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (IOException e) {
-            String errMsg = "Error rendering screen for email: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (SAXException e) {
-            String errMsg = "Error rendering screen for email: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (ParserConfigurationException e) {
-            String errMsg = "Error rendering screen for email: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
+        if (bodyScreenUri != null) {
+            try {
+                screens.render(bodyScreenUri);
+            } catch (GeneralException e) {
+                String errMsg = "Error rendering screen for email: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } catch (IOException e) {
+                String errMsg = "Error rendering screen for email: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } catch (SAXException e) {
+                String errMsg = "Error rendering screen for email: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            } catch (ParserConfigurationException e) {
+                String errMsg = "Error rendering screen for email: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
         }
         
         boolean isMultiPart = false;
@@ -389,7 +392,12 @@ public class EmailServices {
 
                 // store in the list of maps for sendmail....
                 List bodyParts = FastList.newInstance();
-                bodyParts.add(UtilMisc.toMap("content", bodyWriter.toString(), "type", "text/html"));
+                if (bodyText != null) {
+                    bodyText = FlexibleStringExpander.expandString(bodyText, screenContext, (Locale) screenContext.get("locale"));
+                    bodyParts.add(UtilMisc.toMap("content", bodyText, "type", "text/html"));
+                } else {
+                    bodyParts.add(UtilMisc.toMap("content", bodyWriter.toString(), "type", "text/html"));
+                }
                 bodyParts.add(UtilMisc.toMap("content", baos.toByteArray(), "type", "application/pdf", "filename", "Details.pdf"));
                 serviceContext.put("bodyParts", bodyParts);
             } catch (GeneralException ge) {
@@ -416,7 +424,12 @@ public class EmailServices {
         } else {
             isMultiPart = false;
             // store body and type for single part message in the context.
-            serviceContext.put("body", bodyWriter.toString());
+            if (bodyText != null) {
+                bodyText = FlexibleStringExpander.expandString(bodyText, screenContext, (Locale) screenContext.get("locale"));
+                serviceContext.put("body", bodyText);
+            } else {
+                serviceContext.put("body", bodyWriter.toString());
+            }
             serviceContext.put("contentType", "text/html");
         }
         

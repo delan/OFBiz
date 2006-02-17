@@ -533,8 +533,9 @@
     <service name="updateElectronicText" default-entity-name="ElectronicText" engine="java"
         location="org.ofbiz.content.data.DataServices" invoke="updateElectronicText" auth="true">
         <description>Update a ElectronicText</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="contentId" mode="INOUT" optional="true" type="String"/><!-- to optionaly know where this text is belonging to -->
         <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
     </service>
     <service name="removeElectronicText" default-entity-name="ElectronicText" engine="simple"
@@ -548,6 +549,7 @@
         <description>Get a ElectronicText: Can pass either content value object or contentId</description>
         <attribute mode="IN" name="contentId" optional="true" type="String"/>
         <attribute mode="IN" name="content" optional="true" type="GenericValue"/>
+        <attribute mode="OUT" name="dataResourceId" optional="true" type="String"/>
         <attribute mode="OUT" name="textData" optional="false" type="String"/>
     </service>
 

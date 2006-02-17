@@ -339,7 +339,10 @@ public class DataServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue electronicText = null;
         //Locale locale = (Locale) context.get("locale");
-            String dataResourceId = (String) context.get("dataResourceId");
+        String dataResourceId = (String) context.get("dataResourceId");
+        result.put("dataResourceId",dataResourceId);
+        String contentId = (String) context.get("contentId");
+        result.put("contentId",contentId);
             if (UtilValidate.isEmpty(dataResourceId)) {
                     String errMsg = "dataResourceId is null.";
                     Debug.logError(errMsg, module);
