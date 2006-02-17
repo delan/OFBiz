@@ -71,7 +71,7 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         <set-nonpk-fields value-name="salesForecastHistory" map-name="salesForecast"/>
 
         <!-- get the change note from the parameters -->
-        <set field="salesForecastHsitory.changeNote" from-field="parameters.changeNote"/>
+        <set field="salesForecastHistory.changeNote" from-field="parameters.changeNote"/>
 
         <!-- set the modified info -->
         <now-timestamp-to-env env-name="nowTimestamp"/>
