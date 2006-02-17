@@ -595,7 +595,7 @@
                 </add-error>
         </if-empty>
         <check-errors/>
-    
+        <field-to-result field-name="currentContent.dataResourceId" result-name="dataResourceId"/>    
         <field-to-field field-name="dataResourceId" map-name="currentContent" to-map-name="contextB"/>
         <find-by-primary-key value-name="eText" entity-name="ElectronicText"
                          map-name="contextB" use-cache="true" />

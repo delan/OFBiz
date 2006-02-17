@@ -73,7 +73,8 @@
         location="org.ofbiz.content.email.EmailServices" invoke="sendMailFromScreen">
         <description>Send E-Mail From Screen Widget Service</description>
         <implements service="sendMailInterface"/>
-        <attribute name="bodyScreenUri" type="String" mode="IN" optional="false"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyScreenUri" type="String" mode="IN" optional="true"/>
         <attribute name="xslfoAttachScreenLocation" type="String" mode="IN" optional="true"/>
         <attribute name="bodyParameters" type="Map" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
