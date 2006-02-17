@@ -21,6 +21,7 @@
     <MimeType mimeTypeId="application/pdf" description="Adobe Portable Document Format (PDF)"/>
     <MimeType mimeTypeId="application/msword" description="Microsoft Word"/>
     <MimeType mimeTypeId="application/vnd.oasis.opendocument.text" description="OpenOffice OpenDocument Text"/>
+    <MimeType mimeTypeId="application/vnd.ofbiz.survey" description="Survey"/>
 
     <!-- audio mime types -->
     <MimeType mimeTypeId="audio/basic" description="Basic Audio"/>

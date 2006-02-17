@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -73,9 +74,11 @@ public class SimpleContentViewHandler implements ViewHandler {
      */
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
     	
-    	String contentId = request.getParameter("contentId");
+        String contentId = request.getParameter("contentId");
+        String rootContentId = request.getParameter("rootContentId");
     	String dataResourceId = request.getParameter("dataResourceId");
-    	String mimeTypeId = request.getParameter("mimeTypeId");
+        String contentRevisionSeqId = request.getParameter("contentRevisionSeqId");
+        String mimeTypeId = request.getParameter("mimeTypeId");
         ByteWrapper byteWrapper = null;
         Locale locale = UtilHttp.getLocale(request);
         String rootDir = null;
@@ -93,9 +96,18 @@ public class SimpleContentViewHandler implements ViewHandler {
         }
     	try {
     		GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-    		if (UtilValidate.isEmpty(dataResourceId)) {
-    			GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
-    			dataResourceId = content.getString("dataResourceId");
+            if (UtilValidate.isEmpty(dataResourceId)) {
+                if (UtilValidate.isEmpty(contentRevisionSeqId)) {
+                   GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+                   dataResourceId = content.getString("dataResourceId");
+                } else {
+                   GenericValue contentRevisionItem = delegator.findByPrimaryKeyCache("ContentRevisionItem", UtilMisc.toMap("contentId", rootContentId, "itemContentId", contentId, "contentRevisionSeqId", contentRevisionSeqId));
+                   if (contentRevisionItem == null) {
+                       throw new ViewHandlerException("ContentRevisionItem record not found for contentId=" + rootContentId
+                                                      + ", contentRevisionSeqId=" + contentRevisionSeqId + ", itemContentId=" + contentId);
+                   }
+                   dataResourceId = contentRevisionItem.getString("newDataResourceId");
+                }
     		}
 			GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
     		byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, dataResourceId, https, webSiteId, locale, rootDir);

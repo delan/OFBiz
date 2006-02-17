@@ -397,14 +397,14 @@
         <field name="contentId" entry-name="missing" map-name="empty"><text/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId" ><display /></field>
-        <field name="instanceOfContentId" ><display/></field>
-        <field name="caContentIdTo" ><display/></field>
-        <field name="caContentAssocTypeId"  ><display /></field>
-        <field name="caFromDate" ><display/></field>
-        <field name="caThruDate"   ><date-time/></field>
-        <field name="caSequenceNum"   ><text/></field>
+        <field name="instanceOfContentId" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display/></field>
+        <field name="contentIdTo" ><display/></field>
+        <field name="contentAssocTypeId"  ><display /></field>
+        <field name="fromDate" ><display/></field>
+        <field name="thruDate"   ><date-time/></field>
+        <field name="sequenceNum"   ><text/></field>
         
-        <field name="caMimeTypeId" map-name="empty" title="Document Type">
+        <field name="mimeTypeId" map-name="empty" title="Document Type">
             <drop-down allow-empty="true">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF Form"/>

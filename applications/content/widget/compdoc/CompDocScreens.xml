@@ -348,6 +348,7 @@
                     </condition>
                     <actions>
                         <set from-field="content.contentId" field="rootTemplateContentId"/>
+                        <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId"/>
                     </actions>
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -366,6 +367,7 @@
                     </condition>
                     <actions>
                         <set from-field="content.contentId" field="rootInstanceContentId"/>
+                        <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootInstanceRevSeqId}" field="rootInstanceRevSeqId"/>
                     </actions>
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -384,6 +386,7 @@
                     <actions>
                         <set value="updateChildCompDocTemplate" field="childCompDocTarget"/>
                         <set value="TEMPLATE" field="content.contentTypeId"/>
+                        <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId"/>
                     </actions>
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -441,6 +444,7 @@
                                         <set from-field="dummy.rootInstanceContentId" field="dummy.rootContentId" />
                                     </actions>
                                     <widgets>
+                                        <include-screen name="ContentViewLink"/>
                                         <link target="ViewCompDocContent?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View CompDoc Content" style="buttontext"/>
                                         <include-form name="UploadCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
                                     </widgets>
@@ -454,7 +458,96 @@
     </screen>
     
     
-     <screen name="AddRootCompDocInstance">
+    <screen name="ContentViewLink">
+        <section>
+            <condition>
+            </condition>
+            <actions>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <or>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/msword"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/pdf"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/vnd.oasis.opendocument.text"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="image/jpeg"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="image/gif"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="image/tiff"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="image/png"/>
+                        </or>
+                    </condition>
+                    <actions>
+                    </actions>
+                    <widgets>
+                        <link target="ViewCompDocContentBinary?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}" text="View CompDoc Content" style="buttontext"/>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="text/html"/>
+                    </condition>
+                    <actions>
+                    </actions>
+                    <widgets>
+                        <link target="ViewCompDocContentHtml?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}" text="View CompDoc Content" style="buttontext"/>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <or>
+                            <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY"/>
+                            <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
+                        </or>
+                    </condition>
+                    <actions>
+                    </actions>
+                    <widgets>
+                        <link target="ViewCompDocContentSurvey?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}" text="View CompDoc Content" style="buttontext"/>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                      <not>
+                        <or>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/msword"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/pdf"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/vnd.oasis.opendocument.text"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="image/jpeg"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="image/gif"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="image/tiff"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="image/png"/>
+                            
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="text/html"/>
+                            
+                            <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY"/>
+                            <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
+                        </or>
+                      </not>
+                    </condition>
+                    <actions>
+                    </actions>
+                    <widgets>
+                        <label text="Screen not available for mime-type: ${dataResource.mimeTypeId}"/>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ViewCompDocContentHtml">
+        <section>
+            <condition>
+            </condition>
+            <actions>
+            </actions>
+            <widgets>
+                <content content-id="${parameters.contentId}"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="AddRootCompDocInstance">
         <section>
              <condition>
                 <if-has-permission permission="CONTENTMGR" action="CREATE"/>
@@ -504,12 +597,12 @@
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Composite Document Instance Add Page"/>
-                <set from-field="parameters.rootInstanceContentId" field="caContentIdTo" />
-                <set from-field="nowTimestamp" field="caFromDate" />
+                <set from-field="parameters.rootInstanceContentId" field="contentIdTo" />
+                <set from-field="nowTimestamp" field="fromDate" />
                 <set from-field="parameters.contentId" field="instanceOfContentId" />
                 <entity-one entity-name="Content" value-name="itemContent"/>
                 <set from-field="itemContent.contentName" field="contentName"/>
-                <set value="COMPDOC_PART" field="caContentAssocTypeId" />
+                <set value="COMPDOC_PART" field="contentAssocTypeId" />
                 <set value="DOCUMENT" field="contentTypeId" />
                 <set from-field="parameters.caSequenceNum" field="sequenceNum" default-value="${parameters.sequenceNum}"/>
                 <set value="createChildCompDocInstance" field="childCompDocTarget"/>
