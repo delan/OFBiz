@@ -99,7 +99,7 @@ public class PackingSession implements java.io.Serializable {
     public void addOrIncreaseLine(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, double quantity, int packageSeqId) throws GeneralException {
         // reset the session if we just completed
         if (status == 0) {
-            throw new GeneralException("Packing session has been completed; be sure to CLEAR before packing a new order!");
+            throw new GeneralException("Packing session has been completed; be sure to CLEAR before packing a new order! [000]");
         }
 
         // find the actual product ID
@@ -125,46 +125,52 @@ public class PackingSession implements java.io.Serializable {
 
         // no reservations we cannot add this item
         if (UtilValidate.isEmpty(reservations)) {
-            throw new GeneralException("No inventory reservations available; cannot pack this item!");
+            throw new GeneralException("No inventory reservations available; cannot pack this item! [101]");
         }
 
         // find the inventoryItemId to use
-        GenericValue res = null;
-        int checkCode = 0;
         if (reservations.size() == 1) {
-            res = EntityUtil.getFirst(reservations);
-            checkCode = this.checkLineForAdd(res, orderId, orderItemSeqId, shipGroupSeqId, quantity, packageSeqId);
+            GenericValue res = EntityUtil.getFirst(reservations);
+            int checkCode = this.checkLineForAdd(res, orderId, orderItemSeqId, shipGroupSeqId, quantity, packageSeqId);
+            this.createPackLineItem(checkCode, res, orderId, orderItemSeqId, shipGroupSeqId, productId, quantity, packageSeqId);
         } else {
             // more than one reservation found
+            Map toCreateMap = FastMap.newInstance();
             Iterator i = reservations.iterator();
-            while (i.hasNext()) {
-                res = (GenericValue) i.next();
-                int thisCheck = this.checkLineForAdd(res, orderId, orderItemSeqId, shipGroupSeqId, quantity, packageSeqId);
-                if (thisCheck > 0) {
-                    checkCode = thisCheck;
-                    break;
+            double qtyRemain = quantity;
+
+            while (i.hasNext() && qtyRemain > 0) {
+                GenericValue res = (GenericValue) i.next();
+                double resQty = res.getDouble("quantity").doubleValue();
+                double thisQty = resQty > qtyRemain ? qtyRemain : resQty;
+
+                int thisCheck = this.checkLineForAdd(res, orderId, orderItemSeqId, shipGroupSeqId, thisQty, packageSeqId);
+                switch (thisCheck) {
+                    case 2:
+                        Debug.log("Packing check returned '2' - new pack line will be created!", module);
+                        toCreateMap.put(res, new Double(resQty));
+                        qtyRemain -= resQty;
+                        break;
+                    case 1:
+                        Debug.log("Packing check returned '1' - existing pack line has been updated!", module);
+                        qtyRemain -= resQty;
+                        break;
+                    case 0:
+                        Debug.log("Packing check returned '0' - doing nothing.", module);
+                        break;
                 }
             }
-        }
 
-        // process the result; add new item if necessary
-        switch(checkCode) {
-            case 0:
-                // not enough reserved
-                throw new GeneralException("Not enough inventory reservation available; cannot pack the item!");
-            case 1:
-                // we're all good to go; quantity already updated
-                break;
-            case 2:
-                // need to create a new item
-                String invItemId = res.getString("inventoryItemId");
-                packLines.add(new PackingSessionLine(orderId, orderItemSeqId, shipGroupSeqId, productId, invItemId, quantity, packageSeqId));
-                break;
-        }
-
-        // update the package sequence
-        if (packageSeqId > packageSeq) {
-            this.packageSeq = packageSeqId;
+            if (qtyRemain == 0) {
+                Iterator x = toCreateMap.keySet().iterator();
+                while (x.hasNext()) {
+                    GenericValue res = (GenericValue) x.next();
+                    Double qty = (Double) toCreateMap.get(res);
+                    this.createPackLineItem(2, res, orderId, orderItemSeqId, shipGroupSeqId, productId, qty.doubleValue(), packageSeqId);
+                }
+            } else {
+                throw new GeneralException("Not enough inventory reservation available; cannot pack the item! [103]");
+            }
         }
 
         // run the add events
@@ -184,12 +190,37 @@ public class PackingSession implements java.io.Serializable {
         Iterator i = lines.iterator();
         while (i.hasNext()) {
             PackingSessionLine line = (PackingSessionLine) i.next();
-            if (orderId.equals(line.getOrderId()) && orderItemSeqId.equals(line.getOrderItemSeqId()) &&
-                    shipGroupSeqId.equals(line.getShipGroupSeqId()) && packageSeq == line.getPackageSeq()) {
+            if (orderId.equals(line.getOrderId()) &&
+                    orderItemSeqId.equals(line.getOrderItemSeqId()) &&
+                    shipGroupSeqId.equals(line.getShipGroupSeqId()) &&
+                    inventoryItemId.equals(line.getInventoryItemId()) && 
+                    packageSeq == line.getPackageSeq()) {
                 return line;
             }
         }
         return null;
+    }
+
+    protected void createPackLineItem(int checkCode, GenericValue res, String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, double quantity, int packageSeqId) throws GeneralException {
+        // process the result; add new item if necessary
+        switch(checkCode) {
+            case 0:
+                // not enough reserved
+                throw new GeneralException("Not enough inventory reservation available; cannot pack the item! [201]");
+            case 1:
+                // we're all good to go; quantity already updated
+                break;
+            case 2:
+                // need to create a new item
+                String invItemId = res.getString("inventoryItemId");
+                packLines.add(new PackingSessionLine(orderId, orderItemSeqId, shipGroupSeqId, productId, invItemId, quantity, packageSeqId));
+                break;
+        }
+
+        // update the package sequence
+        if (packageSeqId > packageSeq) {
+            this.packageSeq = packageSeqId;
+        }
     }
 
     protected String findOrderItemSeqId(String productId, String orderId, String shipGroupSeqId, double quantity) throws GeneralException {
@@ -228,7 +259,7 @@ public class PackingSession implements java.io.Serializable {
 
         PackingSessionLine line = this.findLine(orderId, orderItemSeqId, shipGroupSeqId, invItemId, packageSeqId);
         if (line == null) {
-            Debug.log("No current line found testing R: " + resQty + " / Q: " + quantity, module);
+            Debug.log("No current line found testing [" + invItemId + "] R: " + resQty + " / Q: " + quantity, module);
             if (resQty < quantity) {
                 return 0;
             } else {
@@ -236,7 +267,7 @@ public class PackingSession implements java.io.Serializable {
             }
         } else {
             double newQty = line.getQuantity() + quantity;
-            Debug.log("Existing line found testing R: " + resQty + " / Q: " + newQty, module);
+            Debug.log("Existing line found testing [" + invItemId + "] R: " + resQty + " / Q: " + newQty, module);
             if (resQty < newQty) {
                 return 0;
             } else {
