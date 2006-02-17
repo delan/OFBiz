@@ -59,6 +59,8 @@ public class PackingServices {
             quantity = new Double(1);
         }
 
+        Debug.log("Pack input [" + productId + "] @ [" + quantity + "]", module);
+        
         try {
             session.addOrIncreaseLine(orderId, null, shipGroupSeqId, productId, quantity.doubleValue(), packageSeq.intValue());
         } catch (GeneralException e) {
