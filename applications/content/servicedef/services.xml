@@ -839,7 +839,7 @@
     
     <service name="persistDataResourceAndData" engine="java"
         transaction-timout="72000" 
-            location="org.ofbiz.content.ContentManagementServices" invoke="persistContentAndAssoc" auth="true">
+            location="org.ofbiz.content.ContentManagementServices" invoke="persistDataResourceAndData" auth="true">
         <description>Persist a  DataResource and data</description>
         <auto-attributes entity-name="DataResource" include="all" mode="IN" optional="true">
             <exclude field-name="dataResourceId"/>
@@ -864,6 +864,15 @@
         <attribute mode="IN" name="_imageData_fileName" optional="true" type="String"/>
         <attribute mode="IN" name="forceElectronicText" optional="true" type="String"/>
         <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
+    </service>
+    
+    <service name="persistCompDocContent" engine="simple"
+        transaction-timout="72000" 
+            location="org/ofbiz/content/compdoc/CompDocServices.xml" invoke="persistCompDocContent" auth="true">
+        <description>Persist a CompDoc DataResource and data</description>
+        <implements service="persistDataResourceAndData"/>
+        <attribute name="contentRevisionSeqId" type="String" mode="OUT" optional="false"/>
+        <attribute name="rootContentId" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="persistContentWithRevision" engine="java"
@@ -1263,8 +1272,10 @@
         invoke="persistContentRevisionAndItem" auth="true">
         <description>Update a ContentRevision and ContentRevisionItem</description>
         <auto-attributes entity-name="ContentRevision" include="all" mode="IN" optional="true">
+            <exclude field-name="contentRevisionSeqId"/>
         </auto-attributes>
         <auto-attributes entity-name="ContentRevisionItem" include="all" mode="IN" optional="true">
+            <exclude field-name="contentRevisionSeqId"/>
         </auto-attributes>
         <attribute name="contentRevisionSeqId" type="String" mode="OUT" optional="false"/>
     </service>

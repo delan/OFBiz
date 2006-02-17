@@ -489,10 +489,16 @@
     <form name="UploadCompDocContent" type="upload" default-title-style="tableheadtext" 
         extends="dummy" target="uploadCompDocContent"
         default-tooltip-style="tabletext" default-widget-style="tabletext" >
+        <field name="rootContentId" map-name="dummy"><hidden/></field>
+        <field name="caContentId" map-name="parameters"><hidden/></field>
+        <field name="caContentAssocTypeId" map-name="parameters"><hidden/></field>
+        <field name="caFromDate" map-name="parameters"><hidden/></field>
+        
         <field name="contentId" map-name="content"><hidden/></field>
         <field name="dataResourceId" map-name="dataResource"><hidden/></field>
         <field name="dataResourceTypeId" map-name="dataResource"><hidden/></field>
         <field name="mimeTypeId" map-name="dataResource"><hidden/></field>
+        <field name="objectInfo" title="File Name" map-name="dataResource"><display also-hidden="false"/></field>
         <field name="imageData" title="Browse"><file/></field>
         <field name="submitButton" title="Upload" widget-style="smallSubmit"><submit/></field>
     </form>

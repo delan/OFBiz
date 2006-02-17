@@ -393,6 +393,9 @@
                                     <condition>
                                         <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
                                     </condition>
+                                    <actions>
+                                        <set from-field="dummy.rootTemplateContentId" field="dummy.rootContentId" />
+                                    </actions>
                                     <widgets>
                                         <link target="ViewCompDocContent?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View CompDoc Content" style="buttontext"/>
                                         <include-form name="UploadCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
@@ -411,7 +414,7 @@
                     <actions>
                         <set value="updateChildCompDocInstance" field="childCompDocTarget"/>
                         <set value="DOCUMENT" field="content.contentTypeId"/>
-                        <set from-field="parameters.caContentIdTo" field="rootInstanceContentId"/>
+                        <set from-field="parameters.caContentIdTo" default-value="${parameters.rootInstanceContentId}" field="rootInstanceContentId"/>
                         <entity-condition entity-name="MaxRevisionItemView" list-name="rootRevList" use-cache="false" >
                            <condition-list combine="and">
                                 <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootInstanceContentId" />
@@ -419,7 +422,7 @@
                            </condition-list> 
                           
                            <select-field field-name="rootRevisionContentId"/>
-                           <select-field fieldViewCompDocContent-name="itemContentId"/>
+                           <select-field field-name="itemContentId"/>
                            <select-field field-name="maxRevisionSeqId"/>
                            
                            <order-by field-name="-maxRevisionSeqId"/>
@@ -434,6 +437,9 @@
                                     <condition>
                                         <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
                                     </condition>
+                                    <actions>
+                                        <set from-field="dummy.rootInstanceContentId" field="dummy.rootContentId" />
+                                    </actions>
                                     <widgets>
                                         <link target="ViewCompDocContent?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View CompDoc Content" style="buttontext"/>
                                         <include-form name="UploadCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>

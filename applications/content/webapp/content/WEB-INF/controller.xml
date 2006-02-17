@@ -1060,9 +1060,9 @@
    </request-map>
    <request-map uri="uploadCompDocContent">
        <security auth="true" https="true"/>
-        <event invoke="persistDataResourceAndData"  path="" type="service"/>
-       <response name="success" type="view" value="ViewCompDocContent"/>
-       <response name="error" type="view" value="ViewCompDocContent"/>
+        <event invoke="persistCompDocContent"  path="" type="service"/>
+       <response name="success" type="view" value="EditCompDoc"/>
+       <response name="error" type="view" value="EditCompDoc"/>
    </request-map>
    <request-map uri="ViewCompDocContent">
        <security auth="true" https="true"/>
