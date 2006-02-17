@@ -50,6 +50,7 @@
         </required-permissions>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="changeNote" type="String" mode="IN" optional="true"/>
     </service>
 
 </services>
