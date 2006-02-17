@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="base/src/base"/>
+	<classpathentry excluding="org/ofbiz/base/util/OfbizJsBsfEngine.java" kind="src" path="base/src/base"/>
 	<classpathentry excluding="org/ofbiz/accounting/thirdparty/clearcommerce/**|org/ofbiz/accounting/thirdparty/verisign/**" kind="src" path="applications/accounting/src"/>
-	<classpathentry kind="src" path="applications/content/src"/>
+	<classpathentry excluding="org/ofbiz/content/openoffice/|org/ofbiz/content/report/" kind="src" path="applications/content/src"/>
 	<classpathentry kind="src" path="applications/ecommerce/src"/>
 	<classpathentry kind="src" path="applications/manufacturing/src"/>
 	<classpathentry kind="src" path="applications/marketing/src"/>
@@ -11,13 +11,13 @@
 	<classpathentry kind="src" path="applications/party/src"/>
 	<classpathentry kind="src" path="applications/pos/src"/>
 	<classpathentry excluding="ShipmentScaleApplet.java" kind="src" path="applications/product/src"/>
-	<classpathentry kind="src" path="applications/securityext/src"/>
+	<classpathentry excluding="org/ofbiz/securityext/thirdparty/truition/TruitionCoReg.java" kind="src" path="applications/securityext/src"/>
 	<classpathentry kind="src" path="applications/workeffort/src"/>
 	<classpathentry kind="src" path="framework/appserver/src"/>
 	<classpathentry kind="src" path="framework/catalina/src"/>
 	<classpathentry kind="src" path="framework/common/src"/>
 	<classpathentry kind="src" path="framework/datafile/src"/>
-	<classpathentry kind="src" path="framework/entity/src"/>
+	<classpathentry excluding="org/ofbiz/entity/transaction/XaPoolConnectionFactory.java" kind="src" path="framework/entity/src"/>
 	<classpathentry kind="src" path="framework/entityext/src"/>
 	<classpathentry kind="src" path="framework/example/src"/>
 	<classpathentry kind="src" path="framework/guiapp/src"/>
@@ -27,9 +27,8 @@
 	<classpathentry kind="src" path="framework/minilang/src"/>
 	<classpathentry kind="src" path="framework/security/src"/>
 	<classpathentry kind="src" path="framework/service/src"/>
-	<classpathentry kind="src" path="framework/shark/src"/>
-	<classpathentry kind="src" path="framework/tests/src"/>
-	<classpathentry kind="src" path="framework/webapp/src"/>
+	<classpathentry excluding="org/enhydra/|org/ofbiz/" kind="src" path="framework/shark/src"/>
+	<classpathentry excluding="org/ofbiz/webapp/view/JasperReportsPdfViewHandler.java|org/ofbiz/webapp/view/JasperReportsXmlViewHandler.java" kind="src" path="framework/webapp/src"/>
 	<classpathentry kind="src" path="framework/webtools/src"/>
 	<classpathentry kind="src" path="framework/widget/src"/>
 	<classpathentry kind="src" path="framework/workflow/src"/>
@@ -77,12 +76,6 @@
 	<classpathentry kind="lib" path="framework/webapp/lib/EdenLib.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/DataVision.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/batik.jar"/>
-	<classpathentry kind="lib" path="framework/tests/lib/Quick4util.jar"/>
-	<classpathentry kind="lib" path="framework/tests/lib/Quick4rt.jar"/>
-	<classpathentry kind="lib" path="framework/tests/lib/jxweb.jar"/>
-	<classpathentry kind="lib" path="framework/tests/lib/jxunit3.jar"/>
-	<classpathentry kind="lib" path="framework/tests/lib/dtdparser113.jar"/>
-	<classpathentry kind="lib" path="framework/tests/lib/dom4j-full.jar"/>
 	<classpathentry kind="lib" path="framework/service/lib/wsdl4j.jar"/>
 	<classpathentry kind="lib" path="framework/service/lib/saaj.jar"/>
 	<classpathentry kind="lib" path="framework/service/lib/jms_1.0.2a.jar"/>
