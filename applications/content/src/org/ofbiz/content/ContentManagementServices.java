@@ -693,7 +693,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                   return ServiceUtil.returnError(errorMsg);
               }
           } else {
-              return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
+              //return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
           }
       } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
       } else if (dataResourceTypeId.startsWith("SURVEY")) {
@@ -710,7 +710,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
           }
       }
     } else {
-      Map thisResult = dispatcher.runSync("updateDataResource", context);
+      Map thisResult = dispatcher.runSync("updateDataResource", newDrContext);
       String errorMsg = ServiceUtil.getErrorMessage(thisResult);
       if (UtilValidate.isNotEmpty(errorMsg)) {
           return ServiceUtil.returnError(errorMsg);

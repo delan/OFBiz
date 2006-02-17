@@ -173,7 +173,7 @@
               </or>
             </condition>
             <then>
-                <set value="ELECTRONIC_TEXT" field="persistMap.dataResourceTypeId"/>
+                <set value="IMAGE_OBJECT" field="persistMap.dataResourceTypeId"/>
             </then>
             <else-if>
                 <condition>
@@ -248,6 +248,38 @@
         <log level="info" message="cloneMap : ${cloneMap}"/>
         <call-service service-name="cloneContentApprovals" in-map-name="cloneMap">
         </call-service>
+    </simple-method>
+    
+    <simple-method method-name="persistCompDocContent" short-description="Create ContentApproval">
+    
+        <entity-one entity-name="Content" value-name="content" use-cache="false"/>
+        <set from-field="content.dataResourceId" field="oldDataResourceId"/>
+        <log level="info" message="persistCompDocContent(0).content : ${content}"/>
+        
+        <set-service-fields service-name="persistDataResourceAndData" map-name="parameters" to-map-name="persistMap"/>
+        <clear-field field-name="persistMap.dataResourceId"/>
+        <clear-field field-name="persistMap.drDataResourceId"/>
+        <log level="info" message="persistCompDocContent(0.2).persistMap : ${persistMap}"/>
+        <call-service service-name="persistDataResourceAndData" in-map-name="persistMap">
+            <result-to-field result-name="dataResourceId" field-name="newDataResourceId"/>
+        </call-service>
+        <log level="info" message="persistCompDocContent(1).newDataResourceId : ${newDataResourceId}"/>
+        
+        <set from-field="newDataResourceId" field="content.dataResourceId"/>
+        <store-value value-name="content"/>
+        
+        <set from-field="parameters.rootContentId" field="revisionMap.contentId"/>
+        <set from-field="parameters.contentId" field="revisionMap.itemContentId"/>
+        <set from-field="parameters.userLogin" field="revisionMap.userLogin"/>
+        <set from-field="oldDataResourceId" field="revisionMap.oldDataResourceId"/>
+        <set from-field="newDataResourceId" field="revisionMap.newDataResourceId"/>
+        <log level="info" message="persistCompDocContent(2).revisionMap : ${revisionMap}"/>
+        <call-service service-name="persistContentRevisionAndItem" in-map-name="revisionMap">
+            <result-to-result result-name="contentRevisionSeqId"/>
+            <result-to-field result-name="contentRevisionSeqId"/>
+        </call-service>
+        <log level="info" message="persistCompDocContent(3).contentRevisionSeqId : ${contentRevisionSeqId}"/>
+        
     </simple-method>
     
     <!-- Methods for ContentApproval -->
