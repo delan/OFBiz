@@ -95,18 +95,24 @@ public class SimpleContentViewHandler implements ViewHandler {
             https = (String) servletContext.getAttribute("https");
         }
     	try {
-    		GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+            Debug.logInfo("SCVH(0a)- dataResourceId:" + dataResourceId, module);
+GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
             if (UtilValidate.isEmpty(dataResourceId)) {
                 if (UtilValidate.isEmpty(contentRevisionSeqId)) {
                    GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
                    dataResourceId = content.getString("dataResourceId");
+                   Debug.logInfo("SCVH(0b)- dataResourceId:" + dataResourceId, module);
                 } else {
                    GenericValue contentRevisionItem = delegator.findByPrimaryKeyCache("ContentRevisionItem", UtilMisc.toMap("contentId", rootContentId, "itemContentId", contentId, "contentRevisionSeqId", contentRevisionSeqId));
                    if (contentRevisionItem == null) {
                        throw new ViewHandlerException("ContentRevisionItem record not found for contentId=" + rootContentId
                                                       + ", contentRevisionSeqId=" + contentRevisionSeqId + ", itemContentId=" + contentId);
                    }
+                   Debug.logInfo("SCVH(1)- contentRevisionItem:" + contentRevisionItem, module);
+                   Debug.logInfo("SCVH(2)-contentId=" + rootContentId
+                           + ", contentRevisionSeqId=" + contentRevisionSeqId + ", itemContentId=" + contentId, module);
                    dataResourceId = contentRevisionItem.getString("newDataResourceId");
+                   Debug.logInfo("SCVH(3)- dataResourceId:" + dataResourceId, module);
                 }
     		}
 			GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
