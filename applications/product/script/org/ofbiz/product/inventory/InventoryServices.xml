@@ -346,9 +346,19 @@
         <set field="parameters.quantityOnHandTotal" value="0" type="Double"/>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="SERIALIZED_INV_ITEM">
-                <calculate field-name="parameters.quantityOnHandTotal" type="Double">
-                    <calcop field-name="parameters.quantityOnHandTotal" operator="add"><number value="1.0"/></calcop>
-                </calculate>
+                <if>
+                    <condition>
+                        <or>
+                            <if-compare field-name="inventoryItem.statusId" value="INV_AVAILABLE" operator="equals"/>
+                            <if-compare field-name="inventoryItem.statusId" value="INV_PROMISED" operator="equals"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <calculate field-name="parameters.quantityOnHandTotal" type="Double">
+                            <calcop field-name="parameters.quantityOnHandTotal" operator="add"><number value="1.0"/></calcop>
+                        </calculate>
+                    </then>
+                </if>
                 <if-compare value="INV_AVAILABLE" operator="equals" field-name="inventoryItem.statusId">
                     <calculate field-name="parameters.availableToPromiseTotal" type="Double">
                         <calcop field-name="parameters.availableToPromiseTotal" operator="add"><number value="1.0"/></calcop>
