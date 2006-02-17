@@ -2550,11 +2550,11 @@
         <relation type="one" fk-name="SALES4C_CUR_UOM" rel-entity-name="Uom">
             <key-map field-name="currencyUomId" rel-field-name="uomId"/>
         </relation>
-        <relation type="one" fk-name="SALES4C_CRT_USER" rel-entity-name="UserLogin">
-            <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+        <relation type="one" fk-name="SALES4C_CRT_USER" title="CreatedBy" rel-entity-name="UserLogin">
+            <key-map field-name="createdByUserLoginId" rel-field-name="userLoginId"/>
         </relation>
-        <relation type="one" fk-name="SALES4C_MOD_USER" rel-entity-name="UserLogin">
-            <key-map field-name="modifiedByUserLogin" rel-field-name="userLoginId"/>
+        <relation type="one" fk-name="SALES4C_MOD_USER" title="ModifiedBy" rel-entity-name="UserLogin">
+            <key-map field-name="modifiedByUserLoginId" rel-field-name="userLoginId"/>
         </relation>
     </entity>
 
@@ -2595,8 +2595,8 @@
         <relation type="one" fk-name="SALES4CH_CUR_UOM" rel-entity-name="Uom">
             <key-map field-name="currencyUomId" rel-field-name="uomId"/>
         </relation>
-        <relation type="one" fk-name="SALES4CH_MOD_USER" rel-entity-name="UserLogin">
-            <key-map field-name="modifiedByUserLogin" rel-field-name="userLoginId"/>
+        <relation type="one" fk-name="SALES4CH_MOD_USER" title="ModifiedBy" rel-entity-name="UserLogin">
+            <key-map field-name="modifiedByUserLoginId" rel-field-name="userLoginId"/>
         </relation>
     </entity>
 
