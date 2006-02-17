@@ -400,7 +400,7 @@
                                         <set from-field="dummy.rootTemplateContentId" field="dummy.rootContentId" />
                                     </actions>
                                     <widgets>
-                                        <link target="ViewCompDocContent?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View CompDoc Content" style="buttontext"/>
+                                        <include-screen name="ContentViewLink"/>
                                         <include-form name="UploadCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
                                     </widgets>
                                 </section>
@@ -445,7 +445,6 @@
                                     </actions>
                                     <widgets>
                                         <include-screen name="ContentViewLink"/>
-                                        <link target="ViewCompDocContent?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View CompDoc Content" style="buttontext"/>
                                         <include-form name="UploadCompDocContent" location="component://content/widget/compdoc/CompDocForms.xml"/>
                                     </widgets>
                                 </section>
@@ -480,7 +479,7 @@
                     <actions>
                     </actions>
                     <widgets>
-                        <link target="ViewCompDocContentBinary?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}" text="View CompDoc Content" style="buttontext"/>
+                        <link target="ViewCompDocContentBinary?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${dummy.rootContentId}" text="View CompDoc Content" style="buttontext"/>
                     </widgets>
                 </section>
                 <section>
@@ -823,7 +822,7 @@
                    <select-field field-name="fromDate"/>
                    <select-field field-name="sequenceNum"/>
 
-                   <order-by field-name="-sequenceNum"/>
+                   <order-by field-name="-maxRevisionSeqId"/>
                 </entity-condition>
                 <set from-field="assocRevisionItemViewList[0]" field="assocRevisionItemView"/>
             </actions>
