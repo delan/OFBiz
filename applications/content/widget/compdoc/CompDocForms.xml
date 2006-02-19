@@ -41,7 +41,7 @@
         extends="dummy"
         target="ListCompDoc" title=" " type="single" > 
         <field name="contentName" title="Name" ><text/></field>
-        <field name="contentId" title="Content Id" ><text/></field>
+        <field name="contentId" title="Content Id" map-name="empty"><text/></field>
         <field name="contentTypeId" title="Content Type Id">
             <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
                 <option key="COMPDOC_TEMPLATE" description="Root Template"/>             
@@ -71,10 +71,10 @@
            <hyperlink also-hidden="false" description="Edit" target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
         <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?rootTemplateContentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?rootTemplateContentId=${contentId}"/> 
         </field>
         <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootInstanceContentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootInstanceContentId=${contentId}"/> 
         </field>
     </form>
     
@@ -152,7 +152,7 @@
     </form>
 
     <form name="ListContentRevisionItem" default-title-style="tableheadtext" 
-        list-name="contentRevisionItemList"
+        list-name="contentRevisionItemList"  extends="dummy"
         default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
         <actions>
         </actions>
@@ -173,10 +173,8 @@
     <form name="EditContentApproval" default-map-name="contentApproval" target="updateContentApproval" title="" type="single"
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-            <alt-target target="createContentApproval" use-when="contentApproval==null"/>
-        <auto-fields-entity entity-name="ContentApproval"/>
-        <field name="contentApprovalId" title="" widget-style="buttontext" ><text/></field>
-        <field name="contentId" title="" widget-style="inputBox"><lookup target-form-name="LookupContent"/><text/></field>
+        <field name="contentApprovalId" title="" widget-style="tabletext"><display/></field>
+        <field name="contentId" title="" widget-style="inputBox"><hidden/></field>
         <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
         <field name="partyId" title="" widget-style="inputBox">
             <lookup target-form-name="LookupPartyName"/>
@@ -184,12 +182,12 @@
         <field name="roleTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
-                    <entity-constraint name="parentTypeId" value="ORGANIZATION_ROLE"/>
+                    <!-- <entity-constraint name="parentTypeId" value=""/> -->
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="approvalStatusId">
+        <field name="approvalStatusId" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
@@ -197,24 +195,53 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="approvalDate" title="" widget-style="inputBox"></field>
-        <field name="sequenceNum" title="" widget-style="inputBox"></field>
-        <field name="comments" title="" widget-style="inputBox"></field>
+        <field name="approvalDate" title="" widget-style="inputBox"><date-time/></field>
+        <field name="sequenceNum" title="" widget-style="inputBox"><text/></field>
+        <field name="comments" title="" widget-style="inputBox"><text size="40"/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
     </form>
 
-    <form name="ListContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+    <form name="AddContentApproval" default-map-name="contentApproval" target="createContentApproval" title="" type="single"
+        extends="dummy"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="contentId" title="" widget-style="inputBox"><hidden/></field>
+        <field name="contentRevisionSeqId" map-name="empty" title="" widget-style="inputBox"><text/></field>
+        <field name="partyId" map-name="empty" title="" widget-style="inputBox">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                    <!-- <entity-constraint name="parentTypeId" value=""/> -->
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="approvalDate" map-name="empty" title="" widget-style="inputBox"><date-time/></field>
+        <field name="sequenceNum" map-name="empty" title="" widget-style="inputBox"><text/></field>
+        <field name="comments" map-name="empty" title="" widget-style="inputBox"><text size="40"/></field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
+    </form>
+
+    <form name="ListContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext"
+                target="updateContentApproval"  extends="dummy" 
                list-name="contentApprovalList" default-widget-style="tabletext" title="" type="list">
-        <field name="contentApprovalId"><display/></field>
-        <field name="contentId"><display/></field>
+        <field name="contentApprovalId" widget-style="tabletext"><display/></field>
+        <field name="contentId"><hidden/></field>
         <field name="contentRevisionSeqId"><display/></field>
         <field name="partyId"><display/></field>
         <field name="roleTypeId">
             <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
         </field>
-        <field name="approvalStatusId">
-            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        <field name="approvalStatusId" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="approvalDate"><display/></field>
         <field name="sequenceNum"><display/></field>
@@ -222,6 +249,7 @@
         <field name="Edit" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)"      ><submit/></field>
     </form>
 
     <form name="CompDocBasic" default-map-name="content" title="" type="single" target="updateRootCompDoc"
@@ -350,10 +378,9 @@
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
-        <field name="contentId" entry-name="empty"><text/></field>
         <field name="contentName"><text/></field>
-        <field name="instanceOfContentId" entry-name="rootTemplateContentId" map-name="parameters"><display/></field>
-        <field name="contentTypeId" ><display/></field>
+        <field name="instanceOfContentId" entry-name="rootTemplateContentId" map-name="parameters" widget-style="tabletext"><display/></field>
+        <field name="contentTypeId" ><hidden value="COMPDOC_INSTANCE"/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -361,10 +388,10 @@
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
-        <field name="contentId"><display/></field>
+        <field name="contentId" widget-style="tabletext"><display/></field>
         <field name="contentName"><text/></field>
-        <field name="instanceOfContentId"><display/></field>
-        <field name="contentTypeId" ><display/></field>
+        <field name="instanceOfContentId" widget-style="tabletext"><display/></field>
+        <field name="contentTypeId" ><hidden value="COMPDOC_INSTANCE"/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -374,7 +401,7 @@
         
         <field name="contentId"><text/></field>
         <field name="contentName"><text/></field>
-        <field name="contentTypeId" map-name="dummy" ><display/></field>
+        <field name="contentTypeId" map-name="dummy" ><hidden value="COMPDOC_TEMPLATE"/></field>
         <field name="rootTemplateContentId"><hidden /></field>
         <field name="rootTemplateRevSeqId"><hidden /></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -386,7 +413,7 @@
         
         <field name="contentId"><text/></field>
         <field name="contentName"><text/></field>
-        <field name="contentTypeId" map-name="dummy" ><display/></field>
+        <field name="contentTypeId" map-name="dummy" ><hidden value="COMPDOC_TEMPLATE"/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -396,9 +423,9 @@
         
         <field name="contentId" entry-name="missing" map-name="empty"><text/></field>
         <field name="contentName"><text/></field>
-        <field name="contentTypeId" ><display /></field>
+        <field name="contentTypeId" ><hidden/></field>
         <field name="instanceOfContentId" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display/></field>
-        <field name="contentIdTo" ><display/></field>
+        <field name="contentIdTo" widget-style="tabletext"><display/></field>
         <field name="contentAssocTypeId"  ><display /></field>
         <field name="fromDate" ><display/></field>
         <field name="thruDate"   ><date-time/></field>
@@ -425,17 +452,19 @@
         
         <field name="contentId"><text/></field>
         <field name="contentName" map-name="content"><text/></field>
-        <field name="contentTypeId" map-name="content" ><display /></field>
+        <field name="contentTypeId" map-name="content" ><hidden/></field>
+        <field name="instanceOfContentId" map-name="content" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display/></field>
         <field name="contentIdTo" title="ContentId To" ><display/></field>
         <field name="contentAssocTypeId" title="Content Assoc Type Id"  ><display also-hidden="false"/></field>
         <field name="fromDate" title="From Date" ><display/></field>
         <field name="thruDate" title="Thru Date"   ><date-time/></field>
         <field name="sequenceNum" title="Sequence Num"   ><text/></field>
         
-        <field name="mimeTypeId" map-name="dataResource" title="Document Type">
-            <drop-down allow-empty="true">
+        <field name="mimeTypeId" map-name="dataResource" title="Document Type" widget-style="tabletext"
+                use-when="contentTypeId.equals(&quot;TEMPLATE&quot;)">
+            <drop-down allow-empty="false">
                 <option key="application/msword" description="MS Word"/>
-                <option key="application/pdf" description="PDF Form"/>
+                <option key="application/pdf" description="PDF File"/>
                 <option key="survey" description="Survey"/>
                 <option key="image/jpeg" description="JPEG"/>
                 <option key="image/gif" description="GIF"/>
@@ -443,6 +472,14 @@
                 <option key="image/png" description="PNG"/>
                 <option key="application/octet-stream" description="Other"/>
             </drop-down>
+        </field>
+        <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"
+                     use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null &amp;&amp; !mimeTypeId.equals(&quot;SURVEY&quot;)">
+            <display-entity entity-name="MimeType" key-field-name="mimeTypeId" description="${description}"/>
+        </field>
+        <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"
+                    use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null  &amp;&amp; mimeTypeId.equals(&quot;SURVEY&quot;)">
+            <display  description="Survey Response"/>
         </field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

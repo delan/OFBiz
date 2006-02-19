@@ -34,10 +34,12 @@
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="Content Approvals"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
+                <entity-one entity-name="ContentApproval" value-name="contentApproval" use-cache="true"/>
+                <entity-one entity-name="Content" value-name="content" use-cache="true"/>
+                <set from-field="content.contentTypeId" field="contentTypeId" />
                 <service service-name="getApprovalsWithPermissions" result-map-name="result">
                     <field-map field-name="rootContentId" env-name="parameters.contentId"/>
                     <field-map field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId"/>
@@ -45,12 +47,14 @@
                 </service>
                 
                 <set field="contentApprovalList" from-field="result.contentApprovalList" />
+                <set field="title" value="Content Approvals for ${parameters.contentId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                        <link target="EditContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Content Approval" style="buttontext"/>
+                        <label text="Add" style="head1"/>
+                        <include-form name="AddContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                         <link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/>
                     </decorator-section>
                 </decorator-screen>
@@ -94,14 +98,16 @@
             </condition>
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="Content Approval Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
                  
+                <entity-one entity-name="Content" value-name="content" use-cache="true"/>
+                <set from-field="content.contentTypeId" field="contentTypeId" />
                 <entity-one entity-name="ContentApproval" value-name="contentApproval" use-cache="true">
                     <field-map env-name="parameters.contentApprovalId" field-name="contentApprovalId" />
                 </entity-one>
+                <set field="title" value="Content Approval Edit Page for ${parameters.contentId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -320,10 +326,11 @@
                 
                 <set from-field="parameters.contentId" default-value="${parameters.rootInstanceContentId}" field="contentId"/>
                 <set from-field="contentId" default-value="${parameters.rootTemplateContentId}" field="contentId"/>
-                <entity-one entity-name="Content" value-name="content"/>
-                <entity-one entity-name="DataResource" value-name="dataResource">
+                <entity-one entity-name="Content" value-name="content" use-cache="false"/>
+                <entity-one entity-name="DataResource" value-name="dataResource" use-cache="false">
                     <field-map field-name="dataResourceId" env-name="content.dataResourceId"/>
                 </entity-one>
+                <set from-field="dataResource.mimeTypeId" field="mimeTypeId"/>
                 <entity-condition entity-name="ContentAssoc" list-name="contentAssocList">
                     <condition-list>
                         <condition-expr field-name="contentId" operator="equals" env-name="content.contentId"/>
@@ -386,6 +393,7 @@
                     <actions>
                         <set value="updateChildCompDocTemplate" field="childCompDocTarget"/>
                         <set value="TEMPLATE" field="content.contentTypeId"/>
+                        <set value="TEMPLATE" field="contentTypeId"/>
                         <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId"/>
                     </actions>
                     <widgets>
@@ -417,6 +425,7 @@
                     <actions>
                         <set value="updateChildCompDocInstance" field="childCompDocTarget"/>
                         <set value="DOCUMENT" field="content.contentTypeId"/>
+                        <set value="DOCUMENT" field="contentTypeId"/>
                         <set from-field="parameters.caContentIdTo" default-value="${parameters.rootInstanceContentId}" field="rootInstanceContentId"/>
                         <entity-condition entity-name="MaxRevisionItemView" list-name="rootRevList" use-cache="false" >
                            <condition-list combine="and">
@@ -431,11 +440,19 @@
                            <order-by field-name="-maxRevisionSeqId"/>
                         </entity-condition>
                         <set from-field="rootRevList[0].maxRevisionSeqId" field="rootInstanceRevSeqId"/>
+                        <entity-one entity-name="Content" value-name="templateContent" use-cache="false">
+                            <field-map field-name="contentId" env-name="content.instanceOfContentId"/>
+                        </entity-one>
+                        <entity-one entity-name="DataResource" value-name="templateDataResource" use-cache="false">
+                            <field-map field-name="dataResourceId" env-name="templateContent.dataResourceId"/>
+                        </entity-one>
+                        <set from-field="templateDataResource.mimeTypeId" field="dataResource.mimeTypeId"/>
+                        <set from-field="templateDataResource.mimeTypeId" field="mimeTypeId"/>
                     </actions>
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                             <decorator-section name="body">
-                                <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                               <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
                                 <section>
                                     <condition>
                                         <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
@@ -595,7 +612,7 @@
             </condition>
             <actions>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Instance Add Page"/>
+                <set field="title" value="Composite Document Instance PART Add Page"/>
                 <set from-field="parameters.rootInstanceContentId" field="contentIdTo" />
                 <set from-field="nowTimestamp" field="fromDate" />
                 <set from-field="parameters.contentId" field="instanceOfContentId" />
@@ -732,7 +749,7 @@
 
                 <set field="rootTemplateContentId" from-field="content.instanceOfContentId"/>
                <set  field="contentRevisionSeqId" from-field="parameters.rootInstanceRevSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}"/>
-               <set  field="contentId" from-field="parameters.rootTemplateContentId" />
+               <set from-field="parameters.rootInstanceContentId"  field="contentId" />
                <set field="title" value="Composite Document Root Instance View Page for Id: ${parameters.rootInstanceContentId} instance of ${rootTemplateContentId}"/>
                 <entity-condition entity-name="ContentRevision" list-name="contentTemplateRevisions" use-cache="true">
                     <condition-list combine="and">

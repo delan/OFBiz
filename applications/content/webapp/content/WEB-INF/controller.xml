@@ -1087,6 +1087,12 @@
        <response name="error" type="view" value="AddRootCompDocInstance"/>
    </request-map>
 
+    <request-map uri="resequenceCompDocPart">
+        <event invoke="resequence"  path="" type="service"/>
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="ViewCompDocTemplateTree"/>
+        <response name="error" type="view" value="ViewCompDocTemplateTree"/>
+    </request-map>
     <!-- ================ CompDoc ContentRole Requests ================= -->
     <request-map uri="EditCompDocContentRole">
         <security auth="true" https="true"/>
@@ -1134,8 +1140,8 @@
     <request-map uri="updateContentApproval">
         <security auth="true" https="true"/>
         <event invoke="updateContentApproval" path="" type="service"/>
-        <response name="success" type="view" value="EditContentApproval"/>
-        <response name="error" type="view" value="EditContentApproval"/>
+        <response name="success" type="view" value="ListContentApproval"/>
+        <response name="error" type="view" value="ListContentApproval"/>
     </request-map>
     <request-map uri="removeContentApproval">
         <security auth="true" https="true"/>
