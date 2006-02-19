@@ -122,6 +122,42 @@
             </widgets>
         </section>
     </screen>
+    <screen name="EditSurveyMultiResps">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditSurveyMultiResps"/>
+                <set field="tabButtonItem" value="SurveyMultiResps"/>
+                <set field="labelTitleProperty" value="PageTitleEditSurveyMultiResps"/>
+                
+                <set field="surveyId" from-field="parameters.surveyId"/>
+                <entity-one entity-name="Survey" value-name="survey"/>
+                <entity-condition entity-name="SurveyMultiResp" list-name="surveyMultiRespList">
+                    <condition-expr field-name="surveyId" env-name="surveyId"/>
+                    <order-by field-name="surveyMultiRespId"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSurveyDecorator">
+                    <decorator-section name="body">
+                        <container><label style="head1">${uiLabelMap.PageTitleEditSurveyMultiResps}, ${uiLabelMap.SurveySurveyId}: ${surveyId}</label></container>
+                        <iterate-section entry-name="surveyMultiResp" list-name="surveyMultiRespList">
+                            <section>
+                                <widgets>
+                                    <container><label style="head2">${uiLabelMap.SurveyEditSurveyMultiResp}</label></container>
+                                    <include-form name="EditSurveyMultiResp" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                                    <include-form name="ListSurveyMultiRespColumns" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                                    <container><label style="tableheadtext">${uiLabelMap.SurveyAddSurveyMultiRespColumn}</label></container>
+                                    <include-form name="AddSurveyMultiRespColumn" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                                </widgets>
+                            </section>
+                        </iterate-section>
+                        <container><label style="head2">${uiLabelMap.SurveyAddSurveyMultiResp}</label></container>
+                        <include-form name="AddSurveyMultiResp" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditSurveyQuestions">
         <section>
             <actions>
