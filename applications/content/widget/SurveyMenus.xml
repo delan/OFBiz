@@ -30,6 +30,9 @@
         <menu-item name="Survey" title="${uiLabelMap.Survey}">
             <link target="EditSurvey?surveyId=${surveyId}"/>
         </menu-item>
+        <menu-item name="SurveyMultiResps" title="${uiLabelMap.SurveyMultiResps}">
+            <link target="EditSurveyMultiResps?surveyId=${surveyId}"/>
+        </menu-item>
         <menu-item name="SurveyQuestions" title="${uiLabelMap.SurveyQuestions}">
             <link target="EditSurveyQuestions?surveyId=${surveyId}"/>
         </menu-item>

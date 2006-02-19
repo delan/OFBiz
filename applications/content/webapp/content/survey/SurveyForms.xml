@@ -69,8 +69,54 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListSurveyPages" type="list" 
-        target="updateSurveyPage" title="" list-name="surveyPageList"
+    <!-- SurveyMultiResp & SurveyMultiRespColumn -->
+    <form name="EditSurveyMultiResp" type="single" target="updateSurveyMultiResp" title="" default-map-name="surveyMultiResp"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateSurveyMultiResp" default-field-type="edit"/>
+        
+        <field name="surveyId"><hidden/></field>
+        <field name="surveyMultiRespId" widget-style="tabletext"><display/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListSurveyMultiRespColumns" type="list" target="updateSurveyMultiRespColumn" title="" list-name="surveyMultiRespColumnList"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="SurveyMultiRespColumn">
+                <condition-list combine="and">
+                    <condition-expr field-name="surveyId" env-name="surveyMultiResp.surveyId"/>
+                    <condition-expr field-name="surveyMultiRespId" env-name="surveyMultiResp.surveyMultiRespId"/>
+                </condition-list>
+                <order-by field-name="sequenceNum"/>
+            </entity-condition>
+        </actions>
+        
+        <auto-fields-service service-name="updateSurveyMultiRespColumn" default-field-type="edit"/>
+        
+        <field name="surveyId"><hidden/></field>
+        <field name="surveyMultiRespId" widget-style="tabletext"><display/></field>
+        <field name="surveyMultiRespColId" widget-style="tabletext"><display/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="AddSurveyMultiRespColumn" type="single" target="createSurveyMultiRespColumn" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createSurveyMultiRespColumn" default-field-type="edit"/>
+        
+        <field name="surveyId" map-name="surveyMultiResp"><hidden/></field>
+        <field name="surveyMultiRespId" map-name="surveyMultiResp"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="AddSurveyMultiResp" type="single" target="createSurveyMultiResp" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createSurveyMultiResp" default-field-type="edit"/>
+        
+        <field name="surveyId" map-name="survey"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- SurveyPage -->
+    <form name="ListSurveyPages" type="list" target="updateSurveyPage" title="" list-name="surveyPageList"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="SurveyPage">

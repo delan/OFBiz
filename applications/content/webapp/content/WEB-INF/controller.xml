@@ -35,15 +35,10 @@
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
 
     <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>        
-    <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
-    <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
     <handler name="fop" type="view" class="org.ofbiz.webapp.view.FopPdfViewHandler"/>
-    
-    <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
     <handler name="simplecontent" type="view" class="org.ofbiz.content.view.SimpleContentViewHandler"/>
 
-    
     <preprocessor>
         <!-- Events to run on every request before security (chains exempt) -->
         <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
@@ -79,11 +74,7 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
-    <request-map uri="view">
-        <security https="false" auth="false"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="error"/>
-    </request-map>
+    <request-map uri="view"><security https="false" auth="false"/><response name="success" type="view" value="main"/></request-map>
     
     <request-map uri="chain">
         <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
@@ -91,31 +82,23 @@
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindWebSite"/>
-    </request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FindWebSite"/></request-map>
     
     <request-map uri="fonts.pdf">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="fonts.fo"/>
     </request-map>
     
     <request-map uri="changeDelegator">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>    
 
     <!-- ================ WebSite Requests ================= -->
-    <request-map uri="FindWebSite">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindWebSite"/>
-    </request-map>
-
-    <request-map uri="EditWebSite">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditWebSite"/>
-    </request-map>
+    <request-map uri="FindWebSite"><security https="true" auth="true"/><response name="success" type="view" value="FindWebSite"/></request-map>
+    <request-map uri="EditWebSite"><security https="true" auth="true"/><response name="success" type="view" value="EditWebSite"/></request-map>
     <request-map uri="createWebSite">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createWebSite"/>
@@ -560,55 +543,10 @@
         <response name="error" type="view" value="EditMimeType"/>
     </request-map>
 
-    <!-- ================ Find/Lookup Requests ================= -->
-    <request-map uri="FindContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="FindContent"/>
-    </request-map>
-    <request-map uri="FindDataResource">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="FindDataResource"/>
-    </request-map>
-    <request-map uri="FindDataResource.ftl">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="FindDataResource"/>
-    </request-map>
-    <request-map uri="LookupContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupContent"/>
-    </request-map>
-    <request-map uri="LookupPerson">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupPerson"/>
-    </request-map>
-    <request-map uri="LookupPartyAndUserLoginAndPerson">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/>
-    </request-map>
-
-    <request-map uri="ClipBoardDataResource">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ClipBoardDataResource"/>
-    </request-map>
-
-    <request-map uri="ClipBoardContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ClipBoardContent"/>
-    </request-map>
-
-    <request-map uri="LookupDataResource">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupDataResource"/>
-    </request-map>
-    <request-map uri="LookupProductFeature">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupProductFeature"/>
-    </request-map>
-
-    <request-map uri="LookupSubContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupSubContent"/>
-    </request-map>
+    <request-map uri="ClipBoardDataResource"><security auth="true" https="true"/><response name="success" type="view" value="ClipBoardDataResource"/></request-map>
+    <request-map uri="ClipBoardContent"><security auth="true" https="true"/><response name="success" type="view" value="ClipBoardContent"/></request-map>
+    
+    <request-map uri="LookupSubContent"><security auth="true" https="true"/><response name="success" type="view" value="LookupSubContent"/></request-map>
 
     <request-map uri="gotoDataResource">
         <security auth="true" https="true"/>
@@ -618,43 +556,20 @@
         <response name="success" type="request" value="gotoDataResourceP2"/>
         -->
         <response name="success" type="view" value="EditDataResource"/>
-        <response name="error" type="view" value="EditDataResource"/>
     </request-map>
 
     <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
 
     <!-- ================ Redirect Content Requests ================= -->
-    <request-map uri="ContentMenu">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ContentMenu"/>
-    </request-map>
-    <request-map uri="DataMenu">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="DataMenu"/>
-    </request-map>
-    <request-map uri="ContentSetupMenu">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ContentSetupMenu"/>
-    </request-map>
-    <request-map uri="DataSetupMenu">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="DataSetupMenu"/>
-    </request-map>
-    <request-map uri="LayoutMenu">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LayoutMenu"/>
-    </request-map>
-    <request-map uri="CMSMenu">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSMenu"/>
-    </request-map>
+    <request-map uri="ContentMenu"><security auth="true" https="true"/><response name="success" type="view" value="ContentMenu"/></request-map>
+    <request-map uri="DataMenu"><security auth="true" https="true"/><response name="success" type="view" value="DataMenu"/></request-map>
+    <request-map uri="ContentSetupMenu"><security auth="true" https="true"/><response name="success" type="view" value="ContentSetupMenu"/></request-map>
+    <request-map uri="DataSetupMenu"><security auth="true" https="true"/><response name="success" type="view" value="DataSetupMenu"/></request-map>
+    <request-map uri="LayoutMenu"><security auth="true" https="true"/><response name="success" type="view" value="LayoutMenu"/></request-map>
+    <request-map uri="CMSMenu"><security auth="true" https="true"/><response name="success" type="view" value="CMSMenu"/></request-map>
 
     <!-- Content requests -->
-    <request-map uri="EditContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContent"/>
-        <response name="error" type="view" value="EditContent"/>
-    </request-map>
+    <request-map uri="EditContent"><security auth="true" https="true"/><response name="success" type="view" value="EditContent"/></request-map>
     <request-map uri="updateContent">
         <security auth="true" https="true"/>
         <event invoke="updateContent" type="service"/>
@@ -670,7 +585,6 @@
     <request-map uri="AddContent">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="AddContent"/>
-        <response name="error" type="view" value="AddContent"/>
     </request-map>
     <request-map uri="gotoContent">
         <security auth="true" https="true"/>
@@ -680,16 +594,11 @@
         <response name="success" type="request" value="gotoContentP2"/>
         -->
         <response name="success" type="view" value="EditContent"/>
-        <response name="error" type="view" value="EditContent"/>
     </request-map>
 
 
     <!-- Content Assoc requests -->
-    <request-map uri="EditContentAssoc">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentAssoc"/>
-        <response name="error" type="view" value="EditContentAssoc"/>
-    </request-map>
+    <request-map uri="EditContentAssoc"><security auth="true" https="true"/><response name="success" type="view" value="EditContentAssoc"/></request-map>
     <request-map uri="updateContentAssoc">
         <security auth="true" https="true"/>
         <event invoke="updateContentAssoc" path="" type="service"/>
@@ -710,36 +619,12 @@
     </request-map>
 
     <!-- DataResource requests -->
-    <request-map uri="BrowseDataResource">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="BrowseDataResource"/>
-        <response name="error" type="view" value="BrowseDataResource"/>
-    </request-map>
-    <request-map uri="EditDataResource">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditDataResource"/>
-        <response name="error" type="view" value="EditDataResource"/>
-    </request-map>
-    <request-map uri="AddDataResource">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="AddDataResource"/>
-        <response name="error" type="view" value="AddDataResource"/>
-    </request-map>
-    <request-map uri="AddDataResourceText">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="AddDataResourceText"/>
-        <response name="error" type="view" value="AddDataResourceText"/>
-    </request-map>
-    <request-map uri="AddDataResourceUrl">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditDataResourceUrl"/>
-        <response name="error" type="view" value="AddDataResourceUrl"/>
-    </request-map>
-    <request-map uri="AddDataResourceUpload">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="AddDataResourceUpload"/>
-        <response name="error" type="view" value="AddDataResourceUpload"/>
-    </request-map>
+    <request-map uri="BrowseDataResource"><security auth="true" https="true"/><response name="success" type="view" value="BrowseDataResource"/></request-map>
+    <request-map uri="EditDataResource"><security auth="true" https="true"/><response name="success" type="view" value="EditDataResource"/></request-map>
+    <request-map uri="AddDataResource"><security auth="true" https="true"/><response name="success" type="view" value="AddDataResource"/></request-map>
+    <request-map uri="AddDataResourceText"><security auth="true" https="true"/><response name="success" type="view" value="AddDataResourceText"/></request-map>
+    <request-map uri="AddDataResourceUrl"><security auth="true" https="true"/><response name="success" type="view" value="EditDataResourceUrl"/></request-map>
+    <request-map uri="AddDataResourceUpload"><security auth="true" https="true"/><response name="success" type="view" value="AddDataResourceUpload"/></request-map>
     <request-map uri="updateDataResourceText">
         <security auth="true" https="true"/>
         <event invoke="updateDataResource" path="" type="service"/>
@@ -778,32 +663,16 @@
         <response name="success" type="view" value="EditDataResourceText"/>
         <response name="error" type="view" value="AddDataResourceText"/>
     </request-map>
-    <request-map uri="EditDataResourceText">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditDataResourceText"/>
-        <response name="error" type="view" value="EditDataResourceText"/>
-    </request-map>
-    <request-map uri="EditDataResourceUrl">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditDataResourceUrl"/>
-        <response name="error" type="view" value="EditDataResourceUrl"/>
-    </request-map>
-    <request-map uri="EditDataResourceUpload">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditDataResourceUpload"/>
-        <response name="error" type="view" value="EditDataResourceUpload"/>
-    </request-map>
+    <request-map uri="EditDataResourceText"><security auth="true" https="true"/><response name="success" type="view" value="EditDataResourceText"/></request-map>
+    <request-map uri="EditDataResourceUrl"><security auth="true" https="true"/><response name="success" type="view" value="EditDataResourceUrl"/></request-map>
+    <request-map uri="EditDataResourceUpload"><security auth="true" https="true"/><response name="success" type="view" value="EditDataResourceUpload"/></request-map>
     <request-map uri="uploadImage">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="uploadImage" />
         <response name="success" type="request" value="UploadImage"/>
         <response name="error" type="view" value="UploadImage"/>
     </request-map>
-    <request-map uri="UploadImage">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="UploadImage"/>
-        <response name="error" type="view" value="main"/>
-    </request-map>
+    <request-map uri="UploadImage"><security auth="true" https="true"/><response name="success" type="view" value="UploadImage"/></request-map>
     <request-map uri="img">
         <security auth="false" https="false"/>
         <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveImage" />
@@ -812,10 +681,7 @@
     </request-map>
 
     <!-- ================ ContentOperation Requests ================= -->
-    <request-map uri="EditContentOperation">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentOperation"/>
-    </request-map>
+    <request-map uri="EditContentOperation"><security auth="true" https="true"/><response name="success" type="view" value="EditContentOperation"/></request-map>
     <request-map uri="addContentOperation">
         <security auth="true" https="true"/>
         <event invoke="createContentOperation" path="" type="service"/>
@@ -836,10 +702,7 @@
     </request-map>
 
     <!-- ================ ContentAttribute Requests ================= -->
-    <request-map uri="EditContentAttribute">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentAttribute"/>
-    </request-map>
+    <request-map uri="EditContentAttribute"><security auth="true" https="true"/><response name="success" type="view" value="EditContentAttribute"/></request-map>
     <request-map uri="addContentAttribute">
         <security auth="true" https="true"/>
         <event invoke="createContentAttribute" path="" type="service"/>
@@ -861,10 +724,7 @@
 
 
     <!-- ================ ContentMetaData Requests ================= -->
-    <request-map uri="EditContentMetaData">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentMetaData"/>
-    </request-map>
+    <request-map uri="EditContentMetaData"><security auth="true" https="true"/><response name="success" type="view" value="EditContentMetaData"/></request-map>
     <request-map uri="addContentMetaData">
         <security auth="true" https="true"/>
         <event invoke="createContentMetaData" path="" type="service"/>
@@ -886,10 +746,7 @@
 
 
     <!-- ================ ContentPurpose Requests ================= -->
-    <request-map uri="EditContentPurpose">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentPurpose"/>
-    </request-map>
+    <request-map uri="EditContentPurpose"><security auth="true" https="true"/><response name="success" type="view" value="EditContentPurpose"/></request-map>
     <request-map uri="addContentPurpose">
         <security auth="true" https="true"/>
         <event invoke="createContentPurpose" path="" type="service"/>
@@ -911,10 +768,7 @@
 
 
     <!-- ================ ContentPurposeOperation Requests ================= -->
-    <request-map uri="EditContentPurposeOperation">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentPurposeOperation"/>
-    </request-map>
+    <request-map uri="EditContentPurposeOperation"><security auth="true" https="true"/><response name="success" type="view" value="EditContentPurposeOperation"/></request-map>
     <request-map uri="addContentPurposeOperation">
         <security auth="true" https="true"/>
         <event invoke="createContentPurposeOperation" path="" type="service"/>
@@ -935,85 +789,27 @@
     </request-map>
 
     <!-- ================ CompDoc Requests ================= -->
-    <request-map uri="FindCompDoc">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="FindCompDoc"/>
-    </request-map>
-    <request-map uri="ListCompDoc">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ListCompDoc"/>
-    </request-map>
-    <request-map uri="EditCompDoc">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditCompDoc"/>
-    </request-map>
-    <request-map uri="EditRootCompDoc">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditRootCompDoc"/>
-    </request-map>
-    <request-map uri="EditChildCompDoc">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditChildCompDoc"/>
-    </request-map>
-    <request-map uri="ViewCompDocTree">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ViewCompDocTree"/>
-    </request-map>
-    <request-map uri="ViewCompDocTemplateTree">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ViewCompDocTemplateTree"/>
-    </request-map>
-    <request-map uri="ViewCompDocInstanceTree">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ViewCompDocInstanceTree"/>
-    </request-map>
-    <request-map uri="CompDocTemplateTree">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CompDocTemplateTree"/>
-    </request-map>
-    <request-map uri="EditCompDoc">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditCompDoc"/>
-    </request-map>
-    <request-map uri="EditRootCompDocContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditRootCompDocContent"/>
-    </request-map>
+    <request-map uri="FindCompDoc"><security auth="true" https="true"/><response name="success" type="view" value="FindCompDoc"/></request-map>
+    <request-map uri="ListCompDoc"><security auth="true" https="true"/><response name="success" type="view" value="ListCompDoc"/></request-map>
+    <request-map uri="EditCompDoc"><security auth="true" https="true"/><response name="success" type="view" value="EditCompDoc"/></request-map>
+    <request-map uri="EditRootCompDoc"><security auth="true" https="true"/><response name="success" type="view" value="EditRootCompDoc"/></request-map>
+    <request-map uri="EditChildCompDoc"><security auth="true" https="true"/><response name="success" type="view" value="EditChildCompDoc"/></request-map>
+    <request-map uri="ViewCompDocTree"><security auth="true" https="true"/><response name="success" type="view" value="ViewCompDocTree"/></request-map>
+    <request-map uri="ViewCompDocTemplateTree"><security auth="true" https="true"/><response name="success" type="view" value="ViewCompDocTemplateTree"/></request-map>
+    <request-map uri="ViewCompDocInstanceTree"><security auth="true" https="true"/><response name="success" type="view" value="ViewCompDocInstanceTree"/></request-map>
+    <request-map uri="CompDocTemplateTree"><security auth="true" https="true"/><response name="success" type="view" value="CompDocTemplateTree"/></request-map>
+    <request-map uri="EditCompDoc"><security auth="true" https="true"/><response name="success" type="view" value="EditCompDoc"/></request-map>
+    <request-map uri="EditRootCompDocContent"><security auth="true" https="true"/><response name="success" type="view" value="EditRootCompDocContent"/></request-map>
     
-    <request-map uri="AddRootCompDocInstance">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="AddRootCompDocInstance"/>
-    </request-map>
-    <request-map uri="AddRootCompDocTemplate">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="AddRootCompDocTemplate"/>
-    </request-map>
-    <request-map uri="ViewInstances">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ViewInstances"/>
-    </request-map>
-   <request-map uri="EditRootCompDocInstance">
-       <security auth="true" https="true"/>
-       <response name="success" type="view" value="EditRootCompDocInstance"/>
-   </request-map>
-   <request-map uri="EditCompDoc">
-       <security auth="true" https="true"/>
-       <response name="success" type="view" value="EditCompDoc"/>
-   </request-map>
+    <request-map uri="AddRootCompDocInstance"><security auth="true" https="true"/><response name="success" type="view" value="AddRootCompDocInstance"/></request-map>
+    <request-map uri="AddRootCompDocTemplate"><security auth="true" https="true"/><response name="success" type="view" value="AddRootCompDocTemplate"/></request-map>
+    <request-map uri="ViewInstances"><security auth="true" https="true"/><response name="success" type="view" value="ViewInstances"/></request-map>
+    <request-map uri="EditRootCompDocInstance"><security auth="true" https="true"/><response name="success" type="view" value="EditRootCompDocInstance"/></request-map>
+    <request-map uri="EditCompDoc"><security auth="true" https="true"/><response name="success" type="view" value="EditCompDoc"/></request-map>
    
-    <request-map uri="AddChildCompDocInstance">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="AddChildCompDocInstance"/>
-    </request-map>
-    <request-map uri="AddChildCompDocTemplate">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="AddChildCompDocTemplate"/>
-    </request-map>
-   
-    <request-map uri="ViewCompDocContentBinary">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ViewCompDocContentBinary"/>
-    </request-map>
+    <request-map uri="AddChildCompDocInstance"><security auth="true" https="true"/><response name="success" type="view" value="AddChildCompDocInstance"/></request-map>
+    <request-map uri="AddChildCompDocTemplate"><security auth="true" https="true"/><response name="success" type="view" value="AddChildCompDocTemplate"/></request-map>
+    <request-map uri="ViewCompDocContentBinary"><security auth="true" https="true"/><response name="success" type="view" value="ViewCompDocContentBinary"/></request-map>
    
     <request-map uri="createCompDocTemplate">
         <security auth="true" https="true"/>
@@ -1035,69 +831,62 @@
     </request-map>
    <request-map uri="updateRootCompDocTemplate">
        <security auth="true" https="true"/>
-        <event invoke="persistCompDoc"  path="" type="service"/>
+       <event invoke="persistCompDoc"  path="" type="service"/>
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="EditCompDoc"/>
    </request-map>
    <request-map uri="createRootCompDocTemplate">
        <security auth="true" https="true"/>
-        <event invoke="persistCompDoc"  path="" type="service"/>
+       <event invoke="persistCompDoc"  path="" type="service"/>
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="AddRootCompDocTemplate"/>
    </request-map>
    <request-map uri="createChildCompDocTemplate">
        <security auth="true" https="true"/>
-        <event invoke="persistCompDoc"  path="" type="service"/>
+       <event invoke="persistCompDoc"  path="" type="service"/>
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="AddChildCompDocTemplate"/>
    </request-map>
    <request-map uri="createChildCompDocInstance">
        <security auth="true" https="true"/>
-        <event invoke="persistCompDoc"  path="" type="service"/>
+       <event invoke="persistCompDoc"  path="" type="service"/>
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="AddChildCompDocInstance"/>
    </request-map>
    <request-map uri="updateChildCompDocTemplate">
        <security auth="true" https="true"/>
-        <event invoke="persistCompDoc"  path="" type="service"/>
+       <event invoke="persistCompDoc"  path="" type="service"/>
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="EditCompDoc"/>
    </request-map>
    <request-map uri="uploadCompDocContent">
        <security auth="true" https="true"/>
-        <event invoke="persistCompDocContent"  path="" type="service"/>
+       <event invoke="persistCompDocContent"  path="" type="service"/>
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="EditCompDoc"/>
    </request-map>
-   <request-map uri="ViewCompDocContent">
-       <security auth="true" https="true"/>
-       <response name="success" type="view" value="ViewCompDocContent"/>
-       <response name="error" type="view" value="ViewCompDocContent"/>
-   </request-map>
+   <request-map uri="ViewCompDocContent"><security auth="true" https="true"/><response name="success" type="view" value="ViewCompDocContent"/></request-map>
    <request-map uri="updateChildCompDocInstance">
        <security auth="true" https="true"/>
-        <event invoke="persistCompDoc"  path="" type="service"/>
+       <event invoke="persistCompDoc"  path="" type="service"/>
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="EditCompDoc"/>
    </request-map>
    <request-map uri="genCompDocInstance">
        <security auth="true" https="true"/>
-        <event invoke="genCompDocInstance"  path="" type="service"/>
+       <event invoke="genCompDocInstance"  path="" type="service"/>
        <response name="success" type="view" value="EditCompDoc"/>
        <response name="error" type="view" value="AddRootCompDocInstance"/>
    </request-map>
 
     <request-map uri="resequenceCompDocPart">
-        <event invoke="resequence"  path="" type="service"/>
         <security auth="true" https="true"/>
+        <event invoke="resequence"  path="" type="service"/>
         <response name="success" type="view" value="ViewCompDocTemplateTree"/>
         <response name="error" type="view" value="ViewCompDocTemplateTree"/>
     </request-map>
     <!-- ================ CompDoc ContentRole Requests ================= -->
-    <request-map uri="EditCompDocContentRole">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditCompDocContentRole"/>
-    </request-map>
+    <request-map uri="EditCompDocContentRole"><security auth="true" https="true"/><response name="success" type="view" value="EditCompDocContentRole"/></request-map>
     <request-map uri="addCompDocContentRole">
         <security auth="true" https="true"/>
         <event invoke="createContentRole" path="" type="service"/>
@@ -1119,18 +908,9 @@
 
 
     <!-- ================ ContentApproval Requests ================= -->
-    <request-map uri="ListContentApproval">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ListContentApproval"/>
-    </request-map>
-    <request-map uri="ListWaitingContentApproval">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ListWaitingContentApproval"/>
-    </request-map>
-    <request-map uri="EditContentApproval">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentApproval"/>
-    </request-map>
+    <request-map uri="ListContentApproval"><security auth="true" https="true"/><response name="success" type="view" value="ListContentApproval"/></request-map>
+    <request-map uri="ListWaitingContentApproval"><security auth="true" https="true"/><response name="success" type="view" value="ListWaitingContentApproval"/></request-map>
+    <request-map uri="EditContentApproval"><security auth="true" https="true"/><response name="success" type="view" value="EditContentApproval"/></request-map>
     <request-map uri="createContentApproval">
         <security auth="true" https="true"/>
         <event invoke="createContentApproval" path="" type="service"/>
@@ -1151,14 +931,8 @@
     </request-map>
 
     <!-- ================ ContentRevision Requests ================= -->
-    <request-map uri="ListContentRevisions">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ListContentRevisions"/>
-    </request-map>
-    <request-map uri="EditContentRevision">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentRevision"/>
-    </request-map>
+    <request-map uri="ListContentRevisions"><security auth="true" https="true"/><response name="success" type="view" value="ListContentRevisions"/></request-map>
+    <request-map uri="EditContentRevision"><security auth="true" https="true"/><response name="success" type="view" value="EditContentRevision"/></request-map>
     <request-map uri="createContentRevision">
         <security auth="true" https="true"/>
         <event invoke="createContentRevision" path="" type="service"/>
@@ -1179,14 +953,8 @@
     </request-map>
 
     <!-- ================ ContentRevisionItem Requests ================= -->
-    <request-map uri="ListContentRevisionItem">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ListContentRevisionItem"/>
-    </request-map>
-    <request-map uri="EditContentRevisionItem">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditContentRevisionItem"/>
-    </request-map>
+    <request-map uri="ListContentRevisionItem"><security auth="true" https="true"/><response name="success" type="view" value="ListContentRevisionItem"/></request-map>
+    <request-map uri="EditContentRevisionItem"><security auth="true" https="true"/><response name="success" type="view" value="EditContentRevisionItem"/></request-map>
     <request-map uri="createContentRevisionItem">
         <security auth="true" https="true"/>
         <event invoke="createContentRevisionItem" path="" type="service"/>
@@ -1207,14 +975,8 @@
     </request-map>
 
     <!-- ================ Survey Requests ================= -->
-    <request-map uri="FindSurvey">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="FindSurvey"/>
-    </request-map>
-    <request-map uri="EditSurvey">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditSurvey"/>
-    </request-map>
+    <request-map uri="FindSurvey"><security auth="true" https="true"/><response name="success" type="view" value="FindSurvey"/></request-map>
+    <request-map uri="EditSurvey"><security auth="true" https="true"/><response name="success" type="view" value="EditSurvey"/></request-map>
     <request-map uri="createSurvey">
         <security auth="true" https="true"/>
         <event invoke="createSurvey" path="" type="service"/>
@@ -1234,11 +996,47 @@
         <response name="error" type="view" value="EditSurvey"/>
     </request-map>
 
-    <!-- SurveyQuestion Requests -->
-    <request-map uri="EditSurveyQuestions">
+    <!-- SurveyMultiResp Requests -->
+    <request-map uri="EditSurveyMultiResps"><security auth="true" https="true"/><response name="success" type="view" value="EditSurveyMultiResps"/></request-map>
+    <request-map uri="createSurveyMultiResp">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <event invoke="createSurveyMultiResp" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyMultiResps"/>
+        <response name="error" type="view" value="EditSurveyMultiResps"/>
     </request-map>
+    <request-map uri="updateSurveyMultiResp">
+        <security auth="true" https="true"/>
+        <event invoke="updateSurveyMultiResp" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyMultiResps"/>
+        <response name="error" type="view" value="EditSurveyMultiResps"/>
+    </request-map>
+    <request-map uri="deleteSurveyMultiResp">
+        <security auth="true" https="true"/>
+        <event invoke="deleteSurveyMultiResp" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyMultiResps"/>
+        <response name="error" type="view" value="EditSurveyMultiResps"/>
+    </request-map>
+    <request-map uri="createSurveyMultiRespColumn">
+        <security auth="true" https="true"/>
+        <event invoke="createSurveyMultiRespColumn" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyMultiResps"/>
+        <response name="error" type="view" value="EditSurveyMultiResps"/>
+    </request-map>
+    <request-map uri="updateSurveyMultiRespColumn">
+        <security auth="true" https="true"/>
+        <event invoke="updateSurveyMultiRespColumn" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyMultiResps"/>
+        <response name="error" type="view" value="EditSurveyMultiResps"/>
+    </request-map>
+    <request-map uri="deleteSurveyMultiRespColumn">
+        <security auth="true" https="true"/>
+        <event invoke="deleteSurveyMultiRespColumn" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyMultiResps"/>
+        <response name="error" type="view" value="EditSurveyMultiResps"/>
+    </request-map>
+    
+    <!-- SurveyQuestion Requests -->
+    <request-map uri="EditSurveyQuestions"><security auth="true" https="true"/><response name="success" type="view" value="EditSurveyQuestions"/></request-map>
     <request-map uri="createSurveyQuestion">
         <security auth="true" https="true"/>
         <event invoke="createSurveyQuestion" type="service"/>
@@ -1304,17 +1102,28 @@
         <response name="error" type="view" value="EditSurveyQuestions"/>
     </request-map>
 
+    <request-map uri="createSurveyPage">
+        <security auth="true" https="true"/>
+        <event invoke="createSurveyPage" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="updateSurveyPage">
+        <security auth="true" https="true"/>
+        <event invoke="updateSurveyPage" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="removeSurveyPage">
+        <security auth="true" https="true"/>
+        <event invoke="deleteSurveyPage" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    
     <!-- SurveyResponse Requests -->
-    <request-map uri="ViewSurveyResponses">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ViewSurveyResponses"/>
-        <response name="error" type="view" value="ViewSurveyResponses"/>
-    </request-map>
-    <request-map uri="EditSurveyResponse">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditSurveyResponse"/>
-        <response name="error" type="view" value="EditSurveyResponse"/>
-    </request-map>
+    <request-map uri="ViewSurveyResponses"><security auth="true" https="true"/><response name="success" type="view" value="ViewSurveyResponses"/></request-map>
+    <request-map uri="EditSurveyResponse"><security auth="true" https="true"/><response name="success" type="view" value="EditSurveyResponse"/></request-map>
     <request-map uri="updateSurveyResponse">
         <security auth="true" https="true"/>
         <event type="service" invoke="createSurveyResponse"/>
@@ -1323,41 +1132,20 @@
     </request-map>
 
     <!-- end of request mappings -->
-    <request-map uri="subcontent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="subcontent"/>
-        <response name="error" type="view" value="main"/>
-    </request-map>
+    <request-map uri="subcontent"><security auth="true" https="true"/><response name="success" type="view" value="subcontent"/></request-map>
 
     <!-- ================ Layout Requests ================= -->
-    <request-map uri="LookupListLayout">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupListLayout"/>
-    </request-map>
-    <request-map uri="ListLayout">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="ListLayout"/>
-    </request-map>
+    <request-map uri="LookupListLayout"><security auth="true" https="true"/><response name="success" type="view" value="LookupListLayout"/></request-map>
+    <request-map uri="ListLayout"><security auth="true" https="true"/><response name="success" type="view" value="ListLayout"/></request-map>
     <request-map uri="clipFindLayout">
         <security auth="true" https="true"/>
         <event invoke="copyToClip" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="FindLayout"/>
         <response name="error" type="view" value="FindLayout"/>
     </request-map>
-    <request-map uri="FindLayout">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="FindLayout"/>
-    </request-map>
-    <request-map uri="EditLayout">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditLayout"/>
-        <response name="error" type="view" value="EditLayout"/>
-    </request-map>
-    <request-map uri="AddLayout">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditLayoutTemplate"/>
-        <response name="error" type="view" value="AddLayout"/>
-    </request-map>
+    <request-map uri="FindLayout"><security auth="true" https="true"/><response name="success" type="view" value="FindLayout"/></request-map>
+    <request-map uri="EditLayout"><security auth="true" https="true"/><response name="success" type="view" value="EditLayout"/></request-map>
+    <request-map uri="AddLayout"><security auth="true" https="true"/><response name="success" type="view" value="EditLayoutTemplate"/></request-map>
     <request-map uri="createLayout">
         <security auth="true" https="true"/>
         <event invoke="createLayout" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
@@ -1400,33 +1188,17 @@
         <response name="success" type="view" value="ListLayout"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-    <request-map uri="EditLayoutHtml">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditLayoutHtml"/>
-    </request-map>
-    <request-map uri="EditLayoutText">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditLayoutText"/>
-    </request-map>
-    <request-map uri="EditLayoutImage">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditLayoutImage"/>
-    </request-map>
-    <request-map uri="EditLayoutUrl">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditLayoutUrl"/>
-    </request-map>
+    <request-map uri="EditLayoutHtml"><security auth="true" https="true"/><response name="success" type="view" value="EditLayoutHtml"/></request-map>
+    <request-map uri="EditLayoutText"><security auth="true" https="true"/><response name="success" type="view" value="EditLayoutText"/></request-map>
+    <request-map uri="EditLayoutImage"><security auth="true" https="true"/><response name="success" type="view" value="EditLayoutImage"/></request-map>
+    <request-map uri="EditLayoutUrl"><security auth="true" https="true"/><response name="success" type="view" value="EditLayoutUrl"/></request-map>
     <request-map uri="createLayoutText">
         <security auth="true" https="true"/>
         <event invoke="createLayoutText" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayoutText"/>
         <response name="error" type="view" value="EditLayoutText"/>
     </request-map>
-    <request-map uri="EditLayoutSubContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditLayoutSubContent"/>
-        <response name="error" type="view" value="EditLayoutSubContent"/>
-    </request-map>
+    <request-map uri="EditLayoutSubContent"><security auth="true" https="true"/><response name="success" type="view" value="EditLayoutSubContent"/></request-map>
     <request-map uri="updateLayoutText">
         <security auth="true" https="true"/>
         <event invoke="updateLayoutText" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
@@ -1484,107 +1256,68 @@
     
     <!-- ================ CMS Requests ================= -->
     
-    <request-map uri="UserPermissions">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="UserPermissions"/>
-    </request-map>
-    <request-map uri="CMSSiteFind">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSSiteFind"/>
-    </request-map>
-    <request-map uri="CMSSiteEdit">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSSiteEdit"/>
-    </request-map>
-    <request-map uri="CMSContentFind">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSContentFind"/>
-    </request-map>
-    <request-map uri="CMSFindOwnedContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSFindOwnedContent"/>
-    </request-map>
-    <request-map uri="CMSContentEdit">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSContentEdit"/>
-    </request-map>
-    <request-map uri="CMSContentAdd">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSContentAdd"/>
-    </request-map>
-    <request-map uri="CMSEditContentPurposeOperation">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSEditContentPurposeOperation"/>
-    </request-map>
-    <request-map uri="CMSSites">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="CMSSites"/>
-    </request-map>
-   <request-map uri="updateSiteRoles">
+    <request-map uri="UserPermissions"><security auth="true" https="true"/><response name="success" type="view" value="UserPermissions"/></request-map>
+    <request-map uri="CMSSiteFind"><security auth="true" https="true"/><response name="success" type="view" value="CMSSiteFind"/></request-map>
+    <request-map uri="CMSSiteEdit"><security auth="true" https="true"/><response name="success" type="view" value="CMSSiteEdit"/></request-map>
+    <request-map uri="CMSContentFind"><security auth="true" https="true"/><response name="success" type="view" value="CMSContentFind"/></request-map>
+    <request-map uri="CMSFindOwnedContent"><security auth="true" https="true"/><response name="success" type="view" value="CMSFindOwnedContent"/></request-map>
+    <request-map uri="CMSContentEdit"><security auth="true" https="true"/><response name="success" type="view" value="CMSContentEdit"/></request-map>
+    <request-map uri="CMSContentAdd"><security auth="true" https="true"/><response name="success" type="view" value="CMSContentAdd"/></request-map>
+    <request-map uri="CMSEditContentPurposeOperation"><security auth="true" https="true"/><response name="success" type="view" value="CMSEditContentPurposeOperation"/></request-map>
+    <request-map uri="CMSSites"><security auth="true" https="true"/><response name="success" type="view" value="CMSSites"/></request-map>
+    <request-map uri="updateSiteRoles">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="updateSiteRoles"/>
         <response name="success" type="view" value="CMSSites"/>
         <response name="error" type="view" value="CMSSites"/>
     </request-map>
-   <request-map uri="linkContentToPubPt">
+    <request-map uri="linkContentToPubPt">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="linkContentToPubPt"/>
         <response name="success" type="view" value="CMSContentEdit"/>
         <response name="error" type="view" value="CMSContentEdit"/>
     </request-map>
-   <request-map uri="updateFeatures">
+    <request-map uri="updateFeatures">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="updateOrRemove"/>
         <response name="success" type="view" value="CMSContentEdit"/>
         <response name="error" type="view" value="CMSContentEdit"/>
     </request-map>
-   <request-map uri="publishResponse">
+    <request-map uri="publishResponse">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="updateContent"/>
         <response name="success" type="view" value="CMSSites"/>
         <response name="error" type="view" value="CMSSites"/>
     </request-map>
-    <request-map uri="addSubSite">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="addSubSite"/>
-    </request-map>
-   <request-map uri="postNewSubSite">
+    <request-map uri="addSubSite"><security auth="true" https="true"/><response name="success" type="view" value="addSubSite"/></request-map>
+    <request-map uri="postNewSubSite">
         <security https="true" auth="true"/>
         <event type="service" invoke="persistContentAndAssoc"/>
         <response name="success" type="view" value="CMSSites"/>
         <response name="error" type="view" value="CMSSites"/>
     </request-map>
 
-   <request-map uri="removeSite">
+    <request-map uri="removeSite">
         <security https="true" auth="true"/>
         <event type="service" invoke="deactivateAssocs"/>
         <response name="success" type="view" value="CMSSites"/>
         <response name="error" type="view" value="CMSSites"/>
     </request-map>
-   <request-map uri="EditAddContent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditAddContent"/>
-    </request-map>
+    <request-map uri="EditAddContent"><security https="true" auth="true"/><response name="success" type="view" value="EditAddContent"/></request-map>
     <request-map uri="persistContentStuff">
         <security auth="true" https="true"/>
         <event invoke="persistContentAndAssoc" path="" type="service"/>
         <response name="success" type="view" value="EditAddContent"/>
         <response name="error" type="view" value="EditAddContent"/>
     </request-map>
-   <request-map uri="EditAddSubContent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditAddSubContent"/>
-    </request-map>
+    <request-map uri="EditAddSubContent"><security https="true" auth="true"/><response name="success" type="view" value="EditAddSubContent"/></request-map>
     <request-map uri="persistSubContentStuff">
         <security auth="true" https="true"/>
         <event invoke="persistContentAndAssoc" path="" type="service"/>
         <response name="success" type="view" value="EditAddContent"/>
         <response name="error" type="view" value="EditAddSubContent"/>
     </request-map>
-   <request-map uri="EditAddImage">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditAddImage"/>
-    </request-map>
+    <request-map uri="EditAddImage"><security https="true" auth="true"/><response name="success" type="view" value="EditAddImage"/></request-map>
     <request-map uri="persistContent">
         <security auth="true" https="true"/>
         <event invoke="persistContentAndAssoc" path="" type="service"/>
@@ -1597,18 +1330,13 @@
         <response name="success" type="view" value="CMSContentEdit"/>
         <response name="error" type="view" value="EditAddImage"/>
     </request-map>
-    <request-map uri="AdminSearch">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="AdminSearch"/>
-    </request-map>
-    <request-map uri="AdminIndex">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="AdminIndex"/>
-    </request-map>
+    <request-map uri="AdminSearch"><security https="true" auth="true"/><response name="success" type="view" value="AdminSearch"/></request-map>
+    <request-map uri="AdminIndex"><security https="true" auth="true"/><response name="success" type="view" value="AdminIndex"/></request-map>
     <request-map uri="indexTree">
         <security https="true" auth="true"/>
         <event invoke="indexTree" path="org.ofbiz.content.search.SearchEvents" type="java"/>
         <response name="success" type="view" value="AdminIndex"/>
+        <response name="error" type="view" value="AdminIndex"/>
     </request-map>
 
 
@@ -1627,6 +1355,15 @@
         <response name="success" type="view" value="ViewSimpleContent"/>
     </request-map>
     
+    <!-- ================ Find/Lookup Requests ================= -->
+    <request-map uri="FindContent"><security auth="true" https="true"/><response name="success" type="view" value="FindContent"/></request-map>
+    <request-map uri="FindDataResource"><security auth="true" https="true"/><response name="success" type="view" value="FindDataResource"/></request-map>
+    <request-map uri="FindDataResource.ftl"><security auth="true" https="true"/><response name="success" type="view" value="FindDataResource"/></request-map>
+    <request-map uri="LookupContent"><security auth="true" https="true"/><response name="success" type="view" value="LookupContent"/></request-map>
+    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupPartyAndUserLoginAndPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/></request-map>
+    <request-map uri="LookupDataResource"><security auth="true" https="true"/><response name="success" type="view" value="LookupDataResource"/></request-map>
+    <request-map uri="LookupProductFeature"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductFeature"/></request-map>
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="screen" page="component://content/widget/CommonScreens.xml#main"/>
@@ -1692,8 +1429,6 @@
     <view-map name="EditLayoutHtml" page="/layout/EditLayoutHtml.ftl" type="jpublish"/>
     <view-map name="EditLayoutImage" page="/layout/EditLayoutImage.ftl" type="jpublish"/>
     <view-map name="EditLayoutUrl" page="/layout/EditLayoutUrl.ftl" type="jpublish"/>
-    <view-map name="LookupListLayout" page="/layout/LookupListLayout.ftl" type="jpublish"/>
-    <view-map name="LookupSubContent" page="/layout/LookupSubContent.ftl" type="jpublish"/>
 
     <view-map name="ContentMenu"  page="component://content/widget/content/ContentScreens.xml#ContentMenu" type="screen"/>
     <view-map name="ContentSetupMenu" page="/cms/ContentSetupMenu.ftl" type="jpublish"/>
@@ -1703,6 +1438,7 @@
 
     <view-map name="FindSurvey" page="component://content/widget/SurveyScreens.xml#FindSurvey" type="screen"/>
     <view-map name="EditSurvey" page="component://content/widget/SurveyScreens.xml#EditSurvey" type="screen"/>
+    <view-map name="EditSurveyMultiResps" page="component://content/widget/SurveyScreens.xml#EditSurveyMultiResps" type="screen"/>
     <view-map name="EditSurveyQuestions" page="component://content/widget/SurveyScreens.xml#EditSurveyQuestions" type="screen"/>
     <view-map name="ViewSurveyResponses" page="component://content/widget/SurveyScreens.xml#ViewSurveyResponses" type="screen"/>
     <view-map name="EditSurveyResponse" page="component://content/widget/SurveyScreens.xml#EditSurveyResponse" type="screen"/>
@@ -1724,13 +1460,6 @@
     <view-map name="CMSMenu" page="/cms/CMSMenu.ftl" type="jpublish"/>
     <view-map name="EditAddSubContent" page="component://content/widget/cms/CMSScreens.xml#EditAddSubContent" type="screen"/>
     <view-map name="TestPermission" page="component://content/widget/cms/CMSScreens.xml#TestPermission" type="screen"/>
-
-    <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
-    <view-map name="LookupDataResource" page="component://content/widget/data/DataScreens.xml#LookupDataResource" type="screen"/>
-    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
-    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
-    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
-    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
 
     <view-map name="ListContentRevisions" page="component://content/widget/compdoc/CompDocScreens.xml#ListContentRevisions" type="screen"/>
     <view-map name="EditContentRevision" page="component://content/widget/compdoc/CompDocScreens.xml#EditContentRevision" type="screen"/>
@@ -1765,5 +1494,14 @@
     <view-map name="ViewCompDocContentBinary" page="" type="simplecontent"/>
 
     <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
+
+    <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
+    <view-map name="LookupDataResource" page="component://content/widget/data/DataScreens.xml#LookupDataResource" type="screen"/>
+    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupListLayout" page="/layout/LookupListLayout.ftl" type="jpublish"/>
+    <view-map name="LookupSubContent" page="/layout/LookupSubContent.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>
