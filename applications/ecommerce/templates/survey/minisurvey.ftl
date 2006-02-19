@@ -44,62 +44,62 @@
 <input type="hidden" name="surveyId" value="${survey.surveyId}"/>
 
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
-  <#list surveyQuestions as question>
+  <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
     <#-- get an answer from the answerMap -->
     <#if surveyAnswers?has_content>
-      <#assign answer = surveyAnswers.get(question.surveyQuestionId)?if_exists>
+      <#assign answer = surveyAnswers.get(surveyQuestionAndAppl.surveyQuestionId)?if_exists>
     </#if>
 
     <tr>
       <#-- standard question options -->
       <td align='left'>
-        <div class="tabletext">${question.question?if_exists}</div>
-        <#if question.hint?has_content>
-          <div class="tabletext">${question.hint}</div>
+        <div class="tabletext">${surveyQuestionAndAppl.question?if_exists}</div>
+        <#if surveyQuestionAndAppl.hint?has_content>
+          <div class="tabletext">${surveyQuestionAndAppl.hint}</div>
         </#if>
       </td>
     </tr>
 
       <tr>
         <td align="center">
-          <#if question.surveyQuestionTypeId == "BOOLEAN">
+          <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
-            <select class="selectBox" name="answers_${question.surveyQuestionId}">
-              <#if question.requiredField?default("N") != "Y">
+            <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
+              <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
                 <option value=""></option>
               </#if>
               <option <#if "Y" == selectedOption>SELECTED</#if>>Y</option>
               <option <#if "N" == selectedOption>SELECTED</#if>>N</option>
             </select>
-          <#elseif question.surveyQuestionTypeId == "TEXTAREA">
-            <textarea class="textAreaBox" cols="40" rows="5" name="answers_${question.surveyQuestionId}">${(answer.textResponse)?if_exists}</textarea>
-          <#elseif question.surveyQuestionTypeId == "TEXT_SHORT">
-            <input type="text" size="15" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "TEXT_LONG">
-            <input type="text" size="35" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "EMAIL">
-            <input type="text" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "URL">
-            <input type="text" size="40" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "DATE">
-            <input type="text" size="12" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "CREDIT_CARD">
-            <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "GIFT_CARD">
-            <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "NUMBER_CURRENCY">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.currencyResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.floatResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.numericResponse?string("#"))?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "PASSWORD">
-            <input type="password" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
-          <#elseif question.surveyQuestionTypeId == "OPTION">
-            <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
+            <textarea class="textAreaBox" cols="40" rows="5" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">${(answer.textResponse)?if_exists}</textarea>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT">
+            <input type="text" size="15" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_LONG">
+            <input type="text" size="35" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "EMAIL">
+            <input type="text" size="30" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "URL">
+            <input type="text" size="40" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "DATE">
+            <input type="text" size="12" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CREDIT_CARD">
+            <input type="text" size="20" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GIFT_CARD">
+            <input type="text" size="20" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_CURRENCY">
+            <input type="text" size="6" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.currencyResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_FLOAT">
+            <input type="text" size="6" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.floatResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_LONG">
+            <input type="text" size="6" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.numericResponse?string("#"))?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "PASSWORD">
+            <input type="password" size="30" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)?if_exists}"/>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
+            <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
-            <select class="selectBox" name="answers_${question.surveyQuestionId}">
-              <#if question.requiredField?default("N") != "Y">
+            <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
+              <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
                 <option value=""></option>
               </#if>
               <#if options?has_content>
@@ -111,9 +111,9 @@
               </#if>
             </select>
           <#else>
-            <div class="tabletext">Unsupported question type : ${question.surveyQuestionTypeId}</div>
+            <div class="tabletext">Unsupported question type : ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
           </#if>
-          <#if question.requiredField?default("N") == "Y">
+          <#if surveyQuestionAndAppl.requiredField?default("N") == "Y">
             <span class="tabletext">*</span>
           <#else>
             <span class="tabletext">[optional]</span>

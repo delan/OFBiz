@@ -25,7 +25,7 @@
 -->
 
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
-    <#assign questions = surveyWrapper.getSurveyQuestions()>
+    <#assign questions = surveyWrapper.getSurveyQuestionAndAppls()>
     <#assign surveyResults = surveyWrapper.getResults(questions)>
 
     <#if questions?has_content>
@@ -33,7 +33,6 @@
         <#assign results = surveyResults.get(question.surveyQuestionId)?if_exists>
 
         <tr>
-
           <#-- seperator options -->
           <#if question.surveyQuestionTypeId == "SEPERATOR_TEXT">
             <td colspan="5"><div class="tabletext">${question.question?if_exists}</div></td>

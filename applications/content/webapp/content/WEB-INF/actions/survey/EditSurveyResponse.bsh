@@ -40,8 +40,9 @@ if ((surveyId == null) && (surveyResponseId != null)) {
 surveyWrapper = new SurveyWrapper(delegator, surveyResponseId, partyId, surveyId, null);
 surveyWrapper.setEdit(true);
 
-ctx = session.getServletContext();
-templatePath = ctx.getRealPath("/survey/genericsurvey.ftl");
-
-surveyString = surveyWrapper.render(templatePath).toString();
-context.put("surveyString", surveyString);
+templateUrl = UtilURL.fromOfbizHomePath("applications/content/template/survey/genericsurvey.ftl");
+if (templateUrl != null) {
+    writer = new StringWriter();
+    surveyWrapper.render(templateUrl, writer);
+    context.put("surveyString", writer.toString());
+}

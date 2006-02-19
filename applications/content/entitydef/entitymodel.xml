@@ -1127,9 +1127,9 @@
       <field name="comments" type="comment"/>
       <field name="submitCaption" type="short-varchar"/>
       <field name="responseService" type="long-varchar"/>
-      <field name="isAnonymous" type="indicator"/>
-      <field name="allowMultiple" type="indicator"/>
-      <field name="allowUpdate" type="indicator"/>
+      <field name="isAnonymous" type="indicator"><description>Allow response to the survey without login?</description></field>
+      <field name="allowMultiple" type="indicator"><description>Allow multiple responses to this survey (if Y), or just a single answer (if N)?</description></field>
+      <field name="allowUpdate" type="indicator"><description>Allow change to responses?</description></field>
       <prim-key field="surveyId"/>
     </entity>
     <entity entity-name="SurveyApplType"
@@ -1219,6 +1219,16 @@
       <relation type="many" rel-entity-name="SurveyQuestionOption">
         <key-map field-name="surveyQuestionId"/>
       </relation>
+        <relation type="one-nofk" rel-entity-name="SurveyPage">
+            <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyPageSeqId to be optional.</description>
+            <key-map field-name="surveyId"/>
+            <key-map field-name="surveyPageSeqId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="SurveyMultiResp">
+            <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyMultiRespId to be optional.</description>
+            <key-map field-name="surveyId"/>
+            <key-map field-name="surveyMultiRespId"/>
+        </relation>
     </view-entity>
     <entity entity-name="SurveyQuestionAppl"
             package-name="org.ofbiz.content.survey"
@@ -1246,11 +1256,16 @@
         <key-map field-name="withSurveyQuestionId" rel-field-name="surveyQuestionId"/>
         <key-map field-name="withSurveyOptionSeqId" rel-field-name="surveyOptionSeqId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="SurveyPage">
-        <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyPageSeqId to be optional.</description>
-        <key-map field-name="surveyId"/>
-        <key-map field-name="surveyPageSeqId"/>
-      </relation>
+        <relation type="one-nofk" rel-entity-name="SurveyPage">
+            <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyPageSeqId to be optional.</description>
+            <key-map field-name="surveyId"/>
+            <key-map field-name="surveyPageSeqId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="SurveyMultiResp">
+            <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyMultiRespId to be optional.</description>
+            <key-map field-name="surveyId"/>
+            <key-map field-name="surveyMultiRespId"/>
+        </relation>
     </entity>
     <entity entity-name="SurveyQuestionCategory"
             package-name="org.ofbiz.content.survey"
@@ -1322,27 +1337,11 @@
     <view-entity entity-name="SurveyResponseAndAnswer"
             package-name="org.ofbiz.content.survey"
             title="Survey Response And Answer View Entity">
-      <member-entity entity-alias="RA" entity-name="SurveyResponseAnswer"/>
       <member-entity entity-alias="SR" entity-name="SurveyResponse"/>
-      <alias entity-alias="SR" name="surveyResponseId"/>
-      <alias entity-alias="SR" name="surveyId"/>
-      <alias entity-alias="SR" name="partyId"/>
-      <alias entity-alias="SR" name="responseDate"/>
-      <alias entity-alias="SR" name="lastModifiedDate"/>
-      <alias entity-alias="SR" name="referenceId"/>
-      <alias entity-alias="SR" name="generalFeedback"/>
-      <alias entity-alias="SR" name="orderId"/>      
-      <alias entity-alias="SR" name="orderItemSeqId"/>
-      <alias entity-alias="RA" name="surveyQuestionId"/>
-      <alias entity-alias="RA" name="booleanResponse"/>
-      <alias entity-alias="RA" name="currencyResponse"/>
-      <alias entity-alias="RA" name="floatResponse"/>
-      <alias entity-alias="RA" name="numericResponse"/>
-      <alias entity-alias="RA" name="textResponse"/>
-      <alias entity-alias="RA" name="contentId"/>
-      <alias entity-alias="RA" name="surveyOptionSeqId"/>
-      <alias entity-alias="RA" name="answeredDate"/>
-      <view-link entity-alias="RA" rel-entity-alias="SR">
+      <member-entity entity-alias="SRA" entity-name="SurveyResponseAnswer"/>
+      <alias-all entity-alias="SR"/>
+      <alias-all entity-alias="SRA"/>
+      <view-link entity-alias="SR" rel-entity-alias="SRA">
         <key-map field-name="surveyResponseId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="Survey">
@@ -1355,15 +1354,25 @@
         <key-map field-name="surveyQuestionId"/>
         <key-map field-name="surveyOptionSeqId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="Content">
-        <key-map field-name="contentId"/>
-      </relation>
+        <relation type="one-nofk" rel-entity-name="SurveyResponse">
+            <key-map field-name="surveyResponseId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="Content">
+            <key-map field-name="contentId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="SurveyMultiRespColumn">
+            <key-map field-name="surveyId"/>
+            <key-map field-name="surveyMultiRespId"/>
+            <key-map field-name="surveyMultiRespColId"/>
+        </relation>
     </view-entity>
     <entity entity-name="SurveyResponseAnswer"
             package-name="org.ofbiz.content.survey"
             title="Survey Response Answer Entity">
       <field name="surveyResponseId" type="id-ne"></field>
       <field name="surveyQuestionId" type="id-ne"></field>
+      <field name="surveyMultiRespColId" type="id-ne"><description>This is needed to support multiple responses for different MultiResp Columns; if not part of a MultiResp will be _NA_</description></field>
+      <field name="surveyMultiRespId" type="id-ne"><description>This is not part of the primary key, but should be populated so that the SurveyMultiRespColumn can be more easily looked up.</description></field>
       <field name="booleanResponse" type="indicator"></field>
       <field name="currencyResponse" type="currency-amount"></field>
       <field name="floatResponse" type="floating-point"></field>
@@ -1379,6 +1388,7 @@
       <field name="durationUomId" type="id"/>
       <prim-key field="surveyResponseId"/>
       <prim-key field="surveyQuestionId"/>
+      <prim-key field="surveyMultiRespColId"/>
       <relation type="one" fk-name="SRVYRSPA_SVRSP" rel-entity-name="SurveyResponse">
         <key-map field-name="surveyResponseId"/>
       </relation>
@@ -1434,7 +1444,6 @@
         <key-map field-name="contentId" rel-field-name="itemContentId"/>
       </view-link>
     </view-entity>
-    
     <view-entity entity-name="ContentAssocRevisionItemView"
                 package-name="org.ofbiz.content.compdoc"
                 title="Latest Revision Children">
@@ -1459,7 +1468,6 @@
         <key-map field-name="contentId" rel-field-name="itemContentId"/>
       </view-link>
     </view-entity>
-    
     <view-entity entity-name="MaxRevisionItemView"
                 package-name="org.ofbiz.content.compdoc"
                 title="Latest Revision Children">
@@ -1469,7 +1477,6 @@
       <alias entity-alias="CRI" name="contentRevisionSeqId" group-by="false"/>
       <alias entity-alias="CRI" name="maxRevisionSeqId" field="contentRevisionSeqId" function="max"/>
     </view-entity>
-    
     <view-entity entity-name="MaxContentApprovalView"
                 package-name="org.ofbiz.content.compdoc"
                 title="Latest ContentApproval">
@@ -1486,7 +1493,6 @@
         <key-map field-name="contentId" rel-field-name="contentId"/>
       </view-link>
     </view-entity>
-    
     <view-entity entity-name="ContentAssocOptViewFrom"
                 package-name="org.ofbiz.content.content"
                 title="Main Assoc To">
@@ -1515,6 +1521,5 @@
       </view-link>
     </view-entity>
 -->
-
 </entitymodel>
 

@@ -48,6 +48,8 @@
     <service name="cloneSurvey" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="cloneSurvey">
         <description>Clone a Survey</description>
+        <attribute name="surveyId" type="String" mode="IN"/>
+        <attribute name="newSurveyId" type="String" mode="OUT"/>
     </service>
     
     <!-- SurveyApplType Services -->

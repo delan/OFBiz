@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -105,10 +105,28 @@ public class SurveyWrapper {
      * @throws SurveyWrapperException
      */
     public Writer render(String templatePath) throws SurveyWrapperException {
+        URL templateUrl = UtilURL.fromResource(templatePath);
+        if (templateUrl == null) {
+            String errMsg = "Problem getting the template for Survey from URL: " + templatePath;
+            Debug.logError(errMsg, module);
+            throw new IllegalArgumentException(errMsg);
+        }
+
+        Writer writer = new StringWriter();
+        this.render(templateUrl, writer);
+        return writer;
+    }
+
+    /**
+     * Renders the Survey
+     * @return Writer object from the parsed Freemarker Template
+     * @throws SurveyWrapperException
+     */
+    public void render(URL templateUrl, Writer writer) throws SurveyWrapperException {
         String responseId = this.getThisResponseId();
         GenericValue survey = this.getSurvey();
-        List questions = this.getSurveyQuestions();
-        Map results = this.getResults(questions);
+        List surveyQuestionAndAppls = this.getSurveyQuestionAndAppls();
+        Map results = this.getResults(surveyQuestionAndAppls);
         Map currentAnswers = null;
         if (responseId != null && canUpdate()) {
             currentAnswers = this.getResponseAnswers(responseId);
@@ -119,34 +137,24 @@ public class SurveyWrapper {
         templateContext.put("partyId", partyId);
         templateContext.put("survey", survey);
         templateContext.put("surveyResults", results);
-        templateContext.put("surveyQuestions", questions);
+        templateContext.put("surveyQuestionAndAppls", surveyQuestionAndAppls);
         templateContext.put("surveyAnswers", currentAnswers);
         templateContext.put("surveyResponseId", responseId);
         templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));
         templateContext.put("additionalFields", passThru);
 
-        Template template = this.getTemplate(templatePath);
-        Writer writer = new StringWriter();
+        Template template = this.getTemplate(templateUrl);
         try {
             template.process(templateContext, writer);
         } catch (TemplateException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "Error rendering Survey with template at [" + templateUrl.toExternalForm() + "]", module);
         } catch (IOException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "Error rendering Survey with template at [" + templateUrl.toExternalForm() + "]", module);
         }
-
-        return writer;
     }
 
     // returns the FTL Template object
-    protected Template getTemplate(String templatePath) {
-        URL templateUrl = UtilURL.fromResource(templatePath);
-        if (templateUrl == null) {
-            String errMsg = "Problem getting the template for Survey from URL: " + templatePath;
-            Debug.logError(errMsg, module);
-            throw new IllegalArgumentException(errMsg);
-        }
-
+    protected Template getTemplate(URL templateUrl) {
         Configuration config = null;
         try {
             config = FreeMarkerWorker.makeDefaultOfbizConfig();
@@ -162,7 +170,7 @@ public class SurveyWrapper {
             InputStreamReader templateReader = new InputStreamReader(templateStream);
             template = new Template(templateUrl.toExternalForm(), templateReader, config);
         } catch (IOException e) {
-            Debug.logError(e, "Unable to get template from URL :" + templatePath, module);
+            Debug.logError(e, "Unable to get template from URL :" + templateUrl.toExternalForm(), module);
         }
         return template;
     }
@@ -217,7 +225,7 @@ public class SurveyWrapper {
     }
 
     // returns a list of SurveyQuestions (in order by sequence number) for the current Survey
-    public List getSurveyQuestions() {
+    public List getSurveyQuestionAndAppls() {
         List questions = new LinkedList();
 
         try {
