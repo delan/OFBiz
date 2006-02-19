@@ -34,7 +34,7 @@
 
 <#macro renderSurveyQuestionRequired surveyQuestionAndAppl>
   <#if surveyQuestionAndAppl.requiredField?default("N") == "Y">
-    <span class="tabletext">*</span>
+    <span class="tabletext">*[required]</span>
   <#else/>
     <span class="tabletext">[optional]</span>
   </#if>

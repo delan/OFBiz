@@ -1312,7 +1312,7 @@
     <request-map uri="updateSurveyResponse">
         <security auth="true" https="true"/>
         <event type="service" invoke="createSurveyResponse"/>
-        <response name="success" type="view" value="EditSurveyResponse"/>
+        <response name="success" type="view" value="ViewSurveyResponses"/>
         <response name="error" type="view" value="EditSurveyResponse"/>
     </request-map>
 
