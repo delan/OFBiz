@@ -176,7 +176,7 @@
 
         <if-empty field-name="fromDate" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+            <set field="newEntity.fromDate" from-field="nowTimestamp"/>
         </if-empty>
 
         <create-value value-name="newEntity"/>
@@ -323,8 +323,8 @@
 
         <!-- check if anonymous is allowed and if not that we have a partyId -->
         <if-compare field-name="isAnonymous" map-name="survey" operator="not-equals" value="Y">
-            <if-empty field-name="partyId" map-name="parameters">
-                <add-error><fail-message message="Anonymous response to this survey is not allowed"/></add-error>
+            <if-empty field-name="parameters.partyId">
+                <add-error><fail-message message="Anonymous response to this survey is not allowed (you must be logged in)"/></add-error>
                 <check-errors/>
             </if-empty>
         </if-compare>
@@ -348,7 +348,7 @@
             <add-error><fail-message message="No answers were found"/></add-error>
             <check-errors/>
         </if-empty>
-        <field-to-env field-name="answers" map-name="parameters" env-name="answers"/>
+        <set from-field="parameters.answers" field="answers"/>
 
         <!-- make sure all required fields were responded to -->
         <iterate entry-name="surveyQuestionAndAppl" list-name="surveyQuestionAndApplList">
@@ -505,12 +505,31 @@
             <set field="responseAnswer" from-field="currentAnswers.${currentFieldName}"/>
         </if-not-empty>
         
-        <if-compare-field field-name="responseAnswer.surveyQuestionId" operator="not-equals" to-field-name="surveyQuestionAndAppl.surveyQuestionId">
-            <make-value entity-name="SurveyResponseAnswer" value-name="responseAnswer"/>
-            <set from-field="surveyResponse.surveyResponseId" field="responseAnswer.surveyResponseId"/>
-            <set from-field="surveyQuestionAndAppl.surveyQuestionId" field="responseAnswer.surveyQuestionId"/>
-            <create-value value-name="responseAnswer"/>
-        </if-compare-field>
+        <if>
+            <condition>
+                <or>
+                    <if-empty field-name="responseAnswer"/>
+                    <if-compare-field field-name="responseAnswer.surveyQuestionId" operator="not-equals" to-field-name="surveyQuestionAndAppl.surveyQuestionId"/>
+                    <if-compare-field field-name="responseAnswer.surveyMultiRespColId" operator="not-equals" to-field-name="surveyMultiRespColumn.surveyMultiRespColId"/>
+                </or>
+            </condition>
+            <then>
+                <make-value entity-name="SurveyResponseAnswer" value-name="responseAnswer"/>
+                <set from-field="surveyResponse.surveyResponseId" field="responseAnswer.surveyResponseId"/>
+                <set from-field="surveyQuestionAndAppl.surveyQuestionId" field="responseAnswer.surveyQuestionId"/>
+                
+                <!-- If this has a surveyMultiRespColumn then set surveyMultiRespId and surveyMultiRespColId otherwise set surveyMultiRespColId to _NA_ -->
+                <if-not-empty field-name="surveyMultiRespColumn">
+                    <set field="responseAnswer.surveyMultiRespId" from-field="surveyMultiRespColumn.surveyMultiRespId"/>
+                    <set field="responseAnswer.surveyMultiRespColId" from-field="surveyMultiRespColumn.surveyMultiRespColId"/>
+                    <else>
+                        <set field="responseAnswer.surveyMultiRespColId" value="_NA_"/>
+                    </else>
+                </if-not-empty>
+                
+                <create-value value-name="responseAnswer"/>
+            </then>
+        </if>
         
         <if-not-empty field-name="answers.${currentFieldName}">
             <if-compare field-name="surveyQuestionAndAppl.surveyQuestionTypeId" operator="equals" value="BOOLEAN">
@@ -572,15 +591,6 @@
                 </else>
                 </if-instance-of>
             </if-compare>
-            
-            <!-- If this has a surveyMultiRespColumn then set surveyMultiRespId and surveyMultiRespColId otherwise set surveyMultiRespColId to _NA_ -->
-            <if-not-empty field-name="surveyMultiRespColumn">
-                <set field="responseAnswer.surveyMultiRespId" from-field="surveyMultiRespColumn.surveyMultiRespId"/>
-                <set field="responseAnswer.surveyMultiRespColId" from-field="surveyMultiRespColumn.surveyMultiRespColId"/>
-            <else>
-                <set field="responseAnswer.surveyMultiRespColId" value="_NA_"/>
-            </else>
-            </if-not-empty>
             
             <set from-field="nowTimestamp" field="responseAnswer.answeredDate"/>
             <store-value value-name="responseAnswer"/>

@@ -26,7 +26,8 @@
 
 <#-- Render the survey -->
 <#if surveyString?has_content>
-  <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>updateSurveyResponse</@ofbizUrl>" style="margin: 0;">
+  <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>updateSurveyResponse</@ofbizUrl>" name="EditSurveyResponseForm" style="margin: 0;">
+    <div class="tabletext">Party ID: <input type="text" size="15" name="partyId" value="${userLogin.partyId}" class="inputBox"/><a href="javascript:call_fieldlookup2(document.EditSurveyResponseForm.partyId, 'LookupPartyName');"><img src="<@ofbizContentUrl>/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup"/></a></div>
     ${surveyString}
   </form>
 <#else>

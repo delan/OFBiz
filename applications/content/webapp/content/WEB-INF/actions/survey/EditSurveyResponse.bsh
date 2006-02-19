@@ -31,6 +31,7 @@ import org.ofbiz.content.survey.*;
 
 surveyResponseId = parameters.get("surveyResponseId");
 partyId = parameters.get("partyId");
+partyId = null;
 
 if ((surveyId == null) && (surveyResponseId != null)) {
    surveyResponse = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
