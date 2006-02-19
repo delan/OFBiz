@@ -51,6 +51,69 @@
         <attribute name="surveyId" type="String" mode="IN"/>
         <attribute name="newSurveyId" type="String" mode="OUT"/>
     </service>
+
+    <!-- SurveyMultiResp Services -->
+    <service name="createSurveyMultiResp" default-entity-name="SurveyMultiResp" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyMultiResp">
+        <description>Create a SurveyMultiResp; surveyMultiRespId will be auto-sequenced</description>
+        <auto-attributes include="pk" mode="IN" optional="false">
+            <exclude field-name="surveyMultiRespId"/>
+        </auto-attributes>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSurveyMultiResp" default-entity-name="SurveyMultiResp" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyMultiResp">
+        <description>Update a SurveyMultiResp</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSurveyMultiResp" default-entity-name="SurveyMultiResp" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="deleteSurveyMultiResp">
+        <description>Delete SurveyMultiResp</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- SurveyMultiRespColumn Services -->
+    <service name="createSurveyMultiRespColumn" default-entity-name="SurveyMultiRespColumn" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyMultiRespColumn">
+        <description>Create a SurveyMultiRespColumn; surveyMultiRespColId will be auto-sequenced</description>
+        <auto-attributes include="pk" mode="IN" optional="false">
+            <exclude field-name="surveyMultiRespColId"/>
+        </auto-attributes>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSurveyMultiRespColumn" default-entity-name="SurveyMultiRespColumn" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyMultiRespColumn">
+        <description>Update a SurveyMultiRespColumn</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSurveyMultiRespColumn" default-entity-name="SurveyMultiRespColumn" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="deleteSurveyMultiRespColumn">
+        <description>Delete SurveyMultiRespColumn</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- SurveyPage Services -->
+    <service name="createSurveyPage" default-entity-name="SurveyPage" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyPage">
+        <description>Create a SurveyPage; the surveyPageSeqId will be auto-generated</description>
+        <auto-attributes include="pk" mode="IN" optional="false">
+            <exclude field-name="surveyPageSeqId"/>
+        </auto-attributes>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSurveyPage" default-entity-name="SurveyPage" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyPage">
+        <description>Update a SurveyPage</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSurveyPage" default-entity-name="SurveyPage" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="deleteSurveyPage">
+        <description>Delete SurveyPage</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     
     <!-- SurveyApplType Services -->
     <service name="createSurveyApplType" default-entity-name="SurveyApplType" auth="true" engine="simple"
