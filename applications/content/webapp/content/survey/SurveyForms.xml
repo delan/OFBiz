@@ -68,6 +68,34 @@
         
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <form name="ListSurveyPages" type="list" 
+        target="updateSurveyPage" title="" list-name="surveyPageList"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="SurveyPage">
+                <condition-expr field-name="surveyId" env-name="surveyId"/>
+                <order-by field-name="sequenceNum"/>
+            </entity-condition>
+        </actions>
+        
+        <auto-fields-service service-name="updateSurveyPage" default-field-type="edit"/>
+        
+        <field name="surveyId"><hidden/></field>
+        <field name="surveyPageSeqId" widget-style="tabletext"><display/></field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="AddSurveyPage" type="single" 
+        target="createSurveyPage" title="" default-map-name="surveyPage"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createSurveyPage" default-field-type="edit"/>
+        
+        <field name="surveyId"><hidden/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
     <form name="ListSurveyQuestions" type="list" 
         target="updateSurveyQuestion" title="" list-name="surveyQuestionList" list-entry-name="surveyQuestion"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">

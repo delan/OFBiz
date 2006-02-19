@@ -144,6 +144,10 @@
                         <include-form name="ListSurveyQuestions" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                         <include-form name="CreateSurveyQuestion" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                         -->
+                        
+                        <container><label style="head1">${uiLabelMap.PageTitleEditSurveyPages}, ${uiLabelMap.SurveySurveyId}: ${surveyId}</label></container>
+                        <include-form name="ListSurveyPages" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                        <include-form name="AddSurveyPage" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
