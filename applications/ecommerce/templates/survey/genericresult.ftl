@@ -28,30 +28,30 @@
 <br/>
 
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
-  <#list surveyQuestions as question>
+  <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
 
     <#-- special formatting for select boxes -->
     <#assign align = "left">
-    <#if (question.surveyQuestionTypeId == "BOOLEAN" || question.surveyQuestionTypeId == "OPTION")>
+    <#if (surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN" || surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION")>
       <#assign align = "right">
     </#if>
 
     <#-- get an answer from the answerMap -->
     <#if surveyAnswers?has_content>
-      <#assign answer = surveyAnswers.get(question.surveyQuestionId)?if_exists>
+      <#assign answer = surveyAnswers.get(surveyQuestionAndAppl.surveyQuestionId)?if_exists>
     </#if>
 
     <#-- get the question results -->
     <#if surveyResults?has_content>
-      <#assign results = surveyResults.get(question.surveyQuestionId)?if_exists>
+      <#assign results = surveyResults.get(surveyQuestionAndAppl.surveyQuestionId)?if_exists>
     </#if>
 
     <tr>
 
       <#-- seperator options -->
-      <#if question.surveyQuestionTypeId == "SEPERATOR_TEXT">
-        <td colspan="5"><div class="tabletext">${question.question?if_exists}</div></td>
-      <#elseif question.surveyQuestionTypeId == "SEPERATOR_LINE">
+      <#if surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_TEXT">
+        <td colspan="5"><div class="tabletext">${surveyQuestionAndAppl.question?if_exists}</div></td>
+      <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_LINE">
         <td colspan="5"><hr class="sepbar"/></td>
       <#else>
 
@@ -61,15 +61,15 @@
           <#if (results._total?default(0) == 1)>
              <#assign answerString = "answer">
           </#if>
-          <div class="tabletext">${question.question?if_exists} (${results._total?default(0)?string.number} ${answerString})</div>
-          <#if question.hint?has_content>
-            <div class="tabletext">${question.hint}</div>
+          <div class="tabletext">${surveyQuestionAndAppl.question?if_exists} (${results._total?default(0)?string.number} ${answerString})</div>
+          <#if surveyQuestionAndAppl.hint?has_content>
+            <div class="tabletext">${surveyQuestionAndAppl.hint}</div>
           </#if>
         </td>
         <td width='1'>&nbsp;</td>
 
         <td align="${align}">
-          <#if question.surveyQuestionTypeId == "BOOLEAN">
+          <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
             <div class="tabletext"><nobr>
               <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonY}<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
@@ -77,37 +77,37 @@
             <div class="tabletext"><nobr>
               <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>N<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]
             </nobr></div>
-          <#elseif question.surveyQuestionTypeId == "TEXTAREA">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
-          <#elseif question.surveyQuestionTypeId == "TEXT_SHORT">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
-          <#elseif question.surveyQuestionTypeId == "TEXT_LONG">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_LONG">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
-          <#elseif question.surveyQuestionTypeId == "EMAIL">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "EMAIL">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
-          <#elseif question.surveyQuestionTypeId == "URL">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "URL">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
-          <#elseif question.surveyQuestionTypeId == "DATE">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "DATE">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
-          <#elseif question.surveyQuestionTypeId == "CREDIT_CARD">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CREDIT_CARD">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
-          <#elseif question.surveyQuestionTypeId == "GIFT_CARD">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GIFT_CARD">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
-          <#elseif question.surveyQuestionTypeId == "NUMBER_CURRENCY">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_CURRENCY">
             <div class="tabletext">${answer.currencyResponse?number?default(0)}</div>
-          <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_FLOAT">
             <div class="tabletext">${answer.floatResponse?number?default(0)?string("#")}</div>
-          <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_LONG">
             <div class="tabletext">${answer.numericResponse?number?default(0)?string("#")}&nbsp;[${uiLabelMap.CommonTally}: ${results._tally?default(0)?string("#")} / ${uiLabelMap.CommonAverage}: ${results._average?default(0)?string("#")}]</div>
-          <#elseif question.surveyQuestionTypeId == "PASSWORD">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "PASSWORD">
             <div class="tabletext">[${uiLabelMap.CommonNotShown}]</div>
-          <#elseif question.surveyQuestionTypeId == "CONTENT">
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT">
             <#if answer.contentId?has_content>
               <#assign content = answer.getRelatedOne("Content")>
               <a href="/content/control/img?imgId=${content.dataResourceId}" class="buttontext">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName?if_exists}                         
             </#if>
-          <#elseif question.surveyQuestionTypeId == "OPTION">
-            <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
+          <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
+            <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
             <#if options?has_content>
               <#list options as option>
@@ -121,7 +121,7 @@
               </#list>
             </#if>
           <#else>
-            <div class="tabletext">${uiLabelMap.EcommerceUnsupportedQuestionType}: ${question.surveyQuestionTypeId}</div>
+            <div class="tabletext">${uiLabelMap.EcommerceUnsupportedQuestionType}: ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
           </#if>
         </td>
         <td width="90%">&nbsp;</td>

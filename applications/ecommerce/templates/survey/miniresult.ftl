@@ -25,16 +25,16 @@
 -->
 
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
-  <#list surveyQuestions as question>
+  <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
 
     <#-- get an answer from the answerMap -->
     <#if surveyAnswers?has_content>
-      <#assign answer = surveyAnswers.get(question.surveyQuestionId)?if_exists>
+      <#assign answer = surveyAnswers.get(surveyQuestionAndAppl.surveyQuestionId)?if_exists>
     </#if>
 
     <#-- get the question results -->
     <#if surveyResults?has_content>
-      <#assign results = surveyResults.get(question.surveyQuestionId)?if_exists>
+      <#assign results = surveyResults.get(surveyQuestionAndAppl.surveyQuestionId)?if_exists>
     </#if>
 
     <tr>
@@ -44,7 +44,7 @@
         <#if (results._total?default(0) == 1)>
            <#assign answerString = "answer">
         </#if>
-        <div class="tabletext">${question.question?if_exists} (${results._total?default(0)?string.number} ${answerString})</div>
+        <div class="tabletext">${surveyQuestionAndAppl.question?if_exists} (${results._total?default(0)?string.number} ${answerString})</div>
       </td>
     </tr>
 
@@ -54,7 +54,7 @@
     
     <tr>
       <td align="left">
-        <#if question.surveyQuestionTypeId == "BOOLEAN">
+        <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
           <#assign selectedOption = (answer.booleanResponse)?default("Y")>
           <div class="tabletext"><nobr>
             <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonY}<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
@@ -63,8 +63,8 @@
             <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonN}<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]
           </nobr></div>
 
-        <#elseif question.surveyQuestionTypeId == "OPTION">
-          <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
+        <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
+          <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
           <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
           <#if options?has_content>
             <#list options as option>
@@ -78,7 +78,7 @@
             </#list>
           </#if>
         <#else>
-          <div class="tabletext">${uiLabelMap.EcommerceUnsupportedQuestionType}${question.surveyQuestionTypeId}</div>
+          <div class="tabletext">${uiLabelMap.EcommerceUnsupportedQuestionType}${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
         </#if>
       </td>
     </tr>
