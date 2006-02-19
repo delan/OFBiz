@@ -103,8 +103,8 @@
             <widgets>
                 <decorator-screen name="mainContentDecorator" >
                     <decorator-section name="body">
-                        <label text="${title}" style="head1"/>
                         <include-menu name="${menuName}" location="component://content/widget/compdoc/CompDocMenus.xml"/>
+                        <label text="${title}" style="head1"/>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

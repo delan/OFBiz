@@ -1026,6 +1026,9 @@
     <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
     <attribute mode="IN" name="seqInc" optional="true" type="Integer"/>
     <attribute mode="IN" name="typeList" optional="true" type="List"/>
+    <attribute mode="IN" name="contentId" optional="true" type="String"/>
+    <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
+    <attribute mode="IN" name="dir" optional="true" type="String"/>
   </service>
   <service auth="true" engine="java" name="changeLeafToNode" validate="true"
         transaction-timout="72000" 

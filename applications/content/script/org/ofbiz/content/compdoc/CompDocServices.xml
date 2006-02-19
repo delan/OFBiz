@@ -101,11 +101,17 @@
         <log level="info" message="revisionMap : ${revisionMap}"/>
         <call-service service-name="persistContentRevisionAndItem" in-map-name="revisionMap">
             <result-to-result result-name="contentRevisionSeqId"/>
+            <result-to-field result-name="contentRevisionSeqId"/>
         </call-service>
         <!--  This is for traversing tree and creating empty instance content entities
         <call-simple-method method-name="genInstanceChildCompDocs"/>
         -->
         
+        <set from-field="revisionMap.contentId" field="cloneMap.contentId"/>
+        <set from-field="contentRevisionSeqId" field="cloneMap.contentRevisionSeqId"/>
+        <set from-field="parameters.userLogin" field="cloneMap.userLogin"/>
+        <call-service service-name="cloneContentApprovals" in-map-name="cloneMap">
+        </call-service>
     </simple-method>
     
     <simple-method method-name="genInstanceChildCompDocs" short-description="Create CompDoc">
@@ -245,7 +251,6 @@
         <set from-field="revisionMap.contentId" field="cloneMap.contentId"/>
         <set from-field="contentRevisionSeqId" field="cloneMap.contentRevisionSeqId"/>
         <set from-field="parameters.userLogin" field="cloneMap.userLogin"/>
-        <log level="info" message="cloneMap : ${cloneMap}"/>
         <call-service service-name="cloneContentApprovals" in-map-name="cloneMap">
         </call-service>
     </simple-method>
@@ -427,7 +432,6 @@
         </call-class-method>
         <log level="info" message="incrementedSeq(1): ${incrementedSeq}"/>
         <log level="info" message="numericPadding(1): ${numericPadding}"/>
-        <log level="info" message="paddedSeqId: ${paddedSeqId}"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set field="newEntity.contentRevisionSeqId" from-field="paddedSeqId"/>
@@ -441,6 +445,7 @@
         <create-value value-name="newEntity"/>
         <log level="info" message="ContentRevisionItem(1): ${newEntity}"/>
         <field-to-result field-name="paddedSeqId" result-name="contentRevisionSeqId"/>
+        <log level="info" message="paddedSeqId: ${paddedSeqId}"/>
     </simple-method>
     
     <simple-method method-name="getRevisionDataResource" short-description="Get version of DataResource that fits overall revision">

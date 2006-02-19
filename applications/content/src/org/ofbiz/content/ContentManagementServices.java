@@ -917,8 +917,10 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             seqInc = new Integer(100);
         int seqIncrement = seqInc.intValue();
         List typeList = (List)context.get("typeList");
-        if (typeList == null)
-            typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
+        if (typeList == null) typeList = new ArrayList();
+        String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        if (UtilValidate.isNotEmpty(contentAssocTypeId)) typeList.add(contentAssocTypeId);
+        if (UtilValidate.isEmpty(typeList)) typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
         List condList = new ArrayList();
         Iterator iterType = typeList.iterator();
         while (iterType.hasNext()) {
@@ -931,12 +933,50 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
          try {
              List listAll = delegator.findByCondition("ContentAssoc", conditionMain, null, UtilMisc.toList("sequenceNum", "fromDate", "createdDate"));
              List listFiltered = EntityUtil.filterByDate(listAll);
-             Iterator iter = listFiltered.iterator();
+             String contentId = (String)context.get("contentId");
+             String dir = (String)context.get("dir");
              int seqNum = seqIncrement;
-             while (iter.hasNext()) {
-                 GenericValue contentAssoc = (GenericValue)iter.next();
-                 contentAssoc.put("sequenceNum", new Integer(seqNum));
-                 contentAssoc.store();
+             String thisContentId = null;
+             for (int i=0; i < listFiltered.size(); i++) {
+                 GenericValue contentAssoc = (GenericValue)listFiltered.get(i);
+                 if (UtilValidate.isNotEmpty(contentId) && UtilValidate.isNotEmpty(dir)) {
+                     // move targeted entry up or down
+                     thisContentId = contentAssoc.getString("contentId");
+                     if (contentId.equals(thisContentId)) {
+                         if (dir.startsWith("up")) {
+                             if (i > 0) {
+                                 // Swap with previous entry 
+                                 try {
+                                     GenericValue prevValue = (GenericValue)listFiltered.get(i-1);
+                                     Long prevSeqNum = (Long)prevValue.get("sequenceNum");
+                                     prevValue.put("sequenceNum", new Long(seqNum));
+                                     prevValue.store();
+                                     contentAssoc.put("sequenceNum", prevSeqNum);
+                                     contentAssoc.store();
+                                 } catch (Exception e) {
+                                     return ServiceUtil.returnError(e.getMessage());             
+                                 }
+                             }
+                         } else {
+                             if (i < listFiltered.size()) {
+                                 // Swap with next entry 
+                                 GenericValue nextValue = (GenericValue)listFiltered.get(i+1);
+                                 nextValue.put("sequenceNum", new Long(seqNum));
+                                 nextValue.store();
+                                 seqNum += seqIncrement;
+                                 contentAssoc.put("sequenceNum", new Long(seqNum));
+                                 contentAssoc.store();
+                                 i++; // skip next one
+                             }
+                         }
+                     } else {
+                         contentAssoc.put("sequenceNum", new Long(seqNum));
+                         contentAssoc.store();
+                     }
+                 } else {
+                     contentAssoc.put("sequenceNum", new Long(seqNum));
+                     contentAssoc.store();
+                 }
                  seqNum += seqIncrement;
              }
         } catch(GenericEntityException e) {
