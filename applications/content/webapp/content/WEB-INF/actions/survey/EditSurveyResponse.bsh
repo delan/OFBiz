@@ -30,7 +30,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.content.survey.*;
 
 surveyResponseId = parameters.get("surveyResponseId");
-partyId = parameters.get("partyId");
+//causes problems, not sure why was here: partyId = parameters.get("partyId");
 partyId = null;
 
 if ((surveyId == null) && (surveyResponseId != null)) {
