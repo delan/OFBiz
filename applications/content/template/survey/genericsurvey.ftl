@@ -40,7 +40,7 @@
   </#if>
 </#macro>
 
-<#macro renderSurveyQuestionInput surveyQuestionAndAppl>
+<#macro renderSurveyQuestionInput surveyQuestionAndAppl questionFieldName>
   <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
     <#assign selectedOption = (answer.booleanResponse)?default("Y")>
     <select class="selectBox" name="${questionFieldName}">
@@ -134,7 +134,7 @@
     <#assign openMultiRespHeader = false/>
     <#assign closeMultiRespHeader = false/>
     <#assign surveyMultiResp = surveyQuestionAndAppl.getRelatedOneCache("SurveyMultiResp")?if_exists/>
-    <#if surveyMultiResp?exists>
+    <#if surveyMultiResp?has_content>
       <#assign surveyMultiRespColumnList = surveyMultiResp.getRelatedCache("SurveyMultiRespColumn", Static["org.ofbiz.base.util.UtilMisc"].toList("sequenceNum"))/>
     
       <#if lastSurveyMultiRespId == "">
@@ -160,7 +160,7 @@
     <#if openMultiRespHeader>
       <tr width="100%">
         <td colspan="5" width="100%">
-          <table width="100%" border="1">
+          <table width="100%" border="1" cellpadding="1" cellspacing="0">
             <tr>
               <td align="left">
                 <div class="tableheadtext">${surveyMultiResp.multiRespTitle?if_exists}</div>
@@ -170,11 +170,11 @@
                   <div class="tableheadtext">${surveyMultiRespColumn.columnTitle?if_exists}</div>
                 </td>
               </#list>
-              <td>&nbsp;</td><#-- placeholder for required/optional column -->
+              <td><div class="tableheadtext">Required?</div></td><#-- placeholder for required/optional column -->
             </tr>
     </#if>
   
-  <#if surveyMultiResp?exists>
+  <#if surveyMultiResp?has_content>
     <tr>
       <td align="left">
           <@renderSurveyQuestionText surveyQuestionAndAppl=surveyQuestionAndAppl/>
@@ -219,7 +219,7 @@
         <td>
           <@renderSurveyQuestionRequired surveyQuestionAndAppl=surveyQuestionAndAppl/>
         </td>
-        <td width="90%">&nbsp;</td>
+        <td width="20%">&nbsp;</td>
       </#if>
     </tr>
   </#if>
