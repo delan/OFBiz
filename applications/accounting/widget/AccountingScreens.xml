@@ -207,7 +207,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="column-left-wide">
                             <include-tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml" /> 
@@ -363,7 +363,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListGlReconciliationEntries" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
                         <include-form name="GlAccountsNavForm" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
@@ -393,10 +393,9 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-form name="AccountActivitesDetail" location="component://accounting/webapp/accounting
-/reports/ReportForms.xml"/>
+                        <include-form name="AccountActivitesDetail" location="component://accounting/webapp/accounting/reports/ReportForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
