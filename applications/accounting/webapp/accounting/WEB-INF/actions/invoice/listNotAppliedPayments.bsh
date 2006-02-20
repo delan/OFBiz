@@ -50,13 +50,13 @@ payments = delegator.findByAnd("Payment",
 if (payments != null && payments.size() > 0)    {
     List paymentApplications = null;
     GenericValue paymentApplication = null;
-    BigDecimal invoiceApplied = InvoiceExtWorker.getInvoiceAppliedBd(invoice);
+    BigDecimal invoiceApplied = InvoiceWorker.getInvoiceAppliedBd(invoice);
     BigDecimal invoiceAmount = InvoiceWorker.getInvoiceTotalBd(invoice);
     BigDecimal invoiceToApply = invoiceAmount.subtract(invoiceApplied); 
     Iterator p = payments.iterator();
     while(p.hasNext())    {
         payment = p.next();
-        BigDecimal paymentApplied = PaymentExtWorker.getPaymentAppliedBd(payment).setScale(decimals,rounding);
+        BigDecimal paymentApplied = PaymentWorker.getPaymentAppliedBd(payment).setScale(decimals,rounding);
         if (!(payment.getBigDecimal("amount").setScale(decimals,rounding).equals(paymentApplied)))    {
            // put in the map
            Map paymentMap = new HashMap();
