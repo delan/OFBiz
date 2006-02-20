@@ -436,11 +436,31 @@
         <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
         <response name="error" type="view" value="EditGlobalGlAccountRoles"/>
     </request-map>
-    
+    <request-map uri="AccountActivitiesDetail">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AccountActivitiesDetail"/>
+    </request-map>
+    <request-map uri="ListGlAccountEntries">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListGlAccountEntries"/>
+    </request-map>
+    <request-map uri="ListAcctgTransEntries">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListAcctgTransEntries"/>
+    </request-map>
+    <request-map uri="viewGlAccountBalance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGlAccountBalance"/>
+    </request-map>
+    <request-map uri="viewGlReconciliation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGlReconciliation"/>
+    </request-map>
+                                                                                                
     <!-- =============== Fixed Asset mapping =================-->
     <request-map uri="ListFixedAssets"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssets"/></request-map>
     <request-map uri="EditFixedAsset"><security https="true" auth="true"/><response name="success" type="view" value="EditFixedAsset"/></request-map>
-   <request-map uri="createFixedAsset">
+    <request-map uri="createFixedAsset">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFixedAsset"/>
         <response name="success" type="view" value="EditFixedAsset"/>
@@ -827,7 +847,14 @@
     <!-- view-map name="EditGlobalGlAccount" type="jpublish" page="/chartofaccounts/EditGlobalGlAccount.ftl"/ -->
     <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
     <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
-    
+
+    <view-map name="AccountActivitiesDetail" type="screen" page="component://accounting/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
+    <view-map name="ListGlAccountEntries" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccountEntries"/>
+    <view-map name="ListAcctgTransEntries" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListAcctgTransEntries"/>
+    <view-map name="ViewGlAccountBalance" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlAccountBalance"/>
+    <view-map name="ViewGlReconciliation" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlReconciliation"/>
+
+
     <view-map name="ListFixedAssets" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssets"/> 
     <view-map name="EditFixedAsset" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAsset"/> 
     <view-map name="ListFixedAssetProducts" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetProducts"/> 
