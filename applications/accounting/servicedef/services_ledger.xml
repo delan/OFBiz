@@ -228,7 +228,7 @@
 
     <!-- ====== Services for posting business transactions (invoices, payments, inventory adjustments, etc.) to the General Ledger ======= -->
     <service name="createAcctgTransAndEntries" engine="simple"
-        location="org/ofbiz/accounting/ledger/GeneralLedgerServicesExt.xml" invoke="createAcctgTransAndEntries" default-entity-name="AcctgTrans">
+        location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createAcctgTransAndEntries" default-entity-name="AcctgTrans">
         <description>
             Takes a list of AcctgTransEntry entries, verifies that the list of entries are valid (GL account and organizationParty exist),
             and then creates an AcctgTrans entry and stores all the AcctgTransEntries with the acctgTransId.  Note that this does not actually
@@ -267,7 +267,7 @@
         <attribute name="glAccountId" type="String" mode="OUT" optional="true"/> 
     </service>
     <service name="getInventoryItemOwner" default-entity-name="InventoryItem" engine="simple" 
-        location="org/ofbiz/accounting/ledger/GeneralLedgerServicesExt.xml" invoke="getInventoryItemOwner" auth="true"> 
+        location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="getInventoryItemOwner" auth="true"> 
         <description>get an ownerPartyId from inventoryItemId </description> 
         <auto-attributes include="pk" mode="IN" optional="false"/> 
         <attribute name="ownerPartyId" type="String" mode="OUT" optional="false"/> 
