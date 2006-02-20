@@ -372,34 +372,5 @@
             </widgets>
         </section>
     </screen>
-    <screen name="AccountActivitiesDetail">
-        <section>
-            <actions>
-                <set field="title" value="GL Account Activities Detail"/>
-                <set field="headerItem" value="companies"/>
-                <set field="labelTitleProperty" value="GL Account Activities Detail"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <set field="partyId" from-field="parameters.partyId"/>
-                <set field="glAccountId" from-field="parameters.glAccountId"/>                
-                <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>                
-                <entity-condition entity-name="AcctgTransAndEntries" list-name="acctTransEntries">
-                  <condition-list>
-                    <condition-expr field-name="organizationPartyId" operator="equals" env-name="organizationPartyId" ignore-if-empty="true" ignore-if-null="true"/>
-                    <condition-expr field-name="partyId" operator="equals" env-name="partyId" ignore-if-empty="true" ignore-if-null="true"/>
-                    <condition-expr field-name="glAccountId" operator="equals" env-name="glAccountId" ignore-if-empty="true" ignore-if-null="true"/>
-                    <condition-expr field-name="glFiscalTypeId" operator="equals" env-name="glFiscalTypeId" ignore-if-empty="true" ignore-if-null="true"/>
-                  </condition-list>
-                    <order-by field-name="transactionDate"/>
-                </entity-condition>
-            </actions>
-            <widgets>
-                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <include-form name="AccountActivitesDetail" location="component://accounting/webapp/accounting/reports/ReportForms.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
 </screens>
 
