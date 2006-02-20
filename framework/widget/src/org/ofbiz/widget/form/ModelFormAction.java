@@ -364,13 +364,17 @@ public abstract class ModelFormAction {
                     context.put(formListIteratorName, obj);
                 }
                 String listName = resultMapListNameExdr.expandString(context);
-                List lst = (List) result.get(listName);
+                Object listObj = result.get(listName);
+                if (!(listObj instanceof List)) {
+                    throw new IllegalArgumentException("Error in form [" + this.modelForm.getName() + "] calling service with name [" + serviceNameExpanded + "]: the result that is supposed to be a list is not a List. You may need to use list-iterator-name isntead of list-name, or something like that.");
+                }
+                List lst = (List) listObj; 
                 if (lst != null ) {
                     context.put("listName", listName);
                     context.put(listName, lst);
                 }
             } catch (GenericServiceException e) {
-                String errMsg = "Error calling service with name " + serviceNameExpanded + ": " + e.toString();
+                String errMsg = "Error in form [" + this.modelForm.getName() + "] calling service with name [" + serviceNameExpanded + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
