@@ -1,9 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2005 Undersun Consulting LLC
- *  Copyright (c) 2005 AntWebsystems Ltd
- *
- *  $Id$
+$Id$
+
+Copyright 2001-2006 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -22,46 +33,98 @@
     
     <!-- Invoice services -->
     <service name="createInvoice" engine="simple" default-entity-name="Invoice"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
         <description>Create Invoice Record</description>
-        <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override name="invoiceTypeId" optional="false"/>
-        <override name="statusId" optional="false"/>
+        <override name="invoiceTypeId" mode="IN" optional="false"/>
+        <override name="statusId" mode = "IN" optional="false"/>
+    </service>
+    <service name="copyInvoice" engine="simple" default-entity-name="Invoice"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="copyInvoice">
+        <description>Create Invoice Record/items from an existing invoice</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <attribute name="invoiceIdToCopyFrom" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="getInvoice" engine="simple" default-entity-name="Invoice"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="getInvoice">
+        <description>Retrieve an existing Invoice/Items</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <attribute name="invoice" type="GenericValue" mode="OUT"/>
+        <attribute name="invoiceItems" type="List" mode="OUT"/><!-- list of invoiceItem GenericValues -->
+    </service>
+    <service name="updateInvoice" engine="simple" default-entity-name="Invoice"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="updateInvoice">
+        <description>Update an existing Invoice Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     <service name="setInvoiceStatus" engine="simple"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
         <description>Set the Invoice  Status</description>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
+    
     <service name="createInvoiceItem" engine="simple" default-entity-name="InvoiceItem"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceItem">
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceItem">
         <description>Create a new Invoice Item Record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="invoiceItemSeqId" mode="INOUT" optional="true"/><!-- will optionally assign by the system -->
         <override name="taxableFlag" optional="false"/>
-        <override name="quantity" optional="false"/>
-        <override name="amount" optional="false"/>
     </service>
+    <service name="updateInvoiceItem" engine="simple" default-entity-name="InvoiceItem"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="updateInvoiceItem">
+        <description>Update existing Invoice Item Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="removeInvoiceItem" engine="simple" default-entity-name="InvoiceItem"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="removeInvoiceItem">
+        <description>Remove an existing Invoice Item Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
     <service name="createInvoiceRole" engine="simple" default-entity-name="InvoiceRole"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceRole">
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceRole">
         <description>Create a new Invoice Role Record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
-        <attribute name="datetimePerformed" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="percentage" type="Double" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="removeInvoiceRole" engine="simple" default-entity-name="InvoiceRole"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="removeInvoiceRole">
+        <description>Remove an existing Invoice Role Record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <service name="updatePaymentApplication" default-entity-name="PaymentApplication" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceExtServices" invoke="updatePaymentApplication">
+        <description>
+            Apply a payment to a Invoice, create/update paymentApplication records.
+        </description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/> <!-- a "Y" will activate this option -->
+        <override name="paymentId" optional="false"/>        
+    </service>
+    <service name="removePaymentApplication" default-entity-name="PaymentApplication" engine="simple"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="removePaymentApplication">
+        <description>Remove a payment to a Invoice, delete a paymentApplication record.</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="paymentId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="createInvoiceTerm" engine="simple" default-entity-name="InvoiceTerm"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceTerm">
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceTerm">
         <description>Create Invoice (Item) Term Record</description>
         <auto-attributes mode="OUT" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="false"/>
         <override name="uomId" optional="true"/>
     </service>
     <service name="createInvoiceForOrder" engine="java"
-            location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceForOrder">
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceForOrder">
         <description>
             Create an invoice from existing order
             orderId = The orderId to associate the invoice with
@@ -72,7 +135,7 @@
         <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="createInvoicesFromShipment" engine="java"
-            location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoicesFromShipment">
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoicesFromShipment">
         <description>
             Create invoice(s) from a Shipment
             invoicesCreated = List of invoiceIds which were created by this service
@@ -80,7 +143,32 @@
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
         <attribute name="invoicesCreated" type="List" mode="OUT" optional="true"/>
     </service>
-
+    <service name="sendInvoicePerEmail" engine="simple"
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="sendInvoicePerEmail">
+        <description>Send an invoice per email</description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="sendFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true"/>
+    </service>
+    <!-- Invoice services -->
+    <service name="setInvoiceStatus" engine="simple"
+            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
+        <description>Set the Invoice  Status</description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="createInvoiceTerm" engine="simple" default-entity-name="InvoiceTerm"
+            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceTerm">
+        <description>Create Invoice (Item) Term Record</description>
+        <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="false"/>
+        <override name="uomId" optional="true"/>
+    </service>
     <service name="checkInvoicePaymentApplications" engine="java"
             location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="checkInvoicePaymentApplications">
         <description>Checks to see if the payments applied to an invoice total up to the invoice total; if so sets to PAID</description>

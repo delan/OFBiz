@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    Copyright 2005-2006 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License"); you  
+    may not use this file except in compliance with the License. You may  
+    obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software  
+    distributed under the License is distributed on an "AS IS" BASIS,  
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or  
+    implied. See the License for the specific language governing  
+    permissions and limitations under the License.
 -->
+
+<!-- NOTE: Portions still licensed under the MIT license until iCLA received from Brett Palmer -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
@@ -36,10 +32,11 @@
     <!-- view handlers -->
     <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>        
 
+    <handler name="fop" type="view" class="org.ofbiz.webapp.view.FopPdfViewHandler"/>
     <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
-    
+    <handler name="screenfop" type="view" class="org.ofbiz.widget.screen.ScreenFopPdfViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
         
     <preprocessor>
@@ -177,18 +174,112 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findInvoices"/>
     </request-map>
-    <request-map uri="viewInvoice">
+    <request-map uri="invoiceOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+    </request-map>
+    <request-map uri="editInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editInvoice"/>
-    </request-map>      
+    </request-map> 
+    <request-map uri="createInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoice"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="editInvoice"/>
+    </request-map>
+    <request-map uri="copyInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="copyInvoice"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
+    <request-map uri="updateInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoice"/>
+        <response name="success" type="view" value="editInvoice"/>
+        <response name="error" type="view" value="editInvoice"/>
+    </request-map>
+    <request-map uri="listInvoiceItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+    </request-map>    
+    <request-map uri="editInvoiceItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>    
     <request-map uri="createInvoiceItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="createInvoiceItem"/>
-        <response name="success" type="view" value="editInvoice"/>
-    </request-map>    
-    <request-map uri="invoicePayments">
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="updateInvoiceItem">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="invoicePayments"/>
+        <event type="service" invoke="updateInvoiceItem"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="removeInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItem"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="editInvoiceApplications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="updateInvoiceApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentApplication"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+        <response name="error" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="removeInvoiceApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentApplication"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+        <response name="error" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="invoiceStatus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceStatus"/>
+    </request-map>
+    
+    <request-map uri="invoiceRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+    </request-map>
+    <request-map uri="createInvoiceRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceRole"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+        <response name="error" type="view" value="invoiceRoles"/>
+    </request-map>
+    <request-map uri="removeInvoiceRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceRole"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+        <response name="error" type="view" value="invoiceRoles"/>
+    </request-map>
+    <request-map uri="setInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
+    
+    <request-map uri="sendPerEmail">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="sendPerEmail"/>
+    </request-map>
+    <request-map uri="executeSendPerEmail">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendInvoicePerEmail"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
     </request-map>
     
     <!-- payment requests -->
@@ -674,8 +765,24 @@
 
     <request-map uri="LookupGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
 
+    <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
+    <request-map uri="LookupInvoice"><security auth="true" https="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
     <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
     <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
+
+    <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
+
+    <!-- ================ PDF generation requests ================== -->
+    <request-map uri="invoice.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InvoicePDF"/>
+    </request-map>
+    
+    <request-map uri="printCheck.pdf">
+        <!-- security https="true" auth="true"/ -->
+        <response name="success" type="view" value="PrintCheckPDF"/>
+    </request-map>
+    
     
     <!-- end of request mappings -->
 
@@ -691,9 +798,15 @@
     <view-map name="BillingAccountInvoices" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#BillingAccountInvoices"/>
     <view-map name="BillingAccountPayments" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#BillingAccountPayments"/>
     
-    <view-map name="findInvoices" type="jpublish" page="/invoice/findInvoices.ftl"/>
-    <view-map name="editInvoice" type="jpublish" page="/invoice/editInvoice.ftl"/>
-    <view-map name="invoicePayments" type="jpublish" page="/invoice/invoicePayments.ftl"/>
+    <view-map name="invoiceOverview" type="screen" page="component://accounting/widget/InvoiceScreens.xml#invoiceOverview"/>
+    <view-map name="findInvoices" type="screen" page="component://accounting/widget/InvoiceScreens.xml#FindInvoices"/>
+    <view-map name="editInvoice" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoice"/>
+    <view-map name="listInvoiceItems" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceItems"/>
+    <view-map name="editInvoiceItem" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceItem"/>
+    <view-map name="invoiceStatus" type="screen" page="component://accounting/widget/InvoiceScreens.xml#InvoiceStatus"/>
+    <view-map name="editInvoiceApplications" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceApplications"/>
+    <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/InvoiceScreens.xml#InvoiceRoles"/>
+    <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/InvoiceScreens.xml#SendPerEmail"/>
     
     <view-map name="findPayment" type="jpublish" page="/payment/findPayment.ftl"/>
     <view-map name="editPayment" type="jpublish" page="/payment/editPayment.ftl"/>
@@ -754,6 +867,7 @@
     <view-map name="TransactionReports" page="component://accounting/widget/TransactionScreens.xml#TransactionReports" type="screen"/>
     
     <!-- Lookup mappings -->
+    <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
     <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
     <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
@@ -767,5 +881,12 @@
 
     <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
+    <view-map name="LookupPayment" page="component://accounting/widget/LookupScreens.xml#LookupPayment" type="screen"/>
+    <view-map name="LookupInvoice" page="component://accounting/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
+    
+    <!-- PDFs  -->
+    <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="PrintCheckPDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#PrintCheckPDF" content-type="application/pdf" encoding="none"/>
+    
     <!-- end of view mappings -->
 </site-conf>

@@ -1,28 +1,23 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright 2003-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
 package org.ofbiz.accounting.payment;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,6 +30,7 @@ import javax.servlet.jsp.PageContext;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,12 +42,13 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev$
  * @since      2.0
  */
 public class PaymentWorker {
     
     public static final String module = PaymentWorker.class.getName();
+    private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
     
     public static void getPartyPaymentMethodValueMaps(PageContext pageContext, String partyId, boolean showOld, String paymentMethodValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
@@ -228,4 +225,72 @@ public class PaymentWorker {
         }
         return paymentsTotal;
     }          
+
+    /**
+     * Method to return the total amount of an payment which is applied to a payment
+     * @param payment GenericValue object of the Payment
+     * @return the applied total as double
+     */
+    public static double getPaymentApplied(GenericDelegator delegator, String paymentId) {
+        return getPaymentAppliedBd(delegator, paymentId).doubleValue(); 
+    }
+    
+    public static BigDecimal getPaymentAppliedBd(GenericDelegator delegator, String paymentId) {
+        if (delegator == null) {
+            throw new IllegalArgumentException("Null delegator is not allowed in this method");
+        }
+        
+        GenericValue payment = null;
+        try {
+            payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));    
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting Payment", module);
+        }
+        
+        if (payment == null) {
+            throw new IllegalArgumentException("The paymentId passed does not match an existing payment");
+        }
+        
+        return getPaymentAppliedBd(payment);
+    }
+    /**
+     * Method to return the total amount of an payment which is applied to a payment
+     * @param payment GenericValue object of the Payment
+     * @return the applied total as double
+     */
+    public static double getPaymentApplied(GenericValue payment) {
+        return getPaymentAppliedBd(payment).doubleValue();
+    }
+
+    public static BigDecimal getPaymentAppliedBd(GenericValue payment) {
+        BigDecimal paymentApplied = new BigDecimal("0");
+        List paymentApplications = null;
+        try {
+            paymentApplications = payment.getRelated("PaymentApplication");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting paymentApplicationlist", module);            
+        }
+        if (paymentApplications != null && paymentApplications.size() > 0) {
+            Iterator p = paymentApplications.iterator();
+            while (p.hasNext()) {
+                GenericValue paymentApplication = (GenericValue) p.next();
+                paymentApplied = paymentApplied.add(paymentApplication.getBigDecimal("amountApplied")).setScale(decimals,rounding);
+            }
+        }
+        // check for payment to payment applications
+        paymentApplications = null;
+        try {
+            paymentApplications = payment.getRelated("ToPaymentApplication");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting the 'to' paymentApplicationlist", module);            
+        }
+        if (paymentApplications != null && paymentApplications.size() > 0) {
+            Iterator p = paymentApplications.iterator();
+            while (p.hasNext()) {
+                GenericValue paymentApplication = (GenericValue) p.next();
+                paymentApplied = paymentApplied.add(paymentApplication.getBigDecimal("amountApplied")).setScale(decimals,rounding);
+            }
+        }
+        return paymentApplied;        
+    }
 }
