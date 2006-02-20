@@ -84,8 +84,8 @@
     <form name="SearchInventoryItemsResults" type="list" list-iterator-name="listIt"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-           <service service-name="performFind" result-map-name="results" result-list-iterator-name="listIt">
-               <field-map field-name="inputFields" env-name="requestParameters"/>
+           <service service-name="performFind" result-map-name="results" result-map-list-iterator-name="listIt">
+               <field-map field-name="inputFields" env-name="parameters"/>
                <field-map field-name="entityName" value="ProductInventoryItem"/>
            </service>
         </actions>        
