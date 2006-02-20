@@ -225,7 +225,7 @@
     <screen name="FindCompDoc">
         <section>
             <condition>
-                <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
             </condition>
             <actions>
 
@@ -241,14 +241,18 @@
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                        <container>
+                            <link target="AddRootCompDocTemplate?contentTypeId=COMPDOC_TEMPLATE" text="Create New Root CompDoc Template" style="buttontext"/>
+                            <link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/>
+                        </container>
                         <include-form name="FindCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                        <link target="AddRootCompDocTemplate?contentTypeId=COMPDOC_TEMPLATE" text="Create New Root CompDoc Template" style="buttontext"/>
-                        <link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/>
+                        <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    <!-- Combining this with FindCompDoc, don't see any reason to have them separate...
     <screen name="ListCompDoc">
         <section>
             <condition>
@@ -263,25 +267,20 @@
                 <set field="currentContentMenuItemName" value="" />
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
-                <entity-condition entity-name="Content"  list-name="compDocFindList">
-                    <condition-list combine="and" >
-                        <condition-expr field-name="contentName" operator="equals" env-name="parameters.contentName" ignore-if-empty="true"/>
-                        <condition-expr field-name="contentId" operator="equals" env-name="parameters.contentId" ignore-if-empty="true"/>
-                        <condition-expr field-name="contentTypeId" operator="equals" env-name="parameters.contentTypeId"/>                  
-                   </condition-list>
-                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                        <link target="FindCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Find"  style="buttontext"/>
-                        <link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/>
+                        <container>
+                            <link target="FindCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Find"  style="buttontext"/>
+                            <link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
              </widgets>
         </section>
     </screen>
+    -->
 
     <screen name="ViewInstances">
         <section>
@@ -476,8 +475,6 @@
     
     <screen name="ContentViewLink">
         <section>
-            <condition>
-            </condition>
             <actions>
             </actions>
             <widgets>
@@ -553,8 +550,6 @@
     
     <screen name="ViewCompDocContentHtml">
         <section>
-            <condition>
-            </condition>
             <actions>
             </actions>
             <widgets>
