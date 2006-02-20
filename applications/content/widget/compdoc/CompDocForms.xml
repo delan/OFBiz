@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -64,16 +64,16 @@
         <field name="contentId" title="Content Id"><display/></field>
         <field name="contentTypeId" title="Content Type Id"><display/></field>
         <field name="contentName" title="Name"><display/></field>
-        <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)">
+        <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)" widget-style="buttontext">
            <hyperlink also-hidden="false" description="Edit" target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
-        <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+        <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)" widget-style="buttontext">
            <hyperlink also-hidden="false" description="Edit" target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
-        <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)">
+        <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?rootTemplateContentId=${contentId}"/> 
         </field>
-        <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+        <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootInstanceContentId=${contentId}"/> 
         </field>
     </form>
