@@ -2,8 +2,8 @@
 <trees xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-tree.xsd">
     <tree name="CompDocTemplateTree" root-node-name="node-root" 
-        default-render-style="simple" default-wrap-style="responseTreeWrapper">
-        <node name="node-root">
+        default-render-style="simple"  default-wrap-style="treeWrapper">
+        <node name="node-root" wrap-style="treeWrapper">
             <entity-one entity-name="Content"  use-cache="false">
                 <field-map field-name="contentId" env-name="rootTemplateContentId"/>
             </entity-one>
@@ -37,7 +37,7 @@
                 </entity-condition>
             </sub-node>
         </node>
-        <node name="node-body" join-field-name="itemContentId"  entity-name="AssocRevisionItemView" >
+        <node name="node-body" join-field-name="itemContentId"  entity-name="AssocRevisionItemView"  wrap-style="treeWrapper">
             <entity-one entity-name="Content"  use-cache="false">
                 <field-map field-name="contentId" env-name="itemContentId"/>
             </entity-one>
@@ -73,7 +73,7 @@
     </tree>
     
     <tree name="CompDocInstanceTree" root-node-name="node-root" 
-        default-render-style="simple" default-wrap-style="responseTreeWrapper">
+        default-render-style="simple" default-wrap-style="treeWrapper">
         <node name="node-root">
             <entity-one entity-name="Content"  use-cache="false">
                 <field-map field-name="contentId" env-name="rootTemplateContentId"/>
