@@ -1,25 +1,19 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright 2003-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
 package org.ofbiz.accounting.invoice;
 
@@ -34,11 +28,14 @@ import java.util.Set;
 
 import javolution.util.FastMap;
 
+import org.ofbiz.accounting.payment.BillingAccountWorker;
 import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -61,6 +58,7 @@ import org.ofbiz.service.ServiceUtil;
 public class InvoiceServices {
 
     public static String module = InvoiceServices.class.getName();
+    private static final BigDecimal zero = new BigDecimal("0.00");
 
     /* Service to create an invoice for an order */
     public static Map createInvoiceForOrder(DispatchContext dctx, Map context) {
@@ -833,5 +831,773 @@ public class InvoiceServices {
             }
         }
         return invoiceTerms;
+    }
+    /**
+     * Service to add payment application records to indicate which invoices
+     * have been paid/received. For invoice processing, this service works on
+     * the invoice level when 'invoiceProcessing' parameter is set to "Y" else
+     * it works on the invoice item level.
+     * 
+     * @author <a href="mailto:h.bakker@antwebsystems.com">Hans Bakker</a>
+     */
+    public static Map updatePaymentApplication(DispatchContext dctx, Map context) {
+        Double amountApplied = (Double) context.get("amountApplied");
+        if (amountApplied != null) {
+            BigDecimal amountAppliedBd = new BigDecimal(amountApplied.toString());
+            context.put("amountApplied", amountAppliedBd);
+        } else {
+            BigDecimal amountAppliedBd = new BigDecimal("0");
+            context.put("amountApplied", amountAppliedBd);
+        }
+
+        return updatePaymentApplicationBd(dctx, context);
+    }
+
+    public static Map updatePaymentApplicationBd(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+        int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+
+        String defaultInvoiceProcessing = UtilProperties.getPropertyValue("AccountingConfig","invoiceProcessing").toString();
+        
+        boolean debug = true; // show processing messages in the log..or
+                                // not....
+
+        // a 'y' in invoiceProssesing wil reverse the default processing
+        String changeProcessing = (String) context.get("invoiceProcessing");
+        String invoiceId = (String) context.get("invoiceId");
+        String invoiceItemSeqId = (String) context.get("invoiceItemSeqId");
+        String paymentId = (String) context.get("paymentId");
+        String toPaymentId = (String) context.get("toPaymentId");
+        String paymentApplicationId = (String) context.get("paymentApplicationId");
+        BigDecimal amountApplied = (BigDecimal) context.get("amountApplied");
+        String billingAccountId = (String) context.get("billingAccountId");
+        String taxAuthGeoId = (String) context.get("taxAuthGeoId");
+
+        List errorMessageList = new LinkedList();
+        if (debug) Debug.logInfo("Input parameters..." + 
+        		" defaultInvoiceProcessing: " + defaultInvoiceProcessing + 
+        		" changeDefaultInvoiceProcessing: " + changeProcessing + 
+        		" paymentApplicationId: " + paymentApplicationId + 
+        		" PaymentId: " + paymentId + 
+        		" InvoiceId: " + invoiceId + 
+        		" InvoiceItemSeqId: " + invoiceItemSeqId + 
+        		" BillingAccountId: " + billingAccountId + 
+        		" toPaymentId: " + toPaymentId + 
+        		" amountApplied: " + amountApplied.toString() + 
+        		" TaxAuthGeoId: " + taxAuthGeoId, module);
+
+        if (changeProcessing == null) changeProcessing = new String("N");	// not provided, so no change
+        
+        boolean invoiceProcessing = true;
+        if (defaultInvoiceProcessing.equals("YY")) invoiceProcessing = true;
+
+        else if (defaultInvoiceProcessing.equals("NN")) invoiceProcessing = false;
+
+        else if (defaultInvoiceProcessing.equals("Y")) {
+        	if (changeProcessing.equals("Y")) invoiceProcessing = false;
+        	else invoiceProcessing = true;
+        }
+
+        else if (defaultInvoiceProcessing.equals("N")) {
+        	if (changeProcessing.equals("Y")) invoiceProcessing = true;
+        	else invoiceProcessing = false;
+        }
+
+        // on a new paymentApplication check if only billing or invoice or tax
+        // id is provided not 2,3...
+        if (paymentApplicationId == null) {
+            int count = 0;
+            if (invoiceId != null) count++;
+            if (toPaymentId != null) count++;
+            if (billingAccountId != null) count++;
+            if (taxAuthGeoId != null) count++;
+            if (count != 1) {
+                errorMessageList.add("- Specify either Invoice or toPayment or billing account or taxGeoId....\n");
+            }
+        }
+
+        // avoid null pointer exceptions.
+        if (amountApplied == null) amountApplied = new BigDecimal("0"); 
+        // makes no sense to have an item numer without an invoice number
+        if (invoiceId == null) invoiceItemSeqId = null; 
+
+        // retrieve all information and perform checking on the retrieved info.....
+
+        // Payment.....
+        BigDecimal paymentApplyAvailable = new BigDecimal("0"); 
+        // amount available on the payment reduced by the already applied amounts
+        BigDecimal amountAppliedMax = new BigDecimal("0"); 
+        // the maximum that can be applied taking payment,invoice,invoiceitem,billing account in concideration
+        // if maxApplied is missing, this value can be used
+        GenericValue payment = null;
+        if (paymentId == null || paymentId.equals("")) {
+            errorMessageList.add("- PaymentId blank or not supplied.... .....\n");
+        } else {
+            try {
+                payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
+            } catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());
+            }
+            if (payment == null) {
+                errorMessageList.add("- Payment record not found, ID: " + paymentId + "\n");
+            }
+            paymentApplyAvailable = payment.getBigDecimal("amount").subtract(PaymentWorker.getPaymentAppliedBd(payment)).setScale(decimals,rounding);
+
+            if (payment.getString("statusId").equals("PMNT_CANCELLED")) {
+                errorMessageList.add("- Payment(" + paymentId + ") is cancelled and cannot be applied\n");
+            }
+
+            // if the amount to apply is 0 give it amount the payment still need
+            // to apply
+            if (amountApplied.equals(zero)) {
+                amountAppliedMax = paymentApplyAvailable;
+            }
+
+            if (paymentApplicationId == null) { 
+                // only check for new application records, update on existing records is checked in the paymentApplication section
+                if (paymentApplyAvailable.equals(zero)) {
+                    errorMessageList.add("- Payment(" + paymentId + ") is already fully applied\n");
+                } else {
+                    // check here for too much application if a new record is
+                    // added (paymentApplicationId == null)
+                    if (amountApplied.compareTo(paymentApplyAvailable) > 0) {
+                        errorMessageList.add("- Payment(" + paymentId + ") has  " + paymentApplyAvailable + " to apply but " + amountApplied + " is requested\n");
+                    }
+                }
+            }
+
+            if (debug) Debug.logInfo("Payment info retrieved and checked...", module);
+        }
+
+        // the "TO" Payment.....
+        BigDecimal toPaymentApplyAvailable = new BigDecimal("0"); 
+        GenericValue toPayment = null;
+        if (toPaymentId != null && !toPaymentId.equals("")) {
+            try {
+                toPayment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", toPaymentId));
+            } catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());
+            }
+            if (toPayment == null) {
+                errorMessageList.add("- toPayment record not found, ID: " + toPaymentId + "\n");
+            }
+            toPaymentApplyAvailable = toPayment.getBigDecimal("amount").subtract(PaymentWorker.getPaymentAppliedBd(toPayment)).setScale(decimals,rounding);
+
+            if (toPayment.getString("statusId").equals("PMNT_CANCELLED")) {
+                errorMessageList.add("- toPayment(" + toPaymentId + ") is cancelled and cannot be applied\n");
+            }
+
+            // if the amount to apply is less then required by the payment reduce it
+            if (amountAppliedMax.compareTo(toPaymentApplyAvailable) > 0) {
+                amountAppliedMax = toPaymentApplyAvailable;
+            }
+
+            if (paymentApplicationId == null) { 
+                // only check for new application records, update on existing records is checked in the paymentApplication section
+                if (toPaymentApplyAvailable.equals(zero)) {
+                    errorMessageList.add("- toPayment(" + toPaymentId + ") is already fully applied\n");
+                } else {
+                    // check here for too much application if a new record is
+                    // added (paymentApplicationId == null)
+                    if (amountApplied.compareTo(toPaymentApplyAvailable) > 0) {
+                        errorMessageList.add("- toPayment(" + toPaymentId + ") has  " + toPaymentApplyAvailable + " to apply but " + amountApplied + " is requested\n");
+                    }
+                }
+            }
+            
+            // check if at least one send is the same as one receiver on the other payment
+            if (!payment.getString("partyIdFrom").equals(toPayment.getString("partyIdTo")) && 
+            		!payment.getString("partyIdFrom").equals(toPayment.getString("partyIdTo")))	{
+            	errorMessageList.add("- At least the 'from' party should be the same as the 'to' party of the other payment\n");
+            }
+
+            if (debug) Debug.logInfo("toPayment info retrieved and checked...", module);
+        }
+
+        // billing account
+        GenericValue billingAccount = null;
+        BigDecimal billingAccountApplyAvailable = new BigDecimal("0");
+        if (billingAccountId != null && !billingAccountId.equals("")) {
+            try {
+                billingAccount = delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", billingAccountId));
+            } catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());
+            }
+            if (billingAccount == null) {
+                errorMessageList.add("- Billing Account record not found, ID: " + billingAccountId + "\n");
+            }
+            try {
+                billingAccountApplyAvailable = billingAccount.getBigDecimal("accountLimit").add(
+                        new BigDecimal(BillingAccountWorker.getBillingAccountBalance(billingAccount))).setScale(decimals,rounding);
+            } catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());
+                errorMessageList.add("- Billing Account(" + billingAccountId + ") balance could not be retrieved, see log for more info...(\n");
+            }
+
+            if (paymentApplicationId == null) { 
+                // only check when a new record is created, existing record check is done in the paymentAllication section
+                if (billingAccountApplyAvailable.compareTo(zero) <= 0) {
+                    errorMessageList.add("- Billing Account(" + billingAccountId + " doesn't have a positive balance: " + billingAccountApplyAvailable + "\n");
+                } else {
+                    // check here for too much application if a new record is
+                    // added (paymentApplicationId == null)
+                    if (amountApplied.compareTo(billingAccountApplyAvailable) > 0) {
+                        errorMessageList.add("- Billing Account(" + billingAccountId + ") has " + paymentApplyAvailable + " to apply but " + amountApplied + " is requested\n");
+                    }
+                }
+            }
+
+            // check the currency
+            if (billingAccount.get("accountCurrencyUomId") != null && payment.get("currencyUomId") != null && 
+                    !billingAccount.getString("accountCurrencyUomId").equals(payment.getString("currencyUomId"))) {
+                errorMessageList.add("- Currencies are not the same, Billing Account(" + billingAccountId + ") has currency " + billingAccount.getString("accountCurrencyUomId") + " and Payment(" + paymentId + ") has a currency of: " + payment.getString("currencyUomId") + "\n");
+            }
+
+            if (debug) Debug.logInfo("Billing Account info retrieved and checked...", module);
+        }
+
+        // get the invoice (item) information
+        BigDecimal invoiceApplyAvailable = new BigDecimal("0");
+        // amount available on the invoice reduced by the already applied amounts
+        BigDecimal invoiceItemApplyAvailable = new BigDecimal("0");
+        // amount available on the invoiceItem reduced by the already applied amounts
+        GenericValue invoice = null;
+    	GenericValue invoiceItem = null;
+        if (invoiceId != null) {
+        	try {
+        		invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));
+        	} catch (GenericEntityException e) {
+        		ServiceUtil.returnError(e.getMessage());
+        	}
+        	
+        	if (invoice == null) {
+        		errorMessageList.add("- Invoice record not found, ID: " + invoiceId + "\n");
+        	}
+        	else { // check the invoice and when supplied the invoice item...
+        		
+        		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) {
+        			errorMessageList.add("- Invoice is cancelled, cannot be applied to, ID: " + invoiceId + "\n");
+        		}
+        		
+        		// check if the invoice already covered by payments
+        		BigDecimal invoiceTotal = InvoiceWorker.getInvoiceTotalBd(invoice);
+        		invoiceApplyAvailable = invoiceTotal.subtract(InvoiceWorker.getInvoiceAppliedBd(invoice));
+        		
+        		// adjust the amountAppliedMax value if required....
+        		if (invoiceApplyAvailable.compareTo(amountAppliedMax) < 0) {
+        			amountAppliedMax = invoiceApplyAvailable;
+        		}
+        		
+        		if (invoiceTotal.equals(zero)) {
+        			errorMessageList.add("- Invoice (" + invoiceId + ") has a total value of zero....cannot apply anything...\n");
+        		} else if (paymentApplicationId == null) { 
+        			// only check for new records here...updates are checked in the paymentApplication section
+        			if (invoiceApplyAvailable.equals(zero)) {
+        				errorMessageList.add("- Invoice (" + invoiceId + ") is already completely covered by payments... \n");
+        			}
+        			// check here for too much application if a new record(s) are
+        			// added (paymentApplicationId == null)
+        			else if (amountApplied.compareTo(invoiceApplyAvailable) > 0) {
+        				errorMessageList.add("- Invoice(" + invoiceId + ") has " + invoiceApplyAvailable + " to apply but " + amountApplied + " is requested\n");
+        			}
+        		}
+        		
+        		// check if at least one sender is the same as one receiver on the invoice
+        		if (!payment.getString("partyIdFrom").equals(invoice.getString("partyId")) && 
+        				!payment.getString("partyIdTo").equals(invoice.getString("partyIdFrom")))	{
+        			errorMessageList.add("- At least the 'from' party should be the same as the 'to' party of the payment/invoice\n");
+        		}
+        		
+        		if (debug) Debug.logInfo("Invoice info retrieved and checked ...", module);
+        	}
+        	
+        	// if provided check the invoice item.
+        	if (invoiceItemSeqId != null) { 
+        		// when itemSeqNr not provided delay checking on invoiceItemSeqId
+        		try {
+        			invoiceItem = delegator.findByPrimaryKey("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId));
+        		} catch (GenericEntityException e) {
+        			ServiceUtil.returnError(e.getMessage());
+        		}
+        		
+        		if (invoiceItem == null) {
+        			errorMessageList.add("- InvoiceItem record not found, ID: " + invoiceId + " " + invoiceItemSeqId + "\n");
+        		} else {
+        			if (invoiceItem.get("uomId") != null && payment.get("currencyUomId") != null && !invoiceItem.getString("uomId").equals(payment.getString("currencyUomId"))) {
+        				errorMessageList.add("- Payment currency(" + payment.getString("currencyUomId") + ") and invoice Item currency(" + invoiceItem.getString("uomId") + ") not the same\n");
+        			} else if (invoice.get("currencyUomId") != null && payment.get("currencyUomId") != null && !invoice.getString("currencyUomId").equals(payment.getString("currencyUomId"))) {
+        				errorMessageList.add("- Payment currency(" + payment.getString("currencyUomId") + ") and invoice currency(" + invoice.getString("currencyUomId") + ") not the same\n");
+        			}
+        			
+        			// get the invoice item applied value
+        			BigDecimal quantity = null;
+        			if (invoiceItem.get("quantity") == null) {
+        				quantity = new BigDecimal("1");
+        			} else {
+        				quantity = invoiceItem.getBigDecimal("quantity").setScale(decimals,rounding);
+        			}
+        			invoiceItemApplyAvailable = invoiceItem.getBigDecimal("amount").multiply(quantity).subtract(InvoiceWorker.getInvoiceItemAppliedBd(invoiceItem));
+        			// check here for too much application if a new record is added
+        			// (paymentApplicationId == null)
+        			if (paymentApplicationId == null && amountApplied.compareTo(invoiceItemApplyAvailable) > 0) { 
+        				// new record
+        				errorMessageList.add("- Invoice(" + invoiceId + ") item(" + invoiceItemSeqId + ") has  " + invoiceItemApplyAvailable + " to apply but " + amountApplied + " is requested\n");
+        			}
+        			
+        		}
+        		if (debug) Debug.logInfo("InvoiceItem info retrieved and checked against the Invoice (currency and amounts) ...", module);
+        	}
+        }
+
+        // get the application record if the applicationId is supplied if not
+        // create empty record.
+        BigDecimal newInvoiceApplyAvailable = invoiceApplyAvailable; 
+        // amount available on the invoice taking into account if the invoiceItemnumber has changed
+        BigDecimal newInvoiceItemApplyAvailable = invoiceItemApplyAvailable; 
+        // amount available on the invoiceItem taking into account if the itemnumber has changed
+        BigDecimal newToPaymentApplyAvailable = toPaymentApplyAvailable; 
+        // amount available on the Billing Account taking into account if the billing account number has changed
+        BigDecimal newBillingAccountApplyAvailable = billingAccountApplyAvailable; 
+        // amount available on the Billing Account taking into account if the billing account number has changed
+        BigDecimal newPaymentApplyAvailable = paymentApplyAvailable;
+        GenericValue paymentApplication = null;
+        if (paymentApplicationId == null) {
+            paymentApplication = delegator.makeValue("PaymentApplication", null); 
+            // prepare for creation
+        } else { // retrieve existing paymentApplication
+            try {
+                paymentApplication = delegator.findByPrimaryKey("PaymentApplication", UtilMisc.toMap("paymentApplicationId", paymentApplicationId));
+            } catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());
+            }
+
+            if (paymentApplication == null) {
+                errorMessageList.add("- PaymentApplication record not found, ID: " + paymentApplicationId + "\n");
+                paymentApplicationId = null;
+            } else {
+
+                // if both invoiceId and BillingId is entered there was
+                // obviously a change
+                // only take the newly entered item, same for tax authority and toPayment
+                if (paymentApplication.get("invoiceId") == null && invoiceId != null) {
+                    billingAccountId = null;
+                    taxAuthGeoId = null;
+                    toPaymentId = null;
+                } else if (paymentApplication.get("toPaymentId") == null && toPaymentId != null) {
+                    invoiceId = null;
+                    invoiceItemSeqId = null;
+                    taxAuthGeoId = null;
+                    billingAccountId = null;
+                } else if (paymentApplication.get("billingAccountId") == null && billingAccountId != null) {
+                    invoiceId = null;
+                    invoiceItemSeqId = null;
+                    toPaymentId = null;
+                    taxAuthGeoId = null;
+                } else if (paymentApplication.get("taxAuthGeoId") == null && taxAuthGeoId != null) {
+                    invoiceId = null;
+                    invoiceItemSeqId = null;
+                    toPaymentId = null;
+                    billingAccountId = null;
+                }
+
+                // check if the payment for too much application if an existing
+                // application record is changed
+                newPaymentApplyAvailable = paymentApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied);
+                if (newPaymentApplyAvailable.compareTo(zero) < 0) {
+                    errorMessageList.add("- Payment(" + paymentId + ") has an amount(" + paymentApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")) + ") to apply and the  " + amountApplied + " specified is too much\n");
+                }
+
+                if (invoiceId != null) { 
+                    // only when we are processing an invoice on existing paymentApplication check invoice item for to much application if the invoice
+                    // number did not change
+                    if (invoiceId.equals(paymentApplication .getString("invoiceId"))) {
+                        // check if both the itemNumbers are null then this is a
+                        // record for the whole invoice
+                        if (invoiceItemSeqId == null && paymentApplication.get("invoiceItemSeqId") == null) {
+                            newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied);
+                            if (invoiceApplyAvailable.compareTo(zero) < 0) {
+                                errorMessageList.add("- Update would apply " + newInvoiceApplyAvailable.negate() + " to much on this Invoice(" + invoiceId + ")\n");
+                            }
+                        } else if (invoiceItemSeqId == null && paymentApplication.get("invoiceItemSeqId") != null) {
+                            // check if the item number changed from a real Item number to a null value
+                            newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied);
+                            if (invoiceApplyAvailable.compareTo(zero) < 0) {
+                                errorMessageList.add("- Update would apply " + newInvoiceApplyAvailable.negate() + " to much on this Invoice(" + invoiceId + ")\n");
+                            }
+                        } else if (invoiceItemSeqId != null && paymentApplication.get("invoiceItemSeqId") == null) {
+                            // check if the item number changed from a null value to
+                            // a real Item number
+                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.subtract(amountApplied);
+                            if (newInvoiceItemApplyAvailable.compareTo(zero) < 0) {
+                                errorMessageList.add("- Update would apply " + newInvoiceItemApplyAvailable.negate() + " to much on this Invoice item(" + invoiceId + "/" + invoiceItemSeqId + "\n");
+                            }
+                        } else if (invoiceItemSeqId.equals(paymentApplication.getString("invoiceItemSeqId"))) {
+                            // check if the real item numbers the same
+                            // item number the same numeric value
+                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied);
+                            if (newInvoiceItemApplyAvailable.compareTo(zero) < 0) {
+                                errorMessageList.add("- Update would apply " + newInvoiceItemApplyAvailable.negate() + " to much on this Invoice item(" + invoiceId + "/" + invoiceItemSeqId + "\n");
+                            }
+                        } else {
+                            // item number changed only check new item
+                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.add(amountApplied);
+                            if (newInvoiceItemApplyAvailable.compareTo(zero) < 0) {
+                                errorMessageList.add("- Update would apply " + newInvoiceItemApplyAvailable.negate() + " to much on this Invoice item\n");
+                            }
+                        }
+
+                        // if the amountApplied = 0 give it the higest possible
+                        // value
+                        if (amountApplied.equals(zero)) {
+                            if (newInvoiceItemApplyAvailable.compareTo(newPaymentApplyAvailable) < 0) {
+                                amountApplied = newInvoiceItemApplyAvailable; 
+                                // from the item number
+                            } else {
+                                amountApplied = newPaymentApplyAvailable; 
+                                // from the payment
+                            }
+                        }
+
+                        // check the invoice
+                        newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied").subtract(amountApplied));
+                        if (newInvoiceApplyAvailable.compareTo(zero) < 0) {
+                            errorMessageList.add("- Invoice (" + invoiceId + ") has only " + invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")) + " left which it not applied, so " + amountApplied + " is too much\n");
+                        }
+                    }
+                }
+
+                // check the toPayment account when only the amountApplied has
+                // changed,
+                if (toPaymentId != null && toPaymentId.equals(paymentApplication.getString("toPaymentId"))) {
+                    newToPaymentApplyAvailable = toPaymentApplyAvailable.subtract(paymentApplication.getBigDecimal("amountApplied")).add(amountApplied);
+                    if (newToPaymentApplyAvailable.compareTo(zero) < 0) {
+                        errorMessageList.add("- toPaymentId(" + toPaymentId + ") has only " + newToPaymentApplyAvailable + " available so " + amountApplied + " is too much\n");
+                    }
+                } else if (toPaymentId != null) {
+                    // billing account entered number has changed so we have to
+                    // check the new billing account number.
+                    newToPaymentApplyAvailable = toPaymentApplyAvailable.add(amountApplied);
+                    if (newToPaymentApplyAvailable.compareTo(zero) < 0) {
+                        errorMessageList.add("- toPaymentId(" + toPaymentId + ") has only "+ newToPaymentApplyAvailable + " available so " + amountApplied + " is too much\n");
+                    }
+
+                }
+                // check the billing account when only the amountApplied has
+                // changed,
+                // change in account number is already checked in the billing
+                // account section
+                if (billingAccountId != null && billingAccountId.equals(paymentApplication.getString("billingAccountId"))) {
+                    newBillingAccountApplyAvailable = billingAccountApplyAvailable.subtract(paymentApplication.getBigDecimal("amountApplied")).add(amountApplied);
+                    if (newBillingAccountApplyAvailable.compareTo(zero) < 0) {
+                        errorMessageList.add("- Billing Account(" + billingAccountId + ") has only " + newBillingAccountApplyAvailable + " available so " + amountApplied + " is too much\n");
+                    }
+                } else if (billingAccountId != null) {
+                    // billing account entered number has changed so we have to
+                    // check the new billing account number.
+                    newBillingAccountApplyAvailable = billingAccountApplyAvailable.add(amountApplied);
+                    if (newBillingAccountApplyAvailable.compareTo(zero) < 0) {
+                        errorMessageList.add("- Billing Account(" + billingAccountId + ") has only "+ newBillingAccountApplyAvailable + " available so " + amountApplied + " is too much\n");
+                    }
+
+                }
+            }
+            if (debug) Debug.logInfo("paymentApplication record info retrieved and checked...", module);
+        }
+
+        // show the maximumus what can be added in the payment application file.
+        if (debug) {
+            String extra = new String("");
+            if (invoiceItemSeqId != null) {
+                extra = new String(" Invoice item(" + invoiceItemSeqId + ") amount not yet applied: " + newInvoiceItemApplyAvailable);
+            }
+            Debug.logInfo("checking finished, start processing withe the following data... ", module);
+            if (invoiceId != null) {
+            Debug.logInfo(" Invoice(" + invoiceId + ") amount not yet applied: " + newInvoiceApplyAvailable + extra + " Payment(" + paymentId + ") amount not yet applied: " + newPaymentApplyAvailable +  " Requested amount to apply:" + amountApplied, module);
+            }
+            if (toPaymentId != null) {
+                Debug.logInfo(" toPayment(" + toPaymentId + ") amount not yet applied: " + newToPaymentApplyAvailable + " Payment(" + paymentId + ") amount not yet applied: " + newPaymentApplyAvailable + " Requested amount to apply:" + amountApplied, module);
+            }
+            if (billingAccountId != null) {
+                Debug.logInfo(" billingAccount(" + billingAccountId + ") amount not yet applied: " + newBillingAccountApplyAvailable + " Payment(" + paymentId + ") amount not yet applied: " + newPaymentApplyAvailable + " Requested amount to apply:" + amountApplied, module);
+            }
+            if (taxAuthGeoId != null) {
+                Debug.logInfo(" taxAuthGeoId(" + taxAuthGeoId + ")  Payment(" + paymentId + ") amount not yet applied: " + newPaymentApplyAvailable + " Requested amount to apply:" + amountApplied, module);
+            }
+        }
+
+        // report error messages if any
+        if (errorMessageList.size() > 0) {
+            return ServiceUtil.returnError(errorMessageList);
+        }
+
+        // if the application is specified it is easy, update the existing record only
+        if (paymentApplicationId != null) { 
+            // record is already retrieved previously
+            if (debug) Debug.logInfo("Process an existing paymentApplication record: " + paymentApplicationId, module);
+            // update the current record
+            paymentApplication.set("invoiceId", invoiceId);
+            paymentApplication.set("invoiceItemSeqId", invoiceItemSeqId);
+            paymentApplication.set("paymentId", paymentId);
+            paymentApplication.set("toPaymentId", toPaymentId);
+            paymentApplication.set("amountApplied", new Double(amountApplied.doubleValue()));
+            paymentApplication.set("billingAccountId", billingAccountId);
+            paymentApplication.set("taxAuthGeoId", taxAuthGeoId);
+            return storePaymentApplication(delegator, paymentApplication);
+        }
+
+        // if no invoice sequence number is provided it assumed the requested paymentAmount will be
+        // spread over the invoice starting with the lowest sequence number if
+        // itemprocessing is on otherwise creat one record
+        if (invoiceId != null && paymentId != null && (invoiceItemSeqId == null)) {
+            if (invoiceProcessing) { 
+                // create only a single record with a null seqId
+                if (debug) Debug.logInfo("Try to allocate the payment to the invoice as a whole", module);
+                paymentApplication.set("paymentId", paymentId);
+                paymentApplication.set("toPaymentId",toPaymentId);
+                paymentApplication.set("invoiceId", invoiceId);
+                paymentApplication.set("invoiceItemSeqId", null);
+                paymentApplication.set("toPaymentId", null);
+                if (amountApplied.compareTo(zero) > 0) {
+                    paymentApplication.set("amountApplied", new Double(amountApplied.doubleValue()));
+                } else {
+                    paymentApplication.set("amountApplied", new Double(amountAppliedMax.doubleValue()));
+                }
+                paymentApplication.set("billingAccountId", null);
+                paymentApplication.set("taxAuthGeoId", null);
+                if (debug) Debug.logInfo("NEW paymentapplication ID:" + paymentApplicationId + " created", module);
+                return storePaymentApplication(delegator, paymentApplication);
+            } else { // spread the amount over every single item number
+                if (debug) Debug.logInfo("Try to allocate the payment to the itemnumbers of the invoice", module);
+                // get the invoice items
+                List invoiceItems = null;
+                try {
+                    invoiceItems = delegator.findByAnd("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId));
+                } catch (GenericEntityException e) {
+                    ServiceUtil.returnError(e.getMessage());
+                }
+                if (invoiceItems == null || invoiceItems.size() == 0) {
+                    errorMessageList.add("- No invoice items found for invoice " + invoiceId + " to match payment against...\n");
+                    return ServiceUtil.returnError(errorMessageList);
+                } else { // we found some invoice items, start processing....
+                    Iterator i = invoiceItems.iterator();
+                    // check if the user want to apply a smaller amount than the maximum possible on the payment
+                    if (!amountApplied.equals(zero) && amountApplied.compareTo(paymentApplyAvailable)< 0)	{
+                    	paymentApplyAvailable = amountApplied;
+                    }
+                    while (i.hasNext() && paymentApplyAvailable.compareTo(zero) > 0) {
+                        // get the invoiceItem
+                        invoiceItem = (GenericValue) i.next();
+                        if (debug) Debug.logInfo("Start processing item: " + invoiceItem.getString("invoiceItemSeqId"), module);
+                        BigDecimal itemQuantity = new BigDecimal("1");
+                        if (invoiceItem.get("quantity") != null && invoiceItem.getBigDecimal("quantity").compareTo(zero) != 0) {
+                            itemQuantity = new BigDecimal(invoiceItem.getString("quantity")).setScale(decimals,rounding);
+                        }
+                        BigDecimal itemAmount = invoiceItem.getBigDecimal("amount").setScale(decimals,rounding);
+                        BigDecimal itemTotal = itemAmount.multiply(itemQuantity).setScale(decimals,rounding);
+
+                        // get the application(s) already allocated to this
+                        // item, if available
+                        List paymentApplications = null;
+                        try {
+                            paymentApplications = invoiceItem.getRelated("PaymentApplication");
+                        } catch (GenericEntityException e) {
+                            ServiceUtil.returnError(e.getMessage());
+                        }
+                        BigDecimal tobeApplied = new BigDecimal("0"); 
+                        // item total amount - already applied (if any)
+                        BigDecimal alreadyApplied = new BigDecimal("0");
+                        if (paymentApplications != null && paymentApplications.size() > 0) { 
+                            // application(s) found, add them all together
+                            Iterator p = paymentApplications.iterator();
+                            while (p.hasNext()) {
+                                paymentApplication = (GenericValue) p.next();
+                                alreadyApplied = alreadyApplied.add(paymentApplication.getBigDecimal("amountApplied").setScale(decimals,rounding));
+                            }
+                            tobeApplied = itemTotal.subtract(alreadyApplied).setScale(decimals,rounding);
+                        } else { 
+                            // no application connected yet
+                            tobeApplied = itemTotal;
+                        }
+                        if (debug) Debug.logInfo("tobeApplied:(" + tobeApplied + ") = " + "itemTotal(" + itemTotal + ") - alreadyApplied(" + alreadyApplied + ") but not more then (nonapplied) paymentAmount(" + paymentApplyAvailable + ")", module);
+
+                        if (tobeApplied.equals(zero)) { 
+                            // invoiceItem already fully applied so look at the next one....
+                            continue;
+                        }
+
+                        if (paymentApplyAvailable.compareTo(tobeApplied) > 0) {
+                            paymentApplyAvailable = paymentApplyAvailable.subtract(tobeApplied);
+                        } else {
+                            tobeApplied = paymentApplyAvailable;
+                            paymentApplyAvailable = new BigDecimal("0");
+                        }
+
+                        // create application payment record but check currency
+                        // first if supplied
+                        if (invoiceItem.get("uomId") != null && payment.get("currencyUomId") != null && !invoiceItem.getString("uomId").equals(payment.getString("currencyUomId"))) {
+                            errorMessageList.add("- Payment currency (" + payment.getString("currencyUomId") + ") and invoice Item(" + invoiceItem.getString("invoiceItemSeqId") + ") currency(" + invoiceItem.getString("uomId") + ") not the same\n");
+                        } else if (invoice.get("currencyUomId") != null && payment.get("currencyUomId") != null && !invoice.getString("currencyUomId").equals( payment.getString("currencyUomId"))) {
+                            errorMessageList.add("- Payment currency (" + payment.getString("currencyUomId") + ") and invoice currency(" + invoice.getString("currencyUomId") + ") not the same\n");
+                        } else {
+                            paymentApplication.set("paymentApplicationId", null);
+                            // make sure we get a new record
+                            paymentApplication.set("invoiceId", invoiceId);
+                            paymentApplication.set("invoiceItemSeqId", invoiceItem.getString("invoiceItemSeqId"));
+                            paymentApplication.set("paymentId", paymentId);
+                            paymentApplication.set("toPaymentId", toPaymentId);
+                            paymentApplication.set("amountApplied", new Double( tobeApplied.doubleValue()));
+                            paymentApplication.set("billingAccountId", billingAccountId);
+                            paymentApplication.set("taxAuthGeoId", taxAuthGeoId);
+                            storePaymentApplication(delegator, paymentApplication);
+                        }
+
+                        // check if either the invoice or the payment is fully
+                        // applied, when yes change the status to paid
+                        // which triggers the ledger routines....
+                        /*
+                         * if
+                         * (InvoiceWorker.getInvoiceTotalBd(invoice).equals(InvoiceWorker.getInvoiceAppliedBd(invoice))) {
+                         * try { dispatcher.runSync("setInvoiceStatus",
+                         * UtilMisc.toMap("invoiceId",invoiceId,"statusId","INVOICE_PAID")); }
+                         * catch (GenericServiceException e1) {
+                         * Debug.logError(e1, "Error updating invoice status",
+                         * module); } }
+                         * 
+                         * if
+                         * (payment.getBigDecimal("amount").equals(PaymentWorker.getPaymentAppliedBd(payment))) {
+                         * GenericValue appliedPayment = (GenericValue)
+                         * delegator.makeValue("Payment",
+                         * UtilMisc.toMap("paymentId",paymentId,"statusId","INVOICE_PAID"));
+                         * try { appliedPayment.store(); } catch
+                         * (GenericEntityException e) {
+                         * ServiceUtil.returnError(e.getMessage()); } }
+                         */
+                    }
+
+                    if (errorMessageList.size() > 0) {
+                        return ServiceUtil.returnError(errorMessageList);
+                    } else {
+                        return ServiceUtil.returnSuccess();
+                    }
+                }
+            }
+        }
+        
+        // if no paymentApplicationId supplied create a new record with the data
+        // supplied...
+        if (paymentApplicationId == null && amountApplied != null) {
+            paymentApplication.set("paymentApplicationId", paymentApplicationId);
+            paymentApplication.set("invoiceId", invoiceId);
+            paymentApplication.set("invoiceItemSeqId", invoiceItemSeqId);
+            paymentApplication.set("paymentId", paymentId);
+            paymentApplication.set("toPaymentId", toPaymentId);
+            paymentApplication.set("amountApplied", new Double(amountApplied.doubleValue()));
+            paymentApplication.set("billingAccountId", billingAccountId);
+            paymentApplication.set("taxAuthGeoId", taxAuthGeoId);
+            return storePaymentApplication(delegator, paymentApplication);
+        }
+
+        // should never come here...
+        errorMessageList.add("??unsuitable parameters passed...?? This message.... should never be shown\n");
+        errorMessageList.add("--Input parameters...InvoiceId:" + invoiceId + " invoiceItemSeqId:" + invoiceItemSeqId + " PaymentId:" + paymentId + " toPaymentId:" + toPaymentId + "\n  paymentApplicationId:" + paymentApplicationId + " amountApplied:" + amountApplied);
+        return ServiceUtil.returnError(errorMessageList);
+    }
+
+    /**
+     * Update/add to the paymentApplication table and making sure no dup[licate
+     * record exist
+     * 
+     * @param delegator
+     * @param paymentApplication
+     * @return map results
+     */
+    private static Map storePaymentApplication(GenericDelegator delegator, GenericValue paymentApplication) {
+    	Map results = ServiceUtil.returnSuccess();
+    	int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    	int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    	boolean debug = true;
+    	if (debug) Debug.logInfo("===============Start updating the paymentApplication table ", module);
+    	
+    	// check if a record already exists with this data
+    	List checkAppls = null;
+    	try {
+    		checkAppls = delegator.findByAnd("PaymentApplication", UtilMisc.toMap(
+    				"invoiceId", paymentApplication.get("invoiceId"),
+    				"invoiceItemSeqId", paymentApplication.get("invoiceItemSeqId"),
+    				"billingAccountId", paymentApplication.get("billingAccountId"), 
+    				"paymentId", paymentApplication.get("paymentId"), 
+    				"toPaymentId", paymentApplication.get("toPaymentId"), 
+    				"taxAuthGeoId", paymentApplication.get("taxAuthGeoId")));
+    	} catch (GenericEntityException e) {
+    		ServiceUtil.returnError(e.getMessage());
+    	}
+    	if (checkAppls != null && checkAppls.size() > 0) {
+    		if (debug) Debug.logInfo("===============" + checkAppls.size() + " records already exist", module);
+    		// 1 record exists just update and if diffrent ID delete other record and add together.
+    		GenericValue checkAppl = (GenericValue) checkAppls.get(0);
+    		// if new record  add to the already existing one.
+    		if ( paymentApplication.get("paymentApplicationId") == null)	{
+    			// add 2 amounts together
+    			checkAppl.set("amountApplied", new Double(paymentApplication.getBigDecimal("amountApplied").
+    					add(checkAppl.getBigDecimal("amountApplied")).setScale(decimals,rounding).doubleValue()));
+    			if (debug) 	Debug.logInfo("==============Update paymentApplication record: " + checkAppl.getString("paymentApplicationId") + " with appliedAmount:" + checkAppl.getBigDecimal("amountApplied"), module);
+    			try {
+    				checkAppl.store();
+    			} catch (GenericEntityException e) {
+    				ServiceUtil.returnError(e.getMessage());
+    			}
+    		} else if (paymentApplication.getString("paymentApplicationId").equals(checkAppl.getString("paymentApplicationId"))) {
+    			// update existing record inplace
+    			checkAppl.set("amountApplied", new Double(paymentApplication.getBigDecimal("amountApplied").doubleValue()));
+    			if (debug) 	Debug.logInfo("==============Update paymentApplication record: " + checkAppl.getString("paymentApplicationId") + " with appliedAmount:" + checkAppl.getBigDecimal("amountApplied"), module);
+    			try {
+    				checkAppl.store();
+    			} catch (GenericEntityException e) {
+    				ServiceUtil.returnError(e.getMessage());
+    			}
+    		} else	{ // two existing records, an updated one added to the existing one
+    			// add 2 amounts together
+    			checkAppl.set("amountApplied", new Double(paymentApplication.getBigDecimal("amountApplied").
+    					add(checkAppl.getBigDecimal("amountApplied")).setScale(decimals,rounding).doubleValue()));
+    			// delete paymentApplication record and update the checkAppls one.
+    			if (debug) Debug.logInfo("============Delete paymentApplication record: " + paymentApplication.getString("paymentApplicationId") + " with appliedAmount:" + paymentApplication.getBigDecimal("amountApplied"), module);
+    			try {
+    				paymentApplication.remove();
+    			} catch (GenericEntityException e) {
+    				ServiceUtil.returnError(e.getMessage());
+    			}
+    			// update amount existing record
+    			if (debug) 	Debug.logInfo("==============Update paymentApplication record: " + checkAppl.getString("paymentApplicationId") + " with appliedAmount:" + checkAppl.getBigDecimal("amountApplied"), module);
+    			try {
+    				checkAppl.store();
+    			} catch (GenericEntityException e) {
+    				ServiceUtil.returnError(e.getMessage());
+    			}
+    		}
+    	} else {
+    		if (debug) Debug.logInfo("No records found with paymentId,invoiceid..etc probaly changed one of them...", module);
+    		// create record if ID null;
+    		if (paymentApplication.get("paymentApplicationId") == null) {
+    			paymentApplication.set("paymentApplicationId", delegator.getNextSeqId("PaymentApplication"));
+    				if (debug) Debug.logInfo("=============Create new paymentAppication record: " + paymentApplication.getString("paymentApplicationId") + " with appliedAmount:" + paymentApplication.getBigDecimal("amountApplied"), module);
+                try {
+                    paymentApplication.create();
+                } catch (GenericEntityException e) {
+                    ServiceUtil.returnError(e.getMessage());
+                }
+            } else {
+                // update existing record (could not be found because a non existing combination of paymentId/invoiceId/invoiceSeqId/ etc... was provided
+                if (debug) Debug.logInfo("===========Update existing paymentApplication record: " + paymentApplication.getString("paymentApplicationId") + " with appliedAmount:" + paymentApplication.getBigDecimal("amountApplied"), module);
+                try {
+                    paymentApplication.store();
+                } catch (GenericEntityException e) {
+                    ServiceUtil.returnError(e.getMessage());
+                }
+            }
+        }
+        return results;
     }
 }

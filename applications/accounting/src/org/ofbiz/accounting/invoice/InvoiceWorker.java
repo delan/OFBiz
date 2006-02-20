@@ -1,37 +1,29 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright 2003-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
 package org.ofbiz.accounting.invoice;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
-import java.math.BigDecimal;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -47,6 +39,9 @@ import org.ofbiz.entity.util.EntityUtil;
 public class InvoiceWorker {
     
     public static String module = InvoiceWorker.class.getName();
+    private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+
     
     /**
      * Method to return the total amount of an invoice
@@ -298,5 +293,137 @@ public class InvoiceWorker {
         return null;        
     }
     
+    /**
+     * Method to return the total amount of an invoice which is not yet applied to a payment
+     * @param invoice GenericValue object of the Invoice
+     * @return the invoice total as double
+     */
+    public static BigDecimal getInvoiceNotApplied(GenericDelegator delegator, String invoiceId) {
+    	return InvoiceWorker.getInvoiceTotalBd(delegator, invoiceId).subtract(getInvoiceAppliedBd(delegator, invoiceId));
+    }
+    public static BigDecimal getInvoiceNotApplied(GenericValue invoice) {
+    	return InvoiceWorker.getInvoiceTotalBd(invoice).subtract(getInvoiceAppliedBd(invoice));
+    }
+
+    /**
+     * Method to return the total amount of an invoice which is applied to a payment
+     * @param invoice GenericValue object of the Invoice
+     * @return the invoice total as double
+     */
+    public static double getInvoiceApplied(GenericDelegator delegator, String invoiceId) {
+    	return getInvoiceAppliedBd(delegator, invoiceId).doubleValue();
+    }
+    	
+    public static BigDecimal getInvoiceAppliedBd(GenericDelegator delegator, String invoiceId) {
+        if (delegator == null) {
+            throw new IllegalArgumentException("Null delegator is not allowed in this method");
+        }
+        
+        GenericValue invoice = null;
+        try {
+            invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));    
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting Invoice", module);
+        }
+        
+        if (invoice == null) {
+            throw new IllegalArgumentException("The invoiceId passed does not match an existing invoice");
+        }
+        
+        return getInvoiceAppliedBd(invoice);
+    }
+    /**
+     * Method to return the total amount of an invoice which is applied to a payment
+     * @param invoice GenericValue object of the Invoice
+     * @return the applied total as double
+     */
+    public static double getInvoiceApplied(GenericValue invoice) {
+    	return getInvoiceAppliedBd(invoice).doubleValue();
+    }
+    /**
+     * Big decimal version of getInvoiceApplied(
+     * 
+     * @param delegator
+     * @param invoiceId
+     * @param invoiceItemSeqId
+     * @return
+     */
+    public static BigDecimal getInvoiceAppliedBd(GenericValue invoice) {
+        BigDecimal invoiceApplied = new BigDecimal("0");
+        List paymentApplications = null;
+        try {
+        	paymentApplications = invoice.getRelated("PaymentApplication");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting paymentApplicationlist", module);            
+        }
+        if (paymentApplications != null && paymentApplications.size() > 0) {
+            Iterator p = paymentApplications.iterator();
+            while (p.hasNext()) {
+                GenericValue paymentApplication = (GenericValue) p.next();
+                invoiceApplied = invoiceApplied.add(paymentApplication.getBigDecimal("amountApplied")).setScale(decimals,rounding);
+            }
+        }
+        return invoiceApplied;        
+    }
+    /**
+     * Method to return the amount of an invoiceItem which is applied to a payment
+     * @param invoice GenericValue object of the Invoice
+     * @return the invoice total as double
+     */
+    public static double getInvoiceItemApplied(GenericDelegator delegator, String invoiceId, String invoiceItemSeqId) {
+    	return getInvoiceItemAppliedBd(delegator, invoiceId, invoiceItemSeqId).doubleValue();
+    }
+    /**
+     * Big decimal version of getInvoiceApplied(
+     * 
+     * @param delegator
+     * @param invoiceId
+     * @param invoiceItemSeqId
+     * @return
+     */
+    public static BigDecimal getInvoiceItemAppliedBd(GenericDelegator delegator, String invoiceId, String invoiceItemSeqId) {
+        if (delegator == null) {
+            throw new IllegalArgumentException("Null delegator is not allowed in this method");
+        }
+        
+        GenericValue invoiceItem = null;
+        try {
+            invoiceItem = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemSeqId", invoiceItemSeqId));    
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting InvoiceItem", module);
+        }
+        
+        if (invoiceItem == null) {
+            throw new IllegalArgumentException("The invoiceId/itemSeqId passed does not match an existing invoiceItem");
+        }
+        
+        return getInvoiceItemAppliedBd(invoiceItem);
+    }
+    /**
+     * Method to return the total amount of an invoiceItem which is applied to a payment
+     * @param invoice GenericValue object of the Invoice
+     * @return the applied total as double
+     */
+    public static double getInvoiceItemApplied(GenericValue invoiceItem) {
+    	return getInvoiceItemAppliedBd(invoiceItem).doubleValue();
+    }
+    public static BigDecimal getInvoiceItemAppliedBd(GenericValue invoiceItem) {
+        BigDecimal invoiceItemApplied = new BigDecimal("0");
+        List paymentApplications = null;
+        try {
+        	paymentApplications = invoiceItem.getRelated("PaymentApplication");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting paymentApplicationlist", module);            
+        }
+        if (paymentApplications != null && paymentApplications.size() > 0) {
+            Iterator p = paymentApplications.iterator();
+            while (p.hasNext()) {
+                GenericValue paymentApplication = (GenericValue) p.next();
+                invoiceItemApplied = invoiceItemApplied.add(paymentApplication.getBigDecimal("amountApplied")).setScale(decimals,rounding);
+            }
+        }
+        return invoiceItemApplied;        
+    }
     
+   
 }
