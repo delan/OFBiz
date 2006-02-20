@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -242,7 +242,7 @@
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <link target="AddRootCompDocTemplate?contentTypeId=COMPDOC_TEMPLATE" text="Create New Root CompDoc Template" style="buttontext"/>
+                            <link target="AddRootCompDocTemplate" text="Create New Root CompDoc Template" style="buttontext"/>
                             <link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/>
                         </container>
                         <include-form name="FindCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
@@ -359,8 +359,8 @@
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                             <decorator-section name="body">
+                                <link target="AddRootCompDocInstance?contentId=${rootTemplateContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create Instance of This Template" style="buttontext"/>
                                 <include-form name="EditRootCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                                <link target="AddRootCompDocInstance?contentId=${rootTemplateContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Instance" style="buttontext"/>
                             </decorator-section>
                         </decorator-screen>
                     </widgets>
@@ -586,7 +586,7 @@
             </condition>
             <actions>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Instance Add Page"/>
+                <set field="title" value="Composite Document Template Add Page"/>
                 <set value="COMPDOC_TEMPLATE" field="dummy.contentTypeId"/>
                 <set value="createChildCompDocTemplate" field="createChildCompDoc"/>
             </actions>

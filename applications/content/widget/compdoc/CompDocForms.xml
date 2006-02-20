@@ -141,7 +141,7 @@
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <alt-target target="createContentRevisionItem" use-when="contentRevisionItem==null"/>
-        <auto-fields-entity entity-name="ContentRevisionItem" />
+        <auto-fields-entity entity-name="ContentRevisionItem"/>
         
         <field name="contentId" title="" widget-style="buttontext"><lookup target-form-name="LookupContent"/></field>
         <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
@@ -398,11 +398,11 @@
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
-        <field name="contentId"><text/></field>
-        <field name="contentName"><text/></field>
+        <!-- Why is this here? <field name="contentId"><text/></field> -->
+        <field name="contentName" title="CompDoc Template Name"><text/></field>
         <field name="contentTypeId" map-name="dummy"><hidden value="COMPDOC_TEMPLATE"/></field>
-        <field name="rootTemplateContentId"><hidden /></field>
-        <field name="rootTemplateRevSeqId"><hidden /></field>
+        <field name="rootTemplateContentId"><hidden/></field>
+        <field name="rootTemplateRevSeqId"><hidden/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -410,7 +410,7 @@
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
-        <field name="contentId"><text/></field>
+        <field name="contentId" widget-style="tabletext"><display/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId" map-name="dummy"><hidden value="COMPDOC_TEMPLATE"/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -425,7 +425,7 @@
         <field name="contentTypeId"><hidden/></field>
         <field name="instanceOfContentId" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display/></field>
         <field name="contentIdTo" widget-style="tabletext"><display/></field>
-        <field name="contentAssocTypeId"><display /></field>
+        <field name="contentAssocTypeId"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><date-time/></field>
         <field name="sequenceNum"><text/></field>
@@ -487,8 +487,8 @@
 
     <form name="EditContentRevisionAndItem" target="updateContentRevisionAndItem" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <auto-fields-entity entity-name="ContentRevision" />
-        <auto-fields-entity entity-name="ContentRevisionItem" />
+        <auto-fields-entity entity-name="ContentRevision"/>
+        <auto-fields-entity entity-name="ContentRevisionItem"/>
         
         <field name="contentId" title="" widget-style="buttontext"><text/></field>
         <field name="contentRevisionSeqId" title=""><hidden/></field> 
@@ -503,8 +503,8 @@
         default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
         <actions>
             <entity-and entity-name="ContentRevisionItemAndContentApprovalView" use-cache="true">
-                <field-map env-name="contentId" field-name="contentId" />
-                <field-map env-name="contentRevisionSeqId" field-name="contentRevisionSeqId" />
+                <field-map env-name="contentId" field-name="contentId"/>
+                <field-map env-name="contentRevisionSeqId" field-name="contentRevisionSeqId"/>
             </entity-and>
         </actions>
         <field name="contentId"><display/></field>

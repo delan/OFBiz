@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2005-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -227,6 +227,8 @@
         </menu-item>
     </menu>
         
+        
+    <!-- DEJ20060220 What is this doing in here? It looks like a menu for the Content maintenance screens and has nothing to do with CompDoc... -->
     <menu name="main" default-title-style="tabButton"
         default-selected-style="tabButtonSelected"
         default-menu-item-name="content"
@@ -302,9 +304,5 @@
           </condition>
             <link target="EditContentMetaData?contentId=${contentId}"/>
         </menu-item>
-
-
     </menu>
-
-
 </menus>

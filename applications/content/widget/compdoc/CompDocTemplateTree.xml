@@ -9,7 +9,7 @@
             </entity-one>
             <include-screen name="rootTemplateLine"
                 location="component://content/widget/compdoc/CompDocScreens.xml" />
-            <sub-node node-name="node-body" entity-name="AssocRevisionItemView" >
+            <sub-node node-name="node-body">
                 <entity-condition entity-name="AssocRevisionItemView" use-cache="false" >
                    <condition-list combine="and">
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="rootTemplateContentId" />
@@ -80,7 +80,7 @@
             </entity-one>
             <include-screen name="rootInstanceLine"
                 location="component://content/widget/compdoc/CompDocScreens.xml" />
-            <sub-node node-name="node-body" entity-name="AssocRevisionItemView" >
+            <sub-node node-name="node-body">
                 <entity-condition entity-name="AssocRevisionItemView" use-cache="false" >
                    <condition-list combine="and">
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="rootTemplateContentId" />
