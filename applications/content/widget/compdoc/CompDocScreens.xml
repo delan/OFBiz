@@ -842,6 +842,12 @@
                    <order-by field-name="-maxRevisionSeqId"/>
                 </entity-condition>
                 <set from-field="assocRevisionItemViewList[0]" field="assocRevisionItemView"/>
+                <entity-one entity-name="Content" value-name="instanceContent">
+                    <field-map field-name="contentId" env-name="assocRevisionItemView.itemContentId"/>
+                </entity-one>
+                <entity-one entity-name="DataResource" value-name="instanceDataResource">
+                    <field-map field-name="dataResourceId" env-name="instanceContent.dataResourceId"/>
+                </entity-one>
             </actions>
             <widgets>
                 <include-menu name="childInstanceLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>

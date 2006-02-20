@@ -122,7 +122,7 @@
         default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="edit-inplace" title="${contentName}[${contentId}]" >
+        <menu-item name="edit-inplace" title="${contentName}[${contentId}]" widget-style="head2">
             <link target="EditCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
         <menu-item name="edit-link" title="Edit" >
@@ -180,7 +180,7 @@
         default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="edit-inplace" title="${contentName}[${assocRevisionItemView.itemContentId}]" >
+        <menu-item name="edit-inplace" title="${contentName}[${assocRevisionItemView.itemContentId}] - ${instanceDataResource.objectInfo}" >
             <condition>
                 <not><if-empty field-name="assocRevisionItemView"/></not>
             </condition>
@@ -199,7 +199,7 @@
             </condition>
             <link target="AddChildCompDocInstance?contentId=${contentId}&amp;caSequenceNum=${sequenceNum}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
-        <menu-item name="edit-link-add" title="Edit" >
+        <menu-item name="edit-link-add" title="Add" >
             <condition>
                 <if-empty field-name="assocRevisionItemView"/>
             </condition>
@@ -216,7 +216,7 @@
         default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="edit-inplace" title="${contentName}[${rootInstanceContentId}]" >
+        <menu-item name="edit-inplace" title="${contentName}[${rootInstanceContentId}]"  widget-style="head2">
             <link target="EditCompDoc?contentId=${rootInstanceContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
         <menu-item name="edit" title="[Edit]" >
