@@ -167,7 +167,7 @@
     <screen name="GlAccountNavigate">
         <section>
             <actions>
-                <set field="title" value="Test AddGlAccount"/>
+                <set field="title" value="Navigate Gl Accounts"/>
                 <!-- <set field="titleProperty" value=""/> -->
                 <set field="headerItem" value="chartofaccounts"/>
                 <set field="labelTitleProperty" value="ListAccounts"/>
@@ -195,10 +195,60 @@
         </section>
     </screen>
 
+    <!-- the next two screens list out the AcctgTransEntries, either from a GL Account or from an acctgTrans -->
+    <screen name="ListGlAccountEntries">
+        <section>
+            <actions>
+                <set field="title" value="View GL Account Entries"/>
+                <set field="tabButtonItem" value="ListGlAccountOrganization"/>
+                <set field="glAccountId" from-field="requestParameters.glAccountId"/>
+                <entity-and entity-name="AcctgTransEntry" list-name="entries">
+                    <field-map field-name="glAccountId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="column-left-wide">
+                            <include-tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml" /> 
+                        </container>
+                        <include-form name="ListAcctgTransEntries" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                     </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ListAcctgTransEntries">
+        <section>
+            <actions>
+                <set field="title" value="View Accounting Transaction"/>
+                <set field="headerItem" value="chartofaccounts"/>
+                <set field="acctgTransId" from-field="requestParameters.acctgTransId"/>
+                <entity-and entity-name="AcctgTransEntry" list-name="entries">
+                    <field-map field-name="acctgTransId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="column-left-wide">
+                            <include-tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml" /> 
+                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://accounting/webapp/accounting/chartofaccounts/GlAccountTabBar.ftl"/></html>
+                        </platform-specific>
+                        <include-form name="ListAcctgTransEntries" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                     </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="AddGlAccount">
         <section>
             <actions>
-                <set field="title" value="Test AddGlAccount"/>
+                <set field="title" value="Add Gl Account"/>
                 <set field="titleProperty" value=""/>
                 <set field="tabButtonItem" value=""/>
                 <set field="labelTitleProperty" value=""/>
@@ -217,7 +267,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ListGlAccounts">
         <section>
             <actions>
@@ -269,6 +319,84 @@
                 <decorator-screen name="CommonAccountDecorator">
                     <decorator-section name="body">
                         <include-form name="EditGlobalAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ViewGlAccountBalance">
+        <section>
+            <actions>
+                <set field="title" value="GL Account Balances"/>
+                <set field="labelTitleProperty" value="GL Account Balances"/>
+                <set field="tabButtonItem" value="reconcileAccounts"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>
+                <entity-and entity-name="GlReconciliation" list-name="glReconciliations">
+                    <field-map field-name="glAccountId"/>
+                    <field-map field-name="organizationPartyId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListGlReconciliations" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                        <include-form name="GlAccountsNavForm" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ViewGlReconciliation">
+        <section>
+            <actions>
+                <set field="title" value="GL Reconciliation"/>
+                <set field="headerItem" value="header item"/>
+                <set field="labelTitleProperty" value="GL Reconciliation"/>
+                <set field="glReconciliationId" from-field="parameters.glReconciliationId"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>
+                <entity-and entity-name="GlReconciliationEntry" list-name="glReconciliationEntries">
+                    <field-map field-name="glReconciliationId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListGlReconciliationEntries" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                        <include-form name="GlAccountsNavForm" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AccountActivitiesDetail">
+        <section>
+            <actions>
+                <set field="title" value="GL Account Activities Detail"/>
+                <set field="headerItem" value="companies"/>
+                <set field="labelTitleProperty" value="GL Account Activities Detail"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>                
+                <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>                
+                <entity-condition entity-name="AcctgTransAndEntries" list-name="acctTransEntries">
+                  <condition-list>
+                    <condition-expr field-name="organizationPartyId" operator="equals" env-name="organizationPartyId" ignore-if-empty="true" ignore-if-null="true"/>
+                    <condition-expr field-name="partyId" operator="equals" env-name="partyId" ignore-if-empty="true" ignore-if-null="true"/>
+                    <condition-expr field-name="glAccountId" operator="equals" env-name="glAccountId" ignore-if-empty="true" ignore-if-null="true"/>
+                    <condition-expr field-name="glFiscalTypeId" operator="equals" env-name="glFiscalTypeId" ignore-if-empty="true" ignore-if-null="true"/>
+                  </condition-list>
+                    <order-by field-name="transactionDate"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="AccountActivitesDetail" location="component://accounting/webapp/accounting
+/reports/ReportForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
