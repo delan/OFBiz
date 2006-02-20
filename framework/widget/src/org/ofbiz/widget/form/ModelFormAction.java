@@ -36,7 +36,6 @@ import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -365,11 +364,11 @@ public abstract class ModelFormAction {
                 }
                 String listName = resultMapListNameExdr.expandString(context);
                 Object listObj = result.get(listName);
-                if (!(listObj instanceof List)) {
-                    throw new IllegalArgumentException("Error in form [" + this.modelForm.getName() + "] calling service with name [" + serviceNameExpanded + "]: the result that is supposed to be a list is not a List. You may need to use list-iterator-name isntead of list-name, or something like that.");
-                }
-                List lst = (List) listObj; 
-                if (lst != null ) {
+                if (listObj != null) {
+                    if (!(listObj instanceof List)) {
+                        throw new IllegalArgumentException("Error in form [" + this.modelForm.getName() + "] calling service with name [" + serviceNameExpanded + "]: the result that is supposed to be a list is not a List. You may need to use list-iterator-name isntead of list-name, or something like that.");
+                    }
+                    List lst = (List) listObj; 
                     context.put("listName", listName);
                     context.put(listName, lst);
                 }
