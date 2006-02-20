@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- * Copyright (c) 2001-2004 The Open For Business Project and repective authors.
+ * Copyright (c) 2006-2006 The Open For Business Project and repective authors.
  * Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -60,7 +60,7 @@
         <make-value entity-name="Content" value-name="rootInstanceContent"/>        
         <if-empty field-name="parameters.rootInstanceContentId">
             <make-next-seq-id seq-field-name="contentId" value-name="rootInstanceContent"/>
-            <log message="genCompDocInstance 2> rootInstanceContent: ${rootInstanceContent}"/>
+            <log level="info" message="genCompDocInstance 2> rootInstanceContent: ${rootInstanceContent}"/>
             <else>
                 <!--  check to see if it already exists, error if so -->
                 <entity-one entity-name="Content" value-name="existingContent">
@@ -632,12 +632,12 @@
         <!--  conditionally set the contentApprovalId status of each entity -->
         <iterate list-name="contentApprovalList" entry-name="existingContentApproval">
             <clone-value value-name="existingContentApproval" new-value-name="contentApproval"/>
-         <log level="info" message="contentApproval 0: ${contentApproval}"/>
+            <log level="info" message="contentApproval 0: ${contentApproval}"/>
             <set from-field="thisContentRevisionSeqId" field="contentApproval.contentRevisionSeqId" />
             <clear-field  field-name="contentApproval.contentApprovalId" />
-         <log level="info" message="contentApproval 1: ${contentApproval}"/>
+            <log level="info" message="contentApproval 1: ${contentApproval}"/>
             <make-next-seq-id seq-field-name="contentApprovalId" value-name="contentApproval"/>
-         <log level="info" message="contentApproval 2: ${contentApproval}"/>
+            <log level="info" message="contentApproval 2: ${contentApproval}"/>
             
             <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE">
                 <if>
@@ -657,11 +657,13 @@
                     <else-if>
                         <!-- soft rejected, reset rejected (shouldn't be any) and soft rejected entities to ready -->
                         <condition>
-                            <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
-                            <or>
-                                <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
-                                <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_REJECTED"/>
-                            </or>
+                            <and>
+                                <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                <or>
+                                    <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                    <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                                </or>
+                            </and>
                         </condition>
                         <then>
                             <set value="CNTAP_READY" field="contentApproval.approvalStatusId" />
@@ -669,14 +671,16 @@
                     </else-if>
                     <else-if>
                         <condition>
-                            <!-- soft rejected and current record is not soft/rejected, keep currentstatus -->
-                            <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
-                            <not>
-                                <or>
-                                    <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
-                                    <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_REJECTED"/>
-                                </or>
-                            </not>
+                            <and>
+                                <!-- soft rejected and current record is not soft/rejected, keep currentstatus -->
+                                <if-compare field-name="primaryApprovalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                <not>
+                                    <or>
+                                        <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_SOFT_REJ"/>
+                                        <if-compare field-name="existingContentApproval.approvalStatusId" operator="equals" value="CNTAP_REJECTED"/>
+                                    </or>
+                                </not>
+                            </and>
                         </condition>
                         <then>
                             <set from-field="existingContentApproval.approvalStatusId" field="contentApproval.approvalStatusId" />
@@ -761,12 +765,12 @@
             </entity-condition>
             <if-not-empty field-name="contentRoleList">
                 <set field="approvalPermExists" value="true"/>
-                <field-to-result result-name="approvalPermExists"/>
+                <field-to-result field-name="approvalPermExists" result-name="approvalPermExists"/>
                 <return/>
             </if-not-empty>
         </if-not-empty>
         <set field="approvalPermExists" value="false"/>
-        <field-to-result result-name="approvalPermExists"/>
+        <field-to-result field-name="approvalPermExists" result-name="approvalPermExists"/>
         <return/>
     </simple-method>
 
@@ -840,11 +844,9 @@
             <check-errors/>
         </else>
         </if-not-empty>
-        
     </simple-method>
     
     <simple-method method-name="checkForOpenApprovals" short-description="Check to see if any open approval conditions exist">
-    
         <!-- Find CDI tied to root CDT -->
         <set field="rootTemplateContentId"  from-field="parameters.rootTemplateContentId" />
         <entity-condition entity-name="Content" list-name="contentList">
@@ -893,9 +895,9 @@
             <check-errors/>
         </else>
         </if-not-empty>
-     </simple-method>
+    </simple-method>
     
-     <simple-method method-name="checkForWaitingApprovals" short-description="Check to see if any approval conditions exist for the passed in user">
+    <simple-method method-name="checkForWaitingApprovals" short-description="Check to see if any approval conditions exist for the passed in user">
         <set from-field="userLogin.partyId" field="partyId"/>
         <entity-and entity-name="PartyRole" list-name="partyRoleList">
             <field-map field-name="partyId" env-name="partyId"/>
@@ -950,6 +952,6 @@
         </entity-condition>
         <log level="info" message="contentApprovalList: ${contentApprovalList}"/>        
         
-        <field-to-result result-name="contentApprovalList"/>
-     </simple-method>
+        <field-to-result field-name="contentApprovalList" result-name="contentApprovalList"/>
+    </simple-method>
 </simple-methods>
