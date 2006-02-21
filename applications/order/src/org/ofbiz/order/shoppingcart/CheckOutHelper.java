@@ -791,6 +791,10 @@ public class CheckOutHelper {
             throw new GeneralException("Problems getting payment preferences", e);
         }
 
+        // filter out cancelled preferences
+        List canExpr = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED"));
+        allPaymentPreferences = EntityUtil.filterByAnd(allPaymentPreferences, canExpr);
+
         // check for online payment methods or in-hand payment types with verbal or external refs
         List exprs = UtilMisc.toList(new EntityExpr("manualRefNum", EntityOperator.NOT_EQUAL, null));
         List manualRefPaymentPrefs = EntityUtil.filterByAnd(allPaymentPreferences, exprs);
