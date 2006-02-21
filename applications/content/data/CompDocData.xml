@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- A CDT (Composite Document Template) that can be used independently, or as part of CD0001 defined below -->
-    <Content contentId="CDT0101" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" contentName="2J Placeholder" description=""/>
+    <Content contentId="CDT0101" contentTypeId="COMPDOC_TEMPLATE" ownerContentId="" dataResourceId="" contentName="2J Placeholder (CDT Root/Sub-Root)" description=""/>
     
-    <Content contentId="CDT1021" contentTypeId="COMPDOC_TEMPLATE" contentName="Request for Option Award 2j" description="" ownerContentId="" dataResourceId=""/>
-    <Content contentId="CDT1022" contentTypeId="COMPDOC_TEMPLATE" contentName="TM 86-01 2j" description="" ownerContentId="" dataResourceId=""/>
-    <Content contentId="CDT1023" contentTypeId="COMPDOC_TEMPLATE" contentName="Visitor Group Security Agreement (VGSA) 2j" description="" ownerContentId="" dataResourceId=""/>
-    <Content contentId="CDT1024" contentTypeId="COMPDOC_TEMPLATE" contentName="Surveillance Agreement 2j" description="" ownerContentId="" dataResourceId=""/>
-    <Content contentId="CDT1025" contentTypeId="COMPDOC_TEMPLATE" contentName="Performance Plan 2j" description="" ownerContentId="" dataResourceId=""/>
-    <Content contentId="CDT1026" contentTypeId="COMPDOC_TEMPLATE" contentName="Other Upload 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1021" contentTypeId="TEMPLATE" contentName="Request for Option Award 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1022" contentTypeId="TEMPLATE" contentName="TM 86-01 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1023" contentTypeId="TEMPLATE" contentName="Visitor Group Security Agreement (VGSA) 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1024" contentTypeId="TEMPLATE" contentName="Surveillance Agreement 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1025" contentTypeId="TEMPLATE" contentName="Performance Plan 2j" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT1026" contentTypeId="TEMPLATE" contentName="Other Upload 2j" description="" ownerContentId="" dataResourceId=""/>
     <ContentAssoc contentIdTo="CDT0101" contentId="CDT1021" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
     <ContentAssoc contentIdTo="CDT0101" contentId="CDT1022" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
     <ContentAssoc contentIdTo="CDT0101" contentId="CDT1023" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
@@ -17,7 +17,7 @@
     <ContentAssoc contentIdTo="CDT0101" contentId="CDT1026" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
     
     <!-- A CDT that is a larger example and that includes a sub-CDT of CD0101 -->
-    <Content contentId="CDT0001" contentTypeId="COMPDOC_TEMPLATE" contentName="Coordination Record" description="" ownerContentId="" dataResourceId=""/>
+    <Content contentId="CDT0001" contentTypeId="COMPDOC_TEMPLATE" contentName="Demo Template Root (CDT) 0001" description="" ownerContentId="" dataResourceId=""/>
 
     <ContentAssoc contentIdTo="CDT0001" contentId="CDT0101" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
     
