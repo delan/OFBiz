@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Id: $
+    
+    Copyright 2001-2006 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not
+    use this file except in compliance with the License. You may obtain a copy of
+    the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="FindPayments">
+        <section>
+            <actions>
+                <set field="title" value="Find an Payment"/>
+                <set field="titleProperty" value="PageTitleFindPayment"/>
+                <set field="headerItem" value="payments"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container><label style="head1">Find Payments</label></container>
+                        <include-form name="FindPayments" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                        <container><link target="editPayment" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingPayment}" style="buttontext"/></container>
+                        <include-form name="ListPayments"  location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditPayment">
+        <section>
+            <actions>
+                <set field="title" value="Edit Payment"/>
+                <set field="titleProperty" value="PageTitleEditPayment"/>
+                <set field="tabButtonItem" value="editPayment"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <entity-one entity-name="Payment" value-name="payment"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <label style="head1"> header detailed information</label>
+                                <include-form name="EditPayment" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPaymentApplications">
+        <section>
+            <actions>
+                <set field="title" value="List application records for a payment"/>
+                <set field="titleProperty" value="PageTitleListPaymentApplications"/>
+                <set field="tabButtonItem" value="editPaymentApplications"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/getAppliedAmounts.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field-name="notAppliedAmount" operator="greater" value="0"/>
+                            </condition>
+                            <widgets>
+                                <container><label style="head1"> Payment Applications, Amount: ${payment.amount} open: ${notAppliedAmount} ${payment.currencyUomId}</label></container>
+                                <include-form name="editPaymentApplications" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                <container><label style="head1">List invoices not yet applied to: [${payment.partyIdFrom}], from: [${payment.partyIdTo}]</label></container>
+                                <include-form name="listInvoicesNotApplied" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                <container><label style="head1">List payments not yet applied to: [${payment.partyIdTo}], from: [${payment.partyIdFrom}]</label></container>
+                                <include-form name="listPaymentsNotApplied" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                <container><label style="head1">Apply this payment to:</label></container>
+                                <include-form name="addPaymentApplication" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head1"> Payment Applications, Amount: ${payment.amount}</label>
+                                <include-form name="editPaymentApplications" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="PaymentOverview">
+        <section>
+            <actions>
+                <set field="title" value="payment Overview"/>
+                <set field="titleProperty" value="PageTitlePaymentOverview"/>
+                <set field="tabButtonItem" value="paymentOverview"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <set field="labelTitleProperty" value=" Payment Overview"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/getAppliedAmounts.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field-name="payment.statusId" operator="equals"  value="PMNT_NOT_PAID"/>
+                            </condition>
+                            <widgets>
+                                <container>
+                                    <label style="head1"> Header detailed information</label>
+                                    <link target="editPayment?paymentId=${paymentId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/>
+                                    <link target="printChecks?paymentId=${paymentId}" text="${uiLabelMap.AccountingPrintAsCheck}" style="buttontext"/>
+                                    <include-form name="paymentHeader" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                </container>
+                                <container>
+                                    <label style="head1">Payments applied: ${appliedAmount}, open: ${notAppliedAmount} ${payment.currencyUomId}</label>
+                                    <link target="editPaymentApplications?paymentId=${paymentId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/>
+                                    <include-form name="paymentApplications" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                </container>
+                                <container>
+                                    <label style="head1">Accounting Transactions</label>
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                </container>
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="head1">Header Detailed Information</label>
+                                    <link target="printChecks?paymentId=${paymentId}" text="${uiLabelMap.AccountingPrintAsCheck}" style="buttontext"/>
+                                    <include-form name="paymentHeader" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                </container>
+                                <container>
+                                    <label style="head1">Payments applied: ${appliedAmount}, open: ${notAppliedAmount} ${payment.currencyUomId}</label>
+                                    <link target="editPaymentApplications?paymentId=${paymentId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/>
+                                    <include-form name="paymentApplications" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                </container>
+                                <container>
+                                    <label style="head1">Accounting Transactions</label>
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+</screens>
+
