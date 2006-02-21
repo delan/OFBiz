@@ -1325,11 +1325,25 @@ public class OrderReadHelper {
 
         double returnedAmount = 0.00;
         Iterator i = returnedItems.iterator();
+        String orderId = orderHeader.getString("orderId");
+        List returnHeaderList = new ArrayList();
         while (i.hasNext()) {
             GenericValue returnedItem = (GenericValue) i.next();
-            if (returnedItem.get("returnPrice") != null) {
-                returnedAmount += returnedItem.getDouble("returnPrice").doubleValue();
+            if ((returnedItem.get("returnPrice") != null) && (returnItem.get("returnQuantity") != null)) {
+                returnedAmount += returnedItem.getDouble("returnPrice").doubleValue() * returnedItem.getDouble("returnQuantity").doubleValue();
             }
+            Map itemAdjustmentCondition = UtilMisc.toMap("returnId", returnedItem.get("returnId"), "returnItemSeqId", returnedItem.get("returnItemSeqId"));
+            returnedAmount += OrderReturnServices.getReturnAdjustmentTotal(orderHeader.getDelegator(), itemAdjustmentCondition);
+            if(orderId.equals(returnedItem.getString("orderId")) && (!returnHeaderList.contains(returnedItem.getString("returnId")))) {
+                returnHeaderList.add(returnedItem.getString("returnId"));
+            }
+        }
+        //get  returnedAmount from returnHeader adjustments whose orderId must equals to current orderHeader.orderId
+        Iterator returnHeaderIterator = returnHeaderList.iterator();
+        while(returnHeaderIterator.hasNext()) {
+            String returnId = (String) returnHeaderIterator.next();
+            Map returnHeaderAdjFilter = UtilMisc.toMap("returnId", returnId, "returnItemSeqId", "_NA_");
+            returnedAmount += OrderReturnServices.getReturnAdjustmentTotal(orderHeader.getDelegator(), returnHeaderAdjFilter);
         }
         return returnedAmount;
     }
@@ -2043,5 +2057,30 @@ public class OrderReadHelper {
 
     public static OrderReadHelper getHelper(GenericValue orderHeader) {
         return new OrderReadHelper(orderHeader);
+    }
+
+    /**
+     * Get orderAdjustments that have no corresponding returnAdjustment
+     * @return orderAdjustmentList
+     */
+    public List getAvailableOrderHeaderAdjustments() {
+        List orderHeaderAdjustments = this.getOrderHeaderAdjustments();
+        List filteredAdjustments = new ArrayList();
+        if (orderHeaderAdjustments != null) {
+            Iterator orderAdjIterator = orderHeaderAdjustments.iterator();
+            while (orderAdjIterator.hasNext()) {
+                GenericValue orderAdjustment = (GenericValue) orderAdjIterator.next();
+                long count = 0;
+                try {
+                    count = orderHeader.getDelegator().findCountByAnd("ReturnAdjustment", UtilMisc.toMap("orderAdjustmentId", orderAdjustment.get("orderAdjustmentId")));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                if (count == 0) {
+                    filteredAdjustments.add(orderAdjustment);
+                }
+            }
+        }
+        return filteredAdjustments;
     }
 }

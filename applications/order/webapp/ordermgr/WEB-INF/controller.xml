@@ -813,7 +813,7 @@
     </request-map>
     <request-map uri="removeReturnAdjustment">
         <security https="true" auth="true"/>
-        <event type="service" invoke="removeReturnItem"/>
+        <event type="service" invoke="removeReturnAdjustment"/>
         <response name="success" type="view" value="returnitems"/>
     </request-map>
     

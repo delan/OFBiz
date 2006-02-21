@@ -1926,6 +1926,10 @@
       <field name="shipGroupSeqId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
+      <field name="returnTypeId" type="id">
+          <description>actually used for disbursement type: store credit, cash refund, exchange</description>
+      </field>
+      <field name="orderAdjustmentId" type="id"></field>
       <field name="amount" type="currency-precise"></field>
       <field name="productPromoId" type="id"></field>
       <field name="productPromoRuleId" type="id"></field>
@@ -1997,6 +2001,12 @@
       </relation>
       <relation type="one" fk-name="RETURN_ADJ_OGLA" title="Override" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_TYPE" rel-entity-name="ReturnType">
+            <key-map field-name="returnTypeId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_ORDADJ" rel-entity-name="OrderAdjustment">
+            <key-map field-name="orderAdjustmentId"/>
       </relation>
     </entity>
     <entity entity-name="ReturnAdjustmentType"

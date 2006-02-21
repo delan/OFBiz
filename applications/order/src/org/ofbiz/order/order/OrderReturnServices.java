@@ -588,7 +588,7 @@ public class OrderReturnServices {
                 returnStatus.set("statusDatetime", now);
                 toBeStored.add(returnStatus);
             }
-
+            creditTotal += getReturnAdjustmentTotal(delegator, UtilMisc.toMap("returnId", returnId));
             // create a Double object for the amount
             Double creditAmount = new Double(creditTotal);
 
@@ -649,6 +649,7 @@ public class OrderReturnServices {
     }
 
     // refund (cash/charge) return
+    //TODO add adjustment total
     public static Map processRefundReturn(DispatchContext dctx, Map context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericDelegator delegator = dctx.getDelegator();
@@ -1219,7 +1220,7 @@ public class OrderReturnServices {
                 if (returnAdjustmentType != null && UtilValidate.isEmpty(description)) {
                     description = returnAdjustmentType.getString("description");
                 }
-                if (UtilValidate.isNotEmpty(returnItemSeqId)) {
+                if ((returnItemSeqId != null) && !("_NA_".equals(returnItemSeqId))) {
                     returnItem = delegator.findByPrimaryKey("ReturnItem",
                             UtilMisc.toMap("returnId", returnId, "returnItemSeqId", returnItemSeqId));
                     Debug.log("returnId:" + returnId + ",returnItemSeqId:" + returnItemSeqId);
@@ -1229,13 +1230,7 @@ public class OrderReturnServices {
                 Debug.logError(e, module);
                 throw new GeneralRuntimeException(e.getMessage());
             }
-            Map orderAdjustmentValue = orderAdjustment.getAllFields();
-            orderAdjustmentValue.remove("oldAmountPerQuantity");
-            orderAdjustmentValue.remove("oldPercentage");
-            orderAdjustmentValue.remove("orderId");
-            orderAdjustmentValue.remove("orderItemSeqId");
             context.putAll(orderAdjustment.getAllFields());
-
         }
 
         // if orderAdjustmentTypeId is empty, ie not found from orderAdjustmentId, then try to get returnAdjustmentTypeId from returnItemTypeMap, 
@@ -1286,27 +1281,30 @@ public class OrderReturnServices {
 
     public static Map updateReturnAdjustment(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
-        double originalReturnPrice = ((Double) context.get("originalReturnPrice")).doubleValue();
-        double originalReturnQuantity = ((Double) context.get("originalReturnQuantity")).doubleValue();
-                
+
         GenericValue returnItem = null;
         GenericValue returnAdjustment = null;
-        
+        String returnAdjustmentTypeId = null;
         Double amount;
-        
-        String returnAdjustmentTypeId = (String) context.get("returnAdjustmentTypeId");
-        String returnItemSeqId = (String) context.get("returnItemSeqId");
+
+
         try {
             returnAdjustment = delegator.findByPrimaryKey("ReturnAdjustment", UtilMisc.toMap("returnAdjustmentId", context.get("returnAdjustmentId")));
-            if (returnItemSeqId != null) {
+
+            if (returnAdjustment != null) {
                 returnItem = delegator.findByPrimaryKey("ReturnItem",
-                        UtilMisc.toMap("returnId", context.get("returnId"), "returnItemSeqId", returnItemSeqId));
+                        UtilMisc.toMap("returnId", returnAdjustment.get("returnId"), "returnItemSeqId", returnAdjustment.get("returnItemSeqId")));
+                returnAdjustmentTypeId = returnAdjustment.getString("returnAdjustmentTypeId");
             }
+
             // calculate the returnAdjustment amount
             if (returnItem != null) {  // returnAdjustment for returnItem
+                double originalReturnPrice = (context.get("originalReturnPrice") != null) ? ((Double) context.get("originalReturnPrice")).doubleValue() : returnItem.getDouble("returnPrice").doubleValue();
+                double originalReturnQuantity = (context.get("originalReturnQuantity") != null) ? ((Double) context.get("originalReturnQuantity")).doubleValue() : returnItem.getDouble("returnQuantity").doubleValue();
+
                 if (needRecalculate(returnAdjustmentTypeId)) {
                     BigDecimal returnTotal = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity"));
-                    BigDecimal originalReturnTotal = new BigDecimal(originalReturnPrice).multiply(new BigDecimal(originalReturnQuantity));                    
+                    BigDecimal originalReturnTotal = new BigDecimal(originalReturnPrice).multiply(new BigDecimal(originalReturnQuantity));
                     amount = getAdjustmentAmount("RET_SALES_TAX_ADJ".equals(returnAdjustmentTypeId), returnTotal, originalReturnTotal, returnAdjustment.getBigDecimal("amount"));
                 } else {
                     amount = (Double) context.get("amount");

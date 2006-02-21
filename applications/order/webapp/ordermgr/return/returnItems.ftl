@@ -178,29 +178,56 @@
         </td>                  
         </#if>
         <#if returnHeader.statusId == "RETURN_REQUESTED">
-          <td align='right'><a href="<@ofbizUrl>removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
+          <td align='right'><a href="<@ofbizUrl>removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
         <#else>
           <td>&nbsp;</td>
         </#if>
       </tr>
       <#assign rowCount = rowCount + 1>
     </#list>
-        
+<#else>
+    <tr>
+      <td colspan="9"><div class="tabletext">No item(s) in return.</div></td>
+    </tr>
+  </#if>
+   <tr><td colspan="10"><hr class="sepbar"></td></tr>
 <#if (returnAdjustments?has_content)>                  
     <#list returnAdjustments as returnAdjustment>
         <#assign returnHeader = returnAdjustment.getRelatedOne("ReturnHeader")>
+        <#assign adjReturnType = returnAdjustment.getRelatedOne("ReturnType")?if_exists>
+        <#assign adjEditable = !readOnly && returnAdjustment.returnItemSeqId.equals("_NA_")>
+        <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
+        <input type="hidden" name="returnAdjustmentId_o_${rowCount}" value="${returnAdjustment.returnAdjustmentId}" />
         <tr class="tabletext">
             <td class="tabletext" colspan="2">${uiLabelMap.OrderReturnAdjustmentForReturnItem}
             ${returnAdjustment.returnItemSeqId?default("N/A")}</td>
             <td colspan="3"><div class="tabletext">${returnAdjustment.description?default("N/A")}</div></td>
-            <#if (!readOnly && returnAdjustment.returnItemSeqId.equals("N/A"))>
+            <#if (adjEditable)>
               <td>
-                 <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}" value="${adj.amount?string("##0.00")}"/>
-                 <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
+                 <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}" value="${returnAdjustment.amount?string("##0.00")}"/>
               </td>
             <#else>
                 <td class="tabletextright"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUomId/></td>
             </#if>
+            <td colspan="3" align="right"><div class="tabletext">
+                        <#if (readOnly)>
+                            ${adjReturnType.description?default("N/A")}
+                        <#else>
+                            <select name="returnTypeId_o_${rowCount}" class="selectBox">
+                                <#if (adjReturnType?has_content)>
+                                    <option value="${adjReturnType.returnTypeId}">${adjReturnType.description?if_exists}</option>
+                                    <option value="${adjReturnType.returnTypeId}">--</option>
+                                </#if>
+                                <#list returnTypes as returnTypeItem>
+                                    <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.description?if_exists}</option>
+                                </#list>
+                            </select>
+                     </#if></div></td>
+                     <#if (adjEditable)>
+                        <td align='right'><a href="<@ofbizUrl>removeReturnAdjustment?returnAdjustmentId=${returnAdjustment.returnAdjustmentId}&returnId=${returnAdjustment.returnId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a></td>
+                     <#else>
+                       <td>&nbsp;</td>
+                     </#if>
             <#assign rowCount = rowCount + 1>
             <#assign returnTotal = returnTotal + returnAdjustment.get("amount")>
         </tr>    
@@ -208,27 +235,22 @@
           <input name="_rowCount" value="${rowCount}" type="hidden">
     </#if>
     <#-- show the return total -->
+    <#if (!readOnly) && (rowCount > 0)>
     <tr><td colspan="5"></td><td><hr class="sepbar"/></td></tr>
     <tr>
       <td colspan="2">&nbsp;</td>
       <td colspan="3" class="tableheadtext">${uiLabelMap.OrderReturnTotal}</td>
       <td class="tabletextright"><b><@ofbizCurrency amount=returnTotal isoCode=returnHeader.currencyUomId/></b></td>
     </tr>
-    <#if (!readOnly)>
        <tr>          
           <input name="returnId" value="${returnHeader.returnId}" type="hidden">
           <td colspan="7" class="tabletext" align="center"><input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}"></td>
       </tr>
-  </form>
-   </#if>        
-  <#else>
-    <tr>
-      <td colspan="9"><div class="tabletext">No item(s) in return.</div></td>
-    </tr>
-  </#if>
+   </#if>
+</form>
 
 </table>
-<#if returnHeader.statusId == "RETURN_REQUESTED">
+<#if (returnHeader.statusId == "RETURN_REQUESTED") && (rowCount > 0)>
 <br/>
 <form name="acceptReturn" method="post" action="<@ofbizUrl>/updateReturn</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${returnId}">
