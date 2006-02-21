@@ -33,8 +33,6 @@
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
                 <entity-one entity-name="ContentApproval" value-name="contentApproval" use-cache="true"/>
@@ -52,10 +50,10 @@
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                        <link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/>
                         <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                         <label text="Add" style="head1"/>
                         <include-form name="AddContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                        <link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -70,9 +68,7 @@
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Waiting Content Approvals"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
                 <service service-name="checkForWaitingApprovals" result-map-name="result">
@@ -83,8 +79,8 @@
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                         <link target="EditContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Content Approval" style="buttontext"/>
+                        <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -97,8 +93,6 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
                  
@@ -127,9 +121,7 @@
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/> 
+                <set field="title" value="Revision List Page"/>
                 
 
                 <entity-and entity-name="ContentRevision" list-name="contentRevisionList" use-cache="true">
@@ -152,11 +144,9 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="title" value="Content Revision Edit Page"/>
                 
                 <entity-one entity-name="ContentRevision" value-name="contentRevision" use-cache="true">
                 </entity-one>
@@ -177,11 +167,9 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="title" value="Content Revision List Page"/>
                 
             <entity-and entity-name="ContentRevisionItem" list-name="contentRevisionItemList" use-cache="true">
                 <field-map field-name="contentId" env-name="parameters.contentId"/>
@@ -204,11 +192,9 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="title" value="Content Revision Item Edit Page"/>
                 
                 <entity-one entity-name="ContentRevisionItem" value-name="contentRevisionItem" use-cache="true"/>
             </actions>
@@ -233,7 +219,6 @@
                 <set field="title" value="Find CompDoc"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="currentContentMenuItemName" value=""/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
@@ -263,7 +248,6 @@
                 <set field="title" value="List CompDoc"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="currentContentMenuItemName" value="" />
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
@@ -292,7 +276,6 @@
                 <set field="title" value="View CompDoc Instances of ${parameters.rootTemplateContentId}"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="currentContentMenuItemName" value="" />
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
@@ -304,9 +287,8 @@
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                        <link target="FindCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Find"  style="buttontext"/>
                         <link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/>
+                        <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -405,7 +387,7 @@
                                     </actions>
                                     <widgets>
                                         <include-screen name="ContentViewLink"/>
-                                        <include-screen name="UploadCompDocContent"/>
+                                        <include-screen name="UploadCompDocTemplateContent"/>
                                     </widgets>
                                 </section>
                             </decorator-section>
@@ -458,7 +440,7 @@
                                     </actions>
                                     <widgets>
                                         <include-screen name="ContentViewLink"/>
-                                        <include-screen name="UploadCompDocContent"/>
+                                        <include-screen name="UploadCompDocTemplateContent"/>
                                     </widgets>
                                 </section>
                             </decorator-section>
@@ -736,7 +718,7 @@
             </condition>
             <actions>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Instance Add Page"/>
+                <set field="title" value="Composite Document Template Add Page"/>
                 <set from-field="parameters.caContentIdTo" default-value="${parameters.contentIdTo}" field="contentIdTo" />
                 <set from-field="nowTimestamp" field="fromDate" />
                 <set value="COMPDOC_PART" field="contentAssocTypeId" />
@@ -794,10 +776,8 @@
             </condition>
             
             <actions>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Composite Document Root Template View Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentMenuItemName" value="viewtree"/>
                 <entity-condition entity-name="ContentRevision" list-name="contentRevisions" use-cache="true">
                     <condition-list combine="and">
@@ -827,9 +807,7 @@
             </condition>
             
             <actions>
-               <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="menuName" value="tree"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentMenuItemName" value="viewtree2"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true">
                     <field-map field-name="contentId" env-name="parameters.rootInstanceContentId"/>
@@ -962,9 +940,7 @@
             </condition>
             <actions>
                 <set field="menuName" value="empty"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="ContentRevisionItem and Approval List Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
 
                 <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
                 <set field="contentRevisionSeqId" from-field="parameters.contentRevisionSeqId" to-scope="screen" default-value="${defaultContentRevisionSeqId}"/>
@@ -994,9 +970,7 @@
             </condition>
             <actions>
                 <set field="menuName" value="tree"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
-                <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="title" value="CompDoc ContentRole Edit Page"/>
                 <set field="currentMenuItemName" value="role" />
                 
                 <set field="defaultContentId" from-field="contentId" from-scope="user"/>

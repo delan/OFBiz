@@ -29,8 +29,6 @@
         orientation="horizontal"
         menu-width="100%"
         default-tooltip-style="tabletext" default-widget-style="tabButton"
-        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
-        default-permission-entity-action="_ADMIN"
         default-associated-content-id="${userLogin.userLoginId}"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
@@ -42,8 +40,6 @@
         orientation="horizontal"
         menu-width="100%"
         default-tooltip-style="tabletext" default-widget-style="tabButton"
-        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
-        default-permission-entity-action="_ADMIN"
         default-associated-content-id="${userLogin.userLoginId}"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
@@ -62,9 +58,6 @@
         default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="find" title="Find" >
-            <link target="FindCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
-        </menu-item>
         <menu-item name="viewtree" title="View Tree">
             <condition>
                 <if-empty field-name="rootInstanceContentId"/>
