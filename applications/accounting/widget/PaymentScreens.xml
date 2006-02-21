@@ -122,7 +122,7 @@
                                 <container>
                                     <label style="head1"> Header detailed information</label>
                                     <link target="editPayment?paymentId=${paymentId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/>
-                                    <link target="printChecks?paymentId=${paymentId}" text="${uiLabelMap.AccountingPrintAsCheck}" style="buttontext"/>
+                                    <link target="printChecks.pdf?paymentId=${paymentId}" text="${uiLabelMap.AccountingPrintAsCheck}" style="buttontext"/>
                                     <include-form name="paymentHeader" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
                                 </container>
                                 <container>
@@ -138,7 +138,7 @@
                             <fail-widgets>
                                 <container>
                                     <label style="head1">Header Detailed Information</label>
-                                    <link target="printChecks?paymentId=${paymentId}" text="${uiLabelMap.AccountingPrintAsCheck}" style="buttontext"/>
+                                    <link target="printChecks.pdf?paymentId=${paymentId}" text="${uiLabelMap.AccountingPrintAsCheck}" style="buttontext"/>
                                     <include-form name="paymentHeader" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
                                 </container>
                                 <container>
@@ -157,5 +157,22 @@
             </widgets>
         </section>
     </screen>   
+
+    <screen name="PrintChecks">
+        <section>
+            <actions>
+                <!-- pass in paymentId to print one check, otherwise use multi form input -->
+                <set field="paymentId" from-field="parameters.paymentId" />
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/printChecks.bsh"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://accounting/webapp/accounting/payment/PrintChecks.fo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
 

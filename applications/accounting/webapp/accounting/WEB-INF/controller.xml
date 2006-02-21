@@ -343,7 +343,7 @@
         <response name="success" type="view" value="manualTx"/>
     </request-map>
 
-    <request-map uri="printChecks">
+    <request-map uri="printChecks.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintChecks"/>
     </request-map>
@@ -871,6 +871,7 @@
     <view-map name="editPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPayment"/>
     <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPaymentApplications"/>
     <view-map name="manualTx" type="jpublish" page="/payment/manualTx.ftl"/>
+    <view-map name="PrintChecks" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintChecks"/>
 
     <!-- view-map name="FindGlobalGlAccount" type="jpublish" page="/chartofaccounts/FindGlobalGlAccount.ftl"/ -->
     <!-- New Screen Widget for EditGlobalGlAccount -->
