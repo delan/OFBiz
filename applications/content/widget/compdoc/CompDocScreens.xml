@@ -348,9 +348,7 @@
             <widgets>
                 <section>
                     <condition>
-                        <and>
-                            <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>
-                        </and>
+                        <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>
                     </condition>
                     <actions>
                         <set from-field="content.contentId" field="rootTemplateContentId"/>
@@ -367,9 +365,7 @@
                 </section>
                 <section>
                     <condition>
-                        <and>
-                            <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
-                        </and>
+                        <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
                     </condition>
                     <actions>
                         <set from-field="content.contentId" field="rootInstanceContentId"/>
@@ -385,13 +381,10 @@
                 </section>
                 <section>
                     <condition>
-                        <and>
-                            <if-compare field-name="content.contentTypeId" operator="equals" value="TEMPLATE"/>
-                        </and>
+                        <if-compare field-name="content.contentTypeId" operator="equals" value="TEMPLATE"/>
                     </condition>
                     <actions>
                         <set value="updateChildCompDocTemplate" field="childCompDocTarget"/>
-                        <set value="TEMPLATE" field="content.contentTypeId"/>
                         <set value="TEMPLATE" field="contentTypeId"/>
                         <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId"/>
                     </actions>
@@ -400,8 +393,12 @@
                             <decorator-section name="body">
                                 <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
                                 <section>
+                                    <!-- For upload-able DataResourceTypes -->
                                     <condition>
-                                        <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
+                                        <and>
+                                            <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
+                                            <if-compare field-name="dataResource.dataResourceTypeId" operator="not-equals" value="SURVEY"/>
+                                        </and>
                                     </condition>
                                     <actions>
                                         <set from-field="dummy.rootTemplateContentId" field="dummy.rootContentId" />
@@ -417,13 +414,10 @@
                 </section>
                 <section>
                     <condition>
-                        <and>
-                            <if-compare field-name="content.contentTypeId" operator="equals" value="DOCUMENT"/>
-                        </and>
+                        <if-compare field-name="content.contentTypeId" operator="equals" value="DOCUMENT"/>
                     </condition>
                     <actions>
                         <set value="updateChildCompDocInstance" field="childCompDocTarget"/>
-                        <set value="DOCUMENT" field="content.contentTypeId"/>
                         <set value="DOCUMENT" field="contentTypeId"/>
                         <set from-field="parameters.caContentIdTo" default-value="${parameters.rootInstanceContentId}" field="rootInstanceContentId"/>
                         <entity-condition entity-name="MaxRevisionItemView" list-name="rootRevList" use-cache="false" >
@@ -454,10 +448,13 @@
                                <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
                                 <section>
                                     <condition>
-                                        <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
+                                        <and>
+                                            <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
+                                            <if-compare field-name="dataResource.dataResourceTypeId" operator="not-equals" value="SURVEY"/>
+                                        </and>
                                     </condition>
                                     <actions>
-                                        <set from-field="dummy.rootInstanceContentId" field="dummy.rootContentId" />
+                                        <set from-field="dummy.rootInstanceContentId" field="dummy.rootContentId"/>
                                     </actions>
                                     <widgets>
                                         <include-screen name="ContentViewLink"/>

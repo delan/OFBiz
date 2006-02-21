@@ -623,6 +623,7 @@
       <field name="mimeTypeId" type="id-long"></field>
       <field name="characterSetId" type="id-long"></field>
       <field name="objectInfo" type="long-varchar"></field>
+      <field name="relatedDetailId" type="id"><description>Depending on the dataResourceTypeId this can point to other entities, like: Survey, SurveyResponse, etc.</description></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>

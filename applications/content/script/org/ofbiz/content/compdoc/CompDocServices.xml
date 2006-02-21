@@ -194,6 +194,14 @@
                     <set value="IMAGE_OBJECT" field="persistMap.dataResourceTypeId"/>
                 </then>
             </else-if>
+            <else-if>
+                <condition><if-compare field-name="parameters.mimeTypeId" operator="equals" value="application/vnd.ofbiz.survey"/></condition>
+                <then><set value="SURVEY" field="persistMap.dataResourceTypeId"/></then>
+            </else-if>
+            <else-if>
+                <condition><if-compare field-name="parameters.mimeTypeId" operator="equals" value="application/vnd.ofbiz.survey.response"/></condition>
+                <then><set value="SURVEY_RESPONSE" field="persistMap.dataResourceTypeId"/></then>
+            </else-if>
             <else>
                 <set value="ELECTRONIC_TEXT" field="persistMap.dataResourceTypeId"/>
             </else>
@@ -240,23 +248,22 @@
                 <set from-field="parameters.rootInstanceContentId" default-value="${pResults.contentId}" field="revisionMap.contentId"/>
             </then>
         </if>
-        <set from-field="pResults.contentId" field="revisionMap.itemContentId"/>
-        <set from-field="parameters.userLogin" field="revisionMap.userLogin"/>
+        <set field="revisionMap.itemContentId" from-field="pResults.contentId"/>
+        <set field="revisionMap.userLogin" from-field="parameters.userLogin"/>
         <log level="info" message="revisionMap : ${revisionMap}"/>
         <call-service service-name="persistContentRevisionAndItem" in-map-name="revisionMap">
             <result-to-result result-name="contentRevisionSeqId"/>
             <result-to-field result-name="contentRevisionSeqId"/>
         </call-service>
         
-        <set from-field="revisionMap.contentId" field="cloneMap.contentId"/>
-        <set from-field="contentRevisionSeqId" field="cloneMap.contentRevisionSeqId"/>
-        <set from-field="parameters.userLogin" field="cloneMap.userLogin"/>
+        <set field="cloneMap.contentId" from-field="revisionMap.contentId"/>
+        <set field="cloneMap.contentRevisionSeqId" from-field="contentRevisionSeqId"/>
+        <set field="cloneMap.userLogin" from-field="parameters.userLogin"/>
         <call-service service-name="cloneContentApprovals" in-map-name="cloneMap">
         </call-service>
     </simple-method>
     
     <simple-method method-name="persistCompDocContent" short-description="Create ContentApproval">
-    
         <entity-one entity-name="Content" value-name="content" use-cache="false"/>
         <set from-field="content.dataResourceId" field="oldDataResourceId"/>
         <log level="info" message="persistCompDocContent(0).content : ${content}"/>

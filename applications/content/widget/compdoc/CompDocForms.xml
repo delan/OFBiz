@@ -254,44 +254,44 @@
 
     <form name="CompDocBasic" default-map-name="content" title="" type="single" target="updateRootCompDoc"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-       <field name="contentId"  field-name="contentId" map-name="content" 
-              use-when="content==null || (content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(content.getString(&quot;contentId&quot;)))"><text/></field>
-       <field name="contentId"  field-name="contentId" map-name="content" 
-              use-when="content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isNotEmpty(content.getString(&quot;contentId&quot;))"><display/></field>
+        <field name="contentId"  field-name="contentId" map-name="content" 
+            use-when="content==null || (content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(content.getString(&quot;contentId&quot;)))"><text/></field>
+        <field name="contentId"  field-name="contentId" map-name="content" 
+            use-when="content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isNotEmpty(content.getString(&quot;contentId&quot;))"><display/></field>
               
-       <field name="contentName"  field-name="contentName" map-name="content"><text/></field>
-       <field name="contentTypeId" entry-name="currentContentTypeId" map-name="dummy" 
-           use-when="content==null || (content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(content.getString(&quot;contentTypeId&quot;)))">
+        <field name="contentName"  field-name="contentName" map-name="content"><text/></field>
+        <field name="contentTypeId" entry-name="currentContentTypeId" map-name="dummy" 
+            use-when="content==null || (content != null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(content.getString(&quot;contentTypeId&quot;)))">
             <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
                 <option key="COMPDOC_TEMPLATE" description="CompDoc Template"/>             
                 <option key="COMPDOC_INSTANCE" description="CompDoc Instance"/>             
            </drop-down>
-       </field>
-       <field name="contentTypeId"  map-name="content" 
-           use-when="content != null ">
+        </field>
+        <field name="contentTypeId"  map-name="content" 
+            use-when="content != null ">
             <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
                 <option key="COMPDOC_TEMPLATE" description="CompDoc Template"/>             
                 <option key="COMPDOC_INSTANCE" description="CompDoc Instance"/>             
             </drop-down>
-       </field>
-       <field name="ownerContentId"  field-name="ownerContentId" map-name="content" 
-              use-when="content != null"><lookup target-form-name="LookupContent"/></field>
-       <field name="ownerContentId"  field-name="rootTemplateContentId" map-name="parameters" 
-              use-when="content == null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(parameters.get(&quot;rootTemplateContentId&quot;))"><lookup target-form-name="LookupContent"/></field>
-       <field name="ownerContentId"  field-name="rootInstanceContentId" map-name="parameters" 
-              use-when="content == null &amp;&amp; org.ofbiz.base.util.UtilValidate.isNotEmpty(parameters.get(&quot;rootInstanceContentId&quot;))"><lookup target-form-name="LookupContent"/></field>
+        </field>
+        <field name="ownerContentId"  field-name="ownerContentId" map-name="content" 
+            use-when="content != null"><lookup target-form-name="LookupContent"/></field>
+        <field name="ownerContentId"  field-name="rootTemplateContentId" map-name="parameters" 
+            use-when="content == null &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(parameters.get(&quot;rootTemplateContentId&quot;))"><lookup target-form-name="LookupContent"/></field>
+        <field name="ownerContentId"  field-name="rootInstanceContentId" map-name="parameters" 
+            use-when="content == null &amp;&amp; org.ofbiz.base.util.UtilValidate.isNotEmpty(parameters.get(&quot;rootInstanceContentId&quot;))"><lookup target-form-name="LookupContent"/></field>
               
-       <field name="instanceOfContentId"  field-name="instanceOfContentId" map-name="content" 
-              use-when="content != null"><lookup target-form-name="LookupContent"/></field>
-       <field name="instanceOfContentId"  field-name="instanceOfContentId" map-name="parameters" 
-              use-when="content == null"><lookup target-form-name="LookupContent"/></field>
-       <field name="dataResourceId">
+        <field name="instanceOfContentId"  field-name="instanceOfContentId" map-name="content" 
+            use-when="content != null"><lookup target-form-name="LookupContent"/></field>
+        <field name="instanceOfContentId"  field-name="instanceOfContentId" map-name="parameters" 
+            use-when="content == null"><lookup target-form-name="LookupContent"/></field>
+        <field name="dataResourceId">
             <lookup target-form-name="LookupDataResource">
-            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+                <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
             </lookup>
-       </field>
-       <field name="templateDataResourceId"  field-name="templateDataResourceId" map-name="content"><text/></field>
-       <field name="dataSourceId"  field-name="dataSourceId" map-name="content"><text/></field>
+        </field>
+        <field name="templateDataResourceId"  field-name="templateDataResourceId" map-name="content"><text/></field>
+        <field name="dataSourceId"  field-name="dataSourceId" map-name="content"><text/></field>
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
@@ -300,15 +300,21 @@
                 </entity-options>
             </drop-down>
         </field>
-       <field name="privilegeEnumId"  field-name="privilegeEnumId" map-name="content"><text/></field>
-       <field name="serviceName"  field-name="serviceName" map-name="content"><text/></field>
-       <field name="description"  field-name="description" map-name="content"><text/></field>
-       <field name="localeString"  field-name="localeString" map-name="content"><text/></field>
+        <field name="privilegeEnumId"  field-name="privilegeEnumId" map-name="content"><text/></field>
+        <field name="serviceName"  field-name="serviceName" map-name="content"><text/></field>
+        <field name="description"  field-name="description" map-name="content"><text/></field>
+        <field name="localeString"  field-name="localeString" map-name="content"><text/></field>
         <field name="mimeTypeId">
             <drop-down allow-empty="true">
-                <option key="1" description="Html - text/html"/><option key="2" description="MS Word - application/msword"/><option key="3" description="PDF - application/pdf"/>
-                <option key="4" description="Survey Response - application/vnd.ofbiz.survey.cdi"/><option key="5" description="Survey Template - application/vnd.ofbiz.survey.cdt"/>
-                <option key="6" description="Text - text/plain"/>
+                <option key="application/msword" description="MS Word"/>
+                <option key="application/pdf" description="PDF File"/>
+                <option key="application/vnd.ofbiz.survey" description="Survey"/>
+                <option key="application/vnd.ofbiz.survey.response" description="Survey Response"/>
+                <option key="image/jpeg" description="JPEG"/>
+                <option key="image/gif" description="GIF"/>
+                <option key="image/tiff" description="TIFF"/>
+                <option key="image/png" description="PNG"/>
+                <option key="application/octet-stream" description="Other"/>
             </drop-down>
         </field>
         <field name="characterSetId">
@@ -417,8 +423,7 @@
     </form>
 
     <form name="AddChildCompDoc" default-map-name="" title="" type="single" target="${childCompDocTarget}"
-        extends="dummy"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        extends="dummy" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentId" entry-name="missing" map-name="empty"><text/></field>
         <field name="contentName"><text/></field>
@@ -434,7 +439,8 @@
             <drop-down allow-empty="true">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
-                <option key="survey" description="Survey"/>
+                <option key="application/vnd.ofbiz.survey" description="Survey"/>
+                <option key="application/vnd.ofbiz.survey.response" description="Survey Response"/>
                 <option key="image/jpeg" description="JPEG"/>
                 <option key="image/gif" description="GIF"/>
                 <option key="image/tiff" description="TIFF"/>
@@ -446,8 +452,7 @@
     </form>
 
     <form name="EditChildCompDoc" default-map-name="contentAssoc" title="" type="single" target="${childCompDocTarget}"
-        extends="dummy"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        extends="dummy" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentId"><text/></field>
         <field name="contentName" map-name="content"><text/></field>
@@ -460,11 +465,12 @@
         <field name="sequenceNum" title="Sequence Num"><text/></field>
         
         <field name="mimeTypeId" map-name="dataResource" title="Document Type" widget-style="tabletext"
-                use-when="contentTypeId.equals(&quot;TEMPLATE&quot;)">
+            use-when="contentTypeId.equals(&quot;TEMPLATE&quot;)">
             <drop-down allow-empty="false">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
-                <option key="survey" description="Survey"/>
+                <option key="application/vnd.ofbiz.survey" description="Survey"/>
+                <option key="application/vnd.ofbiz.survey.response" description="Survey Response"/>
                 <option key="image/jpeg" description="JPEG"/>
                 <option key="image/gif" description="GIF"/>
                 <option key="image/tiff" description="TIFF"/>
@@ -473,12 +479,17 @@
             </drop-down>
         </field>
         <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"
-                     use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null &amp;&amp; !mimeTypeId.equals(&quot;SURVEY&quot;)">
+            use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null &amp;&amp; !mimeTypeId.equals(&quot;SURVEY&quot;)">
             <display-entity entity-name="MimeType" key-field-name="mimeTypeId" description="${description}"/>
         </field>
         <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"
-                    use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null  &amp;&amp; mimeTypeId.equals(&quot;SURVEY&quot;)">
-            <display  description="Survey Response"/>
+            use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null  &amp;&amp; mimeTypeId.equals(&quot;SURVEY&quot;)">
+            <display description="Survey Response"/>
+        </field>
+        <field name="relatedDetailId" map-name="dataResource" title="Survey ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY&quot;.equals(dataResource.dataResourceTypeId)">
+            <lookup target-form-name="LookupSurvey">
+                <sub-hyperlink target="EditSurvey?surveyId=${dataResource.relatedDetailId}" description="Edit Survey" link-style="buttontext"/>
+            </lookup>
         </field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -538,5 +549,4 @@
         <field name="imageData" title="Browse"><file/></field>
         <field name="submitButton" title="Upload" widget-style="smallSubmit"><submit/></field>
     </form>
-
 </forms>
