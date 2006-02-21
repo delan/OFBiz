@@ -121,36 +121,52 @@
 
         <!-- test the total return amount vs the total order amount -->
         <if-compare field-name="parameters.statusId" value="RETURN_ACCEPTED" operator="equals">
-            <!-- get orderId from each ReturnItem: return may be assosicated with many different orders -->
+            <!-- get the list of ReturnItems.  Note: return may be assosicated with many different orders -->
             <entity-condition entity-name="ReturnItem" list-name="returnItems" distinct="true">
                 <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
-                <select-field field-name="orderId"/>
             </entity-condition>
+            <!-- this block is for debugging and can be removed later -->
+            <log level="info" message="Items and adjustments for return ${returnHeader.returnId}"/>
+            <entity-condition entity-name="ReturnAdjustment" list-name="returnAdjustments" distinct="true">
+                <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
+            </entity-condition>
+            <iterate entry-name="returnItem" list-name="returnItems">
+                <log level="info" message="item: ${returnItem.returnItemSeqId} ${returnItem.returnItemTypeId} [${returnItem.description}] ${returnItem.productId} ${returnItem.returnQuantity} ${returnItem.returnPrice}"/>
+            </iterate>
+            <iterate entry-name="returnAdjustment" list-name="returnAdjustments">
+                <log level="info" message="adjustment: ${returnAdjustment.returnItemSeqId} ${returnAdjustment.returnAdjustmentTypeId} [${returnAdjustment.description}] ${returnAdjustment.amount}"/>
+            </iterate>
+            <!-- debugging block -->
 
             <!-- this is used to make sure we don't return a negative amount -->
             <calculate field-name="returnTotalAmount"><number value="0.0"/></calculate>
 
             <!-- check them all to make sure that the return total does not exceed order total.  -->
             <iterate entry-name="returnItem" list-name="returnItems">
+
+               <!-- tally up the return total amount -->
+               <calculate field-name="returnTotalAmount">
+                   <calcop field-name="returnTotalAmount" operator="add">
+                       <calcop operator="multiply">
+                            <calcop operator="get" field-name="returnPrice" map-name="returnItem"/>
+                            <calcop operator="get" field-name="returnQuantity" map-name="returnItem"/>
+                        </calcop>
+                   </calcop>
+                </calculate>
+
+                <!-- compare return vs order total -->
                 <if-not-empty field-name="returnItem.orderId">
                     <set field="returnTotalCtx.orderId" from-field="returnItem.orderId"/>
                     <!-- no adjustment needed: adjustment is passed in to calculate the effect of an additional item on return total.  -->
                     <calculate field-name="returnTotalCtx.adjustment"><number value="0.0"/></calculate>
-                     <calculate field-name="returnTotalAmount">
-                         <calcop field-name="returnTotalAmount" operator="add">
-                             <calcop operator="multiply">
-                             <calcop operator="get" field-name="returnPrice" map-name="returnItem"/>
-                             <calcop operator="get" field-name="returnQuantity" map-name="returnItem"/>
-                         </calcop>
-                        </calcop>
-                    </calculate>
                     <call-service service-name="getOrderAvailableReturnedTotal" in-map-name="returnTotalCtx">
                         <result-to-field result-name="availableReturnTotal" field-name="availableReturnTotal"/>
                         <result-to-field result-name="returnTotal" field-name="returnTotal"/>
                         <result-to-field result-name="orderTotal" field-name="orderTotal"/>
                     </call-service>
-                    <log level="info" message="Available amount for return (order #${returnItem.orderId}) : ${availableReturnTotal} [orderTotal = ${orderTotal} / returnTotal = ${returnTotal}]"/>
-                    <if-compare field-name="availableReturnTotal" operator="less" value="0" type="Double">
+                    <log level="info" message="Available amount for return on order #${returnItem.orderId} is [${availableReturnTotal}] (orderTotal = [${orderTotal}] - returnTotal = [${returnTotal}]"/>
+                    
+                    <if-compare field-name="availableReturnTotal" operator="less" value="-0.01" type="Double">
                         <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
                     </if-compare>
                     <else>
@@ -158,6 +174,7 @@
                     </else>
                 </if-not-empty>    
             </iterate>
+
             <entity-and entity-name="ReturnAdjustment" list-name="returnAdjustments">
                 <field-map field-name="returnId" env-name="returnHeader.returnId"/>
             </entity-and>
@@ -172,7 +189,7 @@
             <if-compare field-name="returnTotalAmount" operator="less" value="0" type="Double">
                 <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnTotalCannotLessThanZero"/></add-error>
             </if-compare>
-            <check-errors/>
+            <check-errors/> 
         </if-compare>
 
         <field-to-result field-name="returnHeader.statusId" result-name="currentStatusId"/>
@@ -639,7 +656,13 @@
                 <log level="info" message="Found unexpected orderAdjustment:${newItemCtx.orderAdjustmentId}"/>
                 <clear-field field-name="newItemCtx.orderAdjustmentId"/>
             </if-not-empty>
-            <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
+            <if-compare field-name="newItemCtx.returnQuantity" value="0" operator="greater" type="Double">
+                <!-- otherwise, items which have been fully returned would still get passed in and then come back with an error -->
+                <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
+            <else>
+                <log level="info" message="This return item is not going to be created because its returnQuantity is zero: ${newItemCtx}"/>
+            </else>
+            </if-compare>
         </iterate>
 
         <!-- create a return adjustment for all order adjustments not attached to a particular orderItem (orderItemSeqId = "_NA_") -->
@@ -677,7 +700,7 @@
                 <calcop operator="get" field-name="returnTotal"/>
             </calcop>
         </calculate>
-        <log level="always" message="OrderTotal [${orderHeader.grandTotal}] - ReturnTotal [${returnTotal}] Diff = [${totalDiff}]"/>
+        <log level="info" message="OrderTotal [${orderHeader.grandTotal}] - ReturnTotal [${returnTotal}] = Diff [${totalDiff}]"/>
 
         <!-- create a manual balance adjustment based on the difference between order total and return total -->
         
@@ -691,7 +714,7 @@
             <set field="balanceItemCtx.returnItemSeqId" value="_NA_"/>
             <set from-field="totalDiff" field="balanceItemCtx.amount" />
 
-            <!-- create the shipping adjustment return item -->
+            <!-- create the balance adjustment return item -->
             <call-service service-name="createReturnAdjustment" in-map-name="balanceItemCtx" include-user-login="true"/>
         </if-compare>
 

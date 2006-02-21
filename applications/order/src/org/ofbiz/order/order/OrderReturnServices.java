@@ -1128,16 +1128,19 @@ public class OrderReturnServices {
             GenericValue returnItemResponse = null;
             GenericValue payment = null;
             String orderId;
+            List paymentList = new ArrayList();
             while (returnItemIterator.hasNext()) {
                 returnItem = (GenericValue) returnItemIterator.next();
                 orderId = returnItem.getString("orderId");
                 try {
                     returnItemResponse = returnItem.getRelatedOne("ReturnItemResponse");
-                    if (returnItemResponse != null && orderId != null) {
+                    if ((returnItemResponse != null) && (orderId != null)) {
                         // TODO should we filter on payment's status (PMNT_SENT,PMNT_RECEIVED)
                         payment = returnItemResponse.getRelatedOne("Payment");
-                        if (payment != null && payment.getDouble("amount") != null) {
+                        if ((payment != null) && (payment.getDouble("amount") != null) &&
+                                !paymentList.contains(payment.get("paymentId"))) {
                             UtilMisc.addToDoubleInMap(returnAmountByOrder, orderId, payment.getDouble("amount"));
+                            paymentList.add(payment.get("paymentId"));  // make sure we don't add duplicated payment amount
                         }
                     }
                 } catch (GenericEntityException e) {
@@ -1174,13 +1177,17 @@ public class OrderReturnServices {
             while (orderIterator.hasNext()) {
                 String orderId = (String) orderIterator.next();
                 Double returnAmount = (Double) returnAmountByOrder.get(orderId);
+                if (Math.abs(returnAmount.doubleValue()) < 0.000001) {
+                    Debug.logError("Order [" + orderId + "] refund amount[ " + returnAmount + "] less than zero", module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderReturnTotalCannotLessThanZero", locale));
+                }
                 OrderReadHelper helper = new OrderReadHelper(OrderReadHelper.getOrderHeader(delegator, orderId));
                 double grandTotal = helper.getOrderGrandTotal();
                 if (returnAmount == null) {
                     Debug.logInfo("No returnAmount found for order:" + orderId, module);
                 } else {
-                    if (grandTotal < returnAmount.doubleValue()) {
-                        Debug.logError("Order [" + orderId + "] refund amount exceeds order total", module);
+                    if ((returnAmount.doubleValue() - grandTotal) > 0.01) {
+                        Debug.logError("Order [" + orderId + "] refund amount[ " + returnAmount + "] exceeds order total [" + grandTotal + "]", module);
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderRefundAmountExceedsOrderTotal", locale));
                     }
                 }
