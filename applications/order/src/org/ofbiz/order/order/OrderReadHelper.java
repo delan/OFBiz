@@ -1329,7 +1329,7 @@ public class OrderReadHelper {
         List returnHeaderList = new ArrayList();
         while (i.hasNext()) {
             GenericValue returnedItem = (GenericValue) i.next();
-            if ((returnedItem.get("returnPrice") != null) && (returnItem.get("returnQuantity") != null)) {
+            if ((returnedItem.get("returnPrice") != null) && (returnedItem.get("returnQuantity") != null)) {
                 returnedAmount += returnedItem.getDouble("returnPrice").doubleValue() * returnedItem.getDouble("returnQuantity").doubleValue();
             }
             Map itemAdjustmentCondition = UtilMisc.toMap("returnId", returnedItem.get("returnId"), "returnItemSeqId", returnedItem.get("returnItemSeqId"));
