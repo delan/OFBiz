@@ -196,6 +196,17 @@
     <ReturnItemType description="Return Finished/Digital Good Item" returnItemTypeId="RET_FDPROD_ITEM" parentTypeId="RET_PROD_ITEM"/>
     <ReturnItemType description="Return Product-Feature Item" returnItemTypeId="RET_PROD_FEATR_ITEM" parentTypeId="RET_PROD_ITEM"/>
     <ReturnItemType description="Return Service Product Item" returnItemTypeId="RET_SPROD_ITEM" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_REPLACE_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_FEE_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_MISC_CHARGE_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_SALES_TAX_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_SHIPPING_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_SURCHARGE_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_ADD_FEATURE_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_WARRANTY_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_MKTG_PKG_ADJ" parentTypeId="RET_PROD_ITEM"/>
+    <ReturnItemType description="JUST TO TRICK THINGS HERE" returnItemTypeId="RET_MAN_ADJ" parentTypeId="RET_PROD_ITEM"/>
+
 
     <ReturnItemType description="Return Work-Effort Item" returnItemTypeId="RET_WE_ITEM" parentTypeId=""/>
     <ReturnItemType description="Return Time-Entry Item" returnItemTypeId="RET_TE_ITEM" parentTypeId=""/>

@@ -57,6 +57,7 @@ if (orderId != null) {
     orh = new OrderReadHelper(order);
     context.put("orh", orh);
     context.put("toPartyId", productStore.getString("payToPartyId"));
+    context.put("orderHeaderAdjustments", orh.getAvailableOrderHeaderAdjustments());
 }
 
 returnTypes = delegator.findAll("ReturnType", UtilMisc.toList("sequenceId"));
@@ -76,9 +77,6 @@ while (iter.hasNext()) {
     typeMap.put(value.getString("returnItemMapKey"), value.getString("returnItemTypeId"));
 }
 context.put("returnItemTypeMap", typeMap);
-
-orderHeaderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", "_NA_"));
-context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 
 if (orderId != null) {
     Map returnRes = dispatcher.runSync("getReturnableItems", UtilMisc.toMap("orderId", orderId));   

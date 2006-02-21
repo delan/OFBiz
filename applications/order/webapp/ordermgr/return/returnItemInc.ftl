@@ -122,7 +122,8 @@
               <tr>
                     <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
                     <td><div class="tableheadtext">${uiLabelMap.CommonAmount}</div></td>                                                
-                      
+                    <td><div class="tableheadtext">Return Type</div></td>
+
                 <td align="right"><div class="tableheadtext">Include?</div></td>
               </tr>
               <tr><td colspan="9"><hr class="sepbar"></td></tr>
@@ -133,6 +134,7 @@
 
                 <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>                
                 <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
+                <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
                 <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
                 <tr>
                   <td>
@@ -143,7 +145,14 @@
                   <td>
                     <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}" value="${adj.amount?string("##0.00")}"/>
                   </td>
-                                     
+                  <td>
+                    <select name="returnTypeId_o_${rowCount}" class="selectBox">
+                      <#list returnTypes as type>
+                      <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
+                      </#list>
+                    </select>
+                  </td>
+
                   <td align="right">
                     <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
                   </td>

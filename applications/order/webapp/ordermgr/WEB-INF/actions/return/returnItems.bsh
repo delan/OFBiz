@@ -26,6 +26,7 @@
  
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.order.order.OrderReadHelper;
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
@@ -69,14 +70,15 @@ while (iter.hasNext()) {
 }
 context.put("returnItemTypeMap", typeMap);
 
-orderHeaderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", "_NA_"));
-context.put("orderHeaderAdjustments", orderHeaderAdjustments);
-
 orderId = request.getParameter("orderId");
-if (orderId != null) {    
-    Map returnRes = dispatcher.runSync("getReturnableItems", UtilMisc.toMap("orderId", orderId));   
+if (orderId != null) {
+    order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+    Map returnRes = dispatcher.runSync("getReturnableItems", UtilMisc.toMap("orderId", orderId));
     context.put("returnableItems", returnRes.get("returnableItems"));
-    
+
+   orh = new OrderReadHelper(order);
+   context.put("orderHeaderAdjustments", orh.getAvailableOrderHeaderAdjustments());
+
     // get the order shipping amount
     Map shipRes = dispatcher.runSync("getOrderShippingAmount", UtilMisc.toMap("orderId", orderId));
     Double shippingAmount = shipRes.get("shippingAmount");
@@ -85,4 +87,3 @@ if (orderId != null) {
 
 partyOrders = delegator.findByAnd("OrderHeaderAndRoles", UtilMisc.toMap("roleTypeId", "PLACING_CUSTOMER", "partyId", returnHeader.getString("fromPartyId")), UtilMisc.toList("orderId"));
 context.put("partyOrders", partyOrders);
-
