@@ -283,9 +283,9 @@
     </request-map>
     
     <!-- payment requests -->
-    <request-map uri="findPayment">
+    <request-map uri="findPayments">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="findPayment"/>
+        <response name="success" type="view" value="findPayments"/>
     </request-map>
     <request-map uri="editPayment">
         <security https="true" auth="true"/>
@@ -294,19 +294,45 @@
     <request-map uri="createPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPayment"/>
-        <response name="success" type="view" value="editPayment"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+        <response name="error" type="view" value="editPayment"/>
     </request-map>
     <request-map uri="updatePayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePayment"/>
         <response name="success" type="view" value="editPayment"/>
+        <response name="error" type="view" value="editPayment"/>
     </request-map>
-    <request-map uri="createPaymentApplication">
+    <request-map uri="paymentOverview">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createPaymentApplication"/>
-        <response name="success" type="view" value="editPayment"/>
+        <response name="success" type="view" value="paymentOverview"/>
+    </request-map> 
+    <request-map uri="paymentApplications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="paymentApplications"/>
     </request-map>
-
+    <request-map uri="editPaymentApplications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="updatePaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentApplication"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="removePaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentApplication"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+        <response name="error" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="setPaymentStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setPaymentStatus"/>
+        <response name="success" type="view" value="paymentOverview"/>
+        <response name="error" type="view" value="paymentOverview"/>
+    </request-map>
+    
     <request-map uri="manualETx">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="manualTx"/>
@@ -317,6 +343,17 @@
         <response name="success" type="view" value="manualTx"/>
     </request-map>
 
+    <request-map uri="printChecks">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintChecks"/>
+    </request-map>
+
+    <request-map uri="quickSendPayment">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="quickSendPayment"/>
+        <response name="success" type="view" value="ListChecksToSend"/>
+        <response name="error" type="view" value="ListChecksToSend"/>
+    </request-map>
     <!-- transaction page requests -->
     <request-map uri="FindGatewayResponses">
         <security https="true" auth="true"/>
@@ -828,8 +865,11 @@
     <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/InvoiceScreens.xml#InvoiceRoles"/>
     <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/InvoiceScreens.xml#SendPerEmail"/>
     
-    <view-map name="findPayment" type="jpublish" page="/payment/findPayment.ftl"/>
-    <view-map name="editPayment" type="jpublish" page="/payment/editPayment.ftl"/>
+    <!-- payments -->
+    <view-map name="findPayments" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPayments"/>
+    <view-map name="paymentOverview" type="screen" page="component://accounting/widget/PaymentScreens.xml#PaymentOverview"/>
+    <view-map name="editPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPayment"/>
+    <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPaymentApplications"/>
     <view-map name="manualTx" type="jpublish" page="/payment/manualTx.ftl"/>
 
     <!-- view-map name="FindGlobalGlAccount" type="jpublish" page="/chartofaccounts/FindGlobalGlAccount.ftl"/ -->

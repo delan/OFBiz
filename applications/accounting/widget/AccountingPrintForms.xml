@@ -27,11 +27,11 @@ under the License.
         <section>
             <actions>
                 <set field="title" value="Invoice"/>
-                <script location="component://accountingext/webapp/accountingext/WEB-INF/actions/invoice/editInvoice.bsh"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/editInvoice.bsh"/>
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://accountingext/webapp/accountingext/invoice/viewInvoice.fo.ftl"/></html>
+                    <html><html-template location="component://accounting/webapp/accounting/invoice/viewInvoice.fo.ftl"/></html>
                 </platform-specific>                
             </widgets>
         </section>
@@ -41,11 +41,11 @@ under the License.
         <section>
             <actions>
                 <set field="title" value="Check"/>
-                <!-- script location="component://accountingext/webapp/accountingext/WEB-INF/actions/invoice/editInvoice.bsh"/ -->
+                <!-- script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/editInvoice.bsh"/ -->
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://accountingext/webapp/accountingext/payment/printCheck.fo.ftl"/></html>
+                    <html><html-template location="component://accounting/webapp/accounting/payment/printCheck.fo.ftl"/></html>
                 </platform-specific>                
             </widgets>
         </section>

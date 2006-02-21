@@ -1,45 +1,293 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    $Id$
+    
+    Copyright 2001-2006 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not
+    use this file except in compliance with the License. You may obtain a copy of
+    the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-    <form name="PaymentApplicationsList" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" target="" paginate-target="/EditPayment" title="" type="list">
-        <auto-fields-entity entity-name="PaymentApplication" default-field-type="display"/>
-    </form>
-    <form name="EditPaymentApplication" type="single" 
-            target="editPaymentApplication" title="" default-map-name="paymentApplication"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        
-        <alt-target use-when="paymentApplication==null" target="createPaymentApplication"/>
-        <auto-fields-service service-name="createPaymentApplication" map-name=""/>
-        <field name="taxAuthGeoId" title="Tax Auth Geo Id">
-             <drop-down allow-empty="true">
-             	<entity-options entity-name="TaxAuthority" description="${taxAuthGeoId}"/>
-             </drop-down>
+
+    <form name="FindPayments" type="single" target="findPayments" title="Find and list payments"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="paymentId"><text-find/></field>
+        <field name="comments"><text-find/></field>
+        <field position="1" name="paymentTypeId" title="Payment Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PaymentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
         </field>
+        <field position="2" name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="1" name="amount"><text/></field>
+        <field name="paymentRefNum"><text-find></text-find></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment"
+        title="Payment List"  default-title-style="tableheadtext" list-name="newPayments"
+        default-widget-style="tabletext" default-tooltip-style="tabletext"
+        paginate-target="/findPayments"  list-iterator-name="listIt" paginate="true">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="Payment"/>
+                <field-map field-name="orderBy" value="effectiveDate"/>
+            </service>
+        </actions>
+        <field name="paymentId" widget-style="buttontext">
+            <hyperlink description="${paymentId}" target="paymentOverview?paymentId=${paymentId}"/>
+        </field>
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PaymentType" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="tabletext"><display-entity entity-name="StatusItem"/></field>
+        <field name="comments"><display/></field>
+        <field name="partyIdFrom" title="Party Payed From"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}[${partyId}]"/></field>
+        <field name="partyIdTo" title="Party Payed To"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}[${partyId}]"/></field>
+        <field name="effectiveDate"><display/></field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}"><display/></field>
+        <field name="amount"><display also-hidden="false"/></field>
+        <field name="applied"><display description="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentAppliedBd(delegator,paymentId)}" also-hidden="false"/></field>
+    </form>
+
+    <form name="EditPayment" type="single"
+        target="updatePayment" title="Edit Payment Header" default-map-name="payment"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="payment==null" target="createPayment"/>
         <field name="paymentId"><hidden/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field position="1" name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="PaymentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="2" name="paymentMethodTypeId" title="${uiLabelMap.AccountingPaymentMethodType}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentMethodType"  description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" use-when="(payment==null)||(payment.get(&quot;partyIdFrom&quot;)==null)">
+            <text/>
+        </field>
+        <field position="1" name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" use-when="(payment!=null)&amp;&amp;(payment.get(&quot;partyIdFrom&quot;)!=null)">
+            <drop-down allow-empty="false">
+                <entity-options  key-field-name="paymentMethodId" entity-name="PaymentMethod" description="${paymentMethodId}">
+                    <entity-constraint name="partyId" operator="equals" value="${payment.partyIdFrom}"/>
+                    <entity-order-by field-name="paymentMethodTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" use-when="paymentId==null"><hidden value="PMNT_NOT_PAID"/></field>
+        <field position="2" name="statusId"  use-when="paymentId!=null"><display-entity entity-name="StatusItem"/></field>
+        <field name="partyIdFrom" position="1"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="amount" position="1"><text/></field>
+        <field position="2" name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="uomId" description="${abbreviation} - ${description}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="effectiveDate" position="1"><date-time/></field>
+        <field name="comments" position="2"><text/></field>
+        <field name="paymentRefNum" position="1"><text/></field>
+        <field name="paymentPreferenceId" position="2"><text/></field>
+        <!--field name="paymentGatewayResponseId" title="Paym Gatw Resp." position="2"><display/></field-->
+        <field name="roleTypeIdTo">
+            <drop-down allow-empty="true">
+                <entity-options  key-field-name="roleTypeId" description="${description}" entity-name="RoleType">
+                    <entity-order-by field-name="roleTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="finAccountTransId" position="1"><text/></field>
+        <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
+        <field position="1" use-when="payment==null" name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field position="1" use-when="payment!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="editPaymentApplications" default-title-style="tableheadtext" default-entity-name="PaymentApplication"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
+        target="updatePaymentApplication" title="List payment Applications" type="list" separate-columns="true">
+        <actions>
+            <entity-condition entity-name="PaymentApplication">
+                <condition-list combine="or">
+                    <condition-expr field-name="paymentId" env-name="paymentId"/>
+                    <condition-expr field-name="toPaymentId" env-name="paymentId"/>
+                </condition-list>
+                <order-by field-name="invoiceId"/>
+                <order-by field-name="invoiceItemSeqId"/>
+            </entity-condition>
+        </actions>
+        <field name="paymentApplicationId"><hidden/></field>
+        <field name="paymentId"><hidden/></field>
+        <field name="invoiceId"><lookup target-form-name="LookupInvoice"></lookup></field>
+        <field name="invoiceItemSeqId" title="ItemNr">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="InvoiceItem" description="${invoiceItemSeqId}">
+                    <entity-constraint name="invoiceId" operator="equals" value="${invoiceId}"/>
+                    <entity-order-by field-name="invoiceItemSeqId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="toPaymentId"><lookup target-form-name="LookupPayment"></lookup></field>
+        <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
+        <field name="taxAuthGeoId" title="Tax Auth Geo Id">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}" cache="true">
+                    <entity-constraint name="geoTypeId" operator="equals" value="COUNTRY"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="amountApplied"><text size="15"/></field>
+        <field name="Update" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="Remove" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonRemove}" 
+                target="removePaymentApplication?paymentApplicationId=${paymentApplicationId}&amp;paymentId=${paymentId}"/>
+        </field>
+    </form>
+
+    <form name="listInvoicesNotApplied" type="list" list-name="invoices" target="updatePaymentApplication" title=""
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/listNotAppliedInvoices.bsh"/>
+        </actions>
+        <field name="paymentId"><hidden/></field>
+        <field name="invoiceId" widget-style="buttontext"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/></field>
+        <field name="invoiceDate"><display/></field>
+        <field name="amount"><display/></field>
+        <field name="amountAlreadyApplied" title="Applied"><display/></field>
+        <field name="amountToApply" title="to Apply" widget-style="inputBox" parameter-name="amountApplied"><text size="10"/></field>
+        <field name="invoiceProcessing" title="Apply to Invoice Items" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
+        <field name="invoiceProcessing" title="Ignore Invoice Items" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="listPaymentsNotApplied" type="list" list-name="payments"
+        target="updatePaymentApplication" title=""
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/listNotAppliedPayments.bsh"/>
+        </actions>
+        <field name="paymentId"><hidden/></field>
+        <field name="toPaymentId" widget-style="buttontext"><hyperlink target="paymentOverview?paymentId=${toPaymentId}" description="[${toPaymentId}]"/></field>
+        <field name="amount"><display/></field>
+        <field name="effectiveDate"><display/></field>
+        <field name="paymentApplied" title="Already Applied"><display/></field>
+        <field name="amountToApply" title="to apply now" parameter-name="amountApplied" widget-style="inputBox"><text size="10"/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="addPaymentApplication" type="single" target="updatePaymentApplication" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="paymentApplicationId"><hidden/></field>
+        <field name="paymentId"><hidden/></field>
+        <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
+        <field name="invoiceItemSeqId" title="ItemNr"><text size="10"/></field>
+        <field name="toPaymentId"><lookup target-form-name="LookupPayment"/></field>
+        <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
+        <field name="taxAuthGeoId" title="Tax Auth Geo Id">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}" cache="true">
+                    <entity-constraint name="geoTypeId" operator="equals" value="COUNTRY"/>
+                    <entity-order-by field-name="geoId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="amountApplied" title="to Apply"><text/></field>
+        <field name="invoiceProcessing" title="Apply to Invoice Items" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
+        <field name="invoiceProcessing" title="Ignore Invoice Items" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="paymentHeader" type="single" title="Payment header information" default-map-name="payment"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="paymentId"><hidden/></field>
+        <field name="paymentTypeId" position="1" title="Payment Type"><display-entity entity-name="PaymentType"/></field>
+        <field name="paymentMethodTypeId" position="2"><display-entity entity-name="PaymentMethodType"/></field>
+        <field name="statusId" position="1"><display-entity entity-name="StatusItem"/></field>
+        <field name="paymentMethodId" position="2"><display-entity entity-name="PaymentMethod" description="${paymentMethodId}[${paymentMethodTypeId}]"/></field>
+        <field name="partyIdFrom" position="1"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}, ${firstName} [${partyId}]"/></field>
+        <field name="partyIdTo" position="2"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}, ${firstName} [${partyId}]"/></field>
+        <field name="paymentRefNum" position="1"><display/></field>
+        <field name="paymentPreferenceId" position="2"><display/></field>
+        <field name="amount" position="1"><display/></field>
+        <field name="currencyUomId" position="2"><display/></field>
+        <field name="effectiveDate" position="1"><display/></field>
+        <field name="comments" position="2"><display/></field>
+        <!--field name="paymentGatewayResponseId" title="Paym Gatw Resp." position="2"><display/></field-->
+        <field name="roleTypeIdTo" position="1"><display/></field>
+        <field name="finAccountTransId" position="1"><display/></field>
+        <field name="overrideGlAccountId" position="2"><display/></field>
+    </form>
+                
+    <form name="paymentApplications" type="list" title="Payment Applications" list-name="paymentApplications"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="PaymentApplication">
+                <condition-list combine="or">
+                    <condition-expr field-name="paymentId" env-name="paymentId"/>
+                    <condition-expr field-name="toPaymentId" env-name="paymentId"/>
+                </condition-list>
+                <order-by field-name="invoiceId"/>
+                <order-by field-name="invoiceItemSeqId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="PaymentApplication" default-field-type="display"/>
+        <field name="paymentApplicationId"><hidden/></field>
+        <field name="paymentId"><hidden/></field>
+        <field name="invoiceId" widget-style="buttontext"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/></field>
+        <field name="invoiceItemSeqId" title="ItemNbr" widget-style="buttontext"><hyperlink target="listInvoiceItems?invoiceId=${invoiceId}&amp;invoiceItemSeqId=${invoiceItemSeqId}" description="${invoiceItemSeqId}"/></field>
+        <field name="toPaymentId" widget-style="buttontext"><hyperlink target="paymentOverview?paymentId=${toPaymentId}" description="${toPaymentId}"/></field>
+        <field name="billingAccountId" widget-style="buttontext"><hyperlink target="editBillingAccount?billingAccountId=${billingAccountId}" description="${billingAccountId}"/></field>
+        <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName}"></display-entity></field>
+    </form>
+
+    <form name="AcctgTransAndEntries" type="list" title="Accounting Transactions" list-name="AcctgTransAndEntries"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="AcctgTransAndEntries">
+                <condition-expr field-name="paymentId" env-name="paymentId"/>
+                <order-by field-name="acctgTransEntrySeqId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="display"/>
+        <field name="paymentId"><hidden/></field>
+        <field name="glAccountId">
+            <hyperlink description="${glAccountId}" target="AccountActivitiesDetail?glAccountId=${glAccountId}&amp;organizationPartyId=${organizationPartyId}&amp;glFiscalTypeId=ACTUAL"/>
+        </field>
     </form>
 </forms>
