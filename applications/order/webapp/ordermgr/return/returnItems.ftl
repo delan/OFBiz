@@ -234,14 +234,14 @@
     </#list>
           <input name="_rowCount" value="${rowCount}" type="hidden">
     </#if>
-    <#-- show the return total -->
-    <#if (!readOnly) && (rowCount > 0)>
+    <#-- show the return total -->    
     <tr><td colspan="5"></td><td><hr class="sepbar"/></td></tr>
     <tr>
       <td colspan="2">&nbsp;</td>
       <td colspan="3" class="tableheadtext">${uiLabelMap.OrderReturnTotal}</td>
       <td class="tabletextright"><b><@ofbizCurrency amount=returnTotal isoCode=returnHeader.currencyUomId/></b></td>
     </tr>
+    <#if (!readOnly) && (rowCount > 0)>
        <tr>          
           <input name="returnId" value="${returnHeader.returnId}" type="hidden">
           <td colspan="7" class="tabletext" align="center"><input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}"></td>
