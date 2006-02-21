@@ -92,14 +92,14 @@
 <tr valign="top">
 <td>
 <ul>
-<li><a href="<@ofbizUrl>findPayment?lookupFlag=Y</@ofbizUrl>">Show all Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y</@ofbizUrl>">Show all Payments</a></li>
 </ul>
 </td>
 
 <td>
 <ul>
 <#list paymentMethodTypes as paymentMethodType>
-<li><a href="<@ofbizUrl>findPayment?lookupFlag=Y&paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">Show ${paymentMethodType.get("description",locale)} Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">Show ${paymentMethodType.get("description",locale)} Payments</a></li>
 </#list>
 </ul>
 </td>
@@ -107,7 +107,7 @@
 <td>
 <ul>
 <#list paymentStatus as status>
-<li><a href="<@ofbizUrl>findPayment?lookupFlag=Y&paymentStatusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&paymentStatusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Payments</a></li>
 </#list>
 </ul>
 </td>
