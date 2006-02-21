@@ -26,6 +26,7 @@ under the License.
 
         <make-value entity-name="AcctgTrans" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set field="newEntity.isPosted" value="N"/>
 
         <!-- AcctgTrans uses a sequenced id, so get the next one now and set it... -->        
         <sequenced-id-to-env sequence-name="AcctgTrans" env-name="newEntity.acctgTransId"/>
