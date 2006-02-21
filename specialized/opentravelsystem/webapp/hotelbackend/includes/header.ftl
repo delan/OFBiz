@@ -90,15 +90,15 @@
             </#if>
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
-                <form method="post" action="/backend/control/setSessionLocale" style="margin: 0;">
-                <select name="locale" class="selectBox">
-                    <option value="en_US">English (United States)</option>
-                    <option value="en">----</option>
-                        <option value="nl">Dutch</option>
-                        <option value="en_US">English (United States)</option>
-                        <option value="th_TH">Thai (Thailand)</option>
-                </select>
-                <input type="submit" value="Set" class="smallSubmit"/>
+                <form method="post" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>" style="margin: 0;">
+                  <select name="locale" class="selectBox">
+                    <option value="${locale}">${locale.getDisplayName(locale)}</option>
+                    <option value="${locale}">----</option>
+                    <#list availableLocales as availableLocale>
+                        <option value="${availableLocale.toString()}">${availableLocale.getDisplayName(locale)}</option>
+                    </#list>
+                  </select>
+                  <input type="submit" value="${uiLabelMap.CommonSet}" class="smallSubmit"/>
                 </form>
             </div>
           </td>
