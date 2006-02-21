@@ -13,23 +13,6 @@
         <field name="partyIdTo" title="Party Id" ><text-find default-option="contains" ignore-case="true"/></field>
         <field name="groupName"><text-find default-option="contains" ignore-case="true"/></field>
         <field name="lastName" ><text-find default-option="contains" ignore-case="true"/></field>
-        <field name="partyRelationshipTypeId">
-            <drop-down allow-empty="true">
-                <entity-options description="${partyRelationshipName}" entity-name="PartyRelationshipType">
-                    <entity-order-by field-name="partyRelationshipName"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="statusId" title="Status" >
-            <drop-down allow-empty="true" no-current-selected-key="PARTYREL-ACTIVE">
-                <entity-options description="${description}" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" value="PARTY-RELATION"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <!--field name="statusId" use-when="deleted!=null"><hidden value="PARTYREL-DELETED"/></field>
-        <field name="statusId" use-when="deleted==null"><hidden value="PARTYREL-ACTIVE"/></field-->
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -38,51 +21,25 @@
     <form name="ListParties" type="list" separate-columns="true" 
         title="Party List"  default-title-style="tableheadtext"
         default-widget-style="tabletext" default-tooltip-style="tabletext"
-        paginate-target="findParties" list-iterator-name="listIt" default-entity-name="PartyRelationshipAndPartyDetail">
+        paginate-target="findParties" list-iterator-name="listIt" default-entity-name="PartyNameView">
         <actions>
             <set field="parameters.partyIdFrom" from-field="parameters.organizationPartyId"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
-                <field-map field-name="entityName" value="PartyRelationshipAndPartyDetail"/>
-                <field-map field-name="orderBy" value="groupName"/>
+                <field-map field-name="entityName" value="PartyNameView"/>
+                <field-map field-name="orderBy" value="partyId"/>
             </service>
         </actions>
         <field name="partyId" widget-style="buttontext" >
             <hyperlink description="${partyId}" target="editParty?partyId=${partyId}"/>
         </field>
-        <field name="statusId"><display-entity entity-name="StatusItem"/></field>
-        <field name="partyRelationshipTypeId" title="Relation"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
+        <field name="partyTypeId"><display-entity entity-name="PartyType" description="${description}"/></field>
         <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
         <field name="financialHistory" title=" " widget-style="buttontext" >
             <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
         </field>
         <field name="Disable" title=" " widget-style="buttontext">
             <hyperlink description="Delete" target-type="plain" target="javascript:confirmActionLink('You want to delete this party?','deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-DELETED')"/>
-        </field>
-    </form>
-    <form name="ListParties1" type="list" separate-columns="true" 
-        title="Party List"  default-title-style="tableheadtext"
-        default-widget-style="tabletext" default-tooltip-style="tabletext"
-        paginate-target="findParties" list-iterator-name="listIt" default-entity-name="PartyRelationshipAndPartyDetail">
-        <actions>
-            <set field="parameters.partyIdFrom" from-field="parameters.organizationPartyId"/>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="parameters"/>
-                <field-map field-name="entityName" value="PartyRelationshipAndPartyDetail"/>
-                <field-map field-name="orderBy" value="groupName"/>
-            </service>
-        </actions>
-        <field name="partyId" widget-style="buttontext" >
-            <hyperlink description="${partyId}" target="editParty?partyId=${partyId}"/>
-        </field>
-        <field name="statusId"><display-entity entity-name="StatusItem"/></field>
-        <field name="partyRelationshipTypeId" title="Relation"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
-        <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
-        <field name="financialHistory" title=" " widget-style="buttontext" >
-            <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
-        </field>
-        <field name="Enable" title=" " widget-style="buttontext">
-            <hyperlink description="Enable" target-type="plain" target="javascript:confirmActionLink('You want to Enable this party?','deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-ACTIVE')"/>
         </field>
     </form>
     
