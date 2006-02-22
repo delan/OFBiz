@@ -712,7 +712,6 @@ under the License.
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Composite Document Template Add Page"/>
                 <set from-field="parameters.caContentIdTo" default-value="${parameters.contentIdTo}" field="contentIdTo" />
-                <set from-field="nowTimestamp" field="fromDate" />
                 <set value="COMPDOC_PART" field="contentAssocTypeId" />
                 <set from-field="parameters.caSequenceNum" field="sequenceNum" default-value="${parameters.sequenceNum}"/>
                 <set value="TEMPLATE" field="contentTypeId" />
