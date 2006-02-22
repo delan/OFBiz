@@ -2548,10 +2548,10 @@
         <relation type="one" fk-name="SALES4C_PARENT" title="Parent" rel-entity-name="SalesForecast">
             <key-map field-name="parentSalesForecastId" rel-field-name="salesForecastId"/>
         </relation>
-        <relation type="one" fk-name="SALES4C_ORG_PARTY" rel-entity-name="Party">
+        <relation type="one" fk-name="SALES4C_ORG_PARTY" title="Organization" rel-entity-name="Party">
             <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
         </relation>
-        <relation type="one" fk-name="SALES4C_INT_PARTY" rel-entity-name="Party">
+        <relation type="one" fk-name="SALES4C_INT_PARTY" title="Internal" rel-entity-name="Party">
             <key-map field-name="internalPartyId" rel-field-name="partyId"/>
         </relation>
         <relation type="one" fk-name="SALES4C_TIME_PER" rel-entity-name="CustomTimePeriod">
@@ -2593,10 +2593,10 @@
         <relation type="one" fk-name="SALES4CH_SALES4C" rel-entity-name="SalesForecast">
             <key-map field-name="salesForecastId"/>
         </relation>
-        <relation type="one" fk-name="SALES4CH_ORG_PARTY" rel-entity-name="Party">
+        <relation type="one" fk-name="SALES4CH_ORG_PARTY" title="Organization" rel-entity-name="Party">
             <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
         </relation>
-        <relation type="one" fk-name="SALES4CH_INT_PARTY" rel-entity-name="Party">
+        <relation type="one" fk-name="SALES4CH_INT_PARTY" title="Internal" rel-entity-name="Party">
             <key-map field-name="internalPartyId" rel-field-name="partyId"/>
         </relation>
         <relation type="one" fk-name="SALES4CH_TIME_PER" rel-entity-name="CustomTimePeriod">
