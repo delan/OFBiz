@@ -658,8 +658,7 @@
 
     <!--Complex Contentservices.-->
     <service name="createContentAndAssoc" default-entity-name="Content" engine="java"
-            location="org.ofbiz.content.content.ContentServicesComplex"
-            invoke="createContentAndAssoc" auth="true">
+        location="org.ofbiz.content.content.ContentServicesComplex" invoke="createContentAndAssoc" auth="true">
         <description>Create a Content, DataResource and/or ContentAssoc</description>
         <auto-attributes entity-name="Content" include="all" mode="IN" optional="true">
             <exclude field-name="contentId"/>
@@ -688,9 +687,8 @@
     </service>
 
     <service name="getAssocAndContentAndDataResourceCache" default-entity-name="ContentAssocDataResourceViewFrom"
-            engine="java"
-            location="org.ofbiz.content.content.ContentServicesComplex"
-            invoke="getAssocAndContentAndDataResourceCache" auth="false">
+        engine="java" location="org.ofbiz.content.content.ContentServicesComplex"
+        invoke="getAssocAndContentAndDataResourceCache" auth="false">
         <description>Get a ContentAssocDataResourceView</description>
         <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all"
             mode="OUT" optional="true">
@@ -715,12 +713,9 @@
     </service>
 
     <service name="getAssocAndContentAndDataResource" default-entity-name="ContentAssocDataResourceViewFrom"
-            engine="java"
-            location="org.ofbiz.content.content.ContentServicesComplex"
-            invoke="getAssocAndContentAndDataResource" auth="false">
+            engine="java" location="org.ofbiz.content.content.ContentServicesComplex" invoke="getAssocAndContentAndDataResource" auth="false">
         <description>Get a ContentAssocDataResourceView</description>
-        <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all"
-            mode="OUT" optional="true">
+        <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all" mode="OUT" optional="true">
             <exclude field-name="contentIdStart"/>
         </auto-attributes>
         <attribute mode="IN" name="assocTypes" optional="true" type="List"/>
@@ -736,9 +731,8 @@
         <attribute mode="OUT" name="entityList" optional="true" type="List"/>
     </service>
 
-    <service name="traverseContent"
-        auth="false" engine="java" invoke="traverseContent"
-        location="org.ofbiz.content.content.ContentServices" >
+    <service name="traverseContent" auth="false" engine="java" invoke="traverseContent"
+        location="org.ofbiz.content.content.ContentServices">
         <description>Follow a content and return descendants</description>
         <attribute mode="IN" name="contentId" optional="false" type="String"/>
         <attribute mode="IN" name="fromDateStr" optional="true" type="String"/>
@@ -751,18 +745,13 @@
         <attribute mode="OUT" name="pickList" optional="true" type="List"/>
         <attribute mode="OUT" name="nodeMap" optional="true" type="Map"/>
     </service>
-    <service name="getContent"
-            engine="java"
-            location="org.ofbiz.content.ContentManagementServices"
-            invoke="getContent" auth="false">
+    <service name="getContent" engine="java"
+            location="org.ofbiz.content.ContentManagementServices" invoke="getContent" auth="false">
         <description>Get Content of passed contentId</description>
         <attribute mode="IN" name="contentId" optional="true" type="String"/>
         <attribute mode="OUT" name="view" optional="true" type="GenericValue"/>
     </service>
-    <service name="getSubContent"
-            engine="java"
-            location="org.ofbiz.content.ContentManagementServices"
-            invoke="getSubContent" auth="false">
+    <service name="getSubContent" engine="java" location="org.ofbiz.content.ContentManagementServices" invoke="getSubContent" auth="false">
         <description>Get subContent of passed contentId/mapKey or subContentId</description>
         <attribute mode="IN" name="mapKey" optional="true" type="String"/>
         <attribute mode="IN" name="contentId" optional="true" type="String"/>
@@ -785,8 +774,7 @@
         <attribute mode="IN" name="session" optional="true" type="javax.servlet.http.HttpSession"/>
     </service>
     -->
-    <service name="persistContentAndAssoc" engine="java"
-        transaction-timout="72000" 
+    <service name="persistContentAndAssoc" engine="java" transaction-timout="72000" 
             location="org.ofbiz.content.ContentManagementServices" invoke="persistContentAndAssoc" auth="true">
         <description>Create a Content, DataResource and/or ContentAssoc</description>
         <auto-attributes entity-name="ContentDataResourceView" include="all" mode="IN" optional="true">

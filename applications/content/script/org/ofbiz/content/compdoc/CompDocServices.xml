@@ -23,12 +23,9 @@ under the License.
  -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
 
-
-    
     <simple-method method-name="genCompDocInstance" short-description="Create CompDoc">
-    
         <entity-one entity-name="Content" value-name="rootTemplateContent">
             <field-map field-name="contentId" env-name="parameters.instanceOfContentId"/>
         </entity-one>

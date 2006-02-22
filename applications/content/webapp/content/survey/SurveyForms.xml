@@ -223,6 +223,27 @@ under the License.
         <field use-when="surveyQuestionOption==null" name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+    <form name="FindSurveyResponse" target="FindSurveyResponse" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="SurveyResponse" default-field-type="find"/>
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListFindSurveyResponse" list-iterator-name="listIt" paginate-target="FindSurveyResponse" title="" type="list"
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="SurveyResponse"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="SurveyResponse" default-field-type="display"/>
+        <field name="surveyResponseId" title="ID" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${surveyResponseId}" target="EditSurveyResponse?surveyResponseId=${surveyResponseId}"/>
+        </field>
+    </form>
+    
     <form name="lookupSurvey" target="LookupSurvey" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="Survey" default-field-type="find"/>

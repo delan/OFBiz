@@ -1122,6 +1122,7 @@
     </request-map>
     
     <!-- SurveyResponse Requests -->
+    <request-map uri="FindSurveyResponse"><security auth="true" https="true"/><response name="success" type="view" value="FindSurveyResponse"/></request-map>
     <request-map uri="ViewSurveyResponses"><security auth="true" https="true"/><response name="success" type="view" value="ViewSurveyResponses"/></request-map>
     <request-map uri="EditSurveyResponse"><security auth="true" https="true"/><response name="success" type="view" value="EditSurveyResponse"/></request-map>
     <request-map uri="updateSurveyResponse">
@@ -1445,6 +1446,7 @@
     <view-map name="EditSurvey" page="component://content/widget/SurveyScreens.xml#EditSurvey" type="screen"/>
     <view-map name="EditSurveyMultiResps" page="component://content/widget/SurveyScreens.xml#EditSurveyMultiResps" type="screen"/>
     <view-map name="EditSurveyQuestions" page="component://content/widget/SurveyScreens.xml#EditSurveyQuestions" type="screen"/>
+    <view-map name="FindSurveyResponse" page="component://content/widget/SurveyScreens.xml#FindSurveyResponse" type="screen"/>
     <view-map name="ViewSurveyResponses" page="component://content/widget/SurveyScreens.xml#ViewSurveyResponses" type="screen"/>
     <view-map name="EditSurveyResponse" page="component://content/widget/SurveyScreens.xml#EditSurveyResponse" type="screen"/>
 
