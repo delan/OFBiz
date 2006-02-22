@@ -32,7 +32,7 @@
 function lookupInvoices() {
     invoiceIdValue = document.lookupinvoice.invoiceId.value;
     if (invoiceIdValue.length > 1) {
-        document.lookupinvoice.action = "<@ofbizUrl>viewInvoice</@ofbizUrl>";
+        document.lookupinvoice.action = "<@ofbizUrl>invoiceOverview</@ofbizUrl>";
     } else {
         document.lookupinvoice.action = "<@ofbizUrl>findInvoices</@ofbizUrl>";
     }
@@ -180,14 +180,14 @@ document.lookupinvoice.invoiceId.focus();
             <#assign invoiceTotal = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceTotal(invoice)>        
             <tr class='${rowClass}'>
               <td><div class='tabletext'>${invoiceType.description?default(invoiceType.invoiceTypeId?default(""))}</div></td>
-              <td><a href="<@ofbizUrl>viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${invoice.invoiceId}</a></td>
+              <td><a href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${invoice.invoiceId}</a></td>
               
               <td align="right"><div class="tabletext">${invoiceTotal?default(0.00)}</div></td>
               <td>&nbsp;</td>
               <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext"><nobr>${invoice.invoiceDate?default("N/A").toString()}</nobr></div></td>                            
               <td align='right'>
-                <a href="<@ofbizUrl>viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${uiLabelMap.CommonView}</a>
               </td>
             </tr>
             <#-- toggle the row color -->
