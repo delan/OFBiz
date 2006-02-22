@@ -30,7 +30,10 @@ under the License.
         <menu-item name="SurveyQuestions" title="${uiLabelMap.SurveyQuestions}">
             <link target="EditSurveyQuestions?surveyId=${surveyId}"/>
         </menu-item>
-        <menu-item name="SurveyResponses" title="${uiLabelMap.SurveyResponses}">
+        <menu-item name="FindSurveyResponse" title="${uiLabelMap.SurveyFindResponse}">
+            <link target="FindSurveyResponse?surveyId=${surveyId}"/>
+        </menu-item>
+        <menu-item name="SurveyResponses" title="${uiLabelMap.SurveyResponseSummary}">
             <link target="ViewSurveyResponses?surveyId=${surveyId}"/>
         </menu-item>
     </menu>

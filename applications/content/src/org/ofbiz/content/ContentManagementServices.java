@@ -63,16 +63,12 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
 
-
-
 /**
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @version    $Rev$
  * @since      3.0
- *
- * 
  */
 public class ContentManagementServices {
 
@@ -84,11 +80,9 @@ public class ContentManagementServices {
      * This service calls a same-named method in ContentWorker to do the work.
      */
     public static Map getSubContent(DispatchContext dctx, Map context) {
-
-        Map results = new HashMap();
-        Security security = dctx.getSecurity();
+        //Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
         String contentId = (String) context.get("contentId"); 
         String subContentId = (String) context.get("subContentId"); 
         String mapKey = (String) context.get("mapKey"); 
@@ -112,12 +106,11 @@ public class ContentManagementServices {
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
+
+        Map results = ServiceUtil.returnSuccess();
         results.put("view", view);
         results.put("content", content);
-   
-
         return results;
-
     }
 
     /**
@@ -125,12 +118,10 @@ public class ContentManagementServices {
      * This service calls a same-named method in ContentWorker to do the work.
      */
     public static Map getContent(DispatchContext dctx, Map context) {
-
-        Map results = new HashMap();
-        Security security = dctx.getSecurity();
+        //Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         String contentId = (String) context.get("contentId"); 
-        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        //GenericValue userLogin = (GenericValue)context.get("userLogin");
         GenericValue view = null;
 
         try {
@@ -138,10 +129,10 @@ public class ContentManagementServices {
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
+
+        Map results = ServiceUtil.returnSuccess();
         results.put("view", view);
-
         return results;
-
     }
 
     /**
@@ -151,20 +142,17 @@ public class ContentManagementServices {
      * either by being created or being selected from a list.
      */
     public static Map addMostRecent(DispatchContext dctx, Map context) {
-
-        Map results = new HashMap();
-        Security security = dctx.getSecurity();
-        GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        HttpServletRequest request = (HttpServletRequest)context.get("request");  
-        String suffix = (String) context.get("suffix"); 
+        //Security security = dctx.getSecurity();
+        //GenericDelegator delegator = dctx.getDelegator();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
+        //HttpServletRequest request = (HttpServletRequest)context.get("request");  
+        //String suffix = (String) context.get("suffix"); 
         GenericValue val = (GenericValue)context.get("pk");
         GenericPK pk = val.getPrimaryKey();
         HttpSession session = (HttpSession)context.get("session");
 
         ContentManagementWorker.mruAdd(session, pk);
-        return results;
-
+        return ServiceUtil.returnSuccess();
     }
 
 
@@ -180,8 +168,6 @@ public class ContentManagementServices {
      * Assumes binary data is always in field, "imageData".
      */
     public static Map persistContentAndAssoc(DispatchContext dctx, Map context) throws GenericServiceException {
-
-        HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         
@@ -246,31 +232,35 @@ public class ContentManagementServices {
         GenericValue electronicText = delegator.makeValue("ElectronicText", null);
         electronicText.setPKFields(context);
         electronicText.setNonPKFields(context);
-        String textData = (String)electronicText.get("textData");
-
         
         // save expected primary keys on result now in case there is no operation that uses them
-        result.put("contentId", content.get("contentId"));
-        result.put("dataResourceId", dataResource.get("dataResourceId"));
-        result.put("contentIdTo", contentAssoc.get("contentIdTo"));
-        result.put("fromDate", contentAssoc.get("fromDate"));
-        result.put("contentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
-        result.put("drDataResourceId", dataResource.get("dataResourceId"));
-        result.put("caContentIdTo", contentAssoc.get("contentIdTo"));
-        result.put("caFromDate", contentAssoc.get("fromDate"));
-        result.put("caContentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
+        Map results = ServiceUtil.returnSuccess();
+        results.put("contentId", content.get("contentId"));
+        results.put("dataResourceId", dataResource.get("dataResourceId"));
+        results.put("contentIdTo", contentAssoc.get("contentIdTo"));
+        results.put("fromDate", contentAssoc.get("fromDate"));
+        results.put("contentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
+        results.put("drDataResourceId", dataResource.get("dataResourceId"));
+        results.put("caContentIdTo", contentAssoc.get("contentIdTo"));
+        results.put("caFromDate", contentAssoc.get("fromDate"));
+        results.put("caContentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
         
         // get user info for multiple use
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
-        String userLoginId = (String)userLogin.get("userLoginId");
-        String createdByUserLogin = userLoginId;
-        String lastModifiedByUserLogin = userLoginId;
-        Timestamp createdDate = UtilDateTime.nowTimestamp();
-        Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
+
+        // TODO: DEJ20060221 Should these be used somewhere?
+        //String textData = (String)electronicText.get("textData");
+
+        //String userLoginId = (String)userLogin.get("userLoginId");
+        
+        //String createdByUserLogin = userLoginId;
+        //String lastModifiedByUserLogin = userLoginId;
+        //Timestamp createdDate = UtilDateTime.nowTimestamp();
+        //Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
 
         // Do update and create permission checks on DataResource if warranted.
-        boolean updatePermOK = false;
-        boolean createPermOK = false;
+        //boolean updatePermOK = false;
+        //boolean createPermOK = false;
 
 
         boolean dataResourceExists = true;
@@ -291,8 +281,8 @@ public class ContentManagementServices {
                 return ServiceUtil.returnError(errorMsg);
             }
             dataResourceId = (String)dataResourceResult.get("dataResourceId");
-            result.put("dataResourceId", dataResourceId);
-            result.put("drDataResourceId", dataResourceId);
+            results.put("dataResourceId", dataResourceId);
+            results.put("drDataResourceId", dataResourceId);
             context.put("dataResourceId", dataResourceId);
             content.put("dataResourceId", dataResourceId);
             context.put("drDataResourceId", dataResourceId);
@@ -356,7 +346,7 @@ public class ContentManagementServices {
 
                 contentId = (String)thisResult.get("contentId");
             }
-            result.put("contentId", contentId);
+            results.put("contentId", contentId);
             context.put("contentId", contentId);
             context.put("caContentId", contentId);
 
@@ -424,20 +414,21 @@ public class ContentManagementServices {
                     if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult) || UtilValidate.isNotEmpty(errMsg)) {
                         return ServiceUtil.returnError(errMsg);
                     }
-                    result.put("contentIdTo", thisResult.get("contentIdTo"));
-                    result.put("contentIdFrom", thisResult.get("contentIdFrom"));
-                    //result.put("contentId", thisResult.get("contentIdFrom"));
-                    result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
-                    result.put("fromDate", thisResult.get("fromDate"));
-                    result.put("sequenceNum", thisResult.get("sequenceNum"));
+                    results.put("contentIdTo", thisResult.get("contentIdTo"));
+                    results.put("contentIdFrom", thisResult.get("contentIdFrom"));
+                    //results.put("contentId", thisResult.get("contentIdFrom"));
+                    results.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
+                    results.put("fromDate", thisResult.get("fromDate"));
+                    results.put("sequenceNum", thisResult.get("sequenceNum"));
                     
-                    result.put("caContentIdTo", thisResult.get("contentIdTo"));
-                    result.put("caContentAssocTypeId", thisResult.get("contentAssocTypeId"));
-                    result.put("caFromDate", thisResult.get("fromDate"));
-                    result.put("caSequenceNum", thisResult.get("sequenceNum"));
+                    results.put("caContentIdTo", thisResult.get("contentIdTo"));
+                    results.put("caContentAssocTypeId", thisResult.get("contentAssocTypeId"));
+                    results.put("caFromDate", thisResult.get("fromDate"));
+                    results.put("caSequenceNum", thisResult.get("sequenceNum"));
                 } else {
                     if ("true".equalsIgnoreCase(deactivateExisting)) {
-                        Map deactivateContext = UtilMisc.toMap("contentId", contentId, "contentAssocTypeId", contentAssocTypeId );
+                        // TODO: DEJ20060221 Does something need to be done here?
+                        //Map deactivateContext = UtilMisc.toMap("contentId", contentId, "contentAssocTypeId", contentAssocTypeId );
                     }
                     ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("updateContentAssoc");
                     Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
@@ -454,29 +445,27 @@ public class ContentManagementServices {
                 throw new GenericServiceException(e2.getMessage());
             }
             String errMsg = ServiceUtil.getErrorMessage(thisResult);
-               if (UtilValidate.isNotEmpty(errMsg)) {
-                   return ServiceUtil.returnError(errMsg);
-               }
-
+           if (UtilValidate.isNotEmpty(errMsg)) {
+               return ServiceUtil.returnError(errMsg);
+           }
        }
        context.remove("skipPermissionCheck");
        context.put("contentId", origContentId);
        context.put("dataResourceId", origDataResourceId);
        context.remove("dataResource");
-       Debug.logInfo("result:" + result, module);
-       return result;
+       Debug.logInfo("results:" + results, module);
+       return results;
     }
 
     /**
     Service for update publish sites with a ContentRole that will tie them to the passed 
     in party. 
    */
-  public static Map updateSiteRoles(DispatchContext dctx, Map context) {
-
-      LocalDispatcher dispatcher = dctx.getDispatcher();
-      GenericDelegator delegator = dctx.getDelegator();
-      GenericValue userLogin = (GenericValue)context.get("userLogin");
-      String userLoginPartyId = userLogin.getString("partyId");
+    public static Map updateSiteRoles(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        //String userLoginPartyId = userLogin.getString("partyId");
       Map results = new HashMap();
       // siteContentId will equal "ADMIN_MASTER", "AGINC_MASTER", etc.
       // Remember that this service is called in the "multi" mode,
@@ -573,14 +562,13 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
       return results;
   }
   
-  public static Map persistDataResourceAndData(DispatchContext dctx, Map context) {
-      
-      GenericDelegator delegator = dctx.getDelegator();
+    public static Map persistDataResourceAndData(DispatchContext dctx, Map context) {
+      //GenericDelegator delegator = dctx.getDelegator();
       LocalDispatcher dispatcher = dctx.getDispatcher();
-      String contentId = (String)context.get("contentId");
+      //String contentId = (String)context.get("contentId");
       Map result = new HashMap();
       try {
-          GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+          //GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
           ModelService checkPermModel = dispatcher.getDispatchContext().getModelService("checkContentPermission");
           Map ctx = checkPermModel.makeValid(context, "IN");
           Map thisResult = dispatcher.runSync("checkContentPermission", ctx);
@@ -600,10 +588,9 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
           return ServiceUtil.returnError(errorMsg);
       }
       return result;
-  }
+    }
   
-  public static Map persistDataResourceAndDataMethod(DispatchContext dctx, Map context) throws GenericServiceException, GenericEntityException, Exception {
-  
+    public static Map persistDataResourceAndDataMethod(DispatchContext dctx, Map context) throws GenericServiceException, GenericEntityException, Exception {
       GenericDelegator delegator = dctx.getDelegator();
       LocalDispatcher dispatcher = dctx.getDispatcher();
       Map result = new HashMap();
@@ -637,7 +624,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
           }
       }
       GenericValue userLogin = (GenericValue) context.get("userLogin"); 
-      String userLoginId = (String)userLogin.get("userLoginId");
+      //String userLoginId = (String)userLogin.get("userLoginId");
       ModelService dataResourceModel = dispatcher.getDispatchContext().getModelService("updateDataResource");
       Map ctx = dataResourceModel.makeValid(dataResource, "IN");
       newDrContext.putAll(ctx);
@@ -774,7 +761,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
     return result;
   }
   
-  public static void addRoleToUser(GenericDelegator delegator, LocalDispatcher dispatcher, Map serviceContext) throws GenericServiceException, GenericEntityException {
+    public static void addRoleToUser(GenericDelegator delegator, LocalDispatcher dispatcher, Map serviceContext) throws GenericServiceException, GenericEntityException {
     String partyId = (String)serviceContext.get("partyId");
     Map findMap = UtilMisc.toMap("partyId", partyId);
         List userLoginList = delegator.findByAnd("UserLogin", findMap);
@@ -787,7 +774,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         }
 }
 
-  public static Map updateSiteRolesDyn(DispatchContext dctx, Map context) {
+    public static Map updateSiteRolesDyn(DispatchContext dctx, Map context) {
 
       LocalDispatcher dispatcher = dctx.getDispatcher();
       GenericDelegator delegator = dctx.getDelegator();
@@ -989,14 +976,13 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
     }
     
     public static Map changeLeafToNode(DispatchContext dctx, Map context) throws GenericServiceException{
-
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String contentId = (String)context.get("contentId");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
         String userLoginId = userLogin.getString("userLoginId");
-        int seqNum = 9999;
+        //int seqNum = 9999;
         try {
             GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
             if (content == null) {
@@ -1004,7 +990,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 return ServiceUtil.returnError("content was null");
             }
             String dataResourceId = content.getString("dataResourceId");
-            String contentTypeIdTo = content.getString("contentTypeId");
+            //String contentTypeIdTo = content.getString("contentTypeId");
             /* this does not seem to be correct or needed
             if (UtilValidate.isNotEmpty(contentTypeIdTo)) {
                 if (contentTypeIdTo.equals("OUTLINE_NODE")) {
