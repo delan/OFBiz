@@ -583,14 +583,16 @@ under the License.
                                 <include-form name="UploadCompDocSurveyId" location="component://content/widget/compdoc/CompDocForms.xml"/>
                             </widgets>
                         </section>
+                        <!--
                         <section>
                             <condition>
                                 <if-compare field-name="contentTypeId" operator="equals" value="DOCUMENT"/>
                             </condition>
                             <widgets>
-                                <include-screen name="EditCompDocSurveyResponse" />
+                                <link target="" text="" style="buttontext"/>
                             </widgets>
                         </section>
+                        -->
                     </widgets>
                 </section>
                 <section>
@@ -688,6 +690,7 @@ under the License.
                 <entity-one entity-name="Content" value-name="instanceOfContent"/>
                 <set from-field="instanceOfContent.contentName" field="contentName"/>
                 <get-related-one value-name="instanceOfContent" relation-name="DataResource" to-value-name="instanceOfDataResource"/>
+                <set field="instanceOfDataResourceTypeId" from-field="instanceOfDataResource.dataResourceTypeId"/>
                 <set value="COMPDOC_PART" field="contentAssocTypeId"/>
                 <set value="DOCUMENT" field="contentTypeId"/>
                 <set from-field="parameters.caSequenceNum" field="sequenceNum" default-value="${parameters.sequenceNum}"/>
@@ -711,13 +714,14 @@ under the License.
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Composite Document Template Add Page"/>
-                <set from-field="parameters.caContentIdTo" default-value="${parameters.contentIdTo}" field="contentIdTo" />
-                <set value="COMPDOC_PART" field="contentAssocTypeId" />
-                <set from-field="parameters.caSequenceNum" field="sequenceNum" default-value="${parameters.sequenceNum}"/>
-                <set value="TEMPLATE" field="contentTypeId" />
-                <set value="" field="rootInstanceContentId" />
-                <set value="" field="contentId" />
-                <set value="createChildCompDocTemplate" field="childCompDocTarget"/>
+                <set field="contentIdTo" from-field="parameters.caContentIdTo" default-value="${parameters.contentIdTo}"/>
+                <set field="contentAssocTypeId" value="COMPDOC_PART"/>
+                <set field="sequenceNum" from-field="parameters.caSequenceNum" default-value="${parameters.sequenceNum}"/>
+                <set field="contentTypeId" value="TEMPLATE"/>
+                <set field="rootInstanceContentId" value=""/>
+                <set field="contentId" value=""/>
+                <set field="instanceOfDataResourceTypeId" value=""/>
+                <set field="childCompDocTarget" value="createChildCompDocTemplate"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
