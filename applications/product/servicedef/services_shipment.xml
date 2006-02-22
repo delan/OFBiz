@@ -85,6 +85,15 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="createShipmentForReturn" default-entity-name="ReturnHeader" engine="simple"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="createShipmentForReturn">
+        <required-permissions join-type="AND">
+            <check-permission permission="FACILITY" action="_CREATE"/>
+        </required-permissions>
+        <description>Create a Return Shipment with information from ReturnHeader fields</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
+    </service>
 
     <service name="prepareShipmentStaging" engine="java"
             location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="fillShipmentStagingTables" auth="true">
