@@ -153,22 +153,6 @@ under the License.
         <attribute name="subject" type="String" mode="IN" optional="true"/>
         <attribute name="bodyText" type="String" mode="IN" optional="true"/>
     </service>
-    <!-- Invoice services -->
-    <service name="setInvoiceStatus" engine="simple"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
-        <description>Set the Invoice  Status</description>
-        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
-        <attribute name="statusId" type="String" mode="IN" optional="false"/>
-        <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
-    </service>
-    <service name="createInvoiceTerm" engine="simple" default-entity-name="InvoiceTerm"
-            location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceTerm">
-        <description>Create Invoice (Item) Term Record</description>
-        <auto-attributes mode="OUT" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="false"/>
-        <override name="uomId" optional="true"/>
-    </service>
     <service name="checkInvoicePaymentApplications" engine="java"
             location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="checkInvoicePaymentApplications">
         <description>Checks to see if the payments applied to an invoice total up to the invoice total; if so sets to PAID</description>
