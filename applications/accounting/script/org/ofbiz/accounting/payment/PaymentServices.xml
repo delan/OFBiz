@@ -102,6 +102,31 @@
             </if-compare-field>
         </if-not-empty>
     </simple-method>
+    <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
+        <if-empty field-name="invoiceId" map-name="parameters">
+            <if-empty field-name="billingAccountId" map-name="parameters">
+                <if-empty field-name="taxAuthGeoId" map-name="parameters">
+                  <add-error><fail-property resource="AccountingUiLabels" property="AccountingPaymentApplicationParameterMissing"/></add-error>
+                  <check-errors/>
+                </if-empty>
+            </if-empty>
+        </if-empty>
+
+        <make-value entity-name="PaymentApplication" value-name="paymentAppl"/>
+        <set-nonpk-fields map-name="parameters" value-name="paymentAppl"/>
+
+        <if-not-empty field-name="parameters.invoiceId">
+            <entity-one entity-name="Invoice" value-name="invoice"/>
+            <if-not-empty field-name="invoice.billingAccountId">
+                <set from-field="invoice.billingAccountId" field="paymentAppl.billingAccountId"/>
+            </if-not-empty>
+        </if-not-empty>
+
+        <sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentAppl.paymentApplicationId"/>
+        <field-to-result field-name="paymentAppl.paymentApplicationId" result-name="paymentApplicationId"/>
+
+        <create-value value-name="paymentAppl"/>
+    </simple-method>
     
     <simple-method method-name="setPaymentStatus" short-description="Set The Payment Status">
         <check-permission permission="ACCOUNTING" action="_UPDATE">
