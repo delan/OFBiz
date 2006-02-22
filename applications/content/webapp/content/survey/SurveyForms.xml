@@ -1,24 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+$Id$
+
+Copyright 2001-2006 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -28,7 +24,6 @@
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="Survey" default-field-type="find"/>
         
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="isAnonymous"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
         <field name="allowMultiple"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
         <field name="allowUpdate"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
@@ -48,7 +43,6 @@
         <field name="surveyId" title="${uiLabelMap.SurveySurveyId}" widget-style="buttontext">
             <hyperlink description="${surveyId}" target="EditSurvey?surveyId=${surveyId}" also-hidden="false"/>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]"/></field>
     </form>
     <form name="EditSurvey" type="single" 
         target="updateSurvey" title="" default-map-name="survey"
@@ -227,5 +221,51 @@
 
         <field use-when="surveyQuestionOption!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field use-when="surveyQuestionOption==null" name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="lookupSurvey" target="LookupSurvey" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="Survey" default-field-type="find"/>
+        <field name="surveyId" title="${uiLabelMap.SurveySurveyId}"><text-find/></field>
+        <field name="isAnonymous"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="allowMultiple"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="allowUpdate"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupSurvey" list-iterator-name="listIt" paginate-target="LookupSurvey" title="" type="list"
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="Survey"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="Survey" default-field-type="display"/>
+        <field name="surveyId" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${surveyId}" target="javascript:set_value('${surveyId}')"/>
+        </field>
+    </form>
+
+    <form name="lookupSurveyResponse" target="LookupSurveyResponse" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="SurveyResponse" default-field-type="find"/>
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupSurveyResponse" list-iterator-name="listIt" paginate-target="LookupSurveyResponse" title="" type="list"
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="SurveyResponse"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="SurveyResponse" default-field-type="display"/>
+        <field name="surveyResponseId" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${surveyResponseId}" target="javascript:set_value('${surveyResponseId}')"/>
+        </field>
     </form>
 </forms>

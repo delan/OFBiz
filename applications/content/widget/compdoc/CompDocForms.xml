@@ -296,13 +296,13 @@ under the License.
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
-        <field name="contentId" entry-name="missing" map-name="empty"><text/></field>
+        <!-- Not sure why this one is here either: <field name="contentId" entry-name="missing" map-name="empty"><text/></field> -->
         <field name="contentName"><text/></field>
         <field name="contentTypeId"><hidden/></field>
         <field name="instanceOfContentId" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display/></field>
-        <field name="contentIdTo" widget-style="tabletext"><display/></field>
-        <field name="contentAssocTypeId"><display/></field>
-        <field name="fromDate"><display/></field>
+        <field name="contentIdTo" widget-style="tabletext" title="Parent Content ID"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
+        <field name="contentAssocTypeId" widget-style="tabletext"><display-entity entity-name="ContentAssocType"/></field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="thruDate"><date-time/></field>
         <field name="sequenceNum"><text/></field>
         
@@ -310,7 +310,9 @@ under the License.
             <drop-down allow-empty="true">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
-                <option key="survey" description="Survey"/>
+                <option key="application/vnd.ofbiz.survey" description="Survey"/>
+                <option key="text/html" description="HTML Text"/>
+                <option key="text/plain" description="Plain Text"/>
                 <option key="image/jpeg" description="JPEG"/>
                 <option key="image/gif" description="GIF"/>
                 <option key="image/tiff" description="TIFF"/>
@@ -325,13 +327,13 @@ under the License.
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
-        <field name="contentId"><text/></field>
+        <field name="contentId" widget-style="tabletext"><display/></field>
         <field name="contentName" map-name="content"><text/></field>
         <field name="contentTypeId" map-name="content"><hidden/></field>
         <field name="instanceOfContentId" map-name="content" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display/></field>
-        <field name="contentIdTo" title="ContentId To"><display/></field>
-        <field name="contentAssocTypeId" title="Content Assoc Type Id"><display also-hidden="false"/></field>
-        <field name="fromDate" title="From Date"><display/></field>
+        <field name="contentIdTo" widget-style="tabletext" title="Parent Content ID"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
+        <field name="contentAssocTypeId" widget-style="tabletext"><display-entity entity-name="ContentAssocType" also-hidden="false"/></field>
+        <field name="fromDate" title="From Date" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="Thru Date"><date-time/></field>
         <field name="sequenceNum" title="Sequence Num"><text/></field>
         
@@ -357,6 +359,11 @@ under the License.
         <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"
                     use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null  &amp;&amp; mimeTypeId.equals(&quot;SURVEY&quot;)">
             <display  description="Survey Response"/>
+        </field>
+        <field name="relatedDetailId" map-name="dataResource" title="Survey ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))"> 	 
+            <lookup target-form-name="LookupSurvey">
+                <sub-hyperlink target="EditSurvey?surveyId=${dataResource.relatedDetailId}" description="Edit Survey" link-style="buttontext" use-when="dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
+            </lookup>
         </field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

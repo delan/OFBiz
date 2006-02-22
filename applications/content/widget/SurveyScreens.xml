@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2006-2006 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *  $Id: CommonScreens.xml 5462 2005-08-05 18:35:48Z jonesde $
+$Id: $
+
+Copyright 2001-2006 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -229,6 +223,51 @@
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleEditSurveyResponse}</label></container>
                         <platform-specific><html><html-template location="component://content/webapp/content/survey/EditSurveyResponse.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="LookupSurvey">
+        <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="Lookup Survey"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupSurvey" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                        <include-form name="listLookupSurvey" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LookupSurveyResponse">
+        <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="Lookup SurveyResponse"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="lookupSurveyResponse" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                        <include-form name="listLookupSurveyResponse" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
