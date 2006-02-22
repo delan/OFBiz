@@ -2,7 +2,7 @@
 <!--
 $Id: $
 
-Copyright 2001-2006 The Apache Software Foundation
+Copyright 2005-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
 use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ under the License.
         
     <!--  dummy values -->
     <form name="dummy" type="single" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <!-- This should be reviewed and removed from everywhere except where _necessary_. It is causing problems with passing data around that shouldn't be passed around, like in the add CDI Part form... -->
         <field name="rootTemplateContentId" map-name="dummy"><hidden/></field>
         <field name="rootInstanceContentId" map-name="dummy"><hidden/></field>
         <field name="rootTemplateRevSeqId" map-name="dummy"><hidden/></field>
@@ -254,7 +255,7 @@ under the License.
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentName"><text/></field>
-        <field name="instanceOfContentId" entry-name="rootTemplateContentId" map-name="parameters" widget-style="tabletext"><display/></field>
+        <field name="instanceOfContentId" entry-name="rootTemplateContentId" map-name="parameters" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentTypeId"><hidden value="COMPDOC_INSTANCE"/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -296,7 +297,7 @@ under the License.
         extends="dummy"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
-        <!-- Not sure why this one is here either: <field name="contentId" entry-name="missing" map-name="empty"><text/></field> -->
+        <field name="contentId"><ignored/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId"><hidden/></field>
         <field name="instanceOfContentId" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)" title="Instance of Content" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
@@ -306,10 +307,10 @@ under the License.
         <field name="thruDate"><date-time/></field>
         <field name="sequenceNum"><text/></field>
         
-        <field name="mimeTypeId" map-name="empty" title="Document Type" use-when="instanceOfDataResource!=null&amp;&amp;&quot;SURVEY&quot;.equals(instanceOfDataResource.getString(&quot;dataResourceTypeId&quot;))">
+        <field name="mimeTypeId" map-name="empty" title="Document Type" use-when="&quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
             <hidden value="application/vnd.ofbiz.survey.response"/>
         </field>
-        <field name="mimeTypeId" map-name="empty" title="Document Type" use-when="instanceOfDataResource==null||!&quot;SURVEY&quot;.equals(instanceOfDataResource.getString(&quot;dataResourceTypeId&quot;))">
+        <field name="mimeTypeId" map-name="empty" title="Document Type" use-when="!&quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
             <drop-down allow-empty="true">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
@@ -333,7 +334,7 @@ under the License.
         <field name="contentId" widget-style="tabletext"><display/></field>
         <field name="contentName" map-name="content"><text/></field>
         <field name="contentTypeId" map-name="content"><hidden/></field>
-        <field name="instanceOfContentId" map-name="content" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display/></field>
+        <field name="instanceOfContentId" map-name="content" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)" title="Instance of Content" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentIdTo" widget-style="tabletext" title="Parent Content ID"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentAssocTypeId" widget-style="tabletext"><display-entity entity-name="ContentAssocType" also-hidden="false"/></field>
         <field name="fromDate" title="From Date" widget-style="tabletext"><display/></field>
@@ -366,6 +367,11 @@ under the License.
         <field name="relatedDetailId" map-name="dataResource" title="Survey ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))"> 	 
             <lookup target-form-name="LookupSurvey">
                 <sub-hyperlink target="EditSurvey?surveyId=${dataResource.relatedDetailId}" description="Edit Survey" link-style="buttontext" use-when="dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
+            </lookup>
+        </field>
+        <field name="relatedDetailId" map-name="dataResource" title="Survey Response ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY_RESPONSE&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))"> 	 
+            <lookup target-form-name="LookupSurveyResponse">
+                <sub-hyperlink target="EditSurveyResponse?surveyResponseId=${dataResource.relatedDetailId}" description="Edit Survey Response" link-style="buttontext" use-when="dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
             </lookup>
         </field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
