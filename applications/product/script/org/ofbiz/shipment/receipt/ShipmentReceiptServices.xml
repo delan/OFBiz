@@ -159,6 +159,7 @@
                             <set field="loops" from-field="returnItem.returnQuantity"/>
                         </if-compare>
 
+                        <!-- loop through to create each serialized one at a time -->
                         <loop count="${loops}" field="currentLoop">
                             <log level="info" message="Looping and creating inventory info - ${currentLoop}"/>
                             <set from-field="parameters.inventoryItemTypeId" field="receiveCtx.inventoryItemTypeId"/>
@@ -166,7 +167,8 @@
                             <set from-field="returnItem.productId" field="receiveCtx.productId"/>
                             <set from-field="returnItem.returnItemSeqId" field="receiveCtx.returnItemSeqId"/>
                             <set from-field="returnItem.returnId" field="receiveCtx.returnId"/>
-                            <set from-field="returnItem.returnQuantity" field="receiveCtx.quantityAccepted"/>
+                            <!-- this should be 1.0: each receive of a serialized inventory is for one unit -->
+                            <set value="1.0" field="receiveCtx.quantityAccepted" type="Double" />
                             <set from-field="returnHeader.destinationFacilityId" field="receiveCtx.facilityId"/>
                             <!-- important: associate ShipmentReceipt with return shipment created -->
                             <set from-field="shipmentId" field="receiveCtx.shipmentId"/>  
