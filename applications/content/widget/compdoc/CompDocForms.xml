@@ -299,14 +299,17 @@ under the License.
         <!-- Not sure why this one is here either: <field name="contentId" entry-name="missing" map-name="empty"><text/></field> -->
         <field name="contentName"><text/></field>
         <field name="contentTypeId"><hidden/></field>
-        <field name="instanceOfContentId" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)"><display/></field>
+        <field name="instanceOfContentId" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)" title="Instance of Content" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentIdTo" widget-style="tabletext" title="Parent Content ID"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentAssocTypeId" widget-style="tabletext"><display-entity entity-name="ContentAssocType"/></field>
         <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="thruDate"><date-time/></field>
         <field name="sequenceNum"><text/></field>
         
-        <field name="mimeTypeId" map-name="empty" title="Document Type">
+        <field name="mimeTypeId" map-name="empty" title="Document Type" use-when="instanceOfDataResource!=null&amp;&amp;&quot;SURVEY&quot;.equals(instanceOfDataResource.getString(&quot;dataResourceTypeId&quot;))">
+            <hidden value="application/vnd.ofbiz.survey.response"/>
+        </field>
+        <field name="mimeTypeId" map-name="empty" title="Document Type" use-when="instanceOfDataResource==null||!&quot;SURVEY&quot;.equals(instanceOfDataResource.getString(&quot;dataResourceTypeId&quot;))">
             <drop-down allow-empty="true">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
