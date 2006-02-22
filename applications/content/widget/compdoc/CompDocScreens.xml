@@ -273,6 +273,7 @@ under the License.
                 <set field="currentContentMenuItemName" value="" />
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="contentTypeId" value="COMPDOC_INSTANCE"/>
                 <entity-and entity-name="Content"  list-name="compDocFindList">
                     <field-map field-name="instanceOfContentId" env-name="parameters.rootTemplateContentId"/>
                     <field-map field-name="contentTypeId" value="COMPDOC_INSTANCE"/>
@@ -282,7 +283,7 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/>
-                        <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                        <include-form name="ListCompDocInstances" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -835,6 +836,7 @@ under the License.
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                       <link target="GenCompDocPDF?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" text="Generate Composite PDF" style="buttontext"/>
                        <include-tree  name="CompDocInstanceTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
                     </decorator-section>
                 </decorator-screen>

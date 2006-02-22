@@ -1448,6 +1448,7 @@
       <member-entity entity-alias="CRI" entity-name="ContentRevisionItem"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <alias entity-alias="C" name="instanceOfContentId" group-by="true"/>
+      <alias entity-alias="C" name="dataResourceId" group-by="true"/>
       <alias entity-alias="CA" name="contentId" group-by="true"/>
       <alias entity-alias="CA" name="contentIdTo" group-by="true"/>
       <alias entity-alias="CA" name="contentAssocTypeId" group-by="true"/>
