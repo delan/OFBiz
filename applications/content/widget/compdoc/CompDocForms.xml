@@ -75,9 +75,9 @@ under the License.
         </field>
     </form>
     
-    <form name="ListCompDocTemplate" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+    <form name="ListCompDocInstances" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
         default-widget-style="tabletext" title="" type="list" list-name="compDocFindList"
-        target=""  paginate-target="ListCompDocTemplate">
+        target=""  paginate-target="ListCompDocInstances">
         <field name="contentId" title="Content Id"><display/></field>
         <field name="contentName" title="Name"><display/></field>
         <field name="caContentIdTo" title="Content Id To"><display/></field>
@@ -85,10 +85,10 @@ under the License.
         <field name="caFromDate" title="From Date"><display/></field>
         <field name="caThruDate"><hidden/></field>
         <field name="editTemplate" title="">
-           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
+           <hyperlink also-hidden="false" description="Edit" target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
         <field name="templateTree" title="">
-            <hyperlink also-hidden="false" description="Tree" target="CompDocTemplateTree?contentId=${contentId}&amp;contentName=${contentName}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootInstanceContentId=${contentId}"/> 
         </field>
     </form>
     
@@ -99,15 +99,15 @@ under the License.
         <auto-fields-entity entity-name="ContentRevision"/>
         
         <field name="contentId" title="" widget-style="buttontext"><lookup target-form-name="LookupContent"/></field>
-        <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
+        <field name="contentRevisionSeqId" title="" widget-style="inputBox"><text/></field>
 <!--         <field name="contentRevisionSeqId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="" key-field-name="contentRevisionSeqId"/>
             </drop-down>
         </field>
 -->
-        <field name="committedByPartyId" title="" widget-style="inputBox"></field>
-        <field name="comments" title="" widget-style="inputBox"></field>
+        <field name="committedByPartyId" title="" widget-style="inputBox"><text/></field>
+        <field name="comments" title="" widget-style="inputBox"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
     </form>
 
@@ -141,10 +141,10 @@ under the License.
         <auto-fields-entity entity-name="ContentRevisionItem"/>
         
         <field name="contentId" title="" widget-style="buttontext"><lookup target-form-name="LookupContent"/></field>
-        <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
-        <field name="itemContentId" title="" widget-style="inputBox"></field>
-        <field name="oldDataResourceId" title="" widget-style="inputBox"></field>
-        <field name="newDataResourceId" title="" widget-style="inputBox"></field>
+        <field name="contentRevisionSeqId" title="" widget-style="inputBox"><text/></field>
+        <field name="itemContentId" title="" widget-style="inputBox"><text/></field>
+        <field name="oldDataResourceId" title="" widget-style="inputBox"><text/></field>
+        <field name="newDataResourceId" title="" widget-style="inputBox"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
     </form>
 

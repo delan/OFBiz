@@ -1374,4 +1374,30 @@
         <attribute name="thisUserLogin" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="contentApprovalList" type="List" mode="OUT" optional="true"/>
     </service>
+    
+    <service name="renderCompDocPdf" engine="java"
+        location="org.ofbiz.content.openoffice.OpenOfficeEvents"
+        invoke="genCompDocPdf" auth="true">
+        <description>Convert all the CompDoc parts into PDF and concatenate and put in CMS</description>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="https" type="String" mode="IN" optional="true"/>
+        <attribute name="rootDir" type="String" mode="IN" optional="true"/>
+        <attribute name="locale" type="java.util.Locale" mode="IN" optional="true"/>
+        <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="false"/>
+    </service>
+    
+    <service name="renderContentPdf" engine="java"
+        location="org.ofbiz.content.openoffice.OpenOfficeEvents"
+        invoke="genContentPdf" auth="true">
+        <description>Convert all the CompDoc parts into PDF and concatenate and put in CMS</description>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="https" type="String" mode="IN" optional="true"/>
+        <attribute name="rootDir" type="String" mode="IN" optional="true"/>
+        <attribute name="locale" type="java.util.Locale" mode="IN" optional="true"/>
+        <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="false"/>
+    </service>
 </services>
