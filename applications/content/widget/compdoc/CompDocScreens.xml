@@ -683,13 +683,13 @@ under the License.
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Composite Document Instance PART Add Page"/>
-                <set from-field="parameters.rootInstanceContentId" field="contentIdTo" />
-                <set from-field="nowTimestamp" field="fromDate" />
-                <set from-field="parameters.contentId" field="instanceOfContentId" />
-                <entity-one entity-name="Content" value-name="itemContent"/>
-                <set from-field="itemContent.contentName" field="contentName"/>
-                <set value="COMPDOC_PART" field="contentAssocTypeId" />
-                <set value="DOCUMENT" field="contentTypeId" />
+                <set field="contentIdTo" from-field="parameters.rootInstanceContentId"/>
+                <set field="instanceOfContentId" from-field="parameters.contentId"/>
+                <entity-one entity-name="Content" value-name="instanceOfContent"/>
+                <set from-field="instanceOfContent.contentName" field="contentName"/>
+                <get-related-one value-name="instanceOfContent" relation-name="DataResource" to-value-name="instanceOfDataResource"/>
+                <set value="COMPDOC_PART" field="contentAssocTypeId"/>
+                <set value="DOCUMENT" field="contentTypeId"/>
                 <set from-field="parameters.caSequenceNum" field="sequenceNum" default-value="${parameters.sequenceNum}"/>
                 <set value="createChildCompDocInstance" field="childCompDocTarget"/>
             </actions>
@@ -785,6 +785,7 @@ under the License.
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml" >
                     <decorator-section name="body">
+                        <container><link target="AddRootCompDocInstance?contentId=${rootTemplateContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create Instance of This Template" style="buttontext"/></container>
                         <include-tree  name="CompDocTemplateTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -1014,5 +1015,4 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
 </screens>
