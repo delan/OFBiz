@@ -103,6 +103,13 @@
             </entity-count>
 
             <if-compare field-name="iiCount" operator="greater" value="0" type="Double">
+                <!-- create a return shipment for this return -->
+                <set field="shipmentCtx.returnId" from-field="parameters.returnId"/>
+                <call-service service-name="createShipmentForReturn" in-map-name="shipmentCtx">
+                    <result-to-field result-name="shipmentId"/>
+                </call-service>
+                <log level="info" message="Created new shipment ${shipmentId}"/>
+
                 <entity-condition entity-name="ReturnItem" list-name="returnItems">
                     <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
                 </entity-condition>
@@ -121,6 +128,16 @@
                 <set field="nonProductItems" type="Long" value="0"/>
 
                 <iterate entry-name="returnItem" list-name="returnItems">
+                    <!-- record this return item on the return shipment as well.  not sure if this is actually necessary... -->
+                    <clear-field field-name="shipItemCtx"/>
+                    <set from-field="shipmentId" field="shipItemCtx.shipmentId"/>
+                    <set from-field="returnItem.productId" field="shipItemCtx.productId"/>
+                    <set from-field="returnItem.returnQuantity" field="shipItemCtx.quantity"/>
+                    <log level="info" message="calling create shipment item with ${shipItemCtx}"/>
+                    <call-service service-name="createShipmentItem" in-map-name="shipItemCtx">
+                        <result-to-field result-name="shipmentItemSeqId"/>
+                    </call-service>
+                    
                     <if-empty field-name="expectedItemStatus" map-name="returnItem">
                         <set value="INV_RETURNED" field="returnItem.expectedItemStatus" type="String"/>
                     </if-empty>
@@ -143,14 +160,16 @@
                         </if-compare>
 
                         <loop count="${loops}" field="currentLoop">
-                            <log level="always" message="Looping and creating inventory info - ${currentLoop}"/>
+                            <log level="info" message="Looping and creating inventory info - ${currentLoop}"/>
                             <set from-field="parameters.inventoryItemTypeId" field="receiveCtx.inventoryItemTypeId"/>
                             <set from-field="returnItem.expectedItemStatus" field="receiveCtx.statusId"/>
-                            <set from-field="orderItem.productId" field="receiveCtx.productId"/>
+                            <set from-field="returnItem.productId" field="receiveCtx.productId"/>
                             <set from-field="returnItem.returnItemSeqId" field="receiveCtx.returnItemSeqId"/>
                             <set from-field="returnItem.returnId" field="receiveCtx.returnId"/>
                             <set from-field="returnItem.returnQuantity" field="receiveCtx.quantityAccepted"/>
                             <set from-field="returnHeader.destinationFacilityId" field="receiveCtx.facilityId"/>
+                            <!-- important: associate ShipmentReceipt with return shipment created -->
+                            <set from-field="shipmentId" field="receiveCtx.shipmentId"/>  
 
                             <set value="Returned Item RA# ${returnItem.returnId}" field="receiveCtx.comments"/>
                             <set from-field="nowTimestamp" field="receiveCtx.datetimeReceived"/>
@@ -182,6 +201,11 @@
                     <set field="retStCtx.statusId" value="RETURN_RECEIVED"/>
                     <call-service service-name="updateReturnHeader" in-map-name="retStCtx"/>
                 </if-compare-field>
+                
+                <!-- update the shipment to received.   commenting out for now to avoid triggering create invoice -->
+<!--                <set from-field="shipmentId" field="updateShipCtx.shipmentId"/>
+                <set value="PURCH_SHIP_RECEIVED" field="updateShipCtx.statusId"/>  
+                <call-service service-name="updateShpment" in-map-name="updateShipCtx"/> -->
             <else>
                 <log level="info" message="Not receiving inventory for returnId ${returnHeader.returnId}, no inventory information available."/>
             </else>
