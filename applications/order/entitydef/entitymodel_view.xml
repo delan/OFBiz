@@ -1164,7 +1164,9 @@
       <member-entity entity-alias="SF" entity-name="SalesForecast"/>
       <member-entity entity-alias="CTP" entity-name="CustomTimePeriod"/>
       <alias-all entity-alias="SF"/>
-      <alias-all entity-alias="CTP"/>
+      <alias-all entity-alias="CTP">
+          <exclude field="organizationPartyId"/>
+      </alias-all>
       <view-link entity-alias="SF" rel-entity-alias="CTP">
         <key-map field-name="customTimePeriodId"/>
       </view-link>
