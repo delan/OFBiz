@@ -195,8 +195,33 @@
     <InvoiceItemType description="Invoice Work-Effort Item" hasTable="N" invoiceItemTypeId="PINV_WE_ITEM" parentTypeId=""/>
     <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="PINV_TE_ITEM" parentTypeId=""/>
 
+    <!-- invoice items for customer returns -->
+    <InvoiceItemType description="Return Product Item" hasTable="N" invoiceItemTypeId="CRT_PROD_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Return Finished Good Item" hasTable="N" invoiceItemTypeId="CRT_FPROD_ITEM" parentTypeId="CRT_PROD_ITEM"/>
+    <InvoiceItemType description="Return Digital Good Item" hasTable="N" invoiceItemTypeId="CRT_DPROD_ITEM" parentTypeId="CRT_PROD_ITEM"/>
+    <InvoiceItemType description="Return Finished/Digital Good Item" hasTable="N" invoiceItemTypeId="CRT_FDPROD_ITEM" parentTypeId="CRT_PROD_ITEM"/>
+    <InvoiceItemType description="Return Product-Feature Item" hasTable="N" invoiceItemTypeId="CRT_PROD_FEATR_ITEM" parentTypeId="CRT_PROD_ITEM"/>
+    <InvoiceItemType description="Return Service Product Item" hasTable="N" invoiceItemTypeId="CRT_SPROD_ITEM" parentTypeId="CRT_PROD_ITEM"/>
+
+    <InvoiceItemType description="Return Work-Effort Item" hasTable="N" invoiceItemTypeId="CRT_WE_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Return Time-Entry Item" hasTable="N" invoiceItemTypeId="CRT_TE_ITEM" parentTypeId=""/>
+
+    <InvoiceItemType description="Return Promotion" hasTable="N" invoiceItemTypeId="CRT_PROMOTION_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Replacement" hasTable="N" invoiceItemTypeId="CRT_REPLACE_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Discount" hasTable="N" invoiceItemTypeId="CRT_DISCOUNT_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Fee" hasTable="N" invoiceItemTypeId="CRT_FEE_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Miscellaneous Charges" hasTable="N" invoiceItemTypeId="CRT_MISC_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Sales Tax" hasTable="N" invoiceItemTypeId="CRT_SALES_TAX_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Shipping and Handling" hasTable="N" invoiceItemTypeId="CRT_SHIPPING_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Surcharge" hasTable="N" invoiceItemTypeId="CRT_SURCHARGE_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Additional Feature" hasTable="N" invoiceItemTypeId="CRT_ADD_FEATURE_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Warranty" hasTable="N" invoiceItemTypeId="CRT_WARRANTY_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Marketing Package Adjustment" hasTable="N" invoiceItemTypeId="CRT_MKTG_PKG_ADJ" parentTypeId=""/>
+    <InvoiceItemType description="Return Manual Adjustment" hasTable="N" invoiceItemTypeId="CRT_MAN_ADJ" parentTypeId=""/>
+    
     <InvoiceType description="Purchase" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
     <InvoiceType description="Sales" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>
+    <InvoiceType description="Customer Return" hasTable="N" invoiceTypeId="CUST_RTN_INVOICE" parentTypeId=""/>
 
     <!-- maps line items such as order items to invoice item types.  separate mapping for sales and purchase invoices -->
     <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="FINISHED_GOOD" invoiceItemTypeId="INV_FPROD_ITEM"/>
@@ -226,6 +251,24 @@
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="SURCHARGE_ADJUSTMENT" invoiceItemTypeId="PITM_SURCHARGE_ADJ"/>
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="ADDITIONAL_FEATURE" invoiceItemTypeId="PITM_ADD_FEATURE"/>
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="WARRANTY_ADJUSTMENT" invoiceItemTypeId="PITM_WARRANTY_ADJ"/>
+
+    <!-- map return items to invoice items -->
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_FPROD_ITEM" invoiceItemTypeId="CRT_FPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_DPROD_ITEM" invoiceItemTypeId="CRT_DPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_DPROD_ITEM" invoiceItemTypeId="CRT_FDPROD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_PROMOTION_ADJ" invoiceItemTypeId="CRT_PROMOTION_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_REPLACE_ADJ" invoiceItemTypeId="CRT_REPLACE_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_DISCOUNT_ADJ" invoiceItemTypeId="CRT_DISCOUNT_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_FEE_ADJ" invoiceItemTypeId="CRT_FEE_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_MISC_CHARGE_ADJ" invoiceItemTypeId="CRT_MISC_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_SALES_TAX_ADJ" invoiceItemTypeId="CRT_SALES_TAX_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_SHIPPING_ADJ" invoiceItemTypeId="CRT_SHIPPING_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_SURCHARGE_ADJ" invoiceItemTypeId="CRT_SURCHARGE_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_ADD_FEATURE_ADJ" invoiceItemTypeId="CRT_ADD_FEATURE_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_WARRANTY_ADJ" invoiceItemTypeId="CRT_WARRANTY_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_MAN_ADJ" invoiceItemTypeId="CRT_MAN_ADJ"/>
+    <InvoiceItemTypeMap invoiceTypeId="CUST_RTN_INVOICE" invoiceItemMapKey="RET_MKTG_PKG_ADJ" invoiceItemTypeId="CRT_MKTG_PKG_ADJ"/>
+
 
     <PaymentMethodType description="Credit Card" paymentMethodTypeId="CREDIT_CARD"/>
     <PaymentMethodType description="Gift Card" paymentMethodTypeId="GIFT_CARD"/>

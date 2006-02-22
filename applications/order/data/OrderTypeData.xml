@@ -183,13 +183,11 @@
     <ReturnAdjustmentType description="Return Marketing Package Adjustment" hasTable="N" returnAdjustmentTypeId="RET_MKTG_PKG_ADJ" parentTypeId=""/>
     <ReturnAdjustmentType description="Return Manual Adjustment" hasTable="N" returnAdjustmentTypeId="RET_MAN_ADJ" parentTypeId=""/>
     
-    
-    
     <!-- Return Header Types -->
     <ReturnHeaderType description="Return from Customer" returnHeaderTypeId="CUSTOMER_RETURN"/>
     <ReturnHeaderType description="Return to Vendor" returnHeaderTypeId="VENDOR_RETURN"/>  <!-- not supported yet -->
     
-    <!-- return item types for sales (AR) returns -->
+    <!-- return item types for sales returns -->
     <ReturnItemType description="Return Product Item" returnItemTypeId="RET_PROD_ITEM" parentTypeId=""/>
     <ReturnItemType description="Return Finished Good Item" returnItemTypeId="RET_FPROD_ITEM" parentTypeId="RET_PROD_ITEM"/>
     <ReturnItemType description="Return Digital Good Item" returnItemTypeId="RET_DPROD_ITEM" parentTypeId="RET_PROD_ITEM"/>
@@ -200,7 +198,7 @@
     <ReturnItemType description="Return Work-Effort Item" returnItemTypeId="RET_WE_ITEM" parentTypeId=""/>
     <ReturnItemType description="Return Time-Entry Item" returnItemTypeId="RET_TE_ITEM" parentTypeId=""/>
 
-    <!-- maps line items such as order items to invoice item types.  separate mapping for sales and purchase invoices -->
+    <!-- maps order item types and order adjustment types to return item types and return adjustment types -->
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="FINISHED_GOOD" returnItemTypeId="RET_FPROD_ITEM"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="DIGITAL_GOOD" returnItemTypeId="RET_DPROD_ITEM"/>
     <ReturnItemTypeMap returnHeaderTypeId="CUSTOMER_RETURN" returnItemMapKey="FINDIG_GOOD" returnItemTypeId="RET_FDPROD_ITEM"/>
