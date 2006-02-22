@@ -2002,7 +2002,7 @@
       <relation type="one" fk-name="RETURN_ADJ_OGLA" title="Override" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
       </relation>
-      <relation type="one" fk-name="RTN_TYPE" rel-entity-name="ReturnType">
+      <relation type="one" fk-name="RET_ADJ_RTN_TYPE" rel-entity-name="ReturnType">
             <key-map field-name="returnTypeId"/>
       </relation>
       <relation type="one" fk-name="RETURN_ADJ_ORDADJ" rel-entity-name="OrderAdjustment">
