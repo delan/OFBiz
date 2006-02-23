@@ -487,16 +487,18 @@
             <list-to-list list-name="privilegedReservations" to-list-name="allReservations"/>
             <list-to-list list-name="reservations" to-list-name="allReservations"/>
 
+            <!-- FIRST, cancel all the reservation -->
             <iterate list-name="allReservations" entry-name="oisgir">
-                <!-- cancel the reservation -->
                 <set from-field="oisgir.orderId" field="cancelOisgirMap.orderId"/>
                 <set from-field="oisgir.orderItemSeqId" field="cancelOisgirMap.orderItemSeqId"/>
                 <set from-field="oisgir.inventoryItemId" field="cancelOisgirMap.inventoryItemId"/>
                 <set from-field="oisgir.shipGroupSeqId" field="cancelOisgirMap.shipGroupSeqId"/>
                 <call-service service-name="cancelOrderItemShipGrpInvRes" in-map-name="cancelOisgirMap"/>
                 <clear-field field-name="cancelOisgirMap"/>
-
-                <!-- re-reserve the cancelled item -->
+            </iterate>
+            
+            <!-- THEN, re-reserve the cancelled item -->
+            <iterate list-name="allReservations" entry-name="oisgir">
                 <!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
                 <set from-field="inventoryItem.productId" field="resMap.productId"/>
                 <set from-field="oisgir.orderId" field="resMap.orderId"/>
