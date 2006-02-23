@@ -1376,11 +1376,11 @@
     </service>
     
     <service name="renderCompDocPdf" engine="java"
-        location="org.ofbiz.content.openoffice.OpenOfficeEvents"
-        invoke="genCompDocPdf" auth="true">
+        location="org.ofbiz.content.openoffice.OpenOfficeServices"
+        invoke="renderCompDocPdf" auth="true">
         <description>Convert all the CompDoc parts into PDF and concatenate and put in CMS</description>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
-        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="https" type="String" mode="IN" optional="true"/>
         <attribute name="rootDir" type="String" mode="IN" optional="true"/>
@@ -1389,11 +1389,11 @@
     </service>
     
     <service name="renderContentPdf" engine="java"
-        location="org.ofbiz.content.openoffice.OpenOfficeEvents"
-        invoke="genContentPdf" auth="true">
+        location="org.ofbiz.content.openoffice.OpenOfficeServices"
+        invoke="renderContentPdf" auth="true">
         <description>Convert all the CompDoc parts into PDF and concatenate and put in CMS</description>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
-        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="https" type="String" mode="IN" optional="true"/>
         <attribute name="rootDir" type="String" mode="IN" optional="true"/>

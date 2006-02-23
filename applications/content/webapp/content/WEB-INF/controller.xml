@@ -885,6 +885,12 @@
         <response name="success" type="view" value="ViewCompDocTemplateTree"/>
         <response name="error" type="view" value="ViewCompDocTemplateTree"/>
     </request-map>
+
+    <request-map uri="GenCompDocPdf">
+        <security auth="true" https="true"/>
+        <event invoke="genCompDocPdf"  path="org.ofbiz.content.openoffice.OpenOfficeEvents" type="java"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
     <!-- ================ CompDoc ContentRole Requests ================= -->
     <request-map uri="EditCompDocContentRole"><security auth="true" https="true"/><response name="success" type="view" value="EditCompDocContentRole"/></request-map>
     <request-map uri="addCompDocContentRole">

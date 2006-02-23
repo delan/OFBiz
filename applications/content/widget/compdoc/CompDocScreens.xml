@@ -836,7 +836,7 @@ under the License.
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                       <link target="GenCompDocPDF?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" text="Generate Composite PDF" style="buttontext"/>
+                       <container><link target="GenCompDocPdf?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" text="Generate Composite PDF" style="buttontext"/></container>
                        <include-tree  name="CompDocInstanceTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
                     </decorator-section>
                 </decorator-screen>
