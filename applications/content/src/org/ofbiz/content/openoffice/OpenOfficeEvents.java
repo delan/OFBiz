@@ -4,7 +4,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,8 +16,10 @@ import javax.servlet.ServletContext;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.util.ByteWrapper;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
 
 public class OpenOfficeEvents {
@@ -26,6 +30,7 @@ public class OpenOfficeEvents {
         String responseStr = "success";
         ByteWrapper byteWrapper = null;
         HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         ServletContext servletContext = session.getServletContext();
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
         Map paramMap = UtilHttp.getParameterMap(request);
@@ -51,12 +56,25 @@ public class OpenOfficeEvents {
         mapIn.put("rootDir", rootDir);
         mapIn.put("webSiteId", webSiteId);
         mapIn.put("https", https);
+        mapIn.put("userLogin", userLogin);
         
         Map results = null;
         try {
             results = dispatcher.runSync("renderCompDocPdf", mapIn);
+        } catch(ServiceAuthException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
         } catch(GenericServiceException e) {
-            ServiceUtil.returnError(e.getMessage());
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
+        } catch(Exception e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
+        }
+        
+        if (ServiceUtil.isError(results)) {
+            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(results));
+            return "error";
         }
         
         ByteWrapper pdfByteWrapper = (ByteWrapper)results.get("pdfByteWrapper");
@@ -65,6 +83,13 @@ public class OpenOfficeEvents {
         String contentType = "application/pdf; charset=ISO-8859-1";
 
         ByteArrayInputStream bais = new ByteArrayInputStream(pdfByteWrapper.getBytes());
+        try {
+            FileOutputStream fos = new FileOutputStream("/home/byersa/pdftest.pdf");
+            fos.write(pdfByteWrapper.getBytes());
+        } catch(FileNotFoundException e) {
+        } catch(IOException e) {
+            
+        }
         try {
             UtilHttp.streamContentToBrowser(response, bais, pdfByteWrapper.getLength(), contentType);
         } catch(IOException e) {

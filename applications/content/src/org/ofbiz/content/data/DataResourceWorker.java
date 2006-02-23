@@ -1119,7 +1119,7 @@ public class DataResourceWorker {
 	            byteWrapper = new ByteWrapper(text.getBytes());
 	        } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
 	            String objectInfo = dataResource.getString("objectInfo");
-	            File inputFile = getContentFile(dataResourceId, objectInfo, rootDir);
+	            File inputFile = getContentFile(dataResourceTypeId, objectInfo, rootDir);
 		    	long fileSize = inputFile.length();
 		    	FileInputStream fis = new FileInputStream(inputFile);
 		    	ByteArrayOutputStream baos = new ByteArrayOutputStream((int)fileSize);

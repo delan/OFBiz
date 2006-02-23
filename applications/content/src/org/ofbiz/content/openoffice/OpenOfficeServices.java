@@ -94,6 +94,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.Document;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.PageSize;
 
 /**
  * OpenOfficeServices Class
@@ -407,48 +408,68 @@ public class OpenOfficeServices {
             EntityConditionList conditionList = new EntityConditionList(exprList, EntityOperator.AND);
             String [] fields = {"rootRevisionContentId", "itemContentId", "maxRevisionSeqId", "contentId", "dataResourceId", "contentIdTo", "contentAssocTypeId", "fromDate", "sequenceNum"};
             List selectFields = UtilMisc.toListArray(fields);
-            List compDocParts = delegator.findByCondition("ContentAssocRevisionItemView", conditionList, selectFields, null);
+            List orderByFields = UtilMisc.toList("sequenceNum");
+            List compDocParts = delegator.findByCondition("ContentAssocRevisionItemView", conditionList, selectFields, orderByFields);
             
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Document document = new Document(new Rectangle(60, 120));
+            Document document = new Document();
+            document.setPageSize(PageSize.LETTER);    
+            Rectangle rect = document.getPageSize();
+            float left = rect.left();
+            float height = rect.height();
             PdfWriter writer = PdfWriter.getInstance(document, baos);
             document.open();
             PdfContentByte cb = writer.getDirectContent();
             Iterator iter = compDocParts.iterator();
+            int pgCnt =0;
             while (iter.hasNext()) {
                 GenericValue contentAssocRevisionItemView = (GenericValue)iter.next();
                 String thisContentId = contentAssocRevisionItemView.getString("contentId");
                 String thisContentRevisionSeqId = contentAssocRevisionItemView.getString("maxRevisionSeqId");
                 String thisDataResourceId = contentAssocRevisionItemView.getString("dataResourceId");
-                GenericValue dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+                GenericValue dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", thisDataResourceId));
                 String inputMimeType = null;
                 if(dataResource != null) {
                     inputMimeType = (String)dataResource.getString("mimeTypeId");
                 }
-                byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, dataResourceId, https, webSiteId, locale, rootDir);
-                OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
-                OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");
-                PdfReader reader = new PdfReader(oobaos.toByteArray());
+                byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
+                byte [] inputByteArray = null;
+                PdfReader reader = null;
+                if (inputMimeType != null && inputMimeType.equals("application/pdf")) {
+                    inputByteArray = byteWrapper.getBytes();
+                    reader = new PdfReader(inputByteArray);
+                } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
+                        inputByteArray = byteWrapper.getBytes();
+                        String s = new String(inputByteArray);
+                        Debug.logInfo("text/html string:" + s, module);
+                        continue;
+                } else {
+                    OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
+                    OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");
+                    inputByteArray = oobaos.toByteArray();
+                    oobais.close();
+                    oobaos.close();
+                    reader = new PdfReader(inputByteArray);
+                }
                 int n = reader.getNumberOfPages();
                 for (int i=0; i < n; i++) {
-                    PdfImportedPage pg = writer.getImportedPage(reader, i);
-                    cb.addTemplate(pg, .5f, 0, 0, .5f, 60, 120);
+                    PdfImportedPage pg = writer.getImportedPage(reader, i + 1);
+                    cb.addTemplate(pg, left, height * pgCnt);
+                    pgCnt++;
                 }
-                oobais.close();
-                oobaos.close();
             }
+            document.close();
             ByteWrapper outByteWrapper = new ByteWrapper(baos.toByteArray());
             results.put("pdfByteWrapper", outByteWrapper);
         } catch (GenericEntityException e) {
-           ServiceUtil.returnError(e.getMessage());
+           return ServiceUtil.returnError(e.getMessage());
         } catch (IOException ioe) {
             ioe.printStackTrace();
-           ServiceUtil.returnError(ioe.getMessage());
+            return ServiceUtil.returnError(ioe.getMessage());
         } catch( Exception e2 ) {
             e2.printStackTrace();
-            ServiceUtil.returnError(e2.getMessage());
+            return ServiceUtil.returnError(e2.getMessage());
         }
-        System.out.println("xmulticomponentfactory: " + xmulticomponentfactory);
         return results;
 
     }
@@ -523,13 +544,13 @@ public class OpenOfficeServices {
             ByteWrapper outByteWrapper = new ByteWrapper(baos.toByteArray());
             results.put("pdfByteWrapper", outByteWrapper);
         } catch (GenericEntityException e) {
-           ServiceUtil.returnError(e.getMessage());
+            return ServiceUtil.returnError(e.getMessage());
         } catch (IOException ioe) {
             ioe.printStackTrace();
-           ServiceUtil.returnError(ioe.getMessage());
+            return ServiceUtil.returnError(ioe.getMessage());
         } catch( Exception e2 ) {
             e2.printStackTrace();
-            ServiceUtil.returnError(e2.getMessage());
+            return ServiceUtil.returnError(e2.getMessage());
         }
         System.out.println("xmulticomponentfactory: " + xmulticomponentfactory);
         return results;
