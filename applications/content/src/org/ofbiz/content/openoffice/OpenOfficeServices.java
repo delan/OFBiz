@@ -90,6 +90,7 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfString;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.Document;
@@ -417,7 +418,8 @@ public class OpenOfficeServices {
             Rectangle rect = document.getPageSize();
             float left = rect.left();
             float height = rect.height();
-            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            //PdfWriter writer = PdfWriter.getInstance(document, baos);
+            PdfCopy writer = new PdfCopy(document, baos);
             document.open();
             PdfContentByte cb = writer.getDirectContent();
             Iterator iter = compDocParts.iterator();
@@ -454,7 +456,8 @@ public class OpenOfficeServices {
                 int n = reader.getNumberOfPages();
                 for (int i=0; i < n; i++) {
                     PdfImportedPage pg = writer.getImportedPage(reader, i + 1);
-                    cb.addTemplate(pg, left, height * pgCnt);
+                    //cb.addTemplate(pg, left, height * pgCnt);
+                    writer.addPage(pg);
                     pgCnt++;
                 }
             }
