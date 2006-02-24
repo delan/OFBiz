@@ -700,12 +700,7 @@ public class InvoiceServices {
                     issueQty = issue.getBigDecimal("quantity");
                 }
 
-                Double billAvailDouble = (Double) itemQtyAvail.get(issue.getString("orderItemSeqId"));
-
-                // convert the double to a big decimal
-                BigDecimal billAvail = null;
-                if (billAvailDouble != null) billAvail = new BigDecimal(billAvailDouble.doubleValue());
-
+                BigDecimal billAvail = (BigDecimal) itemQtyAvail.get(issue.getString("orderItemSeqId"));
                 if (billAvail == null) {
                     Map lookup = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", issue.get("orderItemSeqId"));
                     GenericValue orderItem = null;
