@@ -59,10 +59,10 @@
     <#list receivedItems as item>
       <#assign inventoryItem = item.getRelatedOne("InventoryItem")/>
       <tr>
-        <td><div class="tabletext"><a href="<@ofbizUrl>EditShipment?shipmentId=${item.shipmentId?if_exists}</@ofbizUrl>">${item.shipmentId?if_exists}</a></div></td>
+        <td><div class="tabletext"><a href="<@ofbizUrl>ViewShipment?shipmentId=${item.shipmentId?if_exists}</@ofbizUrl>" class="buttontext">${item.shipmentId?if_exists}</a></div></td>
         <td><div class="tabletext">${item.receiptId}</div></td>
         <td><div class="tabletext">${item.getString("datetimeReceived").toString()}</div></td>
-        <td><div class="tabletext">${item.orderId}</div></td>
+        <td><div class="tabletext"><a href="/ordermgr/orderview?orderId=${item.orderId}" class="buttontext">${item.orderId}</a></div></td>
         <td><div class="tabletext">${item.orderItemSeqId}</div></td>
         <td><div class="tabletext">${item.productId?default("Not Found")}</div></td>
         <td><div class="tabletext">${inventoryItem.unitCost?default(0)?string("##0.00")}</td>
