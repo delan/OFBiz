@@ -265,7 +265,7 @@
         <override name="amount" optional="false"/>
     </service>
     <service name="createPaymentOfbiz" engine="simple" default-entity-name="Payment"
-        location="org/ofbiz/accounting/payment/PaymentServicesExt.xml" invoke="createPayment" auth="true">
+        location="org/ofbiz/accounting/payment/PaymentServices.xml" invoke="createPayment" auth="true">
         <description>Create a Payment</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
@@ -287,7 +287,7 @@
         <override name="statusId" mode = "IN" optional="false"/>
     </service>
     <service name="createInvoiceOfbiz" engine="simple" default-entity-name="Invoice"
-        location="org/ofbiz/accounting/invoice/InvoiceServicesExt.xml" invoke="createInvoice">
+        location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
         <description>Create Invoice Record</description>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
