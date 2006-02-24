@@ -225,7 +225,7 @@ public class BOMServices {
         try {
             List products = delegator.findAll("Product", UtilMisc.toList("isVirtual DESC"));
             Iterator productsIt = products.iterator();
-            Integer zero = new Integer(0);
+            Long zero = new Long(0);
             List allProducts = new ArrayList();
             while (productsIt.hasNext()) {
                 GenericValue product = (GenericValue)productsIt.next();
