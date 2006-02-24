@@ -79,7 +79,7 @@ if (invoices != null && invoices.size() > 0) {
 		invoice = inv.next();
 		if (invoice.getString("statusId").equals("INVOICE_CANCELLED")) continue;
 		BigDecimal invoiceAmount = InvoiceWorker.getInvoiceTotalBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP);
-		invoiceApplied = InvoiceExtWorker.getInvoiceAppliedBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP);
+		invoiceApplied = InvoiceWorker.getInvoiceAppliedBd(invoice).setScale(2,BigDecimal.ROUND_HALF_UP);
 /*		if (invoice.getString("partyId").equals(organizationPartyId)) { //negate for outgoing payments
 			invoiceAmount = invoiceAmount.multiply(new BigDecimal("-1"));
 			invoiceApplied = invoiceApplied.multiply(new BigDecimal("-1"));
