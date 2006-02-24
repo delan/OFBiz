@@ -59,7 +59,6 @@
             <exclude field-name="returnItemSeqId"/>
         </auto-attributes>
         <override name="returnItemResponseId" optional="true"/>
-        <override name="orderAdjustmentId" optional="true"/>
         <override name="orderItemSeqId" optional="true"/>
         <override name="expectedItemStatus" optional="true"/>
         <override name="receivedQuantity" optional="true"/>
@@ -106,7 +105,6 @@
              invoke="createReturnAdjustment">
          <description>Simple create service</description>
          <implements service="returnAdjustmentInterface"/>
-         <attribute name="orderAdjustmentId" type="String" mode="IN" optional="true"/>
          <override name="returnAdjustmentId" mode="OUT" optional="false"/>
     </service>
     <service name="updateReturnAdjustment" engine="java" location="org.ofbiz.order.order.OrderReturnServices"
