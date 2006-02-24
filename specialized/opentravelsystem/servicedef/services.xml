@@ -268,7 +268,7 @@
         location="org/ofbiz/accounting/payment/PaymentServicesExt.xml" invoke="createPayment" auth="true">
         <description>Create a Payment</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <override name="paymentTypeId" optional="false"/>
         <override name="paymentMethodTypeId" optional="false"/>
         <override name="partyIdFrom" optional="false"/>

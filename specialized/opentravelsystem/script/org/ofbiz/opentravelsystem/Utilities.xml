@@ -274,7 +274,7 @@
          <iterate entry-name="payment" list-name="payments">
              <log level="always" message="Processing Payment ${payment.paymentId}"></log>
              <!-- only process fully applied payments -->
-             <set field="applied" value="${bsh:org.ofbiz.accounting.payment.PaymentExtWorker.getPaymentAppliedBd(payment)}" />
+             <set field="applied" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentAppliedBd(payment)}" />
              <if-compare-field field-name="applied" operator="equals" to-field-name="payment.amount" type="Double">
                  <set field="updStatus.statusId" value="PMNT_CONFIRMED"/>
                  <set field="updStatus.paymentId" from-field="payment.paymentId"/>
@@ -294,7 +294,7 @@
              </condition-list>
          </entity-condition>
          <iterate entry-name="invoice" list-name="invoices">
-             <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceExtWorker.getInvoiceNotApplied(invoice)}"/>
+             <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
              <log level="always" message="Looking at Invoice ${invoice.invoiceId} not applied value: ${notApplied}"></log>
              <if-compare field-name="notApplied" operator="equals" value="0.00"> <!-- only fully applied invoices required -->
                  <log level="always" message="Processing Invoice ${invoice.invoiceId}"></log>
