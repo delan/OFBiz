@@ -381,7 +381,7 @@
                                     <condition><not><if-empty field-name="paymentId"/></not></condition>
                                     <widgets>
                                         <platform-specific>
-                                            <html><html-template location="component://accountingext/webapp/accountingext/payment/PaymentTabBar.ftl"/></html>
+                                            <html><html-template location="component://accounting/webapp/accounting/payment/PaymentTabBar.ftl"/></html>
                                         </platform-specific>
                                         <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${uiLabelMap.CommonId}:${paymentId}  ${${extraFunctionName}}</label>
                                     </widgets>
@@ -415,7 +415,7 @@
                                     <condition><not><if-empty field-name="invoiceId"/></not></condition>
                                     <widgets>
                                         <platform-specific>
-                                            <html><html-template location="component://accountingext/webapp/accountingext/invoice/InvoiceTabBar.ftl"/></html>
+                                            <html><html-template location="component://accounting/webapp/accounting/invoice/InvoiceTabBar.ftl"/></html>
                                         </platform-specific>
                                         <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
                                     </widgets>
@@ -449,7 +449,7 @@
                                     <condition><not><if-empty field-name="invoiceId"/></not></condition>
                                     <widgets>
                                         <platform-specific>
-                                            <html><html-template location="component://accountingext/webapp/accountingext/accounting/AccountingTabBar.ftl"/></html>
+                                            <html><html-template location="component://accounting/webapp/accounting/accounting/AccountingTabBar.ftl"/></html>
                                         </platform-specific>
                                         <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
                                     </widgets>
@@ -478,7 +478,7 @@
                         <section>
                             <widgets>
                                 <platform-specific>
-                                    <html><html-template location="component://accountingext/webapp/accountingext/admin/AdminTabBar.ftl"/></html>
+                                    <html><html-template location="component://accounting/webapp/accounting/admin/AdminTabBar.ftl"/></html>
                                 </platform-specific>
                                 <decorator-section-include name="body"/>
                             </widgets>

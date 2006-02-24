@@ -111,12 +111,12 @@
                             <label style="head2" text="Open Sales invoices."/>
                             <include-form name="OpenSalesInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container-->
-                        <container>
+                        <!--container>
                             <label style="head2" text="Reports from accounting module."/>
                             <platform-specific>
-                                <html><html-template location="component://accountingext/webapp/accountingext/reports/reportsAvailable.ftl"/></html>
+                                <html><html-template location="component://accounting/webapp/accounting/reports/reportsAvailable.ftl"/></html>
                             </platform-specific>                    
-                        </container>
+                        </container-->
                     </decorator-section>
                 </decorator-screen>
             </widgets>
