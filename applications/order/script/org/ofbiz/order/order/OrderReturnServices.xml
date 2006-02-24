@@ -350,6 +350,7 @@
                 <clear-field field-name="returnAdjCtx"/>
                 <set field="returnAdjCtx.returnId" from-field="parameters.returnId"/>
                 <set field="returnAdjCtx.returnItemSeqId" from-field="newEntity.returnItemSeqId"/>
+                <set field="returnAdjCtx.returnTypeId" from-field="newEntity.returnTypeId"/>
                 <set field="returnAdjCtx.orderAdjustmentId" from-field="orderAdjustment.orderAdjustmentId"/>
                 <call-service service-name="createReturnAdjustment" in-map-name="returnAdjCtx"/>
             </iterate>            
@@ -380,6 +381,7 @@
             <set-service-fields service-name="updateReturnAdjustment" map-name="returnAdjustment" to-map-name="ctx"/>            
             <set field="ctx.originalReturnPrice" from-field="originalReturnPrice"/>
             <set field="ctx.originalReturnQuantity" from-field="originalReturnQuantity"/>
+            <set field="ctx.returnTypeId" from-field="returnItem.returnTypeId"/>
             <call-service service-name="updateReturnAdjustment" in-map-name="ctx" include-user-login="true"/>
         </iterate>
         
@@ -592,7 +594,6 @@
         </if-empty>
 
         <!-- create the return items -->
-        <calculate field-name="returnTotal" type="Double"><number value="0.0"/></calculate>
         <iterate entry-name="orderItem" list-name="orderItems">
             <field-to-field field-name="returnId" to-map-name="newItemCtx"/>
             <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="newItemCtx"/>
@@ -613,15 +614,6 @@
                 <result-to-field result-name="returnablePrice" field-name="returnPrice" map-name="newItemCtx"/>
             </call-service>
 
-            <!-- add in the item amount for a calc total -->
-            <calculate field-name="returnTotal">
-                <calcop field-name="returnTotal" operator="add">
-                    <calcop operator="multiply">
-                        <calcop operator="get" field-name="returnPrice" map-name="newItemCtx"/>
-                        <calcop operator="get" field-name="returnQuantity" map-name="newItemCtx"/>
-                    </calcop>
-                </calcop>
-            </calculate>
             <!-- get the matching return item type from the order item type -->
 
             <set from-field="orderItem.orderItemTypeId" field="orderItemTypeId"/>
@@ -675,48 +667,40 @@
         <iterate entry-name="orderAdjustment" list-name="orderAdjustments">
             <clear-field field-name="returnAdjCtx"/>
             <set from-field="orderAdjustment.orderAdjustmentId" field="returnAdjCtx.orderAdjustmentId"/>
-            <set from-field="returnId" field="returnAdjCtx.returnId"/>
-            <log level="info" message="Create new return adjustment: ${returnAdjCtx}"/>
-            <call-service service-name="createReturnAdjustment" in-map-name="returnAdjCtx" include-user-login="true"/>
+            <set from-field="returnId" field="returnAdjCtx.returnId"/>            
+            <!--filter out orderAdjustment that have been returned-->
+            <entity-count entity-name="ReturnAdjustment" count-name="returnCount">
+                <condition-expr field-name="orderAdjustmentId" operator="equals" env-name="orderAdjustment.orderAdjustmentId"/>
+            </entity-count>
+            <if-compare field-name="returnCount" value="0" operator="equals">
+                <log level="info" message="Create new return adjustment: ${returnAdjCtx}"/>
+                <call-service service-name="createReturnAdjustment" in-map-name="returnAdjCtx" include-user-login="true"/>
+            </if-compare>
         </iterate>
+        <set field="orderAvailableCtx.orderId" from-field="orderHeader.orderId"/>
+        <call-service service-name="getOrderAvailableReturnedTotal" in-map-name="orderAvailableCtx">
+            <result-to-field result-name="availableReturnTotal" field-name="availableReturnTotal"/>
+            <result-to-field result-name="returnTotal" field-name="returnTotal"/>
+            <result-to-field result-name="orderTotal" field-name="orderTotal"/>
+        </call-service>
+        <log level="info" message="OrderTotal [${orderTotal}] - ReturnTotal [${returnTotal}] = available Return Total [${availableReturnTotal}]"/>
 
-        <!-- find adjustments for the order-->
-        
-        <entity-and entity-name="ReturnAdjustment" list-name="returnAdjustments">
-            <field-map field-name="returnId"/>
-        </entity-and>                
-        <iterate entry-name="returnAdjustment" list-name="returnAdjustments">                                        
-            <calculate field-name="returnTotal">
-                <calcop  field-name="returnTotal" operator="add">
-                    <calcop operator="get" field-name="returnAdjustment.amount"/>                                                
-                </calcop>
-            </calculate>            
-        </iterate>
-
-        <!-- get the order total - return total diff -->
-        <calculate field-name="totalDiff" type="Double" decimal-format="##0.00">
-            <calcop operator="subtract">
-                <calcop operator="get" field-name="grandTotal" map-name="orderHeader"/>
-                <calcop operator="get" field-name="returnTotal"/>
-            </calcop>
-        </calculate>
-        <log level="info" message="OrderTotal [${orderHeader.grandTotal}] - ReturnTotal [${returnTotal}] = Diff [${totalDiff}]"/>
-
-        <!-- create a manual balance adjustment based on the difference between order total and return total -->
-        
-        <if-compare field-name="totalDiff" operator="not-equals" value="0" type="Double">
-            <log level="always" message="diff amount is not 0"/>
-
+        <!-- create a manual balance adjustment based on the difference between order total and return total -->        
+        <if-compare field-name="availableReturnTotal" operator="greater" value="0.01" type="Double">
+            <log level="info" message="availableReturnTotal amount is greater than zero"/>
             <string-to-field string="Balance Adjustment" field-name="description" map-name="balanceItemCtx"/>
             <string-to-field string="RET_MAN_ADJ" field-name="returnAdjustmentTypeId" map-name="balanceItemCtx"/>
 
             <field-to-field field-name="returnId" to-map-name="balanceItemCtx"/>
             <set field="balanceItemCtx.returnItemSeqId" value="_NA_"/>
-            <set from-field="totalDiff" field="balanceItemCtx.amount" />
+            <set from-field="availableReturnTotal" field="balanceItemCtx.amount" />
 
             <!-- create the balance adjustment return item -->
             <call-service service-name="createReturnAdjustment" in-map-name="balanceItemCtx" include-user-login="true"/>
         </if-compare>
+        <if-compare field-name="availableReturnTotal" operator="less" value="-0.01" type="Double">
+            <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
+        </if-compare>        
 
         <!-- update the header status -->
         <string-to-field string="RETURN_ACCEPTED" field-name="statusId" map-name="updateHeaderCtx"/>

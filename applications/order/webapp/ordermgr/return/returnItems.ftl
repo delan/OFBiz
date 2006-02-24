@@ -210,7 +210,7 @@
                 <td class="tabletextright"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUomId/></td>
             </#if>
             <td colspan="3" align="right"><div class="tabletext">
-                        <#if (readOnly)>
+                        <#if (!adjEditable)>
                             ${adjReturnType.description?default("N/A")}
                         <#else>
                             <select name="returnTypeId_o_${rowCount}" class="selectBox">
@@ -232,7 +232,6 @@
             <#assign returnTotal = returnTotal + returnAdjustment.get("amount")>
         </tr>    
     </#list>
-          <input name="_rowCount" value="${rowCount}" type="hidden">
     </#if>
     <#-- show the return total -->    
     <tr><td colspan="5"></td><td><hr class="sepbar"/></td></tr>
@@ -244,6 +243,7 @@
     <#if (!readOnly) && (rowCount > 0)>
        <tr>          
           <input name="returnId" value="${returnHeader.returnId}" type="hidden">
+          <input name="_rowCount" value="${rowCount}" type="hidden">
           <td colspan="7" class="tabletext" align="center"><input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}"></td>
       </tr>
    </#if>
