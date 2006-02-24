@@ -3163,67 +3163,67 @@
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     
     <!-- Lookup request mappings accounting component-->
-    <view-map name="LookupFixedAsset" page="component://accountingext/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
-    <view-map name="LookupBillingAccount" page="component://accountingext/widget/LookupScreens.xml#LookupBillingAccount" type="screen"/>
-    <view-map name="LookupPayment" page="component://accountingext/widget/LookupScreens.xml#LookupPayment" type="screen"/>
-    <view-map name="LookupInvoice" page="component://accountingext/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
+    <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
+    <view-map name="LookupBillingAccount" page="component://accounting/widget/LookupScreens.xml#LookupBillingAccount" type="screen"/>
+    <view-map name="LookupPayment" page="component://accounting/widget/LookupScreens.xml#LookupPayment" type="screen"/>
+    <view-map name="LookupInvoice" page="component://accounting/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
     
     <!-- invoices -->
-    <view-map name="invoiceOverview" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#invoiceOverview"/>
-    <view-map name="findInvoices" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#FindInvoices"/>
-    <view-map name="editInvoice" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoice"/>
-    <view-map name="listInvoiceItems" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceItems"/>
-    <view-map name="editInvoiceItem" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceItem"/>
-    <view-map name="invoiceStatus" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#InvoiceStatus"/>
-    <view-map name="editInvoiceApplications" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#EditInvoiceApplications"/>
-    <view-map name="invoiceRoles" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#InvoiceRoles"/>
-    <view-map name="sendPerEmail" type="screen" page="component://accountingext/widget/InvoiceScreens.xml#SendPerEmail"/>
+    <view-map name="invoiceOverview" type="screen" page="component://accounting/widget/InvoiceScreens.xml#invoiceOverview"/>
+    <view-map name="findInvoices" type="screen" page="component://accounting/widget/InvoiceScreens.xml#FindInvoices"/>
+    <view-map name="editInvoice" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoice"/>
+    <view-map name="listInvoiceItems" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceItems"/>
+    <view-map name="editInvoiceItem" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceItem"/>
+    <view-map name="invoiceStatus" type="screen" page="component://accounting/widget/InvoiceScreens.xml#InvoiceStatus"/>
+    <view-map name="editInvoiceApplications" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceApplications"/>
+    <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/InvoiceScreens.xml#InvoiceRoles"/>
+    <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/InvoiceScreens.xml#SendPerEmail"/>
     <!-- payments -->
-    <view-map name="findPayments" type="screen" page="component://accountingext/widget/PaymentScreens.xml#FindPayments"/>
-    <view-map name="paymentOverview" type="screen" page="component://accountingext/widget/PaymentScreens.xml#PaymentOverview"/>
-    <view-map name="editPayment" type="screen" page="component://accountingext/widget/PaymentScreens.xml#EditPayment"/>
-    <view-map name="editPaymentApplications" type="screen" page="component://accountingext/widget/PaymentScreens.xml#EditPaymentApplications"/>
+    <view-map name="findPayments" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPayments"/>
+    <view-map name="paymentOverview" type="screen" page="component://accounting/widget/PaymentScreens.xml#PaymentOverview"/>
+    <view-map name="editPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPayment"/>
+    <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPaymentApplications"/>
     <!-- Accounting Utilities -->
     <view-map name="Utilities" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#Utilities"/>
     <!--view-map name="DataExchange" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#DataExchange"/-->
     <!-- accounting reports -->
     <view-map name="AccountingReports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#reports"/>
     <view-map name="VatReport" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#VatReport"/>
-    <view-map name="IncomeStatement" type="screen" page="component://accountingext/widget/AccountingScreens.xml#IncomeStatement"/>
-    <view-map name="BalanceSheet" type="screen" page="component://accountingext/widget/AccountingScreens.xml#BalanceSheet"/>
-    <view-map name="TrialBalance" type="screen" page="component://accountingext/widget/AccountingScreens.xml#TrialBalance"/>
-    <view-map name="TaxSummary" type="screen" page="component://accountingext/widget/AccountingScreens.xml#TaxSummary"/>
-    <view-map name="AccountActivitiesDetail" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
+    <view-map name="IncomeStatement" type="screen" page="component://accounting/widget/AccountingScreens.xml#IncomeStatement"/>
+    <view-map name="BalanceSheet" type="screen" page="component://accounting/widget/AccountingScreens.xml#BalanceSheet"/>
+    <view-map name="TrialBalance" type="screen" page="component://accounting/widget/AccountingScreens.xml#TrialBalance"/>
+    <view-map name="TaxSummary" type="screen" page="component://accounting/widget/AccountingScreens.xml#TaxSummary"/>
+    <view-map name="AccountActivitiesDetail" type="screen" page="component://accounting/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
     <!-- Accounting administrative pages -->
-    <view-map name="AdminMain" type="screen" page="component://accountingext/widget/AdminScreens.xml#AdminMain"/>
-    <view-map name="PartyAcctgPreference" type="screen" page="component://accountingext/widget/AdminScreens.xml#PartyAcctgPreference"/>
-    <view-map name="ViewFXConversions" type="screen" page="component://accountingext/widget/AdminScreens.xml#ViewFXConversions"/>
-    <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListUnpostedAcctgTrans"/>
-    <view-map name="GlAccountPurInvoice" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountPurInvoice"/>
-    <view-map name="GlAccountSalInvoice" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountSalInvoice"/>
-    <view-map name="GlAccountTypePaymentType" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountTypePaymentType"/>
-    <view-map name="GlAccountNrPaymentMethod" type="screen" page="component://accountingext/widget/AdminScreens.xml#GlAccountNrPaymentMethod"/>
+    <view-map name="AdminMain" type="screen" page="component://accounting/widget/AdminScreens.xml#AdminMain"/>
+    <view-map name="PartyAcctgPreference" type="screen" page="component://accounting/widget/AdminScreens.xml#PartyAcctgPreference"/>
+    <view-map name="ViewFXConversions" type="screen" page="component://accounting/widget/AdminScreens.xml#ViewFXConversions"/>
+    <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListUnpostedAcctgTrans"/>
+    <view-map name="GlAccountPurInvoice" type="screen" page="component://accounting/widget/AdminScreens.xml#GlAccountPurInvoice"/>
+    <view-map name="GlAccountSalInvoice" type="screen" page="component://accounting/widget/AdminScreens.xml#GlAccountSalInvoice"/>
+    <view-map name="GlAccountTypePaymentType" type="screen" page="component://accounting/widget/AdminScreens.xml#GlAccountTypePaymentType"/>
+    <view-map name="GlAccountNrPaymentMethod" type="screen" page="component://accounting/widget/AdminScreens.xml#GlAccountNrPaymentMethod"/>
     <!-- New Screen Widget for EditGlobalGlAccount -->
-    <view-map name="EditGlJournalEntry" type="screen" page="component://accountingext/widget/AccountingScreens.xml#EditGlJournalEntry"/>
-    <view-map name="AddGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AddGlAccount"/>
-    <view-map name="FindGlobalGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#FindGlobalGlAccount"/>
-    <view-map name="ListGlobalGlAccounts" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccounts"/>
-    <view-map name="ListGlAccountOrganization" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccountOrganization"/>
-    <view-map name="GlAccountNavigate" type="screen" page="component://accountingext/widget/AccountingScreens.xml#GlAccountNavigate"/>
-    <view-map name="ListGlAccountEntries" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListGlAccountEntries"/>
-    <view-map name="ListAcctgTransEntries" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ListAcctgTransEntries"/>
-    <view-map name="AssignGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AssignGlAccount"/>
+    <view-map name="EditGlJournalEntry" type="screen" page="component://accounting/widget/AccountingScreens.xml#EditGlJournalEntry"/>
+    <view-map name="AddGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
+    <view-map name="FindGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#FindGlobalGlAccount"/>
+    <view-map name="ListGlobalGlAccounts" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccounts"/>
+    <view-map name="ListGlAccountOrganization" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccountOrganization"/>
+    <view-map name="GlAccountNavigate" type="screen" page="component://accounting/widget/AccountingScreens.xml#GlAccountNavigate"/>
+    <view-map name="ListGlAccountEntries" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccountEntries"/>
+    <view-map name="ListAcctgTransEntries" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListAcctgTransEntries"/>
+    <view-map name="AssignGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AssignGlAccount"/>
     
-    <view-map name="EditGlobalGlAccount" type="screen" page="component://accountingext/widget/AccountingScreens.xml#AddGlAccount"/>
+    <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
     <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
     <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
     <!-- Reconciliation viewmaps -->
-    <view-map name="ReconcileGlAccountOrganization" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ReconcileGlAccountOrganization"/>
-    <view-map name="ReconcileAccounts" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ReconcileAccounts"/>
-    <view-map name="ViewGlAccountBalance" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ViewGlAccountBalance"/>
-    <view-map name="ViewGlReconciliation" type="screen" page="component://accountingext/widget/AccountingScreens.xml#ViewGlReconciliation"/>
+    <view-map name="ReconcileGlAccountOrganization" type="screen" page="component://accounting/widget/AccountingScreens.xml#ReconcileGlAccountOrganization"/>
+    <view-map name="ReconcileAccounts" type="screen" page="component://accounting/widget/AccountingScreens.xml#ReconcileAccounts"/>
+    <view-map name="ViewGlAccountBalance" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlAccountBalance"/>
+    <view-map name="ViewGlReconciliation" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlReconciliation"/>
     <!-- PDFs  -->
-    <view-map name="InvoicePDF" type="screenfop" page="component://accountingext/widget/AccountingPrintForms.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
     
     <!-- end of view mappings -->
 </site-conf>
