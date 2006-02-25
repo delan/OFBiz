@@ -26,6 +26,7 @@ package org.ofbiz.content.survey;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -39,11 +40,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.Locale;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -54,7 +58,9 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.base.util.GeneralException;
 
 import com.lowagie.text.pdf.AcroFields;
 import com.lowagie.text.pdf.PdfStamper;
@@ -277,51 +283,52 @@ public class PdfSurveyServices {
      */
     public static Map setAcroFields(DispatchContext dctx, Map context) {
         
-    	Map results = ServiceUtil.returnSuccess();
-		try {
-	    	String pdfFileNameIn = (String)context.get("pdfFileNameIn");
-			Map acroFieldMap = (Map)context.get("acroFieldMap");
-	    	String pdfFileNameOut = (String)context.get("pdfFileNameOut");
-	    	if (pdfFileNameOut == null) {
-	    		pdfFileNameOut = pdfFileNameIn;
-	    	}
-	    	File fileOut = new File(pdfFileNameOut);
-	    	FileOutputStream os = new FileOutputStream(fileOut);
-			PdfReader r = new PdfReader(pdfFileNameIn);
-			PdfStamper s = new PdfStamper(r,os);
-			AcroFields fs = s.getAcroFields();
-			Map map = fs.getFields();
-			
-			s.setFormFlattening(true);
-			
-			// Debug code to get the values for setting TDP
-	//		String[] sa = fs.getAppearanceStates("TDP");
-	//		for (int i=0;i<sa.length;i++)
-	//			Debug.log("Appearance="+sa[i]);
-			Iterator iter = map.keySet().iterator();
-			while (iter.hasNext()) {
-				String fieldName=(String)iter.next();
-				String fieldValue = fs.getField(fieldName);
-				Object obj = acroFieldMap.get(fieldName);
-				if (obj instanceof Date) {
-					Date d=(Date)obj;
-					fieldValue=UtilDateTime.toDateString(d);
-				} else if (obj instanceof Long) {
-					Long lg=(Long)obj;
-					fieldValue=lg.toString();
-				} else if (obj instanceof Integer) {
-					Integer ii=(Integer)obj;
-					fieldValue=ii.toString();
-				}	else {
-					fieldValue=(String)obj;
-				}
-			
-				if (UtilValidate.isNotEmpty(fieldValue))
-					fs.setField(fieldName, fieldValue);
-			}			
+        Map results = ServiceUtil.returnSuccess();
+        GenericDelegator delegator = dctx.getDelegator();
+        try {
+            Map acroFieldMap = (Map)context.get("acroFieldMap");
+            ByteWrapper byteWrapper = getInputByteWrapper(context, delegator);
+            PdfReader r = new PdfReader(byteWrapper.getBytes());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfStamper s = new PdfStamper(r, baos);
+            AcroFields fs = s.getAcroFields();
+            Map map = fs.getFields();
+            
+            s.setFormFlattening(true);
+            
+            // Debug code to get the values for setting TDP
+    //      String[] sa = fs.getAppearanceStates("TDP");
+    //      for (int i=0;i<sa.length;i++)
+    //          Debug.log("Appearance="+sa[i]);
+            Iterator iter = map.keySet().iterator();
+            while (iter.hasNext()) {
+                String fieldName=(String)iter.next();
+                String fieldValue = fs.getField(fieldName);
+                Object obj = acroFieldMap.get(fieldName);
+                if (obj instanceof Date) {
+                    Date d=(Date)obj;
+                    fieldValue=UtilDateTime.toDateString(d);
+                } else if (obj instanceof Long) {
+                    Long lg=(Long)obj;
+                    fieldValue=lg.toString();
+                } else if (obj instanceof Integer) {
+                    Integer ii=(Integer)obj;
+                    fieldValue=ii.toString();
+                }   else {
+                    fieldValue=(String)obj;
+                }
+            
+                if (UtilValidate.isNotEmpty(fieldValue))
+                    fs.setField(fieldName, fieldValue);
+            }           
             s.close();
-            os.close();
+            baos.close();
+            ByteWrapper outByteWrapper = new ByteWrapper(baos.toByteArray());
+            results.put("outByteWrapper", outByteWrapper);
         } catch(DocumentException e) {
+            System.err.println(e.getMessage());
+            ServiceUtil.returnError(e.getMessage());
+        } catch(GeneralException e) {
             System.err.println(e.getMessage());
             ServiceUtil.returnError(e.getMessage());
         } catch(FileNotFoundException e) {
@@ -332,8 +339,9 @@ public class PdfSurveyServices {
             ServiceUtil.returnError(ioe.getMessage());
         }
         
-	return results;
-	}
+    return results;
+    }
+    
     
     /**
      */
@@ -342,60 +350,109 @@ public class PdfSurveyServices {
     	GenericDelegator delegator = dctx.getDelegator();
     	LocalDispatcher dispatcher = dctx.getDispatcher();
     	Map results = ServiceUtil.returnSuccess();
-    		String pdfFileNameIn = (String)context.get("pdfFileNameIn");
-        	String surveyResponseId = (String)context.get("surveyResponseId");
-			Map acroFieldMap = new HashMap();
-	    	String pdfFileNameOut = (String)context.get("pdfFileNameOut");
-	    	if (pdfFileNameOut == null) {
-	    		pdfFileNameOut = pdfFileNameIn;
-	    	}
-        
-	    	try {
-	    	    List responses = delegator.findByAnd("SurveyResponseAnswer", UtilMisc.toMap("surveyResponseId", surveyResponseId));
-	    	    Iterator iter = responses.iterator();
-	    	    while (iter.hasNext()) {
-		    	    String value = null;
-	    	    	GenericValue surveyResponseAnswer = (GenericValue)iter.next();
-	            	String surveyQuestionId = (String)surveyResponseAnswer.get("surveyQuestionId");
-		    		GenericValue surveyQuestion = delegator.findByPrimaryKey("SurveyQuestion", UtilMisc.toMap("surveyQuestionId", surveyQuestionId));
-		    		String questionType = surveyQuestion.getString("surveyQuestionTypeId");
-		    		String fieldName = surveyQuestion.getString("description");
-		            if ("OPTION".equals(questionType)) {
-	                    value = surveyResponseAnswer.getString("surveyOptionSeqId");
-		            } else if ("BOOLEAN".equals(questionType)) {
-	                    value = surveyResponseAnswer.getString("booleanResponse");
-		            } else if ("NUMBER_LONG".equals(questionType)
-		            		|| "NUMBER_CURRENCY".equals(questionType)
-		            		|| "NUMBER_FLOAT".equals(questionType)
-		            		) {
-		                Double num = surveyResponseAnswer.getDouble("numericResponse");
-		                if (num != null) {
-		                	value = num.toString();
-		                }
-		            } else if ("SEPERATOR_LINE".equals(questionType) || "SEPERATOR_TEXT".equals(questionType)) {
-		                // not really a question; ingore completely
-		            } else {
-		            	value = surveyResponseAnswer.getString("textResponse");
-		            }
-		            acroFieldMap.put(fieldName, value);
-	    	    }
-	    	} catch (GenericEntityException e) {
-	            System.err.println(e.getMessage());
-	            ServiceUtil.returnError(e.getMessage());
-	    	}
-	    	
-	    	try {
-	    		Map map = dispatcher.runSync("setAcroFields", UtilMisc.toMap("pdfFileNameIn", pdfFileNameIn, "pdfFileNameOut", pdfFileNameOut, "acroFieldMap", acroFieldMap));
-	    		if (ServiceUtil.isError(map)) {
-	    			String errMsg = ServiceUtil.makeErrorMessage(map, null, null, null, null);
-		            System.err.println(errMsg);
-		            ServiceUtil.returnError(errMsg);
-	    		}
-	    	} catch (GenericServiceException e) {
-	            System.err.println(e.getMessage());
-	            ServiceUtil.returnError(e.getMessage());
-	    	}
+		Map acroFieldMap = new HashMap();
+    	String surveyResponseId = (String)context.get("surveyResponseId");
+    
+    	try {
+    	    List responses = delegator.findByAnd("SurveyResponseAnswer", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+    	    Iterator iter = responses.iterator();
+    	    while (iter.hasNext()) {
+	    	    String value = null;
+    	    	GenericValue surveyResponseAnswer = (GenericValue)iter.next();
+            	String surveyQuestionId = (String)surveyResponseAnswer.get("surveyQuestionId");
+	    		GenericValue surveyQuestion = delegator.findByPrimaryKey("SurveyQuestion", UtilMisc.toMap("surveyQuestionId", surveyQuestionId));
+	    		String questionType = surveyQuestion.getString("surveyQuestionTypeId");
+	    		String fieldName = surveyQuestion.getString("description");
+	            if ("OPTION".equals(questionType)) {
+                    value = surveyResponseAnswer.getString("surveyOptionSeqId");
+	            } else if ("BOOLEAN".equals(questionType)) {
+                    value = surveyResponseAnswer.getString("booleanResponse");
+	            } else if ("NUMBER_LONG".equals(questionType)
+	            		|| "NUMBER_CURRENCY".equals(questionType)
+	            		|| "NUMBER_FLOAT".equals(questionType)
+	            		) {
+	                Double num = surveyResponseAnswer.getDouble("numericResponse");
+	                if (num != null) {
+	                	value = num.toString();
+	                }
+	            } else if ("SEPERATOR_LINE".equals(questionType) || "SEPERATOR_TEXT".equals(questionType)) {
+	                // not really a question; ingore completely
+	            } else {
+	            	value = surveyResponseAnswer.getString("textResponse");
+	            }
+	            acroFieldMap.put(fieldName, value);
+    	    }
+    	} catch (GenericEntityException e) {
+            System.err.println(e.getMessage());
+            ServiceUtil.returnError(e.getMessage());
+    	}
+    	
+    	try {
+            ModelService modelService = dispatcher.getDispatchContext().getModelService("setAcroFields");
+            Map ctx = modelService.makeValid(context, "IN");
+            ctx.put("acroFieldMap", acroFieldMap);
+    		Map map = dispatcher.runSync("setAcroFields", ctx);
+    		if (ServiceUtil.isError(map)) {
+    			String errMsg = ServiceUtil.makeErrorMessage(map, null, null, null, null);
+	            System.err.println(errMsg);
+	            ServiceUtil.returnError(errMsg);
+    		}
+            String pdfFileNameOut = (String)context.get("pdfFileNameOut");
+            ByteWrapper outByteWrapper = (ByteWrapper)map.get("outByteWrapper");
+            if (UtilValidate.isNotEmpty("pdfFileNameOut")) {
+                FileOutputStream fos = new FileOutputStream("pdfFileNameOut");
+                fos.write(outByteWrapper.getBytes());
+                fos.close();
+            }
+        } catch(FileNotFoundException e) {
+            System.err.println(e.getMessage());
+            ServiceUtil.returnError(e.getMessage());
+        } catch(IOException e) {
+            System.err.println(e.getMessage());
+            ServiceUtil.returnError(e.getMessage());
+    	} catch (GenericServiceException e) {
+            System.err.println(e.getMessage());
+            ServiceUtil.returnError(e.getMessage());
+    	}
 	    	
 	return results;
 	}
+    
+    public static ByteWrapper getInputByteWrapper(Map context, GenericDelegator delegator) throws GeneralException {
+        
+        ByteWrapper inputByteWrapper = (ByteWrapper)context.get("inputByteWrapper");
+        
+        if (inputByteWrapper == null) {
+            String pdfFileNameIn = (String)context.get("pdfFileNameIn");
+            String contentId = (String)context.get("contentId");
+            if (UtilValidate.isNotEmpty("pdfFileNameIn")) {
+                try {
+                    FileInputStream fis = new FileInputStream(pdfFileNameIn);
+                    int c;
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    while ((c = fis.read()) != -1) baos.write(c);
+                    inputByteWrapper = new ByteWrapper(baos.toByteArray());
+                } catch(FileNotFoundException e) {
+                    throw(new GeneralException(e.getMessage()));
+                } catch(IOException e) {
+                    throw(new GeneralException(e.getMessage()));
+                }
+            } else if (UtilValidate.isNotEmpty("contentId")) {
+                try {
+                    Locale locale = (Locale)context.get("locale");
+                    String https = (String)context.get("https"); 
+                    String webSiteId = (String)context.get("webSiteId");
+                    String rootDir = (String)context.get("rootDir");
+                    GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+                    String dataResourceId = content.getString("dataResourceId");
+                    inputByteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, dataResourceId, https, webSiteId, locale, rootDir);
+                } catch (GenericEntityException e) {
+                    throw(new GeneralException(e.getMessage()));
+                } catch (IOException e) {
+                    throw(new GeneralException(e.getMessage()));
+                }
+            }
+        }
+        return inputByteWrapper;
+    }
 }
