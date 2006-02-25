@@ -30,33 +30,26 @@
     <screen name="InventoryReports">
         <section>
             <actions>
-                <set field="titleProperty" value="InventoryReports"/>
+                <set field="titleProperty" value="ProductViewInventoryByProduct"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>                
                 <set field="headerItem" value="reports"/>
-                <entity-condition entity-name="InventoryReportGroupByFacilityAndProduct" list-name="inventoryReportList">
-                    <condition-list combine="and">
-                        <condition-expr field-name="facilityId" operator="equals" env-name="parameters.facilityId" ignore-if-empty="true"/>
-                        <condition-expr field-name="ownerPartyId" operator="equals" env-name="parameters.organizationPartyId" ignore-if-empty="false"/>
-                    </condition-list>
-                    <!-- note that we need to explicitly identify the fields to select, otherwise the query will include fields that can't logically be grouped -->
-                    <select-field field-name="productId"/>
-                    <select-field field-name="internalName"/>
-                    <select-field field-name="quantityOnHandTotal"/>
-                    <select-field field-name="availableToPromiseTotal"/>
-                    <order-by field-name="internalName"/>
-                </entity-condition>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="productTypeId" from-field=""/>
+                <set field="productCategoryId" from-field=""/>
+                <set field="productSupplierId" from-field=""/>
+                <set field="offsetQty" from-field=""/>                
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/ViewFacilityInventoryByProduct.bsh"/>
+                <entity-one entity-name="Facility" value-name="facility" use-chase="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="component://product/widget/facility/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1" text="Inventory Reports"/>
+                            <label style="head2" text="${uiLabelMap.ProductInventoryByProduct} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
                         </container>
                         <container>
-                            <include-form name="InventorySummaryForm" location="component://product/widget/facility/ReportForms.xml"/>
-                        </container>
-                        <container>
-                            <label style="head2" text="Inventory Summary"/>
-                            <include-form name="InventorySummaryList" location="component://product/widget/facility/ReportForms.xml"/>
+                            <include-form name="ListFacilityInventoryByProduct" location="component://product/webapp/facility/facility/FacilityForms.xml"/>
                         </container>
                     </decorator-section>
                 </decorator-screen>
