@@ -371,12 +371,14 @@ under the License.
                                 <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
                                 <section>
                                     <!-- For upload-able DataResourceTypes -->
+									<!--
                                     <condition>
                                         <and>
                                             <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
                                             <if-compare field-name="dataResource.dataResourceTypeId" operator="not-equals" value="SURVEY"/>
                                         </and>
                                     </condition>
+										-->
                                     <actions>
                                         <set from-field="dummy.rootTemplateContentId" field="dummy.rootContentId" />
                                     </actions>
@@ -410,6 +412,7 @@ under the License.
                            <order-by field-name="-maxRevisionSeqId"/>
                         </entity-condition>
                         <set from-field="rootRevList[0].maxRevisionSeqId" field="rootInstanceRevSeqId"/>
+						<!--
                         <entity-one entity-name="Content" value-name="templateContent" use-cache="false">
                             <field-map field-name="contentId" env-name="content.instanceOfContentId"/>
                         </entity-one>
@@ -418,18 +421,21 @@ under the License.
                         </entity-one>
                         <set from-field="templateDataResource.mimeTypeId" field="dataResource.mimeTypeId"/>
                         <set from-field="templateDataResource.mimeTypeId" field="mimeTypeId"/>
+							-->
                     </actions>
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                             <decorator-section name="body">
                                <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
                                 <section>
+									<!--
                                     <condition>
                                         <and>
                                             <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
                                             <if-compare field-name="dataResource.dataResourceTypeId" operator="not-equals" value="SURVEY"/>
                                         </and>
                                     </condition>
+										-->
                                     <actions>
                                         <set from-field="dummy.rootInstanceContentId" field="dummy.rootContentId"/>
                                     </actions>
@@ -486,8 +492,12 @@ under the License.
                 <section>
                     <condition>
                         <or>
+				            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/vnd.ofbiz.survey.response"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/vnd.ofbiz.survey"/>
+							<!--
                             <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY"/>
                             <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
+								-->
                         </or>
                     </condition>
                     <actions>
@@ -519,7 +529,7 @@ under the License.
                     <actions>
                     </actions>
                     <widgets>
-                        <label text="Screen not available for mime-type: ${dataResource.mimeTypeId}"/>
+                        <label text="View screen not available for mime-type: ${dataResource.mimeTypeId}"/>
                     </widgets>
                 </section>
             </widgets>
@@ -569,31 +579,37 @@ under the License.
                 <section>
                     <condition>
                         <or>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/vnd.ofbiz.survey"/>
+							<!--
                             <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY"/>
                             <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
+								-->
                         </or>
                     </condition>
                     <actions>
                     </actions>
                     <widgets>
-                        <section>
-                            <condition>
-                                <if-compare field-name="contentTypeId" operator="equals" value="TEMPLATE"/>
-                            </condition>
-                            <widgets>
+						<!-- Don't put this link here. It is called in the form. 
                                 <include-form name="UploadCompDocSurveyId" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                            </widgets>
-                        </section>
-                        <!--
-                        <section>
-                            <condition>
-                                <if-compare field-name="contentTypeId" operator="equals" value="DOCUMENT"/>
-                            </condition>
-                            <widgets>
-                                <link target="" text="" style="buttontext"/>
-                            </widgets>
-                        </section>
-                        -->
+						-->
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <or>
+				            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/vnd.ofbiz.survey.response"/>
+							<!--
+                            <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY"/>
+                            <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
+								-->
+                        </or>
+                    </condition>
+                    <actions>
+                    </actions>
+                    <widgets>
+						<!-- Don't put this link here. It is called in the form. 
+                                <link text="Edit Survey Response"/>
+								-->
                     </widgets>
                 </section>
                 <section>
@@ -611,6 +627,8 @@ under the License.
                             <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="text/html"/>
                             <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="text/plain"/>
                             
+				            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/vnd.ofbiz.survey.response"/>
+                            <if-compare field-name="dataResource.mimeTypeId" operator="equals" value="application/vnd.ofbiz.survey"/>
                             <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY"/>
                             <if-compare field-name="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
                         </or>
@@ -619,7 +637,7 @@ under the License.
                     <actions>
                     </actions>
                     <widgets>
-                        <label text="Screen not available for mime-type: ${dataResource.mimeTypeId}"/>
+                        <label text="Upload screen not available for mime-type: ${dataResource.mimeTypeId}"/>
                     </widgets>
                 </section>
             </widgets>

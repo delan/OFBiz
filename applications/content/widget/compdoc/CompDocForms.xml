@@ -357,11 +357,11 @@ under the License.
             </drop-down>
         </field>
         <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"
-                     use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null &amp;&amp; !mimeTypeId.equals(&quot;SURVEY&quot;)">
+                     use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null &amp;&amp; !mimeTypeId.equals(&quot;application/vnd.ofbiz.survey&quot;)">
             <display-entity entity-name="MimeType" key-field-name="mimeTypeId" description="${description}"/>
         </field>
         <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"
-                    use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null  &amp;&amp; mimeTypeId.equals(&quot;SURVEY&quot;)">
+                    use-when="contentTypeId.equals(&quot;DOCUMENT&quot;) &amp;&amp; mimeTypeId != null  &amp;&amp; mimeTypeId.equals(&quot;application/vnd.ofbiz.survey&quot;)">
             <display  description="Survey Response"/>
         </field>
         <field name="relatedDetailId" map-name="dataResource" title="Survey ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))"> 	 
