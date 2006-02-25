@@ -258,15 +258,18 @@ under the License.
             <make-next-seq-id value-name="newEntity" seq-field-name="invoiceItemSeqId"/> <!-- this finds the next sub-sequence ID -->
             <!--field-to-result field-name="newEntity.invoiceItemSeqId" result-name="invoiceItemSeqId"/-->
         </if-empty>
-        <!-- if productItem is supplied fill the amount(price) and description from the product record -->
-        <if-not-empty field-name="parameters.productId">
-            <entity-one entity-name="Product" value-name="product"/>
-            <set from-field="product.description" field="newEntity.description"/>
-            <set from-field="product" field="calculateProductPriceMap.product"/>
-            <call-service service-name="calculateProductPrice" in-map-name="calculateProductPriceMap">
-                <result-to-field result-name="price" field-name="newEntity.amount"/>
-            </call-service>
-        </if-not-empty>
+        <!-- if there is no amount and a productItem is supplied fill the amount(price) and description from the product record 
+             TODO: there are return adjustments now that make this code very broken. The check for price was added as a quick fix. -->
+        <if-empty field-name="parameters.amount">
+            <if-not-empty field-name="parameters.productId">
+                <entity-one entity-name="Product" value-name="product"/>
+                <set from-field="product.description" field="newEntity.description"/>
+                <set from-field="product" field="calculateProductPriceMap.product"/>
+                <call-service service-name="calculateProductPrice" in-map-name="calculateProductPriceMap">
+                    <result-to-field result-name="price" field-name="newEntity.amount"/>
+                </call-service>
+            </if-not-empty>
+        </if-empty>
         <if-empty field-name="newEntity.amount">
             <add-error>
                 <fail-message message="The amount value is mandatory"/>
