@@ -195,4 +195,27 @@ public class UtilNumber {
         }
         return result;
     }
+
+    /**
+     * Method to turn a number such as "0.9853" into a nicely formatted percent, "98.53%".
+     *
+     * @param number    The number object to format
+     * @param scale     How many places after the decimal to include
+     * @param roundingMode  The BigDecimal rounding mode to apply
+     * @return          The formatted string or "" if there were errors.
+     */
+    public static String toPercentString(Number number, int scale, int roundingMode) {
+        // convert to BigDecimal
+        if (!(number instanceof BigDecimal)) {
+            number = new BigDecimal(number.doubleValue());
+        }
+
+        // cast it so we can use BigDecimal methods
+        BigDecimal bd = (BigDecimal) number;
+
+        // multiply by 100 and set the scale
+        bd = bd.multiply(new BigDecimal(100.0)).setScale(scale, roundingMode);
+
+        return (bd.toString() + "%");
+    }
 }
