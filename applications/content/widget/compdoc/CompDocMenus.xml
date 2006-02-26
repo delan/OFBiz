@@ -209,7 +209,7 @@
         default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="edit-inplace" title="${contentName}[${rootInstanceContentId}]"  widget-style="head2">
+        <menu-item name="edit-inplace" title="${instanceContent.contentName}[${instanceContent.contentId}]"  widget-style="head2">
             <link target="EditCompDoc?contentId=${rootInstanceContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootInstanceContentId=${rootInstanceContentId}"/>
         </menu-item>
         <menu-item name="edit" title="[Edit]" >

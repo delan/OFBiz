@@ -307,10 +307,16 @@ under the License.
         <field name="thruDate"><date-time/></field>
         <field name="sequenceNum"><text/></field>
         
-        <field name="mimeTypeId" map-name="empty" title="Document Type" use-when="&quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
+        <field name="mimeTypeId" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; &quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
             <hidden value="application/vnd.ofbiz.survey.response"/>
         </field>
-        <field name="mimeTypeId" map-name="empty" title="Document Type" use-when="!&quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
+        <field name="displayMimeTypeId" map-name="empty" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; &quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
+            <display description="Survey Response"/>
+        </field>
+        <field name="mimeTypeId" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; !&quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
+            <display-entity entity-name="MimeType" description="${description}"/>
+        </field>
+        <field name="mimeTypeId" title="Document Type" use-when="&quot;TEMPLATE&quot;.equals(contentTypeId)">
             <drop-down allow-empty="true">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
@@ -343,7 +349,7 @@ under the License.
         
         <field name="mimeTypeId" map-name="dataResource" title="Document Type" widget-style="tabletext"
                 use-when="contentTypeId.equals(&quot;TEMPLATE&quot;)">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
                 <option key="application/vnd.ofbiz.survey" description="Survey"/>
