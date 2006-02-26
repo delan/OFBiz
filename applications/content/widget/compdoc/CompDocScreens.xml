@@ -44,7 +44,7 @@ under the License.
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/>
+                        <container><link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/></container>
                         <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                         <label text="Add" style="head1"/>
                         <include-form name="AddContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
@@ -73,7 +73,7 @@ under the License.
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <link target="EditContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Content Approval" style="buttontext"/>
+                        <container><link target="EditContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Content Approval" style="buttontext"/></container>
                         <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -221,8 +221,8 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container>
-                            <link target="AddRootCompDocTemplate" text="Create New Root CompDoc Template" style="buttontext"/>
-                            <link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/>
+                            <container><link target="AddRootCompDocTemplate" text="Create New Root CompDoc Template" style="buttontext"/></container>
+                            <container><link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="View Waiting Approvals" style="buttontext"/></container>
                         </container>
                         <include-form name="FindCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
                         <include-form name="ListCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
@@ -282,7 +282,7 @@ under the License.
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/>
+                        <container><link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/></container>
                         <include-form name="ListCompDocInstances" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -328,13 +328,14 @@ under the License.
                         <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>
                     </condition>
                     <actions>
+                		<set field="title" value="Edit CompDoc Template [${contentId}]"/>
                         <set from-field="content.contentId" field="rootTemplateContentId"/>
                         <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId"/>
                     </actions>
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                             <decorator-section name="body">
-                                <link target="AddRootCompDocInstance?contentId=${rootTemplateContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create Instance of This Template" style="buttontext"/>
+                                <container><link target="AddRootCompDocInstance?contentId=${rootTemplateContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create Instance of This Template" style="buttontext"/></container>
                                 <include-form name="EditRootCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
@@ -345,6 +346,7 @@ under the License.
                         <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
                     </condition>
                     <actions>
+                		<set field="title" value="Edit CompDoc Instance [${contentId}]"/>
                         <set from-field="content.contentId" field="rootInstanceContentId"/>
                         <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootInstanceRevSeqId}" field="rootInstanceRevSeqId"/>
                     </actions>
@@ -361,6 +363,7 @@ under the License.
                         <if-compare field-name="content.contentTypeId" operator="equals" value="TEMPLATE"/>
                     </condition>
                     <actions>
+                		<set field="title" value="Edit CompDoc Template Part [${contentId}]"/>
                         <set value="updateChildCompDocTemplate" field="childCompDocTarget"/>
                         <set value="TEMPLATE" field="contentTypeId"/>
                         <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId"/>
@@ -396,6 +399,7 @@ under the License.
                         <if-compare field-name="content.contentTypeId" operator="equals" value="DOCUMENT"/>
                     </condition>
                     <actions>
+                		<set field="title" value="Edit CompDoc Instance Part [${contentId}]"/>
                         <set value="updateChildCompDocInstance" field="childCompDocTarget"/>
                         <set value="DOCUMENT" field="contentTypeId"/>
                         <set from-field="parameters.caContentIdTo" default-value="${parameters.rootInstanceContentId}" field="rootInstanceContentId"/>
@@ -473,7 +477,7 @@ under the License.
                     <actions>
                     </actions>
                     <widgets>
-                        <link target="ViewCompDocContentBinary?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${dummy.rootContentId}" text="View CompDoc Content" style="buttontext"/>
+                        <container><link target="ViewCompDocContentBinary?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${dummy.rootContentId}" text="View CompDoc Content" style="buttontext"/></container>
                     </widgets>
                 </section>
                 <section>
@@ -486,7 +490,7 @@ under the License.
                     <actions>
                     </actions>
                     <widgets>
-                        <link target="ViewCompDocContentHtml?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}" text="View CompDoc Content" style="buttontext"/>
+                        <container><link target="ViewCompDocContentHtml?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}" text="View CompDoc Content" style="buttontext"/></container>
                     </widgets>
                 </section>
                 <section>
@@ -503,7 +507,7 @@ under the License.
                     <actions>
                     </actions>
                     <widgets>
-                        <link target="ViewCompDocContentSurvey?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}" text="View CompDoc Content" style="buttontext"/>
+                        <container><link target="ViewCompDocContentSurvey?contentId=${content.contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}" text="View CompDoc Content" style="buttontext"/></container>
                     </widgets>
                 </section>
                 <section>
@@ -529,7 +533,9 @@ under the License.
                     <actions>
                     </actions>
                     <widgets>
+						<!--
                         <label text="View screen not available for mime-type: ${dataResource.mimeTypeId}"/>
+							-->
                     </widgets>
                 </section>
             </widgets>
@@ -637,7 +643,9 @@ under the License.
                     <actions>
                     </actions>
                     <widgets>
+						<!--
                         <label text="Upload screen not available for mime-type: ${dataResource.mimeTypeId}"/>
+							-->
                     </widgets>
                 </section>
             </widgets>
@@ -661,7 +669,7 @@ under the License.
             </condition>
             <actions>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Instance Add Page"/>
+                <set field="title" value="Add Composite Document Instance Page"/>
                 <set value="COMPDOC_INSTANCE" field="contentTypeId" />
                 <set value="" field="dummy2.contentId" />
             </actions>
@@ -682,7 +690,7 @@ under the License.
             </condition>
             <actions>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Template Add Page"/>
+                <set field="title" value="Add Composite Document Template Page"/>
                 <set value="COMPDOC_TEMPLATE" field="dummy.contentTypeId"/>
                 <set value="createChildCompDocTemplate" field="createChildCompDoc"/>
             </actions>
@@ -703,13 +711,14 @@ under the License.
             </condition>
             <actions>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Instance PART Add Page"/>
+                <set field="title" value="Add Composite Document Instance Part Page"/>
                 <set field="contentIdTo" from-field="parameters.rootInstanceContentId"/>
                 <set field="instanceOfContentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-name="instanceOfContent"/>
                 <set from-field="instanceOfContent.contentName" field="contentName"/>
                 <get-related-one value-name="instanceOfContent" relation-name="DataResource" to-value-name="instanceOfDataResource"/>
                 <set field="instanceOfDataResourceTypeId" from-field="instanceOfDataResource.dataResourceTypeId"/>
+                <set field="mimeTypeId" from-field="instanceOfDataResource.mimeTypeId"/>
                 <set value="COMPDOC_PART" field="contentAssocTypeId"/>
                 <set value="DOCUMENT" field="contentTypeId"/>
                 <set from-field="parameters.caSequenceNum" field="sequenceNum" default-value="${parameters.sequenceNum}"/>
@@ -732,7 +741,7 @@ under the License.
             </condition>
             <actions>
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Template Add Page"/>
+                <set field="title" value="Add Composite Document Template Part Page"/>
                 <set field="contentIdTo" from-field="parameters.caContentIdTo" default-value="${parameters.contentIdTo}"/>
                 <set field="contentAssocTypeId" value="COMPDOC_PART"/>
                 <set field="sequenceNum" from-field="parameters.caSequenceNum" default-value="${parameters.sequenceNum}"/>
@@ -824,7 +833,7 @@ under the License.
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="viewtree2"/>
-                <entity-one entity-name="Content" value-name="content" use-cache="true">
+                <entity-one entity-name="Content" value-name="instanceContent" use-cache="true">
                     <field-map field-name="contentId" env-name="parameters.rootInstanceContentId"/>
                 </entity-one>
                 <entity-condition entity-name="ContentRevision" list-name="contentRevisions" use-cache="true">
@@ -836,7 +845,7 @@ under the License.
                 </entity-condition>
                 <set  field="rootInstanceRevSeqId" from-field="parameters.rootInstanceRevSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}"/>
 
-                <set field="rootTemplateContentId" from-field="content.instanceOfContentId"/>
+                <set field="rootTemplateContentId" from-field="instanceContent.instanceOfContentId"/>
                <set  field="contentRevisionSeqId" from-field="parameters.rootInstanceRevSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}"/>
                <set from-field="parameters.rootInstanceContentId"  field="contentId" />
                <set field="title" value="Composite Document Root Instance View Page for Id: ${parameters.rootInstanceContentId} instance of ${rootTemplateContentId}"/>
