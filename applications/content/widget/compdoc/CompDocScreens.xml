@@ -387,7 +387,7 @@ under the License.
                                     </actions>
                                     <widgets>
                                         <include-screen name="ContentViewLink"/>
-                                        <include-screen name="UploadCompDocTemplateContent"/>
+                                        <include-screen name="UploadCompDocContent"/>
                                     </widgets>
                                 </section>
                             </decorator-section>
@@ -445,7 +445,7 @@ under the License.
                                     </actions>
                                     <widgets>
                                         <include-screen name="ContentViewLink"/>
-                                        <include-screen name="UploadCompDocTemplateContent"/>
+                                        <include-screen name="UploadCompDocContent"/>
                                     </widgets>
                                 </section>
                             </decorator-section>
@@ -542,7 +542,7 @@ under the License.
         </section>
     </screen>
     
-    <screen name="UploadCompDocTemplateContent">
+    <screen name="UploadCompDocContent">
         <section>
             <actions>
             </actions>
