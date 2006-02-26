@@ -86,5 +86,12 @@
             <hyperlink target="removeWebSiteRole?webSiteId=${webSiteRole.webSiteId}&amp;partyId=${webSiteRole.partyId}&amp;roleTypeId=${webSiteRole.roleTypeId}&amp;fromDate=${webSiteRole.fromDate}"
                 description="[Delete]" also-hidden="false"/>
         </field>
-    </form>    
+    </form>
+    <form name="ListWebSites" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
+        target="" title="" type="list" list-name="webSites" paginate-target="FindWebSite" paginate="true">
+        <field name="webSiteId" title="${uiLabelMap.CommonId}" widget-style="buttontext">
+            <hyperlink description="${webSiteId}" target="EditWebSite?webSiteId=${webSiteId}" also-hidden="false"/>
+        </field>
+        <field name="siteName" title="${uiLabelMap.CommonName}"><display/></field>
+    </form>
 </forms>

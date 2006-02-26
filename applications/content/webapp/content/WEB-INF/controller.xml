@@ -1382,9 +1382,9 @@
     <view-map name="login" type="screen" page="component://content/widget/CommonScreens.xml#login"/>
     <view-map name="fonts.fo" page="/fonts.fo.ftl" type="fop"/>
     
-    <view-map name="FindWebSite" page="/website/FindWebSite.ftl" type="jpublish"/>
-    <view-map name="EditWebSite" page="/website/EditWebSite.ftl" type="jpublish"/>    
-    <view-map name="EditWebSiteParties" page="/website/EditWebSiteParties.ftl" type="jpublish"/>
+    <view-map name="FindWebSite" page="component://content/widget/WebSiteScreens.xml#FindWebSite" type="screen"/>
+    <view-map name="EditWebSite" page="component://content/widget/WebSiteScreens.xml#EditWebSite" type="screen"/>
+    <view-map name="EditWebSiteParties" page="component://content/widget/WebSiteScreens.xml#EditWebSiteParties" type="screen"/>
     
     <view-map name="EditContentPurpose" page="component://content/widget/content/ContentScreens.xml#EditContentPurpose" type="screen"/>
     <view-map name="EditContentRole" page="component://content/widget/content/ContentScreens.xml#EditContentRole" type="screen"/>
