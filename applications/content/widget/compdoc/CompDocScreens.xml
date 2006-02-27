@@ -216,6 +216,8 @@ under the License.
                 <set field="currentContentMenuItemName" value=""/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+				<!-- there is a bad sideeffect of the DataResource admin screens. sets dataResourceId in session. -->
+				<set field="dataResourceId" to-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
