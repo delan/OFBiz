@@ -63,6 +63,34 @@ under the License.
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+    <form name="BuildSurveyFromPdf" type="single" 
+        target="buildSurveyFromPdf" title="" default-map-name="survey"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <field name="surveyId" map-name="survey"><hidden/></field>
+
+        <field name="contentId" map-name="empty" title="Content ID" > 	 
+            <lookup target-form-name="LookupContent">
+            </lookup>
+        </field>
+        <field name="submitButton" title="Build Survey from PDF" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="BuildSurveyResponseFromPdf" type="single" 
+        target="buildSurveyResponseFromPdf" title="" default-map-name="survey"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <field name="surveyId" map-name="parameters"><hidden/></field>
+        <field name="surveyResponseId" map-name="surveyResponse"><hidden/></field>
+        <field name="pdfFileNameIn" map-name="empty"><text/></field>
+
+        <field name="contentId" map-name="empty" title="Content ID" > 	 
+            <lookup target-form-name="LookupContent">
+            </lookup>
+        </field>
+        <field name="submitButton" title="Build Survey Response from PDF" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
     <!-- SurveyMultiResp & SurveyMultiRespColumn -->
     <form name="EditSurveyMultiResp" type="single" target="updateSurveyMultiResp" title="" default-map-name="surveyMultiResp"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
