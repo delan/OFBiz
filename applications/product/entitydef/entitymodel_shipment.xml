@@ -347,6 +347,13 @@
       <relation type="one" fk-name="SHP_RCPT_USERLGN" rel-entity-name="UserLogin">
         <key-map field-name="receivedByUserLoginId" rel-field-name="userLoginId"/>
       </relation>
+      <relation type="one-nofk" fk-name="SHP_RCPT_SHIPMT" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHP_RCPT_RETINVITM" rel-entity-name="ReturnItem">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="ShipmentReceiptRole"
             package-name="org.ofbiz.shipment.receipt"
