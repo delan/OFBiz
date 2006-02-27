@@ -27,13 +27,75 @@
 
 package org.ofbiz.accounting.util;
 
+import java.util.Map;
+
+import org.ofbiz.accounting.AccountingException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.ServiceUtil;
 
 public class UtilAccounting {
 
     public static String module = UtilAccounting.class.getName();
+
+    /**
+     * Get the GL Account for a product or the default account type based on input. This replaces the simple-method service
+     * getProductOrgGlAccount. First it will look in ProductGlAccount using the primary keys productId and
+     * productGlAccountTypeId. If none is found, it will look up GlAccountTypeDefault to find the default account for
+     * organizationPartyId with type glAccountTypeId.
+     *
+     * @param   productId                  When searching for ProductGlAccounts, specify the productId
+     * @param   productGlAccountTypeId     When searching for ProductGlAccounts, specify the productGlAccountTypeId
+     * @param   glAccountTypeId            The default glAccountTypeId to look for if no ProductGlAccount is found
+     * @param   organizationPartyId        The organization party of the default account
+     * @return  The account ID (glAccountId) found
+     * @throws  AccountingException        When the no accounts found or an entity exception occurs
+     */
+    public static String getProductOrgGlAccountId(String productId, String productGlAccountTypeId, 
+            String glAccountTypeId, String organizationPartyId, GenericDelegator delegator) 
+        throws AccountingException {
+
+        GenericValue account = null;
+        try {
+            // first try to find the account in ProductGlAccount
+            account = delegator.findByPrimaryKeyCache("ProductGlAccount", 
+                    UtilMisc.toMap("productId", productId, "productGlAccountTypeId", productGlAccountTypeId));
+        } catch (GenericEntityException e) {
+            throw new AccountingException("Failed to find a ProductGLAccount for productId [" + productId + "] and productGlAccountTypeId [" + productGlAccountTypeId + "].", e);
+        }
+
+        // otherwise try the default accounts
+        if (account == null) {
+            try {
+                account = delegator.findByPrimaryKeyCache("GlAccountTypeDefault", UtilMisc.toMap("glAccountTypeId", glAccountTypeId, "organizationPartyId", organizationPartyId));
+            } catch (GenericEntityException e) {
+                throw new AccountingException("Failed to find a GlAccountTypeDefault for glAccountTypeId [" + glAccountTypeId + "] and organizationPartyId [" + organizationPartyId+ "].", e);
+            }
+        }
+
+        // if no results yet, serious problem
+        if (account == null) {
+            throw new AccountingException("Failed to find any accounts in ProductGlAccount for  productId [" + productId + "] and productGlAccountTypeId [" + productGlAccountTypeId + "] or any accounts in GlAccountTypeDefault for glAccountTypeId [" + glAccountTypeId + "] and organizationPartyId [" + organizationPartyId+ "]. Please check your data to make sure that at least a GlAccountTypeDefault is defined for this account type and organization.");
+        }
+
+        // otherwise return the glAccountId
+        return account.getString("glAccountId");
+    }
+
+    /** 
+     * As above, but explicitly looking for default account for given type and organization 
+     * 
+     * @param   glAccountTypeId         The type of account
+     * @param   organizationPartyId     The organization of the account
+     * @return  The default account ID (glAccountId) for this type
+     * @throws  AccountingException     When the default is not configured
+     */
+    public static String getDefaultAccountId(String glAccountTypeId, String organizationPartyId, GenericDelegator delegator) throws AccountingException {
+        return getProductOrgGlAccountId(null, null, glAccountTypeId, organizationPartyId, delegator);
+    }
 
     /**
      * Little method to figure out the net or ending balance of a GlAccountHistory or GlAccountAndHistory value, based on what kind
