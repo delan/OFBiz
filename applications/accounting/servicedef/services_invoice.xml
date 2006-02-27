@@ -68,13 +68,20 @@ under the License.
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
     
+    <!--
+    TODO: There is a big problem with the taxableFlag. Currently, all adjustments are treated as having the same taxableFlag as
+    the product except when it is a sales tax. This is not very flexible. Additionally, when the invoices are computed, a
+    null taxableFlag is considered to be "N" when it should be "unknown". At some point we'll have to implement the adjustment.includeInTax
+    field properly so we don't have to rely on Product.taxable and checking by hand each type that is not taxable. The old way is already 
+    creating an issue with return-wide adjustments: How do we know that such an adjustment is to be taxed or not?  Because of this problem,
+    we will continue to have null taxableFlags for awhile yet, which is why the mantadory taxableFlag of this method was taken out.
+    -->
     <service name="createInvoiceItem" engine="simple" default-entity-name="InvoiceItem"
         location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceItem">
         <description>Create a new Invoice Item Record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceItemSeqId" mode="INOUT" optional="true"/><!-- will optionally assign by the system -->
-        <override name="taxableFlag" optional="false"/>
     </service>
     <service name="updateInvoiceItem" engine="simple" default-entity-name="InvoiceItem"
         location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="updateInvoiceItem">
@@ -134,10 +141,30 @@ under the License.
         <attribute name="billItems" type="List" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
     </service>
+    <service name="createInvoiceFromReturn" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceFromReturn">
+        <description>
+            Create an invoice from a return
+            returnId = The returnId to associate the invoice with
+            shipmentReceiptsToBill = List of ShipmentReceipts to use for creating the invoice
+        </description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentReceiptsToBill" type="List" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
+    </service>
     <service name="createInvoicesFromShipment" engine="java"
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoicesFromShipment">
         <description>
             Create invoice(s) from a Shipment
+            invoicesCreated = List of invoiceIds which were created by this service
+        </description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoicesCreated" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="createInvoicesFromReturnShipment" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoicesFromReturnShipment">
+        <description>
+            Create invoice(s) from a return Shipment
             invoicesCreated = List of invoiceIds which were created by this service
         </description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>

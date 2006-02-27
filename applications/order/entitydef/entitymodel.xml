@@ -2241,6 +2241,39 @@
         <field name="sequenceId" type="id"></field>
         <prim-key field="returnTypeId"/>
     </entity>
+    <entity entity-name="ReturnItemBilling"
+            package-name="org.ofbiz.order.return"
+            never-cache="true"
+            title="Records the quantity and amount returned to an inventory item from a return item.">
+      <field name="returnId" type="id-ne"></field>
+      <field name="returnItemSeqId" type="id-ne"></field>
+      <field name="invoiceId" type="id-ne"></field>
+      <field name="invoiceItemSeqId" type="id-ne"></field>
+      <field name="shipmentReceiptId" type="id"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="amount" type="currency-amount"></field>
+      <prim-key field="returnId"/>
+      <prim-key field="returnItemSeqId"/>
+      <prim-key field="invoiceId"/>
+      <prim-key field="invoiceItemSeqId"/>
+      <relation type="one" fk-name="RTN_ITBLNG_RHDR" rel-entity-name="ReturnHeader">
+        <key-map field-name="returnId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_ITBLNG_RITM" rel-entity-name="ReturnItem">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Invoice">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ITBLNG_IITM" rel-entity-name="InvoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="shipmentReceiptId" rel-field-name="receiptId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.shoppingcart -->
