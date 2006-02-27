@@ -45,7 +45,7 @@
 
     <#list surveyQuestionAndApplList as surveyQuestionAndAppl>
       <#assign questionType = surveyQuestionAndAppl.getRelatedOneCache("SurveyQuestionType")/>
-      <#assign questionCat = surveyQuestionAndAppl.getRelatedOneCache("SurveyQuestionCategory")/>
+      <#assign questionCat = surveyQuestionAndAppl.getRelatedOneCache("SurveyQuestionCategory")?if_exists/>
       <#assign currentSurveyPage = surveyQuestionAndAppl.getRelatedOneCache("SurveyPage")?if_exists/>
       <#assign currentSurveyMultiResp = surveyQuestionAndAppl.getRelatedOneCache("SurveyMultiResp")?if_exists/>
       <form method="post" action="<@ofbizUrl>updateSurveyQuestionAppl</@ofbizUrl>">
@@ -55,7 +55,7 @@
         <tr valign="middle">
           <td><div class="tabletext">${surveyQuestionAndAppl.surveyQuestionId}</div></td>
           <td><div class="tabletext">${questionType.description}</div></td>
-          <td><div class="tabletext">${questionCat.description}</div></td>
+          <td><div class="tabletext">${(questionCat.description)?if_exists}</div></td>
           <td><div class="tabletext">${surveyQuestionAndAppl.description?if_exists}</div></td>
           <td><div class="tabletext">${surveyQuestionAndAppl.question?if_exists}</div></td>
           <td>
