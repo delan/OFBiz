@@ -172,7 +172,21 @@
         <attribute name="year" type="String" mode="IN" optional="false"/>
         <attribute name="monthList" type="java.util.List" mode="OUT" optional="true"/>
     </service>
-
+    
+    <service name="otsOpenInvoiceReport" engine="simple"
+        location="org/ofbiz/opentravelsystem/ReportServices.xml" invoke="openInvoiceReport" auth="true">
+        <description>Report not completely applied invoices</description>
+        <attribute name="organizationPartyId" type="String" mode="IN"/>
+        <attribute name="openInvoices" type="java.util.List" mode="OUT" optional="true"></attribute>
+    </service>
+    
+    <service name="otsOpenPaymentReport" engine="simple"
+        location="org/ofbiz/opentravelsystem/ReportServices.xml" invoke="openPaymentReport" auth="true">
+        <description>Report not completely applied payments</description>
+        <attribute name="organizationPartyId" type="String" mode="IN"/>
+        <attribute name="openPayments" type="java.util.List" mode="OUT" optional="true"></attribute>
+    </service>
+    
     <!-- catalog/product services -->
     <service name="CreateProductCategoryLinkToProdCatalog" engine="simple"
         location="org/ofbiz/opentravelsystem/CatalogServices.xml"

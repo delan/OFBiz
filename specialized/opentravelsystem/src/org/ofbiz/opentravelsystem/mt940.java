@@ -195,9 +195,9 @@ public class mt940 {
 			if (debug) Debug.logInfo("Creating payment with reference number: " + payment.get("paymentRefNum"),module);
 			if (checkPayment() == true)	{
 				paymentAlreadyUploaded++;
-				if (debug) Debug.logInfo("Payment already exists...so delete first.",module);
+				if (debug) Debug.logInfo("Payment already exists...so not create again...",module);
 			}
-			if (!partyOnly)	{	// input parameter.....
+			else if (!partyOnly)	{	// input parameter.....
 				// finally create payment record.
 				payment.put("userLogin",userLogin);
 				payment.put("locale", loc);
@@ -211,7 +211,7 @@ public class mt940 {
 			}
 		}
 		String mess = "Upload ended... " + partiesCreated + " partyGroups created, ";
-		if (!partyOnly) mess = mess.concat(paymentsCreated + " payment records created, " + paymentAlreadyUploaded + " payments deleted....");
+		if (!partyOnly) mess = mess.concat(paymentsCreated + " payment records created, " + paymentAlreadyUploaded + " payments already uploaded....");
 		request.setAttribute("_EVENT_MESSAGE_", mess);
 		
 		return "success";
@@ -227,11 +227,11 @@ public class mt940 {
 		if (payments == null || payments.size() == 0)	
 			return false;
 		else	{
-			try {
+/*			try {
 				((GenericValue) payments.get(0)).remove();
 			} catch (GenericEntityException e1) {
 				Debug.logError(e1, "Error deleting payment record", module);
-			}
+			} */
 			return true;
 		}
 	}
