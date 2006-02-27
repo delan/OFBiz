@@ -909,6 +909,7 @@ under the License.
         </iterate>
         <log level="info" message="roles: ${roles}"/>        
         
+		<!-- find approvals belonging to user -->
         <entity-condition entity-name="MaxContentApprovalView" list-name="compdocApprovalList" use-cache="false">
             <condition-list>
                 <condition-expr field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId" operator="less-equals" ignore-if-empty="true"/>
@@ -916,12 +917,14 @@ under the License.
                 <condition-expr field-name="roleTypeId" operator="in" env-name="roles"/>
             </condition-list>
             <select-field field-name="contentId"/>
+            <select-field field-name="contentTypeId"/>
             <select-field field-name="partyId"/>
             <select-field field-name="roleTypeId"/>
             <select-field field-name="maxContentRevisionSeqId"/>
         </entity-condition>
         <log level="info" message="compdocApprovalList: ${compdocApprovalList}"/>        
         
+		<!-- above query does not get contentApprovalId. For each row find it -->
         <iterate list-name="compdocApprovalList" entry-name="maxContentApproval">
             <log level="info" message="maxContentApproval: ${maxContentApproval}"/>
             <entity-condition entity-name="ContentApproval" list-name="contentApprovalList2" use-cache="false">
@@ -942,6 +945,7 @@ under the License.
         </iterate>
         <log level="info" message="contentApprovalIdList: ${contentApprovalIdList}"/>        
         
+		<!-- find the entries that match the user's partyId or associated roleTypes -->
         <entity-condition entity-name="ContentApproval" list-name="contentApprovalList">
             <condition-list combine="and">
                 <condition-expr field-name="contentApprovalId" operator="in" env-name="contentApprovalIdList"/>

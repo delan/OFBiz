@@ -31,7 +31,7 @@ under the License.
                 <set field="currentMenuItemName" value="approval"/>
                 <entity-one entity-name="ContentApproval" value-name="contentApproval" use-cache="true"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
-                <set from-field="content.contentTypeId" field="contentTypeId" />
+                <set from-field="content.contentTypeId" field="thisContentTypeId" />
                 <service service-name="getApprovalsWithPermissions" result-map-name="result">
                     <field-map field-name="rootContentId" env-name="parameters.contentId"/>
                     <field-map field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId"/>
@@ -74,7 +74,7 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container><link target="EditContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Content Approval" style="buttontext"/></container>
-                        <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                        <include-form name="ListWaitingContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
