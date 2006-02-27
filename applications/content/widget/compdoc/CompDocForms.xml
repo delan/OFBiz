@@ -232,7 +232,7 @@ under the License.
         <field name="roleTypeId">
             <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
         </field>
-        <field name="approvalStatusId" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+        <field name="approvalStatusId" use-when="&quot;COMPDOC_INSTANCE&quot;.equals(thisContentTypeId)">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
@@ -246,7 +246,34 @@ under the License.
         <field name="Edit" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)"><submit/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(thisContentTypeId)"><submit/></field>
+    </form>
+
+    <form name="ListWaitingContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext"
+                target="updateWaitingContentApproval"  extends="dummy" 
+               list-name="contentApprovalList" default-widget-style="tabletext" title="" type="list">
+        <field name="contentApprovalId" widget-style="tabletext"><display/></field>
+        <field name="contentId"><hidden/></field>
+        <field name="contentRevisionSeqId"><display/></field>
+        <field name="partyId"><display/></field>
+        <field name="roleTypeId">
+            <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
+        </field>
+        <field name="approvalStatusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="approvalDate"><display/></field>
+        <field name="sequenceNum"><display/></field>
+        <field name="comments"><display/></field>
+        <field name="Edit" title=" " widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit/></field>
     </form>
 
 

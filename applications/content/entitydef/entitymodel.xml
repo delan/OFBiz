@@ -1127,7 +1127,7 @@
       <field name="isAnonymous" type="indicator"><description>Allow response to the survey without login?</description></field>
       <field name="allowMultiple" type="indicator"><description>Allow multiple responses to this survey (if Y), or just a single answer (if N)?</description></field>
       <field name="allowUpdate" type="indicator"><description>Allow change to responses?</description></field>
-      <field name="contentId" type="id-ne"><description>Points to PDF with AcroForm</description></field>
+      <field name="acroFormContentId" type="id-ne"><description>Points to PDF with AcroForm</description></field>
       <prim-key field="surveyId"/>
     </entity>
     <entity entity-name="SurveyApplType"
