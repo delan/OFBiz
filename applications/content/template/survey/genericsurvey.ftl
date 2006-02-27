@@ -192,7 +192,7 @@
   <#else/>
     <#-- special formatting for select boxes -->
     <#assign align = "left"/>
-    <#if (surveyQuestionAndAppl.surveyQuestionTypeId?has_content>
+    <#if surveyQuestionAndAppl?exists && surveyQuestionAndAppl.surveyQuestionTypeId?has_content>
     	<#if (surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN" || surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT" || surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION")>
       		<#assign align = "right"/>
     	</#if>
@@ -203,7 +203,7 @@
     </#if>
 
     <tr>
-    <#if (surveyQuestionAndAppl.surveyQuestionTypeId?has_content>
+    <#if surveyQuestionAndAppl?exists && surveyQuestionAndAppl.surveyQuestionTypeId?has_content>
       <#-- seperator options -->
       <#if surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_TEXT">
         <td colspan="5"><div class="tabletext">${surveyQuestionAndAppl.question?if_exists}</div></td>
@@ -224,12 +224,8 @@
         </td>
         <td width="20%">&nbsp;</td>
       </#if>
-      <#else>
-      	<td>
-      		Question type missing from question: ${surveyQuestionAndAppl.surveyQuestionId}
-      	</td>
-      </#else>
     </#if>
+    
     </tr>
   </#if>
   </#list>
