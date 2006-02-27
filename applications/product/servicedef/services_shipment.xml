@@ -126,11 +126,13 @@
         <description>Update Shipment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="shipmentTypeId"/>
             <exclude field-name="createdDate"/>
             <exclude field-name="createdByUserLogin"/>
             <exclude field-name="lastModifiedDate"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
+        <attribute name="shipmentTypeId" type="String" mode="INOUT" optional="true"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
         <attribute name="oldPrimaryOrderId" type="String" mode="OUT" optional="true"/>
         <attribute name="oldOriginFacilityId" type="String" mode="OUT" optional="true"/>
