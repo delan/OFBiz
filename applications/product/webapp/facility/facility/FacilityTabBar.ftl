@@ -34,7 +34,7 @@
     <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroups?default(unselectedClassName)}">${uiLabelMap.ProductGroups}</a>
     <a href="<@ofbizUrl>FindFacilityLocation?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityLocation?default(unselectedClassName)}">${uiLabelMap.ProductLocations}</a>
     <a href="<@ofbizUrl>EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityRoles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
-    <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventoryItems}</a>
+    <a href="<@ofbizUrl>ViewFacilityInventoryByProduct?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventory}</a>
     <a href="<@ofbizUrl>ReceiveInventory?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveInventory?default(unselectedClassName)}">${uiLabelMap.ProductInventoryReceive}</a>
     <a href="<@ofbizUrl>FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityTransfers?default(unselectedClassName)}">${uiLabelMap.ProductInventoryXfers}</a>
     <a href="<@ofbizUrl>ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveReturn?default(unselectedClassName)}">${uiLabelMap.ProductReceiveReturn}</a>
