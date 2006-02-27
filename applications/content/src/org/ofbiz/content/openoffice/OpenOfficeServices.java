@@ -363,6 +363,7 @@ public class OpenOfficeServices {
      */
     public static Map renderCompDocPdf(DispatchContext dctx, Map context) {
         
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         Map results = ServiceUtil.returnSuccess();
         String dataResourceId = null;
         ByteWrapper byteWrapper = null;
@@ -441,10 +442,26 @@ public class OpenOfficeServices {
                     inputByteArray = byteWrapper.getBytes();
                     reader = new PdfReader(inputByteArray);
                 } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
-                        inputByteArray = byteWrapper.getBytes();
-                        String s = new String(inputByteArray);
-                        Debug.logInfo("text/html string:" + s, module);
-                        continue;
+                    inputByteArray = byteWrapper.getBytes();
+                    String s = new String(inputByteArray);
+                    Debug.logInfo("text/html string:" + s, module);
+                    continue;
+                } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
+                    String surveyId = dataResource.getString("objectInfo");
+                    GenericValue survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
+                    if (survey != null) {
+                        String acroFormContentId = survey.getString("acroFormContentId");
+                        if (UtilValidate.isEmpty(acroFormContentId)) {
+                            // Create AcroForm PDF
+                            Map survey2PdfResults = dispatcher.runSync("buildPdfFromSurveyResponse", UtilMisc.toMap("surveyResponseId", surveyId));
+                            ByteWrapper outByteWrapper = (ByteWrapper)survey2PdfResults.get("outByteWrapper");
+                            inputByteArray = outByteWrapper.getBytes();
+                            reader = new PdfReader(inputByteArray);
+                        } else {
+                            // Fill in acroForm
+                        }
+                    }
+                    continue;
                 } else {
                     OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
                     OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");

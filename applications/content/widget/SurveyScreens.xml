@@ -105,12 +105,14 @@ under the License.
                             <widgets>
                                 <container><label style="head1">${uiLabelMap.PageTitleCreateSurvey}</label></container>
                                 <include-form name="EditSurvey" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+               					<include-form name="BuildSurveyFromPdf" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <container><label style="head1">${uiLabelMap.PageTitleEditSurvey}, ${uiLabelMap.SurveySurveyId}: ${surveyId}</label></container>
                                 <include-form name="EditSurvey" location="component://content/webapp/content/survey/SurveyForms.xml"/>
-                            </fail-widgets>
-                        </section>
+               					<include-form name="BuildSurveyFromPdf" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+							</fail-widgets>
+						</section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -203,6 +205,7 @@ under the License.
                         <container><link  text="${uiLabelMap.SurveyCreateResponse}" target="EditSurveyResponse?surveyId=${surveyId}" style="buttontext"/></container>
                         <container><label style="head1">${uiLabelMap.PageTitleFindSurveyResponse}, ${uiLabelMap.SurveySurveyId}: ${surveyId}</label></container>
                         <include-form name="FindSurveyResponse" location="component://content/webapp/content/survey/SurveyForms.xml"/>
+                    	<include-form name="BuildSurveyResponseFromPdf" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                         <include-form name="ListFindSurveyResponse" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -242,6 +245,8 @@ under the License.
                 <set field="surveyId" from-field="parameters.surveyId"/>
                 <entity-one entity-name="Survey" value-name="survey"/>
                 
+                <set field="surveyResponseId" from-field="parameters.surveyResponseId"/>
+                <entity-one entity-name="SurveyResponse" value-name="surveyResponse"/>
                 <script location="component://content/webapp/content/WEB-INF/actions/survey/EditSurveyResponse.bsh"/>
             </actions>
             <widgets>
@@ -249,6 +254,7 @@ under the License.
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleEditSurveyResponse}, Response ID: ${parameters.surveyResponseId}, Survey ID: ${surveyId}</label></container>
                         <platform-specific><html><html-template location="component://content/webapp/content/survey/EditSurveyResponse.ftl"/></html></platform-specific>
+                    	<include-form name="BuildSurveyResponseFromPdf" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

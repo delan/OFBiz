@@ -1001,6 +1001,18 @@
         <response name="success" type="view" value="EditSurvey"/>
         <response name="error" type="view" value="EditSurvey"/>
     </request-map>
+    <request-map uri="buildSurveyFromPdf">
+        <security auth="true" https="true"/>
+        <event invoke="buildSurveyFromPdf" path="" type="service"/>
+        <response name="success" type="view" value="EditSurvey"/>
+        <response name="error" type="view" value="EditSurvey"/>
+    </request-map>
+    <request-map uri="buildSurveyResponseFromPdf">
+        <security auth="true" https="true"/>
+        <event invoke="buildSurveyResponseFromPdf" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyResponse"/>
+        <response name="error" type="view" value="EditSurveyResponse"/>
+    </request-map>
     <request-map uri="deleteSurvey">
         <security auth="true" https="true"/>
         <event invoke="deleteSurvey" path="" type="service"/>

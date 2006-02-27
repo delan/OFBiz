@@ -272,41 +272,58 @@
     <service name="buildSurveyFromPdf" engine="java" 
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="buildSurveyFromPdf" auth="false">
         <description>Create a Survey and related entities from AcroForm</description>
-        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="true" />
+        <attribute name="contentId" type="String" mode="IN" optional="true" />
+        <attribute name="inputByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="true" />
         <attribute name="surveyName" type="String" mode="IN" optional="true" />
-        <attribute name="surveyId" type="String" mode="OUT" optional="false"/>
+        <attribute name="surveyId" type="String" mode="INOUT" optional="true"/>
     </service>
 
     <service name="buildSurveyResponseFromPdf" engine="java"  transaction-timout="72000"
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="buildSurveyResponseFromPdf" auth="false">
         <description>Create a Survey and related entities from AcroForm</description>
-        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
-        <attribute name="surveyId" type="String" mode="IN" optional="false"/>
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="true" />
+        <attribute name="contentId" type="String" mode="IN" optional="true" />
+        <attribute name="inputByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="true" />
+        <attribute name="surveyId" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="surveyResponseId" type="String" mode="OUT" optional="false"/>
+        <attribute name="surveyResponseId" type="String" mode="INOUT" optional="true"/>
     </service>
 
     <service name="getAcroFieldsFromPdf" engine="java" 
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="getAcroFieldsFromPdf" auth="false">
         <description>Get fields from AcroForm</description>
-        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="true" />
+        <attribute name="contentId" type="String" mode="IN" optional="true" />
+        <attribute name="inputByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="true" />
         <attribute name="acroFieldMap" type="Map" mode="OUT" optional="false"/>
     </service>
 
     <service name="setAcroFieldsFromSurveyResponse" engine="java" 
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="setAcroFieldsFromSurveyResponse" auth="false">
         <description>Get fields from AcroForm</description>
-        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="true" />
+        <attribute name="contentId" type="String" mode="IN" optional="true" />
+        <attribute name="inputByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="true" />
         <attribute name="surveyResponseId" type="String" mode="IN" optional="false" />
-        <attribute name="pdfFileNameOut" type="String" mode="IN" optional="false" />
+        <attribute name="outByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="true" />
     </service>
 
     <service name="setAcroFields" engine="java" 
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="setAcroFields" auth="false">
         <description>Get fields from AcroForm</description>
-        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="false" />
+        <attribute name="pdfFileNameIn" type="String" mode="IN" optional="true" />
+        <attribute name="contentId" type="String" mode="IN" optional="true" />
+        <attribute name="inputByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="true" />
         <attribute name="acroFieldMap" type="Map" mode="IN" optional="false"/>
-        <attribute name="pdfFileNameOut" type="String" mode="IN" optional="false" />
+        <attribute name="outByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="true" />
+    </service>
+
+    <service name="buildPdfFromSurveyResponse" engine="java" 
+            location="org.ofbiz.content.survey.PdfSurveyServices" invoke="buildPdfFromSurveyResponse" auth="false">
+        <description>Build Pdf From Survey Response</description>
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="false" />
+        <attribute name="outByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="false" />
     </service>
 
     <!-- 
