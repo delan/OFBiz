@@ -91,7 +91,6 @@
                 <set field="page.appTabButtonItem" value="Reservations"/>
                 <set field="page.headerItem" value="Reports"/>
                 <set field="title" value="Accounting Report Options"/>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
@@ -107,16 +106,14 @@
                             <label style="head2" text="VAT report"/>
                             <include-form name="VatReportOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
-                        <!--container>
-                            <label style="head2" text="Open Sales invoices."/>
-                            <include-form name="OpenSalesInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
-                        </container-->
-                        <!--container>
-                            <label style="head2" text="Reports from accounting module."/>
-                            <platform-specific>
-                                <html><html-template location="component://accounting/webapp/accounting/reports/reportsAvailable.ftl"/></html>
-                            </platform-specific>                    
-                        </container-->
+                        <container>
+                            <label style="head2" text="Open (not fully applied) Invoices."/>
+                            <include-form name="OpenInvoiceOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
+                        </container>
+                        <container>
+                            <label style="head2" text="Open (not fully applied) Payments."/>
+                            <include-form name="OpenPaymentOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -155,6 +152,42 @@
                         <container>
                             <label style="head1" text="In and outgoing VAT for: ${organizationPartyId}"/>
                             <include-form name="VatReport" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="OpenInvoiceReport">
+        <section>
+            <actions>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1" text="Open Invoice Report for: ${organizationPartyId}"/>
+                            <include-form name="OpenInvoiceReport" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="OpenPaymentReport">
+        <section>
+            <actions>
+                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1" text="Open Payment Report for: ${organizationPartyId}"/>
+                            <include-form name="OpenPaymentReport" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
                     </decorator-section>
                 </decorator-screen>

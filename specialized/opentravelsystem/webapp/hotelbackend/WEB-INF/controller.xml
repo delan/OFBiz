@@ -2844,6 +2844,17 @@
         <response name="success" type="view" value="VatReport"/>
         <response name="error" type="view" value="AccountingReports"/>
     </request-map>
+    <request-map uri="OpenInvoiceReport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="OpenInvoiceReport"/>
+        <response name="error" type="view" value="AccountingReports"/>
+    </request-map>
+    <request-map uri="OpenPaymentReport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="OpenPaymentReport"/>
+        <response name="error" type="view" value="AccountingReports"/>
+    </request-map>
+    
     <!-- from the accounting component -->    
     <request-map uri="IncomeStatement">
         <security https="true" auth="true"/>
@@ -3185,10 +3196,11 @@
     <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPaymentApplications"/>
     <!-- Accounting Utilities -->
     <view-map name="Utilities" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#Utilities"/>
-    <!--view-map name="DataExchange" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#DataExchange"/-->
     <!-- accounting reports -->
     <view-map name="AccountingReports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#reports"/>
     <view-map name="VatReport" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#VatReport"/>
+    <view-map name="OpenInvoiceReport" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#OpenInvoiceReport"/>
+    <view-map name="OpenPaymentReport" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#OpenPaymentReport"/>
     <view-map name="IncomeStatement" type="screen" page="component://accounting/widget/AccountingScreens.xml#IncomeStatement"/>
     <view-map name="BalanceSheet" type="screen" page="component://accounting/widget/AccountingScreens.xml#BalanceSheet"/>
     <view-map name="TrialBalance" type="screen" page="component://accounting/widget/AccountingScreens.xml#TrialBalance"/>
