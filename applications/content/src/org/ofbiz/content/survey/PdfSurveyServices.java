@@ -1,50 +1,38 @@
 /*
- * $Id: PdfSurveyServices.java 5462 2005-08-05 18:35:48Z byersa $
+ * $Id: $
  *
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright 2005-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
 package org.ofbiz.content.survey;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.data.DataResourceWorker;
@@ -52,33 +40,20 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.ByteWrapper;
-import org.ofbiz.entity.condition.EntityConditionList;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.ModelService;
 import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
-import com.lowagie.text.pdf.AcroFields;
-import com.lowagie.text.pdf.PdfStamper;
-import com.lowagie.text.pdf.PRAcroForm;
-import com.lowagie.text.pdf.PRIndirectReference;
-import com.lowagie.text.pdf.PdfArray;
-import com.lowagie.text.pdf.PdfDictionary;
-import com.lowagie.text.pdf.PdfLister;
-import com.lowagie.text.pdf.PdfName;
-import com.lowagie.text.pdf.PdfObject;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfString;
-import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Document;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
 import com.lowagie.text.Chunk;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.AcroFields;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
+import com.lowagie.text.pdf.PdfWriter;
 
 
 /**
@@ -92,68 +67,62 @@ import com.lowagie.text.Chunk;
  */
 
 public class PdfSurveyServices {
-	
+    
     public static final String module = PdfSurveyServices.class.getName();
 
     /**
      * 
      */
     public static Map buildSurveyFromPdf(DispatchContext dctx, Map context) {
-
-    	String surveyId = null;
-    	try {
-			
-        	GenericDelegator delegator = dctx.getDelegator();
-            
-        	String surveyName = (String)context.get("surveyName");
-        	ByteArrayOutputStream os = new ByteArrayOutputStream();
+        GenericDelegator delegator = dctx.getDelegator();
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        String surveyId = null;
+        try {
+            String surveyName = (String) context.get("surveyName");
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             ByteWrapper byteWrapper = getInputByteWrapper(context, delegator);
-            PdfReader r = new PdfReader(byteWrapper.getBytes());
-			PdfStamper s = new PdfStamper(r,os);
-			AcroFields fs = s.getAcroFields();
-			HashMap hm = fs.getFields();
-			
-            String contentId = (String)context.get("contentId");
+            PdfReader pdfReader = new PdfReader(byteWrapper.getBytes());
+            PdfStamper pdfStamper = new PdfStamper(pdfReader, os);
+            AcroFields acroFields = pdfStamper.getAcroFields();
+            HashMap acroFieldMap = acroFields.getFields();
+            
+            String contentId = (String) context.get("contentId");
             GenericValue survey = null;
-            surveyId = (String)context.get("surveyId");
+            surveyId = (String) context.get("surveyId");
             if (UtilValidate.isEmpty(surveyId)) {
                 surveyId = delegator.getNextSeqId("Survey");
                 survey = delegator.makeValue("Survey", UtilMisc.toMap("surveyName", surveyName));
                 survey.set("surveyId", surveyId);
                 survey.create();
             }
-			s.setFormFlattening(true);
-			for (Iterator i = hm.keySet().iterator();i.hasNext();)
-			{
-				String fieldName = (String)i.next();
-				AcroFields.Item item = fs.getFieldItem(fieldName);
-				int type = fs.getFieldType(fieldName);
-				String value = fs.getField(fieldName);
-				System.out.println("item:" + item + " value:" +value);
-				GenericValue surveyQuestion = delegator.makeValue("SurveyQuestion", UtilMisc.toMap("question", fieldName));
-				String surveyQuestionId = delegator.getNextSeqId("SurveyQuestion");
-				surveyQuestion.set("surveyQuestionId", surveyQuestionId);
-				surveyQuestion.set("description", fieldName);
+            pdfStamper.setFormFlattening(true);
+            Iterator i = acroFieldMap.keySet().iterator();
+            while (i.hasNext()) {
+                String fieldName = (String) i.next();
+                AcroFields.Item item = acroFields.getFieldItem(fieldName);
+                int type = acroFields.getFieldType(fieldName);
+                String value = acroFields.getField(fieldName);
+                Debug.logInfo("item:" + item + " value:" +value, module);
+                GenericValue surveyQuestion = delegator.makeValue("SurveyQuestion", UtilMisc.toMap("question", fieldName));
+                String surveyQuestionId = delegator.getNextSeqId("SurveyQuestion");
+                surveyQuestion.set("surveyQuestionId", surveyQuestionId);
+                surveyQuestion.set("description", fieldName);
 
-				if (type == AcroFields.FIELD_TYPE_TEXT) {
-					
-					surveyQuestion.set("surveyQuestionTypeId", "TEXT_SHORT");
-					
-				} else if (type == AcroFields.FIELD_TYPE_RADIOBUTTON) {
-					
-					surveyQuestion.set("surveyQuestionTypeId", "OPTION");
-					
-				} else {
-				}
-				
-				delegator.create(surveyQuestion);
+                if (type == AcroFields.FIELD_TYPE_TEXT) {
+                    surveyQuestion.set("surveyQuestionTypeId", "TEXT_SHORT");
+                } else if (type == AcroFields.FIELD_TYPE_RADIOBUTTON) {
+                    surveyQuestion.set("surveyQuestionTypeId", "OPTION");
+                } else {
+                    Debug.logWarning("", module);
+                }
+                
+                delegator.create(surveyQuestion);
 
-				GenericValue surveyQuestionAppl = delegator.makeValue("SurveyQuestionAppl", UtilMisc.toMap("surveyId", surveyId, "surveyQuestionId", surveyQuestionId));
-				surveyQuestionAppl.set("fromDate", UtilDateTime.nowTimestamp());
-				delegator.create(surveyQuestionAppl);
-				
-			}			
-			s.close();
+                GenericValue surveyQuestionAppl = delegator.makeValue("SurveyQuestionAppl", UtilMisc.toMap("surveyId", surveyId, "surveyQuestionId", surveyQuestionId));
+                surveyQuestionAppl.set("fromDate", nowTimestamp);
+                surveyQuestionAppl.create();
+            }            
+            pdfStamper.close();
             if (UtilValidate.isNotEmpty(contentId)) {
                 survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
                 survey.set("acroFormContentId", contentId);
@@ -182,13 +151,13 @@ public class PdfSurveyServices {
      */
     public static Map buildSurveyResponseFromPdf(DispatchContext dctx, Map context) {
 
-    	String surveyResponseId = null;
-    	try {
-			
-        	GenericDelegator delegator = dctx.getDelegator();
-        	String partyId = (String)context.get("partyId");
+        String surveyResponseId = null;
+        try {
+            
+            GenericDelegator delegator = dctx.getDelegator();
+            String partyId = (String)context.get("partyId");
             String surveyId = (String)context.get("surveyId");
-            String contentId = (String)context.get("contentId");
+            //String contentId = (String)context.get("contentId");
             surveyResponseId = (String)context.get("surveyResponseId");
             if (UtilValidate.isNotEmpty(surveyResponseId)) {
                 GenericValue surveyResponse = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
@@ -203,41 +172,39 @@ public class PdfSurveyServices {
                 surveyResponse.create();
             }
             
-        	ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             ByteWrapper byteWrapper = getInputByteWrapper(context, delegator);
             PdfReader r = new PdfReader(byteWrapper.getBytes());
-			PdfStamper s = new PdfStamper(r,os);
-			AcroFields fs = s.getAcroFields();
-			HashMap hm = fs.getFields();
-			
-			
-			s.setFormFlattening(true);
-			for (Iterator i = hm.keySet().iterator();i.hasNext();)
-			{
-				String fieldName = (String)i.next();
-				//AcroFields.Item item = fs.getFieldItem(fieldName);
-				//int type = fs.getFieldType(fieldName);
-				String value = fs.getField(fieldName);
-				
-				List questions = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId, "description", fieldName));
-				if (questions.size() == 0 ) {
-					Debug.logInfo("No question found for surveyId:" + surveyId + " and description:" + fieldName, module);
-					continue;
-				}
-				
-				GenericValue surveyQuestionAndAppl = (GenericValue)questions.get(0);
-				String surveyQuestionId = (String)surveyQuestionAndAppl.get("surveyQuestionId");
-				String surveyQuestionTypeId = (String)surveyQuestionAndAppl.get("surveyQuestionTypeId");
-				GenericValue surveyResponseAnswer = delegator.makeValue("SurveyResponseAnswer", UtilMisc.toMap("surveyResponseId", surveyResponseId, "surveyQuestionId", surveyQuestionId));
-				if (surveyQuestionTypeId ==null || surveyQuestionTypeId.equals("TEXT_SHORT")) {
-					surveyResponseAnswer.set("textResponse", value);
-				}
+            PdfStamper s = new PdfStamper(r,os);
+            AcroFields fs = s.getAcroFields();
+            HashMap hm = fs.getFields();
+            
+            
+            s.setFormFlattening(true);
+            Iterator i = hm.keySet().iterator();
+            while (i.hasNext()) {
+                String fieldName = (String)i.next();
+                //AcroFields.Item item = fs.getFieldItem(fieldName);
+                //int type = fs.getFieldType(fieldName);
+                String value = fs.getField(fieldName);
+                
+                List questions = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId, "description", fieldName));
+                if (questions.size() == 0 ) {
+                    Debug.logInfo("No question found for surveyId:" + surveyId + " and description:" + fieldName, module);
+                    continue;
+                }
+                
+                GenericValue surveyQuestionAndAppl = (GenericValue)questions.get(0);
+                String surveyQuestionId = (String)surveyQuestionAndAppl.get("surveyQuestionId");
+                String surveyQuestionTypeId = (String)surveyQuestionAndAppl.get("surveyQuestionTypeId");
+                GenericValue surveyResponseAnswer = delegator.makeValue("SurveyResponseAnswer", UtilMisc.toMap("surveyResponseId", surveyResponseId, "surveyQuestionId", surveyQuestionId));
+                if (surveyQuestionTypeId ==null || surveyQuestionTypeId.equals("TEXT_SHORT")) {
+                    surveyResponseAnswer.set("textResponse", value);
+                }
 
-				delegator.create(surveyResponseAnswer);
-
-				
-			}			
-			s.close();
+                delegator.create(surveyResponseAnswer);
+            }            
+            s.close();
         } catch (GenericEntityException e) {
             String errMsg = "Error generating PDF: " + e.toString();
             Debug.logError(e, errMsg, module);
@@ -275,29 +242,29 @@ public class PdfSurveyServices {
      */
     public static Map getAcroFieldsFromPdf(DispatchContext dctx, Map context) {
         
-		Map acroFieldMap = new HashMap();
-		try {
-	    	ByteArrayOutputStream os = new ByteArrayOutputStream();
+        Map acroFieldMap = new HashMap();
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             GenericDelegator delegator = dctx.getDelegator();
             ByteWrapper byteWrapper = getInputByteWrapper(context, delegator);
             PdfReader r = new PdfReader(byteWrapper.getBytes());
-			PdfStamper s = new PdfStamper(r,os);
-			AcroFields fs = s.getAcroFields();
-			HashMap map = fs.getFields();
-			
-			s.setFormFlattening(true);
-			
-			// Debug code to get the values for setting TDP
-	//		String[] sa = fs.getAppearanceStates("TDP");
-	//		for (int i=0;i<sa.length;i++)
-	//			Debug.log("Appearance="+sa[i]);
-			
-			Iterator iter = map.keySet().iterator();
-			while (iter.hasNext()) {
-				String fieldName=(String)iter.next();
-				String parmValue = fs.getField(fieldName);
-				acroFieldMap.put(fieldName, parmValue);
-			}			
+            PdfStamper s = new PdfStamper(r,os);
+            AcroFields fs = s.getAcroFields();
+            HashMap map = fs.getFields();
+            
+            s.setFormFlattening(true);
+            
+            // Debug code to get the values for setting TDP
+    //        String[] sa = fs.getAppearanceStates("TDP");
+    //        for (int i=0;i<sa.length;i++)
+    //            Debug.log("Appearance="+sa[i]);
+            
+            Iterator iter = map.keySet().iterator();
+            while (iter.hasNext()) {
+                String fieldName=(String)iter.next();
+                String parmValue = fs.getField(fieldName);
+                acroFieldMap.put(fieldName, parmValue);
+            }            
                  
         } catch(DocumentException e) {
             System.err.println(e.getMessage());
@@ -310,10 +277,10 @@ public class PdfSurveyServices {
             ServiceUtil.returnError(ioe.getMessage());
         }
         
-	Map results = ServiceUtil.returnSuccess();
-	results.put("acroFieldMap", acroFieldMap);
-	return results;
-	}
+    Map results = ServiceUtil.returnSuccess();
+    results.put("acroFieldMap", acroFieldMap);
+    return results;
+    }
     
     /**
      */
@@ -382,9 +349,8 @@ public class PdfSurveyServices {
     /**
      */
     public static Map buildPdfFromSurveyResponse(DispatchContext dctx, Map context) {
-        
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
         Map results = ServiceUtil.returnSuccess();
         String surveyResponseId = (String)context.get("surveyResponseId");
         String contentId = (String)context.get("contentId");
@@ -451,7 +417,7 @@ public class PdfSurveyServices {
         }
         
             
-    return results;
+        return results;
     }
     
     /**
