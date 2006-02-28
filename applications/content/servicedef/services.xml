@@ -984,7 +984,7 @@
   </service>
 
     <service name="updateOrRemove" engine="java"
-            location="org.ofbiz.content.ContentManagementServices" invoke="updateOrRemove" auth="true" validate="false">
+        location="org.ofbiz.content.ContentManagementServices" invoke="updateOrRemove" auth="true" validate="false">
         <description>Update or remove a child entity based on value of "action"</description>
         <attribute name="entityName" type="String" mode="IN" optional="false"/>
         <attribute name="action" type="String" mode="IN" optional="true"/>
@@ -999,33 +999,30 @@
         <attribute name="fieldValue0" type="String" mode="IN" optional="true"/>
     </service>
 
-  <service name="indexTree" auth="true" engine="java" validate="true"
-        transaction-timout="72000" 
+    <service name="indexTree" auth="true" engine="java" validate="true" transaction-timout="72000" 
         location="org.ofbiz.content.search.SearchServices" invoke="indexTree">
-    <description>Index content under publish point</description>
-    <attribute mode="IN" name="contentId" optional="false" type="String"/>
-    <attribute mode="OUT" name="badIndexList" optional="true" type="List"/>
-    <attribute mode="OUT" name="goodIndexCount" optional="true" type="Integer"/>
-  </service>
-  <service name="resequence" auth="true" engine="java" validate="true"
-        transaction-timout="72000" 
+        <description>Index content under publish point</description>
+        <attribute mode="IN" name="contentId" optional="false" type="String"/>
+        <attribute mode="OUT" name="badIndexList" optional="true" type="List"/>
+        <attribute mode="OUT" name="goodIndexCount" optional="true" type="Integer"/>
+    </service>
+    <service name="resequence" auth="true" engine="java" validate="true" transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="resequence">
-    <description>Reorder sequence numbers in ContentAssoc entities for a given parent id</description>
-    <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
-    <attribute mode="IN" name="seqInc" optional="true" type="Integer"/>
-    <attribute mode="IN" name="typeList" optional="true" type="List"/>
-    <attribute mode="IN" name="contentId" optional="true" type="String"/>
-    <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
-    <attribute mode="IN" name="dir" optional="true" type="String"/>
-  </service>
-  <service auth="true" engine="java" name="changeLeafToNode" validate="true"
-        transaction-timout="72000" 
+        <description>Reorder sequence numbers in ContentAssoc entities for a given parent id</description>
+        <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
+        <attribute mode="IN" name="seqInc" optional="true" type="Integer"/>
+        <attribute mode="IN" name="typeList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="dir" optional="true" type="String"/>
+    </service>
+    <service name="changeLeafToNode" validate="true" auth="true" engine="java" transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="changeLeafToNode">
-    <description>Moves dataResource to separate content associated with current content so that node can have only children, no content of its own</description>
-    <attribute mode="IN" name="contentId" optional="false" type="String"/>
-    <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
-  </service>
-
+        <description>Moves dataResource to separate content associated with current content so that node can have only children, no content of its own</description>
+        <attribute mode="IN" name="contentId" optional="false" type="String"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+    </service>
+    
   <service name="updatePageType" auth="true" engine="java" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="updatePageType">

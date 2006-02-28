@@ -105,7 +105,6 @@ under the License.
                             <widgets>
                                 <container><label style="head1">${uiLabelMap.PageTitleCreateSurvey}</label></container>
                                 <include-form name="EditSurvey" location="component://content/webapp/content/survey/SurveyForms.xml"/>
-               					<include-form name="BuildSurveyFromPdf" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <container><label style="head1">${uiLabelMap.PageTitleEditSurvey}, ${uiLabelMap.SurveySurveyId}: ${surveyId}</label></container>
