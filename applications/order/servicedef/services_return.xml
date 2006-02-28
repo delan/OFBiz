@@ -101,6 +101,12 @@
         <description>Remove a ReturnItem and related adjustments</description>
         <auto-attributes entity-name="ReturnItem" include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="createReturnItemResponse" engine="simple"
+            location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnItemResponse">
+        <description>Creates a ReturnItemResponse record. If a returnItemResponseId is passed, that ID will be used. No security, no special checking.</description>
+        <attribute name="returnItemResponseId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ReturnItemResponse" include="nonpk" mode="IN" optional="true"/>
+    </service>
     
     <!-- services for return adjustments -->
     <service name="returnAdjustmentInterface" engine="interface" location="" invoke="">

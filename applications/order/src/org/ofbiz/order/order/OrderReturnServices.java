@@ -558,9 +558,11 @@ public class OrderReturnServices {
             // now; to be used for all timestamps
             Timestamp now = UtilDateTime.nowTimestamp();
 
-            // start the response creation
+            // generate the new response ID here, because other entities need to refer to it
             String itemResponseId = delegator.getNextSeqId("ReturnItemResponse").toString();
-            GenericValue itemResponse = delegator.makeValue("ReturnItemResponse", UtilMisc.toMap("returnItemResponseId", itemResponseId));
+
+            // holds ReturnItemResponse non-pk fields for calling the createItemResponse service
+            Map itemResponse = UtilMisc.toMap("returnItemResponseId", itemResponseId);
 
             // need a total for the credit
             List toBeStored = new ArrayList();
@@ -625,13 +627,17 @@ public class OrderReturnServices {
             }
 
             // fill in the response fields
-            itemResponse.set("paymentId", paymentId);
-            itemResponse.set("billingAccountId", billingAccountId);
-            itemResponse.set("responseAmount", creditAmount);
-            itemResponse.set("responseDate", now);
+            itemResponse.put("paymentId", paymentId);
+            itemResponse.put("billingAccountId", billingAccountId);
+            itemResponse.put("responseAmount", creditAmount);
+            itemResponse.put("responseDate", now);
+            itemResponse.put("userLogin", userLogin);
             try {
-                delegator.create(itemResponse);
-            } catch (GenericEntityException e) {
+                Map serviceResults = dispatcher.runSync("createReturnItemResponse", itemResponse);
+                if (ServiceUtil.isError(serviceResults)) {
+                    return ServiceUtil.returnError("Could not create ReturnItemResponse record", null, null, serviceResults);
+                }
+            } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem creating ReturnItemResponse record", module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingReturnItemResponseRecord", locale));
             }
@@ -796,27 +802,26 @@ public class OrderReturnServices {
                     // now; for all timestamps
                     Timestamp now = UtilDateTime.nowTimestamp();
 
-                    // create a new response entry
+                    // fill out the data for the new ReturnItemResponse
                     String responseId = delegator.getNextSeqId("ReturnItemResponse");
-                    GenericValue response = delegator.makeValue("ReturnItemResponse", UtilMisc.toMap("returnItemResponseId", responseId));
-                    response.set("orderPaymentPreferenceId", orderPayPref.getString("orderPaymentPreferenceId"));
-                    response.set("responseAmount", thisRefundAmount);
-                    response.set("responseDate", now);
+                    Map response = UtilMisc.toMap("returnItemResponseId", responseId);
+                    response.put("orderPaymentPreferenceId", orderPayPref.getString("orderPaymentPreferenceId"));
+                    response.put("responseAmount", thisRefundAmount);
+                    response.put("responseDate", now);
+                    response.put("userLogin", userLogin);
                     if (paymentId != null) {
                         // a null payment ID means no electronic refund was available; manual refund needed
-                        response.set("paymentId", paymentId);
+                        response.put("paymentId", paymentId);
                     }
-
-                    //Debug.log("About to create return response", module);
-
                     try {
-                        delegator.create(response);
-                    } catch (GenericEntityException e) {
+                        Map serviceResults = dispatcher.runSync("createReturnItemResponse", response);
+                        if (ServiceUtil.isError(serviceResults)) {
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemsCreatingReturnItemResponseEntity", locale), null, null, serviceResults);
+                        }
+                    } catch (GenericServiceException e) {
                         Debug.logError(e, "Problems creating new ReturnItemResponse entity", module);
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemsCreatingReturnItemResponseEntity", locale));
                     }
-
-                    //Debug.log("Return response created", module);
 
                     // set the response on each item
                     Iterator itemsIter = itemList.iterator();
