@@ -27,6 +27,9 @@ under the License.
         <field name="isAnonymous"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
         <field name="allowMultiple"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
         <field name="allowUpdate"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="acroFormContentId" title="AcroForm (PDF) Content ID"> 	 
+            <lookup target-form-name="LookupContent"/>
+        </field>
         
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -59,6 +62,11 @@ under the License.
         <field name="isAnonymous"><drop-down no-current-selected-key="N" allow-empty="false"><option key="Y"/><option key="N"/></drop-down></field>
         <field name="allowMultiple"><drop-down no-current-selected-key="N" allow-empty="false"><option key="Y"/><option key="N"/></drop-down></field>
         <field name="allowUpdate"><drop-down no-current-selected-key="N" allow-empty="false"><option key="Y"/><option key="N"/></drop-down></field>
+
+        <field name="acroFormContentId" title="AcroForm (PDF) Content ID" use-when="survey!=null"> 	 
+            <lookup target-form-name="LookupContent"/>
+        </field>
+        <field name="acroFormContentId" use-when="survey==null"><ignored/></field>
         
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -68,12 +76,10 @@ under the License.
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         
         <field name="surveyId" map-name="survey"><hidden/></field>
-
-        <field name="contentId" map-name="empty" title="Content ID" > 	 
-            <lookup target-form-name="LookupContent">
-            </lookup>
+        <field name="contentId" map-name="empty" title="PDF Content ID"> 	 
+            <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="submitButton" title="Build Survey from PDF" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Generate Questions from AcroForm PDF" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="BuildSurveyResponseFromPdf" type="single" 
@@ -84,9 +90,8 @@ under the License.
         <field name="surveyResponseId" map-name="surveyResponse"><hidden/></field>
         <field name="pdfFileNameIn" map-name="empty"><text/></field>
 
-        <field name="contentId" map-name="empty" title="Content ID" > 	 
-            <lookup target-form-name="LookupContent">
-            </lookup>
+        <field name="contentId" map-name="empty" title="PDF Content ID">
+            <lookup target-form-name="LookupContent"/>
         </field>
         <field name="submitButton" title="Build Survey Response from PDF" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
