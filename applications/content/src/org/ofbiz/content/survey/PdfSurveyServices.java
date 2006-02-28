@@ -40,6 +40,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.ByteWrapper;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -102,24 +103,25 @@ public class PdfSurveyServices {
                 AcroFields.Item item = acroFields.getFieldItem(fieldName);
                 int type = acroFields.getFieldType(fieldName);
                 String value = acroFields.getField(fieldName);
-                Debug.logInfo("item:" + item + " value:" +value, module);
+                Debug.logInfo("fieldName:" + fieldName + "; item: " + item + "; value: " + value, module);
+
                 GenericValue surveyQuestion = delegator.makeValue("SurveyQuestion", UtilMisc.toMap("question", fieldName));
                 String surveyQuestionId = delegator.getNextSeqId("SurveyQuestion");
                 surveyQuestion.set("surveyQuestionId", surveyQuestionId);
-                surveyQuestion.set("description", fieldName);
 
                 if (type == AcroFields.FIELD_TYPE_TEXT) {
                     surveyQuestion.set("surveyQuestionTypeId", "TEXT_SHORT");
                 } else if (type == AcroFields.FIELD_TYPE_RADIOBUTTON) {
                     surveyQuestion.set("surveyQuestionTypeId", "OPTION");
                 } else {
-                    Debug.logWarning("", module);
+                    Debug.logWarning("Building Survey from PDF, fieldName=[" + fieldName + "]: don't know how to handle field type: " + type, module);
                 }
-                
-                delegator.create(surveyQuestion);
 
                 GenericValue surveyQuestionAppl = delegator.makeValue("SurveyQuestionAppl", UtilMisc.toMap("surveyId", surveyId, "surveyQuestionId", surveyQuestionId));
                 surveyQuestionAppl.set("fromDate", nowTimestamp);
+                surveyQuestionAppl.set("externalFieldRef", fieldName);
+
+                surveyQuestion.create();
                 surveyQuestionAppl.create();
             }            
             pdfStamper.close();
@@ -188,9 +190,9 @@ public class PdfSurveyServices {
                 //int type = fs.getFieldType(fieldName);
                 String value = fs.getField(fieldName);
                 
-                List questions = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId, "description", fieldName));
+                List questions = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId, "externalFieldRef", fieldName));
                 if (questions.size() == 0 ) {
-                    Debug.logInfo("No question found for surveyId:" + surveyId + " and description:" + fieldName, module);
+                    Debug.logInfo("No question found for surveyId:" + surveyId + " and externalFieldRef:" + fieldName, module);
                     continue;
                 }
                 
@@ -222,21 +224,6 @@ public class PdfSurveyServices {
         results.put("surveyResponseId", surveyResponseId);
         return results;
     }
-    
-    /*
-     * $Id: ListFields.java,v 1.3 2005/05/09 11:52:44 blowagie Exp $
-     * $Name:  $
-     *
-     * This code is part of the 'iText Tutorial'.
-     * You can find the complete tutorial at the following address:
-     * http://itextdocs.lowagie.com/tutorial/
-     *
-     * This code is distributed in the hope that it will be useful,
-     * but WITHOUT ANY WARRANTY; without even the implied warranty of
-     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-     *
-     * itext-questions@lists.sourceforge.net
-     */
 
     /**
      */
@@ -355,6 +342,7 @@ public class PdfSurveyServices {
         String surveyResponseId = (String)context.get("surveyResponseId");
         String contentId = (String)context.get("contentId");
         String surveyId = null;
+
         Document document = new Document();
         try {
             if (UtilValidate.isNotEmpty(surveyResponseId)) {
@@ -380,19 +368,16 @@ public class PdfSurveyServices {
             Iterator iter = responses.iterator();
             while (iter.hasNext()) {
                 String value = null;
-                GenericValue surveyResponseAnswer = (GenericValue)iter.next();
-                String surveyQuestionId = (String)surveyResponseAnswer.get("surveyQuestionId");
+                GenericValue surveyResponseAnswer = (GenericValue) iter.next();
+                String surveyQuestionId = (String) surveyResponseAnswer.get("surveyQuestionId");
                 GenericValue surveyQuestion = delegator.findByPrimaryKey("SurveyQuestion", UtilMisc.toMap("surveyQuestionId", surveyQuestionId));
                 String questionType = surveyQuestion.getString("surveyQuestionTypeId");
-                String fieldName = surveyQuestion.getString("description");
+                // DEJ20060227 this isn't used, if needed in the future should get from SurveyQuestionAppl.externalFieldRef String fieldName = surveyQuestion.getString("description");
                 if ("OPTION".equals(questionType)) {
                     value = surveyResponseAnswer.getString("surveyOptionSeqId");
                 } else if ("BOOLEAN".equals(questionType)) {
                     value = surveyResponseAnswer.getString("booleanResponse");
-                } else if ("NUMBER_LONG".equals(questionType)
-                        || "NUMBER_CURRENCY".equals(questionType)
-                        || "NUMBER_FLOAT".equals(questionType)
-                        ) {
+                } else if ("NUMBER_LONG".equals(questionType) || "NUMBER_CURRENCY".equals(questionType) || "NUMBER_FLOAT".equals(questionType)) {
                     Double num = surveyResponseAnswer.getDouble("numericResponse");
                     if (num != null) {
                         value = num.toString();
@@ -416,14 +401,12 @@ public class PdfSurveyServices {
             ServiceUtil.returnError(e.getMessage());
         }
         
-            
         return results;
     }
     
     /**
      */
     public static Map setAcroFieldsFromSurveyResponse(DispatchContext dctx, Map context) {
-        
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map results = ServiceUtil.returnSuccess();
@@ -431,23 +414,33 @@ public class PdfSurveyServices {
         String surveyResponseId = (String)context.get("surveyResponseId");
     
         try {
+            String surveyId = null;
+            if (UtilValidate.isNotEmpty(surveyResponseId)) {
+                GenericValue surveyResponse = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+                if (surveyResponse != null) {
+                    surveyId = surveyResponse.getString("surveyId");
+                }
+            }
+
             List responses = delegator.findByAnd("SurveyResponseAnswer", UtilMisc.toMap("surveyResponseId", surveyResponseId));
             Iterator iter = responses.iterator();
             while (iter.hasNext()) {
                 String value = null;
-                GenericValue surveyResponseAnswer = (GenericValue)iter.next();
-                String surveyQuestionId = (String)surveyResponseAnswer.get("surveyQuestionId");
-                GenericValue surveyQuestion = delegator.findByPrimaryKey("SurveyQuestion", UtilMisc.toMap("surveyQuestionId", surveyQuestionId));
+                GenericValue surveyResponseAnswer = (GenericValue) iter.next();
+                String surveyQuestionId = (String) surveyResponseAnswer.get("surveyQuestionId");
+
+                GenericValue surveyQuestion = delegator.findByPrimaryKeyCache("SurveyQuestion", UtilMisc.toMap("surveyQuestionId", surveyQuestionId));
+                
+                List surveyQuestionApplList = EntityUtil.filterByDate(delegator.findByAndCache("SurveyQuestionAppl", UtilMisc.toMap("surveyId", surveyId, "surveyQuestionId", surveyQuestionId), UtilMisc.toList("-fromDate")), false);
+                GenericValue surveyQuestionAppl = EntityUtil.getFirst(surveyQuestionApplList);
+                
                 String questionType = surveyQuestion.getString("surveyQuestionTypeId");
-                String fieldName = surveyQuestion.getString("description");
+                String fieldName = surveyQuestionAppl.getString("externalFieldRef");
                 if ("OPTION".equals(questionType)) {
                     value = surveyResponseAnswer.getString("surveyOptionSeqId");
                 } else if ("BOOLEAN".equals(questionType)) {
                     value = surveyResponseAnswer.getString("booleanResponse");
-                } else if ("NUMBER_LONG".equals(questionType)
-                        || "NUMBER_CURRENCY".equals(questionType)
-                        || "NUMBER_FLOAT".equals(questionType)
-                        ) {
+                } else if ("NUMBER_LONG".equals(questionType) || "NUMBER_CURRENCY".equals(questionType) || "NUMBER_FLOAT".equals(questionType)) {
                     Double num = surveyResponseAnswer.getDouble("numericResponse");
                     if (num != null) {
                         value = num.toString();
