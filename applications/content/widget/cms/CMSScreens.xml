@@ -37,9 +37,7 @@
             <service service-name="urlEncodeArgs" result-map-name="result">
                 <field-map env-name="requestParameters" field-name="mapIn"/>
             </service>
-            <set field="CMSContentFindQueryString" from-field="result.outputString" to-scope="user"/>
             <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer" default-value="0"/>
-            <set field="CMSContentFindViewIndex" from-field="viewIndex" to-scope="user"/>
             <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             <set field="currentCMSMenuItemName" value="contentfind" to-scope="user"/>
 		</actions>
@@ -139,8 +137,6 @@
                 
 			    <script location="component://content/widget/cms/cmseditaddprep.bsh"/>
                 <set field="currentCMSMenuItemName" value="EditAddContent" to-scope="user"/>
-                <set field="CMSContentFindQueryString" from-field="CMSContentFindQueryString" from-scope="user"/>
-                <set field="CMSContentFindViewIndex" from-field="CMSContentFindViewIndex" from-scope="user"/>
                 <set field="enableEdit" value="true" />
 			</actions>
 	    	<widgets>
@@ -178,8 +174,6 @@
                 
 			    <script location="component://content/widget/cms/cmseditaddprep.bsh"/>
                 <set field="currentCMSMenuItemName" value="EditAddContent" to-scope="user"/>
-                <set field="CMSContentFindQueryString" from-field="CMSContentFindQueryString" from-scope="user"/>
-                <set field="CMSContentFindViewIndex" from-field="CMSContentFindViewIndex" from-scope="user"/>
 			</actions>
 	    	<widgets>
                        <decorator-screen name="commonCmsDecorator" location="${parameters.mainDecoratorLocation}">

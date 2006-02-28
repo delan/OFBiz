@@ -84,7 +84,6 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="uploadimage"/>
-                <set field="dataResourceId" from-field="dataResourceId" from-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator">
@@ -254,7 +253,6 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="editelectronictext"/>
-                <set field="dataResourceId" from-field="dataResourceId" from-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator">
@@ -273,7 +271,6 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="editdataresourceattribute"/>
-                <set field="dataResourceId" from-field="dataResourceId" from-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator">
@@ -293,7 +290,6 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="editdataresourcerole"/>
-                <set field="dataResourceId" from-field="dataResourceId" from-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator">
@@ -314,7 +310,6 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="editdataresourceproductfeatures"/>
-                <set field="dataResourceId" from-field="dataResourceId" from-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator">
@@ -335,7 +330,6 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="edithtmltext"/>
-                <set field="dataResourceId" from-field="dataResourceId" from-scope="user"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator">

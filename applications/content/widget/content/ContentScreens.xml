@@ -53,7 +53,7 @@
             <actions>
                 <set field="headerItem" value="Content"/>
                 <set field="currentContentMenuItemName" value="FindContent" to-scope="user"/>
-                <set field="currentContentMenuItemName" value="FindContent" to-scope="screen"/>
+                <set field="currentContentMenuItemName" value="FindContent" />
                 <set field="title" value="Content Find Page"/>
                 <set field="entityName" value="Content"/>
                 <set field="queryString" from-field="result.queryString"/>
@@ -83,9 +83,7 @@
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="EditContent" to-scope="user"/>
-                <set field="defaultContentId" from-field="contentId" from-scope="user"/>
-                <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
-                <set field="contentId" from-field="contentId" to-scope="user"/>
+                <set field="contentId" from-field="parameters.contentId"  />
                 <entity-one entity-name="Content" value-name="currentValue">
                     <field-map field-name="contentId" env-name="contentId"/>
                 </entity-one>
@@ -131,21 +129,14 @@
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="contentassoc" to-scope="user"/>
                 
-                <set field="defaultContentId" from-field="contentId" from-scope="user"/>
-                <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
-                <set field="contentId" from-field="contentId" to-scope="user"/>
+                <set field="contentId" from-field="parameters.contentId"  />
                 
-                <set field="defaultContentIdTo" from-field="contentIdTo" from-scope="user"/>
-                <set field="contentIdTo" from-field="parameters.contentIdTo" to-scope="screen" default-value="${defaultContentId}"/>
-                <set field="contentIdTo" from-field="contentIdTo" to-scope="user"/>
+                <set field="contentIdTo" from-field="parameters.contentIdTo"  />
                 
-                <set field="defaultContentAssocTypeId" from-field="contentAssocTypeId" from-scope="user"/>
-                <set field="contentAssocTypeId" from-field="parameters.contentAssocTypeId" to-scope="screen" default-value="${defaultContentAssocTypeId}"/>
+                <set field="contentAssocTypeId" from-field="parameters.contentAssocTypeId"  default-value="${defaultContentAssocTypeId}"/>
                 <set field="contentAssocTypeId" from-field="contentAssocTypeId" to-scope="user"/>
                 
-                <set field="defaultFromDate" from-field="fromDate" from-scope="user"/>
-                <set field="fromDate" from-field="parameters.fromDate" to-scope="screen" default-value="${defaultFromDate}"/>
-                <set field="fromDate" from-field="fromDate" to-scope="user"/>
+                <set field="fromDate" from-field="parameters.fromDate"  />
             </actions>
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
@@ -195,9 +186,7 @@
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="role" to-scope="user"/>
                 
-                <set field="defaultContentId" from-field="contentId" from-scope="user"/>
-                <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
-                <set field="contentId" from-field="contentId" to-scope="user"/>
+                <set field="contentId" from-field="parameters.contentId"  />
                 <set field="contentRoleTarget" value=""/>
             </actions>
             <widgets>
@@ -222,9 +211,7 @@
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="purpose" to-scope="user"/>
                 
-                <set field="defaultContentId" from-field="contentId" from-scope="user"/>
-                <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
-                <set field="contentId" from-field="contentId" to-scope="user"/>
+                <set field="contentId" from-field="parameters.contentId"  />
             </actions>
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
@@ -248,9 +235,7 @@
             <set field="titleProperty" value="PageTitleEditContent"/>
             <set field="currentContentMenuItemName" value="attribute" to-scope="user"/>
             
-            <set field="defaultContentId" from-field="contentId" from-scope="user"/>
-            <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
-            <set field="contentId" from-field="contentId" to-scope="user"/>
+            <set field="contentId" from-field="parameters.contentId"  />
         </actions>
         <widgets>
             <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
@@ -274,9 +259,7 @@
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="currentContentMenuItemName" value="metadata" to-scope="user"/>
-                <set field="defaultContentId" from-field="contentId" from-scope="user"/>
-                <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
-                <set field="contentId" from-field="contentId" to-scope="user"/>
+                <set field="contentId" from-field="parameters.contentId"  />
             </actions>
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">

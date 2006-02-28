@@ -417,13 +417,10 @@ public class OpenOfficeServices {
             Document document = new Document();
             document.setPageSize(PageSize.LETTER);    
             Rectangle rect = document.getPageSize();
-            float left = rect.left();
-            float height = rect.height();
             //PdfWriter writer = PdfWriter.getInstance(document, baos);
             PdfCopy writer = new PdfCopy(document, baos);
             document.open();
-            PdfContentByte cb = writer.getDirectContent();
-            Iterator iter = compDocParts.iterator();
+           Iterator iter = compDocParts.iterator();
             int pgCnt =0;
             while (iter.hasNext()) {
                 GenericValue contentAssocRevisionItemView = (GenericValue)iter.next();
@@ -435,22 +432,38 @@ public class OpenOfficeServices {
                 if(dataResource != null) {
                     inputMimeType = (String)dataResource.getString("mimeTypeId");
                 }
-                byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
                 byte [] inputByteArray = null;
                 PdfReader reader = null;
                 if (inputMimeType != null && inputMimeType.equals("application/pdf")) {
+                    byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
                     inputByteArray = byteWrapper.getBytes();
                     reader = new PdfReader(inputByteArray);
                 } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
+                    byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
                     inputByteArray = byteWrapper.getBytes();
                     String s = new String(inputByteArray);
                     Debug.logInfo("text/html string:" + s, module);
                     continue;
                 } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
-                    String surveyId = dataResource.getString("objectInfo");
-                    GenericValue survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
-                    if (survey != null) {
-                        String acroFormContentId = survey.getString("acroFormContentId");
+                    String surveyResponseId = dataResource.getString("objectInfo");
+                    String surveyId = null;
+                    String acroFormContentId = null;
+                    GenericValue surveyResponse = null;
+                    if (UtilValidate.isNotEmpty(surveyResponseId)) {
+                        surveyResponse = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+                        if (surveyResponse != null) {
+                            surveyId = surveyResponse.getString("surveyId");
+                        }
+                    }
+                    if (UtilValidate.isNotEmpty(surveyId) && UtilValidate.isEmpty(contentId)) {
+                        GenericValue survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
+                        if (survey != null) {
+                            acroFormContentId = survey.getString("acroFormContentId");
+                            if (UtilValidate.isNotEmpty(acroFormContentId)) {
+                            }
+                        }
+                    }
+                    if (surveyResponse != null) {
                         if (UtilValidate.isEmpty(acroFormContentId)) {
                             // Create AcroForm PDF
                             Map survey2PdfResults = dispatcher.runSync("buildPdfFromSurveyResponse", UtilMisc.toMap("surveyResponseId", surveyId));
@@ -459,10 +472,15 @@ public class OpenOfficeServices {
                             reader = new PdfReader(inputByteArray);
                         } else {
                             // Fill in acroForm
+                            Map survey2PdfResults = dispatcher.runSync("setAcroFieldsFromSurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+                            ByteWrapper outByteWrapper = (ByteWrapper)survey2PdfResults.get("outByteWrapper");
+                            inputByteArray = outByteWrapper.getBytes();
+                            reader = new PdfReader(inputByteArray);
                         }
                     }
                     continue;
                 } else {
+                    byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
                     OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
                     OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");
                     inputByteArray = oobaos.toByteArray();
@@ -500,6 +518,7 @@ public class OpenOfficeServices {
      */
     public static Map renderContentPdf(DispatchContext dctx, Map context) {
         
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         Map results = ServiceUtil.returnSuccess();
         String dataResourceId = null;
         ByteWrapper byteWrapper = null;
@@ -523,16 +542,19 @@ public class OpenOfficeServices {
             xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
             Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Document document = new Document(new Rectangle(60, 120));
-            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            Document document = new Document();
+            document.setPageSize(PageSize.LETTER);    
+            Rectangle rect = document.getPageSize();
+            //PdfWriter writer = PdfWriter.getInstance(document, baos);
+            PdfCopy writer = new PdfCopy(document, baos);
             document.open();
-            PdfContentByte cb = writer.getDirectContent();
 
-            GenericValue dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+            GenericValue dataResource = null;
             if (UtilValidate.isEmpty(contentRevisionSeqId)) {
                 GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
                 dataResourceId = content.getString("dataResourceId");
                 Debug.logInfo("SCVH(0b)- dataResourceId:" + dataResourceId, module);
+                dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
              } else {
                 GenericValue contentRevisionItem = delegator.findByPrimaryKeyCache("ContentRevisionItem", UtilMisc.toMap("contentId", contentId, "itemContentId", contentId, "contentRevisionSeqId", contentRevisionSeqId));
                 if (contentRevisionItem == null) {
@@ -544,22 +566,73 @@ public class OpenOfficeServices {
                         + ", contentRevisionSeqId=" + contentRevisionSeqId + ", itemContentId=" + contentId, module);
                 dataResourceId = contentRevisionItem.getString("newDataResourceId");
                 Debug.logInfo("SCVH(3)- dataResourceId:" + dataResourceId, module);
+                dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
             }
             String inputMimeType = null;
             if(dataResource != null) {
                 inputMimeType = (String)dataResource.getString("mimeTypeId");
             }
-            byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, dataResourceId, https, webSiteId, locale, rootDir);
-            OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
-            OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");
-            PdfReader reader = new PdfReader(oobaos.toByteArray());
+            byte [] inputByteArray = null;
+            PdfReader reader = null;
+            if (inputMimeType != null && inputMimeType.equals("application/pdf")) {
+                byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, dataResourceId, https, webSiteId, locale, rootDir);
+                inputByteArray = byteWrapper.getBytes();
+                reader = new PdfReader(inputByteArray);
+            } else if (inputMimeType != null && inputMimeType.equals("text/html")) {
+                byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, dataResourceId, https, webSiteId, locale, rootDir);
+                inputByteArray = byteWrapper.getBytes();
+                String s = new String(inputByteArray);
+                Debug.logInfo("text/html string:" + s, module);
+            } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
+                String surveyResponseId = dataResource.getString("objectInfo");
+                String surveyId = null;
+                String acroFormContentId = null;
+                GenericValue surveyResponse = null;
+                if (UtilValidate.isNotEmpty(surveyResponseId)) {
+                    surveyResponse = delegator.findByPrimaryKey("SurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+                    if (surveyResponse != null) {
+                        surveyId = surveyResponse.getString("surveyId");
+                    }
+                }
+                if (UtilValidate.isNotEmpty(surveyId) && UtilValidate.isEmpty(contentId)) {
+                    GenericValue survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
+                    if (survey != null) {
+                        acroFormContentId = survey.getString("acroFormContentId");
+                        if (UtilValidate.isNotEmpty(acroFormContentId)) {
+                        }
+                    }
+                }
+            
+                if (surveyResponse != null) {
+                    if (UtilValidate.isEmpty(acroFormContentId)) {
+                        // Create AcroForm PDF
+                        Map survey2PdfResults = dispatcher.runSync("buildPdfFromSurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+                        ByteWrapper outByteWrapper = (ByteWrapper)survey2PdfResults.get("outByteWrapper");
+                        inputByteArray = outByteWrapper.getBytes();
+                        reader = new PdfReader(inputByteArray);
+                    } else {
+                        // Fill in acroForm
+                        Map survey2PdfResults = dispatcher.runSync("setAcroFieldsFromSurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
+                        ByteWrapper outByteWrapper = (ByteWrapper)survey2PdfResults.get("outByteWrapper");
+                        inputByteArray = outByteWrapper.getBytes();
+                        reader = new PdfReader(inputByteArray);
+                    }
+                }
+            } else {
+                byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, dataResourceId, https, webSiteId, locale, rootDir);
+                OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
+                OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");
+                inputByteArray = oobaos.toByteArray();
+                oobais.close();
+                oobaos.close();
+                reader = new PdfReader(inputByteArray);
+            }
             int n = reader.getNumberOfPages();
             for (int i=0; i < n; i++) {
-                PdfImportedPage pg = writer.getImportedPage(reader, i);
-                cb.addTemplate(pg, .5f, 0, 0, .5f, 60, 120);
+                PdfImportedPage pg = writer.getImportedPage(reader, i + 1);
+                //cb.addTemplate(pg, left, height * pgCnt);
+                writer.addPage(pg);
             }
-            oobais.close();
-            oobaos.close();
             
             ByteWrapper outByteWrapper = new ByteWrapper(baos.toByteArray());
             results.put("pdfByteWrapper", outByteWrapper);
