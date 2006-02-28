@@ -20,23 +20,13 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
         
-    <!--  dummy values -->
-    <form name="dummy" type="single" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <!-- This should be reviewed and removed from everywhere except where _necessary_. It is causing problems with passing data around that shouldn't be passed around, like in the add CDI Part form... -->
-        <field name="rootTemplateContentId" map-name="dummy"><hidden/></field>
-        <field name="rootInstanceContentId" map-name="dummy"><hidden/></field>
-        <field name="rootTemplateRevSeqId" map-name="dummy"><hidden/></field>
-        <field name="rootInstanceRevSeqId" map-name="dummy"><hidden/></field>
-        <field name="contentId" map-name="dummy"><hidden/></field>
-        <field name="contentRevisionSeqId" map-name="dummy"><hidden/></field>
-    </form>
 
     <!-- CompDoc forms -->
     <form name="FindCompDoc" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        default-entity-name="Content" extends="dummy" target="FindCompDoc" title=" " type="single"> 
-        <field name="contentName" title="Name"><text-find/></field>
+        default-entity-name="Content"  target="FindCompDoc" title=" " type="single"> 
         <field name="contentId" title="Content Id" map-name="empty"><text-find/></field>
+        <field name="contentName" title="Name"><text-find/></field>
         <field name="contentTypeId" title="Content Type Id">
             <drop-down no-current-selected-key="COMPDOC_TEMPLATE">
                 <option key="COMPDOC_TEMPLATE" description="Root Template"/>             
@@ -62,16 +52,22 @@ under the License.
         <field name="contentTypeId" title="Content Type Id"><display/></field>
         <field name="contentName" title="Name"><display/></field>
         <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)" widget-style="buttontext">
-           <hyperlink also-hidden="false" description="Edit" target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
+           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
         <field name="edit" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)" widget-style="buttontext">
-           <hyperlink also-hidden="false" description="Edit" target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
+           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
+        </field>
+        <field name="edit" title="" use-when="contentTypeId.equals(&quot;TEMPLATE&quot;)" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="Edit" target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
+        </field>
+        <field name="edit" title="" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="Edit" target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
         <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?rootTemplateContentId=${contentId}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?contentId=${contentId}"/> 
         </field>
         <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootInstanceContentId=${contentId}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?contentId=${contentId}"/> 
         </field>
     </form>
     
@@ -85,10 +81,10 @@ under the License.
         <field name="caFromDate" title="From Date"><display/></field>
         <field name="caThruDate"><hidden/></field>
         <field name="editTemplate" title="">
-           <hyperlink also-hidden="false" description="Edit" target="EditCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
+           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}"/> 
         </field>
         <field name="templateTree" title="">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootInstanceContentId=${contentId}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?contentId=${contentId}"/> 
         </field>
     </form>
     
@@ -120,22 +116,22 @@ under the License.
         <field name="committedByPartyId"><display/></field>
         <field name="comments"><display/></field>
         <field name="editLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevision?&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
         <field name="itemLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Item]" target="ListContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+            <hyperlink also-hidden="false" description="[Items]" target="ListContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
         <field name="create" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
         <field name="tree" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Tree]" target="ViewCompDocTemplateTree?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${contentId}&amp;rootTemplateRevSeqId=${contentRevisionSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+            <hyperlink also-hidden="false" description="[Tree]" target="ViewCompDocTemplateTree?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
     </form>
     
     <!-- ContentRevisionItem forms -->
     <form name="EditContentRevisionItem" default-map-name="contentRevisionItem" target="updateContentRevisionItem" title="" type="single"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <alt-target target="createContentRevisionItem" use-when="contentRevisionItem==null"/>
         <auto-fields-entity entity-name="ContentRevisionItem"/>
@@ -149,7 +145,7 @@ under the License.
     </form>
 
     <form name="ListContentRevisionItem" default-title-style="tableheadtext" 
-        list-name="contentRevisionItemList"  extends="dummy"
+        list-name="contentRevisionItemList"  
         default-tooltip-style="tabletext" default-widget-style="tabletext" title="" type="list">
         <actions>
         </actions>
@@ -159,20 +155,20 @@ under the License.
         <field name="oldDataResourceId"><display/></field>
         <field name="newDataResourceId"><display/></field>
         <field name="editLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}"/>
         </field>
         <field name="create" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
     </form>
 
     <!-- ContentApproval forms -->
     <form name="EditContentApproval" default-map-name="contentApproval" target="updateContentApproval" title="" type="single"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="contentApprovalId" title="" widget-style="tabletext"><display/></field>
         <field name="contentId" title="" widget-style="inputBox"><hidden/></field>
-        <field name="contentRevisionSeqId" title="" widget-style="inputBox"></field>
+        <field name="contentRevisionSeqId" title="" widget-style="inputBox"><text></text></field>
         <field name="partyId" title="" widget-style="inputBox">
             <lookup target-form-name="LookupPartyName"/>
         </field>
@@ -200,7 +196,7 @@ under the License.
     </form>
 
     <form name="AddContentApproval" default-map-name="contentApproval" target="createContentApproval" title="" type="single"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="contentId" title="" widget-style="inputBox"><hidden/></field>
         <field name="contentRevisionSeqId" map-name="empty" title="" widget-style="inputBox"><text/></field>
@@ -223,7 +219,7 @@ under the License.
     </form>
 
     <form name="ListContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext"
-                target="updateContentApproval"  extends="dummy" 
+                target="updateContentApproval"   
                list-name="contentApprovalList" default-widget-style="tabletext" title="" type="list">
         <field name="contentApprovalId" widget-style="tabletext"><display/></field>
         <field name="contentId"><hidden/></field>
@@ -232,7 +228,7 @@ under the License.
         <field name="roleTypeId">
             <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
         </field>
-        <field name="approvalStatusId" use-when="&quot;COMPDOC_INSTANCE&quot;.equals(thisContentTypeId)">
+        <field name="approvalStatusId" use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
@@ -244,13 +240,13 @@ under the License.
         <field name="sequenceNum"><display/></field>
         <field name="comments"><display/></field>
         <field name="Edit" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(thisContentTypeId)"><submit/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><submit/></field>
     </form>
 
     <form name="ListWaitingContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext"
-                target="updateWaitingContentApproval"  extends="dummy" 
+                target="updateWaitingContentApproval"   
                list-name="contentApprovalList" default-widget-style="tabletext" title="" type="list">
         <field name="contentApprovalId" widget-style="tabletext"><display/></field>
         <field name="contentId"><hidden/></field>
@@ -271,14 +267,14 @@ under the License.
         <field name="sequenceNum"><display/></field>
         <field name="comments"><display/></field>
         <field name="Edit" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit/></field>
     </form>
 
 
     <form name="AddRootCompDocInstance" default-map-name="" title="" type="single" target="genCompDocInstance"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentName"><text/></field>
@@ -288,7 +284,7 @@ under the License.
     </form>
 
     <form name="EditRootCompDocInstance" default-map-name="content" title="" type="single" target="updateRootCompDocTemplate"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentId" widget-style="tabletext"><display/></field>
@@ -299,7 +295,7 @@ under the License.
     </form>
     
     <form name="AddRootCompDocTemplate" default-map-name="" title="" type="single" target="createRootCompDocTemplate"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <!-- Why is this here? <field name="contentId"><text/></field> -->
@@ -311,7 +307,7 @@ under the License.
     </form>
 
     <form name="EditRootCompDocTemplate" default-map-name="content" title="" type="single" target="updateRootCompDocTemplate"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentId" widget-style="tabletext"><display/></field>
@@ -321,30 +317,32 @@ under the License.
     </form>
 
     <form name="AddChildCompDoc" default-map-name="" title="" type="single" target="${childCompDocTarget}"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentId"><ignored/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId"><hidden/></field>
         <field name="instanceOfContentId" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)" title="Instance of Content" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
-        <field name="contentIdTo" widget-style="tabletext" title="Parent Content ID"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
+        <field name="caContentIdTo" map-name="parameters" widget-style="tabletext" title="Parent Content ID">
+			<display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/>
+		</field>
         <field name="contentAssocTypeId" widget-style="tabletext"><display-entity entity-name="ContentAssocType"/></field>
         <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="thruDate"><date-time/></field>
         <field name="sequenceNum"><text/></field>
         
-        <field name="mimeTypeId" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; &quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
+        <field name="mimeTypeId" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; &quot;SURVEY&quot;.equals(templateDataResourceTypeId)">
             <hidden value="application/vnd.ofbiz.survey.response"/>
         </field>
-        <field name="displayMimeTypeId" map-name="empty" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; &quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
+        <field name="displayMimeTypeId" map-name="empty" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; &quot;SURVEY&quot;.equals(templateDataResourceTypeId)">
             <display description="Survey Response"/>
         </field>
-        <field name="mimeTypeId" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; !&quot;SURVEY&quot;.equals(instanceOfDataResourceTypeId)">
+        <field name="mimeTypeId" title="Document Type" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; !&quot;SURVEY&quot;.equals(templateDataResourceTypeId)">
             <display-entity entity-name="MimeType" description="${description}"/>
         </field>
         <field name="mimeTypeId" title="Document Type" use-when="&quot;TEMPLATE&quot;.equals(contentTypeId)">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
                 <option key="application/vnd.ofbiz.survey" description="Survey"/>
@@ -361,13 +359,13 @@ under the License.
     </form>
 
     <form name="EditChildCompDoc" default-map-name="contentAssoc" title="" type="single" target="${childCompDocTarget}"
-        extends="dummy"
+        
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentId" widget-style="tabletext"><display/></field>
-        <field name="contentName" map-name="content"><text/></field>
-        <field name="contentTypeId" map-name="content"><hidden/></field>
-        <field name="instanceOfContentId" map-name="content" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)" title="Instance of Content" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
+        <field name="contentName" map-name="itemContent"><text/></field>
+        <field name="contentTypeId" map-name="itemContent"><hidden/></field>
+        <field name="instanceOfContentId" map-name="itemContent" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)" title="Instance of Content" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentIdTo" widget-style="tabletext" title="Parent Content ID"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentAssocTypeId" widget-style="tabletext"><display-entity entity-name="ContentAssocType" also-hidden="false"/></field>
         <field name="fromDate" title="From Date" widget-style="tabletext"><display/></field>
@@ -376,7 +374,7 @@ under the License.
         
         <field name="mimeTypeId" map-name="dataResource" title="Document Type" widget-style="tabletext"
                 use-when="contentTypeId.equals(&quot;TEMPLATE&quot;)">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
                 <option key="application/vnd.ofbiz.survey" description="Survey"/>
@@ -450,14 +448,13 @@ under the License.
     </form>
     
     <form name="UploadCompDocContent" type="upload" default-title-style="tableheadtext" 
-        extends="dummy" target="uploadCompDocContent"
+         target="uploadCompDocContent"
         default-tooltip-style="tabletext" default-widget-style="tabletext">
-        <field name="rootContentId" map-name="dummy"><hidden/></field>
-        <field name="caContentId" map-name="parameters"><hidden/></field>
-        <field name="caContentAssocTypeId" map-name="parameters"><hidden/></field>
-        <field name="caFromDate" map-name="parameters"><hidden/></field>
+        <field name="caContentIdTo" entry-name="contentIdTo" map-name="contentAssoc"><hidden/></field>
+        <field name="caContentAssocTypeId" ><hidden value="COMPDOC_PART"/></field>
+        <field name="caFromDate" entry-name="fromDate" map-name="contentAssoc"><hidden/></field>
         
-        <field name="contentId" map-name="content"><hidden/></field>
+        <field name="contentId" map-name="contentAssoc"><hidden/></field>
         <field name="dataResourceId" map-name="dataResource"><hidden/></field>
         <field name="dataResourceTypeId" map-name="dataResource"><hidden/></field>
         <field name="mimeTypeId" map-name="dataResource"><hidden/></field>
@@ -467,10 +464,10 @@ under the License.
     </form>
     
     <form name="EditCompDocTextContent" type="single" default-title-style="tableheadtext" 
-        extends="dummy" target="uploadCompDocContent"
+         target="uploadCompDocContent"
         default-tooltip-style="tabletext" default-widget-style="tabletext" >
         <field name="rootContentId" map-name="dummy"><hidden/></field>
-        <field name="caContentId" map-name="parameters"><hidden/></field>
+        <field name="caContentIdTo" map-name="parameters"><hidden/></field>
         <field name="caContentAssocTypeId" map-name="parameters"><hidden/></field>
         <field name="caFromDate" map-name="parameters"><hidden/></field>
         
@@ -483,10 +480,10 @@ under the License.
     </form>
 
     <form name="UploadCompDocSurveyId" type="single" default-title-style="tableheadtext" 
-        extends="dummy" target="uploadCompDocContent"
+         target="uploadCompDocContent"
         default-tooltip-style="tabletext" default-widget-style="tabletext" >
         <field name="rootContentId" map-name="dummy"><hidden/></field>
-        <field name="caContentId" map-name="parameters"><hidden/></field>
+        <field name="caContentIdTo" map-name="parameters"><hidden/></field>
         <field name="caContentAssocTypeId" map-name="parameters"><hidden/></field>
         <field name="caFromDate" map-name="parameters"><hidden/></field>
         

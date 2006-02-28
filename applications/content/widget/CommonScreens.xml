@@ -86,19 +86,18 @@
         <section>
             <actions>
                 <set field="headerItem" value="CompDoc"/>
-                <set from-field="rootTemplateContentId" default-value="${parameters.rootTemplateContentId}" field="rootTemplateContentId" global="true"/>
-                <set from-field="rootInstanceContentId" default-value="${parameters.rootInstanceContentId}" field="rootInstanceContentId" global="true" />
-                <set from-field="rootTemplateRevSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId" global="true" />
-                <set from-field="rootInstanceRevSeqId" default-value="${parameters.rootInstanceRevSeqId}" field="rootInstanceRevSeqId" global="true" />
-                <set from-field="contentId" default-value="${parameters.contentId}" field="contentId" global="true" />
-                <set from-field="contentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="contentRevisionSeqId" global="true" />
-                
-                <set from-field="rootTemplateContentId" field="dummy.rootTemplateContentId" />
-                <set from-field="rootInstanceContentId" field="dummy.rootInstanceContentId" />
-                <set from-field="rootTemplateRevSeqId" field="dummy.rootTemplateRevSeqId" />
-                <set from-field="rootInstanceRevSeqId" field="dummy.rootInstanceRevSeqId" />
-                <set from-field="contentId" field="dummy.contentId" />
-                <set from-field="contentRevisionSeqId" field="dummy.contentRevisionSeqId" />
+				<entity-one entity-name="Content" value-name="content" use-cache="true"/>
+				<set from-field="contentTypeId" default-value="${content.contentTypeId}" field="contentTypeId" global="true"/>
+				<set from-field="contentId" default-value="${content.contentId}" field="contentId" global="true"/>
+				<set from-field="contentId" field="rootContentId"/>
+                <entity-condition entity-name="ContentRevision" list-name="contentRevisions" use-cache="true">
+                    <condition-list combine="and">
+                        <condition-expr field-name="contentId" env-name="parameters.contentId" operator="equals"/>
+                        <condition-expr field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId" operator="less-equals" ignore-if-empty="true"/>
+                    </condition-list>
+                    <order-by field-name="-contentRevisionSeqId"/>
+                </entity-condition>
+				<set from-field="parameters.contentRevisionSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}" field="contentRevisionSeqId" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainContentDecorator" >

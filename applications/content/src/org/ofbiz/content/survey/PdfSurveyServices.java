@@ -469,7 +469,8 @@ public class PdfSurveyServices {
             }
             String pdfFileNameOut = (String)context.get("pdfFileNameOut");
             ByteWrapper outByteWrapper = (ByteWrapper)map.get("outByteWrapper");
-            if (UtilValidate.isNotEmpty("pdfFileNameOut")) {
+            results.put("outByteWrapper", outByteWrapper);
+            if (UtilValidate.isNotEmpty(pdfFileNameOut)) {
                 FileOutputStream fos = new FileOutputStream("pdfFileNameOut");
                 fos.write(outByteWrapper.getBytes());
                 fos.close();
