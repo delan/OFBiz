@@ -527,6 +527,16 @@
         <!-- return the current return header status -->
         <field-to-result field-name="statusId" map-name="returnHeader" result-name="returnHeaderStatus"/>
     </simple-method>
+    <simple-method method-name="createReturnItemResponse" short-description="Create a ReturnItemResponse">
+        <make-value value-name="newEntity" entity-name="ReturnItemResponse"/>
+        <set field="newEntity.returnItemResponseId" from-field="parameters.returnItemResponseId"/>
+        <if-empty field-name="returnItemResponseId" map-name="newEntity">
+            <sequenced-id-to-env sequence-name="ReturnItemResponse" env-name="newEntity.returnItemResponseId"/>
+        </if-empty>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+        <field-to-result field-name="newEntity.returnItemResponseId" result-name="returnItemResponseId"/>
+    </simple-method>
     
     <simple-method method-name="quickReturnFromOrder" short-description="Create Quick Return From Order">
         <if>
