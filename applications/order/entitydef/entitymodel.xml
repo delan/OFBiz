@@ -531,14 +531,14 @@
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="Invoice">
+      <relation type="one-nofk" fk-name="ORDER_ITBLNG_INV" rel-entity-name="Invoice">
         <key-map field-name="invoiceId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITBLNG_IITM" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="ShipmentReceipt">
+      <relation type="one" fk-name="ORDER_ITBL_SHIPRCP" rel-entity-name="ShipmentReceipt">
         <key-map field-name="shipmentReceiptId" rel-field-name="receiptId"/>
       </relation>
     </entity>
@@ -2263,14 +2263,14 @@
         <key-map field-name="returnId"/>
         <key-map field-name="returnItemSeqId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="Invoice">
+      <relation type="one-nofk" fk-name="RITBL_INVOICE" rel-entity-name="Invoice">
         <key-map field-name="invoiceId"/>
       </relation>
       <relation type="one" fk-name="RETURN_ITBLNG_IITM" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="ShipmentReceipt">
+      <relation type="one" fk-name="RITBL_SHIPRCPT" rel-entity-name="ShipmentReceipt">
         <key-map field-name="shipmentReceiptId" rel-field-name="receiptId"/>
       </relation>
     </entity>
