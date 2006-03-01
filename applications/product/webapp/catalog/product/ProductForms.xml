@@ -918,11 +918,43 @@
             title="" list-name="costs" paginate-target="EditProductCosts"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="CostComponent" default-field-type="display"/>
+        <field name="costComponentId" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${costComponentId}" target="EditProductCosts?productId=${productId}&amp;productCostComponentId=${costComponentId}"/>
+        </field>
         <field name="productId"><hidden value="${productId}"/></field>
         <field name="costComponentTypeId" widget-style="tabletext">
             <display-entity entity-name="CostComponentType"/>
         </field>
+        <field name="deleteCostComponent" entry-name="costComponentId" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteCostComponent?productId=${productId}&amp;costComponentId=${costComponentId}"/>
+        </field>
     </form>
+    <form name="EditCostComponent" type="single"
+            target="createCostComponent" title="" default-map-name="costComponent"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="costComponent!=null" target="updateCostComponent"/>
+        <auto-fields-service service-name="createCostComponent"/>
+        <field name="productId"><hidden/></field>
+        <field name="costComponentId" use-when="costComponent!=null"><display/></field>
+        <field name="costComponentId" use-when="costComponent==null"><hidden/></field>
+        <field name="costComponentTypeId" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="CostComponentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="costUomId" title="${uiLabelMap.CommonCurrencyUomId}" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]">
+                    <entity-constraint name="uomTypeId" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
     <form name="CalculateProductCosts" type="single"
             target="calculateProductCosts" title="" 
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
