@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -52,6 +53,9 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.AcroFields;
+import com.lowagie.text.pdf.PdfDictionary;
+import com.lowagie.text.pdf.PdfName;
+import com.lowagie.text.pdf.PdfObject;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
@@ -61,10 +65,9 @@ import com.lowagie.text.pdf.PdfWriter;
  * PdfSurveyServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version $Rev: 5462 $
  * @since 3.2
- * 
- *  
  */
 
 public class PdfSurveyServices {
@@ -76,6 +79,8 @@ public class PdfSurveyServices {
      */
     public static Map buildSurveyFromPdf(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         String surveyId = null;
         try {
@@ -96,6 +101,12 @@ public class PdfSurveyServices {
                 survey.set("surveyId", surveyId);
                 survey.create();
             }
+            
+            // create a SurveyQuestionCategory to put the questions in
+            Map createCategoryResultMap = dispatcher.runSync("createSurveyQuestionCategory", 
+                    UtilMisc.toMap("description", "From AcroForm in Content [" + contentId + "] for Survey [" + surveyId + "]", "userLogin", userLogin));
+            String surveyQuestionCategoryId = (String) createCategoryResultMap.get("surveyQuestionCategoryId");
+            
             pdfStamper.setFormFlattening(true);
             Iterator i = acroFieldMap.keySet().iterator();
             while (i.hasNext()) {
@@ -108,18 +119,98 @@ public class PdfSurveyServices {
                 GenericValue surveyQuestion = delegator.makeValue("SurveyQuestion", UtilMisc.toMap("question", fieldName));
                 String surveyQuestionId = delegator.getNextSeqId("SurveyQuestion");
                 surveyQuestion.set("surveyQuestionId", surveyQuestionId);
+                surveyQuestion.set("surveyQuestionCategoryId", surveyQuestionCategoryId);
 
                 if (type == AcroFields.FIELD_TYPE_TEXT) {
                     surveyQuestion.set("surveyQuestionTypeId", "TEXT_SHORT");
                 } else if (type == AcroFields.FIELD_TYPE_RADIOBUTTON) {
                     surveyQuestion.set("surveyQuestionTypeId", "OPTION");
+                } else if (type == AcroFields.FIELD_TYPE_LIST || type == AcroFields.FIELD_TYPE_COMBO) {
+                    surveyQuestion.set("surveyQuestionTypeId", "OPTION");
+                    // TODO: handle these specially with the acroFields.getListOptionDisplay (and getListOptionExport?)
+                    String[] listOptionDisplayArray = acroFields.getListOptionDisplay(fieldName);
+                    String[] listOptionExportArray = acroFields.getListOptionExport(fieldName);
+                    Debug.logInfo("listOptionDisplayArray: " + listOptionDisplayArray + "; listOptionExportArray: " + listOptionExportArray, module);
                 } else {
-                    Debug.logWarning("Building Survey from PDF, fieldName=[" + fieldName + "]: don't know how to handle field type: " + type, module);
+                    surveyQuestion.set("surveyQuestionTypeId", "TEXT_SHORT");
+                    Debug.logWarning("Building Survey from PDF, fieldName=[" + fieldName + "]: don't know how to handle field type: " + type + "; defaulting to short text", module);
+                }
+                
+                // ==== create a good sequenceNum based on tab order or if no tab order then the page location
+                
+                Integer tabPage = (Integer) item.page.get(0);
+                Integer tabOrder = (Integer) item.tabOrder.get(0);
+                Debug.logInfo("tabPage=" + tabPage + ", tabOrder=" + tabOrder, module);
+                
+                //array of float  multiple of 5. For each of this groups the values are: [page, llx, lly, urx, ury]
+                float[] fieldPositions = acroFields.getFieldPositions(fieldName);
+                float fieldPage = fieldPositions[0];
+                float fieldLlx = fieldPositions[1];
+                float fieldLly = fieldPositions[2];
+                float fieldUrx = fieldPositions[3];
+                float fieldUry = fieldPositions[4];
+                Debug.logInfo("fieldPage=" + fieldPage + ", fieldLlx=" + fieldLlx + ", fieldLly=" + fieldLly + ", fieldUrx=" + fieldUrx + ", fieldUry=" + fieldUry, module);
+
+                Long sequenceNum = null;
+                if (tabPage != null && tabOrder != null) {
+                    sequenceNum = new Long(tabPage.intValue() * 1000 + tabOrder.intValue());
+                    Debug.logInfo("tabPage=" + tabPage + ", tabOrder=" + tabOrder + ", sequenceNum=" + sequenceNum, module);
+                } else if (fieldPositions.length > 0) {
+                    sequenceNum = new Long((long) fieldPage * 10000 + (long) fieldLly * 1000 + (long) fieldLlx);
+                    Debug.logInfo("fieldPage=" + fieldPage + ", fieldLlx=" + fieldLlx + ", fieldLly=" + fieldLly + ", fieldUrx=" + fieldUrx + ", fieldUry=" + fieldUry + ", sequenceNum=" + sequenceNum, module);
+                }
+                
+                // TODO: need to find something better to put into these fields...
+                String annotation = null;
+                Iterator widgetIter = item.widgets.iterator();
+                while (widgetIter.hasNext()) {
+                    PdfDictionary dict = (PdfDictionary) widgetIter.next();
+                    
+                    // if the "/Type" value is "/Annot", then get the value of "/TU" for the annotation
+                    
+                    /* Interesting... this doesn't work, I guess we have to iterate to find the stuff...
+                    PdfObject typeValue = dict.get(new PdfName("/Type"));
+                    if (typeValue != null && "/Annot".equals(typeValue.toString())) {
+                        PdfObject tuValue = dict.get(new PdfName("/TU"));
+                        annotation = tuValue.toString();
+                    }
+                    */
+                    
+                    PdfObject typeValue = null;
+                    PdfObject tuValue = null;
+                    
+                    Set dictKeys = dict.getKeys();
+                    Iterator dictKeyIter = dictKeys.iterator();
+                    while (dictKeyIter.hasNext()) {
+                        PdfName dictKeyName = (PdfName) dictKeyIter.next();
+                        PdfObject dictObject = dict.get(dictKeyName);
+                        
+                        if ("/Type".equals(dictKeyName.toString())) {
+                            typeValue = dictObject;
+                        } else if ("/TU".equals(dictKeyName.toString())) {
+                            tuValue = dictObject;
+                        }
+                        //Debug.logInfo("AcroForm widget fieldName[" + fieldName + "] dictKey[" + dictKeyName.toString() + "] dictValue[" + dictObject.toString() + "]", module);
+                    }
+                    if (tuValue != null && typeValue != null && "/Annot".equals(typeValue.toString())) {
+                        annotation = tuValue.toString();
+                    }
+                }
+                
+                surveyQuestion.set("description", fieldName);
+                if (UtilValidate.isNotEmpty(annotation)) {
+                    surveyQuestion.set("question", annotation);
+                } else {
+                    surveyQuestion.set("question", fieldName);
                 }
 
                 GenericValue surveyQuestionAppl = delegator.makeValue("SurveyQuestionAppl", UtilMisc.toMap("surveyId", surveyId, "surveyQuestionId", surveyQuestionId));
                 surveyQuestionAppl.set("fromDate", nowTimestamp);
                 surveyQuestionAppl.set("externalFieldRef", fieldName);
+
+                if (sequenceNum != null) {
+                    surveyQuestionAppl.set("sequenceNum", sequenceNum);
+                }
 
                 surveyQuestion.create();
                 surveyQuestionAppl.create();
