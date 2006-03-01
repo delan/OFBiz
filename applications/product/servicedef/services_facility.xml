@@ -38,6 +38,7 @@
         </auto-attributes>
         <override name="inventoryItemTypeId" optional="false"/>
         <override name="productId" optional="false"/>
+        <override name="unitCost" optional="false"/>
     </service>
     <service name="createInventoryItemCheckSetAtpQoh" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryItemCheckSetAtpQoh" auth="false">

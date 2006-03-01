@@ -99,6 +99,32 @@ if (purchaseOrder != null) {
         purchaseOrderItems = purchaseOrder.getRelated("OrderItem");
     }
 }
+// convert the unit prices to that of the facility owner's currency
+if (purchaseOrder != null) {
+    owner = facility.getRelatedOne("OwnerParty");
+    acctgPref = null;
+    if (owner != null) acctgPref = owner.getRelatedOne("PartyAcctgPreference");
+    if (acctgPref != null) {
+        ownerCurrencyUomId = acctgPref.get("baseCurrencyUomId");
+        orderCurrencyUomId = purchaseOrder.get("currencyUom");
+        if (!orderCurrencyUomId.equals(ownerCurrencyUomId)) {
+            for (iter = purchaseOrderItems.iterator(); iter.hasNext(); ) {
+                item = iter.next();
+                serviceResults = dispatcher.runSync("convertUom", 
+                        UtilMisc.toMap("uomId", orderCurrencyUomId, "uomIdTo", ownerCurrencyUomId, "originalValue", item.get("unitPrice")));
+                convertedValue = serviceResults.get("convertedValue");
+                if (convertedValue != null) {
+                    item.put("unitPrice", convertedValue);
+                }
+            }
+        }
+
+        // for display purposes, put the currency ID as the description
+        context.put("currency", ownerCurrencyUomId);
+    } else {
+        request.setAttribute("_ERROR_MESSAGE_", "Either no owner party was set for this facility, or no accounting preferences were set for this owner party.");
+    }
+}
 receivedQuantities = new HashMap();
 salesOrderItems = new HashMap();
 if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
@@ -171,4 +197,3 @@ context.put("salesOrderItems", salesOrderItems);
 context.put("rejectReasons", rejectReasons);
 context.put("inventoryItemTypes", inventoryItemTypes);
 context.put("facilities", facilities);
-    
