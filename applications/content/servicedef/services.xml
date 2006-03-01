@@ -1342,7 +1342,8 @@
         <description>Generate parallel CompDoc Instance tree</description>
         <attribute name="contentName" type="String" mode="IN" optional="true"/>
         <attribute name="instanceOfContentId" type="String" mode="IN" optional="true"/>
-        <attribute name="rootInstanceContentId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="rootInstanceContentId" type="String" mode="IN" optional="true"/>
+        <attribute name="contentId" type="String" mode="OUT" optional="true"/>
         <attribute name="contentRevisionSeqId" type="String" mode="OUT" optional="false"/>
     </service>
 
@@ -1352,8 +1353,7 @@
         <description>Create a CompDoc Template entity and associated ContentRevision/Item entities</description>
         <implements service="persistContentAndAssoc"/>
         <attribute name="contentRevisionSeqId" type="String" mode="OUT" optional="false"/>
-        <attribute name="rootTemplateContentId" type="String" mode="IN" optional="true"/>
-        <attribute name="rootInstanceContentId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="rootContentId" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="cloneContentApprovals" engine="simple"

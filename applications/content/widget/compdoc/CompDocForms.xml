@@ -64,10 +64,10 @@ under the License.
            <hyperlink also-hidden="false" description="Edit" target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}&amp;caFromDate=${caFromDate}"/> 
         </field>
         <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?contentId=${contentId}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?rootContentId=${contentId}"/> 
         </field>
         <field name="tree" title="" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?contentId=${contentId}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootContentId=${contentId}"/> 
         </field>
     </form>
     
@@ -81,10 +81,10 @@ under the License.
         <field name="caFromDate" title="From Date"><display/></field>
         <field name="caThruDate"><hidden/></field>
         <field name="editTemplate" title="">
-           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?contentId=${contentId}"/> 
+           <hyperlink also-hidden="false" description="Edit" target="EditRootCompDoc?rootContentId=${contentId}"/> 
         </field>
         <field name="templateTree" title="">
-            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?contentId=${contentId}"/> 
+            <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootContentId=${contentId}"/> 
         </field>
     </form>
     
@@ -116,16 +116,16 @@ under the License.
         <field name="committedByPartyId"><display/></field>
         <field name="comments"><display/></field>
         <field name="editLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
         <field name="itemLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Items]" target="ListContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <hyperlink also-hidden="false" description="[Items]" target="ListContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
         <field name="create" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
         <field name="tree" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Tree]" target="ViewCompDocTemplateTree?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <hyperlink also-hidden="false" description="[Tree]" target="ViewCompDocTemplateTree?rootContentId=${contentId}&amp;rootContentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
     </form>
     
@@ -240,7 +240,7 @@ under the License.
         <field name="sequenceNum"><display/></field>
         <field name="comments"><display/></field>
         <field name="Edit" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;rootContentId=${contentId}&amp;rootContentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><submit/></field>
     </form>
@@ -278,8 +278,12 @@ under the License.
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="contentName"><text/></field>
-        <field name="instanceOfContentId" entry-name="rootTemplateContentId" map-name="parameters" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
+        <field name="instanceOfContentId" entry-name="rootContentId" map-name="parameters" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentTypeId"><hidden value="COMPDOC_INSTANCE"/></field>
+		<!--
+        <field name="rootContentId"><hidden/></field>
+        <field name="rootContentRevisionId"><hidden/></field>
+			-->
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -355,6 +359,8 @@ under the License.
                 <option key="application/octet-stream" description="Other"/>
             </drop-down>
         </field>
+        <field name="rootContentId"><hidden/></field>
+        <field name="rootContentRevisionSeqId"><hidden/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -460,6 +466,7 @@ under the License.
         <field name="mimeTypeId" map-name="dataResource"><hidden/></field>
         <field name="objectInfo" title="File Name" map-name="dataResource"><display also-hidden="false"/></field>
         <field name="imageData" title="Browse"><file/></field>
+        <field name="rootContentId" ><hidden/></field>
         <field name="submitButton" title="Upload" widget-style="smallSubmit"><submit/></field>
     </form>
     
