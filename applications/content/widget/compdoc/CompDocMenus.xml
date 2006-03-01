@@ -65,7 +65,7 @@
                 	<if-compare value="TEMPLATE" field-name="contentTypeId" operator="equals"></if-compare>
 				</or>
             </condition>
-            <link target="ViewCompDocTemplateTree?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="ViewCompDocTemplateTree?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="viewtree2" title="View Tree">
             <condition>
@@ -74,16 +74,16 @@
                 	<if-compare value="DOCUMENT" field-name="contentTypeId" operator="equals"></if-compare>
 				</or>
             </condition>
-            <link target="ViewCompDocInstanceTree?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="ViewCompDocInstanceTree?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="edit" title="Edit" >
-            <link target="EditRootCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="EditRootCompDoc?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="approval" title="Approvals" >
-            <link target="ListContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="ListContentApproval?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="revision" title="Revisions" >
-            <link target="ListContentRevisions?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="ListContentRevisions?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
 
     </menu>
@@ -103,7 +103,7 @@
                 	<if-compare value="TEMPLATE" field-name="contentTypeId" operator="equals"></if-compare>
 				</or>
             </condition>
-            <link target="ViewCompDocTemplateTree?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="ViewCompDocTemplateTree?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="viewtree2" title="View Tree">
             <condition>
@@ -112,7 +112,7 @@
                 	<if-compare value="DOCUMENT" field-name="contentTypeId" operator="equals"></if-compare>
 				</or>
             </condition>
-            <link target="ViewCompDocInstanceTree?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="ViewCompDocInstanceTree?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="edit" title="Edit" >
             <link target="EditChildCompDoc?contentId=${itemContentId}&amp;itemContentRevisionSeqId=${itemContentRevisionSeqId}&amp;caContentIdTo=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;fromDate=${fromDate}"/>
@@ -153,20 +153,22 @@
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="edit-inplace" title="${contentName}[${contentId}]" widget-style="head2">
-            <link target="EditRootCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="EditRootCompDoc?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="edit-link" title="Edit" >
-            <link target="EditRootCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="EditRootCompDoc?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="child" title="+Child" >
-            <link target="AddChildCompDocTemplate?contentIdTo=${contentId}&amp;sequenceNum=9999"/>
+            <link target="AddChildCompDocTemplate?caContentIdTo=${contentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}&amp;sequenceNum=9999"/>
         </menu-item>
+		<!-- on page
         <menu-item name="viewinst" title="View Instances" >
-            <link target="ViewInstances?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="ViewInstances?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="addinst" title="Add Instance" >
-            <link target="AddRootCompDocInstance?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="AddRootCompDocInstance?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
+			-->
     </menu>
         
     <menu name="childTemplateLine" default-title-style="tabButton"
@@ -178,10 +180,10 @@
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="edit-inplace" title="${contentName}[${contentId}]" >
-            <link target="EditChildCompDoc?itemContentId=${contentId}&amp;contentId=${contentIdTo}&amp;caFromDate=${fromDate}&amp;itemContentRevisionSeqId=${maxRevisionSeqId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="EditChildCompDoc?itemContentId=${contentId}&amp;contentId=${contentIdTo}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}"/>
         </menu-item>
         <menu-item name="edit-link" title="Edit" >
-            <link target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caFromDate=${fromDate}&amp;itemContentRevisionSeqId=${maxRevisionSeqId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}"/>
         </menu-item>
         <!--  only one level for now 
         <menu-item name="child" title="+Child" >
@@ -195,10 +197,10 @@
             <link target="AddChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="up" title="^Up" >
-            <link target="resequenceCompDocPart?contentId=${contentId}&amp;dir=up&amp;contentAssocTypeId=COMPDOC_PART&amp;contentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="resequenceCompDocPart?contentId=${contentId}&amp;dir=up&amp;contentAssocTypeId=COMPDOC_PART&amp;contentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="down" title="vDn" >
-            <link target="resequenceCompDocPart?contentId=${contentId}&amp;dir=down&amp;contentAssocTypeId=COMPDOC_PART&amp;contentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <link target="resequenceCompDocPart?contentId=${contentId}&amp;dir=down&amp;contentAssocTypeId=COMPDOC_PART&amp;contentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
     </menu>
         
@@ -227,13 +229,13 @@
             <condition>
                 <if-empty field-name="assocRevisionItemView"/>
             </condition>
-            <link target="AddChildCompDocInstance?caContentIdTo=${instanceContentId}&amp;instanceOfContentId=${contentId}&amp;caSequenceNum=${maxRevisionSeqId}"/>
+            <link target="AddChildCompDocInstance?caContentIdTo=${rootContentId}&amp;instanceOfContentId=${contentId}&amp;caSequenceNum=${maxRevisionSeqId}"/>
         </menu-item>
         <menu-item name="edit-link-add" title="Add" >
             <condition>
                 <if-empty field-name="assocRevisionItemView"/>
             </condition>
-            <link target="AddChildCompDocInstance?caContentIdTo=${instanceContentId}&amp;instanceOfContentId=${contentId}&amp;caSequenceNum=${maxRevisionSeqId}"/>
+            <link target="AddChildCompDocInstance?caContentIdTo=${rootContentId}&amp;instanceOfContentId=${contentId}&amp;caSequenceNum=${maxRevisionSeqId}"/>
         </menu-item>
         
         <menu-item name="pdf" title="View as PDF" >
@@ -259,7 +261,7 @@
             <link target="EditRootCompDoc?contentId=${instanceContentId}&amp;contentRevisionSeqId=${instanceContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="viewtree" title="View Template Tree">
-            <link target="ViewCompDocTemplateTree?contentRevisionSeqId=${templateContentRevisionSeqId}&amp;contentId=${templateContentId}"/>
+            <link target="ViewCompDocTemplateTree?rootContentRevisionSeqId=${templateContentRevisionSeqId}&amp;rootContentId=${templateContentId}"/>
         </menu-item>
     </menu>
         

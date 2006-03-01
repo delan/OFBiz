@@ -31,7 +31,7 @@ under the License.
                    <condition-list combine="and">
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="rootContentId" />
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootContentId" />
-                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="contentRevisionSeqId" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootContentRevisionSeqId" ignore-if-null="true"/>
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
                         <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
                         <condition-list combine="or">
@@ -66,7 +66,7 @@ under the License.
                         <condition-expr field-name="contentIdTo" operator="equals" env-name="contentId" />
                         <condition-expr field-name="rootRevisionContentId" operator="equals" env-name="rootContentId" />
                         <condition-expr field-name="contentAssocTypeId" operator="equals" value="COMPDOC_PART" />
-                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootTemplateRevSeqId" />
+                        <condition-expr field-name="contentRevisionSeqId" operator="less-equals" env-name="rootContentRevisionSeqId" />
                         <condition-expr field-name="fromDate" operator="less-equals" env-name="nowTimestamp"/>
                         <condition-list combine="or">
                             <condition-expr field-name="thruDate" operator="equals" value=""/>

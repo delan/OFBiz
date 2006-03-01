@@ -82,7 +82,7 @@ under the License.
         <create-value value-name="rootInstanceContent"/>
         <log message="genCompDocInstance 3> rootInstanceContent: ${rootInstanceContent}" level="info"/>
         
-        <field-to-result result-name="rootInstanceContentId" field-name="rootInstanceContent.contentId"/>
+        <field-to-result result-name="contentId" field-name="rootInstanceContent.contentId"/>
         
         <set from-field="parameters.instanceOfContentId" field="parentTemplateContentId"/>
         <set from-field="rootInstanceContent.contentId" field="parentInstanceContentId"/>
@@ -242,6 +242,8 @@ under the License.
                 <set from-field="parameters.rootInstanceContentId" default-value="${pResults.contentId}" field="revisionMap.contentId"/>
             </then>
         </if>
+        <set field="revisionMap.contentId" from-field="parameters.rootContentId" default-value="${pResults.caContentIdTo}"/>
+        <set field="revisionMap.contentId" from-field="revisionMap.contentId" default-value="${pResults.contentId}"/>
         <set field="revisionMap.itemContentId" from-field="pResults.contentId"/>
         <set field="revisionMap.userLogin" from-field="parameters.userLogin"/>
         <log level="info" message="revisionMap : ${revisionMap}"/>

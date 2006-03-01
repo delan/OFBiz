@@ -86,6 +86,7 @@
         <section>
             <actions>
                 <set field="headerItem" value="CompDoc"/>
+				<!--
 				<entity-one entity-name="Content" value-name="content" use-cache="true"/>
 				<set from-field="contentTypeId" default-value="${content.contentTypeId}" field="contentTypeId" global="true"/>
 				<set from-field="contentId" default-value="${content.contentId}" field="contentId" global="true"/>
@@ -98,6 +99,7 @@
                     <order-by field-name="-contentRevisionSeqId"/>
                 </entity-condition>
 				<set from-field="parameters.contentRevisionSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}" field="contentRevisionSeqId" global="true"/>
+				-->
             </actions>
             <widgets>
                 <decorator-screen name="mainContentDecorator" >
