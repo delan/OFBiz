@@ -765,6 +765,24 @@
 
     <!-- ================ Product Costs Requests ================= -->
     <request-map uri="EditProductCosts"><security https="true" auth="true"/><response name="success" type="view" value="EditProductCosts"/></request-map>
+    <request-map uri="createCostComponent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCostComponent"/>
+        <response name="success" type="view" value="EditProductCosts"/>
+        <response name="error" type="view" value="EditProductCosts"/>
+    </request-map>
+    <request-map uri="updateCostComponent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCostComponent"/>
+        <response name="success" type="view" value="EditProductCosts"/>
+        <response name="error" type="view" value="EditProductCosts"/>
+    </request-map>
+    <request-map uri="deleteCostComponent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCostComponent"/>
+        <response name="success" type="view" value="EditProductCosts"/>
+        <response name="error" type="view" value="EditProductCosts"/>
+    </request-map>
     <request-map uri="calculateProductCosts">
         <security https="true" auth="true"/>
         <event type="service" invoke="calculateProductCosts"/>

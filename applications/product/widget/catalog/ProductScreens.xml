@@ -252,9 +252,14 @@
                 <set field="labelTitleProperty" value="ProductCosts"/>
     
                 <set field="productId" from-field="parameters.productId"/>
+                <set field="productCostComponentId" from-field="parameters.productCostComponentId"/>
                 
                 <entity-one entity-name="Product" value-name="product"/>
-                <entity-and entity-name="CostComponent" list-name="costs" filter-by-date="true">
+                <entity-one entity-name="CostComponent" value-name="costComponent" auto-field-map="false">
+                    <field-map field-name="costComponentId" env-name="productCostComponentId"/>
+                </entity-one>
+                <!--<entity-and entity-name="CostComponent" list-name="costs" filter-by-date="true">-->
+                <entity-and entity-name="CostComponent" list-name="costs">
                     <field-map field-name="productId"/>
                     <order-by field-name="-fromDate"/>
                 </entity-and>
@@ -264,6 +269,9 @@
                     <decorator-section name="body">
                         <container><label style="head2">${uiLabelMap.ProductCosts}</label></container>    
                         <include-form name="ListCostComponents" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <container><label style="head2">${uiLabelMap.ProductEditCostComponent}</label></container>
+                        <include-form name="EditCostComponent" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <container><label style="head2">${uiLabelMap.ProductAutoCreateCosts}</label></container>
                         <include-form name="CalculateProductCosts" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
