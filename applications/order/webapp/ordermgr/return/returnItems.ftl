@@ -20,9 +20,55 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     Si Chen (sichen@opensourcestrategies.com)
+ *@author     Mu Jinsong (mujinsong@opensourcestrategies.com)
  *@version    $Rev$
  *@since      2.2
 -->
+
+<#macro displayReturnAdjustment returnAdjustment adjEditable>
+    <#assign returnHeader = returnAdjustment.getRelatedOne("ReturnHeader")>
+    <#assign adjReturnType = returnAdjustment.getRelatedOne("ReturnType")?if_exists>
+    <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
+    <input type="hidden" name="returnAdjustmentId_o_${rowCount}" value="${returnAdjustment.returnAdjustmentId}" />
+    <tr class="tabletext">
+        <td colspan="2">&nbsp;</td>
+        <td colspan="3" class="tabletext">${returnAdjustment.description?default("N/A")}
+            <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
+        </div></td>
+        <#if (adjEditable)>
+           <td>
+              <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}" value="${returnAdjustment.amount?string("##0.00")}"/>
+           </td>
+        <#else>
+           <td class="tabletextright"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUomId/></td>
+        </#if>
+        <td colspan="2">&nbsp;</td>
+        <td><div class="tabletext">
+           <#if (!adjEditable)>
+               ${adjReturnType.description?default("N/A")}
+           <#else>
+               <select name="returnTypeId_o_${rowCount}" class="selectBox">
+                  <#if (adjReturnType?has_content)>
+                    <option value="${adjReturnType.returnTypeId}">${adjReturnType.description?if_exists}</option>
+                    <option value="${adjReturnType.returnTypeId}">--</option>
+                  </#if>
+                  <#list returnTypes as returnTypeItem>
+                    <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.description?if_exists}</option>
+                  </#list>
+                </select>
+          </#if>
+          </div>
+       </td>
+       <#if (adjEditable)>
+       <td align='right'><a href="<@ofbizUrl>removeReturnAdjustment?returnAdjustmentId=${returnAdjustment.returnAdjustmentId}&returnId=${returnAdjustment.returnId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a></td>
+       <#else>
+       <td>&nbsp;</td>
+       </#if>
+       <#assign rowCount = rowCount + 1>
+       <#assign returnTotal = returnTotal + returnAdjustment.get("amount")>
+    </tr>    
+</#macro>
 
 <div class='tabContainer'>
     <a href="<@ofbizUrl>returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>
@@ -184,6 +230,12 @@
         </#if>
       </tr>
       <#assign rowCount = rowCount + 1>
+      <#assign returnItemAdjustments = item.getRelated("ReturnAdjustment")>
+      <#if (returnItemAdjustments?has_content)>
+          <#list returnItemAdjustments as returnItemAdjustment>
+             <@displayReturnAdjustment returnAdjustment=returnItemAdjustment adjEditable=false/>  <#-- adjustments of return items should never be editable -->
+          </#list>
+      </#if>
     </#list>
 <#else>
     <tr>
@@ -191,46 +243,12 @@
     </tr>
   </#if>
    <tr><td colspan="10"><hr class="sepbar"></td></tr>
+
+<#-- these are general return adjustments not associated with a particular item (itemSeqId = "_NA_" -->
 <#if (returnAdjustments?has_content)>                  
     <#list returnAdjustments as returnAdjustment>
-        <#assign returnHeader = returnAdjustment.getRelatedOne("ReturnHeader")>
-        <#assign adjReturnType = returnAdjustment.getRelatedOne("ReturnType")?if_exists>
-        <#assign adjEditable = !readOnly && returnAdjustment.returnItemSeqId.equals("_NA_")>
-        <input type="hidden" name="_rowSubmit_o_${rowCount}" value="Y" />
-        <input type="hidden" name="returnAdjustmentId_o_${rowCount}" value="${returnAdjustment.returnAdjustmentId}" />
-        <tr class="tabletext">
-            <td class="tabletext" colspan="2">${uiLabelMap.OrderReturnAdjustmentForReturnItem}
-            ${returnAdjustment.returnItemSeqId?default("N/A")}</td>
-            <td colspan="3"><div class="tabletext">${returnAdjustment.description?default("N/A")}</div></td>
-            <#if (adjEditable)>
-              <td>
-                 <input type="text" class="inputBox" size="8" name="amount_o_${rowCount}" value="${returnAdjustment.amount?string("##0.00")}"/>
-              </td>
-            <#else>
-                <td class="tabletextright"><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUomId/></td>
-            </#if>
-            <td colspan="3" align="right"><div class="tabletext">
-                        <#if (!adjEditable)>
-                            ${adjReturnType.description?default("N/A")}
-                        <#else>
-                            <select name="returnTypeId_o_${rowCount}" class="selectBox">
-                                <#if (adjReturnType?has_content)>
-                                    <option value="${adjReturnType.returnTypeId}">${adjReturnType.description?if_exists}</option>
-                                    <option value="${adjReturnType.returnTypeId}">--</option>
-                                </#if>
-                                <#list returnTypes as returnTypeItem>
-                                    <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.description?if_exists}</option>
-                                </#list>
-                            </select>
-                     </#if></div></td>
-                     <#if (adjEditable)>
-                        <td align='right'><a href="<@ofbizUrl>removeReturnAdjustment?returnAdjustmentId=${returnAdjustment.returnAdjustmentId}&returnId=${returnAdjustment.returnId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a></td>
-                     <#else>
-                       <td>&nbsp;</td>
-                     </#if>
-            <#assign rowCount = rowCount + 1>
-            <#assign returnTotal = returnTotal + returnAdjustment.get("amount")>
-        </tr>    
+        <#assign adjEditable = !readOnly> <#-- they are editable if the rest of the return items are -->
+        <@displayReturnAdjustment returnAdjustment=returnAdjustment adjEditable=adjEditable/>
     </#list>
     </#if>
     <#-- show the return total -->    

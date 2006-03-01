@@ -45,7 +45,8 @@ context.put("returnHeader", returnHeader);
 returnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("returnId", returnId));
 context.put("returnItems", returnItems);
 
-returnAdjustments = delegator.findByAnd("ReturnAdjustment", UtilMisc.toMap("returnId", returnId), UtilMisc.toList("returnItemSeqId", "returnAdjustmentTypeId"));
+// these are just the adjustments not associated directly with a return item--the rest are gotten with a .getRelated on the returnItems in the .FTL
+returnAdjustments = delegator.findByAnd("ReturnAdjustment", UtilMisc.toMap("returnId", returnId, "returnItemSeqId", "_NA_"), UtilMisc.toList("returnItemSeqId", "returnAdjustmentTypeId"));
 context.put("returnAdjustments", returnAdjustments);
 
 returnTypes = delegator.findAll("ReturnType", UtilMisc.toList("sequenceId"));
