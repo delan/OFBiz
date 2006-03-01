@@ -973,6 +973,7 @@
       <field name="inventoryItemTypeId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="partyId" type="id"></field>
+      <field name="ownerPartyId" type="id"><description>The owner of the inventory item.</description></field>
       <field name="statusId" type="id"></field>
       <field name="datetimeReceived" type="date-time"></field>
       <field name="expireDate" type="date-time"></field>
@@ -1001,6 +1002,9 @@
       </relation>
       <relation type="one" fk-name="INV_ITEM_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_OWNPARTY" title="Owner" rel-entity-name="Party">
+        <key-map field-name="ownerPartyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="INV_ITEM_STTSITM" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>

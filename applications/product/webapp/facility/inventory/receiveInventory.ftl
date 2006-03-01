@@ -430,13 +430,14 @@
                 </tr>
                 <tr>
                   <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
+                  <td align="right"><span class="tableheadtext">${uiLabelMap.ProductFacilityOwner}:</span></td>
+                  <td align="right"><input type="text" class="inputBox" name="ownerPartyId_o_${rowCount}" size="20" maxlength="20" value="${facility.ownerPartyId}"/></td>
                   <td align="right">
                     <div class="tableheadtext">${uiLabelMap.ProductPerUnitPrice} :</div>
                   </td>
                   <td align="right">
                     <input type="text" class="inputBox" name="unitCost_o_${rowCount}" value="${itemCost?string("##0.00")}" size="6"/>
+                    <span class="tabletext">${currency?if_exists}</span>
                   </td>
                 </tr>
               </table>
