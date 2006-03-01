@@ -169,6 +169,7 @@
                     <if-compare field-name="availableReturnTotal" operator="less" value="-0.01" type="Double">
                         <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
                     </if-compare>
+                    <check-errors/>
                     <else>
                         <log level="info" message="Not an order based returnItem; unable to check valid amounts!"/>
                     </else>
@@ -475,6 +476,13 @@
           <set from-field="receipt.returnItemSeqId" field="newLookupMap.returnItemSeqId"/>
           <find-by-primary-key entity-name="ReturnItem" map-name="newLookupMap" value-name="returnItem"/>
           <if-compare-field field-name="returnQuantity" map-name="returnItem" operator="greater-equals" to-field-name="${receipt.returnItemSeqId}" to-map-name="totalsMap" type="Double">
+            <!--  Set the shipment status to PURCH_SHIP_RECEIVED if it isn't already, that way the invoices get generated here along with whatever else needs to be -->
+            <get-related-one relation-name="Shipment" value-name="receipt" to-value-name="shipment"/>
+            <if-compare field-name="statusId" map-name="shipment" operator="not-equals" value="RETURN_RECEIVED">
+              <set field="serviceInput.shipmentId" from-field="shipment.shipmentId"/>
+              <set field="serviceInput.statusId" value="PURCH_SHIP_RECEIVED"/>
+              <call-service service-name="updateShipment" in-map-name="serviceInput"/>
+            </if-compare>
             <!-- update the status for the item -->
             <set field="returnItem.statusId" value="RETURN_RECEIVED"/>
             <store-value value-name="returnItem"/>
@@ -529,15 +537,12 @@
     </simple-method>
     <simple-method method-name="createReturnItemResponse" short-description="Create a ReturnItemResponse">
         <make-value value-name="newEntity" entity-name="ReturnItemResponse"/>
-        <set field="newEntity.returnItemResponseId" from-field="parameters.returnItemResponseId"/>
-        <if-empty field-name="returnItemResponseId" map-name="newEntity">
-            <sequenced-id-to-env sequence-name="ReturnItemResponse" env-name="newEntity.returnItemResponseId"/>
-        </if-empty>
+        <sequenced-id-to-env sequence-name="ReturnItemResponse" env-name="newEntity.returnItemResponseId"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
         <field-to-result field-name="newEntity.returnItemResponseId" result-name="returnItemResponseId"/>
     </simple-method>
-    
+   
     <simple-method method-name="quickReturnFromOrder" short-description="Create Quick Return From Order">
         <if>
           <condition>
@@ -708,9 +713,6 @@
             <!-- create the balance adjustment return item -->
             <call-service service-name="createReturnAdjustment" in-map-name="balanceItemCtx" include-user-login="true"/>
         </if-compare>
-        <if-compare field-name="availableReturnTotal" operator="less" value="-0.01" type="Double">
-            <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
-        </if-compare>        
 
         <!-- update the header status -->
         <string-to-field string="RETURN_ACCEPTED" field-name="statusId" map-name="updateHeaderCtx"/>

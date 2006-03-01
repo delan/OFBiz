@@ -208,18 +208,13 @@
                 <refresh-value value-name="returnHeader"/>
                 <set field="returnHeader.needsInventoryReceive" value="N"/>
                 <store-value value-name="returnHeader"/>
-
+                
                 <!-- check if we need to manually update the status -->
                 <if-compare-field field-name="nonProductItems" operator="equals" to-field-name="returnItemCount" type="Long">                
                     <set field="retStCtx.returnId" from-field="returnHeader.returnId"/>
                     <set field="retStCtx.statusId" value="RETURN_RECEIVED"/>
                     <call-service service-name="updateReturnHeader" in-map-name="retStCtx"/>
                 </if-compare-field>
-                
-                <!-- update the shipment to received.  -->
-                <set from-field="shipmentId" field="updateShipCtx.shipmentId"/>
-                <set value="PURCH_SHIP_RECEIVED" field="updateShipCtx.statusId"/>  
-                <call-service service-name="updateShipment" in-map-name="updateShipCtx"/> 
             <else>
                 <log level="info" message="Not receiving inventory for returnId ${returnHeader.returnId}, no inventory information available."/>
             </else>

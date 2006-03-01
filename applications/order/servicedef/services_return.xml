@@ -103,9 +103,15 @@
     </service>
     <service name="createReturnItemResponse" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnItemResponse">
-        <description>Creates a ReturnItemResponse record. If a returnItemResponseId is passed, that ID will be used. No security, no special checking.</description>
-        <attribute name="returnItemResponseId" type="String" mode="INOUT" optional="true"/>
+            <description>Creates a ReturnItemResponse record.</description>
         <auto-attributes entity-name="ReturnItemResponse" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="returnItemResponseId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="createPaymentApplicationsFromReturnItemResponse" engine="java"
+            location="org.ofbiz.order.order.OrderReturnServices" invoke="createPaymentApplicationsFromReturnItemResponse">
+            <description>Creates PaymentApplications for each return item billing related to the return response until the responseAmount is reached or
+                all items are paid.</description>
+        <attribute name="returnItemResponseId" type="String" mode="IN" optional="false"/>
     </service>
     
     <!-- services for return adjustments -->

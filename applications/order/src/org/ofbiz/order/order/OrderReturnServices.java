@@ -47,6 +47,18 @@ public class OrderReturnServices {
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
 
+    //  set some BigDecimal properties
+    private static BigDecimal ZERO = new BigDecimal("0");
+    private static int decimals = -1;
+    private static int rounding = -1;
+    static {
+        decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+        rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+
+        // set zero to the proper scale
+        if (decimals != -1) ZERO.setScale(decimals);
+    }
+
     // locate the return item's initial inventory item cost
     public static Map getReturnItemInitialCost(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -558,23 +570,64 @@ public class OrderReturnServices {
             // now; to be used for all timestamps
             Timestamp now = UtilDateTime.nowTimestamp();
 
-            // generate the new response ID here, because other entities need to refer to it
-            String itemResponseId = delegator.getNextSeqId("ReturnItemResponse").toString();
-
-            // holds ReturnItemResponse non-pk fields for calling the createItemResponse service
-            Map itemResponse = UtilMisc.toMap("returnItemResponseId", itemResponseId);
-
-            // need a total for the credit
-            List toBeStored = new ArrayList();
-            double creditTotal = 0.00;
-            Iterator itemsIter = returnItems.iterator();
-            while (itemsIter.hasNext()) {
+            // first, compute the total credit from the return items
+            BigDecimal creditTotal = ZERO;
+            for (Iterator itemsIter = returnItems.iterator(); itemsIter.hasNext(); ) {
                 GenericValue item = (GenericValue) itemsIter.next();
-                Double quantity = item.getDouble("returnQuantity");
-                Double price = item.getDouble("returnPrice");
-                if (quantity == null) quantity = new Double(0);
-                if (price == null) price = new Double(0);
-                creditTotal += price.doubleValue() * quantity.doubleValue();
+                BigDecimal quantity = item.getBigDecimal("returnQuantity");
+                BigDecimal price = item.getBigDecimal("returnPrice");
+                if (quantity == null) quantity = ZERO;
+                if (price == null) price = ZERO;
+                creditTotal = creditTotal.add(price.multiply(quantity).setScale(decimals, rounding));
+            }
+
+            // add the adjustments to the total
+            BigDecimal adjustments = new BigDecimal(getReturnAdjustmentTotal(delegator, UtilMisc.toMap("returnId", returnId)));
+            creditTotal = creditTotal.add(adjustments.setScale(decimals, rounding));
+
+            // create a Payment record for this credit; will look just like a normal payment
+            // However, since this payment is not a DISBURSEMENT or RECEIPT but really a matter of internal record
+            // it is of type "Other (Non-posting)"
+            String paymentId = delegator.getNextSeqId("Payment").toString();
+            GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId));
+            payment.set("paymentTypeId", "CUSTOMER_REFUND");
+            payment.set("paymentMethodTypeId", "EXT_BILLACT");
+            payment.set("partyIdFrom", toPartyId);  // if you receive a return FROM someone, then you'd have to give a return TO that person
+            payment.set("partyIdTo", fromPartyId);
+            payment.set("effectiveDate", now);
+            payment.set("amount", creditTotal);
+            payment.set("comments", "Return Credit");
+            try {
+                delegator.create(payment);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem creating Payment record", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingPaymentRecord", locale));
+            }
+
+            // create a return item response 
+            Map itemResponse = UtilMisc.toMap("paymentId", paymentId);
+            itemResponse.put("billingAccountId", billingAccountId);
+            itemResponse.put("responseAmount", creditTotal);
+            itemResponse.put("responseDate", now);
+            itemResponse.put("userLogin", userLogin);
+            Map serviceResults = null;
+            try {
+                serviceResults = dispatcher.runSync("createReturnItemResponse", itemResponse);
+                if (ServiceUtil.isError(serviceResults)) {
+                    return ServiceUtil.returnError("Could not create ReturnItemResponse record", null, null, serviceResults);
+                }
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem creating ReturnItemResponse record", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingReturnItemResponseRecord", locale));
+            }
+
+            // the resulting response ID will be associated with the return items
+            String itemResponseId = (String) serviceResults.get("returnItemResponseId");
+
+            // loop through the items again to update them and store a status change history
+            List toBeStored = new ArrayList();
+            for (Iterator itemsIter = returnItems.iterator(); itemsIter.hasNext(); ) {
+                GenericValue item = (GenericValue) itemsIter.next();
 
                 // set the response on the item and flag the item to be stored
                 item.set("returnItemResponseId", itemResponseId);
@@ -590,57 +643,6 @@ public class OrderReturnServices {
                 returnStatus.set("statusDatetime", now);
                 toBeStored.add(returnStatus);
             }
-            creditTotal += getReturnAdjustmentTotal(delegator, UtilMisc.toMap("returnId", returnId));
-            // create a Double object for the amount
-            Double creditAmount = new Double(creditTotal);
-
-            // create a Payment record for this credit; will look just like a normal payment
-            // However, since this payment is not a DISBURSEMENT or RECEIPT but really a matter of internal record
-            // it is of type "Other (Non-posting)"
-            String paymentId = delegator.getNextSeqId("Payment").toString();
-            GenericValue payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId));
-            payment.set("paymentTypeId", "CUSTOMER_REFUND");
-            payment.set("paymentMethodTypeId", "EXT_BILLACT");
-            payment.set("partyIdFrom", toPartyId);  // if you receive a return FROM someone, then you'd have to give a return TO that person
-            payment.set("partyIdTo", fromPartyId);
-            payment.set("effectiveDate", now);
-            payment.set("amount", creditAmount);
-            payment.set("comments", "Return Credit");
-            try {
-                delegator.create(payment);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem creating Payment record", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingPaymentRecord", locale));
-            }
-
-            // create the PaymentApplication
-            String paId = delegator.getNextSeqId("PaymentApplication").toString();
-            GenericValue pa = delegator.makeValue("PaymentApplication", UtilMisc.toMap("paymentApplicationId", paId));
-            pa.set("paymentId", paymentId);
-            pa.set("billingAccountId", billingAccountId);
-            pa.set("amountApplied", creditAmount);
-            try {
-                delegator.create(pa);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem creating PaymentApplication record", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingPaymentApplicationRecord", locale));
-            }
-
-            // fill in the response fields
-            itemResponse.put("paymentId", paymentId);
-            itemResponse.put("billingAccountId", billingAccountId);
-            itemResponse.put("responseAmount", creditAmount);
-            itemResponse.put("responseDate", now);
-            itemResponse.put("userLogin", userLogin);
-            try {
-                Map serviceResults = dispatcher.runSync("createReturnItemResponse", itemResponse);
-                if (ServiceUtil.isError(serviceResults)) {
-                    return ServiceUtil.returnError("Could not create ReturnItemResponse record", null, null, serviceResults);
-                }
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Problem creating ReturnItemResponse record", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingReturnItemResponseRecord", locale));
-            }
 
             // store the item changes (attached responseId)
             try {
@@ -648,6 +650,31 @@ public class OrderReturnServices {
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem storing ReturnItem updates", module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemStoringReturnItemUpdates", locale));
+            }
+
+            // create the PaymentApplication for the billing account
+            String paId = delegator.getNextSeqId("PaymentApplication").toString();
+            GenericValue pa = delegator.makeValue("PaymentApplication", UtilMisc.toMap("paymentApplicationId", paId));
+            pa.set("paymentId", paymentId);
+            pa.set("billingAccountId", billingAccountId);
+            pa.set("amountApplied", creditTotal);
+            try {
+                delegator.create(pa);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem creating PaymentApplication record for billing account", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingPaymentApplicationRecord", locale));
+            }
+
+            // create the payment applications for the return invoice
+            try {
+                serviceResults = dispatcher.runSync("createPaymentApplicationsFromReturnItemResponse", 
+                        UtilMisc.toMap("returnItemResponseId", itemResponseId, "userLogin", userLogin));
+                if (ServiceUtil.isError(serviceResults)) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingPaymentApplicationRecord", locale), null, null, serviceResults);
+                }
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem creating PaymentApplication records for return invoice", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemCreatingPaymentApplicationRecord", locale));
             }
         }
 
@@ -803,8 +830,7 @@ public class OrderReturnServices {
                     Timestamp now = UtilDateTime.nowTimestamp();
 
                     // fill out the data for the new ReturnItemResponse
-                    String responseId = delegator.getNextSeqId("ReturnItemResponse");
-                    Map response = UtilMisc.toMap("returnItemResponseId", responseId);
+                    Map response = FastMap.newInstance();
                     response.put("orderPaymentPreferenceId", orderPayPref.getString("orderPaymentPreferenceId"));
                     response.put("responseAmount", thisRefundAmount);
                     response.put("responseDate", now);
@@ -813,8 +839,9 @@ public class OrderReturnServices {
                         // a null payment ID means no electronic refund was available; manual refund needed
                         response.put("paymentId", paymentId);
                     }
+                    Map serviceResults = null;
                     try {
-                        Map serviceResults = dispatcher.runSync("createReturnItemResponse", response);
+                        serviceResults = dispatcher.runSync("createReturnItemResponse", response);
                         if (ServiceUtil.isError(serviceResults)) {
                             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemsCreatingReturnItemResponseEntity", locale), null, null, serviceResults);
                         }
@@ -822,6 +849,7 @@ public class OrderReturnServices {
                         Debug.logError(e, "Problems creating new ReturnItemResponse entity", module);
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemsCreatingReturnItemResponseEntity", locale));
                     }
+                    String responseId = (String) serviceResults.get("returnItemResponseId");
 
                     // set the response on each item
                     Iterator itemsIter = itemList.iterator();
@@ -849,11 +877,87 @@ public class OrderReturnServices {
 
                         //Debug.log("Item status and return status history created", module);
                     }
+
+                    // create the payment applications for the return invoice
+                    try {
+                        serviceResults = dispatcher.runSync("createPaymentApplicationsFromReturnItemResponse", 
+                                UtilMisc.toMap("returnItemResponseId", responseId, "userLogin", userLogin));
+                        if (ServiceUtil.isError(serviceResults)) {
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemUpdatingReturnItemReturnItemResponseId", locale), null, null, serviceResults);
+                        }
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Problem creating PaymentApplication records for return invoice", module);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemUpdatingReturnItemReturnItemResponseId", locale));
+                    }
                 }
             }
         }
 
         //Debug.log("Finished refund process");
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map createPaymentApplicationsFromReturnItemResponse(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String responseId = (String) context.get("returnItemResponseId");
+        String errorMsg = "Failed to create payment applications for return item response [" + responseId + "]. ";
+        try {
+            GenericValue response = delegator.findByPrimaryKey("ReturnItemResponse", UtilMisc.toMap("returnItemResponseId", responseId));
+            if (response == null) {
+                return ServiceUtil.returnError(errorMsg + "Return Item Response not found with ID [" + responseId + "].");
+            }
+            BigDecimal maxAmount = response.getBigDecimal("responseAmount").setScale(decimals, rounding);
+            String paymentId = response.getString("paymentId");
+
+            // for each return item in the response, get the list of return item billings
+            BigDecimal runningTotal = ZERO;
+            List items = response.getRelated("ReturnItem");
+            for (Iterator itemIter = items.iterator(); itemIter.hasNext(); ) {
+                GenericValue item = (GenericValue) itemIter.next();
+
+                List billings = item.getRelated("ReturnItemBilling");
+                for (Iterator billIter = billings.iterator(); billIter.hasNext(); ) {
+                    GenericValue billing = (GenericValue) billIter.next();
+
+                    // the amount to apply is the billing amount * quantity
+                    BigDecimal amountApplied = billing.getBigDecimal("amount").multiply(billing.getBigDecimal("quantity")).setScale(decimals, rounding);
+
+                    // if the total plus the amount applied exceeds the maxAmount, then apply what we can
+                    if (runningTotal.add(amountApplied).compareTo(maxAmount) == 1) {
+                        amountApplied = maxAmount.subtract(runningTotal);
+                        if (Debug.verboseOn()) { Debug.logInfo("Exceeded responseAmount, capping off the PaymentApplication.ammountApplied with remainder.", module); }
+                    }
+
+                    // create a payment application for the billing
+                    Map input = UtilMisc.toMap("paymentId", paymentId, "invoiceId", billing.getString("invoiceId"), 
+                            "invoiceItemSeqId", billing.getString("invoiceItemSeqId"));
+                    input.put("amountApplied", new Double(amountApplied.doubleValue()));
+                    input.put("userLogin", userLogin);
+                    Map serviceResults = dispatcher.runSync("createPaymentApplication", input);
+                    if (ServiceUtil.isError(serviceResults)) {
+                        return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
+                    }
+                    if (Debug.verboseOn()) { Debug.logInfo("Created PaymentApplication for response with amountApplied " + amountApplied.toString(), module); }
+
+                    // keep a running total
+                    runningTotal = runningTotal.add(amountApplied);
+
+                    // we're done if we have no more to apply
+                    if (runningTotal.compareTo(maxAmount) == 1) {
+                        return ServiceUtil.returnSuccess();
+                    }
+                }
+            }
+        } catch (GenericServiceException e) {
+            Debug.logError(e, errorMsg + e.getMessage(), module);
+            return ServiceUtil.returnError(errorMsg + e.getMessage());
+        } catch (GenericEntityException e) {
+            Debug.logError(e, errorMsg + e.getMessage(), module);
+            return ServiceUtil.returnError(errorMsg + e.getMessage());
+        }
         return ServiceUtil.returnSuccess();
     }
 
