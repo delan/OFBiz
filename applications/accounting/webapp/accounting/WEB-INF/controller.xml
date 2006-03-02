@@ -1037,9 +1037,7 @@
     <view-map name="GlAccountNavigate" type="screen" page="component://accounting/widget/AccountingScreens.xml#GlAccountNavigate"/>
     <view-map name="AssignGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AssignGlAccount"/>
  
-    <!-- view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#EditGlobalGlAccount"/ -->
     <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
-    <!-- view-map name="EditGlobalGlAccount" type="jpublish" page="/chartofaccounts/EditGlobalGlAccount.ftl"/ -->
     <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
     <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
 
