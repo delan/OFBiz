@@ -711,14 +711,14 @@
         <log level="info" message="OrderTotal [${orderTotal}] - ReturnTotal [${returnTotal}] = available Return Total [${availableReturnTotal}]"/>
 
         <!-- create a manual balance adjustment based on the difference between order total and return total -->        
-        <if-compare field-name="availableReturnTotal" operator="greater" value="0.01" type="Double">
-            <log level="info" message="availableReturnTotal amount is greater than zero"/>
+        <if-compare field-name="availableReturnTotal" operator="not-equals" value="0.00" type="Double">
             <string-to-field string="Balance Adjustment" field-name="description" map-name="balanceItemCtx"/>
             <string-to-field string="RET_MAN_ADJ" field-name="returnAdjustmentTypeId" map-name="balanceItemCtx"/>
 
             <field-to-field field-name="returnId" to-map-name="balanceItemCtx"/>
             <set field="balanceItemCtx.returnItemSeqId" value="_NA_"/>
             <set from-field="availableReturnTotal" field="balanceItemCtx.amount" />
+            <log level="info" message="Creating a balance adjustment of [${availableReturnTotal}] for return [${returnId}]"/>
 
             <!-- create the balance adjustment return item -->
             <call-service service-name="createReturnAdjustment" in-map-name="balanceItemCtx" include-user-login="true"/>
