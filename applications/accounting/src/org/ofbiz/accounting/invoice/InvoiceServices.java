@@ -894,7 +894,8 @@ public class InvoiceServices {
             BigDecimal promisedTotal = ZERO;
 
             // loop through shipment receipts to create invoice items and return item billings for each item and adjustment
-            int invoiceItemSeqId = 1;
+            int invoiceItemSeqNum = 1;
+            String invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, 2);
             for (Iterator iter = receipts.iterator(); iter.hasNext(); ) {
                 GenericValue receipt = (GenericValue) iter.next();
 
@@ -941,7 +942,8 @@ public class InvoiceServices {
                 }
 
                 // increment the seqId counter after creating the invoice item and return item billing
-                invoiceItemSeqId += 1;  
+                invoiceItemSeqNum += 1;  
+                invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, 2);
 
                 // keep a running total
                 BigDecimal actualAmount = returnItem.getBigDecimal("returnPrice").multiply(receipt.getBigDecimal("quantityAccepted")).setScale(decimals, rounding);
@@ -992,7 +994,10 @@ public class InvoiceServices {
                     if (ServiceUtil.isError(serviceResults)) {
                         return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
                     }
-                    invoiceItemSeqId += 1;  // increment the seqId counter
+
+                    // increment the seqId counter
+                    invoiceItemSeqNum += 1;  
+                    invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, 2);
 
                     // keep a running total
                     invoiceTotal = invoiceTotal.add(amount).setScale(decimals, rounding);
@@ -1040,9 +1045,18 @@ public class InvoiceServices {
                 if (ServiceUtil.isError(serviceResults)) {
                     return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
                 }
-                invoiceItemSeqId += 1;  // increment the seqId counter
+
+                // increment the seqId counter
+                invoiceItemSeqNum += 1;  
+                invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, 2);
             }
-            
+        
+            // Set the invoice to READY
+            serviceResults = dispatcher.runSync("setInvoiceStatus", UtilMisc.toMap("invoiceId", invoiceId, "statusId", "INVOICE_READY", "userLogin", userLogin));
+            if (ServiceUtil.isError(serviceResults)) {
+                return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
+            }
+
             // return the invoiceId
             Map results = ServiceUtil.returnSuccess();
             results.put("invoiceId", invoiceId);
@@ -1094,8 +1108,10 @@ public class InvoiceServices {
 
         if (totalPayments.signum() == 1) {
             BigDecimal invoiceTotal = InvoiceWorker.getInvoiceTotalBd(delegator, invoiceId);
-            //Debug.log("Invoice #" + invoiceId + " total: " + invoiceTotal, module);
-            //Debug.log("Total payments : " + totalPayments, module);
+            if (Debug.verboseOn()) {
+                Debug.logInfo("Invoice #" + invoiceId + " total: " + invoiceTotal, module);
+                Debug.logInfo("Total payments : " + totalPayments, module);
+            }
             if (totalPayments.compareTo(invoiceTotal) >= 0) { // this checks that totalPayments is greter than or equal to invoiceTotal
                 // this invoice is paid
                 Map svcCtx = UtilMisc.toMap("statusId", "INVOICE_PAID", "invoiceId", invoiceId, "userLogin", userLogin);
