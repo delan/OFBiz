@@ -72,8 +72,9 @@
 
 <td>
 <ul>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=SALES_INVOICE</@ofbizUrl>">Show Sales Invoices</a></li>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=PURCHASE_INVOICE</@ofbizUrl>">Show Purchases Invoices</a></li>
+<#list invoiceTypes as invoiceType>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">Show ${invoiceType.description} Invoices</a></li>
+</#list>
 </ul>
 </td>
 <td>
@@ -95,6 +96,15 @@
 <li><a href="<@ofbizUrl>findPayments?lookupFlag=Y</@ofbizUrl>">Show all Payments</a></li>
 </ul>
 </td>
+<td>
+
+<ul>
+<#list paymentTypes as paymentType>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&paymentTypeId=${paymentType.paymentTypeId}</@ofbizUrl>">Show ${paymentType.get("description",locale)} Payments</a></li>
+</#list>
+</ul>
+</td>
+
 
 <td>
 <ul>

@@ -260,6 +260,12 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="main"/>
+                <entity-condition entity-name="PaymentType" list-name="paymentTypes">
+                	<order-by field-name="paymentTypeId"/>
+                </entity-condition>
+                <entity-condition entity-name="InvoiceType" list-name="invoiceTypes">
+                	<order-by field-name="invoiceTypeId"/>
+                </entity-condition>                
                 <entity-condition entity-name="PaymentMethodType" list-name="paymentMethodTypes">
                 	<order-by field-name="paymentMethodTypeId"/>
                 </entity-condition>
