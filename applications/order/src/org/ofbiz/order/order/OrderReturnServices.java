@@ -607,7 +607,7 @@ public class OrderReturnServices {
             // create a return item response 
             Map itemResponse = UtilMisc.toMap("paymentId", paymentId);
             itemResponse.put("billingAccountId", billingAccountId);
-            itemResponse.put("responseAmount", creditTotal);
+            itemResponse.put("responseAmount", new Double(creditTotal.doubleValue()));
             itemResponse.put("responseDate", now);
             itemResponse.put("userLogin", userLogin);
             Map serviceResults = null;
