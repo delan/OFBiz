@@ -157,7 +157,7 @@ under the License.
         <field name="invoiceItemSeqId" title="Item No."><display/></field>
         <field name="productId"><display/></field>
         <field name="description"><display/></field>
-        <field name="total" title="Payment Amount" widget-area-style="tabletextright"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="total" title="Invoice Total" widget-area-style="tabletextright"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId" widget-style="linktext"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
         <field name="billingAccountId"><hidden/></field>
