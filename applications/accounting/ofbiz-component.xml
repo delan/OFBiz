@@ -45,6 +45,7 @@
 
     <!-- General Payment Service Definitions -->
     <service-resource type="model" loader="main" location="servicedef/services_agreement.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_admin.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_billing.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_finaccount.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_fixedasset.xml"/>
