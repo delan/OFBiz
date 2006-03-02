@@ -1,43 +1,37 @@
 /*
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ * $Id$
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included 
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev$
- *@since      2.1
+ * Copyright 2001-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
- 
+
 import java.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.collections.*;
 import org.ofbiz.accounting.invoice.*;
+import java.text.DateFormat;
  
-delegator = request.getAttribute("delegator");
-invoiceId = request.getParameter("invoiceId");
+// delegator = parameters.get("delegator");
+invoiceId = parameters.get("invoiceId");
 
 invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));
 context.put("invoice", invoice);
 
 if (invoice != null) {
-    invoiceItems = invoice.getRelated("InvoiceItem");
+	invoiceItems = invoice.getRelatedOrderBy("InvoiceItem",UtilMisc.toList("invoiceItemSeqId"));
+
     context.put("invoiceItems", invoiceItems);
     
     invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice);
@@ -46,16 +40,17 @@ if (invoice != null) {
     // each invoice of course has two billing addresses, but the one that is relevant for purchase invoices is the PAYMENT_LOCATION of the invoice
     // (ie Accounts Payable address for the supplier), while the right one for sales invoices is the BILLING_LOCATION (ie Accounts Receivable or
     // home of the customer.)
+    billingAddress = null;
     if ((invoice.getString("invoiceTypeId") != null) && (invoice.getString("invoiceTypeId").equals("PURCHASE_INVOICE"))) {
         billingAddress = InvoiceWorker.getSendFromAddress(invoice);
     } else {
         billingAddress = InvoiceWorker.getBillToAddress(invoice);
     }
-    context.put("billingAddress", billingAddress);
+    if (billingAddress != null)
+	    context.put("billingAddress", billingAddress);
     
     billingParty = InvoiceWorker.getBillToParty(invoice);
     context.put("billingParty", billingParty);
-
     sendingParty = InvoiceWorker.getSendFromParty(invoice);
     context.put("sendingParty", sendingParty);
     
@@ -77,11 +72,18 @@ if (invoice != null) {
     invoiceStatus = invoice.getRelatedOne("StatusItem");            
     context.put("invoiceStatus", invoiceStatus);
     
-    edit = request.getParameter("editInvoice");
+    edit = parameters.get("editInvoice");
     if (edit != null && edit.equalsIgnoreCase("true")) {            
         invoiceItemTypes = delegator.findAll("InvoiceItemType");
         context.put("invoiceItemTypes", invoiceItemTypes);  
         context.put("editInvoice", new Boolean(true));  
-    }    
+    }
+
+    // format the date
+    if (invoice.get("invoiceDate") != null) {
+        invoiceDate = DateFormat.getDateInstance(DateFormat.LONG).format(invoice.get("invoiceDate"));
+        context.put("invoiceDate", invoiceDate);
+    } else {
+        context.put("invoiceDate", "N/A");
+    }       
 }
-   
