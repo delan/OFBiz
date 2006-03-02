@@ -385,8 +385,7 @@ under the License.
                 <if-compare field-name="parameters.statusId" operator="equals" value="INVOICE_PAID">
                     <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
                     <if-compare field-name="notApplied" operator="not-equals" value="0.00">
-                        <add-error><fail-message message="Cannot change status to 'paid', invoice ${invoice.invoiceId} not fully applied...."/></add-error>
-                        <log level="error" message="Cannot change from ${invoice.statusId} to ${parameters.statusId} not fully applied"/>
+                        <add-error><fail-message message="Cannot change status to 'paid', invoice ${invoice.invoiceId} has an unapplied balance of [${notApplied}]"/></add-error>
                         <check-errors/>
                     </if-compare>
                 </if-compare>
