@@ -902,6 +902,8 @@ public class OrderReturnServices {
         GenericDelegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
+        // the strategy for this service is to get a list of return invoices via the return items -> return item billing relationships
+        // then split up the responseAmount among the invoices evenly
         String responseId = (String) context.get("returnItemResponseId");
         String errorMsg = "Failed to create payment applications for return item response [" + responseId + "]. ";
         try {
@@ -909,47 +911,60 @@ public class OrderReturnServices {
             if (response == null) {
                 return ServiceUtil.returnError(errorMsg + "Return Item Response not found with ID [" + responseId + "].");
             }
-            BigDecimal maxAmount = response.getBigDecimal("responseAmount").setScale(decimals, rounding);
+            BigDecimal responseAmount = response.getBigDecimal("responseAmount").setScale(decimals, rounding);
             String paymentId = response.getString("paymentId");
 
-            // for each return item in the response, get the list of return item billings
-            BigDecimal runningTotal = ZERO;
+            // for each return item in the response, get the list of return item billings and then a list of invoices
+            Map returnInvoices = FastMap.newInstance(); // key is invoiceId, value is Invoice GenericValue
             List items = response.getRelated("ReturnItem");
             for (Iterator itemIter = items.iterator(); itemIter.hasNext(); ) {
                 GenericValue item = (GenericValue) itemIter.next();
-
                 List billings = item.getRelated("ReturnItemBilling");
                 for (Iterator billIter = billings.iterator(); billIter.hasNext(); ) {
                     GenericValue billing = (GenericValue) billIter.next();
+                    GenericValue invoice = billing.getRelatedOne("Invoice");
 
-                    // the amount to apply is the billing amount * quantity
-                    BigDecimal amountApplied = billing.getBigDecimal("amount").multiply(billing.getBigDecimal("quantity")).setScale(decimals, rounding);
-
-                    // if the total plus the amount applied exceeds the maxAmount, then apply what we can
-                    if (runningTotal.add(amountApplied).compareTo(maxAmount) == 1) {
-                        amountApplied = maxAmount.subtract(runningTotal);
-                        if (Debug.verboseOn()) { Debug.logInfo("Exceeded responseAmount, capping off the PaymentApplication.ammountApplied with remainder.", module); }
-                    }
-
-                    // create a payment application for the billing
-                    Map input = UtilMisc.toMap("paymentId", paymentId, "invoiceId", billing.getString("invoiceId"), 
-                            "invoiceItemSeqId", billing.getString("invoiceItemSeqId"));
-                    input.put("amountApplied", new Double(amountApplied.doubleValue()));
-                    input.put("userLogin", userLogin);
-                    Map serviceResults = dispatcher.runSync("createPaymentApplication", input);
-                    if (ServiceUtil.isError(serviceResults)) {
-                        return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
-                    }
-                    if (Debug.verboseOn()) { Debug.logInfo("Created PaymentApplication for response with amountApplied " + amountApplied.toString(), module); }
-
-                    // keep a running total
-                    runningTotal = runningTotal.add(amountApplied);
-
-                    // we're done if we have no more to apply
-                    if (runningTotal.compareTo(maxAmount) == 1) {
-                        return ServiceUtil.returnSuccess();
+                    // put the invoice in the map if it doesn't already exist (a very loopy way of doing group by invoiceId without creating a view)
+                    if (returnInvoices.get(invoice.getString("invoiceId")) == null) {
+                        returnInvoices.put(invoice.getString("invoiceId"), invoice);
                     }
                 }
+            }
+
+            // for each return invoice found, sum up the related billings
+            Map invoiceTotals = FastMap.newInstance(); // key is invoiceId, value is the sum of all billings for that invoice
+            BigDecimal grandTotal = ZERO; // The sum of all return invoice totals
+            for (Iterator iter = returnInvoices.values().iterator(); iter.hasNext(); ) {
+                GenericValue invoice = (GenericValue) iter.next();
+
+                List billings = invoice.getRelated("ReturnItemBilling");
+                BigDecimal runningTotal = ZERO;
+                for (Iterator billIter = billings.iterator(); billIter.hasNext(); ) {
+                    GenericValue billing = (GenericValue) billIter.next();
+                    runningTotal = runningTotal.add(billing.getBigDecimal("amount").multiply(billing.getBigDecimal("quantity")).setScale(decimals, rounding));
+                }
+
+                invoiceTotals.put(invoice.getString("invoiceId"), runningTotal);
+                grandTotal = grandTotal.add(runningTotal);
+            }
+
+            // now allocate responseAmount * invoiceTotal / grandTotal to each invoice
+            for (Iterator iter = returnInvoices.values().iterator(); iter.hasNext(); ) {
+                GenericValue invoice = (GenericValue) iter.next();
+                String invoiceId = invoice.getString("invoiceId");
+                BigDecimal invoiceTotal = (BigDecimal) invoiceTotals.get(invoiceId);
+
+                BigDecimal amountApplied = responseAmount.multiply(invoiceTotal).divide(grandTotal, decimals, rounding).setScale(decimals, rounding);
+
+                // create a payment application for the invoice
+                Map input = UtilMisc.toMap("paymentId", paymentId, "invoiceId", invoice.getString("invoiceId"));
+                input.put("amountApplied", new Double(amountApplied.doubleValue()));
+                input.put("userLogin", userLogin);
+                Map serviceResults = dispatcher.runSync("createPaymentApplication", input);
+                if (ServiceUtil.isError(serviceResults)) {
+                    return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
+                }
+                if (Debug.verboseOn()) { Debug.logInfo("Created PaymentApplication for response with amountApplied " + amountApplied.toString(), module); }
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, errorMsg + e.getMessage(), module);
