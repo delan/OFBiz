@@ -1555,7 +1555,7 @@ public class InvoiceServices {
 
                 // check if the payment for too much application if an existing
                 // application record is changed
-                newPaymentApplyAvailable = paymentApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied);
+                newPaymentApplyAvailable = paymentApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied).setScale(decimals, rounding);
                 if (newPaymentApplyAvailable.compareTo(ZERO) < 0) {
                     errorMessageList.add("- Payment(" + paymentId + ") has an amount(" + paymentApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")) + ") to apply and the  " + amountApplied + " specified is too much\n");
                 }
@@ -1567,33 +1567,33 @@ public class InvoiceServices {
                         // check if both the itemNumbers are null then this is a
                         // record for the whole invoice
                         if (invoiceItemSeqId == null && paymentApplication.get("invoiceItemSeqId") == null) {
-                            newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied);
+                            newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied).setScale(decimals, rounding);
                             if (invoiceApplyAvailable.compareTo(ZERO) < 0) {
                                 errorMessageList.add("- Update would apply " + newInvoiceApplyAvailable.negate() + " to much on this Invoice(" + invoiceId + ")\n");
                             }
                         } else if (invoiceItemSeqId == null && paymentApplication.get("invoiceItemSeqId") != null) {
                             // check if the item number changed from a real Item number to a null value
-                            newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied);
+                            newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied).setScale(decimals, rounding);
                             if (invoiceApplyAvailable.compareTo(ZERO) < 0) {
                                 errorMessageList.add("- Update would apply " + newInvoiceApplyAvailable.negate() + " to much on this Invoice(" + invoiceId + ")\n");
                             }
                         } else if (invoiceItemSeqId != null && paymentApplication.get("invoiceItemSeqId") == null) {
                             // check if the item number changed from a null value to
                             // a real Item number
-                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.subtract(amountApplied);
+                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.subtract(amountApplied).setScale(decimals, rounding);
                             if (newInvoiceItemApplyAvailable.compareTo(ZERO) < 0) {
                                 errorMessageList.add("- Update would apply " + newInvoiceItemApplyAvailable.negate() + " to much on this Invoice item(" + invoiceId + "/" + invoiceItemSeqId + "\n");
                             }
                         } else if (invoiceItemSeqId.equals(paymentApplication.getString("invoiceItemSeqId"))) {
                             // check if the real item numbers the same
                             // item number the same numeric value
-                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied);
+                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")).subtract(amountApplied).setScale(decimals, rounding);
                             if (newInvoiceItemApplyAvailable.compareTo(ZERO) < 0) {
                                 errorMessageList.add("- Update would apply " + newInvoiceItemApplyAvailable.negate() + " to much on this Invoice item(" + invoiceId + "/" + invoiceItemSeqId + "\n");
                             }
                         } else {
                             // item number changed only check new item
-                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.add(amountApplied);
+                            newInvoiceItemApplyAvailable = invoiceItemApplyAvailable.add(amountApplied).setScale(decimals, rounding);
                             if (newInvoiceItemApplyAvailable.compareTo(ZERO) < 0) {
                                 errorMessageList.add("- Update would apply " + newInvoiceItemApplyAvailable.negate() + " to much on this Invoice item\n");
                             }
@@ -1612,7 +1612,7 @@ public class InvoiceServices {
                         }
 
                         // check the invoice
-                        newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied").subtract(amountApplied));
+                        newInvoiceApplyAvailable = invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied").subtract(amountApplied)).setScale(decimals, rounding);
                         if (newInvoiceApplyAvailable.compareTo(ZERO) < 0) {
                             errorMessageList.add("- Invoice (" + invoiceId + ") has only " + invoiceApplyAvailable.add(paymentApplication.getBigDecimal("amountApplied")) + " left which it not applied, so " + amountApplied + " is too much\n");
                         }
@@ -1622,14 +1622,14 @@ public class InvoiceServices {
                 // check the toPayment account when only the amountApplied has
                 // changed,
                 if (toPaymentId != null && toPaymentId.equals(paymentApplication.getString("toPaymentId"))) {
-                    newToPaymentApplyAvailable = toPaymentApplyAvailable.subtract(paymentApplication.getBigDecimal("amountApplied")).add(amountApplied);
+                    newToPaymentApplyAvailable = toPaymentApplyAvailable.subtract(paymentApplication.getBigDecimal("amountApplied")).add(amountApplied).setScale(decimals, rounding);
                     if (newToPaymentApplyAvailable.compareTo(ZERO) < 0) {
                         errorMessageList.add("- toPaymentId(" + toPaymentId + ") has only " + newToPaymentApplyAvailable + " available so " + amountApplied + " is too much\n");
                     }
                 } else if (toPaymentId != null) {
                     // billing account entered number has changed so we have to
                     // check the new billing account number.
-                    newToPaymentApplyAvailable = toPaymentApplyAvailable.add(amountApplied);
+                    newToPaymentApplyAvailable = toPaymentApplyAvailable.add(amountApplied).setScale(decimals, rounding);
                     if (newToPaymentApplyAvailable.compareTo(ZERO) < 0) {
                         errorMessageList.add("- toPaymentId(" + toPaymentId + ") has only "+ newToPaymentApplyAvailable + " available so " + amountApplied + " is too much\n");
                     }
@@ -1640,14 +1640,14 @@ public class InvoiceServices {
                 // change in account number is already checked in the billing
                 // account section
                 if (billingAccountId != null && billingAccountId.equals(paymentApplication.getString("billingAccountId"))) {
-                    newBillingAccountApplyAvailable = billingAccountApplyAvailable.subtract(paymentApplication.getBigDecimal("amountApplied")).add(amountApplied);
+                    newBillingAccountApplyAvailable = billingAccountApplyAvailable.subtract(paymentApplication.getBigDecimal("amountApplied")).add(amountApplied).setScale(decimals, rounding);
                     if (newBillingAccountApplyAvailable.compareTo(ZERO) < 0) {
                         errorMessageList.add("- Billing Account(" + billingAccountId + ") has only " + newBillingAccountApplyAvailable + " available so " + amountApplied + " is too much\n");
                     }
                 } else if (billingAccountId != null) {
                     // billing account entered number has changed so we have to
                     // check the new billing account number.
-                    newBillingAccountApplyAvailable = billingAccountApplyAvailable.add(amountApplied);
+                    newBillingAccountApplyAvailable = billingAccountApplyAvailable.add(amountApplied).setScale(decimals, rounding);
                     if (newBillingAccountApplyAvailable.compareTo(ZERO) < 0) {
                         errorMessageList.add("- Billing Account(" + billingAccountId + ") has only "+ newBillingAccountApplyAvailable + " available so " + amountApplied + " is too much\n");
                     }
