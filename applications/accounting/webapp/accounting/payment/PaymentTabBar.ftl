@@ -21,6 +21,8 @@ under the License.
 
 <div class="tabContainer">
       <a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${selectedClassMap.paymentOverview?default(unselectedClassName)}">Overview</a>
+      <#-- Payments that are a matter of internal record keeping do not have statusId, so we check that first -->
+      <#if payment.statusId?exists>
       <#if payment.statusId == "PMNT_NOT_PAID">
           <a href="<@ofbizUrl>editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class="${selectedClassMap.editPayment?default(unselectedClassName)}">Header</a>
       </#if>
@@ -28,9 +30,12 @@ under the License.
           <a href="<@ofbizUrl>editPaymentApplications?paymentId=${payment.paymentId}</@ofbizUrl>" class="${selectedClassMap.editPaymentApplications?default(unselectedClassName)}">Applications</a>
       </#if>
       <!--a href="<@ofbizUrl>payment.pdf?paymentId=${payment.paymentId}</@ofbizUrl>" class="${unselectedClassName}">${uiLabelMap.AccountingpaymentPDF}</a-->
+      </#if>
 </div>
 <div>
 <a href="<@ofbizUrl>editPayment</@ofbizUrl>" class="buttontext">Create new Payment</a>
+<#-- Payments that are a matter of internal record keeping do not have statusId, so we check that first -->
+<#if payment.statusId?exists>
 <#if payment.statusId == "PMNT_NOT_PAID">
 <!-- the SENT status is only for disbursements -->
   <#if Static['org.ofbiz.accounting.util.UtilAccounting'].isDisbursement(payment)>
@@ -45,6 +50,7 @@ under the License.
 </#if>
 <#if payment.statusId == "PMNT_NOT_PAID">
     <a href="javascript:confirmActionLink('You want to cancel this payment number ${payment.paymentId}?','setPaymentStatus?paymentId=${payment.paymentId}&statusId=PMNT_CANCELLED')" class="buttontext">Status to 'Cancelled'</a>
+</#if>
 </#if>
 </div>
 <br/>
