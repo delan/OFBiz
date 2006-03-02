@@ -597,6 +597,7 @@ public class OrderReturnServices {
             payment.set("effectiveDate", now);
             payment.set("amount", creditTotal);
             payment.set("comments", "Return Credit");
+            payment.set("statusId", "PMNT_CONFIRMED");  // set the status to confirmed so nothing else can happen to the payment
             try {
                 delegator.create(payment);
             } catch (GenericEntityException e) {
