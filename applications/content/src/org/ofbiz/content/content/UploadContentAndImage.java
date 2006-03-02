@@ -520,25 +520,27 @@ public class UploadContentAndImage {
             request.setAttribute("drDataResourceId" + suffix, ftlResults.get("dataResourceId"));
             request.setAttribute("caContentId" + suffix, ftlResults.get("contentId"));
             
-            Map resequenceContext = new HashMap();
-            resequenceContext.put("contentIdTo", passedParams.get("caContentIdTo"));
-            resequenceContext.put("userLogin", userLogin);
-            try {
-                ftlResults = dispatcher.runSync("resequence", resequenceContext);
-            } catch(ServiceAuthException e) {
-                msg = e.getMessage();
-                request.setAttribute("_ERROR_MESSAGE_", msg);
-                List errorMsgList = (List)request.getAttribute("_EVENT_MESSAGE_LIST_");
-                if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]errorMsgList:" + errorMsgList, module);
-                if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]msg:" + msg, module);
-                if (errorMsgList == null) {
-                    errorMsgList = new ArrayList();
-                    request.setAttribute("errorMessageList", errorMsgList);
+            String caContentIdTo = (String)passedParams.get("caContentIdTo");
+            if (UtilValidate.isNotEmpty(caContentIdTo)) {
+                Map resequenceContext = new HashMap();
+                resequenceContext.put("contentIdTo", caContentIdTo);
+                resequenceContext.put("userLogin", userLogin);
+                try {
+                    ftlResults = dispatcher.runSync("resequence", resequenceContext);
+                } catch(ServiceAuthException e) {
+                    msg = e.getMessage();
+                    request.setAttribute("_ERROR_MESSAGE_", msg);
+                    List errorMsgList = (List)request.getAttribute("_EVENT_MESSAGE_LIST_");
+                    if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]errorMsgList:" + errorMsgList, module);
+                    if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]msg:" + msg, module);
+                    if (errorMsgList == null) {
+                        errorMsgList = new ArrayList();
+                        request.setAttribute("errorMessageList", errorMsgList);
+                    }
+                    errorMsgList.add(msg);
+                    return "error";
                 }
-                errorMsgList.add(msg);
-                return "error";
             }
-            
             return "success";
     }
 
