@@ -173,9 +173,6 @@ under the License.
             </entity-condition>
         </actions>
         <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="display"/>
-        <field name="glAccountId">
-            <hyperlink description="${glAccountId}" target="AccountActivitiesDetail?glAccountId=${glAccountId}&amp;organizationPartyId=${organizationPartyId}&amp;glFiscalTypeId=ACTUAL"/>
-        </field>
         <field name="paymentId"><hidden/></field>
     </form>
     

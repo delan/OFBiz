@@ -286,8 +286,5 @@
         </actions>
         <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="display"/>
         <field name="paymentId"><hidden/></field>
-        <field name="glAccountId">
-            <hyperlink description="${glAccountId}" target="AccountActivitiesDetail?glAccountId=${glAccountId}&amp;organizationPartyId=${organizationPartyId}&amp;glFiscalTypeId=ACTUAL"/>
-        </field>
     </form>
 </forms>
