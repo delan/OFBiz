@@ -166,6 +166,7 @@
                     </call-service>
                     <log level="info" message="Available amount for return on order #${returnItem.orderId} is [${availableReturnTotal}] (orderTotal = [${orderTotal}] - returnTotal = [${returnTotal}]"/>
                     
+                    <!-- TODO: we need to replace this eventually with BigDecimal math -->
                     <if-compare field-name="availableReturnTotal" operator="less" value="-0.01" type="Double">
                         <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
                     </if-compare>
@@ -453,6 +454,7 @@
             <remove-value value-name="returnAdjustment"/>
         </if-not-empty>
     </simple-method>
+    <!-- note that this service is designed to be called once for each shipment receipt that is created -->
     <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
         <check-errors/>
@@ -476,13 +478,6 @@
           <set from-field="receipt.returnItemSeqId" field="newLookupMap.returnItemSeqId"/>
           <find-by-primary-key entity-name="ReturnItem" map-name="newLookupMap" value-name="returnItem"/>
           <if-compare-field field-name="returnQuantity" map-name="returnItem" operator="greater-equals" to-field-name="${receipt.returnItemSeqId}" to-map-name="totalsMap" type="Double">
-            <!--  Set the shipment status to PURCH_SHIP_RECEIVED if it isn't already, that way the invoices get generated here along with whatever else needs to be -->
-            <get-related-one relation-name="Shipment" value-name="receipt" to-value-name="shipment"/>
-            <if-compare field-name="statusId" map-name="shipment" operator="not-equals" value="RETURN_RECEIVED">
-              <set field="serviceInput.shipmentId" from-field="shipment.shipmentId"/>
-              <set field="serviceInput.statusId" value="PURCH_SHIP_RECEIVED"/>
-              <call-service service-name="updateShipment" in-map-name="serviceInput"/>
-            </if-compare>
             <!-- update the status for the item -->
             <set field="returnItem.statusId" value="RETURN_RECEIVED"/>
             <store-value value-name="returnItem"/>
@@ -513,7 +508,22 @@
             </if-not-empty>
           </if-compare>
         </iterate>
+
+        <!-- if the items are all received, then update the return header, store the status history change, and set the shipment to received -->
         <if-compare field-name="allReceived" operator="equals" value="true">
+
+          <!--  Go through all the items yet again and set their shipment status to PURCH_SHIP_RECEIVED (if it isn't already)
+          This activates SECAS such as creating return invoices. This MUST be done before updating the return header so that
+          the ReturnItemBillings are created and then whatever SECA binds to the return header update will have them. . -->
+          <iterate list-name="shipmentReceipts" entry-name="receipt">
+            <get-related-one relation-name="Shipment" value-name="receipt" to-value-name="shipment"/>
+            <if-compare field-name="statusId" map-name="shipment" operator="not-equals" value="RETURN_RECEIVED">
+              <set field="serviceInput.shipmentId" from-field="shipment.shipmentId"/>
+              <set field="serviceInput.statusId" value="PURCH_SHIP_RECEIVED"/>
+              <call-service service-name="updateShipment" in-map-name="serviceInput"/>
+            </if-compare>
+          </iterate>
+
           <!-- update the return header -->
           <set field="returnHeaderCtx.statusId" value="RETURN_RECEIVED"/>
           <set from-field="returnHeader.returnId" field="returnHeaderCtx.returnId"/>
