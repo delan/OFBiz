@@ -232,6 +232,29 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <screen name="CommonAdminDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="companies"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/admin/AdminTabBar.ftl"/></html>
+                                </platform-specific>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="main">
         <section>

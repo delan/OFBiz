@@ -485,14 +485,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListAcctgTransEntries"/>
     </request-map>
-    <request-map uri="viewGlAccountBalance">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewGlAccountBalance"/>
-    </request-map>
-    <request-map uri="viewGlReconciliation">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewGlReconciliation"/>
-    </request-map>
                                                                                                 
     <!-- =============== Fixed Asset mapping =================-->
     <request-map uri="ListFixedAssets"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssets"/></request-map>
@@ -840,7 +832,169 @@
         <response name="success" type="view" value="PrintCheckPDF"/>
     </request-map>
     
+    <!-- ================ Administratvie Requests ================ -->
+    <request-map uri="ListCompanies">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListCompanies"/>
+    </request-map>
+    <request-map uri="AdminMain">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdminMain"/>
+    </request-map>
+    <request-map uri="TimePeriods">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdminMain"/>
+    </request-map>
+    <request-map uri="PartyAcctgPreference">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyAcctgPreference"/>
+    </request-map>
+    <request-map uri="ListUnpostedAcctgTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListUnpostedAcctgTrans"/>
+    </request-map>
+    <request-map uri="postAcctgTrans">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="postAcctgTrans"/>
+        <response name="success" type="view" value="ListUnpostedAcctgTrans"/>
+        <response name="error" type="view" value="ListUnpostedAcctgTrans"/>
+    </request-map>
+    <request-map uri="createPartyAcctgPreference">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyAcctgPreference"/>
+        <response name="success" type="view" value="PartyAcctgPreference"/>
+        <response name="error" type="view" value="PartyAcctgPreference"/>
+    </request-map>
+    <request-map uri="closeAllTimePeriods">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="closeAllTimePeriods"/>
+        <response name="success" type="view" value="AdminMain"/>
+        <response name="error" type="view" value="AdminMain"/>
+    </request-map>
     
+    <request-map uri="GlAccountAssignment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+    <request-map uri="GlAccountSalInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+    <request-map uri="GlAccountPurInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+    <request-map uri="GlAccountTypePaymentType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+    </request-map>
+    <request-map uri="GlAccountNrPaymentMethod">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
+    </request-map>
+    
+    <request-map uri="addSalInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+        <response name="error" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+    
+    <request-map uri="removeSalInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+        <response name="error" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+    
+    <request-map uri="addPurInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+        <response name="error" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+    
+    <request-map uri="removePurInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+        <response name="error" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+    
+    <request-map uri="addPaymentTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addPaymentTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+        <response name="error" type="view" value="GlAccountTypePaymentType"/>
+    </request-map>
+    
+    <request-map uri="removePaymentTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+        <response name="error" type="view" value="GlAccountTypePaymentType"/>
+    </request-map>
+    
+    <request-map uri="addPaymentMethodTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addPaymentMethodTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
+        <response name="error" type="view" value="GlAccountNrPaymentMethod"/>
+    </request-map>
+    
+    <request-map uri="removePaymentMethodTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentMethodTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
+        <response name="error" type="view" value="GlAccountNrPaymentMethod"/>
+    </request-map>
+    
+    <request-map uri="viewFXConversions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewFXConversions"/>
+    </request-map>
+    
+    <request-map uri="updateFXConversion">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateFXConversion"/>
+        <response name="success" type="view" value="ViewFXConversions"/>
+        <response name="error" type="view" value="ViewFXConversions"/>
+    </request-map>
+
+    <!-- Actually reconcile account -->
+    <request-map uri="reconcileGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="reconcileGlAccount"/>
+        <response name="success" type="view" value="ViewGlAccountBalance"/>
+        <response name="error" type="view" value="ReconcileAccounts"/>
+    </request-map>
+    <request-map uri="viewGlAccountBalance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGlAccountBalance"/>
+    </request-map>
+    <request-map uri="viewGlReconciliation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGlReconciliation"/>
+    </request-map>
+    <!-- ================ check requests ================= -->
+    <request-map uri="listChecksToPrint">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListChecksToPrint"/>
+    </request-map>
+    <request-map uri="listChecksToSend">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListChecksToSend"/>
+    </request-map>
+    <request-map uri="printChecks">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintChecks"/>
+    </request-map>
+    <request-map uri="quickSendPayment">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="quickSendPayment"/>
+        <response name="success" type="view" value="ListChecksToSend"/>
+        <response name="error" type="view" value="ListChecksToSend"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -892,10 +1046,8 @@
     <view-map name="AccountActivitiesDetail" type="screen" page="component://accounting/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
     <view-map name="ListGlAccountEntries" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccountEntries"/>
     <view-map name="ListAcctgTransEntries" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListAcctgTransEntries"/>
-    <view-map name="ViewGlAccountBalance" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlAccountBalance"/>
-    <view-map name="ViewGlReconciliation" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlReconciliation"/>
 
-
+    <!-- fixed assets -->
     <view-map name="ListFixedAssets" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssets"/> 
     <view-map name="EditFixedAsset" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAsset"/> 
     <view-map name="ListFixedAssetProducts" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetProducts"/> 
@@ -908,7 +1060,7 @@
     <view-map name="ListFixedAssetsRollUp" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetRollUp"/> 
     <view-map name="ListFixedAssetStdCosts" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetStdCosts"/>
     <view-map name="EditFixedAssetStdCost" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetStdCost"/>
-
+    <!-- agreements -->
     <view-map name="FindAgreement" type="screen" page="component://accounting/widget/AgreementScreens.xml#FindAgreement"/>
     <view-map name="EditAgreement" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreement"/>
     <view-map name="ListAgreementItems" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementItems"/>
@@ -917,7 +1069,7 @@
     <view-map name="EditAgreementTerm" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementTerm"/>
     <view-map name="ListAgreementPromoAppls" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementPromoAppls"/>
     <view-map name="EditAgreementPromoAppl" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementPromoAppl"/>
-
+    <!-- tax authority -->
     <view-map name="FindTaxAuthority" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#FindTaxAuthority"/>
     <view-map name="EditTaxAuthority" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthority"/>
     <view-map name="EditTaxAuthorityCategories" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityCategories"/>
@@ -926,6 +1078,19 @@
     <view-map name="EditTaxAuthorityRateProducts" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityRateProducts"/>
     <view-map name="ListTaxAuthorityParties" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#ListTaxAuthorityParties"/>
     <view-map name="EditTaxAuthorityPartyInfo" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityPartyInfo"/>
+    <!-- administrative pages -->
+    <view-map name="ListCompanies" type="screen" page="component://accounting/widget/AdminScreens.xml#ListCompanies"/>
+    <view-map name="AdminMain" type="screen" page="component://accounting/widget/AdminScreens.xml#AdminMain"/>
+    <view-map name="TimePeriods" type="screen" page="component://accounting/widget/AdminScreens.xml#TimePeriods"/>
+    <view-map name="PartyAcctgPreference" type="screen" page="component://accounting/widget/AdminScreens.xml#PartyAcctgPreference"/>
+    <view-map name="ViewFXConversions" type="screen" page="component://accounting/widget/AdminScreens.xml#ViewFXConversions"/>
+    <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accounting/widget/AdminScreens.xml#ListUnpostedAcctgTrans"/>
+    <view-map name="GlAccountPurInvoice" type="screen" page="component://accounting/widget/AdminScreens.xml#GlAccountPurInvoice"/>
+    <view-map name="GlAccountSalInvoice" type="screen" page="component://accounting/widget/AdminScreens.xml#GlAccountSalInvoice"/>
+    <view-map name="GlAccountTypePaymentType" type="screen" page="component://accounting/widget/AdminScreens.xml#GlAccountTypePaymentType"/>
+    <view-map name="GlAccountNrPaymentMethod" type="screen" page="component://accounting/widget/AdminScreens.xml#GlAccountNrPaymentMethod"/>
+    <view-map name="ListChecksToPrint" type="screen" page="component://accounting/widget/AdminScreens.xml#ListChecksToPrint"/>
+    <view-map name="ListChecksToSend" type="screen" page="component://accounting/widget/AdminScreens.xml#ListChecksToSend"/>
     
     <!-- Transaction mappings -->
     <view-map name="FindGatewayResponses" page="component://accounting/widget/TransactionScreens.xml#FindGatewayResponses" type="screen"/>
