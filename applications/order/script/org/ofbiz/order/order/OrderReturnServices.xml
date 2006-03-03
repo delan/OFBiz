@@ -126,15 +126,15 @@
                 <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
             </entity-condition>
             <!-- this block is for debugging and can be removed later -->
-            <log level="info" message="Items and adjustments for return ${returnHeader.returnId}"/>
+            <log level="verbose" message="Items and adjustments for return ${returnHeader.returnId}"/>
             <entity-condition entity-name="ReturnAdjustment" list-name="returnAdjustments" distinct="true">
                 <condition-expr field-name="returnId" operator="equals" env-name="returnHeader.returnId"/>
             </entity-condition>
             <iterate entry-name="returnItem" list-name="returnItems">
-                <log level="info" message="item: ${returnItem.returnItemSeqId} ${returnItem.returnItemTypeId} [${returnItem.description}] ${returnItem.productId} ${returnItem.returnQuantity} ${returnItem.returnPrice}"/>
+                <log level="verbose" message="item: ${returnItem.returnItemSeqId} ${returnItem.returnItemTypeId} [${returnItem.description}] ${returnItem.productId} ${returnItem.returnQuantity} ${returnItem.returnPrice}"/>
             </iterate>
             <iterate entry-name="returnAdjustment" list-name="returnAdjustments">
-                <log level="info" message="adjustment: ${returnAdjustment.returnItemSeqId} ${returnAdjustment.returnAdjustmentTypeId} [${returnAdjustment.description}] ${returnAdjustment.amount}"/>
+                <log level="verbose" message="adjustment: ${returnAdjustment.returnItemSeqId} ${returnAdjustment.returnAdjustmentTypeId} [${returnAdjustment.description}] ${returnAdjustment.amount}"/>
             </iterate>
             <!-- debugging block -->
 
@@ -166,7 +166,6 @@
                     </call-service>
                     <log level="info" message="Available amount for return on order #${returnItem.orderId} is [${availableReturnTotal}] (orderTotal = [${orderTotal}] - returnTotal = [${returnTotal}]"/>
                     
-                    <!-- TODO: we need to replace this eventually with BigDecimal math -->
                     <if-compare field-name="availableReturnTotal" operator="less" value="-0.01" type="Double">
                         <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedTheOrderTotal"/></add-error>
                     </if-compare>
@@ -187,7 +186,6 @@
                          </calcop>
                   </calculate>
             </iterate>
-            <log level="info" message="returnTotal is [${returnTotalAmount}]"/>
             <if-compare field-name="returnTotalAmount" operator="less" value="0" type="Double">
                 <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnTotalCannotLessThanZero"/></add-error>
             </if-compare>
@@ -718,7 +716,7 @@
             <field-to-field field-name="returnId" to-map-name="balanceItemCtx"/>
             <set field="balanceItemCtx.returnItemSeqId" value="_NA_"/>
             <set from-field="availableReturnTotal" field="balanceItemCtx.amount" />
-            <log level="info" message="Creating a balance adjustment of [${availableReturnTotal}] for return [${returnId}]"/>
+            <log level="warning" message="Creating a balance adjustment of [${availableReturnTotal}] for return [${returnId}]"/>
 
             <!-- create the balance adjustment return item -->
             <call-service service-name="createReturnAdjustment" in-map-name="balanceItemCtx" include-user-login="true"/>
