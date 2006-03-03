@@ -33,6 +33,7 @@ import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 import org.ofbiz.webapp.control.*;
 import org.ofbiz.accounting.invoice.*;
+import org.ofbiz.accounting.payment.*;
 
 delegator = parameters.get("delegator");
 organizationPartyId = parameters.get("organizationPartyId");
@@ -228,31 +229,61 @@ if (notAppliedInvoices != null && notAppliedInvoices.size() > 0) {
 }
 		
 
-BigDecimal totalPaymentNotApplied = new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP);
-// check if any payments left not applied
+// list payments applied to other companies
 historyList = new LinkedList();
 if (payments != null && payments.size() > 0) {
 	Iterator pm = payments.iterator();
 	while (pm.hasNext())	{
 		payment = pm.next();
-		if (payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP).equals(new BigDecimal("0.00"))) continue;
+		// check if payment completely applied
+		BigDecimal amount = payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
+		if (amount.compareTo(new BigDecimal("0.00")) == 0) 
+			continue;
+		Debug.logInfo(" other company payments: " + payment.getString("paymentId") + " amount:" + payment.getBigDecimal("amount") + " applied:" + PaymentWorker.getPaymentAppliedBd(payment),"??");
+		List paymentApplications = payment.getRelated("PaymentApplication");   
+		Iterator pa = paymentApplications.iterator();
+		while (pa.hasNext())	{
+			GenericValue paymentApplication = pa.next();
+			GenericValue invoice = paymentApplication.getRelated("Invoice").get(0);
+			historyItem = new HashMap();
+			historyItem.put("paymentId",payment.getString("paymentId"));
+			historyItem.put("invoiceId",paymentApplication.getString("invoiceId"));
+			historyItem.put("invoiceItemSeqId",paymentApplication.getString("invoiceItemSeqId"));
+			historyItem.put("partyId",invoice.getString("partyId"));
+			historyItem.put("amount",amount.toString());
+			historyItem.put("applied",paymentApplication.getBigDecimal("amountApplied").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+			historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
+			historyList.add(historyItem);
+		}
+	}
+	context.put("historyListPaymentsO",historyList);
+}
+
+// list not applied payments
+BigDecimal totalPaymentNotApplied = new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP);
+historyList = new LinkedList();
+if (payments != null && payments.size() > 0) {
+	Iterator pm = payments.iterator();
+	while (pm.hasNext())	{
+		payment = pm.next();
+		payment = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",payment.getString("paymentId")));
+		notApplied = PaymentWorker.getPaymentAppliedBd(payment).subtract(payment.getBigDecimal("amount")).setScale(2,BigDecimal.ROUND_HALF_UP);
+		// check if payment completely applied
+		Debug.logInfo(" payment: " + payment.getString("paymentId") + " amount:" + payment.getBigDecimal("amount") + " applied:" + PaymentWorker.getPaymentAppliedBd(payment),"??");  
+		if (notApplied.compareTo(new BigDecimal("0.00")) == 0) 
+			continue;
 		historyItem = new HashMap();
 		historyItem.put("paymentId",payment.getString("paymentId"));
-		notApplied = payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
-		paymentDb = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",payment.getString("paymentId")));
-		BigDecimal amount = paymentDb.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
-/*		if (payment.getString("partyIdFrom").equals(organizationPartyId)) {
-			 amount = amount.multiply(new BigDecimal("-1"));
-			 notApplied = notApplied.multiply(new BigDecimal("-1"));
-		}
-*/		totalPaymentNotApplied = totalPaymentNotApplied.add(notApplied);
+		BigDecimal amount = payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
+		totalPaymentNotApplied = totalPaymentNotApplied.add(notApplied);
 		historyItem.put("amount",amount.toString());
 		historyItem.put("notApplied",notApplied.toString());
-		historyItem.put("effectiveDate",paymentDb.getString("effectiveDate").substring(0,10));
+		historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
 		historyList.add(historyItem);
 	}
 	context.put("historyListPaymentsN",historyList);
 }
+
 
 // create totals
 
