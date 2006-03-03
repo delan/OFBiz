@@ -25,10 +25,10 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-               	<set from-field="parameters.rootContentId"  field="rootContentId" />
-               	<set from-field="parameters.rootContentRevisionSeqId"  field="rootContentRevisionSeqId" />
-               	<set from-field="parameters.rootContentId"  field="contentId" />
-               	<set from-field="parameters.rootContentRevisionSeqId"  field="contentRevisionSeqId" />
+               	<set from-field="parameters.rootContentId" default-value="${parameters.contentId}"  field="rootContentId" />
+               	<set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}"  field="rootContentRevisionSeqId" />
+               	<set from-field="parameters.rootContentId" default-value="${parameters.contentId}"  field="contentId" />
+               	<set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}"  field="contentRevisionSeqId" />
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
                 <set field="menuName" value="tree"/>
@@ -63,6 +63,12 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+               	<set from-field="parameters.rootContentId" default-value="${parameters.contentId}"  field="rootContentId" />
+               	<set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}"  field="rootContentRevisionSeqId" />
+               	<set from-field="parameters.rootContentId" default-value="${parameters.contentId}"  field="contentId" />
+               	<set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}"  field="contentRevisionSeqId" />
+                <entity-one entity-name="Content" value-name="content" use-cache="true"/>
+                <set from-field="content.contentTypeId" field="contentTypeId" />
                 <set field="menuName" value="empty"/>
                 <set field="currentMenuItemName" value="approval"/>
                 <set field="title" value="Waiting Content Approvals"/>
@@ -320,7 +326,7 @@ under the License.
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <container><link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootTemplateContentId=${rootTemplateContentId}&amp;rootTemplateRevSeqId=${rootTemplateRevSeqId}&amp;rootInstanceContentId=${rootInstanceContentId}&amp;rootInstanceRevSeqId=${rootInstanceRevSeqId}" text="Create New Root CompDoc Template" style="buttontext"/></container>
+                        <container><link target="AddRootCompDocTemplate?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" text="Create New Root CompDoc Template" style="buttontext"/></container>
                         <include-form name="ListCompDocInstances" location="component://content/widget/compdoc/CompDocForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -359,13 +365,13 @@ under the License.
                     </condition>
                     <actions>
                 		<set field="title" value="Edit CompDoc Template [${rootContentId}]"/>
-                        <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootTemplateRevSeqId}" field="rootTemplateRevSeqId"/>
+                        <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootContentRevisionSeqId}" field="rootContentRevisionSeqId"/>
                     </actions>
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                             <decorator-section name="body">
                                 <container>
-									<link target="AddRootCompDocInstance?contentId=${rootTemplateContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" text="Create Instance of This Template" style="buttontext"/>
+									<link target="AddRootCompDocInstance?contentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}" text="Create Instance of This Template" style="buttontext"/>
             						<link target="ViewInstances?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
 								</container>
                                 <include-form name="EditRootCompDocTemplate" location="component://content/widget/compdoc/CompDocForms.xml"/>
@@ -378,8 +384,8 @@ under the License.
                         <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
                     </condition>
                     <actions>
-                		<set field="title" value="Edit CompDoc Instance [${parameters.contentId}]"/>
-                        <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootInstanceRevSeqId}" field="rootInstanceRevSeqId"/>
+                		<set field="title" value="Edit CompDoc Instance [${rootContentId}]"/>
+                        <set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootContentRevisionSeqId}" field="rootContentRevisionSeqId"/>
                     </actions>
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -404,6 +410,7 @@ under the License.
                 <set from-field="parameters.contentId" field="itemContentId"/>
                 <set from-field="parameters.caContentIdTo" default-value="${parameters.rootContentId}" field="contentId"/>
                 <set from-field="parameters.rootContentId" default-value="${parameters.caContentIdTo}" field="rootContentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="rootContentRevisionSeqId"/>
                 <entity-one entity-name="Content" value-name="itemContent" use-cache="false">
 					<field-map field-name="contentId" env-name="itemContentId"/>
 				</entity-one>
@@ -436,7 +443,7 @@ under the License.
                     </condition-list>
                     <order-by field-name="-contentRevisionSeqId"/>
                 </entity-condition>
-				<set from-field="contentRevisions[0].contentRevisionSeqId" default-value="${}" field="rootContentRevisionSeqId" />
+				<set from-field="rootContentRevisionSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}" field="rootContentRevisionSeqId" />
 				
             </actions>
 			<widgets>
@@ -888,7 +895,7 @@ under the License.
                     <decorator-section name="body">
                                 <container>
             						<link target="ViewInstances?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}" text="View Instances" style="buttontext"/>
-									<link target="AddRootCompDocInstance?contentId=${rootTemplateContentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" text="Create Instance of This Template" style="buttontext"/>
+									<link target="AddRootCompDocInstance?contentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}" text="Create Instance of This Template" style="buttontext"/>
 								</container>
                         <include-tree  name="CompDocTemplateTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
                     </decorator-section>

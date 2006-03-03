@@ -26,6 +26,7 @@
     
     <Content contentId="CDT0211" contentTypeId="COMPDOC_TEMPLATE" ownerContentId=""  contentName="2J Placeholder (CDT Root/Sub-Root)" description=""/>
     
+	<!--
     <Content contentId="CDT1121" contentTypeId="TEMPLATE" contentName="Receive letter of inquiry" description="" ownerContentId="" />
     <Content contentId="CDT1122" contentTypeId="TEMPLATE" contentName="POA Contract" description="" ownerContentId="" />
     <Content contentId="CDT1123" contentTypeId="TEMPLATE" contentName="Personal Profile" description="" ownerContentId="" />
@@ -38,7 +39,7 @@
     <ContentAssoc contentIdTo="CDT1201" contentId="CDT1124" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
     <ContentAssoc contentIdTo="CDT1201" contentId="CDT1125" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
     <ContentAssoc contentIdTo="CDT1201" contentId="CDT1126" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
-    
+    -->
 
     <Content contentId="CDT1101" contentTypeId="TEMPLATE" contentName="Letter of inquiry" description="" ownerContentId=""/>
     <Content contentId="CDT1102" contentTypeId="TEMPLATE" contentName="POA Contract" description="" ownerContentId="" />
@@ -108,10 +109,12 @@
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000002" itemContentId="CDT1116"/>
 
     <ContentRevision contentId="CDT1201" contentRevisionSeqId="000013"/>
+	<!--
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1121"/>
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1122"/>
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1123"/>
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1124"/>
+		-->
 
     <ContentRevision contentId="CDT1201" contentRevisionSeqId="000004"/>
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000004" itemContentId="CDT1102" oldDataResourceId="DR1102a" newDataResourceId="DR1102b" />

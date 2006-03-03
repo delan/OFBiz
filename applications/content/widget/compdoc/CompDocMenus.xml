@@ -216,13 +216,13 @@
             <condition>
                 <not><if-empty field-name="assocRevisionItemView"/></not>
             </condition>
-            <link target="EditCompDoc?contentId=${assocRevisionItemView.contentId}&amp;caContentIdTo=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}"/>
+            <link target="EditCompDoc?contentId=${assocRevisionItemView.contentId}&amp;caContentIdTo=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="edit-link" title="Edit" >
             <condition>
                 <not><if-empty field-name="assocRevisionItemView"/></not>
             </condition>
-            <link target="EditChildCompDoc?contentId=${assocRevisionItemView.contentId}&amp;caContentIdTo=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}"/>
+            <link target="EditChildCompDoc?contentId=${assocRevisionItemView.contentId}&amp;caContentIdTo=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         
         <menu-item name="edit-inplace-add" title="${contentName}[${assocRevisionItemView.itemContentId}]" >
@@ -242,7 +242,7 @@
             <condition>
                 <not><if-empty field-name="assocRevisionItemView"/></not>
             </condition>
-            <link target="GenContentPdf?contentId=${assocRevisionItemView.contentId}"/>
+            <link target="GenContentPdf?contentId=${assocRevisionItemView.contentId}&amp;caSequenceNum=${sequenceNum}"/>
         </menu-item>
     </menu>
         
@@ -255,10 +255,10 @@
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="edit-inplace" title="${instanceContent.contentName}[${instanceContent.contentId}]"  widget-style="head2">
-            <link target="EditRootCompDoc?contentId=${instanceContentId}&amp;contentRevisionSeqId=${instanceContentRevisionSeqId}"/>
+            <link target="EditRootCompDoc?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="edit" title="[Edit]" >
-            <link target="EditRootCompDoc?contentId=${instanceContentId}&amp;contentRevisionSeqId=${instanceContentRevisionSeqId}"/>
+            <link target="EditRootCompDoc?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="viewtree" title="View Template Tree">
             <link target="ViewCompDocTemplateTree?rootContentRevisionSeqId=${templateContentRevisionSeqId}&amp;rootContentId=${templateContentId}"/>

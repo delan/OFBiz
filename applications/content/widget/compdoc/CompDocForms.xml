@@ -124,7 +124,10 @@ under the License.
         <field name="create" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Create]" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
-        <field name="tree" title=" " widget-style="buttontext">
+        <field name="tree" title=" " widget-style="buttontext" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+            <hyperlink also-hidden="false" description="[Tree]" target="ViewCompDocInstanceTree?rootContentId=${contentId}&amp;rootContentRevisionSeqId=${contentRevisionSeqId}"/>
+        </field>
+        <field name="tree" title=" " widget-style="buttontext" use-when="contentTypeId.equals(&quot;COMPDOC_TEMPLATE&quot;)">
             <hyperlink also-hidden="false" description="[Tree]" target="ViewCompDocTemplateTree?rootContentId=${contentId}&amp;rootContentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
     </form>
@@ -219,10 +222,11 @@ under the License.
     </form>
 
     <form name="ListContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext"
-                target="updateContentApproval"   
+                target="updateContentApprovalStatus"   
                list-name="contentApprovalList" default-widget-style="tabletext" title="" type="list">
         <field name="contentApprovalId" widget-style="tabletext"><display/></field>
         <field name="contentId"><hidden/></field>
+        <field name="rootContentId" map-name="empty"><hidden/></field>
         <field name="contentRevisionSeqId"><display/></field>
         <field name="partyId"><display/></field>
         <field name="roleTypeId">
