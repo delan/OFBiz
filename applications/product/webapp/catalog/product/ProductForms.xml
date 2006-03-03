@@ -960,6 +960,11 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="calculateProductCosts" map-name=""/>
         <field name="productId"><hidden value="${productId}"/></field>
+        <field name="costComponentTypePrefix" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <option key="EST_STD" description="Estimated Standard Costs"/>
+            </drop-down>
+        </field>
         <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="${defaultCurrencyUomId}">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]">
