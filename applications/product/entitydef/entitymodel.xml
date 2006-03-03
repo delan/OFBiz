@@ -990,6 +990,7 @@
       <field name="oldAvailableToPromise" col-name="AVAILABLE_TO_PROMISE" type="floating-point"></field>
       <field name="serialNumber" type="value"></field>
       <field name="unitCost" type="currency-amount"></field>
+      <field name="currencyUomId" type="id"><description>The currency Uom of the unit cost.</description></field>
       <prim-key field="inventoryItemId"/>
       <relation type="one" fk-name="INV_ITEM_TYPE" rel-entity-name="InventoryItemType">
         <key-map field-name="inventoryItemTypeId"/>
@@ -1033,6 +1034,9 @@
       </relation>
       <relation type="one" fk-name="INV_ITEM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
     <view-entity entity-name="InventoryItemAndLocation"
