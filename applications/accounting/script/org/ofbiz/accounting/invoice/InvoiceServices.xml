@@ -176,7 +176,8 @@ under the License.
         </call-service>
         <set field="invoice.invoiceId" from-field="parameters.invoiceId"/>
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        <set from-field="nowTimestamp" field="invoice.invoiceDate"/>
+        <set field="invoice.invoiceDate" from-field="nowTimestamp"/>
+        <set field="invoice.statusId" value="INVOICE_IN_PROCESS"/>
         <set-service-fields service-name="createInvoice" map-name="invoice" to-map-name="newInvoice"/>
         <call-service service-name="createInvoice" in-map-name="newInvoice">
             <result-to-field result-name="invoiceId" field-name="invoiceId"/>
