@@ -171,11 +171,11 @@ public class InvoiceServices {
             String billFromVendorPartyId = orh.getBillFromParty().getString("partyId");
 
             // get some quantity totals
-            BigDecimal totalItemsInOrder = new BigDecimal(orh.getTotalOrderItemsQuantity());
+            BigDecimal totalItemsInOrder = orh.getTotalOrderItemsQuantityBd();
 
             // get some price totals
-            BigDecimal shippableAmount = new BigDecimal(orh.getShippableTotal(null));
-            BigDecimal orderSubTotal = new BigDecimal(orh.getOrderItemsSubTotal());
+            BigDecimal shippableAmount = orh.getShippableTotalBd(null);
+            BigDecimal orderSubTotal = orh.getOrderItemsSubTotalBd();
 
             BigDecimal invoiceShipProRateAmount = ZERO;
             BigDecimal invoiceSubTotal = ZERO;
