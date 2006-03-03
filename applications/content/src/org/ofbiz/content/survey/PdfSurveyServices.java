@@ -381,6 +381,7 @@ public class PdfSurveyServices {
     //      String[] sa = fs.getAppearanceStates("TDP");
     //      for (int i=0;i<sa.length;i++)
     //          Debug.log("Appearance="+sa[i]);
+            
             Iterator iter = map.keySet().iterator();
             while (iter.hasNext()) {
                 String fieldName=(String)iter.next();
@@ -401,7 +402,8 @@ public class PdfSurveyServices {
             
                 if (UtilValidate.isNotEmpty(fieldValue))
                     fs.setField(fieldName, fieldValue);
-            }           
+            }      
+                 
             s.close();
             baos.close();
             ByteWrapper outByteWrapper = new ByteWrapper(baos.toByteArray());
@@ -416,6 +418,9 @@ public class PdfSurveyServices {
             System.err.println(e.getMessage());
             ServiceUtil.returnError(e.getMessage());
         } catch(IOException ioe) {
+            System.err.println(ioe.getMessage());
+            ServiceUtil.returnError(ioe.getMessage());
+        } catch(Exception ioe) {
             System.err.println(ioe.getMessage());
             ServiceUtil.returnError(ioe.getMessage());
         }
@@ -503,6 +508,7 @@ public class PdfSurveyServices {
         Map results = ServiceUtil.returnSuccess();
         Map acroFieldMap = new HashMap();
         String surveyResponseId = (String)context.get("surveyResponseId");
+        String acroFormContentId = null;
     
         try {
             String surveyId = null;
@@ -513,6 +519,13 @@ public class PdfSurveyServices {
                 }
             }
 
+            if (UtilValidate.isNotEmpty(surveyId)) {
+                GenericValue survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
+                if (survey != null) {
+                    acroFormContentId = survey.getString("acroFormContentId");
+                }
+            }
+            
             List responses = delegator.findByAnd("SurveyResponseAnswer", UtilMisc.toMap("surveyResponseId", surveyResponseId));
             Iterator iter = responses.iterator();
             while (iter.hasNext()) {
@@ -552,6 +565,7 @@ public class PdfSurveyServices {
             ModelService modelService = dispatcher.getDispatchContext().getModelService("setAcroFields");
             Map ctx = modelService.makeValid(context, "IN");
             ctx.put("acroFieldMap", acroFieldMap);
+            ctx.put("contentId", acroFormContentId);
             Map map = dispatcher.runSync("setAcroFields", ctx);
             if (ServiceUtil.isError(map)) {
                 String errMsg = ServiceUtil.makeErrorMessage(map, null, null, null, null);
@@ -562,7 +576,7 @@ public class PdfSurveyServices {
             ByteWrapper outByteWrapper = (ByteWrapper)map.get("outByteWrapper");
             results.put("outByteWrapper", outByteWrapper);
             if (UtilValidate.isNotEmpty(pdfFileNameOut)) {
-                FileOutputStream fos = new FileOutputStream("pdfFileNameOut");
+                FileOutputStream fos = new FileOutputStream(pdfFileNameOut);
                 fos.write(outByteWrapper.getBytes());
                 fos.close();
             }

@@ -77,21 +77,21 @@ public class OpenOfficeEvents {
             return "error";
         }
         
-        ByteWrapper pdfByteWrapper = (ByteWrapper)results.get("pdfByteWrapper");
+        ByteWrapper outByteWrapper = (ByteWrapper)results.get("outByteWrapper");
 
         // setup content type
         String contentType = "application/pdf; charset=ISO-8859-1";
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(pdfByteWrapper.getBytes());
+        ByteArrayInputStream bais = new ByteArrayInputStream(outByteWrapper.getBytes());
         try {
             FileOutputStream fos = new FileOutputStream("/home/byersa/pdftest.pdf");
-            fos.write(pdfByteWrapper.getBytes());
+            fos.write(outByteWrapper.getBytes());
         } catch(FileNotFoundException e) {
         } catch(IOException e) {
             
         }
         try {
-            UtilHttp.streamContentToBrowser(response, bais, pdfByteWrapper.getLength(), contentType);
+            UtilHttp.streamContentToBrowser(response, bais, outByteWrapper.getLength(), contentType);
         } catch(IOException e) {
             
         }
@@ -148,21 +148,22 @@ public class OpenOfficeEvents {
             return "error";
         }
         
-        ByteWrapper pdfByteWrapper = (ByteWrapper)results.get("pdfByteWrapper");
+        ByteWrapper outByteWrapper = (ByteWrapper)results.get("outByteWrapper");
 
         // setup content type
         String contentType = "application/pdf; charset=ISO-8859-1";
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(pdfByteWrapper.getBytes());
+        ByteArrayInputStream bais = new ByteArrayInputStream(outByteWrapper.getBytes());
         try {
             FileOutputStream fos = new FileOutputStream("/home/byersa/pdftest.pdf");
-            fos.write(pdfByteWrapper.getBytes());
+            fos.write(outByteWrapper.getBytes());
+            fos.close();
         } catch(FileNotFoundException e) {
         } catch(IOException e) {
             
         }
         try {
-            UtilHttp.streamContentToBrowser(response, bais, pdfByteWrapper.getLength(), contentType);
+            UtilHttp.streamContentToBrowser(response, bais, outByteWrapper.getLength(), contentType);
         } catch(IOException e) {
             
         }

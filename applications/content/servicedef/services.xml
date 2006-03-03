@@ -863,6 +863,14 @@
         <attribute name="rootContentId" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="persistCompDocPdf2Survey" engine="simple"
+        transaction-timout="72000" 
+            location="org/ofbiz/content/compdoc/CompDocServices.xml" invoke="persistCompDocPdf2Survey" auth="true">
+        <description>Upload/save PDF, create Survey, populate Content</description>
+        <implements service="persistCompDocContent"/>
+        <attribute name="pdfName" type="String" mode="IN" optional="true"/>
+    </service>
+    
     <service name="persistContentWithRevision" engine="java"
         transaction-timout="72000" 
             location="org.ofbiz.content.ContentManagementServices" invoke="persistContentWithRevision" auth="true">
@@ -1382,7 +1390,7 @@
         <attribute name="https" type="String" mode="IN" optional="true"/>
         <attribute name="rootDir" type="String" mode="IN" optional="true"/>
         <attribute name="locale" type="java.util.Locale" mode="IN" optional="true"/>
-        <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="false"/>
+        <attribute name="outByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="false"/>
     </service>
     
     <service name="renderContentPdf" engine="java"
@@ -1395,6 +1403,6 @@
         <attribute name="https" type="String" mode="IN" optional="true"/>
         <attribute name="rootDir" type="String" mode="IN" optional="true"/>
         <attribute name="locale" type="java.util.Locale" mode="IN" optional="true"/>
-        <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="false"/>
+        <attribute name="outByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="false"/>
     </service>
 </services>

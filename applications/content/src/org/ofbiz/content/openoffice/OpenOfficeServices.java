@@ -445,7 +445,7 @@ public class OpenOfficeServices {
                     Debug.logInfo("text/html string:" + s, module);
                     continue;
                 } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
-                    String surveyResponseId = dataResource.getString("objectInfo");
+                    String surveyResponseId = dataResource.getString("relatedDetailId");
                     String surveyId = null;
                     String acroFormContentId = null;
                     GenericValue surveyResponse = null;
@@ -455,7 +455,7 @@ public class OpenOfficeServices {
                             surveyId = surveyResponse.getString("surveyId");
                         }
                     }
-                    if (UtilValidate.isNotEmpty(surveyId) && UtilValidate.isEmpty(contentId)) {
+                    if (UtilValidate.isNotEmpty(surveyId)) {
                         GenericValue survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
                         if (survey != null) {
                             acroFormContentId = survey.getString("acroFormContentId");
@@ -478,7 +478,6 @@ public class OpenOfficeServices {
                             reader = new PdfReader(inputByteArray);
                         }
                     }
-                    continue;
                 } else {
                     byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
                     OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
@@ -498,7 +497,7 @@ public class OpenOfficeServices {
             }
             document.close();
             ByteWrapper outByteWrapper = new ByteWrapper(baos.toByteArray());
-            results.put("pdfByteWrapper", outByteWrapper);
+            results.put("outByteWrapper", outByteWrapper);
         } catch (GenericEntityException e) {
            return ServiceUtil.returnError(e.getMessage());
         } catch (IOException ioe) {
@@ -584,7 +583,7 @@ public class OpenOfficeServices {
                 String s = new String(inputByteArray);
                 Debug.logInfo("text/html string:" + s, module);
             } else if (inputMimeType != null && inputMimeType.equals("application/vnd.ofbiz.survey.response")) {
-                String surveyResponseId = dataResource.getString("objectInfo");
+                String surveyResponseId = dataResource.getString("relatedDetailId");
                 String surveyId = null;
                 String acroFormContentId = null;
                 GenericValue surveyResponse = null;
@@ -594,7 +593,7 @@ public class OpenOfficeServices {
                         surveyId = surveyResponse.getString("surveyId");
                     }
                 }
-                if (UtilValidate.isNotEmpty(surveyId) && UtilValidate.isEmpty(contentId)) {
+                if (UtilValidate.isNotEmpty(surveyId)) {
                     GenericValue survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
                     if (survey != null) {
                         acroFormContentId = survey.getString("acroFormContentId");
@@ -609,13 +608,13 @@ public class OpenOfficeServices {
                         Map survey2PdfResults = dispatcher.runSync("buildPdfFromSurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
                         ByteWrapper outByteWrapper = (ByteWrapper)survey2PdfResults.get("outByteWrapper");
                         inputByteArray = outByteWrapper.getBytes();
-                        reader = new PdfReader(inputByteArray);
+                        //reader = new PdfReader(inputByteArray);
                     } else {
                         // Fill in acroForm
                         Map survey2PdfResults = dispatcher.runSync("setAcroFieldsFromSurveyResponse", UtilMisc.toMap("surveyResponseId", surveyResponseId));
                         ByteWrapper outByteWrapper = (ByteWrapper)survey2PdfResults.get("outByteWrapper");
                         inputByteArray = outByteWrapper.getBytes();
-                        reader = new PdfReader(inputByteArray);
+                        //reader = new PdfReader(inputByteArray);
                     }
                 }
             } else {
@@ -625,17 +624,11 @@ public class OpenOfficeServices {
                 inputByteArray = oobaos.toByteArray();
                 oobais.close();
                 oobaos.close();
-                reader = new PdfReader(inputByteArray);
-            }
-            int n = reader.getNumberOfPages();
-            for (int i=0; i < n; i++) {
-                PdfImportedPage pg = writer.getImportedPage(reader, i + 1);
-                //cb.addTemplate(pg, left, height * pgCnt);
-                writer.addPage(pg);
+                //reader = new PdfReader(inputByteArray);
             }
             
-            ByteWrapper outByteWrapper = new ByteWrapper(baos.toByteArray());
-            results.put("pdfByteWrapper", outByteWrapper);
+            ByteWrapper outByteWrapper = new ByteWrapper(inputByteArray);
+            results.put("outByteWrapper", outByteWrapper);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         } catch (IOException ioe) {
