@@ -895,7 +895,7 @@ under the License.
                     <decorator-section name="body">
                                 <container>
             						<link target="ViewInstances?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}" text="View Instances" style="buttontext"/>
-									<link target="AddRootCompDocInstance?contentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}" text="Create Instance of This Template" style="buttontext"/>
+									<link target="AddRootCompDocInstance?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}" text="Create Instance of This Template" style="buttontext"/>
 								</container>
                         <include-tree  name="CompDocTemplateTree" location="component://content/widget/compdoc/CompDocTemplateTree.xml"/>
                     </decorator-section>
