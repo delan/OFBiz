@@ -41,4 +41,49 @@ under the License.
         <description>Delete a CostComponent</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="recreateCostComponent" default-entity-name="CostComponent" engine="simple" 
+                location="org/ofbiz/product/cost/CostServices.xml" invoke="recreateCostComponent" auth="true">
+        <description>Create a CostComponent and cancel the existing ones</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+    </service>
+    <service name="cancelCostComponents" engine="simple" 
+                location="org/ofbiz/product/cost/CostServices.xml" invoke="cancelCostComponents" auth="true">
+        <description>Cancels CostComponent</description>
+        <attribute mode="IN" name="costComponentId" optional="true" type="String"/>
+        <attribute mode="IN" name="productId" optional="true" type="String"/>
+        <attribute mode="IN" name="costUomId" optional="true" type="String"/>
+        <attribute mode="IN" name="costComponentTypeId" optional="true" type="String"/>
+    </service>
+    <service name="getProductCost" engine="simple" auth="true"
+                location="org/ofbiz/product/cost/CostServices.xml" invoke="getProductCost">
+        <description>Gets the product's costs (from CostComponent or ProductPrice)</description>
+        <attribute mode="IN" name="productId" optional="false" type="String"/>
+        <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
+        <attribute mode="IN" name="costComponentTypePrefix" optional="false" type="String"/>
+        <attribute mode="OUT" name="productCost" type="Double" optional="false"/>
+    </service>
+    <service name="getTaskCost" engine="simple" auth="true"
+                location="org/ofbiz/product/cost/CostServices.xml" invoke="getTaskCost">
+        <description>Gets the production run task's costs</description>
+        <attribute mode="IN" name="workEffortId" optional="false" type="String"/>
+        <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
+        <attribute mode="IN" name="productId" optional="true" type="String"/>
+        <attribute mode="IN" name="routingId" optional="true" type="String"/>
+        <attribute mode="OUT" name="taskCost" type="Double" optional="false"/>
+    </service>
+    <service name="calculateProductCosts" engine="simple" auth="true"
+                location="org/ofbiz/product/cost/CostServices.xml" invoke="calculateProductCosts">
+        <description>Calculates the product's costs</description>
+        <attribute mode="IN" name="productId" optional="false" type="String"/>
+        <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
+        <attribute mode="IN" name="costComponentTypePrefix" optional="false" type="String"/>
+        <attribute mode="OUT" name="totalCost" type="Double"/>
+    </service>
+    <service name="calculateAllProductsCosts" engine="simple" auth="true" transaction-timout="7200"
+                location="org/ofbiz/product/cost/CostServices.xml" invoke="calculateAllProductsCosts">
+        <description>Calculates estimated costs for all the products</description>
+        <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
+        <attribute mode="IN" name="costComponentTypePrefix" optional="false" type="String"/>
+    </service>
 </services>
