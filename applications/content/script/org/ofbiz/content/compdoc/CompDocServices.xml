@@ -943,12 +943,15 @@ under the License.
         </iterate>
         <log level="info" message="roles: ${roles}"/>        
         
-		<!-- find approvals belonging to user -->
+		<!-- find approvals belonging to roles that the user has or to the user -->
         <entity-condition entity-name="MaxContentApprovalView" list-name="compdocApprovalList" use-cache="false">
             <condition-list>
                 <condition-expr field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId" operator="less-equals" ignore-if-empty="true"/>
                 <condition-expr field-name="contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/>
-                <condition-expr field-name="roleTypeId" operator="in" env-name="roles"/>
+                <condition-list combine="or">
+                    <condition-expr field-name="partyId" operator="equals" env-name="partyId"/>
+                    <condition-expr field-name="roleTypeId" operator="in" env-name="roles"/>
+                </condition-list>
             </condition-list>
             <select-field field-name="contentId"/>
             <select-field field-name="contentTypeId"/>
@@ -983,10 +986,6 @@ under the License.
         <entity-condition entity-name="ContentApproval" list-name="contentApprovalList">
             <condition-list combine="and">
                 <condition-expr field-name="contentApprovalId" operator="in" env-name="contentApprovalIdList"/>
-                <condition-list combine="or">
-                    <condition-expr field-name="partyId" operator="equals" env-name="partyId"/>
-                    <condition-expr field-name="roleTypeId" operator="in" env-name="roles"/>
-                </condition-list>
             </condition-list>
         </entity-condition>
         <log level="info" message="contentApprovalList: ${contentApprovalList}"/>        

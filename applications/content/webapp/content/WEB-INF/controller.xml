@@ -934,6 +934,12 @@
     <request-map uri="updateContentApproval">
         <security auth="true" https="true"/>
         <event invoke="updateContentApproval" path="" type="service"/>
+        <response name="success" type="view" value="EditContentApproval"/>
+        <response name="error" type="view" value="EditContentApproval"/>
+    </request-map>
+    <request-map uri="updateContentApprovalStatus">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentApproval" path="" type="service"/>
         <response name="success" type="view" value="ListContentApproval"/>
         <response name="error" type="view" value="ListContentApproval"/>
     </request-map>
