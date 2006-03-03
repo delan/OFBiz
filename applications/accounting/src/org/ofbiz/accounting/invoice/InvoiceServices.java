@@ -1005,8 +1005,11 @@ public class InvoiceServices {
                 }
             }
 
-            // ratio of the invoice total to the promised total so far
-            BigDecimal actualToPromisedRatio = invoiceTotal.divide(promisedTotal, decimals, rounding);
+            // ratio of the invoice total to the promised total so far or zero if the amounts were zero
+            BigDecimal actualToPromisedRatio = ZERO;
+            if (invoiceTotal.signum() != 0) {
+                invoiceTotal = invoiceTotal.divide(promisedTotal, decimals, rounding);
+            }
 
             // loop through return-wide adjustments and create invoice items for each
             List adjustments = returnHeader.getRelatedByAndCache("ReturnAdjustment", UtilMisc.toMap("returnItemSeqId", "_NA_"));
