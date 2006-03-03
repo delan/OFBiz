@@ -119,8 +119,8 @@ if (purchaseOrder != null) {
             }
         }
 
-        // for display purposes, put the currency ID as the description
-        context.put("currency", ownerCurrencyUomId);
+        // put the pref currency in the map for display and form use
+        context.put("currencyUomId", ownerCurrencyUomId);
     } else {
         request.setAttribute("_ERROR_MESSAGE_", "Either no owner party was set for this facility, or no accounting preferences were set for this owner party.");
     }
