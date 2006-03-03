@@ -43,7 +43,7 @@
   <!-- ========================================================= -->
   <!-- ======================== View Entities ======================= -->
   <!-- ========================================================= -->
-
+<!--
      <view-entity entity-name="CustomerSummary"
             package-name="org.ofbiz.opentravelsystem"
             never-cache="true"
@@ -88,7 +88,7 @@
       <key-map field-name="partyId"/>
     </view-link>
   </view-entity>
-  
+-->  
 
 
 

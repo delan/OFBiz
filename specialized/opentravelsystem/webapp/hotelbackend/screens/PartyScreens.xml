@@ -111,8 +111,19 @@
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1" text="Party: ${party.groupName} ${party.lastName} ${party.firstName} ${party.middleName} [${partyId}] financial history"/></container>
-                        <container><label style="head1" text="Applied invoices to payments"/></container>
+                        <container><label style="head1" text="Invoices paid by payments"/></container>
                         <include-form name="partyFinancialHistoryInvoices" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field-name="historyListPaymentsO"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <container><label style="head1" text="Invoices of other parties paid by payments from ${partyId}"/></container>
+                                <include-form name="partyFinancialHistoryPaymentsO" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                            </widgets>
+                        </section>
                         <section>
                             <condition>
                                 <not>

@@ -143,6 +143,18 @@
         <field name="invoiceNotApplied" widget-area-style="tabletextright"><display/></field>
     </form>
 
+    <form name="partyFinancialHistoryPaymentsO" type="list" list-name="historyListPaymentsO" 
+        default-title-style="tableheadtext" default-widget-style="tabletext" 
+        default-tooltip-style="tabletext" target="updateCategoryProductMember">
+        <field name="paymentId"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
+        <field name="effectiveDate"><display/></field>
+        <field name="amount" widget-area-style="tabletextright"><display/></field>
+        <field name="applied" widget-area-style="tabletextright"><display/></field>
+        <field name="invoiceId"><hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/></field>
+        <field name="invoiceItemSeqId" title="Seq"><display/></field>
+        <field name="partyId" widget-area-style="tabletextright"><display/></field>
+    </form>
+
     <form name="partyFinancialHistoryPaymentsN" type="list" list-name="historyListPaymentsN" 
         default-title-style="tableheadtext" default-widget-style="tabletext" 
         default-tooltip-style="tabletext" target="updateCategoryProductMember">

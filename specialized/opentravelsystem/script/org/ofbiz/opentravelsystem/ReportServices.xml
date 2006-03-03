@@ -235,8 +235,9 @@
         </if-empty>
         
         <iterate entry-name="payment" list-name="payments">
-            <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentAppliedBd(payment)}"/>
-            <if-compare field-name="appliedAmount" operator="not-equals" value="${payment.amount}">
+            <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment)}" type="Double"/>
+            <set field="amount" value="${payment.amount}" type="Double"/> 
+            <if-compare field-name="amount" operator="greater" value="${appliedAmount}">
                 <field-to-list field-name="payment" list-name="openPayments"/>
             </if-compare>
             <calculate field-name="count">
