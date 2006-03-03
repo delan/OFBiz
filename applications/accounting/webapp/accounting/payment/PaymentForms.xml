@@ -95,14 +95,21 @@
         </field>
         <field position="1" name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" use-when="(payment!=null)&amp;&amp;(payment.get(&quot;partyIdFrom&quot;)!=null)">
             <drop-down allow-empty="false">
-                <entity-options  key-field-name="paymentMethodId" entity-name="PaymentMethod" description="${paymentMethodId}">
+                <entity-options  key-field-name="paymentMethodId" entity-name="PaymentMethod" description="${paymentMethodTypeId} (${paymentMethodId})">
                     <entity-constraint name="partyId" operator="equals" value="${payment.partyIdFrom}"/>
                     <entity-order-by field-name="paymentMethodTypeId"/>
                 </entity-options>
             </drop-down>
         </field>
         <field name="statusId" use-when="paymentId==null"><hidden value="PMNT_NOT_PAID"/></field>
-        <field position="2" name="statusId"  use-when="paymentId!=null"><display-entity entity-name="StatusItem"/></field>
+        <field name="statusId" use-when="paymentId!=null">
+            <drop-down allow-empty="false">
+                 <entity-options entity-name="StatusItem" description="${description}">
+                 	 <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
+                 	 <entity-order-by field-name="description"/>
+                 </entity-options>            	
+            </drop-down>
+        </field>
         <field name="partyIdFrom" position="1"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="amount" position="1"><text/></field>
