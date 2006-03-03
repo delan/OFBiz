@@ -436,8 +436,9 @@
                     <div class="tableheadtext">${uiLabelMap.ProductPerUnitPrice} :</div>
                   </td>
                   <td align="right">
+                    <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId?if_exists}"/>
                     <input type="text" class="inputBox" name="unitCost_o_${rowCount}" value="${itemCost?string("##0.00")}" size="6"/>
-                    <span class="tabletext">${currency?if_exists}</span>
+                    <span class="tabletext">${currencyUomId?if_exists}</span>
                   </td>
                 </tr>
               </table>
