@@ -39,6 +39,8 @@
   String maxRecStr = request.getParameter("maxrecords");
   String entitySyncId = request.getParameter("entitySyncId");
   String[] entityName = request.getParameterValues("entityName");
+  String entityFrom = request.getParameter("entityFrom");
+  String entityThru = request.getParameter("entityThru");
 
   // get the max records per file setting and convert to a int
   int maxRecordsPerFile = 0;
@@ -166,10 +168,28 @@
   }
   boolean checkAll = "true".equals(request.getParameter("checkAll"));
   boolean tobrowser = request.getParameter("tobrowser")!=null?true:false;
+  
+  EntityExpr entityFromCond = null;
+  EntityExpr entityThruCond = null;
+  EntityExpr entityDateCond = null;
+  if (UtilValidate.isNotEmpty(entityFrom)) {
+    entityFromCond = new EntityExpr("lastUpdatedTxStamp", EntityComparisonOperator.GREATER_THAN, entityFrom);
+  }
+  if (UtilValidate.isNotEmpty(entityThru)) {
+    entityThruCond = new EntityExpr("lastUpdatedTxStamp", EntityComparisonOperator.LESS_THAN, entityThru);
+  }
+  if ((entityFromCond!=null) && (entityThruCond!=null)) {
+    entityDateCond = new EntityExpr(entityFromCond, EntityJoinOperator.AND, entityThruCond);
+  } else if(entityFromCond!=null) {
+    entityDateCond = entityFromCond;
+  } else if(entityThruCond!=null) {
+    entityDateCond = entityThruCond;
+  }
+  
 %>
-<%if (tobrowser) {%>
-<%
+<%if (tobrowser) {
     session.setAttribute("xmlrawdump_entitylist", entityName);
+    session.setAttribute("entityDateCond", entityDateCond);
 %>   
     <div class="head1">XML Export from DataSource(s)</div>
     <div class="tabletext">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
@@ -188,7 +208,7 @@
 
   int numberOfEntities = passedEntityNames.size();
   long numberWritten = 0;
-
+  
   // single file
   if(filename != null && filename.length() > 0 && numberOfEntities > 0) {
     PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")));
@@ -200,7 +220,7 @@
         boolean beganTransaction = TransactionUtil.begin(3600);
         try {
             String curEntityName = (String)i.next();
-            EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null, UtilMisc.toList("-createdTxStamp"), efo);
+            EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, entityDateCond, null, null, UtilMisc.toList("-createdTxStamp"), efo);
 
             GenericValue value = null;
             long curNumberWritten = 0;
@@ -254,7 +274,7 @@
                     results.add("["+fileNumber +"] [vvv] " + curEntityName + " skipping view entity");
                     continue;
                 }
-                values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), efo);
+                values = delegator.findListIteratorByCondition(curEntityName, entityDateCond, null, null, me.getPkFieldNames(), efo);
                 boolean isFirst = true;
                 PrintWriter writer = null;
                 int fileSplitNumber = 1;
@@ -341,10 +361,20 @@
       <hr/>
     
       <div class="head2">Export:</div>
-      <form method="post" action="<ofbiz:url>/xmldsdump</ofbiz:url>">
+      <form method="post" action="<ofbiz:url>/xmldsdump</ofbiz:url>" name="entityExport">
         <div class="tabletext">Output Directory&nbsp;: <input type="text" class="inputBox" size="60" name="outpath" value="<%=UtilFormatOut.checkNull(outpath)%>"/></div>
         <div class="tabletext">Max Records Per File&nbsp;: <input type="text" class="inputBox" size="10" name="maxrecords"/></div>
         <div class="tabletext">Single Filename&nbsp;&nbsp;: <input type="text" class="inputBox" size="60" name="filename" value="<%=UtilFormatOut.checkNull(filename)%>"/></div>
+        
+        <div class="tabletext">Records Updated Since&nbsp;&nbsp;:
+          <input type="text" class="inputBox" size="25" name="entityFrom" />
+          <a href="javascript:call_cal(document.entityExport.entityFrom, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
+        </div>
+        <div class="tabletext">Records Updated Before&nbsp;&nbsp;:
+          <input type="text" class="inputBox" size="25" name="entityThru" />
+          <a href="javascript:call_cal(document.entityExport.entityThru, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
+        </div>
+
         <div class="tabletext">OR Out to Browser: <input type="checkbox" name="tobrowser" <%=tobrowser?"checked":""%>></div>
         <br/>
         <div class="tabletext">Entity Names:</div>
