@@ -43,10 +43,11 @@
     </simple-method>
     <simple-method method-name="calculateProductCosts" short-description="Calculates the product's cost">
         <!-- the existing costs are expired -->
+        <!--
         <set from-field="parameters.productId" field="cancelMap.productId"/>
         <set from-field="parameters.currencyUomId" field="cancelMap.costUomId"/>
         <call-service service-name="cancelCostComponents" in-map-name="cancelMap"/>
-
+        -->
         <!-- calculate the total materials' cost -->
         <set from-field="parameters.productId" field="callSvcMap.productId"/>
         <call-service service-name="getManufacturingComponents" in-map-name="callSvcMap">
@@ -58,7 +59,7 @@
                 <set field="product" from-field="componentMap.product"/>
                 <set field="inputMap.productId" from-field="product.productId"/>
                 <set field="inputMap.currencyUomId" from-field="parameters.currencyUomId"/>
-                <set field="inputMap.productPriceTypeId" value="AVERAGE_COST"/>
+                <set field="inputMap.costComponentTypePrefix" from-field="parameters.costComponentTypePrefix"/>
                 <call-service service-name="getProductCost" in-map-name="inputMap">
                     <result-to-field result-name="productCost"/>
                 </call-service>
@@ -74,7 +75,7 @@
                 <clear-field field-name="inputMap"/>
                 <set field="inputMap.productId" from-field="parameters.productId"/>
                 <set field="inputMap.currencyUomId" from-field="parameters.currencyUomId"/>
-                <set field="inputMap.productPriceTypeId" value="AVERAGE_COST"/>
+                <set field="inputMap.costComponentTypePrefix" from-field="parameters.costComponentTypePrefix"/>
                 <call-service service-name="getProductCost" in-map-name="inputMap">
                     <result-to-field result-name="productCost"/>
                 </call-service>
@@ -82,7 +83,7 @@
                     <calcop field-name="productCost" operator="get"/>
                 </calculate>
             </else>
-        </if-not-empty>        
+        </if-not-empty>
         <!-- calculate the total tasks' cost -->
         <set field="callSvcMap.ignoreDefaultRouting" value="Y"/>
         <call-service service-name="getProductRouting" in-map-name="callSvcMap">
@@ -113,21 +114,21 @@
         <if-not-empty field-name="totalTaskCost">
             <if-compare field-name="totalTaskCost" operator="greater" value="0" type="Double">
                 <clear-field field-name="callSvcMap"/>
-                <set value="ESTIMATED_LABOR_COST" field="callSvcMap.costComponentTypeId"/>
+                <set value="${parameters.costComponentTypePrefix}_ROUTE_COST" field="callSvcMap.costComponentTypeId"/>
                 <set from-field="parameters.productId" field="callSvcMap.productId"/>
                 <set from-field="parameters.currencyUomId" field="callSvcMap.costUomId"/>
                 <set from-field="totalTaskCost" field="callSvcMap.cost"/>
-                <call-service service-name="createCostComponent" in-map-name="callSvcMap"/>
+                <call-service service-name="recreateCostComponent" in-map-name="callSvcMap"/>
             </if-compare>
         </if-not-empty>
         <if-not-empty field-name="totalProductsCost">
             <if-compare field-name="totalProductsCost" operator="greater" value="0" type="Double">
                 <clear-field field-name="callSvcMap"/>
-                <set value="ESTIMATED_MATERIALS_" field="callSvcMap.costComponentTypeId"/>
+                <set value="${parameters.costComponentTypePrefix}_MAT_COST" field="callSvcMap.costComponentTypeId"/>
                 <set from-field="parameters.productId" field="callSvcMap.productId"/>
                 <set from-field="parameters.currencyUomId" field="callSvcMap.costUomId"/>
                 <set from-field="totalProductsCost" field="callSvcMap.cost"/>
-                <call-service service-name="createCostComponent" in-map-name="callSvcMap"/>
+                <call-service service-name="recreateCostComponent" in-map-name="callSvcMap"/>
             </if-compare>
         </if-not-empty>
         
@@ -186,18 +187,23 @@
     <simple-method method-name="getProductCost" short-description="Gets the product's costs (from CostComponent or ProductPrice)">
         <set from-field="parameters.productId" field="costsAndMap.productId"/>
         <set from-field="parameters.currencyUomId" field="costsAndMap.costUomId"/>
+        <!-- Route costs -->
+        <set value="${parameters.costComponentTypePrefix}_ROUTE_COST" field="costsAndMap.costComponentTypeId"/>
+        <find-by-and entity-name="CostComponent" map-name="costsAndMap" list-name="laborCosts"/>
+        <filter-list-by-date list-name="routeCosts"/>
+        <first-from-list list-name="routeCosts" entry-name="routeCost"/>
         <!-- Labor costs -->
-        <set value="ESTIMATED_LABOR_COST" field="costsAndMap.costComponentTypeId"/>
+        <set value="${parameters.costComponentTypePrefix}_LABOR_COST" field="costsAndMap.costComponentTypeId"/>
         <find-by-and entity-name="CostComponent" map-name="costsAndMap" list-name="laborCosts"/>
         <filter-list-by-date list-name="laborCosts"/>
         <first-from-list list-name="laborCosts" entry-name="laborCost"/>
         <!-- Materials costs -->
-        <set value="ESTIMATED_MATERIALS_" field="costsAndMap.costComponentTypeId"/>
+        <set value="${parameters.costComponentTypePrefix}_MAT_COST" field="costsAndMap.costComponentTypeId"/>
         <find-by-and entity-name="CostComponent" map-name="costsAndMap" list-name="materialsCosts"/>
         <filter-list-by-date list-name="materialsCosts"/>
         <first-from-list list-name="materialsCosts" entry-name="materialsCost"/>
         <!-- Other costs -->
-        <set value="ESTIMATED_OTHER_COST" field="costsAndMap.costComponentTypeId"/>
+        <set value="${parameters.costComponentTypePrefix}_OTHER_COST" field="costsAndMap.costComponentTypeId"/>
         <find-by-and entity-name="CostComponent" map-name="costsAndMap" list-name="otherCosts"/>
         <filter-list-by-date list-name="otherCosts"/>
         <first-from-list list-name="otherCosts" entry-name="otherCost"/>
@@ -205,9 +211,11 @@
         <calculate field-name="productCost">
             <calcop field-name="laborCost.cost" operator="add">
                 <calcop field-name="materialsCost.cost" operator="get"/>
+                <calcop field-name="routeCost.cost" operator="get"/>
                 <calcop field-name="otherCost.cost" operator="get"/>
             </calcop>
         </calculate>
+        <!--
         <if-compare field-name="productCost" operator="equals" value="0" type="Double">
             <clear-field field-name="costsAndMap"/>
             <set from-field="parameters.productId" field="costsAndMap.productId"/>
@@ -220,6 +228,7 @@
                 <set from-field="priceCost.price" field="productCost"/>
             </if-not-empty>
         </if-compare>
+        -->
         <field-to-result field-name="productCost"/>
     </simple-method>
     
@@ -235,7 +244,7 @@
             <store-value value-name="existingCost"/>
         </iterate>
     </simple-method>
-    <simple-method method-name="createCostComponent" short-description="Create a CostComponent">
+    <simple-method method-name="recreateCostComponent" short-description="Create a CostComponent and cancel the existing ones">
         <!-- The existing costs of the same type are expired -->
         <set from-field="parameters.productId" field="costsAndMap.productId"/>
         <set from-field="parameters.costUomId" field="costsAndMap.costUomId"/>

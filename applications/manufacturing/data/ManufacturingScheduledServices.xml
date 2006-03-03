@@ -29,6 +29,14 @@
         <std-String value="USD"/>
       </map-Value>
     </map-Entry>
+    <map-Entry>
+      <map-Key>
+        <std-String value="costComponentTypePrefix"/>
+      </map-Key>
+      <map-Value>
+        <std-String value="EST_STD"/>
+      </map-Value>
+    </map-Entry>
   </map-HashMap>
 </ofbiz-ser>
         ]]></runtimeInfo>

@@ -42,7 +42,7 @@
         <description>Gets the product's costs (from CostComponent or ProductPrice)</description>
         <attribute mode="IN" name="productId" optional="false" type="String"/>
         <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
-        <attribute mode="IN" name="productPriceTypeId" optional="false" type="String"/>
+        <attribute mode="IN" name="costComponentTypePrefix" optional="false" type="String"/>
         <attribute mode="OUT" name="productCost" type="Double" optional="false"/>
     </service>
     <service name="calculateProductCosts" engine="simple" auth="true"
@@ -50,16 +50,18 @@
         <description>Calculates the product's costs</description>
         <attribute mode="IN" name="productId" optional="false" type="String"/>
         <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
+        <attribute mode="IN" name="costComponentTypePrefix" optional="false" type="String"/>
         <attribute mode="OUT" name="totalCost" type="Double"/>
     </service>
     <service name="calculateAllProductsCosts" engine="simple" auth="true" transaction-timout="7200"
                 location="org/ofbiz/manufacturing/cost/CostServices.xml" invoke="calculateAllProductsCosts">
         <description>Calculates estimated costs for all the products</description>
         <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>
+        <attribute mode="IN" name="costComponentTypePrefix" optional="false" type="String"/>
     </service>
-    <service name="createCostComponent" default-entity-name="CostComponent" engine="simple" 
-                location="org/ofbiz/manufacturing/cost/CostServices.xml" invoke="createCostComponent" auth="true">
-        <description>Create a CostComponent</description>
+    <service name="recreateCostComponent" default-entity-name="CostComponent" engine="simple" 
+                location="org/ofbiz/manufacturing/cost/CostServices.xml" invoke="recreateCostComponent" auth="true">
+        <description>Create a CostComponent and cancel the existing ones</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
