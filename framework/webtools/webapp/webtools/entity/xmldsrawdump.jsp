@@ -21,10 +21,12 @@
  *
  * @author David E. Jones (jonesde@ofbiz.org)
  * @version 1.0
---%><%@ page import="java.io.*, java.util.*, java.net.*, org.w3c.dom.*, org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.entity.util.*, org.ofbiz.base.util.*, org.ofbiz.entity.model.*" %><%@ taglib uri="ofbizTags" prefix="ofbiz" %><jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /><jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /><%
+--%><%@ page import="java.io.*, java.util.*, java.net.*, org.w3c.dom.*, org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.entity.condition.*, org.ofbiz.entity.util.*, org.ofbiz.base.util.*, org.ofbiz.entity.model.*" %><%@ taglib uri="ofbizTags" prefix="ofbiz" %><jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /><jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /><%
   if(security.hasPermission("ENTITY_MAINT", session)) {
       String[] entityName = (String[]) session.getAttribute("xmlrawdump_entitylist");
       session.removeAttribute("xmlrawdump_entitylist");
+      EntityExpr entityDateCond = (EntityExpr) session.getAttribute("entityDateCond");
+      session.removeAttribute("entityDateCond");
       if (entityName != null) {
 
           ModelReader reader = delegator.getModelReader();
@@ -59,7 +61,7 @@
             Iterator i = passedEntityNames.iterator();
             while(i.hasNext()) { 
                 String curEntityName = (String)i.next();
-                EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null);
+                EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, entityDateCond, null, null);
 
                 GenericValue value = null;
                 while ((value = (GenericValue) values.next()) != null) {
