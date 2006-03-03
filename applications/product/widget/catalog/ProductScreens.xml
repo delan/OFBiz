@@ -548,7 +548,7 @@
                 <set field="tabButtonItem" value="EditSupplierProduct"/>
                 <set field="labelTitleProperty" value="ProductSuppliers"/>
 
-                <set field="defaultCurrencyUomId" value="USD"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
 
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="orderBy" from-field="parameters.orderBy" default-value="partyId"/>
