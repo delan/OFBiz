@@ -115,11 +115,21 @@
         <make-value entity-name="PaymentApplication" value-name="paymentAppl"/>
         <set-nonpk-fields map-name="parameters" value-name="paymentAppl"/>
 
+        <!-- get the invoice and do some further validation against it -->
         <if-not-empty field-name="parameters.invoiceId">
             <entity-one entity-name="Invoice" value-name="invoice"/>
             <if-not-empty field-name="invoice.billingAccountId">
                 <set from-field="invoice.billingAccountId" field="paymentAppl.billingAccountId"/>
             </if-not-empty>
+
+            <!-- get the amount that has not been applied yet for the invoice (outstanding amount) -->
+            <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice).doubleValue()}"/>
+
+            <!-- if the amount to apply goes over the outstanding amount, then use the notApplied amount and log a warning -->
+            <if-compare-field field-name="paymentAppl.amountApplied" operator="greater" to-field-name="notApplied">
+                <log level="warn" message="Create Payment Application: Amount to apply [${paymentAppl.amountApplied}] is greater than the outstanding amount [${notApplied}] of the invoice [${invoice.invoiceId}]. Creating Payment Application for outstanding amount [${notApplied}] instead."/>
+                <set field="paymentAppl.amountApplied" from-field="notApplied"/>
+            </if-compare-field>
         </if-not-empty>
 
         <sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentAppl.paymentApplicationId"/>
