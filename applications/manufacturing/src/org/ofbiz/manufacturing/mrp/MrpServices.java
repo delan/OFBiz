@@ -290,98 +290,6 @@ public class MrpServices {
         Debug.logInfo("return from initInventoryEventPlanned", module);
         return result;
     }
-    
-/*    
-    public static Map initInventoryEventPlanned(DispatchContext ctx, Map context) {
-        GenericDelegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();
-        Security security = ctx.getSecurity();
-        Timestamp now = UtilDateTime.nowTimestamp();
-        Locale locale = (Locale) context.get("locale");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
-        //Erases the old table 	for the moment and initializes it with the new orders,
-        //Does not modify the old one now.
-        Debug.logInfo("initInventoryEventPlanned called", module);
-        
-        Map parameters = null;
-        List listResult = null;
-        try{
-            listResult = delegator.findAll("InventoryEventPlanned");
-        } catch(GenericEntityException e) {
-            Debug.logError(e,"Error : delegator.findAll(\"InventoryEventPlanned\")", module);
-            return ServiceUtil.returnError("Problem, we can not find all the items of InventoryEventPlanned, for more detail look at the log");
-        }
-        if(listResult != null){
-            try{
-                delegator.removeAll(listResult);
-            } catch(GenericEntityException e) {
-                Debug.logError(e,"Error : delegator.removeAll(listResult), listResult ="+listResult, module);
-                return ServiceUtil.returnError("Problem, we can not remove the InventoryEventPlanned items, for more detail look at the log");
-            }
-        }
-        
-        GenericValue genericResult = null;
-        List resultList = null;
-        parameters = UtilMisc.toMap("statusId", "ITEM_APPROVED");
-        try {
-            resultList = delegator.findByAnd("OrderItem", parameters);
-        } catch(GenericEntityException e) {
-            Debug.logError(e, "Error : delegator.findByAnd(\"OrderItem\", parameters\")", module);
-            Debug.logError(e, "Error : parameters = "+parameters,module);
-            return ServiceUtil.returnError("Problem, we can not find the order items, for more detail look at the log");
-        }
-        Iterator iteratorResult = resultList.iterator();
-        while(iteratorResult.hasNext()){
-            genericResult = (GenericValue) iteratorResult.next();
-            String productId =  genericResult.getString("productId");
-            Double eventQuantityTmp = new Double(-1.0 * genericResult.getDouble("quantity").doubleValue());
-            Timestamp estimatedShipDate = genericResult.getTimestamp("estimatedShipDate");
-            if (estimatedShipDate == null) estimatedShipDate =now;
-            
-            
-            parameters = UtilMisc.toMap("productId",productId,"eventDate",estimatedShipDate,"inventoryEventPlanTypeId","SALE_ORDER_SHIP");
-            //-------------------------------------------------------
-            GenericValue tempInventoryEventPlanned = delegator.makeValue("InventoryEventPlanned", parameters);
-            //tempInventoryEventPlanned.setNonPKFields(context);
-            
-            genericResult = null;
-            try {
-                genericResult = delegator.findByPrimaryKey("InventoryEventPlanned", parameters);
-            } catch (GenericEntityException e) {
-                Debug.logError(e,"Error : delegator.findByPrimaryKey(\"InventoryEventPlanned\", parameters)", module);
-                Debug.logError(e,"Error : parameters = "+parameters,module);
-                return ServiceUtil.returnError("Problem, we can not find the products, for more detail look at the log");
-            }
-            if(genericResult==null){
-                tempInventoryEventPlanned.put("eventQuantity", eventQuantityTmp);
-                try {
-                    tempInventoryEventPlanned.create();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e,"Error : InventoryEventPlanned.create()", module);
-                    Debug.logError(e,"Error : parameters = "+tempInventoryEventPlanned, module);
-                    return ServiceUtil.returnError("Problem, we can not create the product in InventoryEventPlanned, for more detail look at the log");
-                }
-            } else{
-                double qties = eventQuantityTmp.doubleValue() - ((Double)genericResult.get("eventQuantity")).doubleValue();
-                tempInventoryEventPlanned.put("eventQuantity", new Double(qties));
-                try {
-                    tempInventoryEventPlanned.store();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e,"Error : InventoryEventPlanned.store()", module);
-                    Debug.logError(e,"Error : parameters = "+tempInventoryEventPlanned, module);
-                    return ServiceUtil.returnError("Problem, we can not update the product in InventoryEventPlanned, for more detail look at the log");
-                }
-            }
-            //------------------------------------------------
-        }
-        
-        Map result = new HashMap();
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        Debug.logInfo("return from initInventoryEventPlanned", module);
-        return result;
-    }
-*/    
     /**
      * Create a List  with all the event of InventotyEventPlanned for one billOfMaterialLevel, sorted by productId and eventDate.
      *
@@ -453,49 +361,6 @@ public class MrpServices {
         }
         return ((Double)resultMap.get("quantityOnHandTotal")).doubleValue();
     }
-    /*
-    public static double findProductMrpQoh(GenericValue product) {
-        Debug.logInfo("findProductMrpQoh called", module);
-        
-        //TODO : verify if the facility is really MRP available !!!!!!!!!!!!!!!
-        List productInventoryItems = null;
-        //Lists all stocks where the product is defined
-        List orderBy = UtilMisc.toList("facilityId", "-receivedDate", "-inventoryItemId");
-        try{
-            productInventoryItems = product.getRelated("InventoryItem", null, orderBy);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error : product.getRelated(\"InventoryItem\")", module);
-            Debug.logError(e, "Error : orderBy = "+orderBy,module);
-            return 0;
-        }
-        //loop through the inventory items and get totals of available to promise per facility
-        Iterator productInventoryItemIter = productInventoryItems.iterator();
-        double totalAvailableToPromise = 0.0;
-        while (productInventoryItemIter.hasNext()) {
-            GenericValue productInventoryItem = (GenericValue) productInventoryItemIter.next();
-            GenericValue facility = null;
-            try{
-                facility = productInventoryItem.getRelatedOneCache("Facility");
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Error : productInventoryItem.getRelatedCache(\"Facility\")", module);
-                return 0;
-            }
-            if(facility!=null){
-                if ("SERIALIZED_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
-                    if ("INV_PROMISED".equals(productInventoryItem.getString("statusId"))) {
-                        totalAvailableToPromise += 1;
-                    }
-                } else if ("NON_SERIAL_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
-                    if (productInventoryItem.get("availableToPromiseTotal") != null) {
-                        totalAvailableToPromise += productInventoryItem.getDouble("availableToPromiseTotal").doubleValue();
-                    }
-                }
-            }
-        }
-        Debug.logInfo("return from findProductMrpQoh "+product.getString("productId"), module);
-        return totalAvailableToPromise;
-    }
-    */
     
     /**
      * Process the bill of material (bom) of the product  to insert components in the InventoryEventPlanned table.
@@ -669,7 +534,7 @@ public class MrpServices {
                         ProposedOrder proposedOrder = new ProposedOrder(product, facilityId, isbuild, eventDate, qtyToStock);
                         proposedOrder.setMrpName(mrpName);
                         // calculate the ProposedOrder quantity and update the quantity object property.
-                        proposedOrder.calculateQuantityToSupply(reorderQuantity, iteratorListInventoryEventForMRP);
+                        proposedOrder.calculateQuantityToSupply(reorderQuantity, minimumStock, iteratorListInventoryEventForMRP);
                         
                         // -----------------------------------------------------
                         // The components are also loaded thru the configurator
