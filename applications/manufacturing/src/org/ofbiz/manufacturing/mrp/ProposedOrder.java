@@ -196,11 +196,14 @@ public class ProposedOrder {
      * Read the first ProductFacility.reorderQuantity and calculate the quantity : if (quantity < reorderQuantity) quantity = reorderQuantity;
      **/
     // FIXME: facilityId
-    public void calculateQuantityToSupply(double reorderQuantity, ListIterator  listIterIEP){
+    public void calculateQuantityToSupply(double reorderQuantity, double minimumStock, ListIterator  listIterIEP){
         //      TODO : use a better algorithm using Order management cost et Product Stock cost to calculate the re-order quantity
         //                     the variable listIterIEP will be used for that
         if (quantity < reorderQuantity) {
             quantity = reorderQuantity;
+        }
+        if (quantity < minimumStock) {
+            quantity = minimumStock;
         }
     }
     
