@@ -470,6 +470,24 @@ under the License.
         <field name="submitButton" title="Upload" widget-style="smallSubmit"><submit/></field>
     </form>
     
+    <form name="UploadCompDocPdf2Survey" type="upload" default-title-style="tableheadtext" 
+         target="persistCompDocPdf2Survey"
+        default-tooltip-style="tabletext" default-widget-style="tabletext">
+        <field name="caContentIdTo" entry-name="contentIdTo" map-name="contentAssoc"><hidden/></field>
+        <field name="caContentAssocTypeId" ><hidden value="COMPDOC_PART"/></field>
+        <field name="caFromDate" entry-name="fromDate" map-name="contentAssoc"><hidden/></field>
+        
+        <field name="contentId" map-name="contentAssoc"><hidden/></field>
+        <field name="dataResourceId" map-name="dataResource"><hidden/></field>
+        <field name="dataResourceTypeId" map-name="dataResource"><hidden/></field>
+        <field name="mimeTypeId" map-name="dataResource"><hidden/></field>
+        <field name="objectInfo" title="File Name" map-name="dataResource"><display also-hidden="false"/></field>
+        <field name="pdfName" title="PDF name"><text/></field>
+        <field name="imageData" title="Enter a PDF file path to automatically create a survey."><file/></field>
+        <field name="rootContentId" ><hidden/></field>
+        <field name="submitButton" title="Upload" widget-style="smallSubmit"><submit/></field>
+    </form>
+    
     <form name="EditCompDocTextContent" type="single" default-title-style="tableheadtext" 
          target="uploadCompDocContent"
         default-tooltip-style="tabletext" default-widget-style="tabletext" >

@@ -242,7 +242,7 @@
             <condition>
                 <not><if-empty field-name="assocRevisionItemView"/></not>
             </condition>
-            <link target="GenContentPdf?contentId=${instanceContentId}&amp;caSequenceNum=${sequenceNum}"/>
+            <link target="GenContentPdf?contentId=${assocRevisionItemView.contentId}"/>
         </menu-item>
     </menu>
         

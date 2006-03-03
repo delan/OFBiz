@@ -259,7 +259,7 @@ under the License.
         </call-service>
     </simple-method>
     
-    <simple-method method-name="persistCompDocContent" short-description="Create ContentApproval">
+    <simple-method method-name="persistCompDocContent" short-description="Persist a CompDoc DataResource and data">
         <entity-one entity-name="Content" value-name="content" use-cache="false"/>
         <set from-field="content.dataResourceId" field="oldDataResourceId"/>
         <log level="info" message="persistCompDocContent(0).content : ${content}"/>
@@ -288,6 +288,38 @@ under the License.
         </call-service>
         <log level="info" message="persistCompDocContent(3).contentRevisionSeqId : ${contentRevisionSeqId}"/>
         
+    </simple-method>
+    
+    <simple-method method-name="persistCompDocPdf2Survey" short-description="Upload/save PDF, create Survey, populate Content">
+        
+		<set field="pdfMap.contentTypeId" value="DOCUMENT"/>
+		<set field="pdfMap.dataResourceTypeId" value="IMAGE_OBJECT"/>
+		<set field="pdfMap.mimeTypeId" value="application/pdf"/>
+		<set field="pdfMap.drMimeTypeId" value="application/pdf"/>
+        <set field="pdfMap.imageData" from-field="parameters.imageData"/>
+        <set field="pdfMap._imageData_contentType" from-field="parameters._imageData_contentType"/>
+        <set field="pdfMap._imageData_fileName" from-field="parameters._imageData_fileName"/>
+        <set field="pdfMap.contentName" from-field="parameters.pdfName"/>
+        <log level="info" message="persistCompDocPdf2Survey(1).pdfMap : ${pdfMap}"/>
+        <call-service service-name="persistContentAndAssoc" in-map-name="pdfMap">
+            <result-to-field result-name="contentId" field-name="acroFormContentId"/>
+        </call-service>
+        <log level="info" message="persistCompDocPdf2Survey(2).acroFormContentId : ${acroFormContentId}"/>
+		
+        <set field="acroMap.contentId" from-field="acroFormContentId"/>
+        <call-service service-name="buildSurveyFromPdf" in-map-name="acroMap">
+            <result-to-field result-name="surveyId" field-name="surveyId"/>
+        </call-service>
+        <log level="info" message="persistCompDocPdf2Survey(3).surveyId : ${surveyId}"/>
+		
+        <set-service-fields service-name="persistCompDocContent" map-name="parameters" to-map-name="persistMap"/>
+        <set field="persistMap.relatedDetailId" from-field="surveyId"/>
+        <set field="persistMap.drMimeTypeId" value="application/vnd.ofbiz.survey"/>
+        <log level="info" message="persistCompDocPdf2Survey(4)persistMap : ${persistMap}"/>
+        <call-service service-name="persistCompDocContent" in-map-name="persistMap">
+        </call-service>
+        
+         
     </simple-method>
     
     <!-- Methods for ContentApproval -->

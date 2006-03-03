@@ -820,6 +820,12 @@
         <response name="success" type="view" value="EditChildCompDoc"/>
         <response name="error" type="view" value="EditChildCompDoc"/>
     </request-map>
+    <request-map uri="persistCompDocPdf2Survey">
+        <security auth="true" https="true"/>
+        <event invoke="persistCompDocPdf2Survey" path="" type="service"/>
+        <response name="success" type="view" value="EditChildCompDoc"/>
+        <response name="error" type="view" value="EditChildCompDoc"/>
+    </request-map>
     <request-map uri="createCompDoc">
         <security auth="true" https="true"/>
         <event invoke="persistContentAndAssoc"  path="" type="service"/>
