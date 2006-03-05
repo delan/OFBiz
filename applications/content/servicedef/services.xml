@@ -829,7 +829,7 @@
         transaction-timout="72000" 
             location="org.ofbiz.content.ContentManagementServices" invoke="persistDataResourceAndData" auth="true">
         <description>Persist a  DataResource and data</description>
-        <auto-attributes entity-name="DataResource" include="all" mode="IN" optional="true">
+        <auto-attributes entity-name="DataResource" include="all" mode="IN" optional="true" >
             <exclude field-name="dataResourceId"/>
         </auto-attributes>
         <auto-attributes entity-name="ElectronicText" include="all" mode="IN" optional="true">
