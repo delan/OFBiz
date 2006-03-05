@@ -40,7 +40,7 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td valign=middle align="center">
+          <td valign="middle" align="center">
             <div class='boxhead'><b>${uiLabelMap.OrderOrderHeaderInfo}</b></div>
           </td>
         </tr>
@@ -54,7 +54,7 @@
           <td>
             <table width="100%" border="0" cellpadding="2" cellspacing="0">
                 <tr>
-                  <td><div class="tabletext"><b>${uiLabelMap.Party}<b>:</div></td>
+                  <td><div class="tabletext"><b>${uiLabelMap.Party}</b>:</div></td>
                   <td>
                     <div class="tabletext">
                       <a href="/partymgr/control/viewprofile?partyId=${partyId}${externalKeyParam?if_exists}" target="partymgr" class="buttontext">${partyId}</a>
@@ -68,18 +68,18 @@
                   </td>
                 </tr>
                 <tr>
-                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.CommonCurrency}<b>:</div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.CommonCurrency}</b>:</div></td>
                   <td valign="bottom"><div class="tabletext">${currencyUomId}</div></td>
                 </tr>
                 <#if agreementId?has_content>
                 <tr>
-                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.AccountingAgreement}<b>:</div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.AccountingAgreement}</b>:</div></td>
                   <td valign="bottom"><div class="tabletext">${agreementId}</div></td>
                 </tr>
                 </#if>
                 <#if quoteId?has_content>
                 <tr>
-                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.OrderOrderQuote}<b>:</div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.OrderOrderQuote}</b>:</div></td>
                   <td valign="bottom"><div class="tabletext">${quoteId}</div></td>
                 </tr>
                 </#if>

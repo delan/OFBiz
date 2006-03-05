@@ -194,7 +194,7 @@
         <div class="form-row">
             <div class="form-label">${uiLabelMap.PartyAllPhoneNumbers}</div>
             <div class="form-field">
-                [${uiLabelMap.PartyCountry}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]</div>
+                [${uiLabelMap.PartyCountry}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyExtension}]
             </div>
         </div>
         <div class="form-row">

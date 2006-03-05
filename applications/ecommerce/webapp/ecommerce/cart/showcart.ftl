@@ -166,7 +166,7 @@ function setAlternateGwp(field) {
   <#if (shoppingCartSize > 0)>
     <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
       <input type="hidden" name="removeSelected" value="false">
-      <table width="100%" cellspacing="0" cellpadding="1" border="0">
+      <table width="99%" cellspacing="0" cellpadding="1" border="0">
         <tr>
           <td NOWRAP>&nbsp;</td>
           <td NOWRAP><div class="tabletext"><b>${uiLabelMap.EcommerceProduct}</b></div></td>
