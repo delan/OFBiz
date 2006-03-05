@@ -33,11 +33,11 @@
     <div class="screenlet-body" style="text-align: center;">
         <form name="choosecatalogform" method="post" action="<@ofbizUrl>choosecatalog</@ofbizUrl>" style='margin: 0;'>
           <select name='CURRENT_CATALOG_ID' class='selectBox'>
-            <option value='${currentCatalogId}'>${currentCatalogName}</OPTION>
-            <option value='${currentCatalogId}'></OPTION>
+            <option value='${currentCatalogId}'>${currentCatalogName}</option>
+            <option value='${currentCatalogId}'></option>
             <#list catalogCol as catalogId>
               <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
-              <option value='${catalogId}'>${thisCatalogName}</OPTION>
+              <option value='${catalogId}'>${thisCatalogName}</option>
             </#list>
           </select>
           <div><a href="javascript:document.choosecatalogform.submit()" class="buttontext">${uiLabelMap.CommonChange}</a></div>
