@@ -1,62 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    
-    <DataResource dataResourceId="DR1102b" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" dataResourceName="POA Contract"  />
-    <ElectronicText  dataResourceId="DR1102b">
-        <textData><![CDATA[This is a <u>letter of inquiry</u>
-        This is our second attempt to contact you.
-        Please respond at your earliest convenience.
-        ]]></textData>
-    </ElectronicText>
+	<SecurityGroup groupId="COMPDOCADMIN" description="CompDoc admin group, all permissions."/>
+	<SecurityGroupPermission groupId="COMPDOCADMIN" permissionId="CONTENTMGR_VIEW"/>
+	<SecurityGroupPermission groupId="COMPDOCADMIN" permissionId="CONTENTMGR_CREATE"/>
+	<SecurityGroupPermission groupId="COMPDOCADMIN" permissionId="CONTENTMGR_DELETE"/>
+	<SecurityGroupPermission groupId="COMPDOCADMIN" permissionId="CONTENTMGR_UPDATE"/>
+	<SecurityGroupPermission groupId="COMPDOCADMIN" permissionId="CONTENTMGR_ADMIN"/>
+	
+    <RoleType roleTypeId="APPROVER" description="Approver"/>
+    <RoleType roleTypeId="REVIEWER" description="Reviewer"/>
+    <Party partyId="approver" partyTypeId="PERSON"/>
+    <Person firstName="Robert" lastName="Smith" partyId="approver" personalTitle="Captain"/>
+    <PartyRole partyId="approver" roleTypeId="APPROVER"/>
+    <PartyRole partyId="approver" roleTypeId="REVIEWER"/>
+    <PartyRole partyId="admin" roleTypeId="APPROVER"/>
+    <UserLogin userLoginId="approver" partyId="approver"/>
+    <UserLoginSecurityGroup groupId="COMPDOCADMIN" userLoginId="approver" fromDate="2006-01-01 12:00:00.0"/>    
+	
+	
     <DataResource dataResourceId="DR1103b" dataResourceTypeId="OFBIZ_FILE_BIN" objectInfo="/applications/content/data/pdftest2.pdf" mimeTypeId="application/pdf" dataResourceName="Personal Profile"  />
     <DataResource dataResourceId="DR1105b" dataResourceTypeId="OFBIZ_FILE_BIN" objectInfo="/applications/content/data/mswordtest2.doc" mimeTypeId="application/msword" dataResourceName="2nd Quarter Review"  />
 
-    <DataResource dataResourceId="DR1102a" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" dataResourceName="POA Contract"  />
-    <ElectronicText  dataResourceId="DR1102a">
-        <textData><![CDATA[This is a <u>letter of inquiry</u>
-        
-        Please respond at your earliest convenience.
-        ]]></textData>
-    </ElectronicText>
     <DataResource dataResourceId="DR1103a" dataResourceTypeId="OFBIZ_FILE_BIN" objectInfo="/applications/content/data/pdftest2.pdf" mimeTypeId="application/pdf" dataResourceName="Personal Profile"  />
     <DataResource dataResourceId="DR1105a" dataResourceTypeId="OFBIZ_FILE_BIN" objectInfo="/applications/content/data/mswordtest2.doc" mimeTypeId="application/msword" dataResourceName="2nd Quarter Review"  />
 
-    <!-- A CDT (Composite Document Template) that can be used independently, or as part of CD0001 defined below -->
-    <Content contentId="CDT1201" contentTypeId="COMPDOC_TEMPLATE" contentName="Demo Template Root (CDT) 1201" description="" ownerContentId="" />
-    
-    <Content contentId="CDT0211" contentTypeId="COMPDOC_TEMPLATE" ownerContentId=""  contentName="2J Placeholder (CDT Root/Sub-Root)" description=""/>
-    
-	<!--
-    <Content contentId="CDT1121" contentTypeId="TEMPLATE" contentName="Receive letter of inquiry" description="" ownerContentId="" />
-    <Content contentId="CDT1122" contentTypeId="TEMPLATE" contentName="POA Contract" description="" ownerContentId="" />
-    <Content contentId="CDT1123" contentTypeId="TEMPLATE" contentName="Personal Profile" description="" ownerContentId="" />
-    <Content contentId="CDT1124" contentTypeId="TEMPLATE" contentName="1st Quarter Review" description="" ownerContentId="" />
-    <Content contentId="CDT1125" contentTypeId="TEMPLATE" contentName="2st Quarter Review" description="" ownerContentId="" />
-    <Content contentId="CDT1126" contentTypeId="TEMPLATE" contentName="Other Upload" description="" ownerContentId="" />
-    <ContentAssoc contentIdTo="CDT1201" contentId="CDT1121" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
-    <ContentAssoc contentIdTo="CDT1201" contentId="CDT1122" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
-    <ContentAssoc contentIdTo="CDT1201" contentId="CDT1123" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
-    <ContentAssoc contentIdTo="CDT1201" contentId="CDT1124" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
-    <ContentAssoc contentIdTo="CDT1201" contentId="CDT1125" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
-    <ContentAssoc contentIdTo="CDT1201" contentId="CDT1126" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01"/>
-    -->
+    <DataResource dataResourceId="DR1101"  mimeTypeId="application/pdf" dataResourceName="Letter of inquiry"  />
+    <DataResource dataResourceId="DR1102"  mimeTypeId="application/pdf" dataResourceName="POA Contract"  />
+    <DataResource dataResourceId="DR1103"  mimeTypeId="application/pdf" dataResourceName="Personal Profile"  />
+    <DataResource dataResourceId="DR1104"  mimeTypeId="application/pdf" dataResourceName="1st Quarter Review"  />
+    <DataResource dataResourceId="DR1105"  mimeTypeId="application/pdf" dataResourceName="2nd Quarter Review"  />
+    <DataResource dataResourceId="DR1106"  mimeTypeId="application/pdf" dataResourceName="3rd Quarter Review"  />
+    <DataResource dataResourceId="DR1107"  mimeTypeId="application/pdf" dataResourceName="4th Quarter Review"  />
+    <DataResource dataResourceId="DR1108"  mimeTypeId="application/pdf" dataResourceName="Phase I Budget"  />
+    <DataResource dataResourceId="DR1109"  mimeTypeId="application/pdf" dataResourceName="Phase II Budget"  />
+    <DataResource dataResourceId="DR1110"  mimeTypeId="application/pdf" dataResourceName="IJK 4988"  />
+    <DataResource dataResourceId="DR1111"  mimeTypeId="application/pdf" dataResourceName="ABC 123"  />
+    <DataResource dataResourceId="DR1112"  mimeTypeId="application/pdf" dataResourceName="Yearly Review"  />
+    <DataResource dataResourceId="DR1113"  mimeTypeId="application/pdf" dataResourceName="Miscellaneous Notes"  />
+    <DataResource dataResourceId="DR1114"  mimeTypeId="application/pdf" dataResourceName="Disclosure Agreement"  />
+    <DataResource dataResourceId="DR1115"  mimeTypeId="application/pdf" dataResourceName="Performance Review"  />
+    <DataResource dataResourceId="DR1116"  mimeTypeId="application/pdf" dataResourceName="Other Upload"  />
 
-    <Content contentId="CDT1101" contentTypeId="TEMPLATE" contentName="Letter of inquiry" description="" ownerContentId=""/>
-    <Content contentId="CDT1102" contentTypeId="TEMPLATE" contentName="POA Contract" description="" ownerContentId="" />
-    <Content contentId="CDT1103" contentTypeId="TEMPLATE" contentName="Personal Profile" description="" ownerContentId=""/>
-    <Content contentId="CDT1104" contentTypeId="TEMPLATE" contentName="1st Quarter Review" description="" ownerContentId="" />
-    <Content contentId="CDT1105" contentTypeId="TEMPLATE" contentName="2nd Quarter Review" description="" ownerContentId="" />
-    <Content contentId="CDT1106" contentTypeId="TEMPLATE" contentName="3rd Quarter Review" description="" ownerContentId="" />
-    <Content contentId="CDT1107" contentTypeId="TEMPLATE" contentName="4th Quarter Review" description="" ownerContentId="" />
-    <Content contentId="CDT1108" contentTypeId="TEMPLATE" contentName="Phase I Budget" description="" ownerContentId="" />
-    <Content contentId="CDT1109" contentTypeId="TEMPLATE" contentName="Phase II Budget" description="" ownerContentId="" />
-    <Content contentId="CDT1110" contentTypeId="TEMPLATE" contentName="IJK 4988" description="" ownerContentId="" />
-    <Content contentId="CDT1111" contentTypeId="TEMPLATE" contentName="ABC 123" description="" ownerContentId="" />
-    <Content contentId="CDT1112" contentTypeId="TEMPLATE" contentName="Yearly Review" description="" ownerContentId="" />
-    <Content contentId="CDT1113" contentTypeId="TEMPLATE" contentName="Miscellaneous Notes" description="" ownerContentId="" />
-    <Content contentId="CDT1114" contentTypeId="TEMPLATE" contentName="Disclosure Agreement" description="" ownerContentId="" />
-    <Content contentId="CDT1115" contentTypeId="TEMPLATE" contentName="Performance Review" description="" ownerContentId="" />
-    <Content contentId="CDT1116" contentTypeId="TEMPLATE" contentName="Other Upload" description="" ownerContentId="" />
+	    <!-- A CDT (Composite Document Template) that can be used independently, or as part of CD0001 defined below -->
+    <Content contentId="CDT1201" contentTypeId="COMPDOC_TEMPLATE" contentName="Demo Template Root (CDT) 1201"  ownerContentId="" />
+    
+    
+    <Content contentId="CDT1101" dataResourceId="DR1101" contentTypeId="TEMPLATE" contentName="Letter of inquiry"  />
+    <Content contentId="CDT1102" dataResourceId="DR1102" contentTypeId="TEMPLATE" contentName="POA Contract"   />
+    <Content contentId="CDT1103" dataResourceId="DR1103" contentTypeId="TEMPLATE" contentName="Personal Profile"  />
+    <Content contentId="CDT1104" dataResourceId="DR1104" contentTypeId="TEMPLATE" contentName="1st Quarter Review"   />
+    <Content contentId="CDT1105" dataResourceId="DR1105" contentTypeId="TEMPLATE" contentName="2nd Quarter Review"   />
+    <Content contentId="CDT1106" dataResourceId="DR1106" contentTypeId="TEMPLATE" contentName="3rd Quarter Review"   />
+    <Content contentId="CDT1107" dataResourceId="DR1107" contentTypeId="TEMPLATE" contentName="4th Quarter Review"   />
+    <Content contentId="CDT1108" dataResourceId="DR1108" contentTypeId="TEMPLATE" contentName="Phase I Budget"   />
+    <Content contentId="CDT1109" dataResourceId="DR1109" contentTypeId="TEMPLATE" contentName="Phase II Budget"   />
+    <Content contentId="CDT1110" dataResourceId="DR1110" contentTypeId="TEMPLATE" contentName="IJK 4988"   />
+    <Content contentId="CDT1111" dataResourceId="DR1111" contentTypeId="TEMPLATE" contentName="ABC 123"   />
+    <Content contentId="CDT1112" dataResourceId="DR1112" contentTypeId="TEMPLATE" contentName="Yearly Review"   />
+    <Content contentId="CDT1113" dataResourceId="DR1113" contentTypeId="TEMPLATE" contentName="Miscellaneous Notes"   />
+    <Content contentId="CDT1114" dataResourceId="DR1114" contentTypeId="TEMPLATE" contentName="Disclosure Agreement"   />
+    <Content contentId="CDT1115" dataResourceId="DR1115" contentTypeId="TEMPLATE" contentName="Performance Review"   />
+    <Content contentId="CDT1116" dataResourceId="DR1116" contentTypeId="TEMPLATE" contentName="Other Upload"   />
 
     <ContentAssoc contentIdTo="CDT1201" contentId="CDT1101" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" sequenceNum="0010"/>
     <ContentAssoc contentIdTo="CDT1201" contentId="CDT1102" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" sequenceNum="0020"/>
@@ -76,21 +80,16 @@
     <ContentAssoc contentIdTo="CDT1201" contentId="CDT1116" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" sequenceNum="0160"/>
 
 	    <!-- sample instances CDT CDT1201 -->
-    <Content contentId="CDI1201" instanceOfContentId="CDT1201" contentTypeId="COMPDOC_INSTANCE" contentName="Demo Instance Root (CDI) 1201" description="" ownerContentId="" />
-    <Content contentId="CDI1102" instanceOfContentId="CDT1102" dataResourceId="DR1102b" contentTypeId="DOCUMENT" contentName="POA Contract" description="" ownerContentId="" />
-    <Content contentId="CDI1103" instanceOfContentId="CDT1103" dataResourceId="DR1103b" contentTypeId="DOCUMENT" contentName="Personal Profile" description="" ownerContentId=""/>
-    <Content contentId="CDI1104" instanceOfContentId="CDT1104" contentTypeId="DOCUMENT" contentName="1st Quarter Review" description="" ownerContentId="" />
-    <Content contentId="CDI1105" instanceOfContentId="CDT1105" dataResourceId="DR1105b" contentTypeId="DOCUMENT" contentName="2nd Quarter Review" description="" ownerContentId="" />
+    <Content contentId="CDI1201" instanceOfContentId="CDT1201" contentTypeId="COMPDOC_INSTANCE" contentName="Demo Instance Root (CDI) 1201"  ownerContentId="" />
+    <Content contentId="CDI1103" instanceOfContentId="CDT1103" dataResourceId="DR1103b" contentTypeId="DOCUMENT" contentName="Personal Profile"  ownerContentId=""/>
+    <Content contentId="CDI1105" instanceOfContentId="CDT1105" dataResourceId="DR1105b" contentTypeId="DOCUMENT" contentName="2nd Quarter Review"  ownerContentId="" />
 
     <ContentAssoc contentIdTo="CDT1201" contentId="CDI1201" contentAssocTypeId="INSTANCE" fromDate="2006-01-12 01:01:01" sequenceNum="0020"/>
-    <ContentAssoc contentIdTo="CDI1201" contentId="CDI1102" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" sequenceNum="00220"/>
     <ContentAssoc contentIdTo="CDI1201" contentId="CDI1103" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" sequenceNum="00130"/>
-    <ContentAssoc contentIdTo="CDI1201" contentId="CDI1104" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" sequenceNum="00440"/>
     <ContentAssoc contentIdTo="CDI1201" contentId="CDI1105" contentAssocTypeId="COMPDOC_PART" fromDate="2006-01-12 01:01:01" sequenceNum="0050"/>
 
 	    <!-- sample revision entries for CDT CDT1201 -->
     <ContentRevision contentId="CDT1201" contentRevisionSeqId="000002"/>
-    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000002" itemContentId="CDT0211"/>
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000002" itemContentId="CDT1101"/>
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000002" itemContentId="CDT1102"/>
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000002" itemContentId="CDT1103"/>
@@ -108,31 +107,47 @@
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000002" itemContentId="CDT1115"/>
     <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000002" itemContentId="CDT1116"/>
 
-    <ContentRevision contentId="CDT1201" contentRevisionSeqId="000013"/>
-	<!--
-    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1121"/>
-    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1122"/>
-    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1123"/>
-    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1124"/>
-		-->
-
     <ContentRevision contentId="CDT1201" contentRevisionSeqId="000004"/>
-    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000004" itemContentId="CDT1102" oldDataResourceId="DR1102a" newDataResourceId="DR1102b" />
-    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000004" itemContentId="CDT1103" oldDataResourceId="DR1103a" newDataResourceId="DR1103b"/>
-    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000004" itemContentId="CDT1105" oldDataResourceId="DR1105a" newDataResourceId="DR1105b"/>
+
+	<ContentRevision contentId="CDT1201" contentRevisionSeqId="000013"/>
+    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1103" oldDataResourceId="DR1103a" newDataResourceId="DR1103b"/>
+    <ContentRevisionItem contentId="CDT1201" contentRevisionSeqId="000013" itemContentId="CDT1105" oldDataResourceId="DR1105a" newDataResourceId="DR1105b"/>
     
-    <ContentRevision contentId="CDI1201" contentRevisionSeqId="000004"/>
-    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000004" itemContentId="CDI1102" oldDataResourceId="DR1102a" newDataResourceId="DR1102b" />
-    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000004" itemContentId="CDI1103" oldDataResourceId="DR1103a" newDataResourceId="DR1103b"/>
-    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000004" itemContentId="CDI1105" oldDataResourceId="DR1105a" newDataResourceId="DR1105b"/>
+    <ContentRevision contentId="CDI1201" contentRevisionSeqId="000005"/>
+    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000005" itemContentId="CDI1103" newDataResourceId="DR1103a"/>
+    <ContentRevision contentId="CDI1201" contentRevisionSeqId="000006"/>
+    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000006" itemContentId="CDI1105" newDataResourceId="DR1105a"/>
+
+	<ContentRevision contentId="CDI1201" contentRevisionSeqId="000009"/>
+    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000009" itemContentId="CDI1103" oldDataResourceId="DR1103a" newDataResourceId="DR1103b"/>
+	<ContentRevision contentId="CDI1201" contentRevisionSeqId="000010"/>
+    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000010" itemContentId="CDI1105" oldDataResourceId="DR1105a" newDataResourceId="DR1105b"/>
+
+	<ContentRevision contentId="CDI1201" contentRevisionSeqId="000013"/>
+    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000013" itemContentId="CDI1103" oldDataResourceId="DR1103a" newDataResourceId="DR1103b"/>
+	<ContentRevision contentId="CDI1201" contentRevisionSeqId="000014"/>
+    <ContentRevisionItem contentId="CDI1201" contentRevisionSeqId="000014" itemContentId="CDI1105" oldDataResourceId="DR1105a" newDataResourceId="DR1105b"/>
+
     
     <!-- sample approval entries for CDT CD0001 -->
-    <ContentApproval contentApprovalId="CA0101" contentId="CDT1201" contentRevisionSeqId="000002" partyId="admin"/>
-    <ContentApproval contentApprovalId="CA0102" contentId="CDT1201" contentRevisionSeqId="000002" partyId="BLOG_EDITOR"/>
-    <ContentApproval contentApprovalId="CA0103" contentId="CDT1201" contentRevisionSeqId="000002" roleTypeId="MANAGER"/>
-    <ContentApproval contentApprovalId="CA0104" contentId="CDT1201" contentRevisionSeqId="000002" roleTypeId="BUYER"/>
-    <ContentApproval contentApprovalId="CA0111" contentId="CDT1201" contentRevisionSeqId="000013" partyId="admin"/>
-    <ContentApproval contentApprovalId="CA0112" contentId="CDT1201" contentRevisionSeqId="000013" partyId="BLOG_EDITOR"/>
-    <ContentApproval contentApprovalId="CA0113" contentId="CDT1201" contentRevisionSeqId="000013" roleTypeId="MANAGER"/>
-    <ContentApproval contentApprovalId="CA0114" contentId="CDT1201" contentRevisionSeqId="000013" roleTypeId="BUYER"/>
+    <ContentApproval contentApprovalId="CA0101" contentId="CDT1201" contentRevisionSeqId="000002" partyId="admin" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0102" contentId="CDT1201" contentRevisionSeqId="000002" partyId="approver" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0103" contentId="CDT1201" contentRevisionSeqId="000002" roleTypeId="APPROVER" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0104" contentId="CDT1201" contentRevisionSeqId="000002" roleTypeId="REVIEWER" approvalStatusId="CNTAP_READY" />
+
+    <ContentApproval contentApprovalId="CA0111" contentId="CDT1201" contentRevisionSeqId="000004" partyId="admin" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0112" contentId="CDT1201" contentRevisionSeqId="000004" partyId="approver" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0113" contentId="CDT1201" contentRevisionSeqId="000004" roleTypeId="APPROVER" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0114" contentId="CDT1201" contentRevisionSeqId="000004" roleTypeId="REVIEWER" approvalStatusId="CNTAP_READY" />
+
+    <ContentApproval contentApprovalId="CA0121" contentId="CDT1201" contentRevisionSeqId="000013" partyId="admin" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0122" contentId="CDT1201" contentRevisionSeqId="000013" partyId="approver" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0123" contentId="CDT1201" contentRevisionSeqId="000013" roleTypeId="APPROVER" approvalStatusId="CNTAP_READY" />
+    <ContentApproval contentApprovalId="CA0124" contentId="CDT1201" contentRevisionSeqId="000013" roleTypeId="REVIEWER" approvalStatusId="CNTAP_READY" />
+
+    <ContentApproval contentApprovalId="CA0221" contentId="CDI1201" contentRevisionSeqId="000010" partyId="admin" sequenceNum="10" approvalStatusId="CNTAP_APPROVED" />
+    <ContentApproval contentApprovalId="CA0122" contentId="CDI1201" contentRevisionSeqId="000010" partyId="approver" sequenceNum="20" approvalStatusId="CNTAP_APPROVED" />
+    <ContentApproval contentApprovalId="CA0123" contentId="CDI1201" contentRevisionSeqId="000010" roleTypeId="APPROVER" sequenceNum="30" approvalStatusId="CNTAP_SOFT_REJ" />
+    <ContentApproval contentApprovalId="CA0124" contentId="CDI1201" contentRevisionSeqId="000010" roleTypeId="REVIEWER" sequenceNum="40" approvalStatusId="CNTAP_READY" />
+
 </entity-engine-xml>
