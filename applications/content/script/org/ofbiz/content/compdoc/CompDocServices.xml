@@ -292,10 +292,10 @@ under the License.
     
     <simple-method method-name="persistCompDocPdf2Survey" short-description="Upload/save PDF, create Survey, populate Content">
         
-		<set field="pdfMap.contentTypeId" value="DOCUMENT"/>
+		<set field="pdfMap.contentTypeId" value="TEMPLATE"/>
 		<set field="pdfMap.dataResourceTypeId" value="IMAGE_OBJECT"/>
-		<set field="pdfMap.mimeTypeId" value="application/pdf"/>
-		<set field="pdfMap.drMimeTypeId" value="application/pdf"/>
+		<set field="pdfMap.mimeTypeId" value="application/vnd.ofbiz.survey"/>
+		<set field="pdfMap.drMimeTypeId" value="application/vnd.ofbiz.survey"/>
         <set field="pdfMap.imageData" from-field="parameters.imageData"/>
         <set field="pdfMap._imageData_contentType" from-field="parameters._imageData_contentType"/>
         <set field="pdfMap._imageData_fileName" from-field="parameters._imageData_fileName"/>
@@ -314,7 +314,10 @@ under the License.
 		
         <set-service-fields service-name="persistCompDocContent" map-name="parameters" to-map-name="persistMap"/>
         <set field="persistMap.relatedDetailId" from-field="surveyId"/>
-        <set field="persistMap.drMimeTypeId" value="application/vnd.ofbiz.survey"/>
+        <set field="persistMap.mimeTypeId" value="application/vnd.ofbiz.survey"/>
+		<clear-field field-name="persistMap._imageData_contentType"/>
+		<clear-field field-name="persistMap._imageData_fileName"/>
+		<clear-field field-name="persistMap.imageData"/>
         <log level="info" message="persistCompDocPdf2Survey(4)persistMap : ${persistMap}"/>
         <call-service service-name="persistCompDocContent" in-map-name="persistMap">
         </call-service>
