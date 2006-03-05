@@ -49,8 +49,19 @@ under the License.
                     <decorator-section name="body">
                         <container><link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" text="View Waiting Approvals" style="buttontext"/></container>
                         <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                        <label text="Add" style="head1"/>
-                        <include-form name="AddContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
+		                <section>
+        		            <condition>
+                		        <if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_TEMPLATE"/>
+		                    </condition>
+        		            <actions>
+                				<set field="title" value="Edit CompDoc Instance [${rootContentId}]"/>
+                        		<set from-field="parameters.contentRevisionSeqId" default-value="${parameters.rootContentRevisionSeqId}" field="rootContentRevisionSeqId"/>
+		                    </actions>
+        		            <widgets>
+                		        <label text="Add" style="head1"/>
+                        		<include-form name="AddContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
+		                    </widgets>
+        		        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -886,7 +897,7 @@ under the License.
 				<set from-field="parameters.rootContentRevisionSeqId" default-value="${contentRevisions[0].contentRevisionSeqId}" field="rootContentRevisionSeqId" />
 				
                 <set field="menuName" value="tree"/>
-                <set field="title" value="Composite Document Root Template View Page"/>
+                <set field="title" value="Root Template ${rootContentId}, rev. ${rootContentRevisionSeqId}"/>
                 <set field="currentMenuItemName" value="viewtree"/>
 
             </actions>
@@ -934,7 +945,7 @@ under the License.
                     <order-by field-name="-contentRevisionSeqId"/>
                 </entity-condition>
                 <set  field="templateContentRevisionSeqId" from-field="contentTemplateRevisions[0].contentRevisionSeqId"/>
-                <set field="title" value="Composite Document Root Instance View Page for Id: ${rootContentId} instance of ${instanceContent.instanceOfContentId}"/>
+                <set field="title" value="Root ${rootContentId}, rev. ${rootContentRevisionSeqId} instance of ${instanceContent.instanceOfContentId}, rev. ${templateContentRevisionSeqId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">

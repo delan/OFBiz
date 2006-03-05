@@ -987,6 +987,7 @@ under the License.
         <entity-condition entity-name="ContentApproval" list-name="contentApprovalList">
             <condition-list combine="and">
                 <condition-expr field-name="contentApprovalId" operator="in" env-name="contentApprovalIdList"/>
+				<condition-expr field-name="approvalStatusId" operator="equals" value="CNTAP_READY"/>
             </condition-list>
         </entity-condition>
         <log level="info" message="contentApprovalList: ${contentApprovalList}"/>        
