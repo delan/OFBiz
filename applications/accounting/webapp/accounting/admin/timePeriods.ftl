@@ -44,13 +44,4 @@ function submitViewBalance(form) {
 <p>There are currently no closed time periods.</p>
 </#if>
 
-<#if (openTimePeriods?has_content) && (openTimePeriods.size() > 0)>
-<#assign timePeriod = openTimePeriods.get(0)>
-<a href="<@ofbizUrl>closeAllTimePeriods?organizationPartyId=${organizationPartyId}&customTimePeriodId=${timePeriod.customTimePeriodId}</@ofbizUrl>">
-Close time periods ending ${timePeriod.thruDate}
-</a>
-</p>
-<#else>
-<p>There are no time periods which can be closed.</p>
-</#if>
 </div>

@@ -865,12 +865,6 @@
         <response name="success" type="view" value="PartyAcctgPreference"/>
         <response name="error" type="view" value="PartyAcctgPreference"/>
     </request-map>
-    <request-map uri="closeAllTimePeriods">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="closeAllTimePeriods"/>
-        <response name="success" type="view" value="AdminMain"/>
-        <response name="error" type="view" value="AdminMain"/>
-    </request-map>
     
     <request-map uri="GlAccountAssignment">
         <security https="true" auth="true"/>
