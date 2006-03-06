@@ -87,6 +87,8 @@
     <GlAccountClass description="Dividends" glAccountClassId="DIVIDEND" parentClassId="DISTRIBUTION"/>
     <GlAccountClass description="Revenue" glAccountClassId="REVENUE" parentClassId="CREDIT"/>
     <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId="DEBIT"/>
+    <GlAccountClass description="Cash Income" glAccountClassId="CASH_INCOME" parentClassId="INCOME"/>
+    <GlAccountClass description="Non-Cash Income" glAccountClassId="NON_CASH_INCOME" parentClassId="INCOME"/>
     <GlAccountClass description="Expense" glAccountClassId="EXPENSE" parentClassId="DEBIT"/>
     <GlAccountClass description="Cash Expense" glAccountClassId="CASH_EXPENSE" parentClassId="EXPENSE"/>
     <GlAccountClass description="Interest Expense" glAccountClassId="INTEREST_EXPENSE" parentClassId="CASH_EXPENSE"/> <!-- useful for EBITDA, coverage ratios, etc. -->
