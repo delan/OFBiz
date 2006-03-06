@@ -1490,7 +1490,7 @@ public class OrderReadHelper {
         // calculate tax and shipping adjustments for entire order, add to result
         BigDecimal orderItemsSubTotal = this.getOrderItemsSubTotalBd();
         BigDecimal orderFactorNotReturned = ZERO;
-        if (orderItemsSubTotal.signum() == 0) {
+        if (orderItemsSubTotal.signum() != 0) {
             orderFactorNotReturned = totalSubTotalNotReturned.divide(orderItemsSubTotal, scale, rounding);
         }
         BigDecimal orderTaxNotReturned = this.getHeaderTaxTotalBd().multiply(orderFactorNotReturned).setScale(scale, rounding);
