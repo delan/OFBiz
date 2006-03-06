@@ -179,26 +179,20 @@ under the License.
     <form name="EditInvoice" type="single"
         target="updateInvoice" title="Edit Invoice Header" default-map-name="invoice"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <alt-target use-when="invoiceId==null" target="createInvoice"/>
+        <alt-target use-when="invoice==null" target="createInvoice"/>
         <field name="invoiceId"><hidden/></field>
         <field position="1" name="invoiceDate" title="${uiLabelMap.AccountingInvoiceDate}"><date-time/></field>
         <field position="2" name="dueDate" title="${uiLabelMap.AccountingDueDate}"><date-time/></field>
-        <field position="1" name="invoiceTypeId">
-            <drop-down allow-empty="false" no-current-selected-key="SALES_INVOICE">
+        <field position="1" name="invoiceTypeId" use-when="invoice!=null"><display/></field>
+        <field position="1" name="invoiceTypeId" use-when="invoice==null">
+                <drop-down allow-empty="false" no-current-selected-key="SALES_INVOICE">
                 <entity-options description="${description}" entity-name="InvoiceType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field> 
-        <field name="statusId" use-when="invoiceId==null"><hidden value="INVOICE_IN_PROCESS"/></field>
-        <field position="2" name="statusId" use-when="invoiceId!=null"><display-entity entity-name="StatusItem"/></field>
-        <!--field position="2" name="statusId">
-            <drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
-                <entity-options description="${description}" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
-                </entity-options>
-            </drop-down>
-        </field-->
+        <field name="statusId" use-when="invoice==null"><hidden value="INVOICE_IN_PROCESS"/></field>
+        <field position="2" name="statusId" use-when="invoice!=null"><display-entity entity-name="StatusItem"/></field>
         <field position="1" name="description"><text size="100"/></field>
         <field position="1" name="partyIdFrom" title="Party billed from"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyId" title="Party billed to"><lookup target-form-name="LookupPartyName"/></field>
@@ -209,7 +203,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="billingAccountId" title="${uiLabelMap.AccountingBillingAccount}"><lookup target-form-name="LookupBillingAccount"/></field>
+        <field position="2" name="billingAccountId" title="${uiLabelMap.AccountingBillingAccount}"><lookup target-form-name="LookupBillingAccount"/></field>
         <field position="1" name="currencyUomId" title="${uiLabelMap.CommonCurrencyUom}">
             <drop-down allow-empty="true">
                 <entity-options key-field-name="uomId" description="${abbreviation} - ${description}" entity-name="Uom">
@@ -220,10 +214,10 @@ under the License.
         </field>
         <field position="1" name="invoiceMessage"><text size="100"/></field>
         <!--field position="2" name="invoiceAmount" title="Total Amount" use-when="invoiceId!=null"><display/></field-->
-        <field position="1" use-when="invoiceId==null" name="submitButton" title="Create" widget-style="smallSubmit">
+        <field position="1" use-when="invoice==null" name="submitButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field position="1" use-when="invoiceId!=null" name="submitButton" title="Update" widget-style="smallSubmit">
+        <field position="1" use-when="invoice!=null" name="submitButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
