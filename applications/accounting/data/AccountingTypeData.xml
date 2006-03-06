@@ -66,16 +66,35 @@
     <FixedAssetProductType description="Use of Asset" fixedAssetProductTypeId="FAPT_USE"/>
     <FixedAssetProductType description="Sale of Asset" fixedAssetProductTypeId="FAPT_SALE"/>
 
+    <!-- These classes are used to classify gl accounts for financial statement purposes: balance sheet, income statement, cash flow statement,
+        statement of shareholders' equity.  We could get fancier with different types of accounts: Investments vs PP&E, classes of equity, 
+        classes of debt, etc. over time -->
     <GlAccountClass description="Debit" glAccountClassId="DEBIT" parentClassId=""/>
     <GlAccountClass description="Credit" glAccountClassId="CREDIT" parentClassId=""/>
     <GlAccountClass description="Resource" glAccountClassId="RESOURCE" parentClassId=""/>
     <GlAccountClass description="Asset" glAccountClassId="ASSET" parentClassId="DEBIT"/>
+    <GlAccountClass description="Current Asset" glAccountClassId="CURRENT_ASSET" parentClassId="ASSET"/>
+    <GlAccountClass description="Cash and Equivalent" glAccountClassId="CASH_EQUIVALENT" parentClassId="CURRENT_ASSET"/>
+    <GlAccountClass description="Long Term Asset" glAccountClassId="LONGTERM_ASSET" parentClassId="ASSET"/>
     <GlAccountClass description="Liability" glAccountClassId="LIABILITY" parentClassId="CREDIT"/>
+    <GlAccountClass description="Current Liability" glAccountClassId="CURRENT_LIABILITY" parentClassId="LIABILITY"/>
+    <GlAccountClass description="Long Term Liability" glAccountClassId="LONGTERM_LIABILITY" parentClassId="LIABILITY"/>
     <GlAccountClass description="Equity" glAccountClassId="EQUITY" parentClassId="CREDIT"/>
-    <GlAccountClass description="Distributed Equity" glAccountClassId="DISTRIBUTION" parentClassId="DEBIT"/>
+    <GlAccountClass description="Owners Equity" glAccountClassId="OWNERS_EQUITY" parentClassId="EQUITY"/>  
+    <GlAccountClass description="Retained Earnings" glAccountClassId="RETAINED_EARNINGS" parentClassId="EQUITY"/>  
+    <GlAccountClass description="Equity Distribution" glAccountClassId="DISTRIBUTION" parentClassId="DEBIT"/>
+    <GlAccountClass description="Return of Capital" glAccountClassId="RETURN_OF_CAPITAL" parentClassId="DISTRIBUTION"/>
+    <GlAccountClass description="Dividends" glAccountClassId="DIVIDEND" parentClassId="DISTRIBUTION"/>
     <GlAccountClass description="Revenue" glAccountClassId="REVENUE" parentClassId="CREDIT"/>
     <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId="DEBIT"/>
     <GlAccountClass description="Expense" glAccountClassId="EXPENSE" parentClassId="DEBIT"/>
+    <GlAccountClass description="Cash Expense" glAccountClassId="CASH_EXPENSE" parentClassId="EXPENSE"/>
+    <GlAccountClass description="Interest Expense" glAccountClassId="INTEREST_EXPENSE" parentClassId="CASH_EXPENSE"/> <!-- useful for EBITDA, coverage ratios, etc. -->
+    <GlAccountClass description="Cost of Goods Sold Expense" glAccountClassId="COGS_EXPENSE" parentClassId="CASH_EXPENSE"/> <!-- used for Gross Profit -->
+    <GlAccountClass description="Selling, General, and Administrative Expense" glAccountClassId="SGA_EXPENSE" parentClassId="CASH_EXPENSE"/> 
+    <GlAccountClass description="Non-Cash Expense" glAccountClassId="NON_CASH_EXPENSE" parentClassId="EXPENSE"/>
+    <GlAccountClass description="Depreciation" glAccountClassId="DEPRECIATION" parentClassId="NON_CASH_EXPENSE"/>
+    <GlAccountClass description="Amortization" glAccountClassId="AMORTIZATION" parentClassId="NON_CASH_EXPENSE"/>
     <GlAccountClass description="Non-Posting" glAccountClassId="NON_POSTING" parentClassId="DEBIT"/>
 
     <GlAccountType description="Accounts Receivable" glAccountTypeId="ACCOUNTS_RECEIVABLE" hasTable="N" parentTypeId=""/>
