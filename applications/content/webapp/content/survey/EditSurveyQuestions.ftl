@@ -89,12 +89,12 @@
               <option>Y</option><option>N</option>
             </select>
           </td>
-          <td><input type="text" name="sequenceNum" size="5" class="inputBox" value="${surveyQuestionAndAppl.sequenceNum?if_exists}">
-          <td><input type="text" name="withSurveyQuestionId" size="5" class="inputBox" value="${surveyQuestionAndAppl.withSurveyQuestionId?if_exists}">
-          <td><input type="text" name="withSurveyOptionSeqId" size="5" class="inputBox" value="${surveyQuestionAndAppl.withSurveyOptionSeqId?if_exists}">
-          <td><input type="submit" value="Update">
-          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">Edit&nbsp;Question</a>
-          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">Remove</a>
+          <td><input type="text" name="sequenceNum" size="5" class="inputBox" value="${surveyQuestionAndAppl.sequenceNum?if_exists}"/></td>
+          <td><input type="text" name="withSurveyQuestionId" size="5" class="inputBox" value="${surveyQuestionAndAppl.withSurveyQuestionId?if_exists}"/></td>
+          <td><input type="text" name="withSurveyOptionSeqId" size="5" class="inputBox" value="${surveyQuestionAndAppl.withSurveyOptionSeqId?if_exists}"/></td>
+          <td><input type="submit" value="Update" class="smallSubmit"/></td>
+          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">Edit&nbsp;Question</a></td>
+          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">Remove</a></td>
         </tr>
       </form>
     </#list>
@@ -154,10 +154,10 @@
                 <option>Y</option>
               </select>
             </td>
-            <td><input type="text" name="sequenceNum" size="5" class="inputBox">
-            <td><input type="text" name="withSurveyQuestionId" size="5" class="inputBox">
-            <td><input type="text" name="withSurveyOptionSeqId" size="5" class="inputBox">
-            <td><input type="submit" value="Apply">
+            <td><input type="text" name="sequenceNum" size="5" class="inputBox"/></td>
+            <td><input type="text" name="withSurveyQuestionId" size="5" class="inputBox"/></td>
+            <td><input type="text" name="withSurveyOptionSeqId" size="5" class="inputBox"/></td>
+            <td><input type="submit" value="Apply" class="smallSubmit"/></td>
           </tr>
         </form>
       </#list>
@@ -169,14 +169,14 @@
   <div class="head2">Apply Question(s) From Category</div>
   <br/>
   <form method="post" action="<@ofbizUrl>EditSurveyQuestions</@ofbizUrl>">
-    <input type="hidden" name="surveyId" value="${requestParameters.surveyId}">
+    <input type="hidden" name="surveyId" value="${requestParameters.surveyId}"/>
     <select name="surveyQuestionCategoryId" class="selectBox">
       <#list questionCategories as category>
         <option value="${category.surveyQuestionCategoryId}">${category.description?default("??")} [${category.surveyQuestionCategoryId}]</option>
       </#list>
     </select>
     &nbsp;
-    <input type="submit" value="Apply">
+    <input type="submit" value="Apply" class="smallSubmit"/>
   </form>
   <br/>
 
