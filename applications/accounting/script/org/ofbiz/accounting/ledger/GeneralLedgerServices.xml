@@ -387,7 +387,7 @@
     <!-- Miscellaneous services for product and inventory -->
 
     <simple-method method-name="getProductOrgGlAccount" short-description="Look up a GlAccountId from ProductGlAccount, then GlAccountTypeDefault"> 
-        <log level="warn" message="getProductOrgGlAccount is deprecated. Please use UtilAccounting.getProductOrgGlAccountId instead."/>
+        <log level="warning" message="getProductOrgGlAccount is deprecated. Please use UtilAccounting.getProductOrgGlAccountId instead."/>
         <!-- if parameters for ProductGlAccount were passed, then try there first -->
         <if>
             <condition>
