@@ -181,7 +181,7 @@
     </service>
     <service name="createAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTrans" auth="true">
-        <description>Create a AcctgTrans record</description>
+        <description>Create a AcctgTrans record.  isPosted is forced to "N"</description>
         <implements service="interfaceAcctgTrans"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
@@ -209,7 +209,7 @@
     </service>
     <service name="createAcctgTransEntry" default-entity-name="AcctgTransEntry" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTransEntry" auth="true">
-        <description>Add an Entry to a AcctgTrans</description>
+        <description>Add an Entry to a AcctgTrans.  Will use baseCurrencyUomId in PartyAcctgPreference if no currencyUomId is in parameters.</description>
         <implements service="interfaceAcctgTransEntry"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <override name="acctgTransEntrySeqId" mode="OUT"/>

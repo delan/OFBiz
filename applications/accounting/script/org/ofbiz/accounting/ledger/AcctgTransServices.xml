@@ -34,7 +34,7 @@ under the License.
         
         <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
         <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateAcctgTrans" short-description="Update an AcctgTrans">
@@ -72,6 +72,14 @@ under the License.
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <make-next-seq-id value-name="newEntity" seq-field-name="acctgTransEntrySeqId" numeric-padding="5"/>
         <field-to-result field-name="newEntity.acctgTransEntrySeqId" result-name="acctgTransEntrySeqId"/>
+
+        <!-- if not explicitly provided in the parameters, set the currency of the entry from PartyAcctgPreference -->
+        <if-empty field-name="parameters.currencyUomId">
+        	<entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" use-cache="true">
+        		<field-map env-name="parameters.organizationPartyId" field-name="partyId"/>
+        	</entity-one>
+        	<set from-field="partyAcctgPreference.baseCurrencyUomId" field="newEntity.currencyUomId"/>
+        </if-empty>
 
         <!-- by default, set the reconciled status of this new entry to not reconciled -->
         <set value="AES_NOT_RECONCILED" field="newEntity.reconcileStatusId"/>
