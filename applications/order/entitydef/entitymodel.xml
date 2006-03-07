@@ -2138,11 +2138,7 @@
         <relation type="one" fk-name="RTN_ITEM_PROD" rel-entity-name="Product">
             <key-map field-name="productId"/>
         </relation>
-        <relation type="many" rel-entity-name="ShipmentReceipt">
-            <key-map field-name="returnId"/>
-            <key-map field-name="returnItemSeqId"/>
-        </relation>
-        <relation type="many" rel-entity-name="OrderItemShipGrpInvRes">
+        <relation type="many" fk-name="RTN_ITEM_OISGIR" rel-entity-name="OrderItemShipGrpInvRes">
             <key-map field-name="orderId"/>
             <key-map field-name="orderItemSeqId"/>
         </relation>           
