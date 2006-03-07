@@ -1008,7 +1008,7 @@ public class InvoiceServices {
             // ratio of the invoice total to the promised total so far or zero if the amounts were zero
             BigDecimal actualToPromisedRatio = ZERO;
             if (invoiceTotal.signum() != 0) {
-                invoiceTotal = invoiceTotal.divide(promisedTotal, decimals, rounding);
+                actualToPromisedRatio = invoiceTotal.divide(promisedTotal, decimals, rounding);
             }
 
             // loop through return-wide adjustments and create invoice items for each
@@ -1026,7 +1026,7 @@ public class InvoiceServices {
                 // prorate the adjustment amount by the actual to promised ratio
                 BigDecimal amount = adjustment.getBigDecimal("amount").multiply(actualToPromisedRatio).setScale(decimals, rounding);
                 if (Debug.verboseOn()) {
-                    Debug.logInfo("Creating Invoice Item with amount " + adjustment.getBigDecimal("amount") + " prorated to " + amount 
+                    Debug.logVerbose("Creating Invoice Item with amount " + adjustment.getBigDecimal("amount") + " prorated to " + amount 
                             + " for return adjustment [" + adjustment.getString("returnAdjustmentId") + "]", module);
                 }
 
