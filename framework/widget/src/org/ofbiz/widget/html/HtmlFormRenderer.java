@@ -681,6 +681,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderSubmitField(StringBuffer buffer, Map context, SubmitField submitField) {
         ModelFormField modelFormField = submitField.getModelFormField();
         ModelForm modelForm = modelFormField.getModelForm();
+        String singleClickAction = " onClick=\"javascript:submitFormDisableButton(this)\" ";
 
         if ("text-link".equals(submitField.getButtonType())) {
             buffer.append("<a");
@@ -724,6 +725,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
             this.appendContentUrl(buffer, submitField.getImageLocation());
             buffer.append('"');
 
+            buffer.append(singleClickAction);
+            
             buffer.append("/>");
         } else {
             // default to "button"
@@ -748,6 +751,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
                 buffer.append('"');
             }
 
+            // add single click JS onclick
+            buffer.append(singleClickAction);
+            
             buffer.append("/>");
         }
 
