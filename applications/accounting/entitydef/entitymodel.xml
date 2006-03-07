@@ -888,7 +888,6 @@
             title="Accounting Transaction Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="acctgTransTypeId" type="id"></field>
-      <field name="currencyUomId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="transactionDate" type="date-time"></field>
       <field name="isPosted" type="indicator"></field>
@@ -919,9 +918,6 @@
       </relation>
       <relation type="one" fk-name="ACCTTX_GLFST" rel-entity-name="GlFiscalType">
         <key-map field-name="glFiscalTypeId"/>
-      </relation>
-      <relation type="one" fk-name="ACCTTX_CURNCY" title="Currency" rel-entity-name="Uom">  <!-- title strictly speaking not necessary here but nice for consistency -->
-        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="ACCTTX_GRPSTTS" rel-entity-name="StatusItem">
         <key-map field-name="groupStatusId" rel-field-name="statusId"/>
@@ -996,6 +992,7 @@
       <field name="glAccountId" type="id-ne"></field>
       <field name="organizationPartyId" type="id-ne"></field>
       <field name="amount" type="currency-amount"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="origAmount" type="currency-amount"></field>
       <field name="debitCreditFlag" type="indicator"></field>
       <field name="dueDate" type="date"></field>
@@ -1008,6 +1005,9 @@
       <prim-key field="acctgTransEntrySeqId"/>
       <relation type="one" fk-name="ACCTTXENT_ATET" rel-entity-name="AcctgTransEntryType">
         <key-map field-name="acctgTransEntryTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTXENT_CURNCY" title="Currency" rel-entity-name="Uom">  <!-- title strictly speaking not necessary here but nice for consistency -->
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="ACCTTXENT_ACTX" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
@@ -1058,6 +1058,7 @@
       <alias entity-alias="ATE" name="glAccountId"/>
       <alias entity-alias="ATE" name="debitCreditFlag"/>
       <alias entity-alias="ATE" name="amount"/>
+      <alias entity-alias="ATE" name="currencyUomId"/>
       <alias entity-alias="ATE" name="organizationPartyId"/>
       <alias entity-alias="GLAC" name="glAccountClassId"/>
       <alias entity-alias="ATE" name="partyId"/>
