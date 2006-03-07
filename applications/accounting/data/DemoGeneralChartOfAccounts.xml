@@ -334,7 +334,7 @@
     accountName="ACCRUED PAYROLL TAXES - STATE UNEMPLOYMENT TAX" description="" postedBalance="0.0"/>
 
     <GlAccount parentGlAccountId="220000" glAccountId="224000" accountCode="224000" 
-        glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+        glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
         accountName="SALES TAX COLLECTED" description="" postedBalance="0.0"/>
     
     <!-- USA Sales Tax Accounts -->    
