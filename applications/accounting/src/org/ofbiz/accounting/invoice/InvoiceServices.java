@@ -938,7 +938,7 @@ public class InvoiceServices {
                 }
                 if (Debug.verboseOn()) {
                     Debug.logInfo("Creating Invoice Item with amount " + returnItem.getBigDecimal("returnPrice") + " and quantity " 
-                            + returnItem.getDouble("quantityAccepted") + " for shipment receipt [" + receipt.getString("receiptId") + "]", module);
+                            + receipt.getBigDecimal("quantityAccepted") + " for shipment receipt [" + receipt.getString("receiptId") + "]", module);
                 }
 
                 // increment the seqId counter after creating the invoice item and return item billing
