@@ -68,7 +68,7 @@
                     ${shippingAddress.address1}<br/>
                     <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>                            
                     ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
-                    ${shippingAddress.postalCode}<br/>
+                    ${shippingAddress.postalCode?if_exists}<br/>
                     ${shippingAddress.countryGeoId?if_exists}
                   </div>
                 </td>
