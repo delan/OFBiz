@@ -685,8 +685,8 @@ public class OrderReturnServices {
     // refund (cash/charge) return
     //TODO add adjustment total
     public static Map processRefundReturn(DispatchContext dctx, Map context) {
-        LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         String returnId = (String) context.get("returnId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
@@ -801,7 +801,12 @@ public class OrderReturnServices {
                     GenericValue orderPayPref = (GenericValue) prefItemEntry.getKey();
                     List itemList = (List) prefItemEntry.getValue();
 
-                    Double thisRefundAmount = (Double) prefsAmount.get(orderPayPref);
+                    // Get the refund amount as a BigDecimal due to rounding issues (the createReturnItemResponse simple method will turn 203.37999999999997 into 203.37)
+                    BigDecimal thisRefundAmount = ZERO;
+                    Double thisRefundAmountDouble = (Double) prefsAmount.get(orderPayPref);
+                    if (thisRefundAmountDouble != null) thisRefundAmount = new BigDecimal(thisRefundAmountDouble.doubleValue()); 
+                    thisRefundAmount = thisRefundAmount.setScale(decimals, rounding);
+
                     String paymentId = null;
 
                     // this can be extended to support additional electronic types
@@ -811,7 +816,7 @@ public class OrderReturnServices {
                     if (electronicTypes.contains(orderPayPref.getString("paymentMethodTypeId"))) {
                         // call the refund service to refund the payment
                         try {
-                            serviceResult = dispatcher.runSync("refundPayment", UtilMisc.toMap("orderPaymentPreference", orderPayPref, "refundAmount", thisRefundAmount, "userLogin", userLogin));
+                            serviceResult = dispatcher.runSync("refundPayment", UtilMisc.toMap("orderPaymentPreference", orderPayPref, "refundAmount", new Double(thisRefundAmount.doubleValue()), "userLogin", userLogin));
                             if (ServiceUtil.isError(serviceResult)) {
                                 return ServiceUtil.returnError("Error in refund payment", null, null, serviceResult);
                             }
@@ -833,7 +838,7 @@ public class OrderReturnServices {
                     // fill out the data for the new ReturnItemResponse
                     Map response = FastMap.newInstance();
                     response.put("orderPaymentPreferenceId", orderPayPref.getString("orderPaymentPreferenceId"));
-                    response.put("responseAmount", thisRefundAmount);
+                    response.put("responseAmount", new Double(thisRefundAmount.doubleValue()));
                     response.put("responseDate", now);
                     response.put("userLogin", userLogin);
                     if (paymentId != null) {
