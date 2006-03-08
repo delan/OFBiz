@@ -118,10 +118,9 @@ under the License.
     </service>
     <service name="removePaymentApplication" default-entity-name="PaymentApplication" engine="simple"
         location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="removePaymentApplication">
-        <description>Remove a payment to a Invoice, delete a paymentApplication record.</description>
+        <description>Delete a paymentApplication record.</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
-        <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="paymentId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes mode="OUT" include="nonpk" optional="true"/>
     </service>
     <service name="createInvoiceTerm" engine="simple" default-entity-name="InvoiceTerm"
         location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceTerm">

@@ -312,10 +312,16 @@ under the License.
     <simple-method method-name="removeInvoiceItem" short-description="Remove an existing Invoice Item">
         <set field="invoiceId" from-field="parameters.invoiceId"/>
         <call-simple-method method-name="InvoiceStatusInProgress"/>
-        
-        <!-- check if there are specific item paymentApplications when yes remove those -->
-        <set from-field="parameters.invoiceItemSeqId" field="removePaymentApplicationMap.invoiceItemSeqId"/>
-        <remove-by-and entity-name="PaymentApplication" map-name="removePaymentApplicationMap"/>
+
+        <set field="paymentApplicationMap.invoiceId" from-field="parameters.invoiceId"/>
+        <set field="paymentApplicationMap.invoiceItemSeqId" from-field="parameters.invoiceItemSeqId"/>
+        <if-not-empty field-name="parameters.invoiceItemSeqId">        
+            <!-- check if there are specific item paymentApplications when yes remove those -->
+            <remove-by-and entity-name="PaymentApplication" map-name="paymentApplicationMap"/>
+            <else><!-- update global application with a null sequence number -->
+                <!-- TODO: reduce amount on global paymentApplication record -->
+            </else>
+        </if-not-empty>
         
         <entity-one entity-name="InvoiceItem" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
@@ -323,10 +329,34 @@ under the License.
     
     <simple-method method-name="removePaymentApplication" 
         short-description="Remove an existing payment application">
-        <entity-one entity-name="PaymentApplication" value-name="lookedUpValue"/>
-        <field-to-result field-name="lookedUpValue.paymentId" result-name="paymentId"/>
-        <field-to-result field-name="lookedUpValue.invoiceId" result-name="invoiceId"/>
+        <entity-one entity-name="PaymentApplication" value-name="lookedUpValue">
+            <field-map field-name="paymentApplicationId" value="${parameters.paymentApplicationId}"/>
+        </entity-one>
+        <if-empty field-name="lookedUpValue">
+            <add-error>
+                <fail-message message="Cannot find payment application record [${parameters.paymentApplicationId}]"/>
+            </add-error>
+            <return/>
+        </if-empty>
         <remove-value value-name="lookedUpValue"/>
+        <if-not-empty field-name="lookedUpValue.invoiceId">
+            <field-to-result field-name="lookedUpValue.invoiceId" result-name="invoiceId"/>
+        </if-not-empty>
+        <if-not-empty field-name="lookedUpValue.invoiceItemSeqId">
+            <field-to-result field-name="lookedUpValue.invoiceItemSeqId" result-name="invoiceItemSeqId"/>
+        </if-not-empty>
+        <if-not-empty field-name="lookedUpValue.paymentId">
+            <field-to-result field-name="lookedUpValue.paymentId" result-name="paymentId"/>
+        </if-not-empty>
+        <if-not-empty field-name="lookedUpValue.toPaymentId">
+            <field-to-result field-name="lookedUpValue.toPaymentId" result-name="toPaymentId"/>
+        </if-not-empty>
+        <if-not-empty field-name="lookedUpValue.billingAccountId">
+            <field-to-result field-name="lookedUpValue.billingAccountId" result-name="billingAccountId"/>
+        </if-not-empty>
+        <if-not-empty field-name="lookedUpValue.taxAuthGeoId">
+            <field-to-result field-name="lookedUpValue.taxAuthGeoId" result-name="taxAuthGeoId"/>
+        </if-not-empty>
     </simple-method>
     
     <simple-method method-name="createInvoiceRole" short-description="Create a Invoice Role">
