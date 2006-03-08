@@ -138,15 +138,15 @@
     <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="OFBIZ_FILE" description="File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="CONTEXT_FILE" description="File (rel to webapp root)" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="LOCAL_FILE_BIN" description="Local Binary File" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="OFBIZ_FILE_BIN" description="Binary File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="CONTEXT_FILE_BIN" description="Binary File (rel to webapp root)" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="LINK" description="HyperLink" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="URL_RESOURCE" description="URL Resource" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="SHORT_TEXT" description="Short Text" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="ELECTRONIC_TEXT" description="Long Text" hasTable="Y" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
-    <DataResourceType dataResourceTypeId="LOCAL_FILE_BIN" description="Local Binary File" hasTable="N" parentTypeId=""/>
-    <DataResourceType dataResourceTypeId="OFBIZ_FILE_BIN" description="Binary File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
-    <DataResourceType dataResourceTypeId="CONTEXT_FILE_BIN" description="Binary File (rel to webapp root)" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="SURVEY" description="Survey" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="SURVEY_RESPONSE" description="Survey Response" hasTable="N" parentTypeId=""/>
 

@@ -872,6 +872,12 @@ text-align: left;
 }
 
 /* ===== Product Detail Styles ===== */
+#productdetail #download-files {
+margin-top: 10px;
+padding-top: 5px;
+border-top: #999 solid 1px;
+}
+
 #productdetail #long-description {
 margin-top: 10px;
 padding-top: 5px;

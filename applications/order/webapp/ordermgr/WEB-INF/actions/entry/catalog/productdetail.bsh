@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -431,6 +431,9 @@ if (product != null) {
         }
     }
     
-    // not the best to save info in an action, but this is probably the best place to count a view
+    // get the DIGITAL_DOWNLOAD related Content records to show the contentName/description
+    downloadProductContentAndInfoList = delegator.findByAnd("ProductContentAndInfo", UtilMisc.toMap("productId", productId, "productContentTypeId, "DIGITAL_DOWNLOAD"));
+    
+    // not the best to save info in an action, but this is probably the best place to count a view; it is done async
     dispatcher.runAsync("countProductView", UtilMisc.toMap("productId", productId, "weight", new Long(1)), false);
 }
