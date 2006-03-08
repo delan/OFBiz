@@ -687,6 +687,13 @@
         <response name="error" type="view" value="orderstatus"/>
     </request-map>
 
+    <request-map uri="downloadDigitalProduct">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.order.order.OrderEvents" invoke="downloadDigitalProduct"/>
+        <response name="success" type="none"/>
+        <response name="error" type="view" value="orderhistory"/>
+    </request-map>
+    
     <request-map uri="makeReturn">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="requestreturn"/>

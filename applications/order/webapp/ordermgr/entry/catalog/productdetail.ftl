@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -499,6 +499,16 @@ ${virtualJavaScript?if_exists}
     </td>
   </tr>
 </table>
+
+  <#-- Digital Download Files Associated with this Product -->
+  <#if downloadProductContentAndInfoList?has_content>
+    <div id="download-files">
+      <div class="tableheadtext">${uiLabelMap.EcommerceDownloadFilesTitle}:</div>
+      <#list downloadProductContentAndInfoList as downloadProductContentAndInfo>
+        <div class="tableheadtext">${downloadProductContentAndInfo.contentName}<#if downloadProductContentAndInfo.description?has_content> - ${downloadProductContentAndInfo.description}</#if></div>
+      </#list>
+    </div>
+  </#if>
 
   <#-- Long description of product -->
   <div id="long-description">

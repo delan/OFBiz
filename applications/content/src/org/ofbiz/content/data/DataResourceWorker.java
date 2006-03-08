@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
@@ -945,20 +946,20 @@ public class DataResourceWorker {
     public static File getContentFile(String dataResourceTypeId, String objectInfo, String rootDir)  throws GeneralException, FileNotFoundException{
 
         File file = null;
-        if (dataResourceTypeId.startsWith("LOCAL_FILE")) {
+        if (dataResourceTypeId.equals("LOCAL_FILE") || dataResourceTypeId.equals("LOCAL_FILE_BIN")) {
             file = new File(objectInfo);
             if (!file.isAbsolute()) {
                 throw new GeneralException("File (" + objectInfo + ") is not absolute");
             }
             int c;
-        } else if (dataResourceTypeId.startsWith("OFBIZ_FILE")) {
+        } else if (dataResourceTypeId.equals("OFBIZ_FILE") || dataResourceTypeId.equals("OFBIZ_FILE_BIN")) {
             String prefix = System.getProperty("ofbiz.home");
             String sep = "";
             if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
                 sep = "/";
             }
             file = new File(prefix + sep + objectInfo);
-        } else if (dataResourceTypeId.startsWith("CONTEXT_FILE")) {
+        } else if (dataResourceTypeId.equals("CONTEXT_FILE") || dataResourceTypeId.equals("CONTEXT_FILE_BIN")) {
             String prefix = rootDir;
             String sep = "";
             if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
@@ -1058,17 +1059,12 @@ public class DataResourceWorker {
         }
         return latestDir;
     }
-    
-    public static ByteWrapper getContentAsByteWrapper(GenericDelegator delegator, String dataResourceId, String https, String webSiteId, Locale locale, String rootDir) throws IOException, GeneralException {
 
-    	ByteWrapper byteWrapper = new ByteWrapper(new byte[0]);
-    	GenericValue dataResource = null;
-    	String text = null;
+    public static void streamDataResource(OutputStream os, GenericDelegator delegator, String dataResourceId, String https, String webSiteId, Locale locale, String rootDir) throws IOException, GeneralException {
     	try {
-    		dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+        	GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
     		if (dataResource == null) {
-    			Debug.logInfo("DataResource for " + dataResourceId + " is null.", module);
-        		return byteWrapper;
+                throw new GeneralException("Error in streamDataResource: DataResource with ID [" + dataResourceId + "] was not found.");
     		}
 	        String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
 	        if (UtilValidate.isEmpty(dataResourceTypeId)) {
@@ -1080,32 +1076,23 @@ public class DataResourceWorker {
 	        }
 	
 	        if (dataResourceTypeId.equals("SHORT_TEXT")) {
-	            text = dataResource.getString("objectInfo");
-	            byteWrapper = new ByteWrapper(text.getBytes());
+	            String text = dataResource.getString("objectInfo");
+	            os.write(text.getBytes());
 	        } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
 	            GenericValue electronicText = delegator.findByPrimaryKeyCache("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
 	            if (electronicText != null) {
-	                text = electronicText.getString("textData");
-	                byteWrapper = new ByteWrapper(text.getBytes());
+	            	String text = electronicText.getString("textData");
+		            os.write(text.getBytes());
 	            }
 	        } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-	        	byte [] imageBytes = acquireImage(delegator, dataResource);
-                byteWrapper = new ByteWrapper(imageBytes);
+	        	byte[] imageBytes = acquireImage(delegator, dataResource);
+	        	os.write(imageBytes);
 	        } else if (dataResourceTypeId.equals("LINK")) {
-	            text = dataResource.getString("objectInfo");
-	            byteWrapper = new ByteWrapper(text.getBytes());
+	        	String text = dataResource.getString("objectInfo");
+	            os.write(text.getBytes());
 	        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
 	            URL url = new URL(dataResource.getString("objectInfo"));
-	            if (url.getHost() != null) { // is absolute
-	                InputStream in = url.openStream();
-	                int c;
-	                StringWriter sw = new StringWriter();
-	                while ((c = in.read()) != -1) {
-	                    sw.write(c);
-	                }
-	                sw.close();
-	                text = sw.toString();
-	            } else {
+	            if (url.getHost() == null) { // is relative
 	                String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
 	                String sep = "";
 	                //String s = "";
@@ -1113,28 +1100,34 @@ public class DataResourceWorker {
 	                    sep = "/";
 	                }
 	                String s2 = prefix + sep + url.toString();
-	                URL url2 = new URL(s2);
-	                text = (String) url2.getContent();
+	                url = new URL(s2);
 	            }
-	            byteWrapper = new ByteWrapper(text.getBytes());
+                InputStream in = url.openStream();
+                int c;
+                while ((c = in.read()) != -1) {
+                    os.write(c);
+                }
 	        } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
 	            String objectInfo = dataResource.getString("objectInfo");
 	            File inputFile = getContentFile(dataResourceTypeId, objectInfo, rootDir);
-		    	long fileSize = inputFile.length();
+		    	//long fileSize = inputFile.length();
 		    	FileInputStream fis = new FileInputStream(inputFile);
-		    	ByteArrayOutputStream baos = new ByteArrayOutputStream((int)fileSize);
 		    	int c;
 		    	while ((c = fis.read()) != -1) {
-		    		baos.write(c);
+		    		os.write(c);
 		    	}
-	            byteWrapper = new ByteWrapper(baos.toByteArray());
 	        } else {
-	            throw new GeneralException("The dataResourceTypeId [" + dataResourceTypeId + "] is not supported in getContentAsByteWrapper");
+	            throw new GeneralException("The dataResourceTypeId [" + dataResourceTypeId + "] is not supported in streamDataResource");
 	        }
     	} catch(GenericEntityException e) {
-            throw new GeneralException(e.getMessage());
+            throw new GeneralException("Error in streamDataResource", e);
     	}
+    }
+    
+    public static ByteWrapper getContentAsByteWrapper(GenericDelegator delegator, String dataResourceId, String https, String webSiteId, Locale locale, String rootDir) throws IOException, GeneralException {
+    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    	streamDataResource(baos, delegator, dataResourceId, https, webSiteId, locale, rootDir);
+        ByteWrapper byteWrapper = new ByteWrapper(baos.toByteArray());
         return byteWrapper;
     }
-
 }
