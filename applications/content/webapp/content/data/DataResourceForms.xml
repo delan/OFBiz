@@ -341,9 +341,16 @@
     <!-- ElectronicText forms -->
     <form name="EditElectronicText" target="updateElectronicText" title="" type="single" default-map-name="currentValue"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <auto-fields-service service-name="createElectronicText"/>
+        <auto-fields-service service-name="updateElectronicText"/>
+        <actions>
+            <entity-one entity-name="ElectronicText" value-name="eText">
+                <field-map field-name="dataResourceId" env-name="parameters.dataResourceId" ></field-map>
+            </entity-one>
+        </actions>
         <field name="dataResourceId" title="" widget-style="buttontext"><display also-hidden="true"/></field>
-        <field name="textData" title="" widget-style="buttontext"><textarea cols="120" rows="24"/></field>
+        <field name="textData" title="Text" widget-style="buttontext">
+            <textarea cols="120" rows="24" default-value="${eText.textData}" />
+        </field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddElectronicText" target="addElectronicText" title="" type="single"
