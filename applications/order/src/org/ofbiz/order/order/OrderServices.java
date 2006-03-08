@@ -2575,10 +2575,16 @@ public class OrderServices {
 
             if (invoiceItems) {
                 // invoice all APPROVED digital goods
-                Map invoiceContext = UtilMisc.toMap("orderId", orderId, "billItems", digitalItems, "userLogin", userLogin);
+                
+                // do something tricky here: run as a different user that can actually create an invoice, post transaction, etc
                 Map invoiceResult = null;
                 try {
+                    GenericValue permUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "system"));
+                    Map invoiceContext = UtilMisc.toMap("orderId", orderId, "billItems", digitalItems, "userLogin", permUserLogin);
                     invoiceResult = dispatcher.runSync("createInvoiceForOrder", invoiceContext);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "ERROR: Unable to invoice digital items", module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemWithInvoiceCreationDigitalItemsNotFulfilled", locale));
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "ERROR: Unable to invoice digital items", module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderProblemWithInvoiceCreationDigitalItemsNotFulfilled", locale));
