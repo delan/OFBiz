@@ -49,40 +49,40 @@
     accountName="PETTY CASH" description="" postedBalance="0.0"/>  
 
   <GlAccount parentGlAccountId="100000" glAccountId="120000" accountCode="120000" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="120000" glAccountId="121000" accountCode="121000" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - TRADE" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="121000" glAccountId="121100" accountCode="121100" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - TRADE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="121000" glAccountId="121200" accountCode="121200" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - NON-SUFFICIENT FUNDS RETURNED CHECKS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="121000" glAccountId="121900" accountCode="121900" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE TRADE - ALLOWANCE FOR BAD DEBT" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="120000" glAccountId="122000" accountCode="122000" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="IN TRANSIT FROM CREDIT CARD PROCESSORS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122100" accountCode="122100" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - AMEX" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122200" accountCode="122200" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - DISCOVER" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122300" accountCode="122300" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - MASTER CARD / VISA" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122400" accountCode="122400" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - DEBIT / ATM CARDS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122900" accountCode="122900" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE CREDIT CARDS - ALLOWANCE FOR BAD DEBT" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="120000" glAccountId="123000" accountCode="123000" 
@@ -107,7 +107,7 @@
     accountName="A/R MISCELLANEOUS" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="100000" glAccountId="140000" accountCode="140000" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="INVENTORY_ACCOUNT" glResourceTypeId="MONEY"
     accountName="INVENTORY" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="100000" glAccountId="150000" accountCode="150000" 
@@ -254,13 +254,13 @@
     accountName="LIABILITIES" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="200000" glAccountId="210000" accountCode="210000" 
-    glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+    glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="ACCOUNTS_PAYABLE" glResourceTypeId="MONEY"  
     accountName="ACCOUNTS PAYABLE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="210000" glAccountId="211000" accountCode="211000" 
-    glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+    glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="ACCOUNTS_PAYABLE" glResourceTypeId="MONEY"  
     accountName="ACCOUNTS PAYABLE - MERCHANDISE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="210000" glAccountId="212000" accountCode="212000" 
-    glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
+    glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="ACCOUNTS_PAYABLE" glResourceTypeId="MONEY"  
     accountName="ACCOUNTS PAYABLE - OPERATING" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="210000" glAccountId="213000" accountCode="213000" 
