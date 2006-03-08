@@ -505,7 +505,7 @@ ${virtualJavaScript?if_exists}
     <div id="download-files">
       <div class="tableheadtext">${uiLabelMap.EcommerceDownloadFilesTitle}:</div>
       <#list downloadProductContentAndInfoList as downloadProductContentAndInfo>
-        <div class="tableheadtext">${downloadProductContentAndInfo.contentName}<#if downloadProductContentAndInfo.description?has_content> - ${downloadProductContentAndInfo.description}</#if></div>
+        <div class="tabletext">${downloadProductContentAndInfo.contentName}<#if downloadProductContentAndInfo.description?has_content> - ${downloadProductContentAndInfo.description}</#if></div>
       </#list>
     </div>
   </#if>
