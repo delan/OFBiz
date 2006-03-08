@@ -141,11 +141,6 @@
     <Product productId="GZ-1006-3" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo (BSD)" internalName="Open Gizmo (BSD)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="GZ-1006-4" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName="Open Gizmo (MIT)" internalName="Open Gizmo (MIT)" description="Gizmo based on open standards" longDescription="Highest quality gizmo around." taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="Y" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
 
-    <Product productId="GZ-DIG" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="101" productName="Digital Gizmo" internalName="Digital Gizmo" description="A digital gizmo: can be downloaded immediately after purchase." longDescription="This gizmo is part of an exciting new breed that needs no corporeal form: it is all digital! Buy and download it now!" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <DataResource dataResourceId="GZ-DIG" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="image/jpeg" dataResourceName="Digital Gizmo Image" objectInfo="framework/images/webapp/images/ofbiz_logo.jpg"/>
-    <Content contentId="GZ-DIG" contentTypeId="DOCUMENT" dataResourceId="GZ-DIG" mimeTypeId="image/jpeg" contentName="ofbiz_logo.jpg" description="Image of Digital Gizmo (actually the OFBiz logo)"/>
-    <ProductContent productId="GZ-DIG" contentId="GZ-DIG" productContentTypeId="DIGITAL_DOWNLOAD" fromDate="2001-05-13 12:00:00.0" useTime="3" useTimeUomId="TF_mon"/>
-    
     <Product productId="GZ-2002" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Square Gizmo" internalName="Square Gizmo" description="A square gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <Product productId="GZ-2644" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Round Gizmo" internalName="Round Gizmo" description="Round Gizmo w/ Lights" longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact." quantityIncluded="100.0" weight="7.0"/>
     <Product productId="GZ-5005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="101" productName="Purple Gizmo" internalName="Purple Gizmo" description="The stylish gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -183,8 +178,6 @@
     <ProductPrice productId="GZ-8544" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="270.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="GZ-9290" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="97.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="GZ-9290" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="99.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GZ-DIG" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="55.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="GZ-DIG" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="80.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="WG-1111" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="59.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="WG-1111" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="60.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="WG-5569" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="59.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -192,7 +185,36 @@
     <ProductPrice productId="WG-9943" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="549.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="WG-9943" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="550.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="WG-9943" productPricePurposeId="PURCHASE" productPriceTypeId="COMPETITIVE_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="922.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-
+    
+    <!-- test Digital Download product -->
+    <Product productId="GZ-DIG" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="101" productName="Digital Gizmo" internalName="Digital Gizmo" description="A digital gizmo: can be downloaded immediately after purchase." longDescription="This gizmo is part of an exciting new breed that needs no corporeal form: it is all digital! Buy and download it now!" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <DataResource dataResourceId="GZ-DIG" dataResourceTypeId="OFBIZ_FILE_BIN" mimeTypeId="image/jpeg" dataResourceName="Digital Gizmo Image" objectInfo="framework/images/webapp/images/ofbiz_logo.jpg"/>
+    <Content contentId="GZ-DIG" contentTypeId="DOCUMENT" dataResourceId="GZ-DIG" mimeTypeId="image/jpeg" contentName="ofbiz_logo.jpg" description="Image of Digital Gizmo (actually the OFBiz logo)"/>
+    <ProductContent productId="GZ-DIG" contentId="GZ-DIG" productContentTypeId="DIGITAL_DOWNLOAD" fromDate="2001-05-13 12:00:00.0" useTime="3" useTimeUomId="TF_mon"/>
+    <ProductPrice productId="GZ-DIG" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="55.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GZ-DIG" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="80.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    
+    <!-- test for marketing package and auto-exploded marketing packages -->
+    <Product productId="GZ-KIT" productTypeId="FINISHED_GOOD" productName="Gizmo Kit" internalName="Pre-Assembled Gizmo Kit" 
+        description="Pre-Assembled Gizmo Kit"
+        longDescription="Pre-Assembled Gizmo Kit"
+        taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" />
+    <ProductPrice productId="GZ-KIT" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="GZ-KIT" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1000" productAssocTypeId="MARKETING_PACKAGE" quantity="1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1001" productAssocTypeId="MARKETING_PACKAGE" quantity="2" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1004" productAssocTypeId="MARKETING_PACKAGE" quantity="3" fromDate="2001-05-13 12:00:00.0"/>
+    
+    <Product productId="GZ-BASKET" productTypeId="FINISHED_GOOD" productName="Gizmo Basket" internalName="Auto-Explode Gizmo Basket" 
+        description="Auto-Explode Gizmo Basket"
+        longDescription="Auto-Explode Gizmo Basket"
+        taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" />
+    <ProductPrice productId="GZ-BASKET" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductPrice productId="GZ-BASKET" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1000" productAssocTypeId="MARKETING_PKG_AUTO" quantity="1" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1001" productAssocTypeId="MARKETING_PKG_AUTO" quantity="2" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1004" productAssocTypeId="MARKETING_PKG_AUTO" quantity="3" fromDate="2001-05-13 12:00:00.0"/>
+    
     <ProductFeatureCategory productFeatureCategoryId="8000" description="License Features"/>
     <ProductFeatureCategoryAppl productFeatureCategoryId="8000" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"/>
 
@@ -292,18 +314,21 @@
     <ProductAssoc fromDate="2001-05-13 12:00:00.0" productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
         productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
 
-    <ProductCategoryMember productCategoryId="100" productId="GZ-1000" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-1001" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-1004" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-1005" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-1006" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-2002" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-2644" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-5005" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-7000" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-8544" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-9290" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-DIG" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-DIG" sequenceNum="4" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-KIT" sequenceNum="5" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-BASKET" sequenceNum="6" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-1000" sequenceNum="10" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-1001" sequenceNum="11" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-1004" sequenceNum="14" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-1005" sequenceNum="15" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-1006" sequenceNum="16" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-2002" sequenceNum="22" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-2644" sequenceNum="26" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-5005" sequenceNum="55" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-7000" sequenceNum="70" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-8544" sequenceNum="85" fromDate="2001-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="GZ-9290" sequenceNum="92" fromDate="2001-05-13 12:00:00.0"/>
+
     <ProductCategoryMember productCategoryId="101" productId="GZ-1000" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="101" productId="GZ-1001" fromDate="2001-05-13 12:00:00.0"/>
     <ProductCategoryMember productCategoryId="101" productId="GZ-2002" fromDate="2001-05-13 12:00:00.0"/>
@@ -623,28 +648,4 @@
     <ProductFeatureAppl productId="GC-001-H50" productFeatureId="2004" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:45.336" sequenceNum="3"/>
     <ProductFeatureAppl productId="GC-001-HO" productFeatureId="2001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:27:33.716" sequenceNum="2"/>
     <ProductFeatureAppl productId="GC-001-HO" productFeatureId="2006" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:27:33.633"/>
-
-    <!-- test for marketing package and auto-exploded marketing packages -->
-    <Product productId="GZ-KIT" productTypeId="FINISHED_GOOD" productName="Gizmo Kit" internalName="Pre-Assembled Gizmo Kit" 
-        description="Pre-Assembled Gizmo Kit"
-        longDescription="Pre-Assembled Gizmo Kit"
-        taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" />
-    <ProductPrice productId="GZ-KIT" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductPrice productId="GZ-KIT" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1000" productAssocTypeId="MARKETING_PACKAGE" quantity="1" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1001" productAssocTypeId="MARKETING_PACKAGE" quantity="2" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductAssoc productId="GZ-KIT" productIdTo="GZ-1004" productAssocTypeId="MARKETING_PACKAGE" quantity="3" fromDate="2001-05-13 12:00:00.0"/>
-
-    <Product productId="GZ-BASKET" productTypeId="FINISHED_GOOD" productName="Gizmo Basket" internalName="Auto-Explode Gizmo Basket" 
-        description="Auto-Explode Gizmo Basket"
-        longDescription="Auto-Explode Gizmo Basket"
-        taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" />
-    <ProductPrice productId="GZ-BASKET" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="150" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductPrice productId="GZ-BASKET" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" price="165" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1000" productAssocTypeId="MARKETING_PKG_AUTO" quantity="1" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1001" productAssocTypeId="MARKETING_PKG_AUTO" quantity="2" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductAssoc productId="GZ-BASKET" productIdTo="GZ-1004" productAssocTypeId="MARKETING_PKG_AUTO" quantity="3" fromDate="2001-05-13 12:00:00.0"/>
-
-    <ProductCategoryMember productCategoryId="100" productId="GZ-KIT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryMember productCategoryId="100" productId="GZ-BASKET" fromDate="2001-05-13 12:00:00.0"/>
 </entity-engine-xml>

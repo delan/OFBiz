@@ -432,7 +432,8 @@ if (product != null) {
     }
     
     // get the DIGITAL_DOWNLOAD related Content records to show the contentName/description
-    downloadProductContentAndInfoList = delegator.findByAnd("ProductContentAndInfo", UtilMisc.toMap("productId", productId, "productContentTypeId, "DIGITAL_DOWNLOAD"));
+    downloadProductContentAndInfoList = delegator.findByAndCache("ProductContentAndInfo", UtilMisc.toMap("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD"));
+    context.put("downloadProductContentAndInfoList", downloadProductContentAndInfoList);
     
     // not the best to save info in an action, but this is probably the best place to count a view; it is done async
     dispatcher.runAsync("countProductView", UtilMisc.toMap("productId", productId, "weight", new Long(1)), false);
