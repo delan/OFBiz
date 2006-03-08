@@ -836,7 +836,7 @@ public class InvoiceServices {
                 String returnId = (String) iter.next();
                 List receipts = (List) receiptsGroupedByReturn.get(returnId);
                 if (Debug.verboseOn()) {
-                    Debug.logInfo("Creating invoice for return [" + returnId + "] with receipts: " + receipts.toString(), module);
+                    Debug.logVerbose("Creating invoice for return [" + returnId + "] with receipts: " + receipts.toString(), module);
                 }
                 Map input = UtilMisc.toMap("returnId", returnId, "shipmentReceiptsToBill", receipts, "userLogin", context.get("userLogin"));
                 Map serviceResults = dispatcher.runSync("createInvoiceFromReturn", input);
@@ -903,6 +903,9 @@ public class InvoiceServices {
                 GenericValue returnItem = receipt.getRelatedOneCache("ReturnItem");
                 GenericValue product = returnItem.getRelatedOneCache("Product");
 
+                // extract the return price as a big decimal for convenience
+                BigDecimal returnPrice = returnItem.getBigDecimal("returnPrice");
+
                 // determine invoice item type from the return item type
                 String invoiceItemTypeId = getInvoiceItemType(delegator, returnItem.getString("returnItemTypeId"), "CUST_RTN_INVOICE", null);
                 if (invoiceItemTypeId == null) {
@@ -913,7 +916,7 @@ public class InvoiceServices {
                 // create the invoice item for this shipment receipt
                 input = UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", invoiceItemTypeId, "quantity", receipt.get("quantityAccepted"));
                 input.put("invoiceItemSeqId", "" + invoiceItemSeqId); // turn the int into a string with ("" + int) hack
-                input.put("amount", returnItem.get("returnPrice"));
+                input.put("amount", returnItem.get("returnPrice")); // this service requires Double
                 input.put("productId", returnItem.get("productId"));
                 input.put("taxableFlag", product.get("taxable"));
                 input.put("description", returnItem.get("description"));
@@ -930,24 +933,24 @@ public class InvoiceServices {
                 input.put("invoiceItemSeqId", "" + invoiceItemSeqId); // turn the int into a string with ("" + int) hack
                 input.put("shipmentReceiptId", receipt.get("receiptId"));
                 input.put("quantity", receipt.get("quantityAccepted"));
-                input.put("amount", returnItem.get("returnPrice"));
+                input.put("amount", returnItem.get("returnPrice")); // this service requires Double
                 input.put("userLogin", userLogin);
                 serviceResults = dispatcher.runSync("createReturnItemBilling", input);
                 if (ServiceUtil.isError(serviceResults)) {
                     return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
                 }
                 if (Debug.verboseOn()) {
-                    Debug.logInfo("Creating Invoice Item with amount " + returnItem.getBigDecimal("returnPrice") + " and quantity " 
-                            + receipt.getBigDecimal("quantityAccepted") + " for shipment receipt [" + receipt.getString("receiptId") + "]", module);
+                    Debug.logVerbose("Creating Invoice Item with amount " + returnPrice + " and quantity " + receipt.getBigDecimal("quantityAccepted") 
+                            + " for shipment receipt [" + receipt.getString("receiptId") + "]", module);
                 }
 
                 // increment the seqId counter after creating the invoice item and return item billing
                 invoiceItemSeqNum += 1;  
                 invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, 2);
 
-                // keep a running total
-                BigDecimal actualAmount = returnItem.getBigDecimal("returnPrice").multiply(receipt.getBigDecimal("quantityAccepted")).setScale(decimals, rounding);
-                BigDecimal promisedAmount = returnItem.getBigDecimal("returnPrice").multiply(returnItem.getBigDecimal("returnQuantity")).setScale(decimals, rounding);
+                // keep a running total (note: a returnItem may have many receipts. hence, the promised total quantity is the receipt quantityAccepted + quantityRejected)
+                BigDecimal actualAmount = returnPrice.multiply(receipt.getBigDecimal("quantityAccepted")).setScale(decimals, rounding);
+                BigDecimal promisedAmount = returnPrice.multiply(receipt.getBigDecimal("quantityAccepted").add(receipt.getBigDecimal("quantityRejected"))).setScale(decimals, rounding);
                 invoiceTotal = invoiceTotal.add(actualAmount).setScale(decimals, rounding);
                 promisedTotal = promisedTotal.add(promisedAmount).setScale(decimals, rounding);
 
@@ -968,7 +971,7 @@ public class InvoiceServices {
                     BigDecimal amount = adjustment.getBigDecimal("amount");
                     amount = amount.multiply(ratio).setScale(decimals, rounding);
                     if (Debug.verboseOn()) {
-                        Debug.logInfo("Creating Invoice Item with amount " + adjustment.getBigDecimal("amount") + " prorated to " + amount 
+                        Debug.logVerbose("Creating Invoice Item with amount " + adjustment.getBigDecimal("amount") + " prorated to " + amount 
                                 + " for return adjustment [" + adjustment.getString("returnAdjustmentId") + "]", module);
                     }
 
@@ -999,9 +1002,9 @@ public class InvoiceServices {
                     invoiceItemSeqNum += 1;  
                     invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, 2);
 
-                    // keep a running total
+                    // keep a running total (promised adjustment in this case is the same as the invoice adjustment)
                     invoiceTotal = invoiceTotal.add(amount).setScale(decimals, rounding);
-                    promisedTotal = promisedTotal.add(adjustment.getBigDecimal("amount")).setScale(decimals, rounding);
+                    promisedTotal = promisedTotal.add(amount).setScale(decimals, rounding);
                 }
             }
 
@@ -1112,8 +1115,8 @@ public class InvoiceServices {
         if (totalPayments.signum() == 1) {
             BigDecimal invoiceTotal = InvoiceWorker.getInvoiceTotalBd(delegator, invoiceId);
             if (Debug.verboseOn()) {
-                Debug.logInfo("Invoice #" + invoiceId + " total: " + invoiceTotal, module);
-                Debug.logInfo("Total payments : " + totalPayments, module);
+                Debug.logVerbose("Invoice #" + invoiceId + " total: " + invoiceTotal, module);
+                Debug.logVerbose("Total payments : " + totalPayments, module);
             }
             if (totalPayments.compareTo(invoiceTotal) >= 0) { // this checks that totalPayments is greter than or equal to invoiceTotal
                 // this invoice is paid
