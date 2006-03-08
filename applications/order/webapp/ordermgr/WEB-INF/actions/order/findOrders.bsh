@@ -31,6 +31,7 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.transaction.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.product.product.*;
 
 module = "findOrders.bsh";
 
@@ -99,7 +100,7 @@ if (currentProductStoreId != null && currentProductStoreId.length() > 0) {
 currentSalesChannelId = request.getParameter("salesChannelEnumId");
 if (currentSalesChannelId != null && currentSalesChannelId.length() > 0) {
     currentSalesChannel = delegator.findByPrimaryKey("Enumeration", UtilMisc.toMap("enumId", currentSalesChannelId));
-    context.put("currenSalesChannel", currentSalesChannel);
+    context.put("currentSalesChannel", currentSalesChannel);
 }
 
 // create the fromDate for calendar
@@ -203,7 +204,7 @@ if (lookupFlag != null) {
     if (productId != null && productId.length() > 0) {
         paramList = paramList + "&productId=" + productId;
         entityName = "OrderHeaderItemAndRoles";
-        andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+        andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, ProductWorker.findProductId(delegator, productId)));
     }
 
     hasBackOrders = request.getParameter("hasBackOrders");
@@ -297,6 +298,8 @@ if (lookupFlag != null) {
 
         if (andExprs.size() > 0 || showAll.equalsIgnoreCase("Y")) mainCond = new EntityConditionList(andExprs, EntityOperator.AND);
 
+    } else {
+        Debug.log("Error messages: " + lookupErrorMessage, module);
     }
 
     // do the lookup
@@ -338,9 +341,13 @@ if (lookupFlag != null) {
             }
 
             // get the partial list for this page
-            ohli.first();
-            if (orderHeaderListSize > 0) {
+            ohli.beforeFirst();
+            if (orderHeaderListSize > viewSize) {
                 orderHeaderList = ohli.getPartialList(lowIndex, viewSize);
+                //Debug.log("Got partial list [" + lowIndex + " / " + viewSize + "] : " + orderHeaderList);
+            } else if (orderHeaderListSize > 0) {
+                orderHeaderList = ohli.getCompleteList();
+                //Debug.log("Got full list [" + orderHeaderList.size() + "] : " + orderHeaderList);
             } else {
                 orderHeaderList = new ArrayList();
             }
