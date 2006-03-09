@@ -109,6 +109,9 @@
   <GlAccount parentGlAccountId="100000" glAccountId="140000" accountCode="140000" 
     glAccountClassId="CURRENT_ASSET" glAccountTypeId="INVENTORY_ACCOUNT" glResourceTypeId="MONEY"
     accountName="INVENTORY" description="" postedBalance="0.0"/>
+  <GlAccount parentGlAccountId="140000" glAccountId="149000" accountCode="149000" 
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="INV_ADJ_AVG_COST" glResourceTypeId="MONEY"
+    accountName="INVENTORY - AVERAGE COST VALUATION ADJUSTMENT" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="100000" glAccountId="150000" accountCode="150000" 
     glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
