@@ -118,32 +118,7 @@
             <link target="EditChildCompDoc?contentId=${itemContentId}&amp;itemContentRevisionSeqId=${itemContentRevisionSeqId}&amp;caContentIdTo=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;fromDate=${fromDate}"/>
         </menu-item>
     </menu>
-        
-    <menu name="treeline" default-title-style="tabButton"
-        default-selected-style="tabButtonSelected"
-        default-menu-item-name="content"
-        orientation="horizontal"
-        menu-width="100%"
-        default-tooltip-style="tabletext" default-widget-style="tabButton"
-        selected-menuitem-context-field-name="currentMenuItemName"
-        title="" type="simple">
-        <menu-item name="edit-inplace" title="${contentName}[${contentId}]" >
-            <link target="EditRootCompDoc?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
-        </menu-item>
-        <menu-item name="edit-link" title="Edit" >
-            <link target="EditRootCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}"/>
-        </menu-item>
-        <menu-item name="child" title="+Child" >
-            <link target="EditCompDoc?caContentIdTo=${contentId}&amp;caSequenceNum=9999"/>
-        </menu-item>
-        <menu-item name="bef" title="+Bef" >
-            <link target="EditCompDoc?caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}"/>
-        </menu-item>
-        <menu-item name="aft" title="+Aft" >
-            <link target="EditCompDoc?caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${fromDate}"/>
-        </menu-item>
-    </menu>
-    
+     
     <menu name="rootTemplateLine" default-title-style="tabButton"
         default-selected-style="tabButtonSelected"
         default-menu-item-name="content"
@@ -159,7 +134,16 @@
             <link target="EditRootCompDoc?rootContentId=${rootContentId}&amp;contentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="child" title="+Child" >
+			<condition>
+				<if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
+			</condition>
             <link target="AddChildCompDocTemplate?caContentIdTo=${contentId}&amp;sequenceNum=9999"/> <!-- rootContentRevisionSeqId=${rootContentRevisionSeqId}&amp; -->
+        </menu-item>
+        <menu-item name="latest" title="Current Template CompDoc" >
+			<condition>
+				<if-compare-field field-name="mostRecentRevisionSeqId" operator="greater" to-field-name="rootContentRevisionSeqId"/>
+			</condition>
+            <link target="ViewCompDocTemplateTree?rootContentId=${contentId}"/> <!-- rootContentRevisionSeqId=${rootContentRevisionSeqId}&amp; -->
         </menu-item>
 		<!-- on page
         <menu-item name="viewinst" title="View Instances" >
@@ -180,10 +164,10 @@
         selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
         <menu-item name="edit-inplace" title="${contentName}[${contentId}]" >
-            <link target="EditChildCompDoc?itemContentId=${contentId}&amp;contentId=${contentIdTo}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}"/>
+            <link target="EditChildCompDoc?itemContentId=${contentId}&amp;contentId=${contentIdTo}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${maxRevisionSeqId}&amp;rootContentId=${rootContentId}"/>
         </menu-item>
         <menu-item name="edit-link" title="Edit" >
-            <link target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}"/>
+            <link target="EditChildCompDoc?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caFromDate=${fromDate}&amp;contentRevisionSeqId=${maxRevisionSeqId}&amp;rootContentId=${rootContentId}"/>
         </menu-item>
         <!--  only one level for now 
         <menu-item name="child" title="+Child" >
@@ -191,15 +175,27 @@
         </menu-item>
         -->
         <menu-item name="bef" title="+Bef" >
+			<condition>
+				<if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
+			</condition>
             <link target="AddChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}"/> <!-- &amp;contentRevisionSeqId=${contentRevisionSeqId} -->
         </menu-item>
         <menu-item name="aft" title="+Aft" >
+			<condition>
+				<if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
+			</condition>
             <link target="AddChildCompDocTemplate?contentId=${contentId}&amp;caContentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumAfter}&amp;caFromDate=${fromDate}"/> <!-- &amp;contentRevisionSeqId=${contentRevisionSeqId} -->
         </menu-item>
         <menu-item name="up" title="^Up" >
+			<condition>
+				<if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
+			</condition>
             <link target="resequenceCompDocPart?contentId=${contentId}&amp;dir=up&amp;contentAssocTypeId=COMPDOC_PART&amp;contentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
         <menu-item name="down" title="vDn" >
+			<condition>
+				<if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
+			</condition>
             <link target="resequenceCompDocPart?contentId=${contentId}&amp;dir=down&amp;contentAssocTypeId=COMPDOC_PART&amp;contentIdTo=${contentIdTo}&amp;caContentAssocTypeId=${contentAssocTypeId}&amp;caSequenceNum=${seqNumBefore}&amp;caFromDate=${fromDate}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </menu-item>
     </menu>
@@ -233,7 +229,10 @@
         </menu-item>
         <menu-item name="edit-link-add" title="Add" >
             <condition>
-                <if-empty field-name="assocRevisionItemView"/>
+				<and>
+                	<if-empty field-name="assocRevisionItemView"/>
+					<if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
+				</and>
             </condition>
             <link target="AddChildCompDocInstance?caContentIdTo=${rootContentId}&amp;instanceOfContentId=${contentId}&amp;caSequenceNum=${maxRevisionSeqId}"/>
         </menu-item>
@@ -262,6 +261,12 @@
         </menu-item>
         <menu-item name="viewtree" title="View Template Tree">
             <link target="ViewCompDocTemplateTree?rootContentRevisionSeqId=${templateContentRevisionSeqId}&amp;rootContentId=${templateContentId}"/>
+        </menu-item>
+        <menu-item name="latest" title="Current Instance CompDoc" >
+			<condition>
+				<if-compare-field field-name="mostRecentRevisionSeqId" operator="greater" to-field-name="rootContentRevisionSeqId"/>
+			</condition>
+            <link target="ViewCompDocInstanceTree?rootContentId=${rootContentId}"/> <!-- rootContentRevisionSeqId=${rootContentRevisionSeqId}&amp; -->
         </menu-item>
     </menu>
         

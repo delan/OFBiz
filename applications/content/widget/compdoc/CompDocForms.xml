@@ -185,15 +185,14 @@ under the License.
         </field>
         <field name="approvalStatusId" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
-                    <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
-                </entity-options>
+				<option key="SOFT_REJ" description="Soft Rejected"/>
+				<option key="REJECTED" description="Rejected"/>
+				<option key="APPROVED" description="Approved"/>
             </drop-down>
         </field>
         <field name="approvalDate" title="" widget-style="inputBox"><date-time/></field>
         <field name="sequenceNum" title="" widget-style="inputBox"><text/></field>
-        <field name="comments" title="" widget-style="inputBox"><text size="40"/></field>
+        <field name="comments" title="" widget-style="inputBox"><textarea cols="30" rows="3"/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
     </form>
@@ -228,24 +227,27 @@ under the License.
         <field name="contentId"><hidden/></field>
         <field name="rootContentId" map-name="empty"><hidden/></field>
         <field name="contentRevisionSeqId"><display/></field>
-        <field name="partyId"><display/></field>
-        <field name="roleTypeId">
-            <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
+        <field name="partyId" title="" widget-style="inputBox">
+            <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="approvalStatusId" use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)">
+        <field name="roleTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
-                    <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                    <!-- <entity-constraint name="parentTypeId" value=""/> -->
+                    <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="approvalDate"><display/></field>
-        <field name="sequenceNum"><display/></field>
-        <field name="comments"><display/></field>
-        <field name="Edit" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}&amp;rootContentId=${contentId}&amp;rootContentRevisionSeqId=${contentRevisionSeqId}"/>
+        <field name="approvalStatusId" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+            <drop-down allow-empty="true">
+				<option key="SOFT_REJ" description="Soft Rejected"/>
+				<option key="REJECTED" description="Rejected"/>
+				<option key="APPROVED" description="Approved"/>
+            </drop-down>
         </field>
+        <field name="approvalDate" title="" widget-style="inputBox"><date-time/></field>
+        <field name="sequenceNum" title="" widget-style="inputBox"><text/></field>
+        <field name="comments" title="" widget-style="inputBox"><textarea cols="30" rows="3"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><submit/></field>
     </form>
 
@@ -254,26 +256,30 @@ under the License.
                list-name="contentApprovalList" default-widget-style="tabletext" title="" type="list">
         <field name="contentApprovalId" widget-style="tabletext"><display/></field>
         <field name="contentId"><hidden/></field>
+        <field name="rootContentId" map-name="empty"><hidden/></field>
         <field name="contentRevisionSeqId"><display/></field>
-        <field name="partyId"><display/></field>
-        <field name="roleTypeId">
-            <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
+        <field name="partyId" title="" widget-style="inputBox">
+            <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="approvalStatusId">
+        <field name="roleTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
-                    <entity-constraint name="statusTypeId" value="CNTNTAPPR_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                    <!-- <entity-constraint name="parentTypeId" value=""/> -->
+                    <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="approvalDate"><display/></field>
-        <field name="sequenceNum"><display/></field>
-        <field name="comments"><display/></field>
-        <field name="Edit" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentApproval?contentApprovalId=${contentApprovalId}"/>
+        <field name="approvalStatusId" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+            <drop-down allow-empty="true">
+				<option key="SOFT_REJ" description="Soft Rejected"/>
+				<option key="REJECTED" description="Rejected"/>
+				<option key="APPROVED" description="Approved"/>
+            </drop-down>
         </field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit/></field>
+        <field name="approvalDate" title="" widget-style="inputBox"><date-time/></field>
+        <field name="sequenceNum" title="" widget-style="inputBox"><text/></field>
+        <field name="comments" title="" widget-style="inputBox"><text size="40"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><submit/></field>
     </form>
 
 
@@ -410,12 +416,37 @@ under the License.
                 <sub-hyperlink target="EditSurvey?surveyId=${dataResource.relatedDetailId}" description="Edit Survey" link-style="buttontext" use-when="dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
             </lookup>
         </field>
-        <field name="relatedDetailId" map-name="dataResource" title="Survey Response ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY_RESPONSE&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))"> 	 
+        <field name="relatedDetailId" map-name="dataResource" title="Survey Response ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY_RESPONSE&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))&amp;&amp;dataResource.get(&quot;relatedDetailId&quot;)!=null"> 	 
             <lookup target-form-name="LookupSurveyResponse">
                 <sub-hyperlink target="EditSurveyResponse?surveyResponseId=${dataResource.relatedDetailId}" description="Edit Survey Response" link-style="buttontext" use-when="dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
             </lookup>
         </field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="ViewChildCompDoc" default-map-name="contentAssoc" title="" type="single" target=""
+        
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="contentId" widget-style="tabletext"><display/></field>
+        <field name="contentName" map-name="itemContent"><display/></field>
+        <field name="contentTypeId" map-name="itemContent"><hidden/></field>
+        <field name="instanceOfContentId" map-name="itemContent" use-when="contentTypeId.equals(&quot;DOCUMENT&quot;)" title="Instance of Content" widget-style="tabletext"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
+        <field name="contentIdTo" widget-style="tabletext" title="Parent Content ID"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
+        <field name="contentAssocTypeId" widget-style="tabletext"><display-entity entity-name="ContentAssocType" also-hidden="false"/></field>
+        <field name="fromDate" title="From Date" widget-style="tabletext"><display/></field>
+        <field name="thruDate" title="Thru Date"><display/></field>
+        <field name="sequenceNum" title="Sequence Num"><display/></field>
+        
+       <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext">
+            <display-entity entity-name="MimeType" key-field-name="mimeTypeId" description="${description}"/>
+        </field>
+        <field name="relatedDetailId" map-name="dataResource" title="Survey ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))"> 	 
+			<display/>
+        </field>
+        <field name="relatedDetailId" map-name="dataResource" title="Survey Response ID" use-when="dataResource!=null&amp;&amp;&quot;SURVEY_RESPONSE&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))&amp;&amp;dataResource.get(&quot;relatedDetailId&quot;)!=null"> 	 
+			<display/>
+        </field>
     </form>
 
     <!-- ================ CompDoc Revision ================= -->

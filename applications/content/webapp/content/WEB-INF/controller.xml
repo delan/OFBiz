@@ -956,6 +956,13 @@
         <response name="error" type="view" value="EditContentApproval"/>
     </request-map>
 
+    <request-map uri="prepForApproval">
+        <security auth="true" https="true"/>
+        <event invoke="prepForApproval" path="" type="service"/>
+        <response name="success" type="view" value="ViewCompDocInstanceTree"/>
+        <response name="error" type="view" value="ViewCompDocInstanceTree"/>
+    </request-map>
+
     <!-- ================ ContentRevision Requests ================= -->
     <request-map uri="ListContentRevisions"><security auth="true" https="true"/><response name="success" type="view" value="ListContentRevisions"/></request-map>
     <request-map uri="EditContentRevision"><security auth="true" https="true"/><response name="success" type="view" value="EditContentRevision"/></request-map>
