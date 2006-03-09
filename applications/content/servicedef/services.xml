@@ -1309,19 +1309,18 @@
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
         invoke="prepForApproval" auth="true">
         <description>Set ContentApprovals for approval process</description>
-        <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
-        <attribute name="templateContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
-        <attribute name="instanceContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
-        <attribute name="templateApprovalList" type="List" mode="OUT" optional="true"/>
-        <attribute name="instanceApprovalList" type="List" mode="OUT" optional="true"/>
+        <attribute name="rootContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="rootContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
     </service>
 
-    <service name="checkForOpenApprovals" engine="simple"
+    <service name="getFinalApprovalStatus" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="prepForApproval" auth="true">
+        invoke="getFinalApprovalStatus" auth="true">
         <description>Set ContentApprovals for approval process</description>
-        <attribute name="rootTemplateContentId" type="String" mode="IN" optional="false"/>
-        <attribute name="openApprovalExists" type="Boolean" mode="OUT" optional="false"/>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentRevisionSeqId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="approvalStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="contentApprovalList" type="List" mode="OUT" optional="true"/>
     </service>
 
     <service name="getApprovalsWithPermissions" engine="simple"
@@ -1364,11 +1363,19 @@
         <attribute name="rootContentId" type="String" mode="IN" optional="true"/>
     </service>
     
-    <service name="cloneContentApprovals" engine="simple"
+    <service name="cloneTemplateContentApprovals" engine="simple"
         location="org/ofbiz/content/compdoc/CompDocServices.xml"
-        invoke="cloneContentApprovals" auth="true">
-        <description>Bump the previous ContentApproval approvals up to current CDT or CDI</description>
+        invoke="cloneTemplateContentApprovals" auth="true">
+        <description>Bump the previous ContentApproval approvals up to current CDT</description>
         <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="cloneInstanceContentApprovals" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="cloneInstanceContentApprovals" auth="true">
+        <description>Bump the previous ContentApproval approvals up to current CDI</description>
+        <attribute name="contentRevisionSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
     </service>
     
@@ -1404,5 +1411,12 @@
         <attribute name="rootDir" type="String" mode="IN" optional="true"/>
         <attribute name="locale" type="java.util.Locale" mode="IN" optional="true"/>
         <attribute name="outByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="false"/>
+    </service>
+    <service name="getMostRecentRevision" engine="simple"
+        location="org/ofbiz/content/compdoc/CompDocServices.xml"
+        invoke="getMostRecentRevision" auth="true">
+        <description>Look for most recent revision for contentId</description>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="mostRecentRevisionSeqId" type="String" mode="OUT" optional="true"/>
     </service>
 </services>

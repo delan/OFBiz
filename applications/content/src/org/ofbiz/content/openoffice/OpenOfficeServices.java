@@ -365,7 +365,6 @@ public class OpenOfficeServices {
         
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map results = ServiceUtil.returnSuccess();
-        String dataResourceId = null;
         ByteWrapper byteWrapper = null;
         
         Locale locale = (Locale)context.get("locale");
@@ -383,8 +382,14 @@ public class OpenOfficeServices {
         String oooPort = (String)context.get("oooPort");
         if (UtilValidate.isEmpty(oooPort)) oooPort = "8100";
         
+        try {
+                xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
+            } catch (IOException ioe) {
+                // just leave it null for cases where OO cannot be reached
+            } catch( Exception e2 ) {
+                // just leave it null for cases where OO cannot be reached
+            }
         try {   
-            xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
             Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
             List exprList = new ArrayList();
             EntityExpr entityExpr = null;
@@ -479,13 +484,17 @@ public class OpenOfficeServices {
                         }
                     }
                 } else {
-                    byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
-                    OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
-                    OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");
-                    inputByteArray = oobaos.toByteArray();
-                    oobais.close();
-                    oobaos.close();
-                    reader = new PdfReader(inputByteArray);
+                    if (xmulticomponentfactory != null) {
+                        byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, thisDataResourceId, https, webSiteId, locale, rootDir);
+                        OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
+                        OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");
+                        inputByteArray = oobaos.toByteArray();
+                        oobais.close();
+                        oobaos.close();
+                        reader = new PdfReader(inputByteArray);
+                    } else {
+                        //TODO: Write a PDF that says that OO is not available?
+                    }
                 }
                 int n = reader.getNumberOfPages();
                 for (int i=0; i < n; i++) {
@@ -538,7 +547,6 @@ public class OpenOfficeServices {
         if (UtilValidate.isEmpty(oooPort)) oooPort = "8100";
         
         try {   
-            xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
             Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Document document = new Document();
@@ -619,6 +627,7 @@ public class OpenOfficeServices {
                 }
             } else {
                 byteWrapper = DataResourceWorker.getContentAsByteWrapper(delegator, dataResourceId, https, webSiteId, locale, rootDir);
+                xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
                 OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(byteWrapper.getBytes());
                 OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, "application/pdf");
                 inputByteArray = oobaos.toByteArray();
