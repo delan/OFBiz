@@ -46,6 +46,9 @@
       <#else>
         <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyShowOld}</a>&nbsp;&nbsp;
       </#if>
+      <#if (productStore.enableDigProdUpload)?if_exists == "Y">
+      &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="buttontext">Digital Product Upload</a>
+      </#if>
     </td>
   </tr>
 </table>

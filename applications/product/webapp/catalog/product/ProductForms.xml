@@ -587,8 +587,9 @@
                 <display/>
         </field>
         <field name="availableFromDate" title="${uiLabelMap.ProductAvailableFromDate}" red-when="after-now"><display/></field>
-        <field name="availableThruDate" title="${uiLabelMap.ProductAvailableThruDate}" red-when="after-now"><display/></field>
+        <field name="availableThruDate" title="${uiLabelMap.ProductAvailableThruDate}" red-when="before-now"><display/></field>
         <field name="quantityUomId"><display/></field>
+        <field name="supplierCommissionPerc" title="Comm. Perc."><display/></field>
         <field name="lastPrice" widget-area-style="tabletextright"
             header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=lastPrice"  header-link-style="buttontext">
                 <display type="currency" currency="${currencyUomId}"/>

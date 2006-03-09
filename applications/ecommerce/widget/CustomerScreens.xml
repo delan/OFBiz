@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2005-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -337,6 +337,73 @@
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/newmsg.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="digitalproductlist">
+        <section>
+            <actions>
+                <set field="title-property" value="PageTitleDigitalProductList"/>
+                
+                <entity-and entity-name="SupplierProduct" list-name="supplierProductList">
+                    <field-map field-name="partyId" env-name="userLogin.partyId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition><if-compare field-name="productStore.enableDigProdUpload" operator="equals" value="Y"/></condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/digitalproductlist.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <container><label style="head2" text="Sorry, digital product upload is not enabled."></label></container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="digitalproductedit">
+        <section>
+            <actions>
+                <set field="title-property" value="PageTitleDigitalProductEdit"/>
+
+                <set field="parameters.minimumOrderQuantity" value="1" type="Double"/>
+                <entity-one entity-name="SupplierProduct" value-name="supplierProduct" auto-field-map="false">
+                    <field-map field-name="partyId" env-name="userLogin.partyId"/><!-- get from userLogin for security reasons -->
+                    <field-map field-name="productId" env-name="parameters.productId"/>
+                    <field-map field-name="currencyUomId" env-name="parameters.currencyUomId"/>
+                    <field-map field-name="minimumOrderQuantity" env-name="parameters.minimumOrderQuantity"/>
+                    <field-map field-name="availableFromDate" env-name="parameters.availableFromDate"/>
+                </entity-one>
+                <entity-one entity-name="Product" value-name="product"/>
+                
+                <!-- should just be one, but don't have all pk fields so will just get first from list -->
+                <entity-and entity-name="ProductPrice" list-name="productPriceList">
+                    <field-map field-name="productId" env-name="parameters.productId"/>
+                    <field-map field-name="productPriceTypeId" value="DEFAULT_PRICE"/>
+                    <field-map field-name="productPricePurposeId" value="PURCHASE"/>
+                    <field-map field-name="productStoreGroupId" value="_NA_"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition><if-compare field-name="productStore.enableDigProdUpload" operator="equals" value="Y"/></condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/customer/digitalproductedit.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <container><label style="head2" text="Sorry, digital product upload is not enabled."></label></container>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

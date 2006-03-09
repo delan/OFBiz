@@ -735,16 +735,25 @@
         location="org/ofbiz/product/product/CustomerDigitalDownloadServices.xml" invoke="createCustomerDigitalDownloadProduct">
         <description></description>
         <attribute name="productName" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="price" type="Double" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="OUT" optional="false"/>
+        <attribute name="currencyUomId" type="String" mode="OUT" optional="false"/>
+        <attribute name="minimumOrderQuantity" type="Double" mode="OUT" optional="false"/>
+        <attribute name="availableFromDate" type="Timestamp" mode="OUT" optional="false"/>
     </service>
     <service name="updateCustomerDigitalDownloadProduct" auth="true" engine="simple"
         location="org/ofbiz/product/product/CustomerDigitalDownloadServices.xml" invoke="updateCustomerDigitalDownloadProduct">
         <description></description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productName" type="String" mode="IN" optional="false"/>
+        <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="minimumOrderQuantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="availableFromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="price" type="Double" mode="IN" optional="true"/>
     </service>
     <service name="deleteCustomerDigitalDownloadProduct" auth="true" engine="simple"
         location="org/ofbiz/product/product/CustomerDigitalDownloadServices.xml" invoke="deleteCustomerDigitalDownloadProduct">

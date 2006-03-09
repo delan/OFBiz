@@ -722,6 +722,8 @@
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
 
+    <!-- ======================= Customer Profile Requests ======================= -->
+    
     <request-map uri="viewprofile">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="viewprofile"/>
@@ -937,10 +939,7 @@
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="tellafriend">
-        <security https="false" auth="false"/>
-        <response name="success" type="view" value="tellafriend"/>
-    </request-map>
+    <request-map uri="tellafriend"><security https="false" auth="false"/><response name="success" type="view" value="tellafriend"/></request-map>
     <request-map uri="emailFriend">
         <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="tellAFriend"/>
@@ -948,10 +947,7 @@
         <response name="error" type="view" value="tellafriend"/>
     </request-map>
 
-    <request-map uri="giftcardbalance">
-        <security https="true" auth="false"/>
-        <response name="success" type="view" value="giftcardbalance"/>
-    </request-map>
+    <request-map uri="giftcardbalance"><security https="true" auth="false"/><response name="success" type="view" value="giftcardbalance"/></request-map>
     <request-map uri="querygcbalance">
         <security https="true" auth="false"/>
         <event type="service" invoke="balanceInquireGiftCard"/>
@@ -959,10 +955,7 @@
         <response name="error" type="view" value="giftcardbalance"/>
     </request-map>
 
-    <request-map uri="giftcardlink">
-        <security https="true" auth="false"/>
-        <response name="success" type="view" value="giftcardlink"/>
-    </request-map>
+    <request-map uri="giftcardlink"><security https="true" auth="false"/><response name="success" type="view" value="giftcardlink"/></request-map>
     <request-map uri="linkgiftcard">
         <security https="true" auth="false"/>
         <event type="service" invoke="linkPhysicalGiftCard"/>
@@ -970,6 +963,32 @@
         <response name="error" type="view" value="giftcardlink"/>
     </request-map>
 
+    <!-- ======================= Customer Digital Product Requests ======================= -->
+    
+    <request-map uri="digitalproductlist"><security https="true" auth="true"/><response name="success" type="view" value="digitalproductlist"/></request-map>
+    <request-map uri="digitalproductedit"><security https="true" auth="true"/><response name="success" type="view" value="digitalproductedit"/></request-map>
+    
+    <request-map uri="createCustomerDigitalDownloadProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCustomerDigitalDownloadProduct"/>
+        <response name="success" type="view" value="digitalproductedit"/>
+        <response name="error" type="view" value="digitalproductedit"/>
+    </request-map>
+    <request-map uri="updateCustomerDigitalDownloadProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCustomerDigitalDownloadProduct"/>
+        <response name="success" type="view" value="digitalproductedit"/>
+        <response name="error" type="view" value="digitalproductedit"/>
+    </request-map>
+    <request-map uri="deleteCustomerDigitalDownloadProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCustomerDigitalDownloadProduct"/>
+        <response name="success" type="view" value="digitalproductlist"/>
+        <response name="error" type="view" value="digitalproductlist"/>
+    </request-map>
+    
+    <!-- ======================= Survey Requests ======================= -->
+    
     <request-map uri="takesurvey">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="profilesurvey"/>
@@ -986,6 +1005,8 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
+
+    <!-- ======================= Communication Event Based Messaging ======================= -->
 
     <request-map uri="messagelist">
         <security https="true" auth="true"/>
@@ -1019,6 +1040,8 @@
         <response name="error" type="view" value="contactus"/>
     </request-map>
 
+    <!-- ======================= Content Requests: Forums/Content/Articles ======================= -->
+    
     <request-map uri="defaultcontent">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="defaultcontent"/>
@@ -1259,6 +1282,9 @@
     <view-map name="giftcardlink" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardlink"/>
     <view-map name="profilesurvey" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#customersurvey"/>
 
+    <view-map name="digitalproductlist" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#digitalproductlist"/>
+    <view-map name="digitalproductedit" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#digitalproductedit"/>
+    
     <view-map name="contactus" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#contactus"/>
     <view-map name="messagelist" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagelist"/>
     <view-map name="messagedetail" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagedetail"/>
