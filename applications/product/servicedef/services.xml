@@ -729,7 +729,29 @@
        	<attribute name="partyId" type="String" mode="IN" optional="true"/>
        	<attribute name="supplierProductFeatures" type="java.util.List" mode="OUT" optional="false"/>
     </service>
-
+    
+    <!-- Customer driven (customers are suppliers) digital download product services -->
+    <service name="createCustomerDigitalDownloadProduct" auth="true" engine="simple"
+        location="org/ofbiz/product/product/CustomerDigitalDownloadServices.xml" invoke="createCustomerDigitalDownloadProduct">
+        <description></description>
+        <attribute name="productName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateCustomerDigitalDownloadProduct" auth="true" engine="simple"
+        location="org/ofbiz/product/product/CustomerDigitalDownloadServices.xml" invoke="updateCustomerDigitalDownloadProduct">
+        <description></description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCustomerDigitalDownloadProduct" auth="true" engine="simple"
+        location="org/ofbiz/product/product/CustomerDigitalDownloadServices.xml" invoke="deleteCustomerDigitalDownloadProduct">
+        <description></description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <!-- Product Configuration Services -->
     <service name="createProductConfig" default-entity-name="ProductConfig" engine="simple"
                 location="org/ofbiz/product/config/ConfigServices.xml" invoke="createProductConfig" auth="true">
