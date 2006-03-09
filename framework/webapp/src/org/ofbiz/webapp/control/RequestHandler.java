@@ -291,8 +291,8 @@ public class RequestHandler implements Serializable {
         String eventReturn = requestManager.getRequestAttribute(requestUri, eventReturnString);
         if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
 
-        // Set the next view
-        if (eventReturn != null && !"success".equals(eventReturnString)) nextView = eventReturn;
+        // Set the next view (don't use event return if success, default to nextView (which is set to eventReturn later if null); also even if success if it is a type "none" response ignore the nextView, ie use the eventReturn)
+        if (eventReturn != null && (!"success".equals(eventReturnString) || eventReturn.startsWith("none:"))) nextView = eventReturn;
         if (Debug.verboseOn()) Debug.logVerbose("[Event Response Mapping]: " + nextView, module);
 
         // get the previous request info
