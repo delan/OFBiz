@@ -173,6 +173,7 @@
     <PartyClassificationType description="Person" hasTable="N" parentTypeId="" partyClassificationTypeId="PERSON_CLASSIFICATIO"/>
     <PartyClassificationType description="Size" hasTable="N" parentTypeId="" partyClassificationTypeId="SIZE_CLASSIFICATION"/>
 
+    <PartyQualType description="Work experience" hasTable="N" parentTypeId="" partyQualTypeId="EXPERIENCE"/>
     <PartyQualType description="Certification" hasTable="N" parentTypeId="" partyQualTypeId="CERTIFICATION"/>
     <PartyQualType description="Degree" hasTable="N" parentTypeId="" partyQualTypeId="DEGREE"/>
 
