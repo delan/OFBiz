@@ -330,7 +330,7 @@
                 <set field="labelTitleProperty" value="CategoryAttributes"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-name="productCategory"/>
-                <entity-and entity-name="ProductCategoryAttribute" list-name="categoryAttributes"/>
+                <entity-condition entity-name="ProductCategoryAttribute" list-name="categoryAttributes"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator">
