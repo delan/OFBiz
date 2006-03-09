@@ -595,22 +595,22 @@
     <view-entity entity-name="OrderItemAndProductContentInfo"
         package-name="org.ofbiz.order.order"
         title="OrderItem And ProductContent Info View Entity">
-        <member-entity entity-alias="OR" entity-name="OrderRole"/>
         <member-entity entity-alias="OI" entity-name="OrderItem"/>
         <member-entity entity-alias="PC" entity-name="ProductContent"/>
         <member-entity entity-alias="CNT" entity-name="Content"/>
-        <alias-all entity-alias="OR"/>
+        <member-entity entity-alias="PDCT" entity-name="Product"/>
         <alias-all entity-alias="OI"/>
         <alias-all entity-alias="PC"/>
         <alias-all entity-alias="CNT"/>
-        <view-link entity-alias="OR" rel-entity-alias="OI">
-            <key-map field-name="orderId"/>
-        </view-link>
+        <alias-all entity-alias="PDCT"/>
         <view-link entity-alias="OI" rel-entity-alias="PC">
             <key-map field-name="productId"/>
         </view-link>
         <view-link entity-alias="PC" rel-entity-alias="CNT">
             <key-map field-name="contentId"/>
+        </view-link>
+        <view-link entity-alias="OI" rel-entity-alias="PDCT">
+            <key-map field-name="productId"/>
         </view-link>
         <relation type="one-nofk" rel-entity-name="Product">
             <key-map field-name="productId"/>
@@ -838,6 +838,35 @@
       <view-link entity-alias="OI" rel-entity-alias="OIS">
         <key-map field-name="statusId"/>
       </view-link>
+    </view-entity>
+    <view-entity entity-name="OrderRoleAndProductContentInfo"
+        package-name="org.ofbiz.order.order"
+        title="OrderRole And OrderItem And ProductContent Info View Entity">
+        <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
+        <member-entity entity-alias="OI" entity-name="OrderItem"/>
+        <member-entity entity-alias="PC" entity-name="ProductContent"/>
+        <member-entity entity-alias="CNT" entity-name="Content"/>
+        <member-entity entity-alias="PDCT" entity-name="Product"/>
+        <alias-all entity-alias="ORLE"/>
+        <alias-all entity-alias="OI"/>
+        <alias-all entity-alias="PC"/>
+        <alias-all entity-alias="CNT"/>
+        <alias entity-alias="PDCT" name="productName"/>
+        <view-link entity-alias="ORLE" rel-entity-alias="OI">
+            <key-map field-name="orderId"/>
+        </view-link>
+        <view-link entity-alias="OI" rel-entity-alias="PC">
+            <key-map field-name="productId"/>
+        </view-link>
+        <view-link entity-alias="PC" rel-entity-alias="CNT">
+            <key-map field-name="contentId"/>
+        </view-link>
+        <view-link entity-alias="OI" rel-entity-alias="PDCT">
+            <key-map field-name="productId"/>
+        </view-link>
+        <relation type="one-nofk" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
     </view-entity>
     <view-entity entity-name="OrderTaskList"
             package-name="org.ofbiz.order.order"

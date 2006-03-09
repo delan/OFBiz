@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -81,6 +81,62 @@
           </#list>
           <#if !orderHeaderList?has_content>
             <tr><td colspan="9"><div class="head3">${uiLabelMap.OrderNoOrderFound}</div></td></tr>
+          </#if>
+        </table>
+    </div>
+</div>
+
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="boxhead">${uiLabelMap.EcommerceDownloadsAvailableTitle}</div>
+    </div>
+    <div class="screenlet-body">
+        <table width="100%" cellpadding="1" cellspacing="0" border="0">
+          <tr>
+            <td width="10%">
+              <div class="tabletext"><b><nobr>${uiLabelMap.OrderOrder} ${uiLabelMap.OrderNbr}</nobr></b></div>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="20%">
+              <div class="tabletext"><b>${uiLabelMap.ProductProductName}</b></div>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="10%">
+              <div class="tabletext"><b>${uiLabelMap.CommonName}</b></div>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="40%">
+              <div class="tabletext"><b>${uiLabelMap.CommonDescription}</b></div>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="10%"><b></b></td>                
+          </tr>
+          <#list downloadOrderRoleAndProductContentInfoList as downloadOrderRoleAndProductContentInfo>
+            <tr><td colspan="9"><hr class="sepbar"/></td></tr>
+            <tr>
+              <td>
+                <div class="tabletext">${downloadOrderRoleAndProductContentInfo.orderId}</div>
+              </td>
+              <td width="10">&nbsp;</td>
+              <td>
+                <div class="tabletext">${downloadOrderRoleAndProductContentInfo.productName}</div>
+              </td>
+              <td width="10">&nbsp;</td>
+              <td>
+                <div class="tabletext">${downloadOrderRoleAndProductContentInfo.contentName?if_exists}</div>
+              </td>
+              <td width="10">&nbsp;</td>
+              <td>
+                <div class="tabletext">${downloadOrderRoleAndProductContentInfo.description?if_exists}</div>
+              </td>
+              <td width="10">&nbsp;</td>
+              <td align="right">
+                <a href="<@ofbizUrl>downloadDigitalProduct/${downloadOrderRoleAndProductContentInfo.contentName?if_exists}?dataResourceId=${downloadOrderRoleAndProductContentInfo.dataResourceId}</@ofbizUrl>" class="buttontext">Download</a>
+              </td>
+            </tr>
+          </#list>
+          <#if !downloadOrderRoleAndProductContentInfoList?has_content>
+            <tr><td colspan="9"><div class="head3">${uiLabelMap.EcommerceDownloadNotFound}</div></td></tr>
           </#if>
         </table>
     </div>
