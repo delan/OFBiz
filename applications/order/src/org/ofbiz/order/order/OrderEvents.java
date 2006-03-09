@@ -45,49 +45,49 @@ public class OrderEvents {
     public static final String module = OrderEvents.class.getName();
 
     public static String downloadDigitalProduct(HttpServletRequest request, HttpServletResponse response) {
-    	HttpSession session = request.getSession();
-    	ServletContext application = session.getServletContext();
-    	GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-    	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-    	String dataResourceId = request.getParameter("dataResourceId");
-    	
-    	try {
-			// has the userLogin.partyId ordered a product with DIGITAL_DOWNLOAD content associated for the given dataResourceId?
-			List orderItemAndProductContentInfoList = delegator.findByAnd("OrderItemAndProductContentInfo", 
-					UtilMisc.toMap("partyId", userLogin.get("partyId"), "dataResourceId", dataResourceId, "productContentTypeId", "DIGITAL_DOWNLOAD"));
-			
-			if (orderItemAndProductContentInfoList.size() == 0) {
-				request.setAttribute("_ERROR_MESSAGE_", "No record of purchase for digital download found (dataResourceId=[" + dataResourceId + "]).");
-				return "error";
-			}
-			
-			GenericValue orderItemAndProductContentInfo = (GenericValue) orderItemAndProductContentInfoList.get(0);
-			
-	    	// TODO: check validity based on ProductContent fields: useCountLimit, useTime/useTimeUomId
-	    	
-			if (orderItemAndProductContentInfo.getString("mimeTypeId") != null) {
-				response.setContentType(orderItemAndProductContentInfo.getString("mimeTypeId"));
-			}
-			OutputStream os = response.getOutputStream();
-			DataResourceWorker.streamDataResource(os, delegator, dataResourceId, "", application.getInitParameter("webSiteId"), UtilHttp.getLocale(request), application.getRealPath("/"));
-			os.flush();
-		} catch (GenericEntityException e) {
-			String errMsg = "Error downloading digital product content: " + e.toString();
-			Debug.logError(e, errMsg, module);
-			request.setAttribute("_ERROR_MESSAGE_", errMsg);
-			return "error";
-		} catch (GeneralException e) {
-			String errMsg = "Error downloading digital product content: " + e.toString();
-			Debug.logError(e, errMsg, module);
-			request.setAttribute("_ERROR_MESSAGE_", errMsg);
-			return "error";
-		} catch (IOException e) {
-			String errMsg = "Error downloading digital product content: " + e.toString();
-			Debug.logError(e, errMsg, module);
-			request.setAttribute("_ERROR_MESSAGE_", errMsg);
-			return "error";
-		}
-    	
+        HttpSession session = request.getSession();
+        ServletContext application = session.getServletContext();
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        String dataResourceId = request.getParameter("dataResourceId");
+        
+        try {
+            // has the userLogin.partyId ordered a product with DIGITAL_DOWNLOAD content associated for the given dataResourceId?
+            List orderRoleAndProductContentInfoList = delegator.findByAnd("OrderRoleAndProductContentInfo", 
+                    UtilMisc.toMap("partyId", userLogin.get("partyId"), "dataResourceId", dataResourceId, "productContentTypeId", "DIGITAL_DOWNLOAD", "statusId", "ITEM_COMPLETED"));
+            
+            if (orderRoleAndProductContentInfoList.size() == 0) {
+                request.setAttribute("_ERROR_MESSAGE_", "No record of purchase for digital download found (dataResourceId=[" + dataResourceId + "]).");
+                return "error";
+            }
+            
+            GenericValue orderRoleAndProductContentInfo = (GenericValue) orderRoleAndProductContentInfoList.get(0);
+            
+            // TODO: check validity based on ProductContent fields: useCountLimit, useTime/useTimeUomId
+            
+            if (orderRoleAndProductContentInfo.getString("mimeTypeId") != null) {
+                response.setContentType(orderRoleAndProductContentInfo.getString("mimeTypeId"));
+            }
+            OutputStream os = response.getOutputStream();
+            DataResourceWorker.streamDataResource(os, delegator, dataResourceId, "", application.getInitParameter("webSiteId"), UtilHttp.getLocale(request), application.getRealPath("/"));
+            os.flush();
+        } catch (GenericEntityException e) {
+            String errMsg = "Error downloading digital product content: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        } catch (GeneralException e) {
+            String errMsg = "Error downloading digital product content: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        } catch (IOException e) {
+            String errMsg = "Error downloading digital product content: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
+        
         return "success";
     }
 }
