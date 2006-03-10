@@ -41,23 +41,36 @@ under the License.
   <!-- org.ofbiz.humanres.ability -->
   <!-- ========================================================= -->
 
-    <entity entity-name="PartyQual"
-            package-name="org.ofbiz.humanres.ability"
-            title="Party Qualification Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="partyQualTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="partyQualTypeId"/>
-      <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PARTY_QUAL_PRTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="PARTY_QUAL_PQTYP" rel-entity-name="PartyQualType">
-        <key-map field-name="partyQualTypeId"/>
-      </relation>
+    <entity entity-name="PartyQual" package-name="org.ofbiz.humanres.ability" title="Party Qualification Entity">
+        <field name="partyQualId" type="id-ne"></field>
+        <field name="partyId" type="id-ne"></field>
+        <field name="partyQualTypeId" type="id-ne"></field>
+        <field name="institutionPartyId" type="id-ne"></field>
+        <field name="title" type="id-long"><description>Title of degree or job</description></field>
+        <field name="statusId" type="id"><description>Status e.g. completed, part-time etc.</description></field>
+        <field name="institutionInternalId" type="id"><description>Institution internal ID e.g. student ID</description></field>
+        <field name="infoString" type="id-vlong"><description>Additional info e.g. degree major or responsibilities at job</description></field>
+        <field name="verifStatusId" type="id"><description>Verification done for this entry if any</description></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <prim-key field="partyQualId"/>
+        <relation type="one" fk-name="PARTY_QUAL_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="PARTY_QUAL_PQTYP" rel-entity-name="PartyQualType">
+            <key-map field-name="partyQualTypeId"/>
+        </relation>
+        <relation type="one" title="Institution" fk-name="PARTY_QUAL_INST" rel-entity-name="Party">
+            <key-map field-name="institutionPartyId" rel-field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="PARTY_QUAL_STATUS" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+        <relation type="one" title="Verification" fk-name="PARTY_QUAL_VERIF" rel-entity-name="StatusItem">
+            <key-map field-name="verifStatusId" rel-field-name="statusId"/>
+        </relation>
     </entity>
+    
     <entity entity-name="PartyQualType"
             package-name="org.ofbiz.humanres.ability"
             title="Party Qualification Type Entity">
