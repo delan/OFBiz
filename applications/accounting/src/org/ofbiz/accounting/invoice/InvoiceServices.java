@@ -968,8 +968,8 @@ public class InvoiceServices {
                                 +  adjustment.getString("returnAdjustmentTypeId") + "]");
                     }
 
-                    // prorate the adjustment amount by the returned amount
-                    BigDecimal ratio = receipt.getBigDecimal("quantityAccepted").divide(returnItem.getBigDecimal("returnQuantity"), decimals, rounding);
+                    // prorate the adjustment amount by the returned amount; do not round ratio
+                    BigDecimal ratio = receipt.getBigDecimal("quantityAccepted").divide(returnItem.getBigDecimal("returnQuantity"), 100, rounding);
                     BigDecimal amount = adjustment.getBigDecimal("amount");
                     amount = amount.multiply(ratio).setScale(decimals, rounding);
                     if (Debug.verboseOn()) {
@@ -1013,7 +1013,7 @@ public class InvoiceServices {
             // ratio of the invoice total to the promised total so far or zero if the amounts were zero
             BigDecimal actualToPromisedRatio = ZERO;
             if (invoiceTotal.signum() != 0) {
-                actualToPromisedRatio = invoiceTotal.divide(promisedTotal, decimals, rounding);
+                actualToPromisedRatio = invoiceTotal.divide(promisedTotal, 100, rounding);  // do not round ratio
             }
 
             // loop through return-wide adjustments and create invoice items for each
