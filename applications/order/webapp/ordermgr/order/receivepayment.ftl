@@ -31,7 +31,6 @@
   &nbsp;<a href="javascript:document.paysetupform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
   <form method="post" action="<@ofbizUrl>receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">    
-    <input type="hidden" name="orderId" value="${requestParameters.orderId}">
     <#if requestParameters.workEffortId?exists>
     	<input type="hidden" name="workEffortId" value="${requestParameters.workEffortId}">
     </#if>
