@@ -58,7 +58,7 @@
         <key-map field-name="orderId"/>
       </view-link>
     </view-entity>
-
+-->
   <view-entity entity-name="PartyRelationshipAndPartyDetail"
     package-name="org.ofbiz.opentravelsystem"
     title="Party Relationship and Party Detail (Person, PartyGroup, etc) View Entity">
@@ -88,9 +88,5 @@
       <key-map field-name="partyId"/>
     </view-link>
   </view-entity>
--->  
-
-
-
 </entitymodel>
 

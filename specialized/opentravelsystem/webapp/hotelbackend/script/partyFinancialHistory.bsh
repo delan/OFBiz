@@ -154,11 +154,13 @@ if (invoices != null && invoices.size() > 0) {
 				historyItem.put("applied", applied.toString());
 				historyItem.put("paymentId", oldPaymentId);
 				payment = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",oldPaymentId));
+				if (payment != null) {
 					BigDecimal amount = payment.getBigDecimal("amount").setScale(2,BigDecimal.ROUND_HALF_UP);
 //					if (payment.getString("partyIdFrom").equals(organizationPartyId))	amount = amount.multiply(new BigDecimal("-1"));
 					historyItem.put("amount",amount.toString());
-				historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
-				historyList.add(historyItem);
+					historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
+					historyList.add(historyItem);
+				}
 			}
 		}
 	}
@@ -245,15 +247,17 @@ if (payments != null && payments.size() > 0) {
 		while (pa.hasNext())	{
 			GenericValue paymentApplication = pa.next();
 			GenericValue invoice = paymentApplication.getRelated("Invoice").get(0);
-			historyItem = new HashMap();
-			historyItem.put("paymentId",payment.getString("paymentId"));
-			historyItem.put("invoiceId",paymentApplication.getString("invoiceId"));
-			historyItem.put("invoiceItemSeqId",paymentApplication.getString("invoiceItemSeqId"));
-			historyItem.put("partyId",invoice.getString("partyId"));
-			historyItem.put("amount",amount.toString());
-			historyItem.put("applied",paymentApplication.getBigDecimal("amountApplied").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
-			historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
-			historyList.add(historyItem);
+			if (!invoice.getString("partyId").equals(partyId)) {
+				historyItem = new HashMap();
+				historyItem.put("paymentId",payment.getString("paymentId"));
+				historyItem.put("invoiceId",paymentApplication.getString("invoiceId"));
+				historyItem.put("invoiceItemSeqId",paymentApplication.getString("invoiceItemSeqId"));
+				historyItem.put("partyId",invoice.getString("partyIdFrom"));
+				historyItem.put("amount",amount.toString());
+				historyItem.put("applied",paymentApplication.getBigDecimal("amountApplied").setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+				historyItem.put("effectiveDate",payment.getString("effectiveDate").substring(0,10));
+				historyList.add(historyItem);
+			}
 		}
 	}
 	context.put("historyListPaymentsO",historyList);

@@ -10,9 +10,24 @@
         </actions>
         <!--field name="statusId"><hidden value="PARTYREL-ACTIVE"/></field-->
         <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="partyIdTo" title="Party Id" ><text-find default-option="contains" ignore-case="true"/></field>
+        <field name="partyId" title="Party Id" ><text-find default-option="contains" ignore-case="true"/></field>
         <field name="groupName"><text-find default-option="contains" ignore-case="true"/></field>
         <field name="lastName" ><text-find default-option="contains" ignore-case="true"/></field>
+        <field name="partyRelationshipTypeId" title="Party Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${partyRelationshipName}" entity-name="PartyRelationshipType">
+                    <entity-order-by field-name="partyRelationshipName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" value="PARTY-RELATION"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -23,23 +38,25 @@
         default-widget-style="tabletext" default-tooltip-style="tabletext"
         paginate-target="findParties" list-iterator-name="listIt" default-entity-name="PartyNameView">
         <actions>
-            <set field="parameters.partyIdFrom" from-field="parameters.organizationPartyId"/>
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
-                <field-map field-name="entityName" value="PartyNameView"/>
+                <field-map field-name="entityName" value="PartyRelationshipAndPartyDetail"/>
                 <field-map field-name="orderBy" value="partyId"/>
             </service>
         </actions>
+        <!--auto-fields-entity entity-name="PartyRelationshipAndPartyDetail" default-field-type="display"/-->
         <field name="partyId" widget-style="buttontext" >
             <hyperlink description="${partyId}" target="editParty?partyId=${partyId}"/>
         </field>
         <field name="partyTypeId"><display-entity entity-name="PartyType" description="${description}"/></field>
+        <field name="partyRelationshipTypeId" title="Rel.Type"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
         <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
+        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="financialHistory" title=" " widget-style="buttontext" >
             <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
         </field>
         <field name="Disable" title=" " widget-style="buttontext">
-            <hyperlink description="Delete" target-type="plain" target="javascript:confirmActionLink('You want to delete this party?','deleteParty?organizationPartyId=${organizationPartyId}&amp;partyId=${partyId}&amp;statusId=PARTYREL-DELETED')"/>
+            <hyperlink description="Delete" target-type="plain" target="javascript:confirmActionLink('You want to delete this party?','deleteParty?partyId=${partyId}&amp;statusId=PARTYREL-DELETED')"/>
         </field>
     </form>
     
@@ -49,13 +66,11 @@
         <actions>
             <service service-name="otsGetParty" result-map-name="info">
                 <field-map field-name="partyId" value="${parameters.partyId}"/>
-                <field-map field-name="organizationPartyId" value="${organizationPartyId}"/>
             </service>
         </actions>
         <alt-target use-when="party==null||partyId==null" target="addParty"/>
         <auto-fields-service service-name="otsAddParty"/>
         <field name="partyId"><hidden value="${parameters.partyId}"/></field>
-        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="partyRelationshipTypeId" title="Party Type">
             <drop-down allow-empty="false">
                 <entity-options description="${partyRelationshipName}" entity-name="PartyRelationshipType">
@@ -84,12 +99,9 @@
         target="updateCompany" title="Edit Organization Party" default-map-name="info"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
-            <service service-name="otsGetOrganizationParty" result-map-name="info">
-                <field-map field-name="organizationPartyId" value="${organizationPartyId}"/>
-            </service>
+            <service service-name="otsGetOrganizationParty" result-map-name="info"/>
         </actions>
         <auto-fields-service service-name="otsUpdateOrganizationParty"/>
-        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="countryGeoId" title="Country">
             <drop-down allow-empty="true">
                 <entity-options description="${geoName}" entity-name="Geo" key-field-name="geoId">
