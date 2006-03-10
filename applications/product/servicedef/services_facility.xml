@@ -38,7 +38,7 @@
         </auto-attributes>
         <override name="inventoryItemTypeId" optional="false"/>
         <override name="productId" optional="false"/>
-        <override name="unitCost" optional="false"/>
+        <override name="facilityId" optional="false"/>
     </service>
     <service name="createInventoryItemCheckSetAtpQoh" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryItemCheckSetAtpQoh" auth="false">
@@ -62,6 +62,11 @@
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="checkProductInventoryDiscontinuation" auth="false">
         <description>Check Product Inventory Discontinuation</description>
         <attribute name="productId" mode="IN" optional="false" type="String"/>
+    </service>
+    <service name="inventoryItemCheckSetDefaultValues" default-entity-name="InventoryItem" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="inventoryItemCheckSetDefaultValues" auth="false">
+        <description>Check and, if empty, fills with default values ownerPartyId, currencyUomId, unitCost</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <service name="createInventoryItemDetail" default-entity-name="InventoryItemDetail" engine="simple"
