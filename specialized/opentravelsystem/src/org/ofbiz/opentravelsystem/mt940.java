@@ -97,8 +97,7 @@ public class mt940 {
 	static boolean debet; 					// if it was a debet (true) or credit (false) transaction
 	static String defaultCurrency = null;
 	static Map payment = null;		
-	static Map partyGroup = null;    				
-	static Map eftAccount = null;
+	static Map partyInfo = null;    				
 	// statistics
 	static int partiesCreated;
 	static int paymentsCreated;
@@ -164,12 +163,19 @@ public class mt940 {
 		
 		if (debug) Debug.logInfo("Start processing payments...", module);
 		while (getPayment(request) != null) {
+			// first check if the payment already exists
+			if (checkPayment() == true)	{
+				paymentAlreadyUploaded++;
+				if (debug) Debug.logInfo("Payment already exists...so not create again...",module);
+				continue;
+			}
+			
 			String otherParty = getParty();
 			// check to see if the parties where found, when not create
 			if (otherParty == null)	{ 
 				if (createParty() == null) 	
 					return "error"; // party creation error
-				otherParty = (String) partyGroup.get("partyId");
+				otherParty = (String) partyInfo.get("partyId");
 			}
 			if (debet  == false)	{
 				if (otherParty.equals(taxAuthPartyId) || accountPartyId.equals(taxAuthPartyId))
@@ -193,11 +199,7 @@ public class mt940 {
 			payment.put("paymentMethodTypeId","EFT_ACCOUNT");
 			// check if the payment was already uploaded.....
 			if (debug) Debug.logInfo("Creating payment with reference number: " + payment.get("paymentRefNum"),module);
-			if (checkPayment() == true)	{
-				paymentAlreadyUploaded++;
-				if (debug) Debug.logInfo("Payment already exists...so not create again...",module);
-			}
-			else if (!partyOnly)	{	// input parameter.....
+			if (!partyOnly)	{	// input parameter.....
 				// finally create payment record.
 				payment.put("userLogin",userLogin);
 				payment.put("locale", loc);
@@ -242,7 +244,7 @@ public class mt940 {
 	 * @return "error" when not ok...
 	 */
 	private static String createParty()	{
-		
+/*		
 		try {
 			results = dispatcher.runSync("createPartyGroup",partyGroup); 
 		} catch (GenericServiceException e1) {
@@ -298,10 +300,34 @@ public class mt940 {
 		} catch (GenericServiceException e1) {
 			Debug.logError(e1, "Error creating party relationship", module);
 		}
+*/
+		// create party
+		partyInfo.put("userLogin", userLogin);
+		partyInfo.put("partyRelationshipTypeId", "SUPPLIER_REL");
+		try {
+			results = dispatcher.runSync("otsAddParty", partyInfo);
+			partyInfo.put("partyId",results.get("partyId"));
+
+/*					UtilMisc.toMap(	
+							"userLogin", userLogin,
+							"partyRelationshipTypeId", partyRelationshipTypeId,
+							"groupName", partyGroup.get("partyId"),
+							"address1",
+							"address2",
+							"city",
+							"postalCode",
+							"countryGeoId",
+							"emailAddress",
+							"telephone",
+							"fax",
+							"accountNumber" */
+		} catch (GenericServiceException e1) {
+			Debug.logError(e1, "Error creating party relationship", module);
+		}
 		
-		Debug.logInfo("Party Created:" + partyGroup.get("partyId"), module);
+		Debug.logInfo("Party Created:" + partyInfo.get("partyId"), module);
 		partiesCreated++;
-		return (String) partyGroup.get("partyId");
+		return (String) partyInfo.get("partyId");
 	}
 	/**
 	 *    find parties by account number in the eftAccount table --> paymentMethod for the partyId
@@ -309,46 +335,28 @@ public class mt940 {
 	 * @return partyId if found, when not null
 	 */
 	private static String getParty()	{
-		if (debug) Debug.logInfo("eftAccount searching: accountNumber:" + eftAccount.get("accountNumber") + 
-				" Routing Number:" + eftAccount.get("routingNumber"), module);
+		if (debug) Debug.logInfo("eftAccount searching: accountNumber:" + partyInfo.get("accountNumber"), module);
 		
 		List eftAccounts = null; 
 		
-		if (UtilValidate.isNotEmpty((String) eftAccount.get("routingNumber")))	{ // only use if routing number available
-			try { 
-				eftAccounts = delegator.findByAnd("EftAccount", 
-						UtilMisc.toMap("accountNumber", eftAccount.get("accountNumber"), 
-								"routingNumber", eftAccount.get("routingNumber"))); 
-			}
-			catch (GenericEntityException e) {	
-				Debug.logError("Find account/routing Number exception:" + e.getMessage(), module); 
-			}
+		// try to find the account number
+		try { 
+			eftAccounts = delegator.findByAnd("EftAccount", 
+					UtilMisc.toMap("accountNumber", partyInfo.get("accountNumber"))); 
+		}
+		catch (GenericEntityException e) {	
+			Debug.logError("Find account number exception:" + e.getMessage(), module); 
 		}
 		
-		if (UtilValidate.isEmpty(eftAccounts))	{
-			if (debug) Debug.logInfo("Account: " + eftAccount.get("accountNumber") + 
-					" Routing number:" + eftAccount.get("routingNumber") + 
-					"  not specified or not found...try to find with account number only.", module);
-			
-			// try to find only with only the account number
-			try { 
-				eftAccounts = delegator.findByAnd("EftAccount", 
-						UtilMisc.toMap("accountNumber", eftAccount.get("accountNumber"))); 
-			}
-			catch (GenericEntityException e) {	
-				Debug.logError("Find account number exception:" + e.getMessage(), module); 
-			}
-			
-			
-			if(UtilValidate.isEmpty(eftAccounts))	{
-				if (debug) Debug.logInfo("Account: " + eftAccount.get("accountNumber") + " not found....", module);
-				return null;     		// account number not found.
-			}
+		
+		if(UtilValidate.isEmpty(eftAccounts))	{
+			if (debug) Debug.logInfo("Account: " + partyInfo.get("accountNumber") + " not found....", module);
+			return null;     		// account number not found.
 		}
 		
 		Iterator it = eftAccounts.iterator();
 		List paymentMethods = null;
-
+		
 		try { 
 			while (it.hasNext() && (paymentMethods == null || paymentMethods.size() == 0))	{
 				GenericValue eAccount = (GenericValue) it.next();
@@ -373,10 +381,7 @@ public class mt940 {
 	 */
 	private static String getFile(HttpServletRequest request)	{
 		try {
-			Locale locale = UtilHttp.getLocale(request);
-			LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
 			HttpSession session = request.getSession();
-			GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
 			partiesCreated =  paymentsCreated = paymentAlreadyUploaded = 0;
 			start = end = lineNumber = 0;
 			
@@ -467,8 +472,7 @@ public class mt940 {
 		// structurees to create the records in the database (filled by the getPayment routine)
 		payment = new HashMap();
 		payment.put("paymentMethodTypeId","EFT_ACCOUNT");  // all payment are bank transfers....
-		partyGroup = new HashMap();
-		eftAccount = new HashMap();
+		partyInfo = new HashMap();
 		String fileLine = getLine(); // get first line of transaction
 		while (fileLine != null) {
 			//   		Debug.logInfo("Line: " + lineNumber + "  -->" + fileLine, module);
@@ -544,42 +548,49 @@ public class mt940 {
 					if (tagData.substring(0,4).compareTo("GIRO") == 0)	{ // GIRO number
 						x = 4; while (tagData.charAt(x) == ' ')  x++;	// find first nonblank character
 						int y = x; while (y< tagData.length() && tagData.charAt(y) != ' ')  y++;	// find end of account number
-						eftAccount.put("accountNumber","G".concat(tagData.substring(x,y)));
+						partyInfo.put("accountNumber","G".concat(tagData.substring(x,y)));
 						if (tagData.length() > y && tagData.charAt(y) == ' ')	// if blank name follows the account number
-							eftAccount.put("nameOnAccount", tagData.substring(y));
+							partyInfo.put("groupName", tagData.substring(y));
 						else // when not, name on next line
-							eftAccount.put("nameOnAccount", getLine());
-						partyGroup.put("groupName", eftAccount.get("nameOnAccount"));
+							partyInfo.put("groupName", getLine());
 					}
 					else if (tagData.charAt(0) == ' ') {	// normal bank account number start with blank
-						eftAccount.put("accountNumber",tagData.substring(1,3) + tagData.substring(4,6) + tagData.substring(7,9) + tagData.substring(10,13));
+						partyInfo.put("accountNumber",tagData.substring(1,3) + tagData.substring(4,6) + tagData.substring(7,9) + tagData.substring(10,13));
 						if (tagData.length() > 13 && tagData.charAt(13) == ' ')	// if blank name follows the account number
-							eftAccount.put("nameOnAccount", tagData.substring(14));
+							partyInfo.put("groupName", tagData.substring(14));
 						else // when not, name on next line
-							eftAccount.put("nameOnAccount", getLine());
-						partyGroup.put("groupName", eftAccount.get("nameOnAccount"));
+							partyInfo.put("groupName", getLine());
 					}
 					else if (tagData.substring(0,2).compareTo("EM") == 0)	{  // international payment
-						eftAccount.put("accountNumber", tagData.substring(2,15));
+						partyInfo.put("accountNumber", tagData.substring(2,15));
 						payment.put("comments",tagData.substring(15));
-						payment.put("comments",payment.get("comments") + getLine() + getLine());
-						eftAccount.put("nameOnAccount", getLine());
-						partyGroup.put("groupName", eftAccount.get("nameOnAccount"));
+						if((fileLine = getLine()) != null) {
+							payment.put("comments",payment.get("comments") + fileLine);
+							if((fileLine = getLine()) != null) {
+								payment.put("comments",payment.get("comments") + fileLine);
+							}
+						}
+						if (fileLine != null) {
+							if((fileLine=getLine()) != null) 
+								partyInfo.put("groupName", fileLine);
+							else
+								partyInfo.put("groupName", "International Payment");
+						}
+						else
+							partyInfo.put("groupName", "International Payment");
 					}
 					else if (tagData.substring(0,3).compareTo("BEA") == 0)	{  // paying with pincode
-						eftAccount.put("accountNumber", "BEA_Payment");
+						partyInfo.put("accountNumber", "BEA_Payment");
 						payment.put("comments",tagData.substring(18));
 						if((fileLine = getLine()) == null) return null;
 						x = 0; while (fileLine.charAt(x) != ',')  x++;	// find first comma 
-						eftAccount.put("nameOnAccount", "BEA Payments");
-						partyGroup.put("groupName", "BEA Payments");
-						payment.put("comments",payment.get("comments") + " - " + fileLine);
+						partyInfo.put("groupName", "BEA Payments");
+						payment.put("comments",payment.get("comments") + " - " + fileLine); 
 					}
 					else	{ // bank charges
 						payment.put("comments",tagData);
-						eftAccount.put("accountNumber", "ABNAMRO");
-						eftAccount.put("nameOnAccount", "ABN AMRO Bank");
-						partyGroup.put("groupName", eftAccount.get("nameOnAccount"));
+						partyInfo.put("accountNumber", "ABNAMRO");
+						partyInfo.put("groupName", "ABN AMRO Bank");
 					}
 					// read lines until the next 'tag' line and add to payment comments
 					while (localFile.charAt(start) != ':') // start is pointing at the first character of next  line
@@ -603,7 +614,7 @@ public class mt940 {
 	}
 	private static String getFileHeader(HttpServletRequest request) {
 		GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-		eftAccount = (GenericValue) delegator.makeValue("EftAccount",null);
+		GenericValue eftAccount = (GenericValue) delegator.makeValue("EftAccount",null);
 		String fileLine = null; // get first line of transaction
 		lineNumber = end = start = seqNr =  0;
 		while (lineNumber < 7 && (fileLine = getLine()) != null) {
@@ -630,6 +641,8 @@ public class mt940 {
 					eftAccount.put("accountNumber", fileLine.substring(4));
 					accountNr = fileLine.substring(4);
 					lineNumber = end = start = 0;
+					partyInfo = new HashMap();
+					partyInfo.put("accountNumber",accountNr);
 					return "ok";
 				}
 			}

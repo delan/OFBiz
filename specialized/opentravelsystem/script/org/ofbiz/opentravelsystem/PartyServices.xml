@@ -47,7 +47,7 @@
         <!-- partygroup -->
         <!-- create id using the invoice prefix -->
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false">
-            <field-map field-name="partyId" env-name="parameters.organizationPartyId"/>
+            <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
         <set field="createPartyGroup.groupName" from-field="parameters.groupName"/>
         <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Party" env-name="nextPartyId"/>
@@ -111,7 +111,7 @@
         <field-to-request field-name="partyId" request-name="partyId"/>
 
         <!-- party relationship -->
-        <set field="rel.partyIdFrom" from-field="organizationPartyId"/>
+        <set field="rel.partyIdFrom" from-field="parameters.userLogin.partyId"/>
         <set field="rel.partyIdTo" from-field="partyId"/>
         <set field="rel.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/>
         <set field="rel.statusId" value="PARTYREL-ACTIVE"/>
@@ -121,8 +121,8 @@
     
     <simple-method method-name="updateParty" short-description="--Update an existingParty--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
-            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.userLogin.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
         <check-errors/>
         
@@ -264,7 +264,7 @@
         
         <!-- party relationship -->
         <entity-and entity-name="PartyRelationship" list-name="partyRelationships">
-            <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
+            <field-map field-name="partyIdFrom" value="${parameters.userLogin.partyId}"/>
             <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
         </entity-and>
         <first-from-list entry-name="partyRelationship" list-name="partyRelationships"/>
@@ -286,24 +286,10 @@
         
     </simple-method>
 
-    <simple-method method-name="getOrganizationParty" short-description="--retrieve Organization Party Information--">
+    <simple-method method-name="getParty" short-description="--retrieve Party Information--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_R">
-            <alt-permission permission="${parameters.organizationPartyId}" action="_R"/>
-            <fail-message message="Security Error: to update you need R access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
-        </check-permission>        
-        <check-errors/>
-        <set field="org.organizationPartyId" value="parameters.organizationPartyId"/>        
-        <set field="org.partyId" value="parameters.organizationPartyId"/>        
-        <call-service service-name="otsGetParty" in-map-name="org">
-            <result-to-result/>
-        </call-service>
-        <field-to-result field-name="parameters.organizationPartyId" result-name="organizationPartyId"/>
-    </simple-method>
-    
-        <simple-method method-name="getParty" short-description="--retrieve Party Information--">
-        <check-permission permission="OPENTRAVELSYSTEM" action="_R">
-            <alt-permission permission="${parameters.organizationPartyId}" action="_R"/>
-            <fail-message message="Security Error: to update you need R access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+            <fail-message message="Security Error: to read you need R access to &quot;${parameters.userLogin.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
         <check-errors/>
         
@@ -313,7 +299,7 @@
 
         <!-- party relationship -->
         <entity-and entity-name="PartyRelationship" list-name="partyRelationships">
-            <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
+            <field-map field-name="partyIdFrom" value="${parameters.userLogin.partyId}"/>
             <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
         </entity-and>
         <first-from-list entry-name="partyRelationship" list-name="partyRelationships"/>
@@ -334,7 +320,6 @@
         
         <!-- get the postal address defined as GENERAL LOCATION -->
         <set field="getKey.partyId" from-field="parameters.partyId"/>
-        <set field="getKey.organizationPartyId" from-field="parameters.organizationPartyId"/>
         <call-service service-name="otsGetPostalAddress" in-map-name="getKey">
             <result-to-result service-result-name="address1"  result-name="address1"/>
             <result-to-result service-result-name="address2" result-name="address2"/>
@@ -393,13 +378,13 @@
     
     <simple-method method-name="setStatusParty" short-description="--unDelete a Party--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
-            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.userLogin.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
         <check-errors/>
         
         <entity-and entity-name="PartyRelationship" list-name="relations">
-            <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
+            <field-map field-name="partyIdFrom" value="${parameters.userLogin.partyId}"/>
             <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
         </entity-and>
         <filter-list-by-date list-name="relations" to-list-name="selRelations"/>
@@ -413,20 +398,20 @@
     
     <simple-method method-name="createPartyRelationship" short-description="set the relationship between the party and the organizationParty">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
-            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.userLogin.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
         <check-errors/>
         
         <entity-and entity-name="PartyRelationship" list-name="relations">
-            <field-map field-name="partyIdFrom" value="${parameters.organizationPartyId}"/>
+            <field-map field-name="partyIdFrom" value="${parameters.userLogin.partyId}"/>
             <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
         </entity-and>
         <filter-list-by-date list-name="relations" to-list-name="selRelations"/>
         <first-from-list entry-name="relation" list-name="selRelations"/>
         
         <if-empty field-name="relation">
-            <set field="rel.partyIdFrom" from-field="organizationPartyId"/>
+            <set field="rel.partyIdFrom" from-field="parameters.userLogin.partyId"/>
             <set field="rel.partyIdTo" from-field="partyId"/>
             <set field="rel.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/>
             <set field="rel.statusId" value="PARTYREL-ACTIVE"/>
@@ -437,15 +422,15 @@
     
     <simple-method method-name="updatePostalAddress" short-description="--add/update a postal address for a party--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-            <alt-permission permission="${parameters.organizationPartyId}" action="_RW"/>
-            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need RW access to &quot;${parameters.userLogin.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
         <check-errors/>
         
         <!-- check input -->        
         <if-empty field-name="parameters.countryGeoId"><!-- get countryGeoId from organizationparty if empty -->
             <entity-and entity-name="PartyAndPostalAddress" list-name="orgAddressesU">
-                <field-map field-name="partyId" value="${parameters.organizationPartyId}"/>
+                <field-map field-name="partyId" value="${parameters.userLogin.partyId}"/>
                 <field-map field-name="contactMechTypeId" value="POSTAL_ADDRESS"/>
             </entity-and>
             <filter-list-by-date list-name="orgAddressesU" to-list-name="orgAddresses"/>
@@ -467,7 +452,6 @@
         
         <!-- get the postal address defined as GENERAL LOCATION -->
         <set field="getKey.partyId" from-field="parameters.partyId"/>
-        <set field="getKey.organizationPartyId" from-field="parameters.organizationPartyId"/>
         <call-service service-name="otsGetPostalAddress" in-map-name="getKey">
             <result-to-field result-name="contactMechId" field-name="contactMechId"/><!-- required for update -->
             <result-to-field result-name="address1" field-name="postalAddress.address1"/>
@@ -512,8 +496,8 @@
     
     <simple-method method-name="getPostalAddress" short-description="--get postal address for a party--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_R">
-            <alt-permission permission="${parameters.organizationPartyId}" action="_R"/>
-            <fail-message message="Security Error: to update you need R access to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+            <fail-message message="Security Error: to update you need R access to &quot;${parameters.userLogin.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
         </check-permission>        
         <check-errors/>
         

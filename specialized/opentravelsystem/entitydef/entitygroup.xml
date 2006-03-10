@@ -29,7 +29,7 @@
   <!-- ========================================================= -->
 <!--
  <entity-group group="org.ofbiz" entity="CustomerSummary" />
+-->
  <entity-group group="org.ofbiz" entity="PartyRelationshipAndPartyDetail" />
- -->
 </entitygroup>
 
