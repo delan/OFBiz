@@ -420,8 +420,11 @@ public class InvoiceServices {
                         GenericValue adj = (GenericValue) itemAdjIter.next();
                         if (adj.get("amount") != null) {
                             // pro-rate the amount
-                            BigDecimal amount = adj.getBigDecimal("amount").divide(orderItem.getBigDecimal("quantity"), decimals, rounding);
+
+                            // set decimals = 100 means we don't round this intermediate value, which is very important
+                            BigDecimal amount = adj.getBigDecimal("amount").divide(orderItem.getBigDecimal("quantity"), 100, rounding);
                             amount = amount.multiply(invoiceItem.getBigDecimal("quantity"));
+                            amount = amount.setScale(decimals, rounding);
                             GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId));
                             adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceType, "INVOICE_ITM_ADJ"));
                             adjInvItem.set("productId", orderItem.get("productId"));
@@ -434,13 +437,12 @@ public class InvoiceServices {
                                 adjInvItem.set("taxableFlag", product.get("taxable"));    
                             }
                             adjInvItem.set("quantity", new Double(1));
-                            adjInvItem.set("amount", amount);
+                            adjInvItem.set("amount", new Double(amount.doubleValue()));
                             adjInvItem.set("description", adj.get("description"));
                             adjInvItem.set("taxAuthPartyId", adj.get("taxAuthPartyId"));
                             adjInvItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
                             adjInvItem.set("taxAuthGeoId", adj.get("taxAuthGeoId"));
                             toStore.add(adjInvItem);
-
                             // this adjustment amount
                             BigDecimal thisAdjAmount = adjInvItem.getBigDecimal("amount").multiply(adjInvItem.getBigDecimal("quantity")).setScale(decimals, rounding);
 
