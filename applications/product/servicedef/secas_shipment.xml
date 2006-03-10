@@ -23,6 +23,7 @@ under the License.
     <eca service="updateShipment" event="commit">
         <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
         <condition field-name="statusId" operator="equals" value="SHIPMENT_PACKED"/>
+        <condition field-name="shipmentTypeId" operator="equals" value="SALES_SHIPMENT"/>
         <action service="prepareShipmentStaging" mode="sync"/>
         <action service="createInvoicesFromShipment" mode="sync"/>        
     </eca>
