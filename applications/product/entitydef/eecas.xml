@@ -25,7 +25,7 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entity-eca.xsd">
     <!-- Product Keyword Indexing ECAs -->
     <eca entity="Product" operation="create-store" event="return">
-        <condition field-name="autoCreateKeywords" operator="not-equals" value="N"/>
+        <condition field-name="autoCreateKeywords" operator="equals" value="Y"/>
         <action service="indexProductKeywords" mode="sync" value-attr="productInstance"/>
     </eca>
     <eca entity="ProductAttribute" operation="create-store" event="return">
@@ -45,8 +45,11 @@
         <action service="checkProductInventoryDiscontinuation" mode="async"/>
     </eca>
     <!-- Just in case an InventoryItem is ever created with ATP/QOH values, catch and handle that -->
+    <!-- Then verify that all the needed InventoryItem fields are properly populated, if not, fill it 
+         with default values; if default values are not found, return an error. -->
     <eca entity="InventoryItem" operation="create" event="return">
         <action service="createInventoryItemCheckSetAtpQoh" mode="sync"/>
+        <!--<action service="inventoryItemCheckSetDefaultValues" mode="sync"/>-->
     </eca>
     <!-- The InventoryItemDetail entity should never be updated/stored or deleted/removed, but we'll catch those too anyway... -->
     <eca entity="InventoryItemDetail" operation="create-store-remove" event="return">
