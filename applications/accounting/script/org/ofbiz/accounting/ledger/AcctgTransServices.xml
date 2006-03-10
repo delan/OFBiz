@@ -247,7 +247,9 @@ under the License.
             <!-- use the parent of the GlAccountClass, which should either be DEBIT or CREDIT -->
             <get-related-one relation-name="GlAccountClass" value-name="glAccount" to-value-name="glAccountClass"/>
             <get-related-one relation-name="ParentGlAccountClass" value-name="glAccountClass" to-value-name="parentGlAccountClass"/>
-            <if-compare map-name="parentGlAccountClass" field-name="glAccountClassId" operator="equals" value="DEBIT">
+            <!-- test if the account is a DEBIT account -->
+            <set field="isDebit" value="${bsh:org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(glAccount)}"/>
+            <if-compare field-name="isDebit" operator="equals" value="true">
                     <if-compare field-name="debitCreditFlag" map-name="acctgTransEntry" operator="equals" value="D">
                         <set from-field="acctgTransEntry.amount" field="postingAmount"/>
                         <else>
@@ -257,7 +259,9 @@ under the License.
                         </else>
                     </if-compare>
                 <else>
-                    <if-compare field-name="parentGlAccountClass.glAccountClassId" operator="equals" value="CREDIT">
+                    <!-- otherwise, test if the account is credit -->
+                    <set field="isCredit" value="${bsh:org.ofbiz.accounting.util.UtilAccounting.isCreditAccount(glAccount)}"/>
+                    <if-compare field-name="isCredit" operator="equals" value="true">
                         <if-compare field-name="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
                             <set from-field="acctgTransEntry.amount" field="postingAmount"/>
                             <else>
