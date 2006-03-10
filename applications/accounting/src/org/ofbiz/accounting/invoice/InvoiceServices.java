@@ -560,13 +560,16 @@ public class InvoiceServices {
                         currentApplications = payment.getRelated("PaymentApplication");
                         if (currentApplications == null || currentApplications.size() == 0) {
                             // no applications; okay to apply
-                            String applId = delegator.getNextSeqId("PaymentApplication");
-                            GenericValue appl = delegator.makeValue("PaymentApplication", UtilMisc.toMap("paymentApplicationId", applId));
-                            appl.set("paymentId", payment.get("paymentId"));
-                            appl.set("invoiceId", invoiceId);
-                            appl.set("billingAccountId", billingAccountId);
-                            appl.set("amountApplied", payment.get("amount"));
-                            toStore.add(appl);
+                            Map appl = new HashMap();
+                            appl.put("paymentId", payment.get("paymentId"));
+                            appl.put("invoiceId", invoiceId);
+                            appl.put("billingAccountId", billingAccountId);
+                            appl.put("amountApplied", payment.get("amount"));
+                            appl.put("userLogin", userLogin);
+                            Map createPayApplResult = dispatcher.runSync("createPaymentApplication", appl); 
+                            if (ServiceUtil.isError(createPayApplResult)) {
+                                return ServiceUtil.returnError("Error creating invoice from order", null, null, createPayApplResult);
+                            }
                         }
                     }
                 }
@@ -1120,7 +1123,7 @@ public class InvoiceServices {
                 Debug.logVerbose("Invoice #" + invoiceId + " total: " + invoiceTotal, module);
                 Debug.logVerbose("Total payments : " + totalPayments, module);
             }
-            if (totalPayments.compareTo(invoiceTotal) >= 0) { // this checks that totalPayments is greter than or equal to invoiceTotal
+            if (totalPayments.compareTo(invoiceTotal) >= 0) { // this checks that totalPayments is greater than or equal to invoiceTotal
                 // this invoice is paid
                 Map svcCtx = UtilMisc.toMap("statusId", "INVOICE_PAID", "invoiceId", invoiceId, "userLogin", userLogin);
                 try {
