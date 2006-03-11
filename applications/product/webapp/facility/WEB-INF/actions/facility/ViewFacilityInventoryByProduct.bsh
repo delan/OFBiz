@@ -43,6 +43,8 @@ action = request.getParameter("action");
 
 qty = -1;
 
+List rows = new ArrayList();
+
 if (action != null) {
 
     if (offsetQty != null && offsetQty.length() > 0) {
@@ -112,7 +114,6 @@ if (action != null) {
     }
 
     prodsIt = prods.iterator();
-    rows = new ArrayList();
 
     while (prodsIt.hasNext()) {
         oneProd = prodsIt.next();
@@ -141,5 +142,5 @@ if (action != null) {
         rows.add(oneInventory);
     }
 
-    context.put("inventoryByProduct", rows);
 }
+context.put("inventoryByProduct", rows);
