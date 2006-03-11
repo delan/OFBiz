@@ -1981,4 +1981,35 @@ public class InvoiceServices {
         }
         return results;
     }
+
+    public static Map checkPaymentInvoices(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String paymentId = (String) context.get("paymentId");
+        try {
+            GenericValue payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
+            if (payment == null) throw new GenericServiceException("Payment with ID [" + paymentId  + "] not found!");
+
+            List paymentApplications = payment.getRelated("PaymentApplication");
+            if (paymentApplications == null) return ServiceUtil.returnSuccess();
+
+            Iterator iter = paymentApplications.iterator();
+            while (iter.hasNext()) {
+                GenericValue paymentApplication = (GenericValue) iter.next();
+                String invoiceId = paymentApplication.getString("invoiceId");
+                Map serviceResult = dispatcher.runSync("checkInvoicePaymentApplications", UtilMisc.toMap("invoiceId", invoiceId, "userLogin", userLogin));
+                if (ServiceUtil.isError(serviceResult)) return serviceResult;
+            }
+            return ServiceUtil.returnSuccess();
+        } catch (GenericServiceException se) {
+            Debug.logError(se, se.getMessage(), module);
+            return ServiceUtil.returnError(se.getMessage());
+        } catch (GenericEntityException ee) {
+            Debug.logError(ee, ee.getMessage(), module);
+            return ServiceUtil.returnError(ee.getMessage());
+        }
+    }
+
 }
