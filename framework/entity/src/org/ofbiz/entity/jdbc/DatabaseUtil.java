@@ -1012,40 +1012,60 @@ public class DatabaseUtil {
                     if (messages != null) messages.add(message);
                 }
 
+                boolean foundCols = false;
                 ResultSet rsCols = dbData.getColumns(null, lookupSchemaName, null, null);
-                while (rsCols.next()) {
+                if (!rsCols.next()) {
                     try {
-                        ColumnCheckInfo ccInfo = new ColumnCheckInfo();
-
-                        ccInfo.tableName = ColumnCheckInfo.fixupTableName(rsCols.getString("TABLE_NAME"), lookupSchemaName, needsUpperCase);
-                        // ignore the column info if the table name is not in the list we are concerned with
-                        if (!tableNames.contains(ccInfo.tableName)) {
-                            continue;
-                        }
-
-                        ccInfo.columnName = rsCols.getString("COLUMN_NAME");
-                        if (needsUpperCase && ccInfo.columnName != null) {
-                            ccInfo.columnName = ccInfo.columnName.toUpperCase();
-                        }
-                        // NOTE: this may need a toUpperCase in some cases, keep an eye on it
-                        ccInfo.typeName = rsCols.getString("TYPE_NAME");
-                        ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
-                        ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
-                        // NOTE: this may need a toUpperCase in some cases, keep an eye on it
-                        ccInfo.isNullable = rsCols.getString("IS_NULLABLE");
-
-                        Map tableColInfo = (Map) colInfo.get(ccInfo.tableName);
-                        if (tableColInfo == null) {
-                            tableColInfo = FastMap.newInstance();
-                            colInfo.put(ccInfo.tableName, tableColInfo);
-                        }
-                        tableColInfo.put(ccInfo.columnName, ccInfo);
+                        rsCols.close();
                     } catch (SQLException sqle) {
-                        String message = "Error getting column info for column. Error was:" + sqle.toString();
+                        String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
                         Debug.logError(message, module);
                         if (messages != null) messages.add(message);
-                        continue;
                     }
+                    rsCols = dbData.getColumns(null, lookupSchemaName, "%", "%");
+                    if (!rsCols.next()) {
+                        // TODO: now what to do? I guess try one table name at a time...
+                    } else {
+                        foundCols = true;
+                    }
+                } else {
+                    foundCols = true;
+                }
+                if (foundCols) {
+                    do {
+                        try {
+                            ColumnCheckInfo ccInfo = new ColumnCheckInfo();
+
+                            ccInfo.tableName = ColumnCheckInfo.fixupTableName(rsCols.getString("TABLE_NAME"), lookupSchemaName, needsUpperCase);
+                            // ignore the column info if the table name is not in the list we are concerned with
+                            if (!tableNames.contains(ccInfo.tableName)) {
+                                continue;
+                            }
+
+                            ccInfo.columnName = rsCols.getString("COLUMN_NAME");
+                            if (needsUpperCase && ccInfo.columnName != null) {
+                                ccInfo.columnName = ccInfo.columnName.toUpperCase();
+                            }
+                            // NOTE: this may need a toUpperCase in some cases, keep an eye on it
+                            ccInfo.typeName = rsCols.getString("TYPE_NAME");
+                            ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
+                            ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
+                            // NOTE: this may need a toUpperCase in some cases, keep an eye on it
+                            ccInfo.isNullable = rsCols.getString("IS_NULLABLE");
+
+                            Map tableColInfo = (Map) colInfo.get(ccInfo.tableName);
+                            if (tableColInfo == null) {
+                                tableColInfo = FastMap.newInstance();
+                                colInfo.put(ccInfo.tableName, tableColInfo);
+                            }
+                            tableColInfo.put(ccInfo.columnName, ccInfo);
+                        } catch (SQLException sqle) {
+                            String message = "Error getting column info for column. Error was:" + sqle.toString();
+                            Debug.logError(message, module);
+                            if (messages != null) messages.add(message);
+                            continue;
+                        }
+                    } while (rsCols.next());
                 }
 
                 try {
@@ -1057,39 +1077,59 @@ public class DatabaseUtil {
                 }
 
                 if (getPks) {
+                    boolean foundPks = false;
                     ResultSet rsPks = dbData.getPrimaryKeys(null, lookupSchemaName, null);
-                    while (rsPks.next()) {
+                    if (!rsPks.next()) {
                         try {
-                            String tableName = ColumnCheckInfo.fixupTableName(rsPks.getString("TABLE_NAME"), lookupSchemaName, needsUpperCase);
-                            String columnName = rsPks.getString("COLUMN_NAME");
-                            if (needsUpperCase && columnName != null) {
-                                columnName = columnName.toUpperCase();
-                            }
-                            Map tableColInfo = (Map) colInfo.get(tableName);
-                            if (tableColInfo == null) {
-                                // not looking for info on this table
-                                continue;
-                            }
-                            ColumnCheckInfo ccInfo = (ColumnCheckInfo) tableColInfo.get(columnName);
-                            if (ccInfo == null) {
-                                // this isn't good, what to do?
-                                Debug.logWarning("Got primary key information for a column that we didn't get column information for: tableName=[" + tableName + "], columnName=[" + columnName + "]", module);
-                                continue;
-                            }
-
-                            /*
-                            KEY_SEQ short => sequence number within primary key
-                            PK_NAME String => primary key name (may be null)
-                            */
-                            ccInfo.isPk = true;
-                            ccInfo.pkSeq = rsPks.getShort("KEY_SEQ");
-                            ccInfo.pkName = rsPks.getString("PK_NAME");
+                            rsPks.close();
                         } catch (SQLException sqle) {
-                            String message = "Error getting primary key info for column. Error was:" + sqle.toString();
+                            String message = "Unable to close ResultSet for primary key list, continuing anyway... Error was:" + sqle.toString();
                             Debug.logError(message, module);
                             if (messages != null) messages.add(message);
-                            continue;
                         }
+                        rsPks = dbData.getPrimaryKeys(null, lookupSchemaName, "%");
+                        if (!rsPks.next()) {
+                            // TODO: now what to do? I guess try one table name at a time...
+                        } else {
+                            foundPks = true;
+                        }
+                    } else {
+                        foundPks = true;
+                    }
+                    if (foundPks) {
+                        do {
+                            try {
+                                String tableName = ColumnCheckInfo.fixupTableName(rsPks.getString("TABLE_NAME"), lookupSchemaName, needsUpperCase);
+                                String columnName = rsPks.getString("COLUMN_NAME");
+                                if (needsUpperCase && columnName != null) {
+                                    columnName = columnName.toUpperCase();
+                                }
+                                Map tableColInfo = (Map) colInfo.get(tableName);
+                                if (tableColInfo == null) {
+                                    // not looking for info on this table
+                                    continue;
+                                }
+                                ColumnCheckInfo ccInfo = (ColumnCheckInfo) tableColInfo.get(columnName);
+                                if (ccInfo == null) {
+                                    // this isn't good, what to do?
+                                    Debug.logWarning("Got primary key information for a column that we didn't get column information for: tableName=[" + tableName + "], columnName=[" + columnName + "]", module);
+                                    continue;
+                                }
+
+                                /*
+                                KEY_SEQ short => sequence number within primary key
+                                PK_NAME String => primary key name (may be null)
+                                */
+                                ccInfo.isPk = true;
+                                ccInfo.pkSeq = rsPks.getShort("KEY_SEQ");
+                                ccInfo.pkName = rsPks.getString("PK_NAME");
+                            } catch (SQLException sqle) {
+                                String message = "Error getting primary key info for column. Error was:" + sqle.toString();
+                                Debug.logError(message, module);
+                                if (messages != null) messages.add(message);
+                                continue;
+                            }
+                        } while (rsPks.next());
                     }
 
                     try {
