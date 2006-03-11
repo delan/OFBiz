@@ -114,6 +114,7 @@ under the License.
         <field position="2" name="billingAccountId" title="${uiLabelMap.AccountingBillingAccount}"><display/></field>
         <field position="1" name="invoiceDate" title="${uiLabelMap.AccountingInvoiceDate}"><display/></field>
         <field position="2" name="dueDate" title="${uiLabelMap.AccountingDueDate}"><display/></field>
+        <field position="1" name="paidDate" title="${uiLabelMap.AccountingPaidDate}"><display/></field>
         <field position="1" name="invoiceAmount"><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(delegator,invoiceId)}" type="currency" currency="${invoice.currencyUomId}" also-hidden="false"/></field>
         <field position="2" name="currencyUomId" title="${uiLabelMap.CommonCurrencyUom}"><display/></field>
     </form>

@@ -65,6 +65,7 @@ under the License.
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paidDate" type="Timestamp" mode="IN" optional="true"/> <!-- only relevant for changes to PAID -->
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
     
