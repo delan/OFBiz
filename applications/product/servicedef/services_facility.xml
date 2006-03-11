@@ -66,9 +66,9 @@
     <service name="inventoryItemCheckSetDefaultValues" default-entity-name="InventoryItem" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="inventoryItemCheckSetDefaultValues" auth="false">
         <description>Check and, if empty, fills with default values ownerPartyId, currencyUomId, unitCost</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryItem" type="Map" mode="IN" optional="true"/>
     </service>
-
     <service name="createInventoryItemDetail" default-entity-name="InventoryItemDetail" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryItemDetail" auth="true">
         <description>Create an createInventoryItemDetail - note that the quantityOnHand and availableToPromise are relative (positive or negative) and will be added to the corresponding value on the given InventoryItem</description>
