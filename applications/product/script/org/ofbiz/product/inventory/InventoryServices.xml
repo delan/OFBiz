@@ -35,14 +35,16 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="newEntity" entity-name="InventoryItem"/>
+        <make-value value-name="inventoryItem" entity-name="InventoryItem"/>
         <!-- TODO: make sure availableToPromiseTotal and quantityOnHandTotal are not changed -->
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="inventoryItem"/>
 
-        <sequenced-id-to-env sequence-name="InventoryItem" env-name="newEntity.inventoryItemId"/>
-        <field-to-result field-name="newEntity.inventoryItemId" result-name="inventoryItemId"/>
+        <call-simple-method method-name="inventoryItemCheckSetDefaultValues"/>
+        <check-errors/>
 
-        <create-value value-name="newEntity"/>
+        <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItem.inventoryItemId"/>
+        <create-value value-name="inventoryItem"/>
+        <field-to-result field-name="inventoryItem.inventoryItemId" result-name="inventoryItemId"/>
     </simple-method>
     <simple-method method-name="createInventoryItemCheckSetAtpQoh" short-description="createInventoryItemCheckSetAtpQoh" login-required="false">        
         <if>
@@ -62,7 +64,10 @@
         </if>
     </simple-method>
     <simple-method method-name="inventoryItemCheckSetDefaultValues" short-description="Check and, if empty, fills with default values ownerPartyId, currencyUomId, unitCost" login-required="false">
-        <entity-one entity-name="InventoryItem" value-name="inventoryItem"/>
+        <if-empty field-name="inventoryItem">
+            <entity-one entity-name="InventoryItem" value-name="inventoryItem"/>
+            <set field="updateInventoryItem" value="Y"/>
+        </if-empty>
         <!-- if all the inventoryItem's fields are already filled, return with success -->
         <if>
             <condition>
@@ -119,24 +124,27 @@
             <call-service service-name="getProductCost" in-map-name="inputMap">
                 <result-to-field result-name="productCost" field-name="inventoryItem.unitCost"/>
             </call-service>
-            <!-- TODO: getProductCost returns 0 even if no std costs are found -->
-            <!-- if inventoryItem's unitCost is still empty, or negative return an error message -->
-            <!-- if you don't want inventory item with unitCost = 0, change the operator 
-                 attribute from "less" to "less-equals".
-            -->
-            <if-compare field-name="inventoryItem.unitCost" operator="less" value="0" type="Double">
-                <add-error>
-                    <fail-message message="Error: you cannot create inventory items with a negative unitCost."/>
-                </add-error>
-            </if-compare>
-            <if-empty field-name="inventoryItem.unitCost">
-                <add-error>
-                    <fail-message message="Error: you cannot create inventory items with no unitCost."/>
-                </add-error>
-            </if-empty>
-            <check-errors/>
         </if-empty>
-        <store-value value-name="inventoryItem"/>
+        <!-- if inventoryItem's unitCost is still empty, or negative return an error message -->
+        <!-- TODO/WARNING: getProductCost returns 0 even if no std costs are found -->
+        <if-empty field-name="inventoryItem.unitCost">
+            <add-error>
+                <fail-message message="Error: you cannot create inventory items with no unitCost."/>
+            </add-error>
+        </if-empty>
+        <check-errors/>
+        <!-- if you don't want inventory item with unitCost = 0, change the operator 
+             attribute from "less" to "less-equals".
+        -->
+        <if-compare field-name="inventoryItem.unitCost" operator="less" value="0" type="Double">
+            <add-error>
+                <fail-message message="Error: you cannot create inventory items with a negative unitCost."/>
+            </add-error>
+        </if-compare>
+        <check-errors/>
+        <if-not-empty field-name="updateInventoryItem">
+            <store-value value-name="inventoryItem"/>
+        </if-not-empty>
     </simple-method>
 
     <simple-method method-name="updateInventoryItem" short-description="Update an InventoryItem">
