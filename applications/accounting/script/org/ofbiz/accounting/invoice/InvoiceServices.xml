@@ -394,6 +394,18 @@ under the License.
                 <log level="error" message="Cannot change from ${invoice.statusId} to ${parameters.statusId}"/>
                 <check-errors/>
             <else>
+                <!-- if new status is paid check if the complete invoice is applied. -->
+                <if-compare field-name="parameters.statusId" operator="equals" value="INVOICE_PAID">
+                    <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
+                    <if-compare field-name="notApplied" operator="not-equals" value="0.00">
+                        <add-error><fail-message message="Cannot change status to 'paid', invoice ${invoice.invoiceId} has an unapplied balance of [${notApplied}]"/></add-error>
+                        <check-errors/>
+                    </if-compare>
+
+                    <!-- if it's OK to mark invoice paid, use parameter for paidDate -->
+                    <set from-field="parameters.paidDate" field="invoice.paidDate"/>
+                </if-compare>
+
                 <set from-field="parameters.statusId" field="invoice.statusId"/>
                 <store-value value-name="invoice"/>
                 
@@ -411,16 +423,6 @@ under the License.
                     <set field="removePaymentApplicationMap.invoiceId" from-field="parameters.invoiceId"/>
                     <remove-by-and entity-name="PaymentApplication" map-name="removePaymentApplicationMap"/>
                 </if-compare>
-
-                <!-- if new status is paid check if the complete invoice is applied. -->
-                <if-compare field-name="parameters.statusId" operator="equals" value="INVOICE_PAID">
-                    <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
-                    <if-compare field-name="notApplied" operator="not-equals" value="0.00">
-                        <add-error><fail-message message="Cannot change status to 'paid', invoice ${invoice.invoiceId} has an unapplied balance of [${notApplied}]"/></add-error>
-                        <check-errors/>
-                    </if-compare>
-                </if-compare>
-                
             </else>   
             </if-empty>
         </if-compare-field>

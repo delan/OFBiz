@@ -18,6 +18,7 @@
 package org.ofbiz.accounting.invoice;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1100,11 +1101,27 @@ public class InvoiceServices {
         }
 
         Map payments = new HashMap();
+        Timestamp paidDate = null;
         if (paymentAppl != null) {
             Iterator pai = paymentAppl.iterator();
             while (pai.hasNext()) {
                 GenericValue payAppl = (GenericValue) pai.next();
                 payments.put(payAppl.getString("paymentId"), payAppl.getBigDecimal("amountApplied"));
+                
+                // paidDate will be the last date (chronologically) of all the Payments applied to this invoice
+                try {
+                    GenericValue Payment = payAppl.getRelatedOne("Payment");
+                    Timestamp paymentDate = Payment.getTimestamp("effectiveDate");
+                    if (paymentDate != null) {
+                        if ((paidDate == null) || (paidDate.before(paymentDate))) {
+                            paidDate = paymentDate;
+                        }
+                    }    
+                } catch (GenericEntityException ex) {
+                    Debug.logError(ex, "Cannot get payment for application [" + payAppl + "]", module);
+                    return ServiceUtil.returnError("Cannot get payment for application [" + payAppl + "] due to " + ex.getMessage());
+                }
+                
             }
         }
 
@@ -1125,7 +1142,8 @@ public class InvoiceServices {
             }
             if (totalPayments.compareTo(invoiceTotal) >= 0) { // this checks that totalPayments is greater than or equal to invoiceTotal
                 // this invoice is paid
-                Map svcCtx = UtilMisc.toMap("statusId", "INVOICE_PAID", "invoiceId", invoiceId, "userLogin", userLogin);
+                Map svcCtx = UtilMisc.toMap("statusId", "INVOICE_PAID", "invoiceId", invoiceId, 
+                        "paidDate", paidDate, "userLogin", userLogin);
                 try {
                     dispatcher.runSync("setInvoiceStatus", svcCtx);
                 } catch (GenericServiceException e) {
