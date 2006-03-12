@@ -986,6 +986,19 @@
         <response name="success" type="view" value="digitalproductlist"/>
         <response name="error" type="view" value="digitalproductlist"/>
     </request-map>
+
+    <request-map uri="addCustomerDigitalDownloadProductFile">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addCustomerDigitalDownloadProductFile"/>
+        <response name="success" type="view" value="digitalproductedit"/>
+        <response name="error" type="view" value="digitalproductedit"/>
+    </request-map>
+    <request-map uri="removeCustomerDigitalDownloadProductFile">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCustomerDigitalDownloadProductFile"/>
+        <response name="success" type="view" value="digitalproductedit"/>
+        <response name="error" type="view" value="digitalproductedit"/>
+    </request-map>
     
     <!-- ======================= Survey Requests ======================= -->
     
@@ -1089,9 +1102,9 @@
         <response name="error" type="view" value="editaddimage"/>
     </request-map>
     <request-map uri="img">
-        <security auth="false" https="false"/>
-        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveImage" />
-        <response name="success" type="none" />
+        <security auth="true" https="false"/>
+        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveImage"/>
+        <response name="success" type="none"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="uploadArticleAndImage">

@@ -126,6 +126,15 @@
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
     </entity>
+    <view-entity entity-name="ContentAndRole" package-name="org.ofbiz.content.content" title="Content And Role Entity">
+        <member-entity entity-alias="CNT" entity-name="Content"/>
+        <member-entity entity-alias="CRLE" entity-name="ContentRole"/>
+        <alias-all entity-alias="CNT"/>
+        <alias-all entity-alias="CRLE"/>
+        <view-link entity-alias="CNT" rel-entity-alias="CRLE">
+            <key-map field-name="contentId"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="ContentApproval"
         package-name="org.ofbiz.content.content"
         title="Content Approval Entity">
@@ -624,6 +633,7 @@
       <field name="characterSetId" type="id-long"></field>
       <field name="objectInfo" type="long-varchar"></field>
       <field name="relatedDetailId" type="id"><description>Depending on the dataResourceTypeId this can point to other entities, like: Survey, SurveyResponse, etc.</description></field>
+      <field name="isPublic" type="indicator"><description>If this is set to Y then anyone can download it, otherwise the download is restricted.</description></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>

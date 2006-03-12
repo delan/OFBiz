@@ -391,6 +391,19 @@
                     <field-map field-name="productPricePurposeId" value="PURCHASE"/>
                     <field-map field-name="productStoreGroupId" value="_NA_"/>
                 </entity-and>
+                
+                <entity-condition entity-name="ProductContentAndInfo" list-name="productContentAndInfoList" filter-by-date="true">
+                    <condition-list combine="and">
+                        <condition-expr field-name="productId" env-name="parameters.productId"/>
+                        <condition-expr field-name="productContentTypeId" value="DIGITAL_DOWNLOAD"/>
+                    </condition-list>
+                    <order-by field-name="contentId"/>
+                </entity-condition>
+                <entity-and entity-name="ContentAndRole" list-name="ownerContentAndRoleList">
+                    <field-map field-name="partyId" env-name="userLogin.partyId"/>
+                    <field-map field-name="roleTypeId" value="OWNER"/>
+                    <order-by field-name="contentId"/>
+                </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

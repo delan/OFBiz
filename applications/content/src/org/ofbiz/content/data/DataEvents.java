@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.ServletContext;
@@ -40,16 +42,20 @@ public class DataEvents {
     public static final String err_resource = "ContentErrorUiLabel";
 
     public static String uploadImage(HttpServletRequest request, HttpServletResponse response) {
-
         return DataResourceWorker.uploadAndStoreImage(request, "dataResourceId", "imageData");
-
     }
 
     /** Streams ImageDataResource data to the output. */
     public static String serveImage(HttpServletRequest request, HttpServletResponse response) {
-        Debug.log("Img UserAgent - " + request.getHeader("User-Agent"), module);
-        Map parameters = UtilHttp.getParameterMap(request);
+        HttpSession session = request.getSession();
+        ServletContext application = session.getServletContext();
+
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Map parameters = UtilHttp.getParameterMap(request);
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        
+        Debug.log("Img UserAgent - " + request.getHeader("User-Agent"), module);
+
         String dataResourceId = (String) parameters.get("imgId");
         if (UtilValidate.isEmpty(dataResourceId)) {
             String errorMsg = "Error getting image record from db: " + " dataResourceId is empty";
@@ -58,58 +64,23 @@ public class DataEvents {
             return "error";
         }
 
-        Locale locale = UtilHttp.getLocale(request);
-        GenericValue dataResource = null;
         try {
-
-            dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-        } catch (GenericEntityException e) {
-            String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.error_get_image", locale);
-            String errorMsg = "Error getting image record from db: " + e.toString();
-            Debug.logError(e, errorMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
-            return "error";
-        }
-
-        byte[] b = null;
-        String mimeType = DataResourceWorker.getMimeType(dataResource);
-        //if (Debug.infoOn()) Debug.logInfo("in serveImage, imageType:" + imageType, module);
-        String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
-        //if (Debug.infoOn()) Debug.logInfo("in serveImage, dataResourceTypeId:" + dataResourceTypeId, module);
-        if (dataResourceTypeId != null && dataResourceTypeId.equals("IMAGE_OBJECT")) {
-            try {
-                b = DataResourceWorker.acquireImage(delegator, dataResource);
-                if (mimeType == null || b == null || b.length == 0) {
-                    Map messageMap = UtilMisc.toMap("b", b, "imageType", mimeType);
-                    String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.image_or_type_null", messageMap, locale);
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+            if (!"Y".equals(dataResource.getString("isPublic"))) {
+                // make sure the logged in user can download this content; otherwise is a pretty big security hole for DataResource records...
+                // TODO: should we restrict the roleTypeId?
+                List contentAndRoleList = delegator.findByAnd("ContentAndRole", 
+                        UtilMisc.toMap("partyId", userLogin.get("partyId"), "dataResourceId", dataResourceId));
+                if (contentAndRoleList.size() == 0) {
+                    String errorMsg = "You do not have permission to download the Data Resource with ID [" + dataResourceId + "], ie you are not associated with it.";
+                    Debug.logError(errorMsg, module);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMsg);
                     return "error";
-                } else {
-                    try {
-                        if (Debug.infoOn()) Debug.logInfo("in serveImage, byteArray.length:" + b.length, module);
-                        UtilHttp.streamContentToBrowser(response, b, mimeType);
-                        response.flushBuffer();
-                    } catch (IOException e) {
-                        String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.error_write_image", locale);
-                        String errorMsg = "Error writing image to OutputStream: " + e.toString();
-                        Debug.logError(e, errorMsg, module);
-                        request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
-                        return "error";
-                    }
                 }
-            } catch (GenericEntityException e) {
-                String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.error_get_image", locale);
-                String errorMsg = "Error getting image record from acquireImage: " + e.toString();
-                Debug.logError(e, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
-                return "error";
             }
-        } else if (dataResourceTypeId != null && dataResourceTypeId.indexOf("_FILE") >= 0) {
-            String fileName = dataResource.getString("objectInfo");
-            //if (Debug.infoOn()) Debug.logInfo("in serveImage, fileName:" + fileName, module);
-            ServletContext servletContext = request.getSession().getServletContext();
-            String rootDir = servletContext.getRealPath("/");
-            //if (Debug.infoOn()) Debug.logInfo("in serveImage, rootDir:" + rootDir, module);
+            
+            String mimeType = DataResourceWorker.getMimeType(dataResource);
+            //if (Debug.infoOn()) Debug.logInfo("in serveImage, imageType:" + imageType, module);
 
             // hack for IE and mime types
             String userAgent = request.getHeader("User-Agent");
@@ -118,33 +89,28 @@ public class DataEvents {
                 mimeType = "application/octet-stream";
             }
 
-            try {
-                File contentFile = DataResourceWorker.getContentFile(dataResourceTypeId, fileName, rootDir);
-                FileInputStream fis = new FileInputStream(contentFile);
-                int fileSize = (new Long(contentFile.length())).intValue();
-                UtilHttp.streamContentToBrowser(response, fis, fileSize, mimeType);
-            } catch (FileNotFoundException e4) {
-                String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.error_get_image", locale);
-                String errorMsg = "Error getting image record from db: " + e4.toString();
-                Debug.logError(e4, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errMsg + e4.toString());
-                return "error";
-
-            } catch (IOException e2) {
-                String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.error_get_image", locale);
-                String errorMsg = "Error getting image record from db: " + e2.toString();
-                Debug.logError(e2, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errMsg + e2.toString());
-                return "error";
-            } catch (GeneralException e3) {
-                String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.error_get_image", locale);
-                String errorMsg = "Error getting image record from db: " + e3.toString();
-                Debug.logError(e3, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errMsg + e3.toString());
-                return "error";
+            if (mimeType != null) {
+                response.setContentType(mimeType);
             }
+            OutputStream os = response.getOutputStream();
+            DataResourceWorker.streamDataResource(os, delegator, dataResourceId, "", application.getInitParameter("webSiteId"), UtilHttp.getLocale(request), application.getRealPath("/"));
+            os.flush();
+        } catch (GenericEntityException e) {
+            String errMsg = "Error downloading digital product content: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        } catch (GeneralException e) {
+            String errMsg = "Error downloading digital product content: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        } catch (IOException e) {
+            String errMsg = "Error downloading digital product content: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
         }
-
 
         return "success";
     }
@@ -154,7 +120,6 @@ public class DataEvents {
      *  Needed to make permission criteria available to services. 
      */
     public static String persistDataResource(HttpServletRequest request, HttpServletResponse response) {
-
         Map result = null;
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -215,5 +180,4 @@ public class DataEvents {
 
         return returnStr;
     }
-
 }

@@ -760,6 +760,21 @@
         <description></description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
     </service>
+
+    <service name="addCustomerDigitalDownloadProductFile" auth="true" engine="simple"
+        location="org/ofbiz/product/product/CustomerDigitalDownloadServices.xml" invoke="addCustomerDigitalDownloadProductFile">
+        <description></description>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="removeCustomerDigitalDownloadProductFile" auth="true" engine="simple"
+        location="org/ofbiz/product/product/CustomerDigitalDownloadServices.xml" invoke="removeCustomerDigitalDownloadProductFile">
+        <description></description>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productContentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
     
     <!-- Product Configuration Services -->
     <service name="createProductConfig" default-entity-name="ProductConfig" engine="simple"

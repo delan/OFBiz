@@ -193,17 +193,17 @@ public class DataResourceWorker {
      * to be in a field id'd by uploadField.
      */
     public static String uploadAndStoreImage(HttpServletRequest request, String idField, String uploadField) {
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        //GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
-        String idFieldValue = null;
+        //String idFieldValue = null;
         DiskFileUpload fu = new DiskFileUpload();
-        java.util.List lst = null;
+        List lst = null;
         Locale locale = UtilHttp.getLocale(request);
 
         try {
             lst = fu.parseRequest(request);
-        } catch (FileUploadException e4) {
-            request.setAttribute("_ERROR_MESSAGE_", e4.getMessage());
+        } catch (FileUploadException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
             return "error";
         }
 
@@ -236,10 +236,9 @@ public class DataResourceWorker {
                 passedParams.put(fieldName, imageBytes);
                 imageFileName = imageFi.getName();
                 passedParams.put("drObjectInfo", imageFileName);
-        if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]imageData: " + imageBytes.length, module);
+                if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]imageData: " + imageBytes.length, module);
             }
         }
-
 
         if (imageBytes != null && imageBytes.length > 0) {
             String mimeType = getMimeTypeFromImageFileName(imageFileName);

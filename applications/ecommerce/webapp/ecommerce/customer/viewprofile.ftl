@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -415,18 +415,18 @@
           <#if partyContent?has_content>
             <#list partyContent as contentRole>
               <#assign content = contentRole.getRelatedOne("Content")>
-              <#assign contentType = content.getRelatedOne("ContentType")>
-              <#assign mimeType = content.getRelatedOne("MimeType")>
-              <#assign status = content.getRelatedOne("StatusItem")>
+              <#assign contentType = content.getRelatedOneCache("ContentType")>
+              <#assign mimeType = content.getRelatedOneCache("MimeType")>
+              <#assign status = content.getRelatedOneCache("StatusItem")>
               <tr>
-                <td><a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">${content.contentId}</a>
+                <td><a href="<@ofbizUrl>img/${content.contentName}?imgId=${content.dataResourceId}</@ofbizUrl>" class="buttontext">${content.contentId}</a>
                 <td><div class="tabletext">${content.contentName?if_exists}</div></td>
-                <td><div class="tabletext">${contentType.description?if_exists}</div></td>
-                <td><div class="tabletext">${mimeType.description?if_exists}</div></td>
-                <td><div class="tabletext">${status.description?if_exists}</div></td>
+                <td><div class="tabletext">${(contentType.description)?if_exists}</div></td>
+                <td><div class="tabletext">${(mimeType.description)?if_exists}</div></td>
+                <td><div class="tabletext">${(status.description)?if_exists}</div></td>
                 <td><div class="tabletext">${contentRole.fromDate?if_exists}</div></td>
                 <td align="right">
-                  <a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">${uiLabelMap.CommonView}</a>
+                  <a href="<@ofbizUrl>img/${content.contentName}?imgId=${content.dataResourceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
                   <a href="<@ofbizUrl>removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
                 </td>
               </tr>
@@ -442,7 +442,7 @@
             <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
             <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
             <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
-            <input type="file" name="uploadedFile" size="14" class="inputBox"/>
+            <input type="file" name="uploadedFile" size="50" class="inputBox"/>
             <input type="submit" value="Upload" class="smallSubmit"/>
           </form>
         </div>

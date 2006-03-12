@@ -3,7 +3,7 @@
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -36,7 +36,7 @@
   <!-- ========================================================= -->
     <title>Entity of an Open For Business Project Component</title>
     <description>None</description>
-    <copyright>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org</copyright>
+    <copyright>Copyright (c) 2002-2006 The Open For Business Project - www.ofbiz.org</copyright>
     <author>None</author>
     <version>1.0</version>
 
@@ -599,10 +599,21 @@
         <member-entity entity-alias="PC" entity-name="ProductContent"/>
         <member-entity entity-alias="CNT" entity-name="Content"/>
         <member-entity entity-alias="PDCT" entity-name="Product"/>
-        <alias-all entity-alias="OI"/>
+        <alias-all entity-alias="OI">
+            <exclude field="comments"/>
+        </alias-all>
         <alias-all entity-alias="PC"/>
-        <alias-all entity-alias="CNT"/>
-        <alias-all entity-alias="PDCT"/>
+        <alias-all entity-alias="CNT">
+            <exclude field="statusId"/>
+        </alias-all>
+        <alias-all entity-alias="PDCT">
+            <exclude field="description"/>
+            <exclude field="createdDate"/>
+            <exclude field="createdByUserLogin"/>
+            <exclude field="lastModifiedDate"/>
+            <exclude field="lastModifiedByUserLogin"/>
+        </alias-all>
+        <alias entity-alias="CNT" name="contentStatusId" field="statusId"/>
         <view-link entity-alias="OI" rel-entity-alias="PC">
             <key-map field-name="productId"/>
         </view-link>
@@ -850,8 +861,11 @@
         <alias-all entity-alias="ORLE"/>
         <alias-all entity-alias="OI"/>
         <alias-all entity-alias="PC"/>
-        <alias-all entity-alias="CNT"/>
+        <alias-all entity-alias="CNT">
+            <exclude field="statusId"/>
+        </alias-all>
         <alias entity-alias="PDCT" name="productName"/>
+        <alias entity-alias="CNT" name="contentStatusId" field="statusId"/>
         <view-link entity-alias="ORLE" rel-entity-alias="OI">
             <key-map field-name="orderId"/>
         </view-link>
