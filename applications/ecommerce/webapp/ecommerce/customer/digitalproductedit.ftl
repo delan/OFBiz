@@ -68,11 +68,36 @@ under the License.
     </div>
 </div>
 
+<#if supplierProduct?has_content>
 <div class="screenlet">
     <div class="screenlet-header">
         <div class="boxhead">Digital Product Files</div>
     </div>
     <div class="screenlet-body">
+        <#list productContentAndInfoList as productContentAndInfo>
+            <div class="tabletext">
+              ${productContentAndInfo.contentName} (since: ${productContentAndInfo.fromDate})
+              <a href="<@ofbizUrl>removeCustomerDigitalDownloadProductFile?contentId=${productContentAndInfo.contentId}&amp;productContentTypeId=${productContentAndInfo.productContentTypeId}&amp;fromDate=${productContentAndInfo.fromDate}&amp;productId=${parameters.productId}&amp;currencyUomId=${parameters.currencyUomId}&amp;minimumOrderQuantity=${parameters.minimumOrderQuantity}&amp;availableFromDate=${parameters.availableFromDate}</@ofbizUrl>" class="buttontext">Remove</a>
+            </div>
+        </#list>
+    
+        <div><hr class="sepbar"/></div>
+        <div class="tableheadtext">Add From My Files</div>
+        <div>
+        <form method="post" action="<@ofbizUrl>addCustomerDigitalDownloadProductFile</@ofbizUrl>" name="adddigitaluploadfile" style="margin: 0;">
+          <input type="hidden" name="productId" value="${parameters.productId}">
+          <input type="hidden" name="currencyUomId" value="${parameters.currencyUomId}">
+          <input type="hidden" name="minimumOrderQuantity" value="${parameters.minimumOrderQuantity}">
+          <input type="hidden" name="availableFromDate" value="${parameters.availableFromDate}">
+          <select name="contentId" class="selectBox">
+            <#list ownerContentAndRoleList as ownerContentAndRole>
+              <option value="${ownerContentAndRole.contentId}">${ownerContentAndRole.contentName}</option>
+            </#list>
+          </select>
+          <a href="javascript:document.adddigitaluploadfile.submit()" class="buttontext">${uiLabelMap.CommonAdd}</a>
+        </form>
+        </div>
     &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="buttontext">Back to List</a>
     </div>
 </div>
+</#if>

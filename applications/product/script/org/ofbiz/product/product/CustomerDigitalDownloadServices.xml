@@ -71,9 +71,10 @@ under the License.
         <set field="parameters.partyId" from-field="userLogin.partyId"/>
         <entity-one entity-name="SupplierProduct" value-name="supplierProduct"/>
         
-        <if-empty field-name="supplierProductList">
+        <if-empty field-name="supplierProduct">
             <add-error><fail-message message="Cannot update this Product: you are not associated with it as the Supplier"/></add-error>
         </if-empty>
+        <check-errors/>
 
         <!-- update productName/description -->
         <if>
@@ -111,12 +112,13 @@ under the License.
         <!-- make sure SupplierProduct exists for userLogin.partyId -->
         <entity-and entity-name="SupplierProduct" list-name="supplierProductList">
             <field-map field-name="productId" env-name="parameters.productId"/>
-            <field-map field-name="partyId" env-name="userLogin.productId"/>
+            <field-map field-name="partyId" env-name="userLogin.partyId"/>
         </entity-and>
         
         <if-empty field-name="supplierProductList">
             <add-error><fail-message message="Cannot update this Product: you are not associated with it as a Supplier"/></add-error>
         </if-empty>
+        <check-errors/>
         
         <!-- keep the product around, just expire SupplierProduct and ProductCategoryMember records -->
         <iterate entry-name="supplierProduct" list-name="supplierProductList">
@@ -131,5 +133,55 @@ under the License.
             <set field="productCategoryMember.thruDate" from-field="nowTimestamp"/>
             <store-value value-name="productCategoryMember"/>
         </iterate>
+    </simple-method>
+
+    <simple-method method-name="addCustomerDigitalDownloadProductFile" short-description="addCustomerDigitalDownloadProductFile">
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        
+        <!-- make sure SupplierProduct exists for userLogin.partyId -->
+        <entity-and entity-name="SupplierProduct" list-name="supplierProductList">
+            <field-map field-name="productId" env-name="parameters.productId"/>
+            <field-map field-name="partyId" env-name="userLogin.partyId"/>
+        </entity-and>
+        <if-empty field-name="supplierProductList">
+            <add-error><fail-message message="Cannot update this Product: you are not associated with it as a Supplier"/></add-error>
+        </if-empty>
+        
+        <!-- make sure there is a ContentRole for userLogin.partyId and parameters.contentId and roleTypeId=OWNER -->
+        <entity-and entity-name="ContentRole" list-name="contentRoleList">
+            <field-map field-name="partyId" env-name="userLogin.partyId"/>
+            <field-map field-name="contentId" env-name="parameters.contentId"/>
+            <field-map field-name="roleTypeId" value="OWNER"/>
+        </entity-and>
+        <if-empty field-name="contentRoleList">
+            <add-error><fail-message message="Cannot add this Content: you are not associated with it as an Owner"/></add-error>
+        </if-empty>
+        
+        <check-errors/>
+        
+        <make-value value-name="productContent" entity-name="ProductContent"/>
+        <set field="productContent.productId" from-field="parameters.productId"/>
+        <set field="productContent.contentId" from-field="parameters.contentId"/>
+        <set field="productContent.productContentTypeId" value="DIGITAL_DOWNLOAD"/>
+        <set field="productContent.fromDate" from-field="nowTimestamp"/>
+        <create-value value-name="productContent"/>
+    </simple-method>
+    <simple-method method-name="removeCustomerDigitalDownloadProductFile" short-description="removeCustomerDigitalDownloadProductFile">
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        
+        <!-- make sure SupplierProduct exists for userLogin.partyId -->
+        <entity-and entity-name="SupplierProduct" list-name="supplierProductList">
+            <field-map field-name="productId" env-name="parameters.productId"/>
+            <field-map field-name="partyId" env-name="userLogin.partyId"/>
+        </entity-and>
+        
+        <if-empty field-name="supplierProductList">
+            <add-error><fail-message message="Cannot update this Product: you are not associated with it as a Supplier"/></add-error>
+        </if-empty>
+        <check-errors/>
+        
+        <entity-one entity-name="ProductContent" value-name="productContent"/>
+        <set field="productContent.thruDate" from-field="nowTimestamp"/>
+        <store-value value-name="productContent"/>
     </simple-method>
 </simple-methods>
