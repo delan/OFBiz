@@ -56,6 +56,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.minilang.method.entityops.TransactionBegin;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
@@ -67,6 +68,9 @@ import org.ofbiz.base.util.*;
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+
 
 /**
  * mt940 - routines for importing and exporting(later) files in the SWIFT MT940 format.
@@ -127,8 +131,37 @@ public class mt940 {
         Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
         if (loc == null) 
             loc = Locale.getDefault();
-	       
-		
+		// conversion of old file insert year in the reference number because banksequence number start new every year
+        try {
+   	    int count = 0;   
+		GenericValue paymentRecord = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId","anet10025"));
+		if (paymentRecord == null)
+			paymentRecord = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId","anet11128"));
+		String refnum = paymentRecord.getString("paymentRefNum");
+		if (!refnum.substring(21,22).equals("-")) { // check if conversion is done or not
+	   		TransactionUtil.begin();
+			Iterator iPayments = delegator.findListIteratorByCondition("Payment", null,null,null);
+			while ((paymentRecord = (GenericValue) iPayments.next()) != null) {
+				refnum = paymentRecord.getString("paymentRefNum");
+				if (refnum != null && refnum.length() > 20) {
+					String year = paymentRecord.get("effectiveDate").toString().substring(2,4);
+					paymentRecord.put("paymentRefNum", refnum.substring(0,19) + year + "-" + refnum.substring(19));
+					if (debug) Debug.logInfo("Updating refnum old:" + refnum + " new:" + paymentRecord.getString("paymentRefNum"), module);
+					paymentRecord.store();
+					count++;
+					if (count == 100) {
+						TransactionUtil.commit();
+						count = 0;
+						TransactionUtil.begin();
+					}
+				}
+			}
+			TransactionUtil.commit();
+			request.setAttribute("_EVENT_MESSAGE_", "File converted...however re-enter you upload request.....");
+			return "success";
+		}}
+		catch (GenericEntityException e) {	Debug.logError("Conversion problems:" + e.getMessage(), module); return "error"; }
+
 		if (getFile(request).equals("error") || localFile == null || localFile.length() == 0) { // get the content of the uploaded file...
 			request.setAttribute("_ERROR_MESSAGE_", "Uploaded file not found or an empty file......");
 			return "error";
@@ -198,17 +231,17 @@ public class mt940 {
 			payment.put("statusId","PMNT_NOT_PAID");  // it is always loaded with this status....needs tobe changed to send/received....	
 			payment.put("paymentMethodTypeId","EFT_ACCOUNT");
 			// check if the payment was already uploaded.....
-			if (debug) Debug.logInfo("Creating payment with reference number: " + payment.get("paymentRefNum"),module);
 			if (!partyOnly)	{	// input parameter.....
 				// finally create payment record.
 				payment.put("userLogin",userLogin);
 				payment.put("locale", loc);
 				try {
-					dispatcher.runSync("createPayment", payment);
+					results = dispatcher.runSync("createPayment", payment);
 				} catch (GenericServiceException e1) {
 					Debug.logError(e1, "Error creating payment", module);
 					continue;
 				}
+				if (debug) Debug.logInfo("Payment [" + results.get("paymentId") + "] created with reference number: " + payment.get("paymentRefNum"),module);
 				paymentsCreated++;
 			}
 		}
@@ -229,11 +262,8 @@ public class mt940 {
 		if (payments == null || payments.size() == 0)	
 			return false;
 		else	{
-/*			try {
-				((GenericValue) payments.get(0)).remove();
-			} catch (GenericEntityException e1) {
-				Debug.logError(e1, "Error deleting payment record", module);
-			} */
+			GenericValue paym = (GenericValue) payments.get(0);
+			if (debug) Debug.logInfo("Payment [" + paym.getString("paymentId") + "] with reference number: " + payment.get("paymentRefNum") + " already exists",module);
 			return true;
 		}
 	}
@@ -244,63 +274,6 @@ public class mt940 {
 	 * @return "error" when not ok...
 	 */
 	private static String createParty()	{
-/*		
-		try {
-			results = dispatcher.runSync("createPartyGroup",partyGroup); 
-		} catch (GenericServiceException e1) {
-			Debug.logError(e1, "Error creating party group", module);
-		}
-		partyGroup.put("partyId",results.get("partyId"));
-		
-		// create bank account
-		eftAccount.put("partyId",partyGroup.get("partyId"));
-		eftAccount.put("bankName","");
-		eftAccount.put("routingNumber","");
-		eftAccount.put("accountType","");
-		eftAccount.put("nameOnAccount", partyGroup.get("groupName"));
-		eftAccount.put("userLogin",userLogin);
-		
-		try { 
-			results = dispatcher.runSync("createEftAccount",eftAccount); 
-		} catch (GenericServiceException e1) {
-			Debug.logError(e1, "Error creating eft accountp", module);
-		}
-
-		String roletype = null;
-		String partyRelationshipTypeId = null;
-		
-		if (debet == false)	{	// customer
-			roletype = "CUSTOMER";
-			partyRelationshipTypeId = "CUSTOMER_REL";
-		}
-		else	{	// vendor
-			roletype = "VENDOR";
-			partyRelationshipTypeId = "SUPPLIER_REL";
-		}
-
-		// create role
-		try { 
-			results = dispatcher.runSync("createPartyRole", 
-					UtilMisc.toMap("partyId", (String) partyGroup.get("partyId"), 
-							"roleTypeId", roletype , 
-							"userLogin", userLogin)); 
-		} catch (GenericServiceException e1) {
-			Debug.logError(e1, "Error creating party role", module);
-		}
-		
-		// create relations ship
-		try {
-			dispatcher.runSync("createPartyRelationship", 
-					UtilMisc.toMap(	
-							"userLogin", userLogin,
-							"partyRelationshipTypeId", partyRelationshipTypeId,
-							"partyIdTo", partyGroup.get("partyId"),
-							"comments", "Created by bank statement upload"
-					));
-		} catch (GenericServiceException e1) {
-			Debug.logError(e1, "Error creating party relationship", module);
-		}
-*/
 		// create party
 		partyInfo.put("userLogin", userLogin);
 		partyInfo.put("partyRelationshipTypeId", "SUPPLIER_REL");
@@ -308,19 +281,6 @@ public class mt940 {
 			results = dispatcher.runSync("otsAddParty", partyInfo);
 			partyInfo.put("partyId",results.get("partyId"));
 
-/*					UtilMisc.toMap(	
-							"userLogin", userLogin,
-							"partyRelationshipTypeId", partyRelationshipTypeId,
-							"groupName", partyGroup.get("partyId"),
-							"address1",
-							"address2",
-							"city",
-							"postalCode",
-							"countryGeoId",
-							"emailAddress",
-							"telephone",
-							"fax",
-							"accountNumber" */
 		} catch (GenericServiceException e1) {
 			Debug.logError(e1, "Error creating party relationship", module);
 		}
@@ -529,7 +489,7 @@ public class mt940 {
 					defaultCurrency = curr;
 					break;
 				case 61:  //content of the transaction
-					payment.put("paymentRefNum", routingNr.concat("-").concat(accountNr).concat("-").concat(bankSeqNr).concat("-").concat(String.valueOf(seqNr++))); //create payment number
+					payment.put("paymentRefNum", routingNr.concat("-").concat(accountNr).concat("-").concat(tagData.substring(0,2)).concat("-").concat(bankSeqNr).concat("-").concat(String.valueOf(seqNr++))); //create payment number
 					if (debug) Debug.logInfo("Line: " + lineNumber + "  Payment reference: " + payment.get("paymentRefNum"), module);
 					payment.put("effectiveDate",UtilDateTime.toTimestamp(tagData.substring(2,4),tagData.substring(4,6), "20" + tagData.substring(0,2), "00","00","00"));
 					if (tagData.charAt(10) == 'D')	debet = true; else debet = false;

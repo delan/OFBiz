@@ -50,7 +50,9 @@
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
         <set field="createPartyGroup.groupName" from-field="parameters.groupName"/>
+        <loop count="100">
         <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Party" env-name="nextPartyId"/>
+        </loop>
         <set field="createPartyGroup.partyId" value="${partyAcctgPreference.invoiceIdPrefix}${nextPartyId}"/>        
         <call-service service-name="createPartyGroup" in-map-name="createPartyGroup">
             <result-to-field result-name="partyId" field-name="partyId"/>
