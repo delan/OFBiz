@@ -271,7 +271,7 @@ if (payments != null && payments.size() > 0) {
 	while (pm.hasNext())	{
 		payment = pm.next();
 		payment = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId",payment.getString("paymentId")));
-		notApplied = PaymentWorker.getPaymentAppliedBd(payment).subtract(payment.getBigDecimal("amount")).setScale(2,BigDecimal.ROUND_HALF_UP);
+		notApplied = payment.getBigDecimal("amount").subtract(PaymentWorker.getPaymentAppliedBd(payment)).setScale(2,BigDecimal.ROUND_HALF_UP);
 		// check if payment completely applied
 		Debug.logInfo(" payment: " + payment.getString("paymentId") + " amount:" + payment.getBigDecimal("amount") + " applied:" + PaymentWorker.getPaymentAppliedBd(payment),"??");  
 		if (notApplied.compareTo(new BigDecimal("0.00")) == 0) 
