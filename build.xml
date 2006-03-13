@@ -123,6 +123,9 @@
             <filelist dir="." files="base/build.xml"/>
             <filelist refid="framework-builds"/>
             <filelist refid="application-builds"/>
+            <fileset dir="${basedir}/hot-deploy" casesensitive="no">
+                <include name="**/build.xml"/>
+            </fileset>
         </subant>
         <delete file="ofbiz.jar"/>
         <echo message="[clean] ========== Done Cleaning =========="/>
@@ -148,6 +151,9 @@
         <subant inheritall="false">
             <filelist refid="framework-builds"/>
             <filelist refid="application-builds"/>
+            <fileset dir="${basedir}/hot-deploy" casesensitive="no">
+                <include name="**/build.xml"/>
+            </fileset>
         </subant>
 
         <echo message="[build] ========== Done Building (Compile) =========="/>
@@ -164,6 +170,9 @@
             <filelist dir="." files="base/build.xml"/>
             <filelist refid="framework-builds"/>
             <filelist refid="application-builds"/>
+            <fileset dir="${basedir}/hot-deploy" casesensitive="no">
+                <include name="**/build.xml"/>
+            </fileset>
         </subant>
 
         <echo message="[docs] ========== Done Building (JavaDocs) =========="/>
