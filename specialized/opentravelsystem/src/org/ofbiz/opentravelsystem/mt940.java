@@ -131,37 +131,50 @@ public class mt940 {
         Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
         if (loc == null) 
             loc = Locale.getDefault();
-		// conversion of old file insert year in the reference number because banksequence number start new every year
+        
+/*        
         try {
-   	    int count = 0;   
-		GenericValue paymentRecord = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId","anet10025"));
-		if (paymentRecord == null)
-			paymentRecord = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId","anet11128"));
-		String refnum = paymentRecord.getString("paymentRefNum");
-		if (!refnum.substring(21,22).equals("-")) { // check if conversion is done or not
-	   		TransactionUtil.begin();
-			Iterator iPayments = delegator.findListIteratorByCondition("Payment", null,null,null);
-			while ((paymentRecord = (GenericValue) iPayments.next()) != null) {
-				refnum = paymentRecord.getString("paymentRefNum");
-				if (refnum != null && refnum.length() > 20) {
-					String year = paymentRecord.get("effectiveDate").toString().substring(2,4);
-					paymentRecord.put("paymentRefNum", refnum.substring(0,19) + year + "-" + refnum.substring(19));
-					if (debug) Debug.logInfo("Updating refnum old:" + refnum + " new:" + paymentRecord.getString("paymentRefNum"), module);
-					paymentRecord.store();
-					count++;
-					if (count == 100) {
-						TransactionUtil.commit();
-						count = 0;
-						TransactionUtil.begin();
-					}
-				}
-			}
-			TransactionUtil.commit();
-			request.setAttribute("_EVENT_MESSAGE_", "File converted...however re-enter you upload request.....");
-			return "success";
-		}}
-		catch (GenericEntityException e) {	Debug.logError("Conversion problems:" + e.getMessage(), module); return "error"; }
-
+        	// correct errors
+        	GenericValue paymCor = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId","anet10004"));
+        	paymCor.put("partyIdTo","Sidin");
+        	paymCor.store();
+        	
+        	paymCor = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId","anet10055"));
+        	paymCor.put("partyIdTo","anet10082");
+        	paymCor.store();
+        	
+        	
+        	// conversion of old file insert year in the reference number because banksequence number start new every year
+        	int count = 0;   
+        	GenericValue paymentRecord = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId","anet10025"));
+        	if (paymentRecord == null)
+        		paymentRecord = delegator.findByPrimaryKey("Payment",UtilMisc.toMap("paymentId","anet11128"));
+        	String refnum = paymentRecord.getString("paymentRefNum");
+        	if (!refnum.substring(21,22).equals("-")) { // check if conversion is done or not
+        		TransactionUtil.begin();
+        		Iterator iPayments = delegator.findListIteratorByCondition("Payment", null,null,null);
+        		while ((paymentRecord = (GenericValue) iPayments.next()) != null) {
+        			refnum = paymentRecord.getString("paymentRefNum");
+        			if (refnum != null && refnum.length() > 20) {
+        				String year = paymentRecord.get("effectiveDate").toString().substring(2,4);
+        				paymentRecord.put("paymentRefNum", refnum.substring(0,19) + year + "-" + refnum.substring(19));
+        				if (debug) Debug.logInfo("Updating refnum old:" + refnum + " new:" + paymentRecord.getString("paymentRefNum"), module);
+        				paymentRecord.store();
+        				count++;
+        				if (count == 100) {
+        					TransactionUtil.commit();
+        					count = 0;
+        					TransactionUtil.begin();
+        				}
+        			}
+        		}
+        		TransactionUtil.commit();
+        		request.setAttribute("_EVENT_MESSAGE_", "File converted...however re-enter you upload request.....");
+        		return "success";
+        	} 
+        }
+        catch (GenericEntityException e) {	Debug.logError("Conversion problems:" + e.getMessage(), module); return "error"; }
+*/        
 		if (getFile(request).equals("error") || localFile == null || localFile.length() == 0) { // get the content of the uploaded file...
 			request.setAttribute("_ERROR_MESSAGE_", "Uploaded file not found or an empty file......");
 			return "error";
