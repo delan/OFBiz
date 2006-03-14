@@ -225,7 +225,7 @@ public class KeyStoreUtil {
         byte[] certBuf = cert.getEncoded();
         StringBuffer buf = new StringBuffer();
         buf.append("-----BEGIN CERTIFICATE-----\n");
-        buf.append(new sun.misc.BASE64Encoder().encode(certBuf));
+        buf.append(Base64.base64Encode(certBuf));
         buf.append("\n-----END CERTIFICATE-----\n");
         return buf.toString();
     }
