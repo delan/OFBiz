@@ -42,7 +42,7 @@
         <section>
             <actions>
                 <set field="title" value="Order Task List"/>
-                <set field="headerItem" value="orderlist"/>
+                <set field="headerItem" value="tasklist"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/task/ordertasklist.bsh"/>
             </actions>
             <widgets>
