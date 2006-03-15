@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -32,7 +32,7 @@
     <!-- ========================================================= -->
     <title>Entity of an Open For Business Project Component</title>
     <description>None</description>
-    <copyright>Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org</copyright>
+    <copyright>Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org</copyright>
     <author>None</author>
     <version>1.0</version>
 
@@ -1950,23 +1950,6 @@
         <key-map field-name="useTimeUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
-    <view-entity entity-name="ProductInventoryItem"
-            package-name="org.ofbiz.product.product"
-            title="View entity joining Product and InventoryItem to allow queries for InventoryItem based on product attributes">
-      <member-entity entity-alias="PR" entity-name="Product"/>
-      <member-entity entity-alias="II" entity-name="InventoryItem"/>
-      <alias-all entity-alias="PR">
-        <exclude field="facilityId"/>
-      </alias-all>
-      <alias-all entity-alias="II">
-        <exclude field="comments"/>
-      </alias-all>
-      <alias entity-alias="PR" name="productFacilityId" field="facilityId"/>
-      <alias entity-alias="II" name="inventoryComments" field="comments"/>
-      <view-link entity-alias="PR" rel-entity-alias="II">
-         <key-map field-name="productId"/>
-      </view-link>
-    </view-entity>
     <view-entity entity-name="ProductContentAndInfo"
             package-name="org.ofbiz.product.product"
             title="ProductContent, Content and DataResource View Entity">
@@ -2035,6 +2018,23 @@
       <field name="description" type="description"></field>
       <prim-key field="productGlAccountTypeId"/>
     </entity>
+    <view-entity entity-name="ProductInventoryItem"
+        package-name="org.ofbiz.product.product"
+        title="View entity joining Product and InventoryItem to allow queries for InventoryItem based on product attributes">
+        <member-entity entity-alias="PR" entity-name="Product"/>
+        <member-entity entity-alias="II" entity-name="InventoryItem"/>
+        <alias-all entity-alias="PR">
+            <exclude field="facilityId"/>
+        </alias-all>
+        <alias-all entity-alias="II">
+            <exclude field="comments"/>
+        </alias-all>
+        <alias entity-alias="PR" name="productFacilityId" field="facilityId"/>
+        <alias entity-alias="II" name="inventoryComments" field="comments"/>
+        <view-link entity-alias="PR" rel-entity-alias="II">
+            <key-map field-name="productId"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="ProductKeyword"
             package-name="org.ofbiz.product.product"
             never-cache="true"
@@ -2068,6 +2068,32 @@
       <relation type="one-nofk" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
+    </entity>
+    <entity entity-name="ProductMeter" package-name="org.ofbiz.product.product" title="Product Meter Entity">
+        <field name="productId" type="id-ne"></field>
+        <field name="productMeterTypeId" type="id-ne"><description>Part of the primary key as different meters on a machine should have distinct types</description></field>
+        <field name="meterUomId" type="id"><description>Is on this entity instead of the ProductMeterType entity for more flexibility; for example being able to find all speedometers regardless of their primary unit</description></field>
+        <field name="meterName" type="name"></field>
+        <prim-key field="productId"/>
+        <prim-key field="productMeterTypeId"/>
+        <relation type="one" fk-name="PRODMTR_PROD" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
+        <relation type="one" fk-name="PRODMTR_MTRTYP" rel-entity-name="ProductMeterType">
+            <key-map field-name="productMeterTypeId"/>
+        </relation>
+        <relation type="one" fk-name="PRODMTR_MTRUOM" title="Meter" rel-entity-name="Uom">
+            <key-map field-name="meterUomId" rel-field-name="uomId"/>
+        </relation>
+    </entity>
+    <entity entity-name="ProductMeterType" package-name="org.ofbiz.product.product" title="Product Meter Type Entity">
+        <field name="productMeterTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <field name="defaultUomId" type="id"><description>This is optional and if applicable can describe the meter better</description></field>
+        <prim-key field="productMeterTypeId"/>
+        <relation type="one" fk-name="PRODMTRTP_DUOM" title="Default" rel-entity-name="Uom">
+            <key-map field-name="defaultUomId" rel-field-name="uomId"/>
+        </relation>
     </entity>
     <entity entity-name="ProductReview"
             package-name="org.ofbiz.product.product"

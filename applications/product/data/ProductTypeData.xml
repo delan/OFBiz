@@ -214,6 +214,13 @@
     <ProductGlAccountType description="Cost of Goods Sold" productGlAccountTypeId="COGS"/>
     <ProductGlAccountType description="Inventory" productGlAccountTypeId="INVENTORY"/>
 
+    <ProductMeterType description="Speedometer" productMeterTypeId="SPEEDOMETER"/>
+    <ProductMeterType description="Tachometer" productMeterTypeId="TACHOMETER"/>
+    <ProductMeterType description="Distance Meter" productMeterTypeId="DISTANCE"/>
+    <ProductMeterType description="Motor Time Meter" productMeterTypeId="MOTOR_TIME"/>
+    <ProductMeterType description="Use Count Meter" productMeterTypeId="USE_COUNT"/>
+    <ProductMeterType description="Copy Count Meter" productMeterTypeId="COPY_COUNT"/>
+    
     <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
 
     <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
