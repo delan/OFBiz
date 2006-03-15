@@ -356,6 +356,7 @@
       <field name="dateNextService" type="date-time"></field>
       <field name="productionCapacity" type="floating-point"></field>
       <field name="calendarId" type="id-ne"></field>
+      <field name="serialNumber" type="long-varchar"></field>
       <prim-key field="fixedAssetId"/>
       <relation type="one" fk-name="FIXEDAST_TYPE" rel-entity-name="FixedAssetType">
         <key-map field-name="fixedAssetTypeId"/>

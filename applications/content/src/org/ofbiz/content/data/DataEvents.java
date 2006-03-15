@@ -1,14 +1,12 @@
 package org.ofbiz.content.data;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +50,6 @@ public class DataEvents {
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Map parameters = UtilHttp.getParameterMap(request);
-        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         
         Debug.log("Img UserAgent - " + request.getHeader("User-Agent"), module);
 
@@ -67,6 +64,15 @@ public class DataEvents {
         try {
             GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
             if (!"Y".equals(dataResource.getString("isPublic"))) {
+                // now require login...
+                GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+                if (userLogin == null) {
+                    String errorMsg = "You must be logged in to download the Data Resource with ID [" + dataResourceId + "]";
+                    Debug.logError(errorMsg, module);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                    return "error";
+                }
+                
                 // make sure the logged in user can download this content; otherwise is a pretty big security hole for DataResource records...
                 // TODO: should we restrict the roleTypeId?
                 List contentAndRoleList = delegator.findByAnd("ContentAndRole", 

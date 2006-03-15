@@ -1102,7 +1102,7 @@
         <response name="error" type="view" value="editaddimage"/>
     </request-map>
     <request-map uri="img">
-        <security auth="true" https="false"/>
+        <security auth="false" https="false"/>
         <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveImage"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="main"/>
