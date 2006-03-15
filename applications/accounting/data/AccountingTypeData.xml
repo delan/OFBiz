@@ -63,6 +63,14 @@
     <FixedAssetType description="Vehicle" fixedAssetTypeId="VEHICLE" hasTable="N" parentTypeId=""/>
     <FixedAssetType description="Real Estate" fixedAssetTypeId="REAL_ESTATE" hasTable="N" parentTypeId=""/>
 
+    <FixedAssetIdentType description="Mfg Serial Number" fixedAssetIdentTypeId="MFG_SERIAL"/>
+    <FixedAssetIdentType description="Vendor Tracking/Inventory Number" fixedAssetIdentTypeId="TRACKING_VENDOR"/>
+    <FixedAssetIdentType description="Internal Tracking Label Number" fixedAssetIdentTypeId="TRACKING_LABEL"/>
+    <FixedAssetIdentType description="Vehicle Identification Number (VIN)" fixedAssetIdentTypeId="VIN"/>
+    <FixedAssetIdentType description="Gas Card Number 1" fixedAssetIdentTypeId="GAS_CARD1"/>
+    <FixedAssetIdentType description="Gas Card Number 2" fixedAssetIdentTypeId="GAS_CARD2"/>
+    <FixedAssetIdentType description="Gas Card Number 3" fixedAssetIdentTypeId="GAS_CARD3"/>
+    
     <FixedAssetProductType description="Use of Asset" fixedAssetProductTypeId="FAPT_USE"/>
     <FixedAssetProductType description="Sale of Asset" fixedAssetProductTypeId="FAPT_SALE"/>
 
