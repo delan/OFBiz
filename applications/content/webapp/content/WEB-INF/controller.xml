@@ -928,14 +928,14 @@
     <request-map uri="createContentApproval">
         <security auth="true" https="true"/>
         <event invoke="createContentApproval" path="" type="service"/>
-        <response name="success" type="view" value="EditContentApproval"/>
-        <response name="error" type="view" value="EditContentApproval"/>
+        <response name="success" type="view" value="ListContentApproval"/>
+        <response name="error" type="view" value="ListContentApproval"/>
     </request-map>
     <request-map uri="updateContentApproval">
         <security auth="true" https="true"/>
         <event invoke="updateContentApproval" path="" type="service"/>
-        <response name="success" type="view" value="EditContentApproval"/>
-        <response name="error" type="view" value="EditContentApproval"/>
+        <response name="success" type="view" value="ListContentApproval"/>
+        <response name="error" type="view" value="ListContentApproval"/>
     </request-map>
     <request-map uri="updateContentApprovalStatus">
         <security auth="true" https="true"/>
@@ -952,8 +952,8 @@
     <request-map uri="removeContentApproval">
         <security auth="true" https="true"/>
         <event invoke="removeContentApproval" path="" type="service"/>
-        <response name="success" type="view" value="EditContentApproval"/>
-        <response name="error" type="view" value="EditContentApproval"/>
+        <response name="success" type="view" value="ListContentApproval"/>
+        <response name="error" type="view" value="ListContentApproval"/>
     </request-map>
 
     <request-map uri="prepForApproval">
