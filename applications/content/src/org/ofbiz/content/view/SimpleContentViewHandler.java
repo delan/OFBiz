@@ -96,7 +96,7 @@ public class SimpleContentViewHandler implements ViewHandler {
         }
     	try {
             Debug.logInfo("SCVH(0a)- dataResourceId:" + dataResourceId, module);
-GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+            GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
             if (UtilValidate.isEmpty(dataResourceId)) {
                 if (UtilValidate.isEmpty(contentRevisionSeqId)) {
                    GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));

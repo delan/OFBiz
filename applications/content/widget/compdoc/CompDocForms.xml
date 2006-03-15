@@ -94,6 +94,8 @@ under the License.
         <alt-target target="createContentRevision" use-when="contentRevision==null"/>
         <auto-fields-entity entity-name="ContentRevision"/>
         
+        <field name="rootContentId" map-name="empty" widget-style="buttontext"><hidden/></field>
+        <field name="rootContentRevisionSeqId"  map-name="empty" title="" widget-style="buttontext"><hidden/></field>
         <field name="contentId" title="" widget-style="buttontext"><lookup target-form-name="LookupContent"/></field>
         <field name="contentRevisionSeqId" title="" widget-style="inputBox"><text/></field>
 <!--         <field name="contentRevisionSeqId">
@@ -139,6 +141,8 @@ under the License.
         <alt-target target="createContentRevisionItem" use-when="contentRevisionItem==null"/>
         <auto-fields-entity entity-name="ContentRevisionItem"/>
         
+        <field name="rootContentId" map-name="empty" widget-style="buttontext"><hidden/></field>
+        <field name="rootContentRevisionSeqId"  map-name="empty" title="" widget-style="buttontext"><hidden/></field>
         <field name="contentId" title="" widget-style="buttontext"><lookup target-form-name="LookupContent"/></field>
         <field name="contentRevisionSeqId" title="" widget-style="inputBox"><text/></field>
         <field name="itemContentId" title="" widget-style="inputBox"><text/></field>
@@ -158,10 +162,10 @@ under the License.
         <field name="oldDataResourceId"><display/></field>
         <field name="newDataResourceId"><display/></field>
         <field name="editLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
         <field name="create" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}"/>
+            <hyperlink also-hidden="false" description="[Create]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
     </form>
 
@@ -221,12 +225,12 @@ under the License.
     </form>
 
     <form name="ListContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext"
-                target="updateContentApprovalStatus"   
+                target="updateContentApproval"   
                list-name="contentApprovalList" default-widget-style="tabletext" title="" type="list">
         <field name="contentApprovalId" widget-style="tabletext"><display/></field>
         <field name="contentId"><hidden/></field>
         <field name="rootContentId" map-name="empty"><hidden/></field>
-        <field name="contentRevisionSeqId"><display/></field>
+        <field name="contentRevisionSeqId"><hidden/></field>
         <field name="partyId" title="" widget-style="inputBox">
             <lookup target-form-name="LookupPartyName"/>
         </field>
@@ -238,17 +242,20 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="approvalStatusId" use-when="contentTypeId.equals(&quot;COMPDOC_INSTANCE&quot;)">
+        <field name="approvalStatusId" use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)">
             <drop-down allow-empty="true">
 				<option key="SOFT_REJ" description="Soft Rejected"/>
 				<option key="REJECTED" description="Rejected"/>
 				<option key="APPROVED" description="Approved"/>
             </drop-down>
         </field>
-        <field name="approvalDate" title="" widget-style="inputBox"><date-time/></field>
-        <field name="sequenceNum" title="" widget-style="inputBox"><text/></field>
+        <field name="approvalDate" title="" widget-style="inputBox"   use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><date-time/></field>
+        <field name="sequenceNum" title="" widget-style="inputBox"  use-when="&quot;COMPDOC_TEMPLATE&quot;.equals(contentTypeId)"><text/></field>
         <field name="comments" title="" widget-style="inputBox"><textarea cols="30" rows="3"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"  use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)"><submit/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit/></field>
+        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit">
+			<hyperlink target="removeContentApproval?contentApprovalId=${contentApprovalId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}" description="${uiLabelMap.CommonDelete}"></hyperlink>
+		</field>
     </form>
 
     <form name="ListWaitingContentApproval" default-title-style="tableheadtext" default-tooltip-style="tabletext"
@@ -481,7 +488,7 @@ under the License.
         <field name="contentApprovalId"><display/></field>
 
         <field name="editLink" title=" " widget-style="buttontext" use-when="approvalCount &gt; 0">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}"/>
+            <hyperlink also-hidden="false" description="[Edit]" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
         <field name="create" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Create]" target="EditContentRevisionItem"/>

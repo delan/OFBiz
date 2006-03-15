@@ -31,8 +31,6 @@ under the License.
                	<set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}"  field="contentRevisionSeqId" />
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
-                <set field="menuName" value="tree"/>
-                <set field="currentMenuItemName" value="approval"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
                 <set from-field="content.contentTypeId" field="contentTypeId" />
                 <service service-name="getApprovalsWithPermissions" result-map-name="result">
@@ -42,7 +40,7 @@ under the License.
                 </service>
                 
                 <set field="contentApprovalList" from-field="result.contentApprovalList" />
-                <set field="title" value="Content Approvals for ${contentId}"/>
+                <set field="title" value="Content Approvals for ${contentId}, rev. ${contentRevisionSeqId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -144,7 +142,6 @@ under the License.
                 <set from-field="content.contentTypeId" field="contentTypeId" />
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                <set field="title" value="Revision List Page"/>
                 
 
                 <entity-one entity-name="Content" value-name="content" use-cache="true">
@@ -154,6 +151,8 @@ under the License.
                  <entity-and entity-name="ContentRevision" list-name="contentRevisionList" use-cache="true">
                     <field-map env-name="contentId" field-name="contentId" />
                 </entity-and>
+
+				<set field="title" value="Revision List Page for Content: ${rootContentId} rev. ${rootContentRevisionSeqId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -179,7 +178,7 @@ under the License.
                 <set from-field="content.contentTypeId" field="contentTypeId" />
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                <set field="title" value="Content Revision Edit Page"/>
+				<set field="title" value="Revision List Page for Content: ${rootContentId} rev. ${rootContentRevisionSeqId}"/>
                 
                 <entity-one entity-name="ContentRevision" value-name="contentRevision" use-cache="true">
                 </entity-one>
@@ -208,12 +207,12 @@ under the License.
                 <set from-field="content.contentTypeId" field="contentTypeId" />
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                <set field="title" value="Content Revision List Page"/>
-                
-            <entity-and entity-name="ContentRevisionItem" list-name="contentRevisionItemList" use-cache="true">
-                <field-map field-name="contentId" env-name="parameters.contentId"/>
-                <field-map field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId"/>
-            </entity-and>
+				<set field="title" value="Revision Item List Page for Content: ${rootContentId} rev. ${rootContentRevisionSeqId}"/>
+	                
+	            <entity-and entity-name="ContentRevisionItem" list-name="contentRevisionItemList" use-cache="true">
+	                <field-map field-name="contentId" env-name="parameters.contentId"/>
+	                <field-map field-name="contentRevisionSeqId" env-name="parameters.contentRevisionSeqId"/>
+	            </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -233,13 +232,13 @@ under the License.
             <actions>
                	<set from-field="parameters.rootContentId"  field="rootContentId" />
                	<set from-field="parameters.rootContentRevisionSeqId"  field="rootContentRevisionSeqId" />
-               	<set from-field="rootContentId"  field="contentId" />
-               	<set from-field="rootContentRevisionSeqId"  field="contentRevisionSeqId" />
+               	<set from-field="parameters.contentId" default-value="${rootContentId}"  field="contentId" />
+               	<set from-field="parameters.contentRevisionSeqId" default-value="${rootContentRevisionSeqId}"  field="contentRevisionSeqId" />
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
                 <set from-field="content.contentTypeId" field="contentTypeId" />
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                <set field="title" value="Content Revision Item Edit Page"/>
+                <set field="title" value="Content Revision Item Edit Page for Content: ${contentId} rev. ${contentRevisionSeqId}"/>
                 
                 <entity-one entity-name="ContentRevisionItem" value-name="contentRevisionItem" use-cache="true"/>
             </actions>
