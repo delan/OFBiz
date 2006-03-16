@@ -347,6 +347,7 @@
       <field name="fixedAssetTypeId" type="id"></field>
       <field name="parentFixedAssetId" type="id-ne"></field>
       <field name="instanceOfProductId" type="id"></field>
+      <field name="classEnumId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="uomId" type="id"></field>
@@ -369,6 +370,9 @@
       </relation>
       <relation type="one" fk-name="FIXEDAST_IOPROD" title="InstanceOf" rel-entity-name="Product">
         <key-map field-name="instanceOfProductId" rel-field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="FIXEDAST_CLSENM" title="Class" rel-entity-name="Enumeration">
+        <key-map field-name="classEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="FIXEDAST_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
