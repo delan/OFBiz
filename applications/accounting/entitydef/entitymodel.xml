@@ -444,6 +444,58 @@
         <field name="description" type="description"></field>
         <prim-key field="fixedAssetIdentTypeId"/>
     </entity>
+    <entity entity-name="FixedAssetMaint"
+        package-name="org.ofbiz.accounting.fixedasset"
+        title="Fixed Asset Maintenance Entity">
+        <field name="fixedAssetId" type="id-ne"></field>
+        <field name="maintHistSeqId" type="id-ne"></field>
+        <field name="statusId" type="id"></field>
+        <field name="productMaintTypeId" type="id-ne"><description>If productMaintSeqId is known can lookup using that and the FixedAsset.productId; for un-scheduled maintenance is filled in directly</description></field>
+        <field name="productMaintSeqId" type="id"><description>Optional, though should be filled in to determine upcoming maintenance for all scheduled maintenance</description></field>
+        <field name="scheduleWorkEffortId" type="id"><description>Has field for estimated/actual start and finish dates, etc</description></field>
+        <field name="intervalQuantity" type="floating-point"></field>
+        <field name="intervalUomId" type="id"><description>UOM for intervalQuantity; if used intervalMeterTypeId is generally not used (ie one or the other); if a meter reading is done as well that is not tied to the interval it should be tracked in a FixedAssetMaintMeter record</description></field>
+        <field name="intervalMeterTypeId" type="id"><description>Meter Type for intervalQuantity; if used intervalUomId is generally not used (ie one or the other)</description></field>
+        <field name="purchaseOrderId" type="id"></field>
+        <prim-key field="fixedAssetId"/>
+        <prim-key field="maintHistSeqId"/>
+        <relation type="one" fk-name="FXDASTMNT_FXAST" rel-entity-name="FixedAsset">
+            <key-map field-name="fixedAssetId"/>
+        </relation>
+        <relation type="one" fk-name="FXDASTMNT_PMNTP" rel-entity-name="ProductMaintType">
+            <key-map field-name="productMaintTypeId"/>
+        </relation>
+        <relation type="one" fk-name="FXDASTMNT_SCHWE" title="Schedule" rel-entity-name="WorkEffort">
+            <key-map field-name="scheduleWorkEffortId" rel-field-name="workEffortId"/>
+        </relation>
+        <relation type="one" fk-name="FXDASTMNT_INTUOM" title="Interval" rel-entity-name="Uom">
+            <key-map field-name="intervalUomId" rel-field-name="uomId"/>
+        </relation>
+        <relation type="one" fk-name="FXDASTMNT_PDMTTYP" title="Interval" rel-entity-name="ProductMeterType">
+            <key-map field-name="intervalMeterTypeId" rel-field-name="productMeterTypeId"/>
+        </relation>
+        <relation type="one" fk-name="FXDASTMNT_PURORD" title="Purchase" rel-entity-name="OrderHeader">
+            <key-map field-name="purchaseOrderId" rel-field-name="orderId"/>
+        </relation>
+    </entity>
+    <entity entity-name="FixedAssetMaintMeter"
+        package-name="org.ofbiz.accounting.fixedasset"
+        title="Fixed Asset Maintenance Entity">
+        <field name="fixedAssetId" type="id-ne"></field>
+        <field name="maintHistSeqId" type="id-ne"></field>
+        <field name="productMeterTypeId" type="id-ne"></field>
+        <field name="meterValue" type="floating-point"></field>
+        <prim-key field="fixedAssetId"/>
+        <prim-key field="maintHistSeqId"/>
+        <prim-key field="productMeterTypeId"/>
+        <relation type="one" fk-name="FXDASTMNMT_FAMNT" rel-entity-name="FixedAssetMaint">
+            <key-map field-name="fixedAssetId"/>
+            <key-map field-name="maintHistSeqId"/>
+        </relation>
+        <relation type="one" fk-name="FXDASTMNMT_PMTYP" rel-entity-name="ProductMeterType">
+            <key-map field-name="productMeterTypeId"/>
+        </relation>
+    </entity>
     <entity entity-name="FixedAssetProduct"
             package-name="org.ofbiz.accounting.fixedasset"
             title="Fixed Asset Product Representation Entity">
@@ -479,6 +531,53 @@
       <field name="fixedAssetProductTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="fixedAssetProductTypeId"/>
+    </entity>
+    <entity entity-name="FixedAssetRegistration" package-name="org.ofbiz.accounting.fixedasset" title="Fixed Asset Registration Entity">
+        <field name="fixedAssetId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="registrationDate" type="date-time"></field>
+        <field name="govAgencyPartyId" type="id-ne"></field>
+        <field name="registrationNumber" type="long-varchar"></field>
+        <field name="licenseNumber" type="long-varchar"></field>
+        <prim-key field="fixedAssetId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="FIXDASTREG_FXAST" rel-entity-name="FixedAsset">
+            <key-map field-name="fixedAssetId"/>
+        </relation>
+        <relation type="one" fk-name="FIXDASTREG_GVAPTY" title="GovAgency" rel-entity-name="Party">
+            <key-map field-name="govAgencyPartyId" rel-field-name="partyId"/>
+        </relation>
+    </entity>
+    <entity entity-name="FixedAssetStdCost" package-name="org.ofbiz.accounting.fixedasset" title="Fixed Asset Standard Cost Entity">
+        <field name="fixedAssetId" type="id-ne"></field>
+        <field name="fixedAssetStdCostTypeId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="amountUomId" type="id"></field>
+        <field name="amount" type="currency-amount"></field>
+        <prim-key field="fixedAssetId"/>
+        <prim-key field="fixedAssetStdCostTypeId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="FIXASTCO_FIXAST" rel-entity-name="FixedAsset">
+            <key-map field-name="fixedAssetId"/>
+        </relation>
+        <relation type="one" fk-name="FIXASTCO_TYPCOS" rel-entity-name="FixedAssetStdCostType">
+            <key-map field-name="fixedAssetStdCostTypeId"/>
+        </relation>
+        <relation type="one" fk-name="FIXASTCO_AMCURR" rel-entity-name="Uom">
+            <key-map field-name="amountUomId" rel-field-name="uomId"/>
+        </relation>
+    </entity>
+    <entity entity-name="FixedAssetStdCostType" package-name="org.ofbiz.accounting.fixedasset" title="Fixed Asset Standard Cost Type Entity">
+        <field name="fixedAssetStdCostTypeId" type="id-ne"></field>
+        <field name="parentTypeId" type="id-ne"></field>
+        <field name="hasTable" type="indicator"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="fixedAssetStdCostTypeId"/>
+        <relation type="one" fk-name="FIXASTCO_TYPPAR" title="Parent" rel-entity-name="FixedAssetStdCostType">
+            <key-map field-name="parentTypeId" rel-field-name="fixedAssetStdCostTypeId"/>
+        </relation>
     </entity>
     <entity entity-name="FixedAssetType"
             package-name="org.ofbiz.accounting.fixedasset"
@@ -539,40 +638,6 @@
       </relation>
       <relation type="one" fk-name="PTY_FASTAS_SI" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
-      </relation>
-    </entity>
-    <entity entity-name="FixedAssetStdCost"
-            package-name="org.ofbiz.accounting.fixedasset"
-            title="Fixed Asset Standard Cost Entity">
-      <field name="fixedAssetId" type="id-ne"></field>
-      <field name="fixedAssetStdCostTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="amountUomId" type="id"></field>
-      <field name="amount" type="currency-amount"></field>
-      <prim-key field="fixedAssetId"/>
-      <prim-key field="fixedAssetStdCostTypeId"/>
-      <prim-key field="fromDate"/>
-      <relation type="one" fk-name="FIXASTCO_FIXAST" rel-entity-name="FixedAsset">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
-      <relation type="one" fk-name="FIXASTCO_TYPCOS" rel-entity-name="FixedAssetStdCostType">
-        <key-map field-name="fixedAssetStdCostTypeId"/>
-      </relation>
-      <relation type="one" fk-name="FIXASTCO_AMCURR" rel-entity-name="Uom">
-        <key-map field-name="amountUomId" rel-field-name="uomId"/>
-      </relation>
-    </entity>
-    <entity entity-name="FixedAssetStdCostType"
-            package-name="org.ofbiz.accounting.fixedasset"
-            title="Fixed Asset Standard Cost Type Entity">
-      <field name="fixedAssetStdCostTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="fixedAssetStdCostTypeId"/>
-      <relation type="one" fk-name="FIXASTCO_TYPPAR" title="Parent" rel-entity-name="FixedAssetStdCostType">
-        <key-map field-name="parentTypeId" rel-field-name="fixedAssetStdCostTypeId"/>
       </relation>
     </entity>
 

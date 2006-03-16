@@ -85,6 +85,13 @@
     <FixedAssetIdentType description="Gas Card Number 1" fixedAssetIdentTypeId="GAS_CARD1"/>
     <FixedAssetIdentType description="Gas Card Number 2" fixedAssetIdentTypeId="GAS_CARD2"/>
     <FixedAssetIdentType description="Gas Card Number 3" fixedAssetIdentTypeId="GAS_CARD3"/>
+
+    <StatusType description="Fixed Asset Maintenance" hasTable="N" parentTypeId="" statusTypeId="FIXEDAST_MNT_STATUS"/>
+    <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="FAM_CREATED" statusTypeId="FIXEDAST_MNT_STATUS"/>
+    <StatusItem description="Scheduled" sequenceId="03" statusCode="SCHEDULED" statusId="FAM_SCHEDULED" statusTypeId="FIXEDAST_MNT_STATUS"/>
+    <StatusItem description="In Process" sequenceId="05" statusCode="IN_PROCESS" statusId="FAM_IN_PROCESS" statusTypeId="FIXEDAST_MNT_STATUS"/>
+    <StatusItem description="Completed" sequenceId="10" statusCode="COMPLETED" statusId="FAM_COMPLETED" statusTypeId="FIXEDAST_MNT_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="FAM_CANCELLED" statusTypeId="FIXEDAST_MNT_STATUS"/>
     
     <FixedAssetProductType description="Use of Asset" fixedAssetProductTypeId="FAPT_USE"/>
     <FixedAssetProductType description="Sale of Asset" fixedAssetProductTypeId="FAPT_SALE"/>

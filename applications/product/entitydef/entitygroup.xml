@@ -163,6 +163,8 @@
     <entity-group group="org.ofbiz" entity="OldProductKeywordResult" />
     <entity-group group="org.ofbiz" entity="ProductMeter" />
     <entity-group group="org.ofbiz" entity="ProductMeterType" />
+    <entity-group group="org.ofbiz" entity="ProductMaint" />
+    <entity-group group="org.ofbiz" entity="ProductMaintType" />
     <entity-group group="org.ofbiz" entity="ProductReview" />
     <entity-group group="org.ofbiz" entity="ProductSearchConstraint" />
     <entity-group group="org.ofbiz" entity="ProductSearchResult" />
