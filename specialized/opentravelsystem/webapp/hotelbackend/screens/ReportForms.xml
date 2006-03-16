@@ -87,7 +87,6 @@
     
     <form name="VatReportOptions" type="single" target="VatReport" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="year" title="Year"><text size="4" maxlength="4"/></field>
         <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -110,7 +109,6 @@
 
     <form name="OpenInvoiceOptions" type="single" target="OpenInvoiceReport" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -119,9 +117,7 @@
         default-widget-style="tabletext" default-tooltip-style="tabletext"
         paginate-target="openInvoices" default-entity-name="Invoice">
         <actions>
-            <service service-name="otsOpenInvoiceReport" result-map-list-name="openInvoices">
-                <field-map field-name="organizationPartyId" value="${organizationPartyId}"/>
-            </service>
+            <service service-name="otsOpenInvoiceReport" result-map-list-name="openInvoices"/>
         </actions>
         <row-actions>
             <service service-name="getPartyNameForDate" result-map-name="partyNameResultFrom">
@@ -153,7 +149,6 @@
 
     <form name="OpenPaymentOptions" type="single" target="OpenPaymentReport" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="submitButton" title="Run Report" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -162,9 +157,7 @@
         default-widget-style="tabletext" default-tooltip-style="tabletext"
         paginate-target="/findPayments" paginate="true">
         <actions>
-            <service service-name="otsOpenPaymentReport" result-map-list-name="openPayments">
-                <field-map field-name="organizationPartyId" value="${organizationPartyId}"/>
-            </service>
+            <service service-name="otsOpenPaymentReport" result-map-list-name="openPayments"/>
         </actions>
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview?paymentId=${paymentId}"/>

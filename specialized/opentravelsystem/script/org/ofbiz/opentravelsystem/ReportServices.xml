@@ -40,7 +40,13 @@
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
-        <set field="searchPrefix" from-field="partyAcctgPreference.invoiceIdPrefix"/>
+        <set field="searchPrefix" from-field="partyAcctgPreference.invoiceIdPrefix" default-value=""/>
+        <if-compare field-name="searchPrefix" value="" operator="equals">
+            <set field="partyId" value=""/>
+            <else>
+                <set field="partyId" from-field="parameters.userLogin.partyId"/>
+            </else>
+        </if-compare>
         
         <if-empty field-name="parameters.year">
             <now-timestamp-to-env env-name="nowTimestamp"/>
@@ -174,6 +180,7 @@
         </if-not-empty>
         <field-to-list field-name="monthTotal" list-name="monthList"/>
         <field-to-result field-name="monthList" result-name="monthList"/>
+        <field-to-result field-name="partyId" result-name="partyId"/><!-- blank for all parties  -->
     </simple-method>
     
     <simple-method method-name="openInvoiceReport" short-description="Show the invoices which are not fully applied">

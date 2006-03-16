@@ -53,7 +53,6 @@
             <actions>
                 <set field="title" value="Utilities"/>
                 <set field="headerItem" value="Utilities"/>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
@@ -96,7 +95,7 @@
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1" text="Accounting Reports for ${organizationPartyId}"/>
+                            <label style="head1" text="Accounting Reports for ${parameters.userLogin.partyId}"/>
                         </container>
                         <container>
                             <label style="head2" text="Invoices report by customer/supplier"/>
@@ -122,7 +121,6 @@
     <screen name="InvoicesList">
         <section>
             <actions>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="salesTaxIn" from-field="requestAttributes.salesTaxIn"/> 
                 <set field="salesTaxOut" from-field="requestAttributes.salesTaxOut"/>
                 <script location="component://opentravelsystem/webapp/hotelbackend/script/ListInvoices.bsh"/>
@@ -131,7 +129,7 @@
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1" text="List of invoices from: ${organizationPartyId} for: ${year}"/>
+                            <label style="head1" text="List of invoices from: ${parameters.userLogin.partyId} for: ${year}"/>
                             <include-form name="InvoicesList" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
                     </decorator-section>
@@ -143,14 +141,13 @@
     <screen name="VatReport">
         <section>
             <actions>
-                <set field="organizationPartyId" from-scope="user"  from-field="productStoreId" />
                 <set field="monthList" from-field="parameters.monthList"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1" text="In and outgoing VAT for: ${organizationPartyId}"/>
+                            <label style="head1" text="In and outgoing VAT for: ${parameters.userLogin.partyId}"/>
                             <include-form name="VatReport" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
                     </decorator-section>
