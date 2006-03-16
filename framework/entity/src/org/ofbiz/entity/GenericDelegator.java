@@ -2692,14 +2692,14 @@ public class GenericDelegator implements DelegatorInterface {
         return cache;
     }
 
-    public GenericDelegator cloneDelegator() {
+    public GenericDelegator cloneDelegator(String delegatorName) {
         // creates an exact clone of the delegator; except for the sequencer
         // note that this will not be cached and should be used only when
         // needed to change something for single instance (use).
         GenericDelegator newDelegator = new GenericDelegator();
         newDelegator.modelReader = this.modelReader;
         newDelegator.modelGroupReader = this.modelGroupReader;
-        newDelegator.delegatorName = this.delegatorName;
+        newDelegator.delegatorName = delegatorName;
         newDelegator.delegatorInfo = this.delegatorInfo;
         newDelegator.cache = this.cache;
         newDelegator.andCacheFieldSets = this.andCacheFieldSets;
@@ -2709,5 +2709,9 @@ public class GenericDelegator implements DelegatorInterface {
         // not setting the sequencer so that we have unique sequences.
 
         return newDelegator;
+    }
+
+    public GenericDelegator cloneDelegator() {
+        return this.cloneDelegator(this.delegatorName);
     }
 }
