@@ -36,18 +36,18 @@
     </div>
     <div class="screenlet-body">
       <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>" style="margin: 0;">
-        <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}">
-        <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS">
-        <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI">
-        <input type="hidden" name="note" value="${Static["org.ofbiz.base.util.UtilHttp"].getFullRequestUrl(request).toString()}">
+        <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}"/>
+        <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS"/>
+        <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI"/>
+        <input type="hidden" name="note" value="${Static["org.ofbiz.base.util.UtilHttp"].getFullRequestUrl(request).toString()}"/>
         <#if message?has_content>
-          <input type="hidden" name="parentCommEventId" value="${communicationEvent.communicationEventId}">
+          <input type="hidden" name="parentCommEventId" value="${communicationEvent.communicationEventId}"/>
           <#if (communicationEvent.origCommEventId?exists && communicationEvent.origCommEventId?length > 0)>
             <#assign orgComm = communicationEvent.origCommEventId>
           <#else>
             <#assign orgComm = communicationEvent.communicationEventId>
           </#if>
-          <input type="hidden" name="origCommEventId" value="${orgComm}">
+          <input type="hidden" name="origCommEventId" value="${orgComm}"/>
         </#if>
         <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
@@ -60,7 +60,7 @@
           </tr>
           <#if partyIdTo?has_content>
             <#assign partyToName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>
-            <input type="hidden" name="partyIdTo" value="${partyIdTo}">
+            <input type="hidden" name="partyIdTo" value="${partyIdTo}"/>
             <tr>
               <td colspan="3">&nbsp;</td>
             </tr>
@@ -86,7 +86,7 @@
           <tr>
             <td width="5">&nbsp;</td>
             <td align="right"><div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div></td>
-            <td><input type="input" class="inputBox" name="subject" size="20" value="${defaultSubject}">
+            <td><input type="input" class="inputBox" name="subject" size="20" value="${defaultSubject}"/>
           </tr>
           <tr>
             <td colspan="3">&nbsp;</td>
@@ -99,7 +99,7 @@
           <tr>
             <td colspan="2">&nbsp;</td>
             <td colspan="2">
-              <textarea name="content" class="textAreaBox" cols="40" rows="5" wrap="hard"></textarea>
+              <textarea name="content" class="textAreaBox" cols="40" rows="5"></textarea>
             </td>
           </tr>
           <tr>
@@ -107,7 +107,7 @@
           </tr>
           <tr>
             <td colspan="2">&nbsp;</td>
-            <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"></td>
+            <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"/></td>
           </tr>
         </table>
       </form>

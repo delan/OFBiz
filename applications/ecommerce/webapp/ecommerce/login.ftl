@@ -69,7 +69,7 @@
         </div>
         <div class="screenlet-body" style="text-align: center;">
           <form method="post" action="<@ofbizUrl>forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style="margin: 0;">
-            <span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span><input type="text" size="20" class="inputBox" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>">
+            <span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span><input type="text" size="20" class="inputBox" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
             <div><input type="submit" name="GET_PASSWORD_HINT" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}"/>&nbsp;<input type="submit" name="EMAIL_PASSWORD" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}"/></div>
           </form>
         </div>
@@ -84,7 +84,7 @@
         <div class="screenlet-body" style="text-align: center;">
           <form method="post" action="<@ofbizUrl>newcustomer${previousParams}</@ofbizUrl>" style="margin: 0;">
             <div class="tabletext">${uiLabelMap.CommonMayCreateNewAccountHere}:</div>
-            <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonMayCreate}"></div>
+            <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonMayCreate}"/></div>
           </form>
         </div>
     </div>
@@ -97,14 +97,14 @@
         <div class="screenlet-body">
           <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" style="margin: 0;">
             <div class="tabletext" align="center">${uiLabelMap.CommonCheckoutAnonymousMsg}:</div>
-            <div align="center"><input type="submit" class="smallSubmit" value="Checkout"></div>
+            <div align="center"><input type="submit" class="smallSubmit" value="Checkout"/></div>
           </form>
         </div>
     </div>
     </#if>
   </div>
   <div class="endcolumns">&nbsp;</div>
-<div>
+</div>
 
 <script language="JavaScript" type="text/javascript">
   <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>
