@@ -64,7 +64,7 @@
     <div class="screenlet-body">
         <table width="100%" border="0" cellpadding="1">
           <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
-            <div class="tabletext">${uiLabelMap.EcommerceNoMessages}.</div>
+            <tr><td><div class="tabletext">${uiLabelMap.EcommerceNoMessages}.</div></td></tr>
           <#else/>
             <tr>
               <td><div class="tableheadtext">${uiLabelMap.CommonFrom}</div></td>
