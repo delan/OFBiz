@@ -108,8 +108,8 @@ under the License.
         <field position="2" name="statusId"><display-entity entity-name="StatusItem"/></field>
         <field position="1" name="description"><display/></field>
         <field position="2" name="invoiceMessage"><display/></field>
-        <field position="1" name="partyIdFrom" title="Party Billed From"><display description="${partyNameResultFrom.fullName} [${invoice.partyIdFrom}]"/></field>
-        <field position="2" name="partyId" title="Party Billed To"><display description="${partyNameResultTo.fullName} [${invoice.partyId}]"/></field>
+        <field position="1" name="partyIdFrom" title="Party Billed From"><hyperlink target="viewprofile?partyId=${invoice.partyIdFrom}" description="${partyNameResultFrom.fullName} [${invoice.partyIdFrom}]"/></field>
+        <field position="2" name="partyId" title="Party Billed To"><hyperlink target="viewprofile?partyId=${invoice.partyId}" description="${partyNameResultTo.fullName} [${invoice.partyId}]"/></field>
         <field position="1" name="roleTypeId" title="${uiLabelMap.AccountingRoleType}"><display/></field>
         <field position="2" name="billingAccountId" title="${uiLabelMap.AccountingBillingAccount}"><display/></field>
         <field position="1" name="invoiceDate" title="${uiLabelMap.AccountingInvoiceDate}"><display/></field>

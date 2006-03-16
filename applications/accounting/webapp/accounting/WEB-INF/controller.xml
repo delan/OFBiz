@@ -802,6 +802,11 @@
         <response name="error" type="view" value="EditTaxAuthorityPartyInfo"/>
     </request-map>
     
+    <request-map uri="viewprofile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewprofile"/>
+    </request-map>
+
     <!-- ================ Entity Lookup Requests ================= -->
     <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
     <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
@@ -1108,6 +1113,7 @@
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
     <view-map name="LookupPayment" page="component://accounting/widget/LookupScreens.xml#LookupPayment" type="screen"/>
     <view-map name="LookupInvoice" page="component://accounting/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
+    <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
     
     <!-- PDFs  -->
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>

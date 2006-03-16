@@ -117,6 +117,38 @@ under the License.
         </section>
     </screen>
 
+    <screen name="CommonPartyDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field-name="invoiceId"/></not></condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html><html-template location="component://accounting/webapp/accounting/invoice/InvoiceTabBar.ftl"/></html>
+                                        </platform-specific>
+                                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>

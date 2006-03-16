@@ -242,13 +242,25 @@
 
     <form name="paymentHeader" type="single" title="Payment header information" default-map-name="payment"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <service service-name="getPartyNameForDate" result-map-name="partyNameResultFrom">
+                <field-map field-name="partyId" env-name="payment.partyIdFrom"/>
+                <field-map field-name="compareDate" env-name="payment.effectiveDate"/>
+                <field-map field-name="lastNameFirst" value="Y"/>
+            </service>
+            <service service-name="getPartyNameForDate" result-map-name="partyNameResultTo">
+                <field-map field-name="partyId" env-name="payment.partyIdTo"/>
+                <field-map field-name="compareDate" env-name="payment.effectiveDate"/>
+                <field-map field-name="lastNameFirst" value="Y"/>
+            </service>
+        </actions>
         <field name="paymentId"><hidden/></field>
         <field name="paymentTypeId" position="1" title="Payment Type"><display-entity entity-name="PaymentType"/></field>
         <field name="paymentMethodTypeId" position="2"><display-entity entity-name="PaymentMethodType"/></field>
         <field name="statusId" position="1"><display-entity entity-name="StatusItem"/></field>
         <field name="paymentMethodId" position="2"><display-entity entity-name="PaymentMethod" description="${paymentMethodId}[${paymentMethodTypeId}]"/></field>
-        <field name="partyIdFrom" position="1"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}, ${firstName} [${partyId}]"/></field>
-        <field name="partyIdTo" position="2"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}, ${firstName} [${partyId}]"/></field>
+        <field name="partyIdFrom" position="1"><hyperlink target="viewprofile?partyId=${payment.partyIdFrom}" description="${partyNameResultFrom.fullName} [${payment.partyIdTo}]"/></field>
+        <field name="partyIdTo" position="2"><hyperlink target="viewprofile?partyId=${payment.partyIdTo}" description="${partyNameResultTo.fullName} [${payment.partyIdFrom}]"/></field>
         <field name="paymentRefNum" position="1"><display/></field>
         <field name="paymentPreferenceId" position="2"><display/></field>
         <field name="amount" position="1"><display/></field>
