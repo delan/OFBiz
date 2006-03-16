@@ -496,12 +496,14 @@ public class OpenOfficeServices {
                         //TODO: Write a PDF that says that OO is not available?
                     }
                 }
-                int n = reader.getNumberOfPages();
-                for (int i=0; i < n; i++) {
-                    PdfImportedPage pg = writer.getImportedPage(reader, i + 1);
-                    //cb.addTemplate(pg, left, height * pgCnt);
-                    writer.addPage(pg);
-                    pgCnt++;
+                if (reader != null) {
+                    int n = reader.getNumberOfPages();
+                    for (int i=0; i < n; i++) {
+                        PdfImportedPage pg = writer.getImportedPage(reader, i + 1);
+                        //cb.addTemplate(pg, left, height * pgCnt);
+                        writer.addPage(pg);
+                        pgCnt++;
+                    }
                 }
             }
             document.close();
