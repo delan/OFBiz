@@ -29,11 +29,11 @@
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
   <form method="post" action="<@ofbizUrl>updatePassword/${donePage}</@ofbizUrl>" name="changepasswordform">
-  <table width="90%" border="0" cellpadding="2" cellspacing="0">
+  <table width="90%" border="0" cellpadding="2" cellspacing="0" class="tabletext">
     <tr>
       <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyOldPassword}</div></td>
       <td width="74%">
-        <input type="password" class='inputBox' name="currentPassword" size="20" maxlength="20">
+        <input type="password" class='inputBox' name="currentPassword" size="20" maxlength="20"/>
       *</td>
     </tr>
     <tr>
@@ -45,7 +45,7 @@
     <tr>
       <td width="26%" align="right"><div class="tabletext">${uiLabelMap.PartyNewPasswordVerify}</div></td>
       <td width="74%">
-        <input type="password" class='inputBox' name="newPasswordVerify" size="20" maxlength="20">
+        <input type="password" class='inputBox' name="newPasswordVerify" size="20" maxlength="20"/>
       *</td>
     </tr>
     <tr>
@@ -56,6 +56,7 @@
     </tr>
   </table>
   </form>
+<div class="tabletext">${uiLabelMap.CommonFieldsMarkedAreRequired}</div>
 
     &nbsp;<a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
