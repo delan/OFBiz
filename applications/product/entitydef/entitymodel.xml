@@ -2095,6 +2095,46 @@
             <key-map field-name="defaultUomId" rel-field-name="uomId"/>
         </relation>
     </entity>
+    <entity entity-name="ProductMaint" package-name="org.ofbiz.product.product" title="Product Maintenance Entity">
+        <description>This is used to specify the details for scheduled maintenance.</description>
+        <field name="productId" type="id-ne"></field>
+        <field name="productMaintSeqId" type="id-ne"></field>
+        <field name="productMaintTypeId" type="id"></field>
+        <field name="maintName" type="name"></field>
+        <field name="intervalQuantity" type="floating-point"></field>
+        <field name="intervalUomId" type="id"><description>UOM for intervalQuantity; if used intervalMeterTypeId is generally not used (ie one or the other)</description></field>
+        <field name="intervalMeterTypeId" type="id"><description>Meter Type for intervalQuantity; if used intervalUomId is generally not used (ie one or the other)</description></field>
+        <field name="repeatCount" type="numeric"><description>If 0 or null means no limit to repeat count; can be used with multiple ProductMaint records for a single ProductMaintType in cases where maintenance intervals are not evenly distributed, or only need to be done once like a break-in period</description></field>
+        <prim-key field="productId"/>
+        <prim-key field="productMaintSeqId"/>
+        <relation type="one" fk-name="PRODMNT_PROD" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
+        <relation type="one" fk-name="PRODMNT_MNTTYP" rel-entity-name="ProductMaintType">
+            <key-map field-name="productMaintTypeId"/>
+        </relation>
+        <relation type="one" fk-name="PRODMNT_INTUOM" title="Interval" rel-entity-name="Uom">
+            <key-map field-name="intervalUomId" rel-field-name="uomId"/>
+        </relation>
+        <relation type="one" fk-name="PRODMNT_PDMTTYP" title="Interval" rel-entity-name="ProductMeterType">
+            <key-map field-name="intervalMeterTypeId" rel-field-name="productMeterTypeId"/>
+        </relation>
+        <relation type="one-nofk" title="Interval" rel-entity-name="ProductMeter">
+            <description>This can't have a foreign key because the intervalMeterTypeId field is optional, but the productId field is not</description>
+            <key-map field-name="productId"/>
+            <key-map field-name="intervalMeterTypeId" rel-field-name="productMeterTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="ProductMaintType" package-name="org.ofbiz.product.product" title="Product Maintenance Type Entity">
+        <description>This is for both scheduled and unscheduled maintenance; use ProductMaint to track details for scheduled maintenance</description>
+        <field name="productMaintTypeId" type="id-ne"></field>
+        <field name="description" type="description"></field>
+        <field name="parentTypeId" type="id"></field>
+        <prim-key field="productMaintTypeId"/>
+        <relation type="one" fk-name="PRODMNT_TYPE_PAR" title="Parent" rel-entity-name="ProductMaintType">
+            <key-map field-name="parentTypeId" rel-field-name="productMaintTypeId"/>
+        </relation>
+    </entity>
     <entity entity-name="ProductReview"
             package-name="org.ofbiz.product.product"
             title="Product Review Entity">
@@ -2121,10 +2161,7 @@
           <key-map field-name="statusId"/>
         </relation>
     </entity>
-    <entity entity-name="ProductSearchConstraint"
-            package-name="org.ofbiz.product.product"
-            never-cache="true"
-            title="Product Search Result Entity">
+    <entity entity-name="ProductSearchConstraint" package-name="org.ofbiz.product.product" never-cache="true" title="Product Search Result Constraint Entity">
       <field name="productSearchResultId" type="id-ne"></field>
       <field name="constraintSeqId" type="id-ne"></field>
       <field name="constraintName" type="long-varchar"></field>

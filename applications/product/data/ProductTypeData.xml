@@ -263,6 +263,14 @@
     <ProductMeterType description="Use Count Meter" productMeterTypeId="USE_COUNT"/>
     <ProductMeterType description="Copy Count Meter" productMeterTypeId="COPY_COUNT"/>
     
+    <ProductMaintType description="Vehicle Maintenance" productMaintTypeId="VEHICLE_MAINT" parentTypeId=""/>
+    <ProductMaintType description="Oil Change" productMaintTypeId="OIL_CHANGE" parentTypeId="VEHICLE_MAINT"/>
+    <ProductMaintType description="Serpentine Belt Replacement" productMaintTypeId="SERP_BELT" parentTypeId="VEHICLE_MAINT"/>
+    <ProductMaintType description="Re-Fuel" productMaintTypeId="REFUEL" parentTypeId="VEHICLE_MAINT"/>
+    <ProductMaintType description="Replace Battery" productMaintTypeId="REPLACE_BATTERY" parentTypeId="VEHICLE_MAINT"/>
+
+    <ProductMaintType description="Wash" productMaintTypeId="WASH" parentTypeId=""/>
+    
     <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
 
     <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>

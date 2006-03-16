@@ -54,15 +54,18 @@
     <entity-group group="org.ofbiz" entity="FixedAsset" />
     <entity-group group="org.ofbiz" entity="FixedAssetAttribute" />
     <entity-group group="org.ofbiz" entity="FixedAssetDepMethod" />
-    <entity-group group="org.ofbiz" entity="FixedAssetProduct" />
     <entity-group group="org.ofbiz" entity="FixedAssetIdent" />
     <entity-group group="org.ofbiz" entity="FixedAssetIdentType" />
+    <entity-group group="org.ofbiz" entity="FixedAssetMaint" />
+    <entity-group group="org.ofbiz" entity="FixedAssetMaintMeter" />
+    <entity-group group="org.ofbiz" entity="FixedAssetProduct" />
     <entity-group group="org.ofbiz" entity="FixedAssetProductType" />
+    <entity-group group="org.ofbiz" entity="FixedAssetRegistration" />
+    <entity-group group="org.ofbiz" entity="FixedAssetStdCost" />
+    <entity-group group="org.ofbiz" entity="FixedAssetStdCostType" />
     <entity-group group="org.ofbiz" entity="FixedAssetType" />
     <entity-group group="org.ofbiz" entity="FixedAssetTypeAttr" />
     <entity-group group="org.ofbiz" entity="PartyFixedAssetAssignment" />
-    <entity-group group="org.ofbiz" entity="FixedAssetStdCost" />
-    <entity-group group="org.ofbiz" entity="FixedAssetStdCostType" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.accounting.invoice -->
