@@ -24,7 +24,7 @@ under the License.
     <version>1.0</version>
 
     <service name="createPartyQual" engine="java" default-entity-name="PartyQual"
-            location="org.ofbiz.humanres.HumanResServices" invoke="createPartyQual" auth="false">
+            location="org.ofbiz.humanres.HumanResServices" invoke="createPartyQual" auth="true">
         <description>Create a Party Qualification entry</description>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
