@@ -723,7 +723,7 @@ according to which type of entity.
     
     
   <GlAccount parentGlAccountId="510000" glAccountId="514000" accountCode="514000" 
-    glAccountClassId="NON_CASH_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="INVENTORY_ADJUST" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="INVENTORY SHRINKAGE" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="510000" glAccountId="515000" accountCode="515000" 
