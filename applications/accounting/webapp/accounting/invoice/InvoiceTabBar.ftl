@@ -41,15 +41,11 @@ under the License.
 <a href="<@ofbizUrl>editInvoice</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
 <a href="<@ofbizUrl>copyInvoice?invoiceIdToCopyFrom=${invoiceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCopy}</a>
 <a href="<@ofbizUrl>invoice.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext" target="_blank">${uiLabelMap.AccountingInvoicePDF}</a>
-<#if invoice.statusId == "INVOICE_IN_PROCESS" && invoice.invoiceTypeId == "SALES_INVOICE">
+<#if invoice.statusId == "INVOICE_IN_PROCESS">
     <a href="<@ofbizUrl>setInvoiceStatus?invoiceId=${invoice.invoiceId}&statusId=INVOICE_READY</@ofbizUrl>" class="buttontext">Status to 'Ready'</a>
-</#if>
-<#if invoice.statusId == "INVOICE_IN_PROCESS" && invoice.invoiceTypeId == "PURCHASE_INVOICE">
-    <a href="<@ofbizUrl>setInvoiceStatus?invoiceId=${invoice.invoiceId}&statusId=INVOICE_RECEIVED</@ofbizUrl>" class="buttontext">Status to 'Received'</a>
 </#if>
 <#if invoice.statusId == "INVOICE_READY" && invoice.invoiceTypeId == "SALES_INVOICE">
     <a href="<@ofbizUrl>setInvoiceStatus?invoiceId=${invoice.invoiceId}&statusId=INVOICE_SENT</@ofbizUrl>"  class="buttontext">Status to 'Send'</a>
-    <a href="<@ofbizUrl>setInvoiceStatus?invoiceId=${invoice.invoiceId}&statusId=INVOICE_IN_PROCESS</@ofbizUrl>"  class="buttontext">Status to 'In Process'</a>
 </#if>
 <#if invoice.statusId == "INVOICE_SENT">
     <a href="<@ofbizUrl>setInvoiceStatus?invoiceId=${invoice.invoiceId}&statusId=INVOICE_PAID</@ofbizUrl>"  class="buttontext">status to 'Paid'</a>
@@ -57,8 +53,8 @@ under the License.
 <#if invoice.statusId == "INVOICE_RECEIVED">
     <a href="<@ofbizUrl>setInvoiceStatus?invoiceId=${invoice.invoiceId}&statusId=INVOICE_PAID</@ofbizUrl>"  class="buttontext">status to 'Paid'</a>
 </#if>
-<#-- invoice cannot be cancelled if it is PAID or CANCELLED -->
-<#if invoice.statusId != "INVOICE_PAID" && invoice.statusId != "INVOICE_CANCELLED">
+<#-- invoice cannot be cancelled if it is READY, PAID, SENT, or CANCELLED -->
+<#if invoice.statusId == "INVOICE_IN_PROCESS" || invoice.statusId == "INVOICE_RECEIVED">
     <a href="javascript:confirmActionLink('You want to cancel this invoice number ${invoice.invoiceId}?','setInvoiceStatus?invoiceId=${invoice.invoiceId}&statusId=INVOICE_CANCELLED')" class="buttontext">Status to 'Cancelled'</a>
 </#if>
 </div>
