@@ -191,31 +191,31 @@
     accountName="VEHICLES" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="100000" glAccountId="180000" accountCode="180000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="180000" glAccountId="181000" accountCode="181000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - BUILDING" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="180000" glAccountId="182000" accountCode="182000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - LAND IMPROVEMENTS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="180000" glAccountId="183000" accountCode="183000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - BUILDING IMPROVEMENTS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="180000" glAccountId="184000" accountCode="184000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - LEASEHOLD IMPROVEMENTS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="180000" glAccountId="185000" accountCode="185000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - FURNITURE FIXTURES EQUIPMENT" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="180000" glAccountId="186000" accountCode="186000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - DATA PROCESSING EQUIP" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="180000" glAccountId="187000" accountCode="187000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - DATA PROCESSING SOFTWARE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="180000" glAccountId="188000" accountCode="188000" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_DEPRECIATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - VEHICLES" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="100000" glAccountId="190000" accountCode="190000" 
@@ -238,7 +238,7 @@
     glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="OTHER INTANGIBLE ASSETS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="191000" glAccountId="191900" accountCode="191900" 
-    glAccountClassId="LONGTERM_ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+    glAccountClassId="ACCUM_AMORTIZATION" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED AMORTIZATION" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="190000" glAccountId="192000" accountCode="192000" 
@@ -1285,7 +1285,7 @@ according to which type of entity.
     glAccountClassId="SGA_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="VEHICLE EXPENSE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="780000" glAccountId="787000" accountCode="787000" 
-    glAccountClassId="SGA_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="AMORTIZATION" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="AMORTIZATION EXPENSE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="780000" glAccountId="788000" accountCode="788000" 
     glAccountClassId="SGA_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
