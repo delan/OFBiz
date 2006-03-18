@@ -130,6 +130,9 @@
     <!-- a special class for non-cash inventory adjustment expenses to avoid duplicating opearting cash flow adjustments for inventory
          account transactions, which adjust operating cash flows -->
     <GlAccountClass description="Inventory Adjustment" glAccountClassId="INVENTORY_ADJUST" parentClassId="NON_CASH_EXPENSE"/>
+    <!-- same idea: these avoid double counting of depreciaton & amortization -->
+    <GlAccountClass description="Accumulated Depreciation" glAccountClassId="ACCUM_DEPRECIATION" parentClassId="NON_CASH_EXPENSE"/>
+    <GlAccountClass description="Accumulated Amortization" glAccountClassId="ACCUM_AMORTIZATION" parentClassId="NON_CASH_EXPENSE"/>
     <GlAccountClass description="Non-Posting" glAccountClassId="NON_POSTING" parentClassId="DEBIT"/>
 
     <GlAccountType description="Accounts Receivable" glAccountTypeId="ACCOUNTS_RECEIVABLE" hasTable="N" parentTypeId=""/>
