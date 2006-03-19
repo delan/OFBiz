@@ -584,7 +584,7 @@ public class ShipmentServices {
             stageShip.set("postalCodeExt", address.get("postalCodeExt"));
             stageShip.set("countryGeoId", address.get("countryGeoId"));
             stageShip.set("stateProvinceGeoId", address.get("stateProvinceGeoId"));
-            stageShip.set("numberOfPackages", new Integer(packages.size()));
+            stageShip.set("numberOfPackages", new Long(packages.size()));
             stageShip.set("handlingInstructions", shipment.get("handlingInstructions"));
             toStore.add(stageShip);
 
