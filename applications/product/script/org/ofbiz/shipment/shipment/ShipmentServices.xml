@@ -266,7 +266,9 @@
         	  <set value="SALES_RETURN" field="shipmentCtx.shipmentTypeId"/>
         	  <set value="PURCH_SHIP_CREATED" field="shipmentCtx.statusId"/>  <!-- we may later need different status codes for return shipments -->
         	<else>
-        	  <fail-message message="${returnHeader.returnTypeId} is not supported"/>
+                  <add-error>
+        	    <fail-message message="${returnHeader.returnTypeId} is not supported"/>
+                  </add-error>
         	  <check-errors/>
         	</else>
         </if-compare>        
