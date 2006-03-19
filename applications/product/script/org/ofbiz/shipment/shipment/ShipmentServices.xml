@@ -256,24 +256,24 @@
             <field-map field-name="returnId" env-name="parameters.returnId"/>
         </entity-one>
 
-    	  <set from-field="returnHeader.fromPartyId" field="shipmentCtx.partyIdFrom"/>
-    	  <set from-field="returnHeader.toPartyId" field="shipmentCtx.partyIdTo"/>
-    	  <set from-field="returnHeader.originContactMechId" field="shipmentCtx.originContactMechId"/>
-    	  <set from-field="returnHeader.destinationFacilityId" field="shipmentCtx.destinationFacilityId"/>
-    	  
-    	  <!-- later different behavior for customer vs. returns would happen here -->
+        <set from-field="returnHeader.fromPartyId" field="shipmentCtx.partyIdFrom"/>
+        <set from-field="returnHeader.toPartyId" field="shipmentCtx.partyIdTo"/>
+        <set from-field="returnHeader.originContactMechId" field="shipmentCtx.originContactMechId"/>
+        <set from-field="returnHeader.destinationFacilityId" field="shipmentCtx.destinationFacilityId"/>
+
+        <!-- later different behavior for customer vs. returns would happen here -->
         <if-compare value="CUSTOMER_RETURN" field-name="returnHeader.returnHeaderTypeId" operator="equals">
-        	  <set value="SALES_RETURN" field="shipmentCtx.shipmentTypeId"/>
-        	  <set value="PURCH_SHIP_CREATED" field="shipmentCtx.statusId"/>  <!-- we may later need different status codes for return shipments -->
-        	<else>
-                  <add-error>
-        	    <fail-message message="${returnHeader.returnTypeId} is not supported"/>
-                  </add-error>
-        	  <check-errors/>
-        	</else>
+            <set value="SALES_RETURN" field="shipmentCtx.shipmentTypeId"/>
+            <set value="PURCH_SHIP_CREATED" field="shipmentCtx.statusId"/>  <!-- we may later need different status codes for return shipments -->
+        <else>
+            <add-error>
+                <fail-message message="${returnHeader.returnTypeId} is not supported"/>
+            </add-error>
+            <check-errors/>
+        </else>
         </if-compare>        
         <call-service service-name="createShipment" in-map-name="shipmentCtx">
-        	  <result-to-field result-name="shipmentId"/>
+            <result-to-field result-name="shipmentId"/>
         </call-service>
         
         <field-to-result field-name="shipmentId"/>
