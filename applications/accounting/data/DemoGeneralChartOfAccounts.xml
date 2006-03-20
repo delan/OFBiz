@@ -679,6 +679,10 @@ according to which type of entity.
   <GlAccount parentGlAccountId="500000" glAccountId="502000" accountCode="502000" 
     glAccountClassId="COGS_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="MERCHANDISE PURCHASES - CATEGORY 2" description="" postedBalance="0.0"/>
+  <GlAccount parentGlAccountId="500000" glAccountId="503000" accountCode="503000" 
+    glAccountClassId="COGS_EXPENSE" glAccountTypeId="COGS_ADJ_AVG_COST" glResourceTypeId="MONEY"  
+    accountName="COGS (AVG COST ADJUSTMENT)" description="" postedBalance="0.0"/>
+
     
   <GlAccount parentGlAccountId="500000" glAccountId="510000" accountCode="510000" 
     glAccountClassId="REVENUE" glAccountTypeId="" glResourceTypeId="MONEY"  
