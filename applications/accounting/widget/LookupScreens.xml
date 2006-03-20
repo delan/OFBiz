@@ -36,8 +36,8 @@ under the License.
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="lookupPayment" location="component://accounting/webapp/accounting/lookup/LookupForms.xml" />
-                        <include-form name="listPayment" location="component://accounting/webapp/accounting/lookup/LookupForms.xml" />
+                        <include-form name="lookupPayment" location="component://accounting/webapp/accounting/lookup/FieldLookupForms.xml" />
+                        <include-form name="listPayment" location="component://accounting/webapp/accounting/lookup/FieldLookupForms.xml" />
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -60,8 +60,8 @@ under the License.
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="lookupInvoice" location="component://accounting/webapp/accounting/lookup/LookupForms.xml" />
-                        <include-form name="listInvoice" location="component://accounting/webapp/accounting/lookup/LookupForms.xml" />
+                        <include-form name="lookupInvoice" location="component://accounting/webapp/accounting/lookup/FieldLookupForms.xml" />
+                        <include-form name="listInvoice" location="component://accounting/webapp/accounting/lookup/FieldLookupForms.xml" />
                     </decorator-section>
                 </decorator-screen>
             </widgets>
