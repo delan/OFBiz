@@ -32,8 +32,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transaction;
 
 import javolution.util.FastMap;
+import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -43,6 +45,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
@@ -351,42 +355,121 @@ public class ServiceUtil {
         EntityCondition doneCond = new EntityConditionList(UtilMisc.toList(cancelled, finished), EntityOperator.OR);
         EntityCondition mainCond = new EntityConditionList(UtilMisc.toList(doneCond, pool), EntityOperator.AND);
 
-        // lookup the jobs
+        // configure the find options
+        EntityFindOptions findOptions = new EntityFindOptions();
+        findOptions.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
+        findOptions.setMaxRows(1000);
+
+        // always suspend the current transaction; use the one internally
+        Transaction parent = null;
         try {
-        	boolean noMoreResults = false;
-        	while (!noMoreResults) {
-        		EntityFindOptions findOptions = new EntityFindOptions();
-        		findOptions.setMaxRows(1000);
-        		findOptions.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
-        		
-            	EntityListIterator foundJobs = delegator.findListIteratorByCondition("JobSandbox", mainCond, null, null, null, findOptions);
-            	// get 1000 at a time for removal so we can close the ELI (and the ResultSet) while doing removes to avoid problems with cursors
-            	List curList = foundJobs.getPartialList(1, 1000);
-                foundJobs.close();
-            	
-            	if (curList != null && curList.size() > 0) {
+            if (TransactionUtil.getStatus() != TransactionUtil.STATUS_NO_TRANSACTION) {
+                parent = TransactionUtil.suspend();
+            }
+
+            // lookup the jobs - looping 1000 at a time to avoid problems with cursors
+            // also, using unique transaction to delete as many as possible even with errors
+            boolean noMoreResults = false;
+            boolean beganTx1 = false;
+            while (!noMoreResults) {
+                // current list of records
+                List curList = null;
+                try {
+                    // begin this transaction
+                    beganTx1 = TransactionUtil.begin();
+
+                    EntityListIterator foundJobs = delegator.findListIteratorByCondition("JobSandbox", mainCond, null, null, null, findOptions);
+                    curList = foundJobs.getPartialList(1, 1000);
+                    foundJobs.close();
+
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot obtain job data from datasource", module);
+                    try {
+                        TransactionUtil.rollback(beganTx1, e.getMessage(), e);
+                    } catch (GenericTransactionException e1) {
+                        Debug.logWarning(e1, module);
+                    }
+                    return ServiceUtil.returnError(e.getMessage());
+                } finally {
+                    try {
+                        TransactionUtil.commit(beganTx1);
+                    } catch (GenericTransactionException e) {
+                        Debug.logWarning(e, module);
+                    }
+                }
+
+                // remove each from the list in its own transaction
+                if (curList != null && curList.size() > 0) {
+                    // list of runtime data IDs to attempt to delete
+                    List runtimeToDelete = FastList.newInstance();
+                    
                     Iterator curIter = curList.iterator();
                     while (curIter.hasNext()) {
-                        GenericValue jobSandbox = (GenericValue) curIter.next();
+                        GenericValue job = (GenericValue) curIter.next();
+                        String jobId = job.getString("jobId");
+                        boolean beganTx2 = false;
                         try {
-                            jobSandbox.remove();
+                            beganTx2 = TransactionUtil.begin();
+                            job.remove();
                         } catch (GenericEntityException e) {
-                            Debug.logError(e, "Unable to remove job : " + jobSandbox + "; " + e.toString(), module);
-                        }
-                        try {
-                            // in a separate try/catch because other entities like ApplicationSandbox and WorkEffort can point to the same record, though it pretty much doesn't happen
-                            jobSandbox.removeRelated("RuntimeData");
-                        } catch (GenericEntityException e) {
-                            Debug.logWarning(e, "After removing job unable to remove related RuntimeData for JobSandbox: " + jobSandbox + "; " + e.toString(), module);
+                            Debug.logInfo("Cannot remove job data for ID: " + jobId, module);
+                            try {
+                                TransactionUtil.rollback(beganTx2, e.getMessage(), e);
+                            } catch (GenericTransactionException e1) {
+                                Debug.logWarning(e1, module);
+                            }
+                        } finally {
+                            try {
+                                TransactionUtil.commit(beganTx2);
+                            } catch (GenericTransactionException e) {
+                                Debug.logWarning(e, module);
+                            }
                         }
                     }
-            	} else {
-            		noMoreResults = true;
-            	}
-        	}
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot get jobs to purge");
+
+                    // delete the runtime data - in a new transaction for each delete
+                    // we do this so that the ones which cannot be deleted to not cause
+                    // the entire group to rollback; some may be attached to multiple jobs.
+                    if (runtimeToDelete.size() > 0) {
+                        Iterator delIter = runtimeToDelete.iterator();
+                        while (delIter.hasNext()) {
+                            String runtimeId = (String) delIter.next();
+                            boolean beganTx3 = false;
+                            try {
+                                beganTx3 = TransactionUtil.begin();
+                                delegator.removeByAnd("RuntimeData", UtilMisc.toMap("runtimeDataId", runtimeId));
+
+                            } catch (GenericEntityException e) {
+                                Debug.logInfo("Cannot remove runtime data for ID: " + runtimeId, module);
+                                try {
+                                    TransactionUtil.rollback(beganTx3, e.getMessage(), e);
+                                } catch (GenericTransactionException e1) {
+                                    Debug.logWarning(e1, module);
+                                }
+                            } finally {
+                                try {
+                                    TransactionUtil.commit(beganTx3);
+                                } catch (GenericTransactionException e) {
+                                    Debug.logWarning(e, module);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    noMoreResults = true;
+                }
+            }
+        } catch (GenericTransactionException e) {
+            Debug.logError(e, "Unable to suspend transaction; cannot purge jobs!", module);
             return ServiceUtil.returnError(e.getMessage());
+        } finally {
+            if (parent != null) {
+                try {
+                    TransactionUtil.resume(parent);
+                } catch (GenericTransactionException e) {
+                    Debug.logWarning(e, module);
+                }
+            }
         }
 
         return ServiceUtil.returnSuccess();
