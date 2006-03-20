@@ -106,18 +106,17 @@ public class ShoppingCartHelper {
             String productCategoryId, String itemType, String itemDescription, double price, double amount, double quantity, java.sql.Timestamp reservStart, double reservLength, double reservPersons, ProductConfigWrapper configWrapper, Map context) {
         Map result = null;
         Map attributes = null;
-        String errMsg = null;
     
         // price sanity check
         if (productId == null && price < 0) {
-            errMsg = UtilProperties.getMessage(resource, "cart.price_not_positive_number", this.cart.getLocale());
+            String errMsg = UtilProperties.getMessage(resource, "cart.price_not_positive_number", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
         // quantity sanity check
         if (quantity < 1) {
-            errMsg = UtilProperties.getMessage(resource, "cart.quantity_not_positive_number", this.cart.getLocale());
+            String errMsg = UtilProperties.getMessage(resource, "cart.quantity_not_positive_number", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
         }
@@ -199,7 +198,8 @@ public class ShoppingCartHelper {
             }
         } catch (CartItemModifyException e) {
             if (cart.getOrderType().equals("PURCHASE_ORDER")) {
-                errMsg = UtilProperties.getMessage(resource, "cart.product_not_valid_for_supplier", this.cart.getLocale());
+                String errMsg = UtilProperties.getMessage(resource, "cart.product_not_valid_for_supplier", this.cart.getLocale());
+                errMsg = errMsg + " (" + e.getMessage() + ")";
                 result = ServiceUtil.returnError(errMsg);
             } else {
                 result = ServiceUtil.returnError(e.getMessage());
@@ -647,6 +647,7 @@ public class ShoppingCartHelper {
                                             if (productSupplier == null) {
                                                 // in this case, the user wanted to purchase a quantity which is not available (probably below minimum)
                                                 String errMsg = UtilProperties.getMessage(resource, "cart.product_not_valid_for_supplier", this.cart.getLocale());
+                                                errMsg = errMsg + " (" + item.getProductId() + ", " + quantity + ", " + cart.getCurrency() + ")";
                                                 errorMsgs.add(errMsg);
                                             } else {
                                                 item.setQuantity(quantity, dispatcher, this.cart);
