@@ -366,7 +366,7 @@ public class InvoiceServices {
                     GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId));
                     invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, lookupType, invoiceType, "INV_FPROD_ITEM"));
                     invoiceItem.set("description", orderItem.get("itemDescription"));
-                    invoiceItem.set("quantity", billingQuantity);
+                    invoiceItem.set("quantity", new Double(billingQuantity.doubleValue()));
                     invoiceItem.set("amount", orderItem.get("unitPrice"));
                     invoiceItem.set("productId", orderItem.get("productId"));
                     invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
@@ -746,7 +746,7 @@ public class InvoiceServices {
                 if (billAvail != null && billAvail.signum() == 1) { // this checks if billAvail is a positive non-zero number
                     if (issueQty != null && issueQty.doubleValue() > billAvail.doubleValue()) {
                         // can only bill some of the issuance; others have been billed already
-                        issue.set("quantity", billAvail);
+                        issue.set("quantity", new Double(billAvail.doubleValue()));
                         billAvail = ZERO;
                     } else {
                         // now have been billed
@@ -1186,7 +1186,10 @@ public class InvoiceServices {
             adjAmount = amount;
         }
 
-        Debug.logInfo("adjAmount: " + adjAmount + ", divisor: " + divisor + ", multiplier: " + multiplier + ", invoiceTypeId: " + invoiceTypeId + ", invoiceId: " + invoiceId + ", itemSeqId: " + invoiceItemSeqId + ", adj: " + adj, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("adjAmount: " + adjAmount + ", divisor: " + divisor + ", multiplier: " + multiplier + 
+                ", invoiceTypeId: " + invoiceTypeId + ", invoiceId: " + invoiceId + ", itemSeqId: " + invoiceItemSeqId + ", adj: " + adj, module);
+        }
         return adjAmount;
     }
 
