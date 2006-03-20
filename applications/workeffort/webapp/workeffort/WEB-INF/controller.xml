@@ -515,8 +515,6 @@
     <view-map name="LookupQuote" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuote"/>
     <view-map name="LookupQuoteItem" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupQuoteItem"/>
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
-
-    <!-- note that this won't work if the accountingext component is not in place -->
-    <view-map name="LookupInvoice" page="component://accountingext/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
+    <view-map name="LookupInvoice" page="component://accounting/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>
