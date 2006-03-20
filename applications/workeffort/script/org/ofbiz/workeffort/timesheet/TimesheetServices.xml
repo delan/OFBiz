@@ -146,7 +146,6 @@ under the License.
                 
                 <set field="createInvoiceItemMap.description" from-field="timeEntry.comments"/>
                 
-                <!-- NOTE: this will only work with the createInvoiceItem service in accountingext which can generate and return an invoiceItemSeqId -->
                 <call-service service-name="createInvoiceItem" in-map-name="createInvoiceItemMap">
                     <result-to-field result-name="invoiceItemSeqId" field-name="timeEntry.invoiceItemSeqId"/>
                 </call-service>
