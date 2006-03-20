@@ -807,25 +807,6 @@
         <response name="success" type="view" value="viewprofile"/>
     </request-map>
 
-    <!-- ================ Entity Lookup Requests ================= -->
-    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
-    <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
-    <request-map uri="LookupProductCategory"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductCategory"/></request-map>
-    <request-map uri="LookupProductStore"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
-    
-    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
-    <request-map uri="LookupPartyGroup"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
-    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
-
-    <request-map uri="LookupGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
-
-    <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
-    <request-map uri="LookupInvoice"><security auth="true" https="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
-    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
-    <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
-
-    <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
-
     <!-- ================ PDF generation requests ================== -->
     <request-map uri="invoice.pdf">
         <security https="true" auth="true"/>
@@ -994,6 +975,27 @@
         <response name="success" type="view" value="ListChecksToSend"/>
         <response name="error" type="view" value="ListChecksToSend"/>
     </request-map>
+
+    <!-- ================ Entity Lookup Requests ================= -->
+    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
+    <request-map uri="LookupProductCategory"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductCategory"/></request-map>
+    <request-map uri="LookupProductStore"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
+    
+    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupPartyGroup"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
+    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    
+    <request-map uri="LookupGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
+    
+    <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
+    <request-map uri="LookupInvoice"><security auth="true" https="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
+    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
+    <request-map uri="LookupBillingAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupBillingAccount"/></request-map>
+    <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
+    
+    <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -1110,6 +1112,7 @@
     <view-map name="LookupGeo" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeo"/>
 
     <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
+    <view-map name="LookupBillingAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupBillingAccount"/>
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
     <view-map name="LookupPayment" page="component://accounting/widget/LookupScreens.xml#LookupPayment" type="screen"/>
     <view-map name="LookupInvoice" page="component://accounting/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
