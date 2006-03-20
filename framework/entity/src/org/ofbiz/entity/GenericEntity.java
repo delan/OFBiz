@@ -390,7 +390,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                 if (!ObjectType.instanceOf(value, type.getJavaType())) {
                     String errMsg = "In entity field set the value passed in [" + value.getClass().getName() + "] is not compatible with the Java type of the field [" + type.getJavaType() + "]";
                     // eventually we should do this, but for now we'll do a "soft" failure: throw new IllegalArgumentException(errMsg);
-                    Debug.logError(errMsg, module);
+                    Debug.logWarning(errMsg, module);
                 }
             }
             Object old = fields.put(name, value);
