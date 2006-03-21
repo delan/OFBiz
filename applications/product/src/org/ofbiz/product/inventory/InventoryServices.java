@@ -115,6 +115,8 @@ public class InventoryServices {
                     //       However, the code here should work fine because all the values
                     //       for the new inventory item are inerited from the existing item.
                     newItem = GenericValue.create(inventoryItem);
+                    newItem.set("availableToPromiseTotal", new Double(0));
+                    newItem.set("quantityOnHandTotal", new Double(0));
                     
                     String newSeqId = null;
                     try {
@@ -163,7 +165,7 @@ public class InventoryServices {
 
                 inventoryItemToClear.refresh();
                 double atp = inventoryItemToClear.get("availableToPromiseTotal") == null ? 0 : inventoryItemToClear.getDouble("availableToPromiseTotal").doubleValue();
-                if (atp != 0) { 
+                if (atp != 0) {
                     Map createDetailMap = UtilMisc.toMap("availableToPromiseDiff", new Double(-atp), 
                             "inventoryItemId", inventoryItemToClear.get("inventoryItemId"), "userLogin", userLogin);
                     try {
