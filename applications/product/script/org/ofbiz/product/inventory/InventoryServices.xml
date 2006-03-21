@@ -107,10 +107,13 @@
                 <field-map field-name="partyId" env-name="inventoryItem.ownerPartyId"/>
             </entity-one>
             <set field="inventoryItem.currencyUomId" from-field="accPref.baseCurrencyUomId"/>
+            <if-empty field-name="inventoryItem.currencyUomId">
+                <property-to-field resource="general" property="currency.uom.id.default" field-name="inventoryItem.currencyUomId"/>
+            </if-empty>
             <!-- if inventoryItem's currencyUomId is still empty, return an error message -->
             <if-empty field-name="inventoryItem.currencyUomId">
                 <add-error>
-                    <fail-message message="Error: you cannot create inventory items with no currencyUomId."/>
+                    <fail-message message="Error: you cannot create inventory items with no currencyUomId; you can set a default currency in the PartyAcctgPreference for the party [${inventoryItem.ownerPartyId}], or in the general.properties file under the key [currency.uom.id.default]."/>
                 </add-error>
                 <check-errors/>
             </if-empty>
