@@ -66,13 +66,13 @@
     <member-entity entity-alias="PERSON" entity-name="Person"/>
     <member-entity entity-alias="PTYGRP" entity-name="PartyGroup"/>
     <member-entity entity-alias="PR" entity-name="PartyRelationship"/>
-    <alias-all entity-alias="PTY"/>
     <alias-all entity-alias="PERSON">
       <exclude field="comments"/>
     </alias-all>
     <alias-all entity-alias="PTYGRP">
       <exclude field="comments"/>
     </alias-all>
+    <alias entity-alias="PTY" name="partyId"/>
     <alias entity-alias="PR" name="partyIdFrom"/>
     <alias entity-alias="PR" name="partyRelationshipTypeId"/>
     <alias entity-alias="PR" name="fromDate"/>
