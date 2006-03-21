@@ -860,22 +860,24 @@ public class ShoppingCartItem implements java.io.Serializable {
         // needed for inventory checking and auto-save
         String productStoreId = cart.getProductStoreId();
 
-        // check inventory if new quantity is greater than old quantity; don't worry about inventory getting pulled out from under, that will be handled at checkout time
-        if (_product != null && quantity > this.quantity) {
-            try {
-                Map invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", productId, "product", this.getProduct(), "quantity", new Double(quantity)));
-                if (ServiceUtil.isError(invReqResult)) {
-                    Debug.logError("Error calling isStoreInventoryAvailableOrNotRequired service, result is: " + invReqResult, module);
-                    throw new CartItemModifyException((String) invReqResult.get(ModelService.ERROR_MESSAGE));
-                } else if (!"Y".equals((String) invReqResult.get("availableOrNotRequired"))) {
-                    String excMsg = "Sorry, we do not have enough (you tried " + UtilFormatOut.formatQuantity(quantity) + ") of the product " + this.getName() + " (product ID: " + productId + ") in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.";
-                    Debug.logWarning(excMsg, module);
-                    throw new CartItemModifyException(excMsg);
+        if (!"PURCHASE_ORDER".equals(cart.getOrderType())) {
+            // check inventory if new quantity is greater than old quantity; don't worry about inventory getting pulled out from under, that will be handled at checkout time
+            if (_product != null && quantity > this.quantity) {
+                try {
+                    Map invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", productId, "product", this.getProduct(), "quantity", new Double(quantity)));
+                    if (ServiceUtil.isError(invReqResult)) {
+                        Debug.logError("Error calling isStoreInventoryAvailableOrNotRequired service, result is: " + invReqResult, module);
+                        throw new CartItemModifyException((String) invReqResult.get(ModelService.ERROR_MESSAGE));
+                    } else if (!"Y".equals((String) invReqResult.get("availableOrNotRequired"))) {
+                        String excMsg = "Sorry, we do not have enough (you tried " + UtilFormatOut.formatQuantity(quantity) + ") of the product " + this.getName() + " (product ID: " + productId + ") in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.";
+                        Debug.logWarning(excMsg, module);
+                        throw new CartItemModifyException(excMsg);
+                    }
+                } catch (GenericServiceException e) {
+                    String errMsg = "Fatal error calling inventory checking services: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new CartItemModifyException(errMsg);
                 }
-            } catch (GenericServiceException e) {
-                String errMsg = "Fatal error calling inventory checking services: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new CartItemModifyException(errMsg);
             }
         }
 
@@ -891,12 +893,14 @@ public class ShoppingCartItem implements java.io.Serializable {
             ProductPromoWorker.doPromotions(cart, dispatcher);
         }
 
-        // store the auto-save cart
-        if (triggerExternalOps && ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
-            try {
-                ShoppingListEvents.fillAutoSaveList(cart, dispatcher);
-            } catch (GeneralException e) {
-                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderUnableToStoreAutoSaveCart", locale));
+        if (!"PURCHASE_ORDER".equals(cart.getOrderType())) {
+            // store the auto-save cart
+            if (triggerExternalOps && ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
+                try {
+                    ShoppingListEvents.fillAutoSaveList(cart, dispatcher);
+                } catch (GeneralException e) {
+                    Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderUnableToStoreAutoSaveCart", locale));
+                }
             }
         }
 
