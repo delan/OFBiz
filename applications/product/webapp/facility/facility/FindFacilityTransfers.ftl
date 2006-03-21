@@ -59,8 +59,10 @@
             </td>
             <td><div class="tabletext">&nbsp;${(transfer.sendDate)?if_exists}</div></td>
             <td>
-                <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", transfer.statusId))>
-                <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
+                <#if (transfer.statusId)?exists>
+                    <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", transfer.statusId))>
+                    <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
+                </#if>
             </td>
             <td align="center"><div class="tabletext"><a href="<@ofbizUrl>TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div></td>
             </tr>
@@ -91,8 +93,10 @@
             </td>
             <td><div class="tabletext">&nbsp;${(transfer.sendDate)?if_exists}</div></td>
             <td>
-                <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", transfer.statusId))>
-                <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
+                <#if (transfer.statusId)?exists>
+                    <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", transfer.statusId))>
+                    <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
+                </#if>
             </td>
             <td align="center"><div class="tabletext"><a href="<@ofbizUrl>TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div></td>
             </tr>

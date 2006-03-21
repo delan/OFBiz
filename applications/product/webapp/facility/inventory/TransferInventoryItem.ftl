@@ -146,10 +146,10 @@
         <td width="6%">&nbsp;</td>
         <td width="74%">
         <select name="statusId" class="selectBox">
-            <#if (inventoryTransfer.getRelatedOneCache("StatusItem"))?exists>
+            <#if (inventoryTransfer.statusId)?exists>
                 <#assign curStatusItem = inventoryTransfer.getRelatedOneCache("StatusItem")>
+                <option value="${(inventoryTransfer.statusId)?if_exists}">${(curStatusItem.description)?if_exists}</option>
             </#if>
-            <option value="${(inventoryTransfer.statusId)?if_exists}">${(curStatusItem.description)?if_exists}</option>
             <#list statusItems as statusItem>
             <option value="${(statusItem.statusId)?if_exists}">${(statusItem.get("description",locale))?if_exists}</option>
             </#list>
