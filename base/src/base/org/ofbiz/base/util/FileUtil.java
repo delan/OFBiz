@@ -45,7 +45,35 @@ public class FileUtil {
         writeString(null, fileName, s);
     }
 
-    public static void writeString(String path, String fileName, String s) throws IOException {
+    public static void writeString(String path, String name, String s) throws IOException {      
+        Writer out = getBufferedWriter(path, name);
+
+        try {
+            out.write(s + System.getProperty("line.separator"));
+        } catch (IOException e) {
+            Debug.logError(e, module);
+            throw e;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+    }
+
+    public static Writer getBufferedWriter(String path, String name) throws IOException {
+        String fileName = getPatchedFileName(path, name);
+        if (UtilValidate.isEmpty(fileName)) {
+            throw new IOException("Cannot obtain buffered writer for an empty filename!");
+        }
+
+        return new BufferedWriter(new FileWriter(fileName));
+    }
+
+    public static String getPatchedFileName(String path, String fileName) throws IOException {
         // make sure the export directory exists
         if (UtilValidate.isNotEmpty(path)) {
             path = path.replaceAll("\\\\", "/");
@@ -66,24 +94,6 @@ public class FileUtil {
             fileName = path + fileName;
         }
 
-        if (UtilValidate.isNotEmpty(fileName)) {
-            // write the string
-            Writer out = null;
-            try {
-                out = new BufferedWriter(new FileWriter(fileName));
-                out.write(s + System.getProperty("line.separator"));
-            } catch (IOException e) {
-                Debug.logError(e, module);
-                throw e;
-            } finally {
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        Debug.logError(e, module);
-                    }
-                }
-            }
-        }
+        return fileName;
     }
 }
