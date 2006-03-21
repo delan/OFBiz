@@ -161,13 +161,18 @@
                     <clear-field field-name="reserveOisgirMap"/>
                 <else>
                     <!-- no non-ser inv item, create a non-ser InventoryItem with availableToPromise = -quantityNotReserved -->
-                    <make-value entity-name="InventoryItem" value-name="newNonSerInventoryItem"/>
-                    <sequenced-id-to-env sequence-name="InventoryItem" env-name="newNonSerInventoryItem.inventoryItemId"/>
-                    <set from-field="parameters.productId" field="newNonSerInventoryItem.productId"/>
-                    <set from-field="parameters.facilityId" field="newNonSerInventoryItem.facilityId"/>
-                    <set from-field="parameters.containerId" field="newNonSerInventoryItem.containerId"/>
-                    <set value="NON_SERIAL_INV_ITEM" field="newNonSerInventoryItem.inventoryItemTypeId"/>
-                    <create-value value-name="newNonSerInventoryItem"/>
+                    <clear-field field-name="createInventoryItemInMap"/>
+                    <clear-field field-name="createInventoryItemOutMap"/>
+                    <set from-field="parameters.productId" field="createInventoryItemInMap.productId"/>
+                    <set from-field="parameters.facilityId" field="createInventoryItemInMap.facilityId"/>
+                    <set from-field="parameters.containerId" field="createInventoryItemInMap.containerId"/>
+                    <set value="NON_SERIAL_INV_ITEM" field="createInventoryItemInMap.inventoryItemTypeId"/>
+                    <call-service service-name="createInventoryItem" in-map-name="createInventoryItemInMap">
+                        <result-to-field result-name="inventoryItemId" field-name="createInventoryItemOutMap.inventoryItemId"/>
+                    </call-service>
+                    <entity-one entity-name="InventoryItem" value-name="newNonSerInventoryItem">
+                        <field-map field-name="inventoryItemId" env-name="createInventoryItemOutMap.inventoryItemId"/>
+                    </entity-one>
 
                     <!-- also create a detail record with the quantities -->
                     <set from-field="newNonSerInventoryItem.inventoryItemId" field="createDetailMap.inventoryItemId"/>
