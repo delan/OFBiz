@@ -247,6 +247,15 @@
         <if-not-empty field-name="duplicateInventoryItems" map-name="parameters">
             <find-by-and entity-name="InventoryItem" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
+                <!--
+                    NOTE: new inventory items should always be created calling the
+                          createInventoryItem service because in this way we are sure
+                          that all the relevant fields are filled with default values.
+                          However, the code here should work fine because all the values
+                          for the new inventory item are inerited from the existing item.
+                    TODO: is this code correct? What is the meaning of duplicating inventory items?
+                          What about the InventoryItemDetail entries?
+                -->
                 <clone-value value-name="foundValue" new-value-name="newTempValue"/>
                 <set from-field="parameters.productId" field="newTempValue.productId"/>
                 <!-- this one is slightly different because it needs a new sequenced inventoryItemId -->

@@ -109,6 +109,11 @@ public class InventoryServices {
                 // however, if atp < qoh && atp == xferQty, then we still need to split; oh, but no need to check atp == xferQty in the second part because if it isn't greater and isn't less, then it is equal
                 if (xferQty.doubleValue() < atp.doubleValue() || atp.doubleValue() < qoh.doubleValue()) {
                     Double negXferQty = new Double(-xferQty.doubleValue());
+                    // NOTE: new inventory items should always be created calling the
+                    //       createInventoryItem service because in this way we are sure
+                    //       that all the relevant fields are filled with default values.
+                    //       However, the code here should work fine because all the values
+                    //       for the new inventory item are inerited from the existing item.
                     newItem = GenericValue.create(inventoryItem);
                     
                     String newSeqId = null;
