@@ -264,6 +264,7 @@ public class InventoryServices {
         String inventoryTransferId = (String) context.get("inventoryTransferId");
         GenericValue inventoryTransfer = null;
         GenericValue inventoryItem = null;
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         try {
             inventoryTransfer = delegator.findByPrimaryKey("InventoryTransfer",
@@ -285,7 +286,8 @@ public class InventoryServices {
             double atp = inventoryItem.get("availableToPromiseTotal") == null ? 0 : inventoryItem.getDouble("availableToPromiseTotal").doubleValue();
             double qoh = inventoryItem.get("quantityOnHandTotal") == null ? 0 : inventoryItem.getDouble("quantityOnHandTotal").doubleValue();
             Map createDetailMap = UtilMisc.toMap("availableToPromiseDiff", new Double(qoh - atp), 
-                    "inventoryTransferId", inventoryTransferId, "inventoryItemId", inventoryItem.get("inventoryItemId"));
+                                                 "inventoryItemId", inventoryItem.get("inventoryItemId"),
+                                                 "userLogin", userLogin);
             try {
                 Map result = dctx.getDispatcher().runSync("createInventoryItemDetail", createDetailMap);
                 if (ServiceUtil.isError(result)) {
