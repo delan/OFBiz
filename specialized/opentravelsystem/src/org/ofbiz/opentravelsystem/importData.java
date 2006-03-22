@@ -186,7 +186,7 @@ public class importData {
 			String prefix = partyAcctgPreference.getString("invoiceIdPrefix");
 			String infoItem = null;
 			// parse line from file
-			while ((infoItem=getToken()) != null && infoItemNr != 7 ) {
+			while ((infoItem=getToken()) != null && infoItemNr != 8 ) {
 				if (debug) Debug.logInfo("Token read: " + infoItem, module);
 				switch(++infoItemNr) {
 				case 1: // product number
@@ -223,6 +223,8 @@ public class importData {
 					else  {
 						promo=true;
 					}
+				case 8: //coordinates for bowlingshop into productcategorymembers comments
+					productCategoryMember.put("comments", prefix.concat(infoItem));
 					break;
 				}
 			}
