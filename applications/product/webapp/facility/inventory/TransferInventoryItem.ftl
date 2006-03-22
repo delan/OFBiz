@@ -204,7 +204,7 @@
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <#if inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
-                <input type="text" size="5" name="xferQty" value="${(inventoryItem.availableToPromise)?if_exists}" class="inputBox">
+                <input type="text" size="5" name="xferQty" value="${(inventoryItem.availableToPromiseTotal)?if_exists}" class="inputBox">
             <#elseif inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
                 <input type="hidden" name="xferQty" value="1">
                 <div class="tabletext">1</div>
