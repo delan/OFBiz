@@ -139,6 +139,7 @@
     <GlAccountType description="Accounts Payable" glAccountTypeId="ACCOUNTS_PAYABLE" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Balance" glAccountTypeId="BALANCE_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Bank Settlement" glAccountTypeId="BANK_STLMNT_ACCOUNT" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Merchant Account Settlement" glAccountTypeId="MRCH_STLMNT_ACCOUNT" hasTable="N" parentTypeId="ACCOUNTS_RECEIVABLE"/>
     <GlAccountType description="Current Asset" glAccountTypeId="CURRENT_ASSET" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Fixed Asset" glAccountTypeId="FIXED_ASSET" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Other Asset" glAccountTypeId="OTHER_ASSET" hasTable="N" parentTypeId=""/>
@@ -169,6 +170,10 @@
     <GlAccountType description="Uninvoiced Shipment Receipts" glAccountTypeId="UNINVOICED_SHIP_RCPT" hasTable="N" parentTypeId="CURRENT_LIABILITY"/>
     <GlAccountType description="Purchase Price Variance" glAccountTypeId="PURCHASE_PRICE_VAR" hasTable="N" parentTypeId="EXPENSE"/>
     <GlAccountType description="Prepaid Expenses" glAccountTypeId="PREPAID_EXPENSES" hasTable="N" parentTypeId="CURRENT_ASSET"/>
+
+    <GlAccountType description="Receivable from Inventory Transferred Out" glAccountTypeId="INVENTORY_XFER_OUT" hasTable="N" parentTypeId="CURRENT_ASSET"/>
+    <GlAccountType description="Payable from Inventory Transferred In" glAccountTypeId="INVENTORY_XFER_IN" hasTable="N" parentTypeId="CURRENT_LIABILITY"/>
+
 
     <GlResourceType description="Money" glResourceTypeId="MONEY"/>
     <GlResourceType description="Raw Materials" glResourceTypeId="RAW_MATERIALS"/>
