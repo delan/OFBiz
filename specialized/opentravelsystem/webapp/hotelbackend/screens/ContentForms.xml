@@ -29,7 +29,7 @@
 		
     <form name="EditElectronicText" 
         default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        default-tooltip-style="tabletext"
         target="updateElectronicText" title="" type="single">
         <actions>
             <service service-name="getElectronicText">
@@ -37,7 +37,8 @@
             </service>
         </actions>
         <auto-fields-service service-name="updateElectronicText"/>
-        <field name="textData" title=" "><textarea cols="90" rows="38"/></field>
+        <field name="textData" title=" " id-name="textData"><textarea cols="90" rows="38"/></field>
+        <field name=""><display description="&lt;script type=&quot;text/javascript&quot;>makeWhizzyWig(&quot;textData&quot;, &quot;all&quot;);&lt;/script&gt;"/></field>
         <field name="dataResourceId"><hidden/></field>
         <field name="contentId"><hidden/></field>
         <field name="skipPermissionCheck"><hidden/></field>

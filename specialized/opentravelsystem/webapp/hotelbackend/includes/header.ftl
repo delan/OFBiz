@@ -46,20 +46,18 @@
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
 	${layoutSettings.extraHead?if_exists}
     <#if htmlEdit?exists>
-		<script language="javascript" type="text/javascript" src="/hotelbackend/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>		<script language="javascript" type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
-		<script language="javascript" type="text/javascript">
-			tinyMCE.init({
-	        mode : "textareas",
-	        theme : "advanced",
-	        theme_advanced_toolbar_location : "top",
-  	        theme_advanced_disable : "strikethrough,styleselect,formatselect,anchor,removeformat,sub,sup,visualaid,separator,hr,charmap,cleanup",
-        	theme_advanced_buttons1_add : "charmap"
-       		});		
-		</script>
+		<script language="Javascript" type="text/javascript" src="/${activeApp}/html/whizzywig.js"></script>
+		<script language="Javascript" type="text/javascript" src="/${activeApp}/html/xhtml.js"></script>
+	<script language="JavaScript">
+		// wizzywig variables
+		buttonPath = "/${activeApp}/html/images/";
+		cssFile = "/${activeApp}/html/images/simple.css";
+		gentleClean = "true";
+	</script>
 	</#if>
 	<script language="JavaScript">
 		function getHelpWindow(url) {
-	    win=window.open(url,"helpwin","height=400,width=600,toolbar=no,location=no,scrollbars=yes,directories=no,status=no,menubar=no,resizable=yes");
+	    win=window.open(url,"helpwin","height=400,width=800,toolbar=no,location=no,scrollbars=yes,directories=no,status=no,menubar=no,resizable=yes");
 	    win.focus();
 			}
 	</script>
