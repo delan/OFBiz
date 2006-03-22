@@ -811,7 +811,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.content">
-        <xs:attribute type="xs:string" name="content-id" use="required"/>
+        <xs:attribute type="xs:string" name="content-id"/>
+        <xs:attribute type="xs:string" name="dataresource-id"/>
         <xs:attribute type="xs:string" name="edit-request"/>
         <xs:attribute type="xs:string" name="edit-container-style" default="editWrapper"/>
         <xs:attribute type="xs:string" name="enable-edit-name" default="enableEdit"/>

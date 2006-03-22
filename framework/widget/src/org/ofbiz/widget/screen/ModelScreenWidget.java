@@ -818,7 +818,7 @@ public abstract class ModelScreenWidget implements Serializable {
         protected FlexibleStringExpander editContainerStyle;
         protected FlexibleStringExpander enableEditName;
         protected boolean xmlEscape = false;
-        protected String dataResourceId;
+        protected FlexibleStringExpander dataResourceId;
         protected String width;
         protected String height;
         protected String border;
@@ -828,6 +828,7 @@ public abstract class ModelScreenWidget implements Serializable {
 
             // put the text attribute first, then the pcdata under the element, if both are there of course
             this.contentId = new FlexibleStringExpander(subContentElement.getAttribute("content-id"));
+            this.dataResourceId = new FlexibleStringExpander(subContentElement.getAttribute("dataresource-id"));
             this.editRequest = new FlexibleStringExpander(subContentElement.getAttribute("edit-request"));
             this.editContainerStyle = new FlexibleStringExpander(subContentElement.getAttribute("edit-container-style"));
             this.enableEditName = new FlexibleStringExpander(subContentElement.getAttribute("enable-edit-name"));
@@ -846,27 +847,29 @@ public abstract class ModelScreenWidget implements Serializable {
                 // because many times there will be embedded "subcontent" elements
                 // that use the syntax: <subcontent content-id="${contentId}"...
                 // and this is a step to make sure that it is there.
-                String expandedContentId = getContentId(context);
-                if (!(context instanceof MapStack)) {
-                    context = MapStack.create(context);
-                }
-                
-                // This is an important step to make sure that the current contentId is in the context
-                // as templates that contain "subcontent" elements will expect to find the master
-                // contentId in the context as "contentId".
-                ((MapStack) context).push();
-                context.put("contentId", expandedContentId);
-                
                 GenericDelegator delegator = (GenericDelegator) context.get("delegator");
                 GenericValue content = null;
-                if (UtilValidate.isNotEmpty(expandedContentId)) {
-                	content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", expandedContentId));
+                String expandedDataResourceId = getDataResourceId(context);
+                if (UtilValidate.isEmpty(expandedDataResourceId)) {
+                    String expandedContentId = getContentId(context);
+                    if (!(context instanceof MapStack)) {
+                        context = MapStack.create(context);
+                    }
+                    
+                    // This is an important step to make sure that the current contentId is in the context
+                    // as templates that contain "subcontent" elements will expect to find the master
+                    // contentId in the context as "contentId".
+                    ((MapStack) context).push();
+                    context.put("contentId", expandedContentId);
+                    
+                    if (UtilValidate.isNotEmpty(expandedContentId)) {
+                    	content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", expandedContentId));
+                    }
+                    expandedDataResourceId = content.getString("dataResourceId");
                 }
-                
                 GenericValue dataResource = null;
-                this.dataResourceId = content.getString("dataResourceId");
-                if (UtilValidate.isNotEmpty(dataResourceId)) {
-                	dataResource = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", expandedContentId));
+                if (UtilValidate.isNotEmpty(expandedDataResourceId)) {
+                	dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", expandedDataResourceId));
                 }
                 
                 String mimeTypeId = null;
@@ -899,6 +902,10 @@ public abstract class ModelScreenWidget implements Serializable {
             return this.contentId.expandString(context);
         }
         
+        public String getDataResourceId(Map context) {
+            return this.dataResourceId.expandString(context);
+        }
+        
         public String getEditRequest(Map context) {
             return this.editRequest.expandString(context);
         }
@@ -918,10 +925,6 @@ public abstract class ModelScreenWidget implements Serializable {
         public String rawString() {
             // may want to expand this a bit more
             return "<content content-id=\"" + this.contentId.getOriginal() + "\" xml-escape=\"" + this.xmlEscape + "\"/>";
-        }
-        
-        public String getDataResourceId() {
-            return this.dataResourceId;
         }
         
         public String getWidth() {
