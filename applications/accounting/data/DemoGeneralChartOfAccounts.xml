@@ -67,22 +67,22 @@
     accountName="ACCOUNTS RECEIVABLE TRADE - ALLOWANCE FOR BAD DEBT" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="120000" glAccountId="122000" accountCode="122000" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="MRCH_STLMNT_ACCOUNT" glResourceTypeId="MONEY"
     accountName="IN TRANSIT FROM CREDIT CARD PROCESSORS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122100" accountCode="122100" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="MRCH_STLMNT_ACCOUNT" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - AMEX" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122200" accountCode="122200" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="MRCH_STLMNT_ACCOUNT" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - DISCOVER" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122300" accountCode="122300" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="MRCH_STLMNT_ACCOUNT" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - MASTER CARD / VISA" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122400" accountCode="122400" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="MRCH_STLMNT_ACCOUNT" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - DEBIT / ATM CARDS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="122000" glAccountId="122900" accountCode="122900" 
-    glAccountClassId="CURRENT_ASSET" glAccountTypeId="ACCOUNTS_RECEIVABLE" glResourceTypeId="MONEY"
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="MRCH_STLMNT_ACCOUNT" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE CREDIT CARDS - ALLOWANCE FOR BAD DEBT" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="120000" glAccountId="123000" accountCode="123000" 
@@ -101,6 +101,10 @@
   <GlAccount parentGlAccountId="124000" glAccountId="124300" accountCode="124300" 
     glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
     accountName="LOANS RECEIVABLE -OTHERS" description="" postedBalance="0.0"/>
+
+  <GlAccount parentGlAccountId="120000" glAccountId="125000" accountCode="125000" 
+    glAccountClassId="CURRENT_ASSET" glAccountTypeId="INVENTORY_XFER_OUT" glResourceTypeId="MONEY"
+    accountName="RECEIVABLE FROM INVENTORY TRANSFERRED OUT" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="120000" glAccountId="129000" accountCode="129000" 
     glAccountClassId="CURRENT_ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
@@ -284,6 +288,10 @@
   <GlAccount parentGlAccountId="210000" glAccountId="214000" accountCode="214000" 
     glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="UNINVOICED ITEM RECEIPTS" description="" postedBalance="0.0"/>
+      
+  <GlAccount parentGlAccountId="210000" glAccountId="215000" accountCode="215000" 
+    glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="INVENTORY_XFER_IN" glResourceTypeId="MONEY"  
+    accountName="PAYABLE FOR INVENTORY TRANSFERRED IN" description="" postedBalance="0.0"/>
       
   <GlAccount parentGlAccountId="200000" glAccountId="220000" accountCode="220000" 
     glAccountClassId="CURRENT_LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
