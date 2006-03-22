@@ -53,6 +53,15 @@
         <set from-field="nowTimestamp" field="newEntity.lastModifiedDate"/>
         <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
         <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
+        <if-empty field-name="newEntity.isVariant">
+            <set field="newEntity.isVariant" value="N"/>
+        </if-empty>
+        <if-empty field-name="newEntity.isVirtual">
+            <set field="newEntity.isVirtual" value="N"/>
+        </if-empty>
+        <if-empty field-name="newEntity.billOfMaterialLevel">
+            <set field="newEntity.billOfMaterialLevel" value="0" type="Integer"/>
+        </if-empty>
 
         <create-value value-name="newEntity"/>
 
