@@ -40,10 +40,10 @@
         <field use-when="product==null&amp;&amp;productId!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotFindProductId} [${productId}]"><text size="20" maxlength="20"/></field>
 
         <field position="1" name="isVirtual" title="${uiLabelMap.ProductVirtualProduct}" widget-style="selectBox">
-            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}" /><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down><option key="N" description="${uiLabelMap.CommonN}"/><option key="Y" description="${uiLabelMap.CommonY}"/></drop-down>
         </field>
         <field position="2" name="isVariant" title="${uiLabelMap.ProductVariantProduct}" widget-style="selectBox">
-            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down><option key="N" description="${uiLabelMap.CommonN}"/><option key="Y" description="${uiLabelMap.CommonY}"/></drop-down>
         </field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}" widget-style="selectBox">
             <drop-down>
