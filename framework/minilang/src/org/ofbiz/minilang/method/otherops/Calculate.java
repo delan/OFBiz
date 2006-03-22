@@ -152,12 +152,12 @@ public class Calculate extends MethodOperation {
         }
         
         BigDecimal resultValue = ZERO;
-        resultValue.setScale(decimalScale, roundingMode);
+        resultValue = resultValue.setScale(decimalScale, roundingMode);
         for (int i = 0; i < calcops.length; i++) {
             resultValue = resultValue.add(calcops[i].calcValue(methodContext, decimalScale, roundingMode));
             // Debug.logInfo("main total so far: " + resultValue, module);
         }
-        resultValue.setScale(decimalScale, roundingMode);
+        resultValue = resultValue.setScale(decimalScale, roundingMode);
         
         /* the old thing that did conversion to string and back, may want to use somewhere sometime...:
          * for now just doing the setScale above (before and after calc ops)
@@ -184,11 +184,11 @@ public class Calculate extends MethodOperation {
             resultObj = new Float(resultValue.floatValue());
             break;
         case TYPE_LONG:
-            resultValue.setScale(0, roundingMode);
+            resultValue = resultValue.setScale(0, roundingMode);
             resultObj = new Long(resultValue.longValue());
             break;
         case TYPE_INTEGER:
-            resultValue.setScale(0, roundingMode);
+            resultValue = resultValue.setScale(0, roundingMode);
             resultObj = new Integer(resultValue.intValue());
             break;
         case TYPE_STRING:
@@ -244,7 +244,7 @@ public class Calculate extends MethodOperation {
             BigDecimal value;
             try {
                 value = new BigDecimal(valueStr);
-                value.setScale(scale, roundingMode);
+                value = value.setScale(scale, roundingMode);
             } catch (Exception e) {
                 Debug.logError(e, "Could not parse the number string: " + valueStr, module);
                 throw new IllegalArgumentException("Could not parse the number string: " + valueStr);
@@ -312,7 +312,7 @@ public class Calculate extends MethodOperation {
             }
             
             BigDecimal resultValue = ZERO;
-            resultValue.setScale(scale, roundingMode);
+            resultValue = resultValue.setScale(scale, roundingMode);
             boolean isFirst = true;
 
             // if a fieldAcsr was specified, get the field from the map or result and use it as the initial value
