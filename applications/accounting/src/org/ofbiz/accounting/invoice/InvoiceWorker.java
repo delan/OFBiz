@@ -18,12 +18,17 @@
 package org.ofbiz.accounting.invoice;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -42,7 +47,6 @@ public class InvoiceWorker {
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
 
-    
     /**
      * Method to return the total amount of an invoice
      * @param invoice GenericValue object of the Invoice
@@ -98,7 +102,7 @@ public class InvoiceWorker {
                     amount = new BigDecimal("0");
                 if (quantity == null)
                     quantity = new BigDecimal("1");
-                invoiceTotal = invoiceTotal.add( amount.multiply(quantity)).setScale(2,4);
+                invoiceTotal = invoiceTotal.add( amount.multiply(quantity)).setScale(decimals,rounding);
             }
         }
         return invoiceTotal;        
@@ -304,7 +308,18 @@ public class InvoiceWorker {
     public static BigDecimal getInvoiceNotApplied(GenericValue invoice) {
     	return InvoiceWorker.getInvoiceTotalBd(invoice).subtract(getInvoiceAppliedBd(invoice));
     }
+    /**
+     * Returns amount not applied (ie, still outstanding) of an invoice at an asOfDate, based on Payment.effectiveDate <= asOfDateTime
+     * 
+     * @param invoice
+     * @param asOfDateTime
+     * @return
+     */
+    public static BigDecimal getInvoiceNotApplied(GenericValue invoice, Timestamp asOfDateTime) {
+    	return InvoiceWorker.getInvoiceTotalBd(invoice).subtract(getInvoiceAppliedBd(invoice, asOfDateTime));
+    }
 
+    
     /**
      * Method to return the total amount of an invoice which is applied to a payment
      * @param invoice GenericValue object of the Invoice
@@ -315,44 +330,36 @@ public class InvoiceWorker {
     }
     	
     public static BigDecimal getInvoiceAppliedBd(GenericDelegator delegator, String invoiceId) {
+        return getInvoiceAppliedBd(delegator, invoiceId, UtilDateTime.nowTimestamp());
+    }
+    
+    /**
+     * Returns amount applied to invoice before an asOfDateTime, based on Payment.effectiveDate <= asOfDateTime
+     * 
+     * @param delegator
+     * @param invoiceId
+     * @param asOfDateTime - a Timestamp
+     * @return
+     */
+    public static BigDecimal getInvoiceAppliedBd(GenericDelegator delegator, String invoiceId, Timestamp asOfDateTime) {
         if (delegator == null) {
             throw new IllegalArgumentException("Null delegator is not allowed in this method");
         }
         
-        GenericValue invoice = null;
-        try {
-            invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));    
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting Invoice", module);
-        }
-        
-        if (invoice == null) {
-            throw new IllegalArgumentException("The invoiceId passed does not match an existing invoice");
-        }
-        
-        return getInvoiceAppliedBd(invoice);
-    }
-    /**
-     * Method to return the total amount of an invoice which is applied to a payment
-     * @param invoice GenericValue object of the Invoice
-     * @return the applied total as double
-     */
-    public static double getInvoiceApplied(GenericValue invoice) {
-    	return getInvoiceAppliedBd(invoice).doubleValue();
-    }
-    /**
-     * Big decimal version of getInvoiceApplied(
-     * 
-     * @param delegator
-     * @param invoiceId
-     * @param invoiceItemSeqId
-     * @return
-     */
-    public static BigDecimal getInvoiceAppliedBd(GenericValue invoice) {
         BigDecimal invoiceApplied = new BigDecimal("0");
         List paymentApplications = null;
+        
+        // lookup payment applications which took place before the asOfDateTime for this invoice
+        EntityConditionList dateCondition = new EntityConditionList(UtilMisc.toList(
+                new EntityExpr("effectiveDate", EntityOperator.EQUALS, null),
+                new EntityExpr("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, asOfDateTime)), EntityOperator.OR);
+        EntityConditionList conditions = new EntityConditionList(UtilMisc.toList(
+                dateCondition,
+                new EntityExpr("invoiceId", EntityOperator.EQUALS, invoiceId)),
+                EntityOperator.AND); 
+
         try {
-        	paymentApplications = invoice.getRelated("PaymentApplication");
+        	paymentApplications = delegator.findByCondition("PaymentAndApplication", conditions, null, UtilMisc.toList("effectiveDate"));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting paymentApplicationlist", module);            
         }
@@ -363,8 +370,31 @@ public class InvoiceWorker {
                 invoiceApplied = invoiceApplied.add(paymentApplication.getBigDecimal("amountApplied")).setScale(decimals,rounding);
             }
         }
-        return invoiceApplied;        
+        return invoiceApplied;
     }
+    /**
+     * Method to return the total amount of an invoice which is applied to a payment
+     * @param invoice GenericValue object of the Invoice
+     * @return the applied total as double
+     */
+    public static double getInvoiceApplied(GenericValue invoice) {
+    	return getInvoiceAppliedBd(invoice).doubleValue();
+    }
+    /**
+     * Big decimal version of getInvoiceApplied
+     * 
+     * @param delegator
+     * @param invoiceId
+     * @param invoiceItemSeqId
+     * @return
+     */
+    public static BigDecimal getInvoiceAppliedBd(GenericValue invoice, Timestamp asOfDateTime) {
+        return getInvoiceAppliedBd(invoice.getDelegator(), invoice.getString("invoiceId"), asOfDateTime);
+    }
+    public static BigDecimal getInvoiceAppliedBd(GenericValue invoice) {
+        return getInvoiceAppliedBd(invoice, UtilDateTime.nowTimestamp());
+    }
+    
     /**
      * Method to return the amount of an invoiceItem which is applied to a payment
      * @param invoice GenericValue object of the Invoice
@@ -373,8 +403,9 @@ public class InvoiceWorker {
     public static double getInvoiceItemApplied(GenericDelegator delegator, String invoiceId, String invoiceItemSeqId) {
     	return getInvoiceItemAppliedBd(delegator, invoiceId, invoiceItemSeqId).doubleValue();
     }
+    
     /**
-     * Big decimal version of getInvoiceApplied(
+     * Big decimal version of getInvoiceApplied
      * 
      * @param delegator
      * @param invoiceId
@@ -399,6 +430,7 @@ public class InvoiceWorker {
         
         return getInvoiceItemAppliedBd(invoiceItem);
     }
+    
     /**
      * Method to return the total amount of an invoiceItem which is applied to a payment
      * @param invoice GenericValue object of the Invoice
