@@ -374,7 +374,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderContentFrame(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
     	
-    	String dataResourceId = content.getDataResourceId();
+    	String dataResourceId = content.getDataResourceId(context);
     	String urlString = "ViewSimpleContent?dataResourceId=" + dataResourceId;
     	
     	String width = content.getWidth();
