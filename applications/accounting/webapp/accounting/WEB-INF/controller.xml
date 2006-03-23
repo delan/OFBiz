@@ -807,6 +807,25 @@
         <response name="success" type="view" value="viewprofile"/>
     </request-map>
 
+    <!-- ================ Entity Lookup Requests ================= -->
+    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
+    <request-map uri="LookupProductCategory"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductCategory"/></request-map>
+    <request-map uri="LookupProductStore"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
+    
+    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupPartyGroup"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
+    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+
+    <request-map uri="LookupGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
+
+    <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
+    <request-map uri="LookupInvoice"><security auth="true" https="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
+    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
+    <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
+
+    <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
+
     <!-- ================ PDF generation requests ================== -->
     <request-map uri="invoice.pdf">
         <security https="true" auth="true"/>
@@ -975,26 +994,38 @@
         <response name="success" type="view" value="ListChecksToSend"/>
         <response name="error" type="view" value="ListChecksToSend"/>
     </request-map>
+    
+    <!-- FixedAssetIdent -->
+    <request-map uri="ListFixedAssetIdents">
+    	<security https="true" auth="true"/>
+		<response name="success" type="view" value="ListFixedAssetIdents"/>
+		<response name="error" type="view" value="ListFixedAssetIdents"/>		
+    </request-map>
+    
+    <request-map uri="EditFixedAssetIdent">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditFixedAssetIdent"/>
+    	<response name="error" type="view" value="EditFixedAssetIdent"/>
+    </request-map>
 
-    <!-- ================ Entity Lookup Requests ================= -->
-    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
-    <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
-    <request-map uri="LookupProductCategory"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductCategory"/></request-map>
-    <request-map uri="LookupProductStore"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
-    
-    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
-    <request-map uri="LookupPartyGroup"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
-    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
-    
-    <request-map uri="LookupGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupGeo"/></request-map>
-    
-    <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
-    <request-map uri="LookupInvoice"><security auth="true" https="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
-    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
-    <request-map uri="LookupBillingAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupBillingAccount"/></request-map>
-    <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
-    
-    <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
+    <request-map uri="createFixedAssetIdent">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFixedAssetIdent"/>
+        <response name="success" type="view" value="ListFixedAssetIdents"/>
+        <response name="error" type="view" value="ListFixedAssetIdents"/>
+    </request-map>
+    <request-map uri="updateFixedAssetIdent">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAssetIdent"/>
+        <response name="success" type="view" value="ListFixedAssetIdents"/>
+        <response name="error" type="view" value="ListFixedAssetIdents"/>
+    </request-map>
+    <request-map uri="removeFixedAssetIdent">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeFixedAssetIdent"/>
+        <response name="success" type="view" value="ListFixedAssetIdents"/>
+        <response name="error" type="view" value="ListFixedAssetIdents"/>
+    </request-map>
     
     <!-- end of request mappings -->
 
@@ -1112,7 +1143,6 @@
     <view-map name="LookupGeo" type="screen" page="component://common/widget/LookupScreens.xml#LookupGeo"/>
 
     <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
-    <view-map name="LookupBillingAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupBillingAccount"/>
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
     <view-map name="LookupPayment" page="component://accounting/widget/LookupScreens.xml#LookupPayment" type="screen"/>
     <view-map name="LookupInvoice" page="component://accounting/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
@@ -1122,5 +1152,9 @@
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintCheckPDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#PrintCheckPDF" content-type="application/pdf" encoding="none"/>
     
+    <!-- Fixed Asset Idents -->
+    <view-map name="ListFixedAssetIdents" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetIdents"/> 
+    <view-map name="EditFixedAssetIdent" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetIdent"/>
+    	
     <!-- end of view mappings -->
 </site-conf>
