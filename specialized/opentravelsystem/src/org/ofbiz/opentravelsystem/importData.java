@@ -56,6 +56,9 @@ import org.apache.commons.fileupload.FileItem;
  * 
  * it will also create the categories. The catalog should however already exist and should be the same name as the organizationPartyId.
  *
+ *Please note that the override services from the opentravelsystem should be installed which will prefix product, productcategory with
+ * the invoice prefix etc...
+ *
  * @author     <a href="mailto:support@opentravelsystem.org">Hans Bakker</a> 
  * @version    $Rev: 0000 $
  */
@@ -82,6 +85,8 @@ public class importData {
 		if (loc == null) loc = Locale.getDefault();
 		String organizationPartyId = userLogin.getString("partyId");
 		Map results = null;
+		int categoryNbr = 0;
+		int productNbr = 0;
 
 		if (getFile(request).equals("error") || localFile == null || localFile.length() == 0) { // get the content of the uploaded file...
 			request.setAttribute("_ERROR_MESSAGE_", "imPortProduct: Uploaded file not found or an empty file......");
@@ -118,6 +123,7 @@ public class importData {
 						"productCategoryTypeId","CATALOG_CATEGORY",
 						"description","Promotion Items")); 
 				promoCategory = (String) results.get("productCategoryId");
+				categoryNbr++;
 		// connect to catalog
 			results = dispatcher.runSync("addProductCategoryToProdCatalog",UtilMisc.toMap(
 					"userLogin",userLogin,
@@ -132,6 +138,7 @@ public class importData {
 					"productCategoryTypeId","CATALOG_CATEGORY",
 					"description","contain the categories to browse"	));
 			browseCategory = (String) results.get("productCategoryId");
+			categoryNbr++;
 		
 		// connect to catalog
 			results = dispatcher.runSync("addProductCategoryToProdCatalog",UtilMisc.toMap(
@@ -207,7 +214,10 @@ public class importData {
 					product.put("smallImageUrl","/".concat(organizationPartyId).concat("/html/images").concat(infoItem));
 					break;
 				case 5: //price
+					if (infoItem.length() > 0)
 						productPrice.put("price", new Double(Double.parseDouble(infoItem)));
+					else
+						productPrice.put("price", null);
 					break;
 				case 6: //category
 					productCategory.put("productCategoryId", infoItem);
@@ -221,10 +231,11 @@ public class importData {
 						promo = false;
 					}
 					else  {
-						promo=true;
+						promo = true;
 					}
+					break;
 				case 8: //coordinates for bowlingshop into productcategorymembers comments
-					productCategoryMember.put("comments", prefix.concat(infoItem));
+					productCategoryMember.put("comments", infoItem);
 					break;
 				}
 			}
@@ -239,7 +250,7 @@ public class importData {
 			try {
 				prExist = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId",prefix.concat((String)product.get("productId"))));
 				if (productCategory.get("productCategoryId") != null)
-					catExist = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId",prefix.concat((String)productCategory.get("productCategoryId"))));
+					catExist = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId",productCategory.get("productCategoryId")));
 			} catch(GenericEntityException e2) {
 				request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
 				return "error";
@@ -249,11 +260,13 @@ public class importData {
 			try { 
 				if (catExist == null && productCategory.get("productCategoryId") != null) { 
 					results = dispatcher.runSync("createProductCategory",productCategory);									// add category
+					categoryNbr++;
 					results = dispatcher.runSync("addProductCategoryToProdCatalog",prodCatalogCategory); 			// link to catalog
 					results = dispatcher.runSync("addProductCategoryToCategory",productCategoryRollup); 			// link to browse category
 				}
 				if(prExist == null) {
 					results = dispatcher.runSync("createProduct",product); 																// create product
+					productNbr++;
 					if (productPrice.get("price") != null)									// if price is supplied
 						results = dispatcher.runSync("createProductPrice",productPrice);												// create product price
 					if (productCategory.get("productCategoryId") != null)		// category is supplied 
@@ -268,7 +281,7 @@ public class importData {
 			}
 		}
 		
-		request.setAttribute("_EVENT_MESSAGE_", "Import successfull. ");
+		request.setAttribute("_EVENT_MESSAGE_", "Import successfull, " + categoryNbr +" categories and " + productNbr + " products added." );
 		return (String) "success";
 	}		
 	

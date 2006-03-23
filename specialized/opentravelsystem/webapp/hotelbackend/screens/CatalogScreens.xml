@@ -765,7 +765,7 @@
                             <label style="head1">Import comma delimited product/catalog file</label>
                         </container>
                         <container>
-                            <label style="head3">Format: &quot;ProductNr&quot;,descr,largeImage,smallImage,price,category,promo-y/n</label>
+                            <label style="head3">Format: &quot;ProductNr&quot;,&quot;descr&quot;,&quot;largeImage&quot;,&quot;smallImage&quot;,&quot;price&quot;,&quot;category&quot;,&quot;promo-y/n&quot;</label>
                         </container>
                         <include-form name="ImportProduct" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
                     </decorator-section>
