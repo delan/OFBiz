@@ -201,12 +201,14 @@ public class InventoryServices {
         String inventoryTransferId = (String) context.get("inventoryTransferId");
         GenericValue inventoryTransfer = null;
         GenericValue inventoryItem = null;
+        GenericValue destinationFacility = null;
         GenericValue userLogin = (GenericValue) context.get("userLogin");        
         
         try {
             inventoryTransfer = delegator.findByPrimaryKey("InventoryTransfer", 
                     UtilMisc.toMap("inventoryTransferId", inventoryTransferId));
-            inventoryItem = inventoryTransfer.getRelatedOne("InventoryItem");  
+            inventoryItem = inventoryTransfer.getRelatedOne("InventoryItem");
+            destinationFacility = inventoryTransfer.getRelatedOne("ToFacility");
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Inventory Item/Transfer lookup problem [" + e.getMessage() + "]");
         }
@@ -246,14 +248,33 @@ public class InventoryServices {
         }
 
         // set the fields on the item
-        inventoryItem.set("facilityId", inventoryTransfer.get("facilityIdTo"));
-        inventoryItem.set("containerId", inventoryTransfer.get("containerIdTo"));
-        inventoryItem.set("locationSeqId", inventoryTransfer.get("locationSeqIdTo"));
+        Map updateInventoryItemMap = UtilMisc.toMap("inventoryItemId", inventoryItem.getString("inventoryItemId"),
+                                                    "facilityId", inventoryTransfer.get("facilityIdTo"),
+                                                    "containerId", inventoryTransfer.get("containerIdTo"),
+                                                    "locationSeqId", inventoryTransfer.get("locationSeqIdTo"),
+                                                    "userLogin", userLogin);
+        // if the destination facility's owner is different 
+        // from the inventory item's ownwer, 
+        // the inventory item is assigned to the new owner.
+        if (destinationFacility != null && destinationFacility.get("ownerPartyId") != null) {
+            String fromPartyId = inventoryItem.getString("ownerPartyId");
+            String toPartyId = destinationFacility.getString("ownerPartyId");
+            if (fromPartyId == null || !fromPartyId.equals(toPartyId)) {
+                updateInventoryItemMap.put("ownerPartyId", toPartyId);
+            }
+        }
+        try {
+            Map result = dctx.getDispatcher().runSync("updateInventoryItem", updateInventoryItemMap);
+            if (ServiceUtil.isError(result)) {
+                return ServiceUtil.returnError("Inventory item store problem", null, null, result);
+            }
+        } catch (GenericServiceException exc) {
+            return ServiceUtil.returnError("Inventory item store problem [" + exc.getMessage() + "]");
+        }
 
         // store the entities
         try {
             inventoryTransfer.store();
-            inventoryItem.store();
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Inventory store problem [" + e.getMessage() + "]");
         }
