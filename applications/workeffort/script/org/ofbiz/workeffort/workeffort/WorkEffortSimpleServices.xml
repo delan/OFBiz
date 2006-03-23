@@ -744,4 +744,22 @@
         </if-empty>
         <remove-value value-name="orderWorkEffort"/>
     </simple-method>
+    
+    <simple-method method-name="setWorkEffortFixedAssetAssign" short-description="Based on task's estimate dates, write assign entries for the fixed asset the task is assigned to">
+        <entity-one entity-name="WorkEffort" value-name="workEffort"/>
+        <set from-field="workEffort.workEffortId" field="findMap.workEffortId"/>
+        <set from-field="workEffort.fixedAssetId" field="findMap.fixedAssetId"/>
+        <find-by-and entity-name="WorkEffortFixedAssetAssign" map-name="findMap" list-name="existingAssignments"/>
+        <filter-list-by-date list-name="existingAssignments"/>
+        <iterate list-name="existingAssignments" entry-name="existingAssignment">
+            <remove-value value-name="existingAssignment"/>
+        </iterate>
+        <make-value value-name="newEntity" entity-name="WorkEffortFixedAssetAssign"/>
+        <set from-field="workEffort.workEffortId" field="newEntity.workEffortId"/>
+        <set from-field="workEffort.fixedAssetId" field="newEntity.fixedAssetId"/>
+        <set from-field="workEffort.currentStatusId" field="newEntity.statusId"/>
+        <set from-field="workEffort.estimatedStartDate" field="newEntity.fromDate"/>
+        <set from-field="workEffort.estimatedCompletionDate" field="newEntity.thruDate"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
 </simple-methods>

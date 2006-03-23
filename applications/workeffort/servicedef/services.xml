@@ -165,7 +165,20 @@
         <attribute name="periodSeconds" type="java.lang.Integer" mode="IN" optional="false"/>
         <attribute name="periods" type="java.util.List" mode="OUT" optional="false"/>
         <attribute name="maxConcurrentEntries" type="java.lang.Integer" mode="OUT" optional="false"/>
-    </service>          
+    </service>
+    <service name="getProductManufacturingSummaryByFacility" engine="java"
+            location="org.ofbiz.workeffort.workeffort.WorkEffortServices" invoke="getProductManufacturingSummaryByFacility">
+        <description>
+            Create a map with an entry for each facility. The value is another map with information about
+            the manufacturing orders running in the facility for the given product:
+            incoming - incomingProductionRunList, estimatedQuantityTotal
+            outgoing - outgoingProductionRunList, estimatedQuantityTotal
+        </description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="summaryInByFacility" type="Map" mode="OUT" optional="false"/>
+        <attribute name="summaryOutByFacility" type="Map" mode="OUT" optional="false"/>
+    </service>
     <service name="createWorkEffortAssoc" default-entity-name="WorkEffortAssoc" engine="simple"
             location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortAssoc">
         <description>
@@ -347,5 +360,10 @@
         location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteOrderHeaderWorkEffort">
         <description>Deletes a OrderHeaderWorkEffort</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="setWorkEffortFixedAssetAssign" engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="setWorkEffortFixedAssetAssign" auth="true">
+        <description>Based on task's estimate dates, write assign entries for the fixed asset the task is assigned to</description>
+        <attribute mode="IN" name="workEffortId" optional="false" type="String"/>
     </service>
 </services>
