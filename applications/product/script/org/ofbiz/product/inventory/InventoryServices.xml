@@ -160,6 +160,7 @@
         <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <field-to-result field-name="lookedUpValue.ownerPartyId" result-name="oldOwnerPartyId"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>

@@ -57,6 +57,7 @@
             <exclude field-name="availableToPromiseTotal"/>
             <exclude field-name="quantityOnHandTotal"/>
         </auto-attributes>
+        <attribute name="oldOwnerPartyId" mode="OUT" optional="false" type="String"/>
     </service>
     <service name="checkProductInventoryDiscontinuation" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="checkProductInventoryDiscontinuation" auth="false">
