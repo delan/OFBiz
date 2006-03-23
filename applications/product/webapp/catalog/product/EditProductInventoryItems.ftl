@@ -26,7 +26,11 @@
  *@since      2.2
 -->
 <#assign externalKeyParam = "&externalLoginKey=" + requestAttributes.externalLoginKey?if_exists>
-
+<#if parameters.showAllFacilities?exists>
+<a href="EditProductInventoryItems?productId=${productId}" class="buttontext">${uiLabelMap.showProductFacilities}</a>
+<#else>
+<a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="buttontext">${uiLabelMap.showAllFacilities}</a>
+</#if>
 <table border="1" cellpadding="2" cellspacing="0">
     <tr>
         <td><div class="tabletext"><b>${uiLabelMap.ProductFacility}</b></div></td>
@@ -38,12 +42,16 @@
     </tr>
     <#list quantitySummaryByFacility.values() as quantitySummary>
         <#assign facilityId = quantitySummary.facilityId?if_exists>
-        <#assign facility = quantitySummary.facility?if_exists>
+        <#assign facility = delegator.findByPrimaryKey("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId))>
+        <#assign manufacturingInQuantitySummary = manufacturingInQuantitySummaryByFacility.get(facilityId)?if_exists>
+        <#assign manufacturingOutQuantitySummary = manufacturingOutQuantitySummaryByFacility.get(facilityId)?if_exists>
         <#assign totalQuantityOnHand = quantitySummary.totalQuantityOnHand?if_exists>
         <#assign totalAvailableToPromise = quantitySummary.totalAvailableToPromise?if_exists>
         <#assign incomingShipmentAndItemList = quantitySummary.incomingShipmentAndItemList?if_exists>
-        <#assign incomingProductionRunList = quantitySummary.incomingProductionRunList?if_exists>
-        <#assign outgoingProductionRunList = quantitySummary.outgoingProductionRunList?if_exists>
+        <#assign incomingProductionRunList = manufacturingInQuantitySummary.incomingProductionRunList?if_exists>
+        <#assign incomingQuantityTotal = manufacturingInQuantitySummary.estimatedQuantityTotal?if_exists>
+        <#assign outgoingProductionRunList = manufacturingOutQuantitySummary.outgoingProductionRunList?if_exists>
+        <#assign outgoingQuantityTotal = manufacturingOutQuantitySummary.estimatedQuantityTotal?if_exists>
 
         <tr>
             <td><div class="tabletext">${(facility.facilityName)?if_exists} [${facilityId?default("[No Facility]")}]</div></td>
@@ -63,6 +71,7 @@
                     <#list incomingProductionRunList as incomingProductionRun>
                         <div class="tabletext">${incomingProductionRun.workEffortId}-${(incomingProductionRun.estimatedCompletionDate.toString())?if_exists}-<#if incomingProductionRun.estimatedQuantity?exists>${incomingProductionRun.estimatedQuantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
                     </#list>
+                    <div class="tabletext"><b>${uiLabelMap.CommonTotal}:&nbsp;${incomingQuantityTotal?if_exists}</b></div>
                 <#else>
                     <div class="tabletext">&nbsp;</div>
                 </#if>
@@ -72,6 +81,7 @@
                     <#list outgoingProductionRunList as outgoingProductionRun>
                         <div class="tabletext">${outgoingProductionRun.workEffortParentId}:${outgoingProductionRun.workEffortId}-${(outgoingProductionRun.estimatedStartDate.toString())?if_exists}-<#if outgoingProductionRun.estimatedQuantity?exists>${outgoingProductionRun.estimatedQuantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
                     </#list>
+                    <div class="tabletext"><b>${uiLabelMap.CommonTotal}:&nbsp;${outgoingQuantityTotal?if_exists}</b></div>
                 <#else>
                     <div class="tabletext">&nbsp;</div>
                 </#if>
