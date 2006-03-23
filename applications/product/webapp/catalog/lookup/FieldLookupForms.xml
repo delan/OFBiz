@@ -50,7 +50,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="isVariant"><hidden value="N"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProduct" 
@@ -63,10 +64,9 @@
                 <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
-        <field name="productId" title=" " widget-style="buttontext" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
+        <field name="productId" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
-        <field name="productId" title=" " use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
         <field name="brandName"><display/></field>
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
