@@ -37,20 +37,14 @@
     <div class="screenlet-body">
         <#-- shipping address -->
           <table width="100%" border="0" cellpadding="1">
-            <#if orderType == "PURCHASE_ORDER">
+            <#if (orderForParty?exists)>
              <tr>
                <td align="right" valign="top" width="15%">
                  <span class="tabletext">&nbsp;<b>${uiLabelMap.OrderOrderFor}</b> </span>
                </td>
                <td width="5">&nbsp;</td>
                <td align="left" valign="top" width="80%" class="tabletext">
-               <#if orderPerson?has_content>
-                  ${orderPerson.firstName?if_exists}&nbsp;${orderPerson.lastName?if_exists}&nbsp;[${orderPerson.partyId}]
-               <#elseif orderPartyGroup?has_content>
-                  ${orderPartyGroup.groupName?if_exists}&nbsp;[${orderPartyGroup.partyId}]
-               <#else>
-                  [${uiLabelMap.PartyPartyNotDefined}]
-               </#if>
+               ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(orderForParty, false)} [${orderForParty.partyId}]
               </td>
             </tr>
             <tr><td colspan="7"><hr class="sepbar"/></td></tr>

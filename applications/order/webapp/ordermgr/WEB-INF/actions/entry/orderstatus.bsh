@@ -51,15 +51,12 @@ if (orderHeader != null) {
     headerAdjustmentsToShow = orderReadHelper.getOrderHeaderAdjustmentsToShow();
     orderTerms = orderHeader.getRelated("OrderTerm");
 
-    partyObject = orderReadHelper.getSupplierAgent();
-    if (partyObject != null) {
-       if (partyObject.getEntityName().equals("Person")) {
-         context.put("person",partyObject);
-       } else {
-         context.put("partyGroup",partyObject);
-       }
+    if (orderHeader.getString("orderTypeId").equals("PURCHASE_ORDER")) {
+        context.put("orderForParty", orderReadHelper.getSupplierAgent());    
+    } else {
+        context.put("orderForParty", orderReadHelper.getBillToParty());
     }
-
+    
     context.put("orderHeader", orderHeader);
     context.put("currencyUomId", orderHeader.get("currencyUom"));
     context.put("localOrderReadHelper", orderReadHelper);
