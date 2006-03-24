@@ -335,6 +335,10 @@ public class ShoppingCartItem implements java.io.Serializable {
             cart.addItem(cartLocation.intValue(), newItem);
         }
 
+        if (selectedAmount > 0) {
+            newItem.setSelectedAmount(selectedAmount);
+        }
+
         try {
             newItem.setQuantity(quantity, dispatcher, cart, true);
         } catch (CartItemModifyException e) {
@@ -342,10 +346,6 @@ public class ShoppingCartItem implements java.io.Serializable {
             cart.clearItemShipInfo(newItem);
             cart.removeEmptyCartItems();
             throw e;
-        }
-
-        if (selectedAmount > 0) {
-            newItem.setSelectedAmount(selectedAmount);
         }
 
         // specific for purchase orders - description is set to supplierProductId + supplierProductName, price set to lastPrice of SupplierProduct
