@@ -52,6 +52,7 @@ public class ModelScreen implements Serializable {
     public static final String module = ModelScreen.class.getName();
 
     protected String name;
+    protected String sourceLocation;
     protected FlexibleStringExpander transactionTimeoutExdr;
     protected Map modelScreenMap;
     
@@ -59,10 +60,11 @@ public class ModelScreen implements Serializable {
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
-    public ModelScreen() {}
+    protected ModelScreen() {}
 
     /** XML Constructor */
-    public ModelScreen(Element screenElement, Map modelScreenMap) {
+    public ModelScreen(Element screenElement, Map modelScreenMap, String sourceLocation) {
+        this.sourceLocation = sourceLocation;
         this.name = screenElement.getAttribute("name");
         this.transactionTimeoutExdr = new FlexibleStringExpander(screenElement.getAttribute("transaction-timeout"));
         this.modelScreenMap = modelScreenMap;
@@ -109,7 +111,7 @@ public class ModelScreen implements Serializable {
                 try {
                     transactionTimeout = Integer.parseInt(transactionTimeoutPar);
                 } catch(NumberFormatException nfe) {
-                    String msg = "TRANSACTION_TIMEOUT parameter for screen [" + this.name + "] is invalid and it will be ignored: " + nfe.toString();
+                    String msg = "TRANSACTION_TIMEOUT parameter for screen [" + this.sourceLocation + "#" + this.name + "] is invalid and it will be ignored: " + nfe.toString();
                     Debug.logWarning(msg, module);
                 }
             }
@@ -141,7 +143,7 @@ public class ModelScreen implements Serializable {
             // render the screen, starting with the top-level section
             this.section.renderWidgetString(writer, context, screenStringRenderer);
         } catch (RuntimeException e) {
-            String errMsg = "Error rendering screen [" + this.name + "]: " + e.toString();
+            String errMsg = "Error rendering screen [" + this.sourceLocation + "#" + this.name + "]: " + e.toString();
             Debug.logError(errMsg + ". Rolling back transaction.", module);
             try {
                 // only rollback the transaction if we started one...
@@ -152,7 +154,7 @@ public class ModelScreen implements Serializable {
             // after rolling back, rethrow the exception
             throw new GeneralException(errMsg, e);
         } catch (Exception e) {
-            String errMsg = "Error rendering screen [" + this.name + "]: " + e.toString();
+            String errMsg = "Error rendering screen [" + this.sourceLocation + "#" + this.name + "]: " + e.toString();
             Debug.logError(errMsg + ". Rolling back transaction.", module);
             try {
                 // only rollback the transaction if we started one...
