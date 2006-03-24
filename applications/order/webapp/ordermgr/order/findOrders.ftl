@@ -196,12 +196,12 @@ function runAction() {
                 <td>
                   <select name='productStoreId' class='selectBox'>
                     <#if currentProductStore?has_content>
-                    <option value="${currentProductStore.productStoreId}">${currentProductStore.storeName}</option>
+                    <option value="${currentProductStore.productStoreId}">${currentProductStore.storeName?if_exists}</option>
                     <option value="${currentProductStore.productStoreId}">---</option>
                     </#if>
                     <option value="ANY">${uiLabelMap.CommonAnyStore}</option>
                     <#list productStores as store>
-                      <option value="${store.productStoreId}">${store.storeName}</option>
+                      <option value="${store.productStoreId}">${store.storeName?if_exists}</option>
                     </#list>
                   </select>
                 </td>
