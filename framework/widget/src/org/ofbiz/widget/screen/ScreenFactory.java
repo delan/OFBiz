@@ -121,7 +121,7 @@ public class ScreenFactory {
                         throw new IllegalArgumentException("Could not resolve location to URL: " + resourceName);
                     }
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true);
-                    modelScreenMap = readScreenDocument(screenFileDoc);
+                    modelScreenMap = readScreenDocument(screenFileDoc, resourceName);
                     screenLocationCache.put(resourceName, modelScreenMap);
                     double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
                     Debug.logInfo("Got " + modelScreenMap.size() + " screens in " + totalSeconds + "s from: " + screenFileUrl.toExternalForm(), module);
@@ -151,7 +151,7 @@ public class ScreenFactory {
                     
                     URL screenFileUrl = servletContext.getResource(resourceName);
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true);
-                    modelScreenMap = readScreenDocument(screenFileDoc);
+                    modelScreenMap = readScreenDocument(screenFileDoc, resourceName);
                     screenWebappCache.put(cacheKey, modelScreenMap);
                 }
             }
@@ -164,7 +164,7 @@ public class ScreenFactory {
         return modelScreen;
     }
     
-    public static Map readScreenDocument(Document screenFileDoc) {
+    public static Map readScreenDocument(Document screenFileDoc, String sourceLocation) {
         Map modelScreenMap = new HashMap();
         if (screenFileDoc != null) {
             // read document and construct ModelScreen for each screen element
@@ -173,7 +173,7 @@ public class ScreenFactory {
             Iterator screenElementIter = screenElements.iterator();
             while (screenElementIter.hasNext()) {
                 Element screenElement = (Element) screenElementIter.next();
-                ModelScreen modelScreen = new ModelScreen(screenElement, modelScreenMap);
+                ModelScreen modelScreen = new ModelScreen(screenElement, modelScreenMap, sourceLocation);
                 //Debug.logInfo("Read Screen with name: " + modelScreen.getName(), module);
                 modelScreenMap.put(modelScreen.getName(), modelScreen);
             }
