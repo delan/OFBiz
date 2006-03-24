@@ -639,6 +639,11 @@ public class CheckOutEvents {
         }
 
         // set the customer info
+        if (mode != null && mode.equals("default")) {
+            cart.setDefaultCheckoutOptions(dispatcher);
+        }
+
+        // set the customer info
         if (mode != null && mode.equals("cust")) {
             String partyId = (String) request.getAttribute("partyId");
             if (partyId != null) {
