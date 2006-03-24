@@ -230,7 +230,7 @@ if (orderHeader != null) {
         context.put("facilities", facilities);
     }
 
-    // set the type of return baed on type of order
+    // set the type of return based on type of order
     if ("SALES_ORDER".equals(orderType)) {
         context.put("returnHeaderTypeId", "CUSTOMER_RETURN");
         // also set the product store facility Id for sales orders
@@ -238,6 +238,73 @@ if (orderHeader != null) {
     } else {
         context.put("returnHeaderTypeId", "VENDOR_RETURN");
     }
+
+    // QUANTITY: get the returned quantity by order item map
+    context.put("returnQuantityMap", orderReadHelper.getOrderItemReturnedQuantities());
+
+    // INVENTORY: construct a Set of productIds in the order for use in querying for inventory, otherwise these queries can get expensive
+    productIds = new HashSet();
+    for (iter = orderItems.iterator(); iter.hasNext(); ) {
+        productIds.add(iter.next().getString("productId"));
+    }
+
+    // INVENTORY: get the production quantity for each product and store the results in a map of productId -> quantity
+    productionMap = new HashMap();
+    for (iter = productIds.iterator(); iter.hasNext(); ) {
+        productId = iter.next();
+        contextInput = UtilMisc.toMap("productId", productId, "userLogin", session.getAttribute("userLogin"));
+        resultOutput = dispatcher.runSync("getProductManufacturingSummaryByFacility", contextInput);
+        manufacturingInQuantitySummaryByFacility = resultOutput.get("summaryInByFacility");
+        Double productionQuantity = (Double) manufacturingInQuantitySummaryByFacility.get("estimatedQuantityTotal");
+        productionMap.put(productId, productionQuantity);
+    }
+    context.put("productionProductQuantityMap", productionMap);
+
+    // INVENTORY: find the number of products in outstanding sales orders for the same product store
+    fieldsToSelect = UtilMisc.toList("productId", "quantity");
+    condList = UtilMisc.toList(
+            new EntityExpr("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"),
+            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"),
+            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
+            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"),
+            new EntityExpr("productId", EntityOperator.IN, productIds)
+            );
+    condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED"));
+    condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
+    condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
+    conditions = new EntityConditionList(condList, EntityOperator.AND);
+    List requiredProducts = delegator.findByCondition("OrderReportGroupByProduct", conditions, fieldsToSelect, null);
+
+    // store the results in a map of productId -> quantity
+    requiredMap = new HashMap();
+    for (iter = requiredProducts.iterator(); iter.hasNext(); ) {
+        value = iter.next();
+        requiredMap.put(value.getString("productId"), value.getDouble("quantity"));
+    }
+    context.put("requiredProductQuantityMap", requiredMap);
+
+    // INVENTORY: find the quantity of each product in outstanding purchase orders
+    fieldsToSelect = UtilMisc.toList("productId", "quantity");
+    condList = UtilMisc.toList(
+            new EntityExpr("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"),
+            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"),
+            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
+            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"),
+            new EntityExpr("productId", EntityOperator.IN, productIds)
+            );
+    condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED"));
+    condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
+    condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
+    conditions = new EntityConditionList(condList, EntityOperator.AND);
+    List onOrderProducts = delegator.findByCondition("OrderReportGroupByProduct", conditions, fieldsToSelect, null);
+
+    // store the results in a map of productId -> quantity
+    onOrderMap = new HashMap();
+    for (iter = onOrderProducts.iterator(); iter.hasNext(); ) {
+        value = iter.next();
+        onOrderMap.put(value.getString("productId"), value.getDouble("quantity"));
+    }
+    context.put("onOrderProductQuantityMap", onOrderMap);
 }
 
 paramString = "";

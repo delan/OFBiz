@@ -48,7 +48,7 @@
           <tr align="left" valign=bottom>
             <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
             <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
-            <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>
+            <td width="5%" align="center"><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>
             <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderUnitList}</div></td>
             <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderAdjustments}</div></td>
             <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderSubTotal}</div></td>
@@ -59,6 +59,7 @@
           <#else>
             <#list orderItemList as orderItem>
               <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
+              <#assign orderItemShipGrpInvResList = orderReadHelper.getOrderItemShipGrpInvResList(orderItem)>
               <tr><td colspan="8"><hr class="sepbar"></td></tr>
               <tr>
                 <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")?if_exists>
@@ -68,7 +69,7 @@
                     <b><div class="tabletext"> &gt;&gt; ${orderItem.itemDescription}</div></b>
                   </td>
                 <#else>
-                  <td valign="top">
+                  <td valign="top" rowspan="4">
                     <div class="tabletext">
                       <#if productId?exists>
                         ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?if_exists}
@@ -79,25 +80,49 @@
                       </#if>
                     </div>
                     <#if productId?exists>
-                      <div class="tabletext">
+                      <div class="tabletext" style="margin-top: 15px; margin-left: 10px;">
                         <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">${uiLabelMap.ProductCatalog}</a>
                         <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">${uiLabelMap.EcommerceEcommerce}</a>
                         <#if orderItemContentWrapper.get("IMAGE_URL")?has_content>
                           <a href="<@ofbizUrl>viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="buttontext">${uiLabelMap.OrderViewImage}</a>
                         </#if>
                       </div>
+
+                      <#-- INVENTORY -->
                       <#if (orderHeader.statusId != "ORDER_COMPLETED") && availableToPromiseMap.get(productId)?exists && quantityOnHandMap.get(productId)?exists>
-                        <div class="tabletext">
-                            <a href="/catalog/control/EditProductInventoryItems?productId=${productId}" target="_blank">${uiLabelMap.ProductInventory}:</a>
-                            ATP = ${availableToPromiseMap.get(productId)}, QOH = ${quantityOnHandMap.get(productId)}</a>
+                      <#assign quantityToProduce = 0>
+                      <#assign atpQuantity = availableToPromiseMap.get(productId)?default(0)>
+                      <#assign qohQuantity = quantityOnHandMap.get(productId)?default(0)>
+                      <#assign requiredQuantity = requiredProductQuantityMap.get(productId)?default(0)>
+                      <#assign onOrderQuantity = onOrderProductQuantityMap.get(productId)?default(0)>
+                      <#assign inProductionQuantity = productionProductQuantityMap.get(productId)?default(0)>
+                      <#assign unplannedQuantity = requiredQuantity - qohQuantity - inProductionQuantity - onOrderQuantity>
+                      <#if unplannedQuantity < 0><#assign unplannedQuantity = 0></#if>
+                        <div class="tabletext" style="margin-top: 15px; margin-left: 20px;">
+                            <table cellspacing="0" cellpadding="0" border="0">
+                              <tr><td style="text-align: right; padding-bottom: 10px;">
+                                  <a class="buttontext" href="/catalog/control/EditProductInventoryItems?productId=${productId}&externalLoginKey=${externalLoginKey}" target="_blank">${uiLabelMap.ProductInventory}</a>
+                              </td><td>&nbsp;</td></tr>
+                              <tr><td align="left">${uiLabelMap.OrderRequiredForSO}</td>
+                                <td style="padding-left: 15px; text-align: left;">${requiredQuantity}</td></tr>
+                              <tr><td align="left">${uiLabelMap.ProductInInventory} QOH</td>
+                                <td style="padding-left: 15px; text-align: left;">${qohQuantity} (ATP: ${atpQuantity})</a></td></tr>
+                              <tr><td align="left">${uiLabelMap.OrderOnOrder}</td>
+                                <td style="padding-left: 15px; text-align: left;">${onOrderQuantity}</td></tr>
+                              <tr><td align="left">${uiLabelMap.OrderInProduction}</td>
+                                <td style="padding-left: 15px; text-align: left;">${inProductionQuantity}</td></tr>
+                              <tr><td align="left">${uiLabelMap.OrderUnplanned}</td>
+                                <td style="padding-left: 15px; text-align: left;">${unplannedQuantity}</td></tr>
+                            </table>
                         </div>
                       </#if>
+
                     </#if>
                   </td>
 
                   <#-- now show status details per line item -->
                   <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem")>
-                  <td align="left" colspan="1">
+                  <td align="left" colspan="1" valign="top">
                     <div class="tabletext">${uiLabelMap.CommonCurrent}: ${currentItemStatus.description?default(currentItemStatus.statusId)}</div>
                     <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                     <#list orderItemStatuses as orderItemStatus>
@@ -118,12 +143,37 @@
                       </#list>
                     </#if>
                   </td>
+
+                  <#-- QUANTITY -->
                   <td align="right" valign="top" nowrap>
-                    <#assign remainingQuantity = (orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0))>
-                    <div class="tabletext">${uiLabelMap.OrderOrdered}:&nbsp;${orderItem.quantity?default(0)?string.number}&nbsp;&nbsp;</div>
-                    <div class="tabletext">${uiLabelMap.OrderCancelled}:&nbsp;${orderItem.cancelQuantity?default(0)?string.number}&nbsp;&nbsp;</div>
-                    <div class="tabletext">${uiLabelMap.OrderRemaining}:&nbsp;${remainingQuantity}&nbsp;&nbsp;</div>
+                    <table>
+                      <tr valign="top">
+                        <td>
+                        <#assign remainingQuantity = (orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0))>
+                        <#assign shippedQuantity = orderReadHelper.getItemShippedQuantity(orderItem)>
+                        <#-- to compute shortfall amount, sum up the orderItemShipGrpInvRes.quantityNotAvailable -->
+                        <#assign shortfalledQuantity = 0/>
+                        <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
+                          <#if (orderItemShipGrpInvRes.quantityNotAvailable?has_content && orderItemShipGrpInvRes.quantityNotAvailable > 0)>
+                            <#assign shortfalledQuantity = shortfalledQuantity + orderItemShipGrpInvRes.quantityNotAvailable/>
+                          </#if>
+                        </#list>
+                          <div class="tabletext">${uiLabelMap.OrderOrdered}:&nbsp;${orderItem.quantity?default(0)?string.number}&nbsp;&nbsp;</div>
+                          <div class="tabletext">${uiLabelMap.OrderCancelled}:&nbsp;${orderItem.cancelQuantity?default(0)?string.number}&nbsp;&nbsp;</div>
+                          <div class="tabletext">${uiLabelMap.OrderRemaining}:&nbsp;${remainingQuantity}&nbsp;&nbsp;</div>
+                          <div class="tabletext">${uiLabelMap.OrderShortfalled}:&nbsp;${shortfalledQuantity}&nbsp;&nbsp;</div>
+                        </td>
+                        <td>
+                          <div class="tabletext">${uiLabelMap.OrderShipRequest}:&nbsp;${orderReadHelper.getItemReservedQuantity(orderItem)}&nbsp;&nbsp;</div>
+                          <div class="tabletext">${uiLabelMap.OrderQtyShipped}:&nbsp;${shippedQuantity}&nbsp;&nbsp;</div>
+                          <div class="tabletext">${uiLabelMap.OrderOutstanding}:&nbsp;${orderItem.quantity?default(0) - shippedQuantity}&nbsp;&nbsp;</div>
+                          <div class="tabletext">${uiLabelMap.OrderInvoiced}:&nbsp;${orderReadHelper.getOrderItemInvoicedQuantity(orderItem)}&nbsp;&nbsp;</div>
+                          <div class="tabletext">${uiLabelMap.OrderReturned}:&nbsp;${returnQuantityMap.get(orderItem.orderItemSeqId)?default(0)}&nbsp;&nbsp;</div>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
+
                   <td align="right" valign="top" nowrap>
                     <div class="tabletext" nowrap><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/> / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/></div>
                   </td>
@@ -327,7 +377,6 @@
               </#if>
 
               <#-- now show inventory reservation info per line item -->
-              <#assign orderItemShipGrpInvResList = orderReadHelper.getOrderItemShipGrpInvResList(orderItem)>
               <#if orderItemShipGrpInvResList?exists && orderItemShipGrpInvResList?has_content>
                 <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
                   <tr>
@@ -341,9 +390,9 @@
                     <td align="center">
                       <div class="tabletext" style="font-size: xx-small;">${orderItemShipGrpInvRes.quantity?string.number}&nbsp;</div>
                     </td>
-                    <td>
+                    <td class="tabletext">
                       <#if (orderItemShipGrpInvRes.quantityNotAvailable?has_content && orderItemShipGrpInvRes.quantityNotAvailable > 0)>
-                        <font color="red">[${orderItemShipGrpInvRes.quantityNotAvailable?string.number}&nbsp;Backordered]</font>
+                        <span style="color: red;">[${orderItemShipGrpInvRes.quantityNotAvailable?string.number}&nbsp;Backordered]</span>
                       </#if>
                       &nbsp;
                     </td>
