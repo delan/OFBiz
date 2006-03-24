@@ -223,6 +223,28 @@ public class OrderReadHelper {
         return (List) orderStatuses;
     }
 
+    public List getOrderTerms() {
+        try {
+           return orderHeader.getRelated("OrderTerm");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+    
+    /**
+     * @return Long number of days from termDays of first FIN_PAYMENT_TERM
+     */
+    public Long getOrderTermNetDays() {
+        List orderTerms = EntityUtil.filterByAnd(getOrderTerms(), UtilMisc.toMap("termTypeId", "FIN_PAYMENT_TERM"));
+        if ((orderTerms == null) || (orderTerms.size() == 0)) {
+            return null;
+        } else if (orderTerms.size() > 1) {
+            Debug.logWarning("Found " + orderTerms.size() + " FIN_PAYMENT_TERM order terms for orderId [" + getOrderId() + "], using the first one ", module);
+        }
+        return ((GenericValue) orderTerms.get(0)).getLong("termDays");
+    }
+    
     /** @deprecated */
     public String getShippingMethod() {
         throw new IllegalArgumentException("You must call the getShippingMethod method with the shipGroupdSeqId parameter, this is no londer supported since a single OrderShipmentPreference is no longer used.");
