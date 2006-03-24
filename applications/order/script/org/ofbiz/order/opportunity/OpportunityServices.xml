@@ -45,21 +45,26 @@ This file contains basic services for SalesOpportunity and SalesForecast.
         <!-- create the value -->
         <create-value value-name="salesForecast"/>
 
+        <!-- save a copy to history -->
+        <call-simple-method method-name="saveSalesForecastHistory"/>
+
         <!-- return the ID -->
         <field-to-result result-name="salesForecastId" field-name="salesForecastId"/>
     </simple-method>
 
     <simple-method method-name="updateSalesForecast" short-description="Updates a sales forecast and stores a copy in sales forecast history.">
 
-        <!-- get the forecast and save a copy to history -->
+        <!-- get the forecast -->
         <entity-one entity-name="SalesForecast" auto-field-map="true" value-name="salesForecast"/>
-        <call-simple-method method-name="saveSalesForecastHistory"/>
 
         <!-- set the fields from the parameters -->
         <set-nonpk-fields map-name="parameters" value-name="salesForecast"/>
         
         <!-- store the value -->
         <store-value value-name="salesForecast"/>
+
+        <!-- save a copy to history -->
+        <call-simple-method method-name="saveSalesForecastHistory"/>
     </simple-method>
 
     <simple-method method-name="saveSalesForecastHistory" short-description="Given a salesForecast map, saves the data in the history.">
