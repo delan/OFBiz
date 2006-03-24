@@ -229,7 +229,7 @@
         <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductPerUnitPrice}</div></td>
         <td width="6%">&nbsp;</td>
         <td width="74%">
-          <input type="text" name="unitCost_o_0" size="5" value="${unitCost?default(0)?string("##0.00")}" class="inputBox"/>
+          <input type="text" name="unitCost_o_0" size="10" value="${unitCost?default(0)}" class="inputBox"/>
         </td>
       </tr>
       <tr>
@@ -437,7 +437,7 @@
                   </td>
                   <td align="right">
                     <input type="hidden" name="currencyUomId_o_${rowCount}" value="${currencyUomId?if_exists}"/>
-                    <input type="text" class="inputBox" name="unitCost_o_${rowCount}" value="${itemCost?string("##0.00")}" size="6"/>
+                    <input type="text" class="inputBox" name="unitCost_o_${rowCount}" value="${itemCost}" size="6" maxlength="20"/>
                     <span class="tabletext">${currencyUomId?if_exists}</span>
                   </td>
                 </tr>
