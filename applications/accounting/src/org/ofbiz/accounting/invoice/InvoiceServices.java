@@ -185,12 +185,18 @@ public class InvoiceServices {
             GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
             String billingAccountId = billingAccount != null ? billingAccount.getString("billingAccountId") : null;
 
+            // TODO: ideally this should be the same time as when a shipment is sent and be passed in as a parameter 
+            Timestamp invoiceDate = UtilDateTime.nowTimestamp();
+            // TODO: perhaps consider billing account net days term as well?
+            Timestamp dueDate = UtilDateTime.getDayEnd(invoiceDate, orh.getOrderTermNetDays().intValue());
+            
             // create the invoice record
             Map createInvoiceContext = FastMap.newInstance();
             createInvoiceContext.put("partyId", billToCustomerPartyId);
             createInvoiceContext.put("partyIdFrom", billFromVendorPartyId);
             createInvoiceContext.put("billingAccountId", billingAccountId);
-            createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
+            createInvoiceContext.put("invoiceDate", invoiceDate);
+            createInvoiceContext.put("dueDate", dueDate);
             createInvoiceContext.put("invoiceTypeId", invoiceType);
             // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
             createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
@@ -226,7 +232,7 @@ public class InvoiceServices {
 
             // order terms to invoice terms.  Implemented for purchase orders, although it may be useful
             // for sales orders as well.  Later it might be nice to filter OrderTerms to only copy over financial terms.
-            List orderTerms = orderHeader.getRelated("OrderTerm");
+            List orderTerms = orh.getOrderTerms();
             toStore.addAll(createInvoiceTerms(delegator, invoiceId, orderTerms));
 
             // billing accounts
