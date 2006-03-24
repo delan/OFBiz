@@ -171,8 +171,8 @@
         <description>
             Create a map with an entry for each facility. The value is another map with information about
             the manufacturing orders running in the facility for the given product:
-            incoming - incomingProductionRunList, estimatedQuantityTotal
-            outgoing - outgoingProductionRunList, estimatedQuantityTotal
+            incoming - incomingProductionRunList, estimatedQuantityTotal.  Shows quantity of product to be produced.
+            outgoing - outgoingProductionRunList, estimatedQuantityTotal.  Shows quantity of product to be consumed.
         </description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
