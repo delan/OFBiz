@@ -79,7 +79,8 @@ if (product != null) {
 }
 
 categoryId = null;
-if (product != null) {     
+reviews = null;
+if (product != null) {
     categoryId = request.getParameter("category_id");
     if (categoryId == null) {
         categoryId = request.getAttribute("productCategoryId");
@@ -105,10 +106,9 @@ if (product != null) {
 
         context.put("price", priceMap);
     }
+    // get the product review(s)
+    reviews = product.getRelatedCache("ProductReview", null, UtilMisc.toList("-postedDateTime"));
 }
-
-// get the product review(s)
-reviews = product.getRelatedCache("ProductReview", null, UtilMisc.toList("-postedDateTime"));
 
 // get the average rating
 if (reviews != null && reviews.size() > 0) {
