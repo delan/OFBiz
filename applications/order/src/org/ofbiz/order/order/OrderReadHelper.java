@@ -1335,6 +1335,42 @@ public class OrderReadHelper {
         return this.orderReturnItems;
     }
 
+   /**
+    * Get the quantity returned per order item.
+    * In other words, this method will count the ReturnItems 
+    * related to each OrderItem.
+    *
+    * @return  Map of returned quantities as Doubles keyed to the orderItemSeqId
+    */
+   public Map getOrderItemReturnedQuantities() {
+       List returnItems = getOrderReturnItems();
+
+       // since we don't have a handy grouped view entity, we'll have to group the return items by hand
+       Map returnMap = new HashMap();
+       for (Iterator iter = this.getValidOrderItems().iterator(); iter.hasNext(); ) {
+           GenericValue orderItem = (GenericValue) iter.next();
+           List group = EntityUtil.filterByAnd(returnItems, 
+                   UtilMisc.toMap("orderId", orderItem.get("orderId"), "orderItemSeqId", orderItem.get("orderItemSeqId")));
+
+           // add up the returned quantities for this group TODO: received quantity should be used eventually
+           double returned = 0;
+           for (Iterator groupiter = group.iterator(); groupiter.hasNext(); ) {
+               GenericValue returnItem = (GenericValue) groupiter.next();
+               if (returnItem.getDouble("returnQuantity") != null) {
+                   returned += ((Double) returnItem.getDouble("returnQuantity")).doubleValue();
+               }
+           }
+
+           // the quantity returned per order item
+           returnMap.put(orderItem.get("orderItemSeqId"), new Double(returned));
+       }
+       return returnMap;
+   }
+
+   /**
+    * Get the total quantity of returned items for an order. This will count 
+    * only the ReturnItems that are directly correlated to an OrderItem.
+    */
     public BigDecimal getOrderReturnedQuantityBd() {
         List returnedItemsBase = getOrderReturnItems();
         List returnedItems = new ArrayList(returnedItemsBase.size());
@@ -2369,4 +2405,23 @@ public class OrderReadHelper {
     public static BigDecimal setScaleByType(boolean isTax, BigDecimal value){
         return isTax ? value.setScale(taxCalcScale, taxRounding) : value.setScale(scale, rounding); 
     }
+
+   /** Get the quantity of order items that have been invoiced */
+   public static double getOrderItemInvoicedQuantity(GenericValue orderItem) {
+       double invoiced = 0;
+       try {
+           // this is simply the sum of quantity billed in all related OrderItemBillings
+           List billings = orderItem.getRelated("OrderItemBilling");
+           for (Iterator iter = billings.iterator(); iter.hasNext(); ) {
+               GenericValue billing = (GenericValue) iter.next();
+               Double quantity = billing.getDouble("quantity");
+               if (quantity != null) {
+                   invoiced += quantity.doubleValue();
+               }
+           }
+       } catch (GenericEntityException e) {
+           Debug.logError(e, e.getMessage(), module);
+       }
+       return invoiced;
+   }
 }

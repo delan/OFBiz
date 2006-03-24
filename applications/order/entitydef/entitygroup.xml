@@ -89,6 +89,7 @@
     <entity-group group="org.ofbiz" entity="WorkOrderItemFulfillment" />
     <entity-group group="org.ofbiz" entity="OrderReportSalesGroupByProduct" />
     <entity-group group="org.ofbiz" entity="OrderReportPurchasesGroupByProduct" />
+    <entity-group group="org.ofbiz" entity="OrderReportGroupByProduct" />
 
     <!-- ========================================================= -->
     <!-- org.ofbiz.order.quote -->
