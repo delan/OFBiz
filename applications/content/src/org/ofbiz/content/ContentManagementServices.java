@@ -192,7 +192,7 @@ public class ContentManagementServices {
         List contentPurposeList = (List)context.get("contentPurposeList");
         if (contentPurposeList == null)
             contentPurposeList = new ArrayList();
-        String contentPurposeString = (String)context.get("contentPurposeString");
+        String contentPurposeString = (String) context.get("contentPurposeString");
         if (UtilValidate.isNotEmpty(contentPurposeString)) {
             List tmpPurposes = StringUtil.split(contentPurposeString, "|");
             contentPurposeList.addAll(tmpPurposes);
@@ -208,10 +208,10 @@ public class ContentManagementServices {
         GenericValue content = delegator.makeValue("Content", null);
         content.setPKFields(context);
         content.setNonPKFields(context);
-        String contentId = (String)content.get("contentId");
-        String contentTypeId = (String)content.get("contentTypeId");
-        String origContentId = (String)content.get("contentId");
-        String origDataResourceId = (String)content.get("dataResourceId");
+        String contentId = (String) content.get("contentId");
+        String contentTypeId = (String) content.get("contentTypeId");
+        String origContentId = (String) content.get("contentId");
+        String origDataResourceId = (String) content.get("dataResourceId");
         if (Debug.infoOn()) Debug.logInfo("in persist... contentId(0):" + contentId, null);
 
         GenericValue dataResource = delegator.makeValue("DataResource", null);
@@ -219,8 +219,8 @@ public class ContentManagementServices {
         dataResource.setNonPKFields(context);
         dataResource.setAllFields(context, false, "dr", null);
         context.putAll(dataResource);
-        String dataResourceId = (String)dataResource.get("dataResourceId");
-        String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
+        String dataResourceId = (String) dataResource.get("dataResourceId");
+        String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
         if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceId(0):" + dataResourceId, null);
 
         GenericValue contentAssoc = delegator.makeValue("ContentAssoc", null);
@@ -291,15 +291,14 @@ public class ContentManagementServices {
 
         context.put("skipPermissionCheck", null);  // Force check here
         boolean contentExists = true;
-            if (Debug.infoOn()) Debug.logInfo("in persist... contentTypeId" +  contentTypeId + " dataResourceTypeId:" + dataResourceTypeId + " contentId:" + contentId + " dataResourceId:" + dataResourceId, null);
+        if (Debug.infoOn()) Debug.logInfo("in persist... contentTypeId" +  contentTypeId + " dataResourceTypeId:" + dataResourceTypeId + " contentId:" + contentId + " dataResourceId:" + dataResourceId, null);
         if (UtilValidate.isNotEmpty(contentTypeId) ) {
-            if (UtilValidate.isEmpty(contentId)) 
+            if (UtilValidate.isEmpty(contentId)) {
                 contentExists = false;
-            else {
+            } else {
                 try {
                     GenericValue val = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
-                    if (val == null)
-                        contentExists = false;
+                    if (val == null) contentExists = false;
                 } catch(GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
                 }
@@ -309,42 +308,33 @@ public class ContentManagementServices {
             context.putAll(content);
             if (contentExists) {
                 //targetOperations.add("CONTENT_UPDATE");
-                    Map contentContext = new HashMap();
-                    ModelService contentModel = dispatcher.getDispatchContext().getModelService("updateContent");
-                    Map ctx = contentModel.makeValid(context, "IN");
-                    contentContext.putAll(ctx);
-                    contentContext.put("userLogin", userLogin);
-                    contentContext.put("displayFailCond", bDisplayFailCond);
-                    contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
-                    Map thisResult = dispatcher.runSync("updateContent", contentContext);
-                    String errMsg = ServiceUtil.getErrorMessage(thisResult);
-                    if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult) || UtilValidate.isNotEmpty(errMsg)) {
-                        return ServiceUtil.returnError(errMsg);
-                    }
+                Map contentContext = new HashMap();
+                ModelService contentModel = dispatcher.getDispatchContext().getModelService("updateContent");
+                contentContext.putAll(contentModel.makeValid(context, "IN"));
+                contentContext.put("userLogin", userLogin);
+                contentContext.put("displayFailCond", bDisplayFailCond);
+                contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
+                Map thisResult = dispatcher.runSync("updateContent", contentContext);
+                if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult)) {
+                    return ServiceUtil.returnError("Error updating content (updateContent) in persistContentAndAssoc", null, null, thisResult);
+                }
                 //Map thisResult = ContentServices.updateContentMethod(dctx, context);
-                boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
-                if (isError) 
-                    return ServiceUtil.returnError( (String)thisResult.get(ModelService.ERROR_MESSAGE));
             } else {
                 //targetOperations.add("CONTENT_CREATE");
-                    Map contentContext = new HashMap();
-                    ModelService contentModel = dispatcher.getDispatchContext().getModelService("createContent");
-                    Map ctx = contentModel.makeValid(context, "IN");
-                    contentContext.putAll(ctx);
-                    contentContext.put("userLogin", userLogin);
-                    contentContext.put("displayFailCond", bDisplayFailCond);
-                    contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
-                    Map thisResult = dispatcher.runSync("createContent", contentContext);
-                    String errMsg = ServiceUtil.getErrorMessage(thisResult);
-                    if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult) || UtilValidate.isNotEmpty(errMsg)) {
-                        return ServiceUtil.returnError(errMsg);
-                    }
+                Map contentContext = new HashMap();
+                ModelService contentModel = dispatcher.getDispatchContext().getModelService("createContent");
+                contentContext.putAll(contentModel.makeValid(context, "IN"));
+                contentContext.put("userLogin", userLogin);
+                contentContext.put("displayFailCond", bDisplayFailCond);
+                contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
+                Debug.logInfo("In persistContentAndAssoc calling createContent with content: " + contentContext, module);
+                Map thisResult = dispatcher.runSync("createContent", contentContext);
+                if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult)) {
+                    return ServiceUtil.returnError("Error creating content (createContent) in persistContentAndAssoc", null, null, thisResult);
+                }
                 //Map thisResult = ContentServices.createContentMethod(dctx, context);
-                boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
-                if (isError) 
-                    return ServiceUtil.returnError( (String)thisResult.get(ModelService.ERROR_MESSAGE));
 
-                contentId = (String)thisResult.get("contentId");
+                contentId = (String) thisResult.get("contentId");
             }
             results.put("contentId", contentId);
             context.put("contentId", contentId);
