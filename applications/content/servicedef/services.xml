@@ -67,10 +67,7 @@
 
     <!--Contentservices.-->
     <service name="createContent" default-entity-name="Content" engine="java"
-            location="org.ofbiz.content.content.ContentServices"
-            invoke="createContent"
-        transaction-timout="72000" 
-            auth="true" >
+        location="org.ofbiz.content.content.ContentServices" invoke="createContent" transaction-timout="72000" auth="true" >
         <description>Create a Content</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
@@ -86,7 +83,7 @@
         <override name="contentTypeId" optional="false"/>
     </service>
     <service name="updateContent" default-entity-name="Content" engine="java"
-            location="org.ofbiz.content.content.ContentServices" invoke="updateContent" auth="true">
+        location="org.ofbiz.content.content.ContentServices" invoke="updateContent" auth="true">
         <description>Update a Content</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>

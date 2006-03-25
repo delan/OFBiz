@@ -280,6 +280,7 @@ public class ContentServices {
         context.put("targetOperationList", targetOperationList);
         context.put("contentPurposeList", contentPurposeList);
 
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -287,29 +288,25 @@ public class ContentServices {
         //String contentTypeId = (String) context.get("contentTypeId");
 
         if (UtilValidate.isEmpty(contentId)) {
-            contentId = delegator.getNextSeqId("Content").toString();
+            contentId = delegator.getNextSeqId("Content");
         }
 
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", contentId));
         content.setNonPKFields(context);
-            GenericValue userLogin = (GenericValue) context.get("userLogin");
-            String userLoginId = (String) userLogin.get("userLoginId");
-            String createdByUserLogin = userLoginId;
-            String lastModifiedByUserLogin = userLoginId;
-            Timestamp createdDate = UtilDateTime.nowTimestamp();
-            Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
 
-            content.put("createdByUserLogin", createdByUserLogin);
-            content.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
-            content.put("createdDate", createdDate);
-            content.put("lastModifiedDate", lastModifiedDate);
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String userLoginId = (String) userLogin.get("userLoginId");
+
+        content.put("createdByUserLogin", userLoginId);
+        content.put("lastModifiedByUserLogin", userLoginId);
+        content.put("createdDate", nowTimestamp);
+        content.put("lastModifiedDate", nowTimestamp);
 
         context.put("currentContent", content);
         if (Debug.infoOn()) Debug.logInfo("in createContentMethod, context: " + context, null);
 
         Map permResults = ContentWorker.callContentPermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String) permResults.get("permissionStatus");
-
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             try {
                 content.create();
@@ -321,7 +318,7 @@ public class ContentServices {
 
             result.put("contentId", contentId);
         } else {
-            String errorMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
+            String errorMsg = (String) permResults.get(ModelService.ERROR_MESSAGE);
             result.put(ModelService.ERROR_MESSAGE, errorMsg);
             return ServiceUtil.returnFailure(errorMsg);
         }
