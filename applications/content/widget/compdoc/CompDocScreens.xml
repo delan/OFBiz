@@ -23,10 +23,16 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                   <set from-field="parameters.rootContentId" default-value="${parameters.contentId}" field="rootContentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="rootContentRevisionSeqId"/>
-                   <set from-field="parameters.rootContentId" default-value="${parameters.contentId}" field="contentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="contentRevisionSeqId"/>
+                <set field="rootContentId" from-field="parameters.rootContentId" default-value="${parameters.contentId}"/>
+                <set field="rootContentRevisionSeqId" from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}"/>
+                <set field="contentId" from-field="parameters.rootContentId" default-value="${parameters.contentId}"/>
+                <set field="contentRevisionSeqId" from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}"/>
+
+                <service service-name="getMostRecentRevision" result-map-name="revisionResult">
+                    <field-map field-name="contentId" env-name="rootContentId"/>
+                </service>        
+                <set field="mostRecentRevisionSeqId" from-field="revisionResult.mostRecentRevisionSeqId"/>
+                
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="approval"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
@@ -44,6 +50,10 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container><link target="ListWaitingContentApproval?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}" text="View Waiting Approvals" style="buttontext"/></container>
+                        <section>
+                            <condition><if-compare field-name="content.contentTypeId" operator="equals" value="COMPDOC_INSTANCE"/></condition>
+                            <widgets><include-screen name="rootInstanceApprovalStatus"/></widgets>
+                        </section>
                         <include-form name="ListContentApproval" location="component://content/widget/compdoc/CompDocForms.xml"/>
                         <section>
                             <condition>
@@ -69,11 +79,12 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                   <set from-field="parameters.rootContentId" default-value="${parameters.contentId}" field="rootContentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="rootContentRevisionSeqId"/>
-                   <set from-field="parameters.rootContentId" default-value="${parameters.contentId}" field="contentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="contentRevisionSeqId"/>
+                <set from-field="parameters.rootContentId" default-value="${parameters.contentId}" field="rootContentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="rootContentRevisionSeqId"/>
+                <set from-field="parameters.rootContentId" default-value="${parameters.contentId}" field="contentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="contentRevisionSeqId"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
+
                 <set from-field="content.contentTypeId" field="contentTypeId"/>
                 <set field="menuName" value="empty"/>
                 <set field="currentMenuItemName" value="approval"/>
@@ -129,21 +140,20 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                   <set from-field="parameters.rootContentId" field="rootContentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
-                   <set from-field="rootContentId" field="contentId"/>
-                   <set from-field="rootContentRevisionSeqId" field="contentRevisionSeqId"/>
+                <set from-field="parameters.rootContentId" field="rootContentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
+                <set from-field="rootContentId" field="contentId"/>
+                <set from-field="rootContentRevisionSeqId" field="contentRevisionSeqId"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
                 <set from-field="content.contentTypeId" field="contentTypeId"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
-                
 
                 <entity-one entity-name="Content" value-name="content" use-cache="true">
                     <field-map field-name="contentId" env-name="contentId"/>
                 </entity-one>
                 <set from-field="content.contentTypeId" field="contentTypeId"/>
-                 <entity-and entity-name="ContentRevision" list-name="contentRevisionList" use-cache="true">
+                <entity-and entity-name="ContentRevision" list-name="contentRevisionList" use-cache="true">
                     <field-map env-name="contentId" field-name="contentId"/>
                 </entity-and>
 
@@ -164,18 +174,17 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                   <set from-field="parameters.rootContentId" default-value="${parameters.contentId}" field="rootContentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="rootContentRevisionSeqId"/>
-                   <set from-field="parameters.contentId" field="contentId"/>
-                   <set from-field="parameters.contentRevisionSeqId" field="contentRevisionSeqId"/>
+                <set from-field="parameters.rootContentId" default-value="${parameters.contentId}" field="rootContentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" default-value="${parameters.contentRevisionSeqId}" field="rootContentRevisionSeqId"/>
+                <set from-field="parameters.contentId" field="contentId"/>
+                <set from-field="parameters.contentRevisionSeqId" field="contentRevisionSeqId"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
                 <set from-field="content.contentTypeId" field="contentTypeId"/>
                 <set field="menuName" value="tree"/>
                 <set field="currentMenuItemName" value="revision"/>
                 <set field="title" value="Revision List Page for Content: ${rootContentId} rev. ${rootContentRevisionSeqId}"/>
                 
-                <entity-one entity-name="ContentRevision" value-name="contentRevision" use-cache="true">
-                </entity-one>
+                <entity-one entity-name="ContentRevision" value-name="contentRevision" use-cache="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -192,10 +201,10 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                   <set from-field="parameters.rootContentId" field="rootContentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
-                   <set from-field="rootContentId" field="contentId"/>
-                   <set from-field="rootContentRevisionSeqId" field="contentRevisionSeqId"/>
+                <set from-field="parameters.rootContentId" field="rootContentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
+                <set from-field="rootContentId" field="contentId"/>
+                <set from-field="rootContentRevisionSeqId" field="contentRevisionSeqId"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
                 <set from-field="content.contentTypeId" field="contentTypeId"/>
                 <set field="menuName" value="tree"/>
@@ -222,10 +231,10 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                   <set from-field="parameters.rootContentId" field="rootContentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
-                   <set from-field="parameters.contentId" default-value="${rootContentId}" field="contentId"/>
-                   <set from-field="parameters.contentRevisionSeqId" default-value="${rootContentRevisionSeqId}" field="contentRevisionSeqId"/>
+                <set from-field="parameters.rootContentId" field="rootContentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
+                <set from-field="parameters.contentId" default-value="${rootContentId}" field="contentId"/>
+                <set from-field="parameters.contentRevisionSeqId" default-value="${rootContentRevisionSeqId}" field="contentRevisionSeqId"/>
                 <entity-one entity-name="Content" value-name="content" use-cache="true"/>
                 <set from-field="content.contentTypeId" field="contentTypeId"/>
                 <set field="menuName" value="tree"/>
@@ -249,7 +258,6 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
             </condition>
             <actions>
-
                 <set field="menuName" value="empty"/>
                 <set field="title" value="Find CompDoc"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
@@ -308,8 +316,8 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                   <set from-field="parameters.rootContentId" field="rootContentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
+                <set from-field="parameters.rootContentId" field="rootContentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
                 <set field="menuName" value="tree"/>
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
@@ -485,9 +493,9 @@ under the License.
                                         <container>
                                             <label style="tableheadtext" text="Viewing Revision [${rootContentRevisionSeqId}], Latest is [${mostRecentRevisionSeqId}]"/>
                                             <link style="buttontext" text="Latest" target="EditChildCompDoc?contentId=${contentId}&amp;rootContentId=${rootContentId}&amp;caFromDate=${fromDate}"></link>
+                                            <include-screen name="ContentViewLink"/>
                                         </container>
                                         <include-form name="ViewChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                                        <include-screen name="ContentViewLink"/>
                                     </widgets>
                                 </section>
                             </decorator-section>
@@ -527,23 +535,9 @@ under the License.
                     <widgets>
                         <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                             <decorator-section name="body">
-                               <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
-                                <section>
-                                    <!--
-                                    <condition>
-                                        <and>
-                                            <not><if-empty field-name="dataResource.dataResourceTypeId"/></not>
-                                            <if-compare field-name="dataResource.dataResourceTypeId" operator="not-equals" value="SURVEY"/>
-                                        </and>
-                                    </condition>
-                                        -->
-                                    <actions>
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="ContentViewLink"/>
-                                        <include-screen name="UploadCompDocContent"/>
-                                    </widgets>
-                                </section>
+                                <include-screen name="ContentViewLink"/>
+                                <include-form name="EditChildCompDoc" location="component://content/widget/compdoc/CompDocForms.xml"/>
+                                <include-screen name="UploadCompDocContent"/>
                             </decorator-section>
                         </decorator-screen>
                     </widgets>
@@ -802,8 +796,8 @@ under the License.
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Add Composite Document Template Page"/>
-                <set value="COMPDOC_TEMPLATE" field="contentTypeId"/>
-                <set value="createChildCompDocTemplate" field="createChildCompDoc"/>
+                <set field="contentTypeId" value="COMPDOC_TEMPLATE"/>
+                <set field="createChildCompDoc" value="createChildCompDocTemplate"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -822,20 +816,21 @@ under the License.
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Add Composite Document Instance Part Page"/>
-                <set field="contentIdTo" from-field="parameters.caContentIdTo"/>
+                <set field="contentIdTo" from-field="parameters.rootContentId"/>
                 <set field="templateContentId" from-field="parameters.instanceOfContentId"/>
                 <entity-one entity-name="Content" value-name="templateContent">
                     <field-map field-name="contentId" env-name="templateContentId"/>
                 </entity-one>
                 <set from-field="templateContent.contentName" field="contentName"/>
+
                 <get-related-one value-name="templateContent" relation-name="DataResource" to-value-name="templateDataResource"/>
                 <set field="templateDataResourceTypeId" from-field="templateDataResource.dataResourceTypeId"/>
                 <set field="mimeTypeId" from-field="templateDataResource.mimeTypeId"/>
-                <set value="COMPDOC_PART" field="contentAssocTypeId"/>
-                <set value="DOCUMENT" field="contentTypeId"/>
-                <set from-field="parameters.caSequenceNum" field="sequenceNum" default-value="${parameters.sequenceNum}"/>
-                <set value="createChildCompDocInstance" field="childCompDocTarget"/>
-                <set from-field="parameters.contentId" field="contentId"/>
+                <set field="contentAssocTypeId" value="COMPDOC_PART"/>
+                <set field="contentTypeId" value="DOCUMENT"/>
+                <set field="sequenceNum" from-field="parameters.caSequenceNum" default-value="${parameters.sequenceNum}"/>
+                <set field="childCompDocTarget" value="createChildCompDocInstance"/>
+                <set field="contentId" from-field="parameters.contentId"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -854,7 +849,7 @@ under the License.
             <actions>
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Add Composite Document Template Part Page"/>
-                <set field="contentIdTo" from-field="parameters.caContentIdTo" default-value="${parameters.contentIdTo}"/>
+                <set field="contentIdTo" from-field="parameters.rootContentId" default-value="${parameters.contentIdTo}"/>
                 <set field="rootContentId" from-field="contentIdTo"/>
                 <set field="rootContentRevisionSeqId" from-field="parameters.rootContentRevisionSeqId"/>
                 <set field="contentAssocTypeId" value="COMPDOC_PART"/>
@@ -878,11 +873,10 @@ under the License.
             <condition>
                 <if-has-permission permission="CONTENTMGR" action="CREATE"/>
             </condition>
-            
             <actions>
-                   <set from-field="parameters.rootContentId" field="rootContentId"/>
-                   <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
-                   <set value="COMPDOC_TEMPLATE" field="contentTypeId"/>
+                <set from-field="parameters.rootContentId" field="rootContentId"/>
+                <set from-field="parameters.rootContentRevisionSeqId" field="rootContentRevisionSeqId"/>
+                <set value="COMPDOC_TEMPLATE" field="contentTypeId"/>
                 <service service-name="getMostRecentRevision" result-map-name="revisionResult">
                     <field-map field-name="contentId" env-name="rootContentId"/>
                 </service>        
@@ -892,7 +886,6 @@ under the License.
                 <set field="menuName" value="tree"/>
                 <set field="title" value="Root Template ${rootContentId}, rev. ${rootContentRevisionSeqId}"/>
                 <set field="currentMenuItemName" value="viewtree"/>
-
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
@@ -958,32 +951,42 @@ under the License.
     </screen>
     <screen name="rootInstanceLine">
         <section>
+            <widgets>
+                <include-menu name="rootInstanceLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
+                <include-screen name="rootInstanceApprovalStatus"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="rootInstanceApprovalStatus">
+        <section>
             <actions>
-                <service service-name="getFinalApprovalStatus" result-map-name="results">
+                <service service-name="getFinalApprovalStatus" result-map-name="approvalStatusResult">
                     <field-map field-name="contentId" env-name="rootContentId"/>
                     <field-map field-name="contentRevisionSeqId" env-name="rootContentRevisionSeqId"/>
                 </service>
                 <entity-one entity-name="StatusItem" value-name="statusItem">
-                    <field-map field-name="statusId" env-name="results.approvalStatusId"/>
+                    <field-map field-name="statusId" env-name="approvalStatusResult.approvalStatusId"/>
                 </entity-one>
             </actions>
             <widgets>
-                <include-menu name="rootInstanceLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
-                <label text="Approval Status: ${statusItem.description}" style="head2"/>
-                <section>
-                    <condition>
-                        <and>
-                            <if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
-                            <if-compare value="CNTAP_NOT_READY" field-name="results.approvalStatusId" operator="equals"/>
-                        </and>
-                    </condition>
-                    <widgets>
-                        <link text="Start Approval Process" target="prepForApproval?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}" style="buttontext"/>
-                    </widgets>
-                </section>
+                <container>
+                    <label text="Approval Status: ${statusItem.description}" style="head2"/>
+                    <section>
+                        <condition>
+                            <and>
+                                <if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
+                                <if-compare field-name="approvalStatusResult.approvalStatusId" operator="equals" value="CNTAP_NOT_READY"/>
+                            </and>
+                        </condition>
+                        <widgets>
+                            <link text="Start Approval Process" target="prepForApproval?rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}" style="buttontext"/>
+                        </widgets>
+                    </section>
+                </container>
             </widgets>
         </section>
     </screen>
+    
     <screen name="childTemplateLine">
         <section>
             <actions>
@@ -1050,7 +1053,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- ================ CompDoc Requests ================= -->
+
     <screen name="EditContentRevisionAndItem">
         <section>
             <widgets>
