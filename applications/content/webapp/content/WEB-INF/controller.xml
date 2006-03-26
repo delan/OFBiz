@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
     <description>Content Manager Module Site Configuration File</description>
-    <owner>The Open For Business Project Copyright (c) 2002-2003</owner>
+    <owner>The Open For Business Project Copyright (c) 2002-2006</owner>
     <errorpage>/error/error.jsp</errorpage>
     
     <handler name="java" type="request" class="org.ofbiz.webapp.event.JavaEventHandler"/>
@@ -891,12 +891,14 @@
 
     <request-map uri="GenCompDocPdf">
         <security auth="true" https="true"/>
-        <event invoke="genCompDocPdf"  path="org.ofbiz.content.openoffice.OpenOfficeEvents" type="java"/>
+        <event invoke="genCompDocPdf"  path="org.ofbiz.content.compdoc.CompDocEvents" type="java"/>
+        <response name="success" type="none" value=""/>
         <response name="error" type="view" value="error"/>
     </request-map>
     <request-map uri="GenContentPdf">
         <security auth="true" https="true"/>
-        <event invoke="genContentPdf"  path="org.ofbiz.content.openoffice.OpenOfficeEvents" type="java"/>
+        <event invoke="genContentPdf"  path="org.ofbiz.content.compdoc.CompDocEvents" type="java"/>
+        <response name="success" type="none" value=""/>
         <response name="error" type="view" value="error"/>
     </request-map>
     <!-- ================ CompDoc ContentRole Requests ================= -->
