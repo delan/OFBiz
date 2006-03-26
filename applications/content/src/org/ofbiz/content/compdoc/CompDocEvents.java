@@ -1,11 +1,33 @@
+/*
+ * $Id: $
+ *
+ * Copyright 2005-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 package org.ofbiz.content.compdoc;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,10 +41,12 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.event.CoreEvents;
 import org.ofbiz.service.GenericServiceException;
@@ -32,14 +56,9 @@ import org.ofbiz.service.GenericServiceException;
  * CompDocEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev: 5462 $
- * @since      3.0
- *
- * 
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  */
-
 public class CompDocEvents {
-
     public static final String module = CompDocEvents.class.getName();
     
     /** 
@@ -59,10 +78,10 @@ public class CompDocEvents {
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
         Locale locale = UtilHttp.getLocale(request);
         HttpSession session = request.getSession();
-        Security security = (Security)request.getAttribute("security");
+        //Security security = (Security)request.getAttribute("security");
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         String contentId = (String)paramMap.get("contentId");
-        String instanceContentId = null;
+        //String instanceContentId = null;
         
         boolean contentExists = true;
         if (UtilValidate.isEmpty(contentId)) {
@@ -83,7 +102,7 @@ public class CompDocEvents {
         try {
             modelService = dispatcher.getDispatchContext().getModelService("persistContentAndAssoc");
         } catch (GenericServiceException e) {
-            String errMsg = "Error getting model service for serviceName, 'persistContentAndAssoc'. " + e.getMessage();
+            String errMsg = "Error getting model service for serviceName, 'persistContentAndAssoc'. " + e.toString();
             Debug.logError(errMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg + "</li>");
             return "error";
@@ -123,7 +142,7 @@ public class CompDocEvents {
             }
             
         } catch(GenericServiceException e) {
-            String errMsg = "Error running serviceName, 'persistContentAndAssoc'. " + e.getMessage();
+            String errMsg = "Error running serviceName, 'persistContentAndAssoc'. " + e.toString();
             Debug.logError(errMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg + "</li>");
             return "error";
@@ -134,5 +153,155 @@ public class CompDocEvents {
     public static String padNumberWithLeadingZeros(Long num, Integer padLen) {
         String s = UtilFormatOut.formatPaddedNumber(num.longValue(), padLen.intValue());
         return s;
+    }
+
+    public static String genCompDocPdf(HttpServletRequest request, HttpServletResponse response) {
+        String responseStr = "success";
+        //ByteWrapper byteWrapper = null;
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        ServletContext servletContext = session.getServletContext();
+        LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
+        Map paramMap = UtilHttp.getParameterMap(request);
+        String contentId = (String)paramMap.get("contentId");
+        Locale locale = UtilHttp.getLocale(request);
+        String rootDir = null;
+        String webSiteId = null;
+        String https = null;
+        
+        if (UtilValidate.isEmpty(rootDir)) {
+            rootDir = servletContext.getRealPath("/");
+        }
+        if (UtilValidate.isEmpty(webSiteId)) {
+            webSiteId = (String) servletContext.getAttribute("webSiteId");
+        }
+        if (UtilValidate.isEmpty(https)) {
+            https = (String) servletContext.getAttribute("https");
+        }
+        
+        Map mapIn = new HashMap();
+        mapIn.put("contentId", contentId);
+        mapIn.put("locale", locale);
+        mapIn.put("rootDir", rootDir);
+        mapIn.put("webSiteId", webSiteId);
+        mapIn.put("https", https);
+        mapIn.put("userLogin", userLogin);
+        
+        Map results = null;
+        try {
+            results = dispatcher.runSync("renderCompDocPdf", mapIn);
+        } catch(ServiceAuthException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        } catch(GenericServiceException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        } catch(Exception e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        }
+        
+        if (ServiceUtil.isError(results)) {
+            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(results));
+            return "error";
+        }
+        
+        ByteWrapper outByteWrapper = (ByteWrapper)results.get("outByteWrapper");
+
+        // setup content type
+        String contentType = "application/pdf; charset=ISO-8859-1";
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(outByteWrapper.getBytes());
+        
+        /*
+        try {
+            FileOutputStream fos = new FileOutputStream("/home/byersa/pdftest.pdf");
+            fos.write(outByteWrapper.getBytes());
+        } catch(FileNotFoundException e) {
+        } catch(IOException e) {
+        }
+        */
+        try {
+            UtilHttp.streamContentToBrowser(response, bais, outByteWrapper.getLength(), contentType);
+        } catch(IOException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        }
+        return responseStr;
+    }
+    public static String genContentPdf(HttpServletRequest request, HttpServletResponse response) {
+        String responseStr = "success";
+        //ByteWrapper byteWrapper = null;
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        ServletContext servletContext = session.getServletContext();
+        LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
+        Map paramMap = UtilHttp.getParameterMap(request);
+        String contentId = (String)paramMap.get("contentId");
+        Locale locale = UtilHttp.getLocale(request);
+        String rootDir = null;
+        String webSiteId = null;
+        String https = null;
+        
+        if (UtilValidate.isEmpty(rootDir)) {
+            rootDir = servletContext.getRealPath("/");
+        }
+        if (UtilValidate.isEmpty(webSiteId)) {
+            webSiteId = (String) servletContext.getAttribute("webSiteId");
+        }
+        if (UtilValidate.isEmpty(https)) {
+            https = (String) servletContext.getAttribute("https");
+        }
+        
+        Map mapIn = new HashMap();
+        mapIn.put("contentId", contentId);
+        mapIn.put("locale", locale);
+        mapIn.put("rootDir", rootDir);
+        mapIn.put("webSiteId", webSiteId);
+        mapIn.put("https", https);
+        mapIn.put("userLogin", userLogin);
+        
+        Map results = null;
+        try {
+            results = dispatcher.runSync("renderContentPdf", mapIn);
+        } catch(ServiceAuthException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        } catch(GenericServiceException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        } catch(Exception e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        }
+        
+        if (ServiceUtil.isError(results)) {
+            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(results));
+            return "error";
+        }
+        
+        ByteWrapper outByteWrapper = (ByteWrapper)results.get("outByteWrapper");
+
+        // setup content type
+        String contentType = "application/pdf; charset=ISO-8859-1";
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(outByteWrapper.getBytes());
+        
+        /*
+        try {
+            FileOutputStream fos = new FileOutputStream("/home/byersa/pdftest.pdf");
+            fos.write(outByteWrapper.getBytes());
+            fos.close();
+        } catch(FileNotFoundException e) {
+        } catch(IOException e) {
+        }
+        */
+        try {
+            UtilHttp.streamContentToBrowser(response, bais, outByteWrapper.getLength(), contentType);
+        } catch(IOException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        }
+        return responseStr;
     }
 }

@@ -400,6 +400,10 @@ under the License.
                     description="Edit Survey Response" link-style="buttontext" use-when="dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
             </lookup>
         </field>
+        <field name="surveyResponseLink" map-name="dummy" widget-style="buttontext" 
+            use-when="dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
+            <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse?surveyId=${templateDataResource.relatedDetailId}" also-hidden="false" target-window="_blank"/>
+        </field>
 
         <field name="objectInfo" title="Current File Name" map-name="dataResource" widget-style="tabletext"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; mimeTypeId!=null &amp;&amp; !&quot;application/vnd.ofbiz.survey&quot;.equals(mimeTypeId)">
