@@ -1084,53 +1084,87 @@ public class PriceServices {
         String partyId = (String)context.get("partyId");
         Double quantity = (Double)context.get("quantity");
         
-        // TODO: a) Get the Price from the Agreement* data model
-        //
-        // b) If no price can be found, get the lastPrice from the SupplierProduct entity
-        //
-        Map priceContext = UtilMisc.toMap("currencyUomId", currencyUomId, "partyId", partyId, "productId", productId, "quantity", quantity);
-        List productSuppliers = null;
-        try {
-            Map priceResult = dispatcher.runSync("getSuppliersForProduct", priceContext);
-            if (ServiceUtil.isError(priceResult)) {
-                String errMsg = ServiceUtil.getErrorMessage(priceResult);
-                Debug.logError(errMsg, module);
-                return ServiceUtil.returnError(errMsg);
-            }
-            productSuppliers = (List) priceResult.get("supplierProducts");
-        } catch(GenericServiceException gse) {
-            Debug.logError(gse, module);
-            return ServiceUtil.returnError(gse.getMessage());
-        }
-        if (productSuppliers != null) {
-            for (int i = 0; i < productSuppliers.size(); i++) {
-                GenericValue productSupplier = (GenericValue) productSuppliers.get(i);
-                if (!validPriceFound) {
-                    price = ((Double)productSupplier.get("lastPrice")).doubleValue();
-                    validPriceFound = true;
-                }
-                // add a orderItemPriceInfo element too, without orderId or orderItemId
-                StringBuffer priceInfoDescription = new StringBuffer();
-                priceInfoDescription.append("SupplierProduct ");
-                priceInfoDescription.append("[minimumOrderQuantity:");
-                priceInfoDescription.append("" + productSupplier.getDouble("minimumOrderQuantity").doubleValue());
-                priceInfoDescription.append(", lastPrice: " + productSupplier.getDouble("lastPrice").doubleValue());
-                priceInfoDescription.append("]");
-                GenericValue orderItemPriceInfo = delegator.makeValue("OrderItemPriceInfo", null);
-                //orderItemPriceInfo.set("productPriceRuleId", productPriceAction.get("productPriceRuleId"));
-                //orderItemPriceInfo.set("productPriceActionSeqId", productPriceAction.get("productPriceActionSeqId"));
-                //orderItemPriceInfo.set("modifyAmount", new Double(modifyAmount));
-                // make sure description is <= than 250 chars
-                String priceInfoDescriptionString = priceInfoDescription.toString();
-                if (priceInfoDescriptionString.length() > 250) {
-                    priceInfoDescriptionString = priceInfoDescriptionString.substring(0, 250);
-                }
-                orderItemPriceInfo.set("description", priceInfoDescriptionString);
-                orderItemPriceInfos.add(orderItemPriceInfo);
-            }
-        }
-        // TODO: c) If no price can be found, get the averageCost from the ProductPrice entity
+        // a) Get the Price from the Agreement* data model
+        // TODO: Implement this
 
+        // b) If no price can be found, get the lastPrice from the SupplierProduct entity
+        if (!validPriceFound) {
+            Map priceContext = UtilMisc.toMap("currencyUomId", currencyUomId, "partyId", partyId, "productId", productId, "quantity", quantity);
+            List productSuppliers = null;
+            try {
+                Map priceResult = dispatcher.runSync("getSuppliersForProduct", priceContext);
+                if (ServiceUtil.isError(priceResult)) {
+                    String errMsg = ServiceUtil.getErrorMessage(priceResult);
+                    Debug.logError(errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+                productSuppliers = (List) priceResult.get("supplierProducts");
+            } catch(GenericServiceException gse) {
+                Debug.logError(gse, module);
+                return ServiceUtil.returnError(gse.getMessage());
+            }
+            if (productSuppliers != null) {
+                for (int i = 0; i < productSuppliers.size(); i++) {
+                    GenericValue productSupplier = (GenericValue) productSuppliers.get(i);
+                    if (!validPriceFound) {
+                        price = ((Double)productSupplier.get("lastPrice")).doubleValue();
+                        validPriceFound = true;
+                    }
+                    // add a orderItemPriceInfo element too, without orderId or orderItemId
+                    StringBuffer priceInfoDescription = new StringBuffer();
+                    priceInfoDescription.append("SupplierProduct ");
+                    priceInfoDescription.append("[minimumOrderQuantity:");
+                    priceInfoDescription.append("" + productSupplier.getDouble("minimumOrderQuantity").doubleValue());
+                    priceInfoDescription.append(", lastPrice: " + productSupplier.getDouble("lastPrice").doubleValue());
+                    priceInfoDescription.append("]");
+                    GenericValue orderItemPriceInfo = delegator.makeValue("OrderItemPriceInfo", null);
+                    //orderItemPriceInfo.set("productPriceRuleId", productPriceAction.get("productPriceRuleId"));
+                    //orderItemPriceInfo.set("productPriceActionSeqId", productPriceAction.get("productPriceActionSeqId"));
+                    //orderItemPriceInfo.set("modifyAmount", new Double(modifyAmount));
+                    // make sure description is <= than 250 chars
+                    String priceInfoDescriptionString = priceInfoDescription.toString();
+                    if (priceInfoDescriptionString.length() > 250) {
+                        priceInfoDescriptionString = priceInfoDescriptionString.substring(0, 250);
+                    }
+                    orderItemPriceInfo.set("description", priceInfoDescriptionString);
+                    orderItemPriceInfos.add(orderItemPriceInfo);
+                }
+            }
+        }
+
+        // c) If no price can be found, get the averageCost from the ProductPrice entity
+        if (!validPriceFound) {
+            List prices = null;
+            try {
+                prices = delegator.findByAnd("ProductPrice", UtilMisc.toMap("productId", productId,
+                        "productPricePurposeId", "PURCHASE"), UtilMisc.toList("-fromDate"));
+
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+
+            // filter out the old prices
+            prices = EntityUtil.filterByDate(prices);
+
+            // first check for the AVERAGE_COST price type
+            List pricesToUse = EntityUtil.filterByAnd(prices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
+            if (pricesToUse == null || pricesToUse.size() == 0) {
+                // next go with default price
+                pricesToUse = EntityUtil.filterByAnd(prices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
+                if (pricesToUse == null || pricesToUse.size() == 0) {
+                    // finally use list price
+                    pricesToUse = EntityUtil.filterByAnd(prices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
+                }
+            }
+
+            // use the most current price
+            GenericValue thisPrice = EntityUtil.getFirst(prices);
+            if (thisPrice != null) {
+                price = thisPrice.getDouble("price").doubleValue();
+                validPriceFound = true;
+            }
+        }
 
         result.put("price", new Double(price));
         result.put("validPriceFound", new Boolean(validPriceFound));
