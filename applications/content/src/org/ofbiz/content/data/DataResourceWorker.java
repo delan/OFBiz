@@ -192,6 +192,7 @@ public class DataResourceWorker {
      * Uploads image data from a form and stores it in ImageDataResource. Expects key data in a field identitified by the "idField" value and the binary data
      * to be in a field id'd by uploadField.
      */
+    // TODO: This method is not used and should be removed. amb
     public static String uploadAndStoreImage(HttpServletRequest request, String idField, String uploadField) {
         //GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 

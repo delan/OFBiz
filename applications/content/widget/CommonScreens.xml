@@ -81,6 +81,23 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="commonDataResourceDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="DataResource"/>
+                <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainContentDecorator">
+                    <decorator-section name="body">
+                        <include-menu name="dataresource" location="component://content/webapp/content/data/DataResourceMenus.xml"/>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="commonCompDocDecorator">
         <section>
