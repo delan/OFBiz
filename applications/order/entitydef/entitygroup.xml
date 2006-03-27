@@ -28,7 +28,10 @@
     <!-- org.ofbiz.order.order -->
     <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz" entity="OldOrderItemInventoryRes" />
+	
+    <entity-group group="org.ofbiz" entity="CommunicationEventOrder" />
+
+	<entity-group group="org.ofbiz" entity="OldOrderItemInventoryRes" />
     <entity-group group="org.ofbiz" entity="OldOrderShipmentPreference" />
     <entity-group group="org.ofbiz" entity="OrderAdjustment" />
     <entity-group group="org.ofbiz" entity="OrderAdjustmentAttribute" />

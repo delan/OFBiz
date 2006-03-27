@@ -231,6 +231,20 @@
       <field name="description" type="description"></field>
       <prim-key field="orderBlacklistTypeId"/>
     </entity>
+ 	<entity entity-name="CommunicationEventOrder"
+            package-name="org.ofbiz.order.order"
+            title="Communication Event Order Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="communicationEventId" type="id-ne"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="communicationEventId"/>
+      <relation type="one" fk-name="COMEV_ORDER_ORDER" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="COMEV_ORDER_CMEV" rel-entity-name="CommunicationEvent">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+    </entity>
     <entity entity-name="OrderContactMech"
             package-name="org.ofbiz.order.order"
             never-cache="true"
