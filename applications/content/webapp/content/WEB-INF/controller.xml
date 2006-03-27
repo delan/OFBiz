@@ -562,7 +562,6 @@
 
     <!-- ================ Redirect Content Requests ================= -->
     <request-map uri="ContentMenu"><security auth="true" https="true"/><response name="success" type="view" value="ContentMenu"/></request-map>
-    <request-map uri="DataMenu"><security auth="true" https="true"/><response name="success" type="view" value="DataMenu"/></request-map>
     <request-map uri="ContentSetupMenu"><security auth="true" https="true"/><response name="success" type="view" value="ContentSetupMenu"/></request-map>
     <request-map uri="DataSetupMenu"><security auth="true" https="true"/><response name="success" type="view" value="DataSetupMenu"/></request-map>
     <request-map uri="LayoutMenu"><security auth="true" https="true"/><response name="success" type="view" value="LayoutMenu"/></request-map>
@@ -668,7 +667,10 @@
     <request-map uri="EditDataResourceUpload"><security auth="true" https="true"/><response name="success" type="view" value="EditDataResourceUpload"/></request-map>
     <request-map uri="uploadImage">
         <security auth="true" https="true"/>
+		<!--
         <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="uploadImage" />
+			-->
+        <event invoke="persistContentAndAssoc" path="" type="service"/>
         <response name="success" type="request" value="UploadImage"/>
         <response name="error" type="view" value="UploadImage"/>
     </request-map>
@@ -1446,22 +1448,21 @@
     <view-map name="EditContentOperation" page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentOperation" type="screen"/>
     <view-map name="EditContentPurposeOperation"  page="component://content/widget/contentsetup/ContentSetupScreens.xml#EditContentPurposeOperation" type="screen"/>
 
-    <view-map name="FindDataResource"  page="component://content/widget/content/DataResourceScreens.xml#FindDataResource" type="screen"/>
-    <view-map name="UploadImage"  page="component://content/widget/content/DataResourceScreens.xml#UploadImage" type="screen"/>
-    <view-map name="EditDataResource"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResource" type="screen"/>
-    <view-map name="AddDataResource"  page="component://content/widget/content/DataResourceScreens.xml#AddDataResource" type="screen"/>
-    <view-map name="AddDataResourceText"  page="component://content/widget/content/DataResourceScreens.xml#AddDataResourceText" type="screen"/>
-    <view-map name="AddDataResourceUrl"  page="component://content/widget/content/DataResourceScreens.xml#AddDataResourceUrl" type="screen"/>
-    <view-map name="AddDataResourceUpload"  page="component://content/widget/content/DataResourceScreens.xml#AddDataResourceUpload" type="screen"/>
-    <view-map name="EditDataResourceText"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceText" type="screen"/>
-    <view-map name="EditDataResourceUrl"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceUrl" type="screen"/>
-    <view-map name="EditDataResourceUpload"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceUpload" type="screen"/>
-    <view-map name="EditElectronicText"  page="component://content/widget/content/DataResourceScreens.xml#EditElectronicText" type="screen"/>
-    <view-map name="EditDataResourceAttribute"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceAttribute" type="screen"/>
-    <view-map name="EditDataResourceRole"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceRole" type="screen"/>
-    <view-map name="EditDataResourceProductFeatures"  page="component://content/widget/content/DataResourceScreens.xml#EditDataResourceProductFeatures" type="screen"/>
-    <view-map name="EditHtmlText"  page="component://content/widget/content/DataResourceScreens.xml#EditHtmlText" type="screen"/>
-    <view-map name="DataMenu"  page="component://content/widget/content/DataResourceScreens.xml#DataMenu" type="screen"/>
+    <view-map name="FindDataResource"  page="component://content/widget/data/DataResourceScreens.xml#FindDataResource" type="screen"/>
+    <view-map name="UploadImage"  page="component://content/widget/data/DataResourceScreens.xml#UploadImage" type="screen"/>
+    <view-map name="EditDataResource"  page="component://content/widget/data/DataResourceScreens.xml#EditDataResource" type="screen"/>
+    <view-map name="AddDataResource"  page="component://content/widget/data/DataResourceScreens.xml#AddDataResource" type="screen"/>
+    <view-map name="AddDataResourceText"  page="component://content/widget/data/DataResourceScreens.xml#AddDataResourceText" type="screen"/>
+    <view-map name="AddDataResourceUrl"  page="component://content/widget/data/DataResourceScreens.xml#AddDataResourceUrl" type="screen"/>
+    <view-map name="AddDataResourceUpload"  page="component://content/widget/data/DataResourceScreens.xml#AddDataResourceUpload" type="screen"/>
+    <view-map name="EditDataResourceText"  page="component://content/widget/data/DataResourceScreens.xml#EditDataResourceText" type="screen"/>
+    <view-map name="EditDataResourceUrl"  page="component://content/widget/data/DataResourceScreens.xml#EditDataResourceUrl" type="screen"/>
+    <view-map name="EditDataResourceUpload"  page="component://content/widget/data/DataResourceScreens.xml#EditDataResourceUpload" type="screen"/>
+    <view-map name="EditElectronicText"  page="component://content/widget/data/DataResourceScreens.xml#EditElectronicText" type="screen"/>
+    <view-map name="EditDataResourceAttribute"  page="component://content/widget/data/DataResourceScreens.xml#EditDataResourceAttribute" type="screen"/>
+    <view-map name="EditDataResourceRole"  page="component://content/widget/data/DataResourceScreens.xml#EditDataResourceRole" type="screen"/>
+    <view-map name="EditDataResourceProductFeatures"  page="component://content/widget/data/DataResourceScreens.xml#EditDataResourceProductFeatures" type="screen"/>
+    <view-map name="EditHtmlText"  page="component://content/widget/data/DataResourceScreens.xml#EditHtmlText" type="screen"/>
 
     <view-map name="BrowseDataResource" page="/data/BrowseDataResource.ftl" type="jpublish"/>
  
