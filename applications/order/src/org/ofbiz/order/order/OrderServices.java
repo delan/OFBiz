@@ -3083,7 +3083,7 @@ public class OrderServices {
                 valueObj.set("createdByUserLogin", userLogin.getString("userLoginId"));
             } else if ("OrderPaymentPreference".equals(valueObj.getEntityName())) {
                 if (valueObj.get("orderPaymentPreferenceId") == null) {
-                    valueObj.set("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString());
+                    valueObj.set("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference"));
                     valueObj.set("createdDate", UtilDateTime.nowTimestamp());
                     valueObj.set("createdByUserLogin", userLogin.getString("userLoginId"));
                 }
