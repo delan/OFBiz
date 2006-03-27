@@ -804,7 +804,7 @@ public class ShoppingCart implements Serializable {
         if (getOrderType().equals("PURCHASE_ORDER")) {
             //GenericValue productSupplier = null;
             supplierProduct = getSupplierProduct(productId, quantity, dispatcher);
-            if (supplierProduct != null) {
+            if (supplierProduct != null || "_NA_".equals(this.getPartyId())) {
                  return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this, supplierProduct));
             } else {
                 throw new CartItemModifyException("SupplierProduct not found");

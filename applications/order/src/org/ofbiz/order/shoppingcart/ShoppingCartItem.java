@@ -353,6 +353,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (supplierProduct != null) {
             newItem.setName(getPurchaseOrderItemDescription(product, supplierProduct, cart.getLocale()));
             newItem.setBasePrice(supplierProduct.getDouble("lastPrice").doubleValue());
+        } else {
+            newItem.setName(product.getString("internalName"));
         }
         return newItem;
 
