@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  * critical to understand the way BigDecimal works if you wish to modify the 
  * computations in this file. The most important things to keep in mind:
  *
- * Critically important: BigDecimal arigthmetic methods like add(), 
+ * Critically important: BigDecimal arithmetic methods like add(), 
  * multiply(), divide() do not modify the BigDecimal itself. Instead, they 
  * return a new BigDecimal. For example, to keep a running total of an 
  * amount, make sure you do this:
@@ -188,7 +188,8 @@ public class InvoiceServices {
             // TODO: ideally this should be the same time as when a shipment is sent and be passed in as a parameter 
             Timestamp invoiceDate = UtilDateTime.nowTimestamp();
             // TODO: perhaps consider billing account net days term as well?
-            Timestamp dueDate = UtilDateTime.getDayEnd(invoiceDate, orh.getOrderTermNetDays().intValue());
+            Long orderTermNetDays = orh.getOrderTermNetDays();
+            Timestamp dueDate = UtilDateTime.getDayEnd(invoiceDate, (orderTermNetDays!= null? orderTermNetDays.intValue(): 0));
             
             // create the invoice record
             Map createInvoiceContext = FastMap.newInstance();
