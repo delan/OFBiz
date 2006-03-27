@@ -49,6 +49,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.security.Security;
@@ -70,7 +71,7 @@ import org.ofbiz.security.Security;
 public class OrderReadHelper {
 
     public static final String module = OrderReadHelper.class.getName();
-    
+
     // scales and rounding modes for BigDecimal math
     public static final int scale = UtilNumber.getBigDecimalScale("order.decimals");
     public static final int rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
@@ -231,7 +232,7 @@ public class OrderReadHelper {
             return null;
         }
     }
-    
+
     /**
      * @return Long number of days from termDays of first FIN_PAYMENT_TERM
      */
@@ -244,7 +245,7 @@ public class OrderReadHelper {
         }
         return ((GenericValue) orderTerms.get(0)).getLong("termDays");
     }
-    
+
     /** @deprecated */
     public String getShippingMethod() {
         throw new IllegalArgumentException("You must call the getShippingMethod method with the shipGroupdSeqId parameter, this is no londer supported since a single OrderShipmentPreference is no longer used.");
@@ -689,7 +690,7 @@ public class OrderReadHelper {
                             GenericValue appl = (GenericValue) fai.next();
                             Double lastQuantity = (Double) featureMap.get(appl.getString("productFeatureId"));
                             if (lastQuantity == null) {
-                                lastQuantity = new Double(0); 
+                                lastQuantity = new Double(0);
                             }
                             Double newQuantity = new Double(lastQuantity.doubleValue() + getOrderItemQuantity(item).doubleValue());
                             featureMap.put(appl.getString("productFeatureId"), newQuantity);
@@ -774,7 +775,7 @@ public class OrderReadHelper {
     }
 
     public BigDecimal getShippableTotalBd(String shipGroupSeqId) {
-        BigDecimal shippableTotal = ZERO; 
+        BigDecimal shippableTotal = ZERO;
         List validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
             Iterator i = validItems.iterator();
@@ -1340,7 +1341,7 @@ public class OrderReadHelper {
         Map filter = UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId"));
         if (shipmentId != null) {
             filter.put("shipmentId", shipmentId);
-        }        
+        }
         return EntityUtil.filterByAnd(orderItemIssuances, filter);
     }
 
@@ -1359,7 +1360,7 @@ public class OrderReadHelper {
 
    /**
     * Get the quantity returned per order item.
-    * In other words, this method will count the ReturnItems 
+    * In other words, this method will count the ReturnItems
     * related to each OrderItem.
     *
     * @return  Map of returned quantities as Doubles keyed to the orderItemSeqId
@@ -1371,7 +1372,7 @@ public class OrderReadHelper {
        Map returnMap = new HashMap();
        for (Iterator iter = this.getValidOrderItems().iterator(); iter.hasNext(); ) {
            GenericValue orderItem = (GenericValue) iter.next();
-           List group = EntityUtil.filterByAnd(returnItems, 
+           List group = EntityUtil.filterByAnd(returnItems,
                    UtilMisc.toMap("orderId", orderItem.get("orderId"), "orderItemSeqId", orderItem.get("orderItemSeqId")));
 
            // add up the returned quantities for this group TODO: received quantity should be used eventually
@@ -1390,7 +1391,7 @@ public class OrderReadHelper {
    }
 
    /**
-    * Get the total quantity of returned items for an order. This will count 
+    * Get the total quantity of returned items for an order. This will count
     * only the ReturnItems that are directly correlated to an OrderItem.
     */
     public BigDecimal getOrderReturnedQuantityBd() {
@@ -2334,6 +2335,38 @@ public class OrderReadHelper {
         return newOrderAdjustmentsList;
     }
 
+    public static double getQuantityOnOrder(GenericDelegator delegator, String productId) {
+        double quantity = 0.0;
+
+        // first find all open purchase orders
+        List openOrdersExprs = UtilMisc.toList(new EntityExpr("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+        openOrdersExprs.add(new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
+        openOrdersExprs.add(new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
+        openOrdersExprs.add(new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED"));
+        openOrdersExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+        EntityCondition openOrdersCond = new EntityConditionList(openOrdersExprs, EntityOperator.AND);
+        List openOrders = null;
+        try {
+            openOrders = delegator.findByCondition("OrderHeaderAndItems", openOrdersCond, null, null);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (openOrders != null && openOrders.size() > 0) {
+            Iterator i = openOrders.iterator();
+            while (i.hasNext()) {
+                GenericValue order = (GenericValue) i.next();
+                Double thisQty = order.getDouble("quantity");
+                if (thisQty == null) {
+                    thisQty = new Double(0);
+                }
+                quantity += thisQty.doubleValue();
+            }
+        }
+
+        return quantity;
+    }
+
     /**
      * Checks to see if this user has read permission on the specified order
      * @param userLogin The UserLogin value object to check
@@ -2425,7 +2458,7 @@ public class OrderReadHelper {
 
     // little helper method to set the scale according to tax type
     public static BigDecimal setScaleByType(boolean isTax, BigDecimal value){
-        return isTax ? value.setScale(taxCalcScale, taxRounding) : value.setScale(scale, rounding); 
+        return isTax ? value.setScale(taxCalcScale, taxRounding) : value.setScale(scale, rounding);
     }
 
    /** Get the quantity of order items that have been invoiced */

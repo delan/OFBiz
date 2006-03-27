@@ -642,13 +642,20 @@ public class ShoppingCartHelper {
                                             oldDescription = item.getName();
                                             oldPrice = item.getBasePrice();
 
+
                                             GenericValue productSupplier = this.getProductSupplier(item.getProductId(), new Double(quantity), cart.getCurrency());
 
                                             if (productSupplier == null) {
-                                                // in this case, the user wanted to purchase a quantity which is not available (probably below minimum)
-                                                String errMsg = UtilProperties.getMessage(resource, "cart.product_not_valid_for_supplier", this.cart.getLocale());
-                                                errMsg = errMsg + " (" + item.getProductId() + ", " + quantity + ", " + cart.getCurrency() + ")";
-                                                errorMsgs.add(errMsg);
+                                                if ("_NA_".equals(cart.getPartyId())) {
+                                                    // no supplier does not require the supplier product
+                                                    item.setQuantity(quantity, dispatcher, this.cart);
+                                                    item.setName(item.getProduct().getString("internalName"));
+                                                } else {
+                                                    // in this case, the user wanted to purchase a quantity which is not available (probably below minimum)
+                                                    String errMsg = UtilProperties.getMessage(resource, "cart.product_not_valid_for_supplier", this.cart.getLocale());
+                                                    errMsg = errMsg + " (" + item.getProductId() + ", " + quantity + ", " + cart.getCurrency() + ")";
+                                                    errorMsgs.add(errMsg);
+                                                }
                                             } else {
                                                 item.setQuantity(quantity, dispatcher, this.cart);
                                                 item.setBasePrice(productSupplier.getDouble("lastPrice").doubleValue());
