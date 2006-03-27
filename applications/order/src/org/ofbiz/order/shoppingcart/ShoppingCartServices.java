@@ -317,10 +317,10 @@ public class ShoppingCartServices {
                 cartItem.setQuoteItemSeqId(item.getString("quoteItemSeqId"));
                 cartItem.setProductCategoryId(item.getString("productCategoryId"));
                 cartItem.setDesiredDeliveryDate(item.getTimestamp("estimatedDeliveryDate"));
-                cartItem.setShipBeforeDate(item.getTimestamp("shipBeforeDate"));
-                cartItem.setShipAfterDate(item.getTimestamp("shipAfterDate"));
+                //cartItem.setShipBeforeDate(item.getTimestamp("shipBeforeDate"));
+                //cartItem.setShipAfterDate(item.getTimestamp("shipAfterDate"));
                 cartItem.setShoppingList(item.getString("shoppingListId"), item.getString("shoppingListItemSeqId"));
-                cartItem.setIsModifiedPrice(new String("Y").equals(item.getString("isModifiedPrice")) ? true : false);
+                cartItem.setIsModifiedPrice("Y".equals(item.getString("isModifiedPrice")));
                 if(cartItem.getIsModifiedPrice())
                     cartItem.setBasePrice(item.getDouble("unitPrice").doubleValue());
                 
