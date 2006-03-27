@@ -162,12 +162,14 @@ if ("Y".equals(lookupFlag)) {
     } else {
         shipmentList = new ArrayList();
         shipmentListSize = 0;
+        highIndex = 0;
+        lowIndex = 0;
     }
 
     context.put("shipmentList", shipmentList);
     context.put("listSize", shipmentListSize);
     context.put("highIndex", highIndex);
-	context.put("lowIndex", lowIndex);
+    context.put("lowIndex", lowIndex);
 }
 
 // =============== Prepare the Option Data for the Find Form =================
