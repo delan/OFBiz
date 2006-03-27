@@ -1646,6 +1646,22 @@
   <!-- org.ofbiz.product.product -->
   <!-- ========================================================= -->
 
+    <entity entity-name="CommunicationEventProduct"
+            package-name="org.ofbiz.product.product"
+            title="Communication Event Product Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="communicationEventId" type="id-ne"></field>
+      <prim-key field="productId"/>
+      <prim-key field="communicationEventId"/>
+      <relation type="one" fk-name="COMEV_PROD_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="COMEV_PROD_CMEV" rel-entity-name="CommunicationEvent">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+    </entity>
+	
+	
     <entity entity-name="GoodIdentification"
             package-name="org.ofbiz.product.product"
             title="Good Identification Entity">
