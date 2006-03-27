@@ -386,6 +386,9 @@ under the License.
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; mimeTypeId!=null &amp;&amp; &quot;application/vnd.ofbiz.survey&quot;.equals(mimeTypeId)">
             <display description="Survey Response"/>
         </field>
+        <!-- <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"><display/></field> -->
+        <!-- <field name="contentTypeId" map-name="content" title="Content Type"  widget-style="tabletext"><display/></field> -->
+        
         <field name="relatedDetailId" map-name="dataResource" title="Survey ID"
             use-when="dataResource!=null &amp;&amp; &quot;SURVEY&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))">
             <lookup target-form-name="LookupSurvey">
@@ -401,7 +404,7 @@ under the License.
             </lookup>
         </field>
         <field name="surveyResponseLink" map-name="dummy" widget-style="buttontext" 
-            use-when="dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
+            use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse?surveyId=${templateDataResource.relatedDetailId}" also-hidden="false" target-window="_blank"/>
         </field>
 
