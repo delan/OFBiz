@@ -103,8 +103,9 @@ public class OpenOfficeWorker{
             xmulticomponentfactory = (XMultiComponentFactory) UnoRuntime.queryInterface(XMultiComponentFactory.class, objectInitial);
             Debug.logInfo("soffice started. " + procSoffice, module);
             */
-            Debug.logError(e, "Error connecting to OpenOffice: " + e.toString(), module);
-            throw e;
+            String errMsg = "Error connecting to OpenOffice with host [" + host + "] and port [" + port + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            throw new IllegalArgumentException(errMsg);
         }
         
         return xmulticomponentfactory;
