@@ -186,28 +186,28 @@
                    <tr><td colspan="7"><hr class="sepbar"/></td></tr>
             </#if>
           </#if>
-              <#if shipBeforeDate?has_content>
+            <#if shipAfterDate?has_content>
+             <tr>
+                <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b></div>
+                </td>
+                <td width="5">&nbsp;</td>
+                <td align="left" valign="top" width="80%">
+                    <div class="tabletext">${shipAfterDate}</div>
+                </td>
+            </tr>
+            </#if>
+            <#if shipBeforeDate?has_content>
             <tr>
-                    <td align="right" valign="top" width="15%">
-                      <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b></div>
-                </td>
-                    <td width="5">&nbsp;</td>
-                    <td align="left" valign="top" width="80%">
-                      <div class="tabletext">${shipBeforeDate}</div>
-                </td>
+               <td align="right" valign="top" width="15%">
+                   <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b></div>
+               </td>
+               <td width="5">&nbsp;</td>
+               <td align="left" valign="top" width="80%">
+                   <div class="tabletext">${shipBeforeDate}</div>
+               </td>
              </tr>
            </#if>
-               <#if shipAfterDate?has_content>
-             <tr>
-                    <td align="right" valign="top" width="15%">
-                      <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b></div>
-                </td>
-                    <td width="5">&nbsp;</td>
-                    <td align="left" valign="top" width="80%">
-                      <div class="tabletext">${shipAfterDate}</div>
-                </td>
-             </tr>
-            </#if>
         </table>
     </div>
 </div>

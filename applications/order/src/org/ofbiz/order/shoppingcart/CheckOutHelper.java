@@ -190,19 +190,22 @@ public class CheckOutHelper {
         // interal code
         this.cart.setInternalCode(internalCode);
 
-        // set the shipping dates
-        if (UtilValidate.isDate(shipBeforeDate)) {
-            cart.setShipBeforeDate(UtilDateTime.toTimestamp(shipBeforeDate));
-        } else {
-            errMsg = UtilProperties.getMessage(resource, "checkhelper.specify_if_shipBeforeDate_is_date", (cart != null ? cart.getLocale() : Locale.getDefault()));
-            errorMessages.add(errMsg);
+        if (shipBeforeDate != null && shipBeforeDate.length() > 0) {
+            if (UtilValidate.isDate(shipBeforeDate)) {
+                cart.setShipBeforeDate(UtilDateTime.toTimestamp(shipBeforeDate));
+            } else {
+                errMsg = UtilProperties.getMessage(resource, "checkhelper.specify_if_shipBeforeDate_is_date", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                errorMessages.add(errMsg);
+            }
         }
 
-        if (UtilValidate.isDate(shipAfterDate)) {
-            cart.setShipAfterDate(UtilDateTime.toTimestamp(shipAfterDate));
-        } else {
-            errMsg = UtilProperties.getMessage(resource, "checkhelper.specify_if_shipAfterDate_is_date", (cart != null ? cart.getLocale() : Locale.getDefault()));
-            errorMessages.add(errMsg);
+        if (shipAfterDate != null && shipAfterDate.length() > 0) {
+            if (UtilValidate.isDate(shipAfterDate)) {
+                cart.setShipAfterDate(UtilDateTime.toTimestamp(shipAfterDate));
+            } else {
+                errMsg = UtilProperties.getMessage(resource, "checkhelper.specify_if_shipAfterDate_is_date", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                errorMessages.add(errMsg);
+            }
         }
 
         // set any additional notification emails
@@ -551,7 +554,8 @@ public class CheckOutHelper {
                         inputMap.put("quantity", orderItem.getDouble("quantity"));
                         inputMap.put("userLogin", userLogin);
                         // TODO: check service result for an error return
-                        Map prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
+                        // TODO: needs a productionRunId, commenting out because it will crash order creation
+                        //Map prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
                     }
                 } catch (Exception e) {
                     String service = e.getMessage();

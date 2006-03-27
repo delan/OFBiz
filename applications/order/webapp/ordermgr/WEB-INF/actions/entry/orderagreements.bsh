@@ -55,12 +55,17 @@ if (UtilValidate.isNotEmpty(productStoreId)) {
         context.put("defaultCurrencyUomId", productStore.getString("defaultCurrencyUomId"));
         payToPartyId = productStore.getString("payToPartyId");
         partyId = shoppingCart.getOrderPartyId();
-        agreements = delegator.findByAndCache("Agreement", UtilMisc.toMap("partyIdTo", partyId, "partyIdFrom", payToPartyId));
-        if (agreements != null && agreements.size() > 0) {
-            context.put("hasAgreements","Y");
-            context.put("agreements", agreements);
+        
+        // get applicable agreements for order entry
+        if (shoppingCart.getOrderType().equals("PURCHASE_ORDER")) {
+            // the agreement for a PO is from customer to payToParty (ie, us)
+            agreements = delegator.findByAndCache("Agreement", UtilMisc.toMap("partyIdTo", partyId, "partyIdFrom", payToPartyId));
         } else {
-            context.put("hasAgreements","N");
+            // the agreement for a sales order is from us to the customer
+            agreements = delegator.findByAndCache("Agreement", UtilMisc.toMap("partyIdTo", payToPartyId, "partyIdFrom", partyId));
+        }
+        if (agreements != null && agreements.size() > 0) {
+            context.put("agreements", agreements);
         }
     }
 }

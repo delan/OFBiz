@@ -69,7 +69,7 @@
                     <b><div class="tabletext"> &gt;&gt; ${orderItem.itemDescription}</div></b>
                   </td>
                 <#else>
-                  <td valign="top" rowspan="4">
+                  <td valign="top">
                     <div class="tabletext">
                       <#if productId?exists>
                         ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?if_exists}
@@ -351,10 +351,25 @@
                 </#list>
               </#if>
 
+              <!-- display the ship before/after dates -->
+              <#if orderItem.shipAfterDate?exists>
+              <tr>
+                <td align="right" colspan="2">
+                  <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.OrderShipAfterDate}</i>:</b> ${orderItem.shipAfterDate?string.short}</div>
+                </td>
+              </tr>
+              </#if>
+              <#if orderItem.shipBeforeDate?exists>
+              <tr>
+                <td align="right" colspan="2">
+                  <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.OrderShipBeforeDate}</i>:</b> ${orderItem.shipBeforeDate?string.short}</div>
+                </td>
+              </tr>
+              </#if>
+
               <#-- now show ship group info per line item -->
               <#assign orderItemShipGroupAssocs = orderItem.getRelated("OrderItemShipGroupAssoc")?if_exists>
               <#if orderItemShipGroupAssocs?has_content>
-                <tr><td>&nbsp;</td></tr>
                 <#list orderItemShipGroupAssocs as shipGroupAssoc>
                   <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup")>
                   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress")?if_exists>

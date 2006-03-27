@@ -144,6 +144,24 @@ function quicklookup(element) {
                   </td>
                 </tr>
                 <tr>
+                  <td align="right"><div class="tableheadtext">${uiLabelMap.OrderShipAfterDate} :</div></td>
+                  <td>
+                    <div class="tabletext">
+                      <input type="text" class="inputBox" size="20" maxlength="30" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()?default("")}"/>
+                      <a href="javascript:call_cal(document.quickaddform.shipAfterDate,'${shoppingCart.getDefaultShipAfterDate()?default("")}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}"/></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right"><div class="tableheadtext">${uiLabelMap.OrderShipBeforeDate} :</div></td>
+                  <td>
+                    <div class="tabletext">
+                      <input type="text" class="inputBox" size="20" maxlength="30" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()?default("")}"/>
+                      <a href="javascript:call_cal(document.quickaddform.shipBeforeDate,'${shoppingCart.getDefaultShipBeforeDate()?default("")}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}"/></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.CommonComment} :</div></td>
                   <td>
                     <div class="tabletext">
@@ -302,7 +320,7 @@ function quicklookup(element) {
                     <#-- this is a non-product item -->
                     <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
                   </#if>
-                    <#-- display the item's features -->
+                    <#-- display the item''s features -->
                    <#assign features = "">
                    <#if cartLine.getFeaturesForSupplier(dispatcher,shoppingCart.getPartyId())?has_content>
                        <#assign features = cartLine.getFeaturesForSupplier(dispatcher, shoppingCart.getPartyId())>
@@ -358,6 +376,26 @@ function quicklookup(element) {
                 </td>
               </tr>
             </#if>
+            <#-- ship before/after date -->
+            <tr>
+              <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+                <td align="left">
+                  <div class="tabletext">${uiLabelMap.OrderShipAfterDate}
+                    <input type="text" class="inputBox" size="20" maxlength="30" name="shipAfterDate_${cartLineIndex}" 
+                      value="${cartLine.getShipAfterDate()?default("")}"/>
+                    <a href="javascript:call_cal(document.cartform.shipAfterDate_${cartLineIndex},'${shoppingCart.getShipAfterDate()?default("")}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}"/></a>
+                  </div>
+                </td>
+                <td>&nbsp;</td>
+                <td align="left">
+                  <div class="tabletext">${uiLabelMap.OrderShipBeforeDate}
+                    <input type="text" class="inputBox" size="20" maxlength="30" name="shipBeforeDate_${cartLineIndex}" 
+                      value="${cartLine.getShipBeforeDate()?default("")}"/>
+                    <a href="javascript:call_cal(document.cartform.shipBeforeDate_${cartLineIndex},'${shoppingCart.getShipBeforeDate()?default("")}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}"/></a>
+                  </div>
+                </td>
+              </tr></table></td>
+            </tr>
           </table>
 
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>

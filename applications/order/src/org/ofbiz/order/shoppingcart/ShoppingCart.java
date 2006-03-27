@@ -113,6 +113,10 @@ public class ShoppingCart implements Serializable {
     /** contains a list of partyId for each roleTypeId (key) */
     private Map additionalPartyRole = new HashMap();
 
+    /** these are defaults for all ship groups */
+    private Timestamp defaultShipAfterDate = null;
+    private Timestamp defaultShipBeforeDate = null;
+    
     public static class ProductPromoUseInfo implements Serializable {
         public String productPromoId = null;
         public String productPromoCodeId = null;
@@ -150,7 +154,7 @@ public class ShoppingCart implements Serializable {
         public List makeItemShipGroupAndAssoc(GenericDelegator delegator, ShoppingCart cart, long groupIndex) {
             String shipGroupSeqId = UtilFormatOut.formatPaddedNumber(groupIndex, 5);
             List values = new LinkedList();
-
+            
             // create order contact mech for shipping address
             if (contactMechId != null) {
                 GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
@@ -170,8 +174,19 @@ public class ShoppingCart implements Serializable {
             shipGroup.set("maySplit", maySplit);
             shipGroup.set("isGift", isGift);
             shipGroup.set("shipGroupSeqId", shipGroupSeqId);
-            shipGroup.set("shipByDate", shipBeforeDate);
-            shipGroup.set("shipAfterDate", shipAfterDate);
+            
+            // use the cart's default ship before and after dates here
+            if ((shipBeforeDate == null) && (cart.getDefaultShipBeforeDate() != null)) {
+                shipGroup.set("shipByDate", cart.getDefaultShipBeforeDate());
+            } else {
+                shipGroup.set("shipByDate", shipBeforeDate);
+            }
+            if ((shipAfterDate == null) && (cart.getDefaultShipAfterDate() != null)) {
+                shipGroup.set("shipAfterDate", cart.getDefaultShipAfterDate());
+            } else {
+                shipGroup.set("shipAfterDate", shipAfterDate);
+            }
+            
             values.add(shipGroup);
 
             // create the shipping estimate adjustments
@@ -266,6 +281,30 @@ public class ShoppingCart implements Serializable {
             return shipItemInfo.keySet();
         }
 
+        /**
+         * Reset the ship group's shipBeforeDate if it is after the parameter 
+         * @param newShipBeforeDate
+         */
+        public void resetShipBeforeDateIfAfter(Timestamp newShipBeforeDate) {
+            if (newShipBeforeDate != null) {
+                if ((this.shipBeforeDate == null) || (this.shipBeforeDate.before(newShipBeforeDate))) {
+                    this.shipBeforeDate = newShipBeforeDate;
+                }
+            }
+        }
+        
+        /**
+         * Reset the ship group's shipAfterDate if it is before the parameter 
+         * @param newShipBeforeDate
+         */
+        public void resetShipAfterDateIfBefore(Timestamp newShipAfterDate) {
+            if (newShipAfterDate != null) {
+                if ((this.shipAfterDate == null) || (this.shipAfterDate.after(newShipAfterDate))) {
+                    this.shipAfterDate = newShipAfterDate;
+                }
+            }
+        }
+        
         public double getTotalTax(ShoppingCart cart) {
             double taxTotal = 0.00;
             for (int i = 0; i < shipTaxAdj.size(); i++) {
@@ -551,7 +590,9 @@ public class ShoppingCart implements Serializable {
         this.externalId = cart.getExternalId();
         this.internalCode = cart.getInternalCode();
         this.viewCartOnAdd = cart.viewCartOnAdd();
-
+        this.defaultShipAfterDate = cart.getDefaultShipAfterDate();
+        this.defaultShipBeforeDate = cart.getDefaultShipBeforeDate();
+        
         // clone the additionalPartyRoleMap
         this.additionalPartyRole = new HashMap();
         Iterator it = cart.additionalPartyRole.entrySet().iterator();
@@ -772,10 +813,11 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         if (isReadOnlyCart()) {
            throw new CartItemModifyException("Cart items cannot be changed");
         }
+        
         GenericValue supplierProduct = null;
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
@@ -800,27 +842,26 @@ public class ShoppingCart implements Serializable {
             }
         }
         // Add the new item to the shopping cart if it wasn't found.
-
         if (getOrderType().equals("PURCHASE_ORDER")) {
             //GenericValue productSupplier = null;
             supplierProduct = getSupplierProduct(productId, quantity, dispatcher);
             if (supplierProduct != null || "_NA_".equals(this.getPartyId())) {
-                 return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this, supplierProduct));
+                 return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this, supplierProduct, shipBeforeDate, shipAfterDate));
             } else {
                 throw new CartItemModifyException("SupplierProduct not found");
             }
         } else {
-            return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
+            return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
         }
     }
     public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, features, attributes, prodCatalogId, null, dispatcher);
+        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, null, null, features, attributes, prodCatalogId, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, features, attributes, prodCatalogId, null, dispatcher);
+        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, null, null, features, attributes, prodCatalogId, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, reservStart, reservLength, reservPersons,  features, attributes, prodCatalogId, null, dispatcher);
+        return addOrIncreaseItem(productId, 0.00, quantity, reservStart, reservLength, reservPersons,  null, null, features, attributes, prodCatalogId, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addOrIncreaseItem(productId, quantity, null, null, null, dispatcher);
@@ -854,7 +895,7 @@ public class ShoppingCart implements Serializable {
 
     /** Add an item to the shopping cart. */
     public int addItemToEnd(String productId, double amount, double quantity,  double unitPrice, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, boolean triggerExternalOps, boolean triggerPriceRules) throws CartItemModifyException, ItemNotFoundException {
-        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, unitPrice, null, 0.00, 0.00, features, attributes, prodCatalogId, null, dispatcher, this, triggerExternalOps, triggerPriceRules));
+        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, unitPrice, null, 0.00, 0.00, null, null, features, attributes, prodCatalogId, null, dispatcher, this, triggerExternalOps, triggerPriceRules));
     }
 
     /** Add an item to the shopping cart. */
@@ -1094,42 +1135,94 @@ public class ShoppingCart implements Serializable {
         this.webSiteId = webSiteId;
     }
 
+    /**
+     * Set ship before date for a particular ship group
+     * @param idx
+     * @param shipBeforeDate
+     */
    public void setShipBeforeDate(int idx, Timestamp shipBeforeDate) {
        CartShipInfo csi = this.getShipInfo(idx);
        csi.shipBeforeDate  = shipBeforeDate;
    }
 
+   /**
+    * Set ship before date for ship group 0
+    * @param shipBeforeDate
+    */
    public void setShipBeforeDate(Timestamp shipBeforeDate) {
        this.setShipBeforeDate(0, shipBeforeDate);
    }
 
+   /**
+    * Get ship before date for a particular ship group
+    * @param idx
+    * @return
+    */
    public Timestamp getShipBeforeDate(int idx) {
        CartShipInfo csi = this.getShipInfo(idx);
        return csi.shipBeforeDate;
    }
 
+   /**
+    * Get ship before date for ship group 0
+    * @return
+    */
    public Timestamp getShipBeforeDate() {
        return this.getShipBeforeDate(0);
    }
 
+   /**
+    * Set ship after date for a particular ship group
+    * @param idx
+    * @param shipAfterDate
+    */
    public void setShipAfterDate(int idx, Timestamp shipAfterDate) {
        CartShipInfo csi = this.getShipInfo(idx);
        csi.shipAfterDate  = shipAfterDate;
    }
 
+   /**
+    * Set ship after date for a particular ship group
+    * @param shipAfterDate
+    */
    public void setShipAfterDate(Timestamp shipAfterDate) {
        this.setShipAfterDate(0, shipAfterDate);
    }
 
+   /**
+    * Get ship after date for a particular ship group
+    * @param idx
+    * @return
+    */
    public Timestamp getShipAfterDate(int idx) {
        CartShipInfo csi = this.getShipInfo(idx);
        return csi.shipAfterDate;
    }
 
+   /**
+    * Get ship after date for ship group 0
+    * @return
+    */
    public Timestamp getShipAfterDate() {
        return this.getShipAfterDate(0);
    }
 
+   public void setDefaultShipBeforeDate(Timestamp defaultShipBeforeDate) {
+      this.defaultShipBeforeDate = defaultShipBeforeDate;    
+   }
+   
+   public Timestamp getDefaultShipBeforeDate() {
+       return this.defaultShipBeforeDate;
+   }
+   
+   public void setDefaultShipAfterDate(Timestamp defaultShipAfterDate) {
+       this.defaultShipAfterDate = defaultShipAfterDate;
+   }
+   
+   public Timestamp getDefaultShipAfterDate() {
+       return this.defaultShipAfterDate;
+   }
+   
     public String getOrderPartyId() {
         return this.orderPartyId != null ? this.orderPartyId : this.getPartyId();
     }
@@ -1852,6 +1945,26 @@ public class ShoppingCart implements Serializable {
         csi.shipEstimate = amount;
     }
 
+    /**
+     * Updates the shipBefore and shipAfterDates of all ship groups that the item belongs to, re-setting
+     * ship group ship before date if item ship before date is before it and ship group ship after date if
+     * item ship after date is before it.  
+     * @param item
+     */
+    public void setShipGroupShipDatesFromItem(ShoppingCartItem item) {
+        Map shipGroups = this.getShipGroups(item);
+        
+        if ((shipGroups != null) && (shipGroups.keySet() != null)) {
+            for (Iterator shipGroupKeys = shipGroups.keySet().iterator(); shipGroupKeys.hasNext(); ) {
+                Integer shipGroup = (Integer) shipGroupKeys.next();
+                CartShipInfo shipInfo = this.getShipInfo(shipGroup.intValue());
+                
+                shipInfo.resetShipAfterDateIfBefore(item.getShipAfterDate());
+                shipInfo.resetShipBeforeDateIfAfter(item.getShipBeforeDate());
+            }
+        }
+    }
+    
     public double getItemShipGroupEstimate(int idx) {
         CartShipInfo csi = this.getShipInfo(idx);
         return csi.shipEstimate;
@@ -1878,6 +1991,11 @@ public class ShoppingCart implements Serializable {
             if (quantity > item.getQuantity()) {
                 quantity = item.getQuantity();
             }
+            
+            // re-set the ship group's before and after dates based on the item's
+            csi.resetShipBeforeDateIfAfter(item.getShipBeforeDate());
+            csi.resetShipAfterDateIfBefore(item.getShipAfterDate());
+            
             CartShipInfo.CartShipItemInfo csii = csi.setItemInfo(item, quantity);
             this.checkShipItemInfo(csi, csii);
         }
@@ -2915,6 +3033,9 @@ public class ShoppingCart implements Serializable {
                 orderItem.set("quoteId", item.getQuoteId());
                 orderItem.set("quoteItemSeqId", item.getQuoteItemSeqId());
                 orderItem.set("statusId", status);
+
+                orderItem.set("shipBeforeDate", item.getShipBeforeDate());
+                orderItem.set("shipAfterDate", item.getShipAfterDate());
 
                 result.add(orderItem);
                 // don't do anything with adjustments here, those will be added below in makeAllAdjustments

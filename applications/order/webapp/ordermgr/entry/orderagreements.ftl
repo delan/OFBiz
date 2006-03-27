@@ -23,61 +23,97 @@
  *@version    1.0
 -->
 
-<table border="0" cellspacing='0' cellpadding='0'>
-  <tr>
-    <td>
-      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <#if hasAgreements=='Y'>
-        <form method="post" name="agreementForm" action="<@ofbizUrl>setOrderAgreement</@ofbizUrl>">
-        <input type='hidden' name='hasAgreements' value='${hasAgreements}'>
-        <tr>
-          <td>&nbsp;</td>
-          <td align='right' valign='top' nowrap>
-             <div class='tableheadtext'>
-                    ${uiLabelMap.OrderSelectAgreement}
-             </div>
-          </td>
-          <td>&nbsp;</td>
-          <td valign='middle'>
-            <div class='tabletext' valign='top'>
-                <#list agreements as agreement>
-                   <input type='radio' name='agreementId' value='${agreement.agreementId}' >${agreement.agreementId} - ${agreement.description?if_exists} <br />
-                </#list>
-            </div>
-          </td>
-        </tr>
-        <tr><td colspan="4">&nbsp;</td></tr>
-        <tr><td colspan="3">&nbsp;</td><td align="left"><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSelectOne}">
-        <tr><td colspan="4">&nbsp;</td></tr>
-        <tr><td colspan="4"><hr class="sepbar"></td></tr>
-        <tr><td colspan="4">&nbsp;</td></tr>
-        </form>
-        </#if>
-        <form method="post" name="agreementForm" action="<@ofbizUrl>setOrderCurrency</@ofbizUrl>">
-         <input type='hidden' name='hasAgreements' value='${hasAgreements}'>
-         <tr>
-          <td>&nbsp;</td>
-          <td align='right' valign='middle' nowrap>
-             <div class='tableheadtext'>
-                 ${uiLabelMap.OrderSelectCurrency}
-             </div>
-          </td>
-          <td>&nbsp;</td>
-          <td valign='middle'>
-            <div class='tabletext' valign='top'>
-                  <select class="selectBox" name="currencyUomId">
-                  <option value=""></option>
-                    <#list currencies as currency>
-                      <option value="${currency.uomId}" <#if (defaultCurrencyUomId?has_content) && (currency.uomId == defaultCurrencyUomId)>selected</#if>>${currency.uomId}</option>
-                    </#list>
-                  </select>
-            </div>
-          </td>
-        </tr>
-        <tr><td colspan="4">&nbsp;</td></tr>
-        <tr><td colspan="3">&nbsp;</td><td align="left"><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSelectOne}">
-       </form>
-      </table>
-    </td>
-  </tr>
-</table>
+
+<form method="post" name="agreementForm" action="<@ofbizUrl>setOrderCurrencyAgreementShipDates</@ofbizUrl>">
+<div class="screenlet">
+  <div class="screenlet-header">
+    <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}</div>
+  </div>
+  <div class="screenlet-body">
+    <table>
+      <tr><td colspan="4">&nbsp;</td></tr>
+
+      <#if agreements?exists>
+      <input type='hidden' name='hasAgreements' value='Y'/>
+      <tr>
+        <td>&nbsp;</td>
+        <td align='right' valign='top' nowrap>
+          <div class='tableheadtext'>
+            ${uiLabelMap.OrderSelectAgreement}
+          </div>
+        </td>
+        <td>&nbsp;</td>
+        <td valign='middle'>
+          <div class='tabletext' valign='top'>
+            <select name="agreementId" class="inputBox">
+            <option value="">${uiLabelMap.CommonNone}</option>
+            <#list agreements as agreement>
+            <option value='${agreement.agreementId}' >${agreement.agreementId} - ${agreement.description?if_exists}</option>
+            </#list>
+            </select>
+          </div>
+        </td>
+      </tr>
+
+      <#else><input type='hidden' name='hasAgreements' value='N'/>
+      </#if>
+
+      <tr>
+        <td>&nbsp;</td>
+        <td align='right' valign='middle' nowrap>
+          <div class='tableheadtext'>
+            <#if agreements?exists>${uiLabelMap.OrderSelectCurrencyOr}
+            <#else>${uiLabelMap.OrderSelectCurrency}
+            </#if>
+          </div>
+        </td>
+        <td>&nbsp;</td>
+        <td valign='middle'>
+          <div class='tabletext' valign='top'>
+            <select class="selectBox" name="currencyUomId">
+              <option value=""></option>
+              <#list currencies as currency>
+              <option value="${currency.uomId}" <#if (defaultCurrencyUomId?has_content) && (currency.uomId == defaultCurrencyUomId)>selected</#if>>${currency.uomId}</option>
+              </#list>
+            </select>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td>&nbsp;</td>
+        <td align='right' valign='top' nowrap>
+          <div class='tableheadtext'>
+            ${uiLabelMap.OrderShipAfterDateDefault}
+          </div>
+        </td>
+        <td>&nbsp;</td>
+        <td><input type="text" name="shipAfterDate" size="20" maxlength="30" class="inputBox"/>
+          <a href="javascript:call_cal(document.agreementForm.shipAfterDate,'');">
+            <img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'/>
+          </a>
+        </td>
+      </tr>
+
+      <tr>
+        <td>&nbsp;</td>
+        <td align='right' valign='top' nowrap>
+          <div class='tableheadtext'>
+            ${uiLabelMap.OrderShipBeforeDateDefault}
+          </div>
+        </td>
+        <td>&nbsp;</td>
+        <td><input type="text" name="shipBeforeDate" size="20" maxlength="30" class="inputBox"/>
+          <a href="javascript:call_cal(document.agreementForm.shipBeforeDate,'');">
+            <img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'/>
+          </a>
+        </td>
+      </tr>
+
+      <tr><td colspan="4">&nbsp;</td></tr>
+      <tr><td colspan="3">&nbsp;</td><td align="left"><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSelect}">
+
+    </table>
+  </div>
+</div>
+</form>

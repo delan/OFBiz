@@ -322,6 +322,13 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderagreements"/>
     </request-map>
+    <request-map uri="setOrderCurrencyAgreementShipDates">
+        <description>Handles setting the currency, agreement and shipment dates of an order.</description>
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDates"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderagreements"/>
+    </request-map>
     <request-map uri="setOrderAgreement">
         <security https="true" auth="true"/>
          <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="selectAgreement"/>
