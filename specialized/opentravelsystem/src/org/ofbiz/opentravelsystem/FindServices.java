@@ -146,6 +146,9 @@ public class FindServices {
         		else if (entityName.equals("Party") || entityName.equals("PartyRelationshipAndPartyDetail") || entityName.equals("PartyNameView"))  {
         			extraCond = new EntityExpr("partyId", EntityOperator.LIKE, companyPrefix); 
         		}
+        		else if (entityName.equals("ElectronicText") || entityName.equals("DataResource"))  {
+        			extraCond = new EntityExpr("dataResourceId", EntityOperator.LIKE, companyPrefix); 
+        		}
         		else {
                 	Debug.logInfo("OrganizationPartyId found but no limitation on entity: " + entityName,module);
         		}

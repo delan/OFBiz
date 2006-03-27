@@ -20,7 +20,7 @@ if (scheme.equals("http") && (serverPath.equals("/backend") || serverPath.equals
 	response.sendRedirect("https://" + serverName + ":8443/" + serverpath + "/control/main");
 
 if (serverName.equals("ant.co.th")) response.sendRedirect("/antwebsystems");
-if (serverName.equals("openwinkel.co.th")) response.sendRedirect("/openwinkel");
+if (serverName.equals("openwinkel.co.th")) response.sendRedirect("/ow");
 if (serverName.equals("anet.co.th")) response.sendRedirect("/anet");
 
 

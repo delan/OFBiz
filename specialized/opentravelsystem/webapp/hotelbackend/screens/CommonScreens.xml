@@ -31,8 +31,6 @@
         <section>
             <actions>
                 <!-- base/top/specific map first, then more common map added for shared labels --> 
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
@@ -60,7 +58,7 @@
             </actions>
             <widgets>
                 <!-- render header -->
-                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/header.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://common/webcommon/includes/header.ftl"/></html></platform-specific>
                 <section>
                     <condition>
                         <if-empty field-name="parameters.popup"/>
