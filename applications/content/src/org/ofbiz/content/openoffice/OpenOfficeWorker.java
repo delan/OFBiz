@@ -89,18 +89,22 @@ public class OpenOfficeWorker{
          
             // Create a service manager from the initial object
             xmulticomponentfactory = (XMultiComponentFactory) UnoRuntime.queryInterface(XMultiComponentFactory.class, objectInitial);
-        } catch(Exception exception) {
+        } catch(Exception e) {
             // TODO: None of this works. Need a programmable start solution.
             //String ooxvfb = UtilProperties.getPropertyValue("openoffice", "oo.start.xvfb");
             //String ooexport = UtilProperties.getPropertyValue("openoffice", "oo.start.export");
             String oosoffice = UtilProperties.getPropertyValue("openoffice", "oo.start.soffice");
             //Process procXvfb = Runtime.getRuntime().exec(ooxvfb);
             //Process procExport = Runtime.getRuntime().exec(ooexport);
+            /*
             Process procSoffice = Runtime.getRuntime().exec(oosoffice);
             Thread.sleep(3000);
             objectInitial = xurlresolver.resolve("uno:socket,host=" + host + ",port=" + port + ";urp;StarOffice.ServiceManager");
             xmulticomponentfactory = (XMultiComponentFactory) UnoRuntime.queryInterface(XMultiComponentFactory.class, objectInitial);
             Debug.logInfo("soffice started. " + procSoffice, module);
+            */
+            Debug.logError(e, "Error connecting to OpenOffice: " + e.toString(), module);
+            throw e;
         }
         
         return xmulticomponentfactory;
