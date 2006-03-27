@@ -436,6 +436,8 @@
       <field name="autoCancelDate" type="date-time"></field>
       <field name="dontCancelSetDate" type="date-time"></field>
       <field name="dontCancelSetUserLogin" type="id-vlong"></field>
+      <field name="shipBeforeDate" type="date-time"></field>
+      <field name="shipAfterDate" type="date-time"></field>
       <field name="overrideGlAccountId" type="id"><!-- used to specify the override or actual glAccountId used for the adjustment, avoids problems if configuration changes after initial posting, etc --></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>

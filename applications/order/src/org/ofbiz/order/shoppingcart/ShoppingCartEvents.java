@@ -115,6 +115,11 @@ public class ShoppingCartEvents {
         double reservLength = 0;
         String reservPersonsStr = null;
         double reservPersons = 0;
+        String shipBeforeStr = null;
+        String shipBeforeDateStr = null;
+        String shipAfterDateStr = null;
+        java.sql.Timestamp shipBeforeDate = null;
+        java.sql.Timestamp shipAfterDate = null;
 
         // not used right now: Map attributes = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
@@ -311,6 +316,30 @@ public class ShoppingCartEvents {
             }
         }
 
+        // get the ship before date (handles both yyyy-mm-dd input and full timestamp)
+        shipBeforeDateStr = (String) paramMap.remove("shipBeforeDate");
+        if (shipBeforeDateStr != null) {
+            if (shipBeforeDateStr.length() == 10) shipBeforeDateStr += " 00:00:00.000";
+            try {
+                shipBeforeDate = java.sql.Timestamp.valueOf(shipBeforeDateStr);
+            } catch (IllegalArgumentException e) {
+                Debug.logWarning(e, "Bad shipBeforeDate input: " + e.getMessage(), module);
+                shipBeforeDate = null;
+            }
+        }
+
+        // get the ship after date (handles both yyyy-mm-dd input and full timestamp)
+        shipAfterDateStr = (String) paramMap.remove("shipAfterDate");
+        if (shipAfterDateStr != null) {
+            if (shipAfterDateStr.length() == 10) shipAfterDateStr += " 00:00:00.000";
+            try {
+                shipAfterDate = java.sql.Timestamp.valueOf(shipAfterDateStr);
+            } catch (IllegalArgumentException e) {
+                Debug.logWarning(e, "Bad shipAfterDate input: " + e.getMessage(), module);
+                shipAfterDate = null;
+            }
+        }
+
         // check for an add-to cart survey
         List surveyResponses = null;
         if (productId != null) {
@@ -347,7 +376,7 @@ public class ShoppingCartEvents {
 
         // Translate the parameters and add to the cart
         result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-                itemType, itemDescription, price, amount, quantity, reservStart, reservLength, reservPersons, configWrapper, paramMap);
+                itemType, itemDescription, price, amount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, configWrapper, paramMap);
             controlDirective = processResult(result, request);
 
         // Determine where to send the browser
@@ -1136,15 +1165,17 @@ public class ShoppingCartEvents {
     public static String routeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
 
-        String orderMode = (String)session.getAttribute("orderMode");
-        String orderModePar = request.getParameter("orderMode"); // orderModePar != null when this request is coming from the init page
-
-        if (orderMode == null) {
+        // if the order mode is not set in the attributes, then order entry has not been initialized
+        if (session.getAttribute("orderMode") == null) {
             return "init";
         }
-        if (orderMode.equals("PURCHASE_ORDER") && orderModePar != null) {
-            return "agreements";
+
+        // if the request is coming from the init page, then orderMode will be in the request parameters
+        if (request.getParameter("orderMode") != null) {
+            return "agreements"; // next page after init is always agreements
         }
+
+        // orderMode is set and there is an order in progress, so go straight to the cart
         return "cart";
     }
 
@@ -1269,7 +1300,7 @@ public class ShoppingCartEvents {
                     Debug.logInfo("Attempting to add to cart with productId = " + productId + ", categoryId = " + productCategoryId +
                             " and quantity = " + quantity, module);
                     result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-                            "", "", 0.00, amount, quantity, null, 0.00, 0.00, null, itemAttributes);
+                            "", "", 0.00, amount, quantity, null, 0.00, 0.00, null, null, null, itemAttributes);
                     // no values for itemType, itemDescription, price, and paramMap (a context for adding attributes)
                     controlDirective = processResult(result, request);
                     if (controlDirective.equals(ERROR)){    // if the add to cart failed, then get out of this loop right away
@@ -1281,5 +1312,46 @@ public class ShoppingCartEvents {
 
         // Determine where to send the browser
         return cart.viewCartOnAdd() ? "viewcart" : "success";
+    }
+
+    // request method for setting the currency, agreement and shipment dates at once
+    public static String setOrderCurrencyAgreementShipDates(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+
+        String agreementId = (String) request.getParameter("agreementId");
+        String currencyUomId = (String) request.getParameter("currencyUomId");
+        String shipBeforeDateStr = (String) request.getParameter("shipBeforeDate");
+        String shipAfterDateStr = (String) request.getParameter("shipAfterDate");
+        Map result = null;
+
+        // set the agreement if specified otherwise set the currency
+        if (agreementId != null && agreementId.length() > 0) {
+            result = cartHelper.selectAgreement(agreementId);
+        } else { 
+            result = cartHelper.setCurrency(currencyUomId);
+        }
+        if (ServiceUtil.isError(result)) {
+            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+            return "error";
+        }
+
+        // set the default ship before and after dates if supplied
+        try {
+            if (UtilValidate.isNotEmpty(shipBeforeDateStr)) {
+                if (shipBeforeDateStr.length() == 10) shipBeforeDateStr += " 00:00:00.000";
+                cart.setDefaultShipBeforeDate(java.sql.Timestamp.valueOf(shipBeforeDateStr));
+            }
+            if (UtilValidate.isNotEmpty(shipAfterDateStr)) {
+                if (shipAfterDateStr.length() == 10) shipAfterDateStr += " 00:00:00.000";
+                cart.setDefaultShipAfterDate(java.sql.Timestamp.valueOf(shipAfterDateStr));
+            }
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
+        }
+        return "success";
     }
 }

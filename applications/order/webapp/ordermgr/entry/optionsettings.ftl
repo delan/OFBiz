@@ -144,39 +144,6 @@
                   </td>
                 </tr>
                  </#if>
-                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                   <tr>
-                      <td nowrap colspan="2">
-                         <table>
-                            <tr>
-                              <td width="26%" align="right" valign="top">
-                                <div class="head2"><b>${uiLabelMap.OrderShipBeforeDate} :</b></div>
-                              </td>
-                              <td width="5">&nbsp;</td>
-                              <td width="74%">
-                                <input type='text' size='25' class='inputBox' name='shipBeforeDate' value='${requestParameters.shipBeforeDate?if_exists}'>
-                                <a href="javascript:call_cal(document.checkoutsetupform.shipBeforeDate,'${beforeDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                              </td>
-                            </tr>
-                         </table>
-                      </td>
-                   </tr>
-                   <tr>
-                      <td nowrap colspan="2">
-                         <table>
-                            <tr>
-                              <td width="26%" align="right" valign="top">
-                                <div class="head2"><b>${uiLabelMap.OrderShipAfterDate} :</b></div>
-                              </td>
-                              <td width="5">&nbsp;</td>
-                              <td width="74%">
-                                <input type='text' size='25' class='inputBox' name='shipAfterDate' value='${requestParameters.shipAfterDate?if_exists}'>
-                                <a href="javascript:call_cal(document.checkoutsetupform.shipAfterDate,'${afterDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                              </td>
-                            </tr>
-                         </table>
-                      </td>
-                   </tr>
                    <tr>
                       <td colspan="2"></td>
                    </tr>

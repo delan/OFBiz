@@ -43,10 +43,11 @@
         <section>
             <actions>
                 <set field="title" value="Order Agreements"/>
+                <set field="headerItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderagreements.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/orderagreements.ftl"/></html></platform-specific>
                     </decorator-section>

@@ -37,6 +37,7 @@ import java.util.Vector;
 import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -103,10 +104,13 @@ public class ShoppingCartHelper {
 
     /** Event to add an item to the shopping cart. */
     public Map addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, String productId,
-            String productCategoryId, String itemType, String itemDescription, double price, double amount, double quantity, java.sql.Timestamp reservStart, double reservLength, double reservPersons, ProductConfigWrapper configWrapper, Map context) {
+            String productCategoryId, String itemType, String itemDescription, 
+            double price, double amount, double quantity, 
+            java.sql.Timestamp reservStart, double reservLength, double reservPersons, 
+            java.sql.Timestamp shipBeforeDate, java.sql.Timestamp shipAfterDate,
+            ProductConfigWrapper configWrapper, Map context) {
         Map result = null;
         Map attributes = null;
-    
         // price sanity check
         if (productId == null && price < 0) {
             String errMsg = UtilProperties.getMessage(resource, "cart.price_not_positive_number", this.cart.getLocale());
@@ -186,7 +190,8 @@ public class ShoppingCartHelper {
         try {
             int itemId = -1;
             if (productId != null) {
-                itemId = cart.addOrIncreaseItem(productId, amount, quantity, reservStart, reservLength, reservPersons, null, attributes, catalogId, configWrapper, dispatcher);
+                itemId = cart.addOrIncreaseItem(productId, amount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate,
+                        null, attributes, catalogId, configWrapper, dispatcher);
             } else {
                 itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
             }
@@ -209,7 +214,7 @@ public class ShoppingCartHelper {
             result = ServiceUtil.returnError(e.getMessage());
             return result;
         }
-
+        
         // Indicate there were no critical errors
         result = ServiceUtil.returnSuccess();
         return result;
@@ -574,6 +579,7 @@ public class ShoppingCartHelper {
             return result;
         }
 
+        // TODO: This should be refactored to use UtilHttp.parseMultiFormData(parameters)
         while (i.hasNext()) {
             String o = (String) i.next();
             int underscorePos = o.lastIndexOf('_');
@@ -585,6 +591,7 @@ public class ShoppingCartHelper {
                     String quantString = (String) context.get(o);
                     double quantity = -1;
                     String itemDescription="";
+                    if (quantString != null) quantString = quantString.trim();
 
                     // get the cart item
                     ShoppingCartItem item = this.cart.findCartItem(index);
@@ -621,6 +628,20 @@ public class ShoppingCartHelper {
                                 double reservPersons = nf.parse(quantString).doubleValue();
                                 item.setReservPersons(reservPersons);
                         }
+                    } else if (o.startsWith("shipBeforeDate")) {
+                        if (item != null) {
+                            // input is either yyyy-mm-dd or a full timestamp
+                            if (quantString.length() == 10)
+                                quantString += " 00:00:00.000"; 
+                            item.setShipBeforeDate(Timestamp.valueOf(quantString));
+                        }
+                    } else if (o.startsWith("shipAfterDate")) {
+                        if (item != null) {
+                            // input is either yyyy-mm-dd or a full timestamp
+                            if (quantString.length() == 10)
+                                quantString += " 00:00:00.000"; 
+                            item.setShipAfterDate(Timestamp.valueOf(quantString));
+                        }
                     } else {
                         quantity = nf.parse(quantString).doubleValue();
                         if (quantity < 0) {
@@ -628,6 +649,11 @@ public class ShoppingCartHelper {
                         }
                     }
 
+                    // perhaps we need to reset the ship groups' before and after dates based on new dates for the items
+                    if (o.startsWith("shipAfterDate") || o.startsWith("shipBeforeDate")) {
+                        this.cart.setShipGroupShipDatesFromItem(item);
+                    }
+                    
                     if (o.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
                             deleteList.add(item);
