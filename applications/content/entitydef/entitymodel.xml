@@ -47,6 +47,29 @@
   <!--  - org.ofbiz.content.survey -->
   <!-- ========================================================= -->
 
+ <!-- ========================================================= -->
+  <!-- org.ofbiz.content.commevent -->
+  <!-- ========================================================= -->
+   <entity entity-name="CommEventContentAssoc"
+            package-name="org.ofbiz.content.commevent"
+            title="CommunicationEvent Content Association Entity">
+      <field name="contentId" type="id-ne"></field>
+      <field name="communicationEventId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="contentId"/>
+      <prim-key field="communicationEventId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="COMMEV_CONTENTASSC_FROM" title="From" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+      <relation type="one" fk-name="COMMEV_CONTENTASSC_COMMEV"  rel-entity-name="CommunicationEvent">
+        <key-map field-name="communicationEventId"/>
+      </relation>
+    </entity>
+    
+
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.content.content -->
