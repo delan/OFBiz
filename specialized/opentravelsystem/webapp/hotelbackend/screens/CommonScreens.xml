@@ -105,7 +105,34 @@
             </widgets>
         </section>
     </screen>
-
+    <screen name="WebsiteDecorator">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Website"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        
+                        <container style="centerarea">
+                            <label style="apptitle" text="Website text pages."/>
+                            <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="WebsiteAppBar"/>
+                            <container style="contentarea">
+                                <container style="${MainColumnStyle}">
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
+                                <!--/container-->
+                            </container>
+                        </container>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonPartyDecorator">
         <section>
             <condition>

@@ -37,16 +37,50 @@
             </service>
         </actions>
         <auto-fields-service service-name="updateElectronicText"/>
-        <field name="textData" title=" " id-name="textData"><textarea cols="90" rows="38"/></field>
-        <field name=""><display description="&lt;script type=&quot;text/javascript&quot;>makeWhizzyWig(&quot;textData&quot;, &quot;all&quot;);&lt;/script&gt;"/></field>
+        <field name="textData"><textarea cols="90" rows="20" editor="true"/></field>
         <field name="dataResourceId"><hidden/></field>
         <field name="contentId"><hidden/></field>
         <field name="skipPermissionCheck"><hidden/></field>
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
- 
- 
- 
+    
+    <form name="EditHelpText" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext"
+        target="updateHelpText" title="" type="single">
+        <actions>
+            <service service-name="getElectronicText">
+                <field-map field-name="contentId" value="${parameters.contentId}"/>
+            </service>
+        </actions>
+        <auto-fields-service service-name="updateElectronicText"/>
+        <field name="textData"><textarea cols="90" rows="20" editor="true"/></field>
+        <field name="dataResourceId"><hidden/></field>
+        <field name="contentId"><hidden/></field>
+        <field name="skipPermissionCheck"><hidden/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
+    <form name="ListElectronicTexts" type="list" separate-columns="true" 
+        title="ElectronicText List"  default-title-style="tableheadtext" list-name="newElectronicTexts" target=""
+        default-widget-style="tabletext" default-tooltip-style="tabletext"
+        paginate-target="findElectronicTexts" list-iterator-name="listIt" default-entity-name="ElectronicText">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="ElectronicText"/>
+                <field-map field-name="orderBy" value="dataResourceId"/>
+            </service>
+        </actions>
+        <field name="DataResourceId" widget-style="buttontext">
+            <hyperlink description="${dataResourceId}" target="editPage?contentId=${dataResourceId}"/>
+        </field>
+        <field name="dataResourceName"><display-entity entity-name="DataResource" key-field-name="dataResourceId" description="${dataResourceName}"></display-entity></field>
+        <field name="createdStamp" ><display/></field>
+        <field name="lastUpdatedStamp"><display/></field>
+    </form>
+    
  
  
     

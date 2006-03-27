@@ -39,7 +39,7 @@
 		,{"title":"OrdersReservations",	"url":"findorders"}
 		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
 		,{"title":"Accounting",			"url":"mainAccounting"}
-		,{"title":"Website", 			"url":"/${parameters.userLogin.partyId}"}
+		,{"title":"Website", 			"url":"findElectronicTexts"}
 		,{"title":"Logout", 			"url":"logout"}
 		]>
 <#else>
@@ -67,7 +67,7 @@
 	            <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	              <tr>
 	                <td class="${class.left}"><a href="<@ofbizUrl>${display.url}</@ofbizUrl>" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
-	                <td nowrap="nowrap" class="${class.center}"><a href=<#if display.title == "Website">"${display.url}" target="newwindow"<#else>"<@ofbizUrl>${display.url}</@ofbizUrl>"</#if> title="" class="${class.link}">${"uiLabelMap.opentravelsystem${display.title}"?eval}</a></td>
+	                <td nowrap="nowrap" class="${class.center}"><a href="<@ofbizUrl>${display.url}</@ofbizUrl>" title="" class="${class.link}">${"uiLabelMap.opentravelsystem${display.title}"?eval}</a></td>
 	                <td class="${class.right}"><a href="<@ofbizUrl>${display.url}</@ofbizUrl>" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>"alt="" width="10" height="15" border="0"></a></td></tr>
 				  <#if thisAppOpt != display.title>
 	                <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
