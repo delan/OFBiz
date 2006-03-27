@@ -25,6 +25,12 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitygroup.xsd">
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.content.commevent -->
+  <!-- ========================================================= -->
+
+	    <entity-group group="org.ofbiz" entity="CommEventContentAssoc" />
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.content.content -->
   <!-- ========================================================= -->
 
