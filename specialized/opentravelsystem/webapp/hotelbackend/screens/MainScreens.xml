@@ -77,10 +77,17 @@
                         <container style="contentarea">
                             <container style="${MainColumnStyle}">
                                 <!--platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific-->
-                                <link target="javascript:close()" text="close this screen" url-mode="plain"/>
-                                <content content-id="${parameters.contentId}"/>
-                                <link target="editPage?dataResourceId=${parameters.dataResourceId}&amp;contentId=${parameters.contentId}" text="update this help screen"/>
-                                <!--content content-id="helpIndexTemplate"/-->
+                                <!--link style="col-right" target="javascript:close()" text="close this screen" url-mode="plain"/-->
+                                <container style="screenlet">
+                                    <container style="screenlet-header">
+                                        <label style="boxhead" text="Help screen for application: ${parameters.app}, function: ${parameters.function} and tab: ${parameters.tab}"/>
+                                        <link style="submenutext" text="&lt;span align=right&gt;close window&lt;/span&gt;" target="javascript:window.close()"  url-mode="plain"/>
+                                    </container>    
+                                    <container style="screenlet-body">
+                                        <content content-id="${parameters.contentId}"/>
+                                    </container>
+                                </container>
+                                <link target="editHelpPage?dataResourceId=${parameters.dataResourceId}&amp;contentId=${parameters.contentId}" text="update this help screen"/>
                             </container>
                         </container>
                     </decorator-section>

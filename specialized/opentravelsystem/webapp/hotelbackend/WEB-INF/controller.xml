@@ -155,16 +155,26 @@
         <response name="error" type="view" value="help"/>
     </request-map>
     
+    <request-map uri="editHelpPage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditHelpText"/>
+    </request-map>
+
     <request-map uri="editPage">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditElectronicText"/>
-        <response name="error" type="view" value="EditElectronicText"/>
     </request-map>
-
-    <request-map uri="updateElectronicText">
+    
+    <request-map uri="updateHelpText">
         <security auth="true" https="true"/>
         <event invoke="updateElectronicText" type="service"/>
         <response name="success" type="view" value="help"/>
+        <response name="error" type="view" value="EditHelpText"/>
+    </request-map>
+    <request-map uri="updateElectronicText">
+        <security auth="true" https="true"/>
+        <event invoke="updateElectronicText" type="service"/>
+        <response name="success" type="view" value="EditElectronicText"/>
         <response name="error" type="view" value="EditElectronicText"/>
     </request-map>
     
@@ -3017,6 +3027,13 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewGlReconciliation"/>
     </request-map>
+    
+    <!-- electronic text -->
+    <request-map uri="findElectronicTexts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findElectronicTexts"/>
+    </request-map>
+    
 
     <!-- pdf processes  -->
     <request-map uri="invoice.pdf">
@@ -3040,6 +3057,7 @@
     <view-map name="noAccess" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#noAccess"/>
     <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
     <view-map name="help" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#help"/>
+    <view-map name="EditHelpText"  page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditHelpText" type="screen"/>
     <view-map name="EditElectronicText"  page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditElectronicText" type="screen"/>
     <view-map name="EditSecurityGroupUserLogins" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#EditSecurityGroupUserLogins"/>
     <!-- Accounting screens-->
@@ -3237,6 +3255,8 @@
     <view-map name="ReconcileAccounts" type="screen" page="component://accounting/widget/AccountingScreens.xml#ReconcileAccounts"/>
     <view-map name="ViewGlAccountBalance" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlAccountBalance"/>
     <view-map name="ViewGlReconciliation" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlReconciliation"/>
+    <!-- electronic texts -->
+    <view-map name="findElectronicTexts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#findElectronicTexts"/>
     <!-- PDFs  -->
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
     
