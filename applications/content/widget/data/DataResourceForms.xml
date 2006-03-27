@@ -350,12 +350,12 @@
     <!-- ElectronicText forms -->
     <form name="EditElectronicText" target="updateElectronicText" title="" type="single" default-map-name="currentValue"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <auto-fields-service service-name="updateElectronicText"/>
         <actions>
             <entity-one entity-name="ElectronicText" value-name="eText">
                 <field-map field-name="dataResourceId" env-name="parameters.dataResourceId" ></field-map>
             </entity-one>
         </actions>
+        <auto-fields-service service-name="updateElectronicText"/>
         <field name="dataResourceId" title="" widget-style="tabletext"><display also-hidden="true"/></field>
         <field name="textData" title="Text" widget-style="buttontext">
             <textarea cols="120" rows="24" default-value="${eText.textData}" />
