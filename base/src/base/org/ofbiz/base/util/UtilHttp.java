@@ -514,6 +514,10 @@ public class UtilHttp {
         return htmlBuffer.toString();
     }
 
+    public static String encodeBlanks(String htmlString) {
+        return htmlString.replaceAll(" ", "%20");
+    }
+
     public static String setResponseBrowserProxyNoCache(HttpServletRequest request, HttpServletResponse response) {
         setResponseBrowserProxyNoCache(response);
         return "success";
