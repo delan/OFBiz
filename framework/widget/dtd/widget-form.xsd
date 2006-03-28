@@ -717,6 +717,18 @@
         <xs:attribute type="xs:positiveInteger" name="cols" default="60"/>
         <xs:attribute type="xs:positiveInteger" name="rows" default="3"/>
         <xs:attribute type="xs:string" name="default-value"/>
+        <xs:attribute name="visual-editor-enable" default="false">
+            <xs:annotation><xs:documentation>This will enable the html editor on this text area from www.unverse.net (more info there), only one textarea can be used on one page</xs:documentation></xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="visual-editor-buttons">
+            <xs:annotation><xs:documentation>In here you can specify which buttons you want to see and in which order separated by blanks. Available buttons are:formatblock fontname fontsize newline bold italic underline left center right number bullet indent outdent undo redo color hilite rule link image table clean html spellcheck |(separator) Default is that all buttons are shown</xs:documentation></xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="text-find" substitutionGroup="AllFields">
         <xs:complexType>

@@ -307,9 +307,12 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(" id=\"");
             buffer.append(idName);
             buffer.append('"');
+        } else if (textareaField.getVisualEditorEnable()) {
+            buffer.append(" id=\"");
+            buffer.append("htmlEditArea");
+            buffer.append('"');
         }
-
-
+ 
         buffer.append('>');
 
         String value = modelFormField.getEntry(context, textareaField.getDefaultValue(context));
@@ -318,6 +321,24 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append("</textarea>");
+        
+        if (textareaField.getVisualEditorEnable()) {
+            buffer.append("<script language=\"javascript\" src=\"/images/htmledit/whizzywig.js\" type=\"text/javascript\"></script>");
+            buffer.append("<script language=\"javascript\" type=\"text/javascript\"> buttonPath = \"/images/htmledit/\"; cssFile=\"/images/htmledit/simple.css\";makeWhizzyWig(\"");
+            if (UtilValidate.isNotEmpty(idName)) { 
+                buffer.append(idName);
+            } else {
+                buffer.append("htmlEditArea");
+            }
+            buffer.append("\",\"");
+            String buttons = textareaField.getVisualEditorButtons(context);
+            if (UtilValidate.isNotEmpty(buttons)) {
+                buffer.append(buttons);
+            } else {
+                buffer.append("all");
+            }
+            buffer.append("\") </script>");
+        }
 
         this.addAstericks(buffer, context, modelFormField);
 
@@ -354,9 +375,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
         if (UtilValidate.isNotEmpty(value)) {
             buffer.append(" value=\"");
             if ("date".equals(dateTimeField.getType()) && value.length()>=10) {
-            	value = value.substring(0, 10);
+                value = value.substring(0, 10);
             } else if ("time".equals(dateTimeField.getType()) && value.length()>=16) {
-            	value = value.substring(0, 16);
+                value = value.substring(0, 16);
             }
             
             buffer.append(value);
@@ -1368,7 +1389,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         String opGreaterThanEquals = UtilProperties.getMessage("conditional", "greater_than_equals", locale);
         String opLessThan = UtilProperties.getMessage("conditional", "less_than", locale);
         String opLessThanEquals = UtilProperties.getMessage("conditional", "less_than_equals", locale);
-        String opIsEmpty = UtilProperties.getMessage("conditional", "is_empty", locale);
+        //String opIsEmpty = UtilProperties.getMessage("conditional", "is_empty", locale);
 
         buffer.append("<input type=\"text\"");
 
