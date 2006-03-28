@@ -187,6 +187,8 @@ function confirmActionFormLink(msg, formName) {
 
 // prevents doubleposts for <submit> inputs of type "button" or "image"
 function submitFormDisableButton(button) {
-    button.disabled = true;
+    if (button.form.action != null && button.form.action.length > 0) {
+        button.disabled = true;
+    }
     button.form.submit();
 }                                                                                                                                                                                                                          
