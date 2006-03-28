@@ -126,7 +126,7 @@ public class ModelFormField {
         this.parameterName = UtilXml.checkEmpty(fieldElement.getAttribute("parameter-name"), this.name);
         this.fieldName = UtilXml.checkEmpty(fieldElement.getAttribute("field-name"), this.name);
         this.attributeName = UtilXml.checkEmpty(fieldElement.getAttribute("attribute-name"), this.name);
-        this.setTitle(fieldElement.getAttribute("title"));
+        this.setTitle(fieldElement.hasAttribute("title")?fieldElement.getAttribute("title"):null);
         this.setTooltip(fieldElement.getAttribute("tooltip"));
         this.titleAreaStyle = fieldElement.getAttribute("title-area-style");
         this.widgetAreaStyle = fieldElement.getAttribute("widget-area-style");
@@ -912,7 +912,7 @@ public class ModelFormField {
      * @return
      */
     public String getTitle(Map context) {
-        if (this.title != null && !this.title.isEmpty()) {
+        if (this.title != null && this.title.getOriginal() != null) {
             return title.expandString(context);
         } else {
             // create a title from the name of this field; expecting a Java method/field style name, ie productName or productCategoryId

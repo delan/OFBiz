@@ -896,9 +896,9 @@ public class ModelForm {
         // ===== render the item rows =====
         this.renderItemRows(buffer, context, formStringRenderer, false);
 
-        formStringRenderer.renderMultiFormClose(buffer, context, this);
-        
         formStringRenderer.renderFormatListWrapperClose(buffer, context, this);
+        
+        formStringRenderer.renderMultiFormClose(buffer, context, this);
     }
 
     public void renderHeaderRow(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
