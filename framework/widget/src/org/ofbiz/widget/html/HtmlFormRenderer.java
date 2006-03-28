@@ -281,13 +281,15 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderTextareaField(StringBuffer buffer, Map context, TextareaField textareaField) {
         ModelFormField modelFormField = textareaField.getModelFormField();
 
-        buffer.append("<textarea class=\"textAreaBox\"");
+        buffer.append("<textarea");
 
         String className = modelFormField.getWidgetStyle();
         if (UtilValidate.isNotEmpty(className)) {
             buffer.append(" class=\"");
             buffer.append(className);
             buffer.append('"');
+        } else {
+            buffer.append(" class=\"textAreaBox\"");
         }
 
         buffer.append(" name=\"");
@@ -424,8 +426,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
             buffer.append('.');
             buffer.append(modelFormField.getParameterName(context));
-            buffer.append(", '");
-            buffer.append(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context)));
+            buffer.append(",'");
+            buffer.append(UtilHttp.encodeBlanks(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context))));
             buffer.append("');\">");
             buffer.append("<img src=\"");
             this.appendContentUrl(buffer, "/content/images/cal.gif");
@@ -857,17 +859,19 @@ public class HtmlFormRenderer implements FormStringRenderer {
         String tempTitleText = modelFormField.getTitle(context);
         String titleText = UtilHttp.encodeAmpersands(tempTitleText);
         
-        buffer.append("<span");
-        if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
-            buffer.append(" class=\"");
-            buffer.append(modelFormField.getTitleStyle());
-            buffer.append("\"");
-        }
-        buffer.append(">");
-        renderHyperlinkTitle(buffer, context, modelFormField, titleText);         
-        buffer.append("</span>");
+        if (UtilValidate.isNotEmpty(titleText)) {
+            buffer.append("<span");
+            if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
+                buffer.append(" class=\"");
+                buffer.append(modelFormField.getTitleStyle());
+                buffer.append("\"");
+            }
+            buffer.append(">");
+            renderHyperlinkTitle(buffer, context, modelFormField, titleText);         
+            buffer.append("</span>");
 
-        this.appendWhitespace(buffer);
+            this.appendWhitespace(buffer);
+        }
     }
 
     /* (non-Javadoc)
@@ -905,12 +909,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("<form method=\"post\" ");
         String targ = modelForm.getTarget(context);
         String targetType = modelForm.getTargetType();
+        // The 'action' attribute is mandatory in a form definition,
+        // even if it is empty.
+        buffer.append(" action=\"");
         if (targ != null && targ.length() > 0) {
-            buffer.append(" action=\"");
             //this.appendOfbizUrl(buffer, "/" + targ);
             WidgetWorker.buildHyperlinkUrl(buffer, targ, targetType, request, response, context);
-            buffer.append("\" ");
         }
+        buffer.append("\" ");
 
         String formType = modelForm.getType();
         if (formType.equals("upload") ) {
@@ -962,14 +968,19 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
             // Threw this in that as a hack to keep the submit button from expanding the first field
             // Needs a more rugged solution
-            this.renderFormatItemRowCellOpen(buffer, context, modelForm, submitField);
-            this.renderFormatItemRowCellClose(buffer, context, modelForm, submitField);
+            // WARNING: this method (renderMultiFormClose) must be called after the 
+            // table that contains the list has been closed (to avoid validation errors) so
+            // we cannot call here the methods renderFormatItemRowCell*: for this reason
+            // they are now commented.
             
-            this.renderFormatItemRowCellOpen(buffer, context, modelForm, submitField);
+            // this.renderFormatItemRowCellOpen(buffer, context, modelForm, submitField);
+            // this.renderFormatItemRowCellClose(buffer, context, modelForm, submitField);
+            
+            // this.renderFormatItemRowCellOpen(buffer, context, modelForm, submitField);
 
             submitField.renderFieldString(buffer, context, this);
 
-            this.renderFormatItemRowCellClose(buffer, context, modelForm, submitField);
+            // this.renderFormatItemRowCellClose(buffer, context, modelForm, submitField);
             
         }
         buffer.append("</form>");
@@ -1579,8 +1590,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
         buffer.append('.');
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_fld0_value, '");
-        buffer.append(modelFormField.getEntry(context, dateFindField.getDefaultDateTimeString(context)));
+        buffer.append("_fld0_value,'");
+        buffer.append(UtilHttp.encodeBlanks(modelFormField.getEntry(context, dateFindField.getDefaultDateTimeString(context))));
         buffer.append("');\">");
         buffer.append("<img src=\"");
         this.appendContentUrl(buffer, "/content/images/cal.gif");
@@ -1657,8 +1668,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
         buffer.append('.');
         buffer.append(modelFormField.getParameterName(context));
-        buffer.append("_fld1_value, '");
-        buffer.append(modelFormField.getEntry(context, dateFindField.getDefaultDateTimeString(context)));
+        buffer.append("_fld1_value,'");
+        buffer.append(UtilHttp.encodeBlanks(modelFormField.getEntry(context, dateFindField.getDefaultDateTimeString(context))));
         buffer.append("');\">");
         buffer.append("<img src=\"");
         this.appendContentUrl(buffer, "/content/images/cal.gif");
@@ -1750,15 +1761,15 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
             buffer.append('.');
             buffer.append(modelFormField.getParameterName(context));
-            buffer.append(", '");
+            buffer.append(",'");
             buffer.append(descriptionFieldName);
-            buffer.append(", '");
+            buffer.append(",'");
         } else {
             buffer.append("<a href=\"javascript:call_fieldlookup2(document.");
             buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
             buffer.append('.');
             buffer.append(modelFormField.getParameterName(context));
-            buffer.append(", '");
+            buffer.append(",'");
         }
         buffer.append(lookupField.getFormName(context));
         buffer.append("'");
@@ -1838,7 +1849,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         int highIndex = (viewIndex + 1) * viewSize;
         int actualPageSize = modelForm.getActualPageSize();
         // if this is all there seems to be (if listSize < 0, then size is unknown)
-        if (actualPageSize >= listSize && listSize > 0) {
+        if (actualPageSize >= listSize && listSize >= 0) {
             return;
         }
 
