@@ -55,6 +55,15 @@ under the License.
                 </entity-options> 
             </drop-down>
         </field>
+        <field name="instanceOfProductId" title=""><lookup target-form-name="LookupProduct"/></field>        
+        <field name="classEnumId" title="Class Enum Id" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="FXAST_CLASS"/>                
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPerson"/></field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}" widget-style="selectBox">
             <drop-down allow-empty="true">
