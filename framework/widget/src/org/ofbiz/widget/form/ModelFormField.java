@@ -2194,6 +2194,8 @@ public class ModelFormField {
         protected int cols = 60;
         protected int rows = 2;
         protected FlexibleStringExpander defaultValue;
+        protected boolean visualEditorEnable = false;
+        protected FlexibleStringExpander visualEditorButtons;
 
         protected TextareaField() {
             super();
@@ -2210,6 +2212,9 @@ public class ModelFormField {
         public TextareaField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
             this.setDefaultValue(element.getAttribute("default-value"));
+            
+            visualEditorEnable = "true".equals(element.getAttribute("visual-editor-enable"));
+            visualEditorButtons = new FlexibleStringExpander(element.getAttribute("visual-editor-buttons"));
 
             String colsStr = element.getAttribute("cols");
             try {
@@ -2260,6 +2265,20 @@ public class ModelFormField {
         }
 
         /**
+         * @return
+         */
+        public boolean getVisualEditorEnable() {
+            return this.visualEditorEnable;
+        }
+
+        /**
+         * @return
+         */
+        public String getVisualEditorButtons(Map context) {
+            return this.visualEditorButtons.expandString(context);
+        }
+
+        /**
          * @param i
          */
         public void setCols(int i) {
@@ -2278,6 +2297,20 @@ public class ModelFormField {
          */
         public void setDefaultValue(String str) {
             this.defaultValue = new FlexibleStringExpander(str);
+        }
+
+        /**
+         * @param i
+         */
+        public void setVisualEditorEnable(boolean visualEditorEnable) {
+            this.visualEditorEnable = visualEditorEnable;
+        }
+
+        /**
+         * @param i
+         */
+        public void setVisualEditorButtons(String eb) {
+            this.visualEditorButtons = new FlexibleStringExpander(eb);
         }
     }
 
