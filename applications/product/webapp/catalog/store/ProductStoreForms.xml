@@ -45,7 +45,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field use-when="productStore!=null&amp;&amp;productStore.getString(&quot;inventoryFacilityId&quot;)!=null" name="inventoryFacilityLink" title=" " widget-style="buttontext">
+        <field use-when="productStore!=null&amp;&amp;productStore.getString(&quot;inventoryFacilityId&quot;)!=null" name="inventoryFacilityLink" title="" widget-style="buttontext">
             <hyperlink target="/facility/control/EditFacility?facilityId=${productStore.inventoryFacilityId}" target-type="inter-app"
                 description="Edit Facility ${productStore.inventoryFacilityId}" also-hidden="false"/>
         </field>
@@ -230,7 +230,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteProductStoreCatalog?prodCatalogId=${prodCatalogId}&amp;productStoreId=${productStoreId}&amp;fromDate=${fromDate}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -305,7 +305,7 @@
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteProductStoreKeywordOvrd?productStoreId=${productStoreId}&amp;keyword=${keyword}&amp;fromDate=${fromDate}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -323,7 +323,7 @@
         </field>
         <field name="segmentGroupTypeId" title="${uiLabelMap.ProductSegmentGroupTypeId}"><display-entity entity-name="SegmentGroupType"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="/marketing/control/deleteSegmentGroup?segmentGroupId=${segmentGroupId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false" target-type="inter-app"/>
         </field>

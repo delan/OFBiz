@@ -64,13 +64,13 @@
                 <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
-        <field name="productId" title=" " widget-style="buttontext">
+        <field name="productId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
         <field name="brandName"><display/></field>
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
-        <field name="searchVariants" title=" " widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
+        <field name="searchVariants" title="" widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="Variants" target="LookupVariantProduct?productId=${productId}"/>
         </field>
     </form>
@@ -91,7 +91,7 @@
                 <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
-        <field name="productId" title=" " widget-style="buttontext">
+        <field name="productId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="brandName"><display/></field>
@@ -152,17 +152,17 @@
                 <field-map field-name="entityName" value="ProductAndPriceView"/>
             </service>
         </actions>
-        <field name="productId" title=" " widget-style="buttontext" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
+        <field name="productId" title="" widget-style="buttontext" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
-        <field name="productId" title=" " use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
+        <field name="productId" title="" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
         <field name="currencyUomId"><display/></field>
         <field name="price"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="thruDate"><display/></field>
-        <field name="searchVariants" title=" " widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
+        <field name="searchVariants" title="" widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="Variants" target="LookupVariantProduct?productId=${productId}"/>
         </field>
     </form>
@@ -191,7 +191,7 @@
         </actions>
         <auto-fields-entity entity-name="ProductCategory" default-field-type="display"/>
         <field name="productCategoryTypeId"><display-entity entity-name="ProductCategoryType"/></field>
-        <field name="productCategoryId" title=" " widget-style="buttontext">
+        <field name="productCategoryId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productCategoryId}" target="javascript:set_value('${productCategoryId}')"/>
         </field>
         <field name="longDescription"><ignored/></field>
@@ -231,7 +231,7 @@
             </service>
         </actions>
         <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
-        <field name="productFeatureId" title=" " widget-style="buttontext">
+        <field name="productFeatureId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
         </field>
     </form>
@@ -259,7 +259,7 @@
         
         <!-- <auto-fields-entity entity-name="ProductStore" default-field-type="display"/> -->
         
-        <field name="productStoreId" title=" " widget-style="buttontext">
+        <field name="productStoreId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productStoreId}" target="javascript:set_value('${productStoreId}')"/>
         </field>
         <field name="primaryStoreGroupId"><display/></field>
