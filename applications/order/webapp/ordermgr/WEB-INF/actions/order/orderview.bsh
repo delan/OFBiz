@@ -266,9 +266,11 @@ if (orderHeader != null) {
             new EntityExpr("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"),
             new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"),
             new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
-            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"),
-            new EntityExpr("productId", EntityOperator.IN, productIds)
+            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")
             );
+    if (productIds.size() > 0) {
+        condList.add(new EntityExpr("productId", EntityOperator.IN, productIds));
+    }
     condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED"));
     condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
     condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
@@ -289,9 +291,11 @@ if (orderHeader != null) {
             new EntityExpr("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"),
             new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"),
             new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
-            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"),
-            new EntityExpr("productId", EntityOperator.IN, productIds)
+            new EntityExpr("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")
             );
+    if (productIds.size() > 0) {
+        condList.add(new EntityExpr("productId", EntityOperator.IN, productIds));
+    }
     condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED"));
     condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
     condList.add(new EntityExpr("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
