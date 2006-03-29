@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -1807,17 +1808,28 @@ public class HtmlFormRenderer implements FormStringRenderer {
             return; 
         }
 
+        // get the parametrized pagination index and size fields
+        String viewIndexParam = modelForm.getPaginateIndexField(context);
+        String viewSizeParam = modelForm.getPaginateSizeField(context);
 
         int viewIndex = -1;
         try {
-            viewIndex = ((Integer) context.get("viewIndex")).intValue();
+            Object value = context.get(viewIndexParam);
+            if (value instanceof Integer)
+                viewIndex = ((Integer) value).intValue();
+            else if (value instanceof String)
+                viewIndex = Integer.parseInt((String) value);
         } catch (Exception e) {
             viewIndex = 0;
         }
 
         int viewSize = -1;
         try {
-            viewSize = ((Integer) context.get("viewSize")).intValue();
+            Object value = context.get(viewSizeParam);
+            if (value instanceof Integer)
+                viewSize = ((Integer) value).intValue();
+            else if (value instanceof String)
+                viewSize = Integer.parseInt((String) value);
         } catch (Exception e) {
             viewSize = modelForm.getViewSize();
         }
@@ -1853,10 +1865,26 @@ public class HtmlFormRenderer implements FormStringRenderer {
             return;
         }
 
+        // for legacy support, the viewSizeParam is VIEW_SIZE and viewIndexParam is VIEW_INDEX when the fields are "viewSize" and "viewIndex"
+        if (viewIndexParam.equals("viewIndex")) viewIndexParam = "VIEW_INDEX";
+        if (viewSizeParam.equals("viewSize")) viewSizeParam = "VIEW_SIZE";
+
         String str = (String) context.get("_QBESTRING_");
-        String queryString = UtilHttp.stripViewParamsFromQueryString(str);
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+
+        // strip legacy viewIndex/viewSize params from the query string
+        String queryString = UtilHttp.stripViewParamsFromQueryString(str);
+
+        // strip parametrized index/size params from the query string
+        HashSet paramNames = new HashSet();
+        paramNames.add(viewIndexParam);
+        paramNames.add(viewSizeParam);
+        queryString = UtilHttp.stripNamedParamsFromQueryString(queryString, paramNames);
+
+        String anchor = "";
+        String paginateAnchor = modelForm.getPaginateTargetAnchor();
+        if (paginateAnchor != null) anchor = "#" + paginateAnchor;
 
         buffer.append("<table border=\"0\" cellpadding=\"2\">\n");
         buffer.append("  <tr>\n");
@@ -1869,11 +1897,12 @@ public class HtmlFormRenderer implements FormStringRenderer {
             else linkText += "&amp;";
             if (queryString != null && !queryString.equals("null"))
                 linkText += queryString + "&amp;";
-            linkText += "VIEW_SIZE=" + viewSize + "&amp;VIEW_INDEX=" + (viewIndex - 1) + "\"";
+            linkText += viewSizeParam + "=" + viewSize + "&amp;" + viewIndexParam + "=" + (viewIndex - 1) + anchor + "\"";
 
             // make the link
-            buffer.append(rh.makeLink(request, response, linkText, false, false, false));
-            buffer.append(" class=\"buttontext\">Previous</a>\n");
+            String tmp = rh.makeLink(request, response, linkText, false, false, false);
+            buffer.append(tmp);
+            buffer.append(" class=\"").append(modelForm.getPaginatePreviousStyle()).append("\">").append(modelForm.getPaginatePreviousLabel(context)).append("</a>\n");
 
         }
         if (listSize > 0) {
@@ -1884,11 +1913,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
             String linkText = "" + targetService;
             if (linkText.indexOf("?") < 0)  linkText += "?";
             else linkText += "&amp;";
-            linkText += queryString + "&amp;VIEW_SIZE=" + viewSize + "&amp;VIEW_INDEX=" + (viewIndex + 1) + "\"";
+            linkText += queryString + "&amp;" + viewSizeParam + "=" + viewSize + "&amp;" + viewIndexParam + "=" + (viewIndex + 1) + anchor + "\"";
 
             // make the link
             buffer.append(rh.makeLink(request, response, linkText, false, false, false));
-            buffer.append(" class=\"buttontext\">Next</a>\n");
+            buffer.append(" class=\"").append(modelForm.getPaginatePreviousStyle()).append("\">").append(modelForm.getPaginateNextLabel(context)).append("</a>\n");
 
         }
         buffer.append("      </b>\n");

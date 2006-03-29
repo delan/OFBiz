@@ -67,7 +67,6 @@
         </xs:attribute>
         <xs:attribute type="xs:string" name="target"/>
         <xs:attribute type="xs:string" name="target-window"/>
-        <xs:attribute type="xs:string" name="paginate-target"/>
         <xs:attribute type="xs:string" name="title"/>
         <xs:attribute type="xs:string" name="tooltip"/>
         <xs:attribute type="xs:string" name="list-name">
@@ -91,6 +90,30 @@
         <xs:attribute type="xs:string" name="default-widget-style"/>
         <xs:attribute type="xs:string" name="default-tooltip-style"/>
         <xs:attribute type="xs:string" name="default-required-field-style"/>
+        <xs:attribute type="xs:string" name="paginate-target">
+            <xs:annotation><xs:documentation>Target location for the [Previous] and [Next] buttons in a form with pagination. Accepts ${} notation.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="paginate-target-anchor">
+            <xs:annotation><xs:documentation>Target anchor for the [Previous] and [Next] buttons in a form with pagination.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="paginate-size-field">
+            <xs:annotation><xs:documentation>The name of the parameter that specifies the number of rows to display for each page in a list form with multiple pages. The default is VIEW_SIZE. Accepts ${} notation.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="paginate-index-field">
+            <xs:annotation><xs:documentation>The name of the parameter that specifies what the current page is in a list form with multiple pages. The default is VIEW_INDEX Accepts ${} notation.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="paginate-previous-label">
+            <xs:annotation><xs:documentation>Text to display for the [Previous] button in a form with pagination. Defaults to "Previous". Accepts ${} notation.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="paginate-next-label">
+            <xs:annotation><xs:documentation>Text to display for the [Next] button in a form with pagination. Defaults to "Next". Accepts ${} notation.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="paginate-previous-style">
+            <xs:annotation><xs:documentation>CSS style to use for the [Previous] button in a form with pagination. Defaults to "buttontext".</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="paginate-next-style">
+            <xs:annotation><xs:documentation>CSS style to use for the [Next] button in a form with pagination. Defaults to "buttontext".</xs:documentation></xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="item-index-separator" default="_o_"/>
         <xs:attribute type="xs:string" name="extends"/>
         <xs:attribute type="xs:string" name="extends-resource"/>
