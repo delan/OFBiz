@@ -174,7 +174,7 @@
             </service>
         </actions>
         
-        <field name="partyClassificationGroupId" title=" " widget-style="buttontext">
+        <field name="partyClassificationGroupId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${partyClassificationGroupId}" target="javascript:set_value('${partyClassificationGroupId}')"/>
         </field>
         <field name="partyClassificationTypeId"><display/></field>
