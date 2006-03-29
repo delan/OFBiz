@@ -38,6 +38,9 @@
         <menu-item name="UpdateCommWorkEfforts" title="WorkEfforts">
             <link target="ListCommWorkEfforts?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </menu-item>
+        <menu-item name="CommContent" title="Content">
+            <link target="ListCommContent?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
+        </menu-item>
         <!-- TODO! 
         <menu-item name="ListCommCustRequests" title="CustRequests">
             <link target="ListCommCustRequests?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
