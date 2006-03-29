@@ -76,6 +76,7 @@ function refreshInfo() {
                   <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked="checked"</#if>/>${uiLabelMap.PartyPostal}&nbsp;
                   <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked="checked"</#if>/>${uiLabelMap.PartyTelecom}&nbsp;
                   <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked="checked"</#if>/>${uiLabelMap.CommonOther}&nbsp;
+                </div>
               </td>
             </tr>
             <tr>
@@ -120,7 +121,7 @@ function refreshInfo() {
               </td>
             </tr>
             <#if extInfo == "P">
-              <tr><td colspan="3"><hr class="sepbar"></td></tr>
+              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.CommonAddress1} :</div></td>
                 <td width="5%">&nbsp;</td>
@@ -157,7 +158,7 @@ function refreshInfo() {
               </tr>
             </#if>
             <#if extInfo == "T">
-              <tr><td colspan="3"><hr class="sepbar"></td></tr>
+              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyCountryCode} :</div></td>
                 <td width="5%">&nbsp;</td>
@@ -175,19 +176,19 @@ function refreshInfo() {
               </tr>
             </#if>
             <#if extInfo == "O">
-              <tr><td colspan="3"><hr class="sepbar"></td></tr>
+              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyContactInfoList} :</div></td>
                 <td width="5%">&nbsp;</td>
                 <td><input type="text" class="inputBox" name="infoString" value="${parameters.infoString?if_exists}"/></td>
               </tr>
             </#if>
-            <tr><td colspan="3"><hr class="sepbar"></td></tr>
+            <tr><td colspan="3"><hr class="sepbar"/></td></tr>
             <tr>
               <td colspan="3" align="center">
                 <div class="tabletext">
                   <a href="javascript:document.lookupparty.submit();" class="buttontext">${uiLabelMap.PartyLookupParty}</a>
-                  <a href="<@ofbizUrl>findparty?showAll=Y&hideFields=Y&lookupFlag=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonShowAllRecords}</a>
+                  <a href="<@ofbizUrl>findparty?showAll=Y&amp;hideFields=Y&amp;lookupFlag=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonShowAllRecords}</a>
                 </div>
               </td>
             </tr>
@@ -217,7 +218,7 @@ function refreshInfo() {
                  <div class="boxhead" align="right">
                   <#if (partyListSize > 0)>
                     <#if (viewIndex > 1)>
-                      <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
+                      <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                     <#else>
                       <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                     </#if>
@@ -225,7 +226,7 @@ function refreshInfo() {
                       <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${partyListSize}</span>
                     </#if>
                     <#if (partyListSize > highIndex)>
-                      <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
+                      <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                     <#else>
                       <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                     </#if>
@@ -250,7 +251,7 @@ function refreshInfo() {
               <td><div class="tableheadtext">${uiLabelMap.PartyType}</div></td>
               <td>&nbsp;</td>
             </tr>
-            <tr><td colspan="6"><hr class="sepbar"></td></tr>
+            <tr><td colspan="6"><hr class="sepbar"/></td></tr>
             <#if partyList?has_content>
               <#assign rowClass = "viewManyTR2">
               <#list partyList as partyRow>
@@ -307,7 +308,7 @@ function refreshInfo() {
                     <div class="tabletext"><nobr>
                       <a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a>&nbsp;
                       <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-                        <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyRow.partyId + externalKeyParam}" class="buttontext">${uiLabelMap.OrderOrders}</a>&nbsp;
+                        <a href="/ordermgr/control/findorders?lookupFlag=Y&amp;hideFields=Y&amp;partyId=${partyRow.partyId + externalKeyParam}" class="buttontext">${uiLabelMap.OrderOrders}</a>&nbsp;
                       </#if>
                       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
                         <a href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" class="buttontext">${uiLabelMap.OrderNewOrder}</a>&nbsp;
