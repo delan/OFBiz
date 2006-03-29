@@ -42,7 +42,7 @@
             </td>            
             <td rowspan="2">&nbsp;&nbsp;</td>
             <td rowspan="2">
-              <a href="javascript:document.findorder.submit()" class="buttontext"><nobr>${uiLabelMap.CommonSubmit}</nobr></a><br/>
+              <a href="javascript:document.findorder.submit()" class="buttontext">${uiLabelMap.CommonSubmit}</a><br/>
             </td>
           </tr>
           <tr>
@@ -83,10 +83,10 @@
                   <div class="tabletext"><b>${uiLabelMap.CommonDate}</b></div>
                 </td>
                 <td width="10%">
-                  <div class="tabletext"><b><nobr>${uiLabelMap.OrderOrder} #</nobr></b></div>
+                  <div class="tabletext"><b>${uiLabelMap.OrderOrder} #</b></div>
                 </td>
                 <td width="10%">
-                  <div class="tabletext"><b><nobr>${uiLabelMap.OrderOrderType}</nobr></b></div>
+                  <div class="tabletext"><b>${uiLabelMap.OrderOrderType}</b></div>
                 </td>
                 <td width="15%">
                   <div class="tabletext"><b>${uiLabelMap.OrderOrderBillFromParty}</b></div>

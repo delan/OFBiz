@@ -54,8 +54,7 @@
                 <TD><div class="tableheadtext">${uiLabelMap.OrderMTD}</div></td>
                 <TD><div class="tableheadtext">${uiLabelMap.OrderYTD}</div></td>              
               </TR>
-              
-              <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
+              <tr><td colspan="8"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="7">
                   <div class="tableheadtext">${uiLabelMap.OrderOrdersTotals}</div>
@@ -64,30 +63,29 @@
               <tr>
                 <td>&nbsp;</td>
                 <td><div class="tabletext">${uiLabelMap.OrderGrossDollarAmountsIncludesAdjustmentsAndPendingOrders}</div></td>
-                <td><div class="tabletext">${dayItemTotal}</ofbiz:format></div></td>
-                <td><div class="tabletext">${weekItemTotal}</ofbiz:format></div></td>
-                <td><div class="tabletext">${monthItemTotal}</ofbiz:format></div></td>
-                <td><div class="tabletext">${yearItemTotal}</ofbiz:format></div></td>
+                <td><div class="tabletext">${dayItemTotal}</div></td>
+                <td><div class="tabletext">${weekItemTotal}</div></td>
+                <td><div class="tabletext">${monthItemTotal}</div></td>
+                <td><div class="tabletext">${yearItemTotal}</div></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
                 <td><div class="tabletext">${uiLabelMap.OrderPaidDollarAmountsIncludesAdjustments}</div></td>
-                <td><div class="tabletext">${dayItemTotalPaid}</ofbiz:format></div></td>
-                <td><div class="tabletext">${weekItemTotalPaid}</ofbiz:format></div></td>
-                <td><div class="tabletext">${monthItemTotalPaid}</ofbiz:format></div></td>
-                <td><div class="tabletext">${yearItemTotalPaid}</ofbiz:format></div></td>
+                <td><div class="tabletext">${dayItemTotalPaid}</div></td>
+                <td><div class="tabletext">${weekItemTotalPaid}</div></td>
+                <td><div class="tabletext">${monthItemTotalPaid}</div></td>
+                <td><div class="tabletext">${yearItemTotalPaid}</div></td>
               </tr>
 
               <tr>
                 <td>&nbsp;</td>
                 <td><div class="tabletext">${uiLabelMap.OrderPendingPaymentDollarAmountsIncludesAdjustments}</div></td>
-                <td><div class="tabletext">${dayItemTotalPending}</ofbiz:format></div></td>
-                <td><div class="tabletext">${weekItemTotalPending}</ofbiz:format></div></td>
-                <td><div class="tabletext">${monthItemTotalPending}</ofbiz:format></div></td>
-                <td><div class="tabletext">${yearItemTotalPending}</ofbiz:format></div></td>
+                <td><div class="tabletext">${dayItemTotalPending}</div></td>
+                <td><div class="tabletext">${weekItemTotalPending}</div></td>
+                <td><div class="tabletext">${monthItemTotalPending}</div></td>
+                <td><div class="tabletext">${yearItemTotalPending}</div></td>
               </tr>
-
-              <TR><TD colspan='8'><HR class='sepbar'></TD></TR>  
+              <tr><td colspan="8"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="7">
                   <div class="tableheadtext">${uiLabelMap.OrderOrdersItemCounts}</div>
@@ -117,7 +115,7 @@
                 <td><div class="tabletext">${monthItemCountPending?string.number}</div></td>
                 <td><div class="tabletext">${yearItemCountPending?string.number}</div></td>
               </tr>              
-              <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
+              <tr><td colspan="8"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="7">
                   <div class="tableheadtext">${uiLabelMap.OrderOrdersPending}</div>
@@ -147,8 +145,7 @@
                 <td><div class="tabletext">--</div></td>
                 <td><div class="tabletext">--</div></td>
               </tr>                     
-                                      
-              <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
+              <tr><td colspan="8"><hr class="sepbar"/></td></tr>
               <tr>
                 <td colspan="7">
                   <div class="tableheadtext">${uiLabelMap.OrderStatusChanges}</div>
