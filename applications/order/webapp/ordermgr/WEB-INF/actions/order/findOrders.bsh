@@ -159,7 +159,7 @@ highIndex = 0;
 
 if (lookupFlag != null) {
     showAll = request.getParameter("showAll") != null ? request.getParameter("showAll") : "N";
-    paramList = paramList + "&lookupFlag=" + lookupFlag + "&showAll=" + showAll;
+    paramList = paramList + "&amp;lookupFlag=" + lookupFlag + "&amp;showAll=" + showAll;
     locale = UtilHttp.getLocale(request);
     uiLabelMap = UtilProperties.getResourceBundleMap("OrderErrorUiLabels", locale);
 
@@ -170,7 +170,7 @@ if (lookupFlag != null) {
     // check for a orderId (happens in some browsers)
     orderId = request.getParameter("orderId");
     if (orderId != null && orderId.length() > 0) {
-        paramList = paramList + "&orderId=" + orderId;
+        paramList = paramList + "&amp;orderId=" + orderId;
         andExprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, orderId));
     }
 
@@ -187,7 +187,7 @@ if (lookupFlag != null) {
     }
 
     if (partyId != null && partyId.length() > 0) {
-        paramList = paramList + "&partyId=" + partyId;
+        paramList = paramList + "&amp;partyId=" + partyId;
         entityName = "OrderHeaderAndRoles";
         andExprs.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
     }
@@ -195,21 +195,21 @@ if (lookupFlag != null) {
     // item related
     correspondingPoId = request.getParameter("correspondingPoId");
     if (correspondingPoId != null && correspondingPoId.length() > 0) {
-        paramList = paramList + "&correspondingPoId=" + correspondingPoId;
+        paramList = paramList + "&amp;correspondingPoId=" + correspondingPoId;
         entityName= "OrderHeaderItemAndRoles";
         andExprs.add(new EntityExpr("correspondingPoId", EntityOperator.EQUALS, correspondingPoId));
     }
 
     productId = request.getParameter("productId");
     if (productId != null && productId.length() > 0) {
-        paramList = paramList + "&productId=" + productId;
+        paramList = paramList + "&amp;productId=" + productId;
         entityName = "OrderHeaderItemAndRoles";
         andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, ProductWorker.findProductId(delegator, productId)));
     }
 
     hasBackOrders = request.getParameter("hasBackOrders");
     if (hasBackOrders != null && "Y".equals(hasBackOrders)) {
-        paramList = paramList + "&hasBackOrders=Y";
+        paramList = paramList + "&amp;hasBackOrders=Y";
         entityName = "OrderHeaderItemAndInvRoles";
         andExprs.add(new EntityExpr("quantityNotAvailable", EntityOperator.NOT_EQUAL, null));
         andExprs.add(new EntityExpr("quantityNotAvailable", EntityOperator.GREATER_THAN, new Double(0)));
@@ -241,58 +241,58 @@ if (lookupFlag != null) {
         if (orderStatus == null) orderStatus = "ANY";
         if (salesChannelEnumId == null) salesChannelEnumId = "ANY";
 
-        paramList = paramList + "&productStoreId=" + productStoreId;
+        paramList = paramList + "&amp;productStoreId=" + productStoreId;
         if (!"ANY".equals(productStoreId)) {
             andExprs.add(new EntityExpr("productStoreId", EntityOperator.EQUALS, productStoreId));
         }
-        paramList = paramList + "&webSiteId=" + webSiteId;
+        paramList = paramList + "&amp;webSiteId=" + webSiteId;
         if (!"ANY".equals(webSiteId)) {
             andExprs.add(new EntityExpr("webSiteId", EntityOperator.EQUALS, webSiteId));
         }
-        paramList = paramList + "&roleTypeId=" + roleType;
+        paramList = paramList + "&amp;roleTypeId=" + roleType;
         if (!"ANY".equals(roleType)) {
             entityName = "OrderHeaderAndRoles";
             andExprs.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, roleType));
         }
-        paramList = paramList + "&orderTypeId=" + orderType;
+        paramList = paramList + "&amp;orderTypeId=" + orderType;
         if (!"ANY".equals(orderType)) {
             andExprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, orderType));
         }
-        paramList = paramList + "&orderStatusId=" + orderStatus;
+        paramList = paramList + "&amp;orderStatusId=" + orderStatus;
         if (!"ANY".equals(orderStatus)) {
             andExprs.add(new EntityExpr("statusId", EntityOperator.EQUALS, orderStatus));
         }
-        paramList = paramList + "&salesChannelEnumId=" + salesChannelEnumId;
+        paramList = paramList + "&amp;salesChannelEnumId=" + salesChannelEnumId;
         if (!"ANY".equals(salesChannelEnumId)) {
             andExprs.add(new EntityExpr("salesChannelEnumId", EntityOperator.EQUALS, salesChannelEnumId));
         }
 
         if (billAcct != null && billAcct.length() > 0) {
-            paramList = paramList + "&billingAccountId=" + billAcct;
+            paramList = paramList + "&amp;billingAccountId=" + billAcct;
             andExprs.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billAcct));
         }
         if (createdBy != null && createdBy.length() > 0) {
-            paramList = paramList + "&createdBy=" + createdBy;
+            paramList = paramList + "&amp;createdBy=" + createdBy;
             andExprs.add(new EntityExpr("createdBy", EntityOperator.EQUALS, createdBy));
         }
         if (externalId != null && externalId.length() > 0) {
-            paramList = paramList + "&externalId=" + externalId;
+            paramList = paramList + "&amp;externalId=" + externalId;
             andExprs.add(new EntityExpr("externalId", EntityOperator.EQUALS, externalId));
         }
         if (internalCode != null && internalCode.length() > 0) {
-            paramList = paramList + "&internalCode=" + internalCode;
+            paramList = paramList + "&amp;internalCode=" + internalCode;
             andExprs.add(new EntityExpr("internalCode", EntityOperator.EQUALS, internalCode));
         }
         if (minDate != null && minDate.length() > 8) {
             minDate = minDate.trim();
             if (minDate.length() < 14) minDate = minDate + " " + "00:00:00.000";
-            paramList = paramList + "&minDate=" + minDate;
+            paramList = paramList + "&amp;minDate=" + minDate;
             andExprs.add(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(minDate, "Timestamp", null, null)));
         }
         if (maxDate != null && maxDate.length() > 8) {
             maxDate = maxDate.trim();
             if (maxDate.length() < 14) maxDate = maxDate + " " + "23:59:59.999";
-            paramList = paramList + "&maxDate=" + maxDate;
+            paramList = paramList + "&amp;maxDate=" + maxDate;
             andExprs.add(new EntityExpr("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(maxDate, "Timestamp", null, null)));
         }
 
