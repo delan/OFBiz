@@ -93,6 +93,13 @@ public class ModelForm {
     protected String defaultTooltipStyle;
     protected String itemIndexSeparator;
     protected FlexibleStringExpander paginateTarget;
+    protected FlexibleStringExpander paginateIndexField;
+    protected FlexibleStringExpander paginateSizeField;
+    protected FlexibleStringExpander paginatePreviousLabel;
+    protected FlexibleStringExpander paginateNextLabel;
+    protected String paginateTargetAnchor;
+    protected String paginatePreviousStyle;
+    protected String paginateNextStyle;
     protected boolean separateColumns = false;
     protected String listIteratorName;
     protected boolean paginate = true;
@@ -145,7 +152,10 @@ public class ModelForm {
      */
     protected FieldGroup defaultFieldGroup;
     
+    /** Default hyperlink target. */
     public static String DEFAULT_TARGET_TYPE = "intra-app";
+
+    /** Pagination settings and defaults. */
     public static int DEFAULT_PAGE_SIZE = 100;
     protected int viewIndex = 0;
     protected int viewSize = DEFAULT_PAGE_SIZE;
@@ -153,6 +163,12 @@ public class ModelForm {
     protected int highIndex = -1;
     protected int listSize = 0;
     protected int actualPageSize = 0;
+    public static String DEFAULT_PAG_INDEX_FIELD = "viewIndex";
+    public static String DEFAULT_PAG_SIZE_FIELD = "viewSize";
+    public static String DEFAULT_PAG_PREV_LABEL = "Previous";
+    public static String DEFAULT_PAG_NEXT_LABEL = "Next";
+    public static String DEFAULT_PAG_PREV_STYLE = "buttontext";
+    public static String DEFAULT_PAG_NEXT_STYLE = "buttontext";
     
     protected List actions;
     protected List rowActions;
@@ -301,13 +317,28 @@ public class ModelForm {
             this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
         if (this.itemIndexSeparator == null || formElement.hasAttribute("item-index-separator"))
             this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
-        if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
-            this.paginateTarget = new FlexibleStringExpander(formElement.getAttribute("paginate-target"));
         if (this.targetType == null || formElement.hasAttribute("target-type"))
             this.targetType = formElement.getAttribute("target-type");
         if (this.defaultRequiredFieldStyle == null || formElement.hasAttribute("default-required-field-style"))
             this.defaultRequiredFieldStyle = formElement.getAttribute("default-required-field-style");
 
+        // pagination settings
+        if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
+            setPaginateTarget(formElement.getAttribute("paginate-target"));
+        if (this.paginateTargetAnchor == null || formElement.hasAttribute("paginate-target-anchor"))
+            this.paginateTargetAnchor = formElement.getAttribute("paginate-target-anchor");
+        if (this.paginateIndexField == null || formElement.hasAttribute("paginate-index-field"))
+            setPaginateIndexField(formElement.getAttribute("paginate-index-field"));
+        if (this.paginateSizeField == null || formElement.hasAttribute("paginate-size-field"))
+            setPaginateSizeField(formElement.getAttribute("paginate-size-field"));
+        if (this.paginatePreviousLabel == null || formElement.hasAttribute("paginate-previous-label"))
+            this.paginatePreviousLabel = new FlexibleStringExpander(formElement.getAttribute("paginate-previous-label"));
+        if (this.paginateNextLabel == null || formElement.hasAttribute("paginate-next-label"))
+            this.paginateNextLabel = new FlexibleStringExpander(formElement.getAttribute("paginate-next-label"));
+        if (this.paginatePreviousStyle == null || formElement.hasAttribute("paginate-previous-style"))
+            setPaginatePreviousStyle(formElement.getAttribute("paginate-previous-style"));
+        if (this.paginateNextStyle == null || formElement.hasAttribute("paginate-next-style"))
+            setPaginateNextStyle(formElement.getAttribute("paginate-next-style"));
         
         this.paginate = "true".equals(formElement.getAttribute("paginate"));
         this.cssStyling = "true".equals(formElement.getAttribute("css-styling"));
@@ -1715,7 +1746,51 @@ public class ModelForm {
         
         return targ;
     }
+
+    public String getPaginateTargetAnchor() {
+        return this.paginateTargetAnchor;
+    }
     
+    public String getPaginateIndexField(Map context) {
+        String field = this.paginateIndexField.expandString(context);
+        if (UtilValidate.isEmpty(field)) {
+            field = DEFAULT_PAG_INDEX_FIELD;
+        }
+        return field;
+    }
+
+    public String getPaginateSizeField(Map context) {
+        String field = this.paginateSizeField.expandString(context);
+        if (UtilValidate.isEmpty(field)) {
+            field = DEFAULT_PAG_SIZE_FIELD;
+        }
+        return field;
+    }
+
+    public String getPaginatePreviousLabel(Map context) {
+        String field = this.paginatePreviousLabel.expandString(context);
+        if (UtilValidate.isEmpty(field)) {
+            field = DEFAULT_PAG_PREV_LABEL;
+        }
+        return field;
+    }
+
+    public String getPaginateNextLabel(Map context) {
+        String field = this.paginateNextLabel.expandString(context);
+        if (UtilValidate.isEmpty(field)) {
+            field = DEFAULT_PAG_NEXT_LABEL;
+        }
+        return field;
+    }
+
+    public String getPaginatePreviousStyle() {
+        return this.paginatePreviousStyle;
+    }
+
+    public String getPaginateNextStyle() {
+        return this.paginateNextStyle;
+    }
+
     public String getTargetWindow(Map context) {
         return this.targetWindowExdr.expandString(context);
     }
@@ -1768,6 +1843,22 @@ public class ModelForm {
      */
     public void setPaginateTarget(String string) {
         this.paginateTarget = new FlexibleStringExpander(string);
+    }
+
+    public void setPaginateIndexField(String string) {
+        this.paginateIndexField = new FlexibleStringExpander(string);
+    }
+
+    public void setPaginateSizeField(String string) {
+        this.paginateSizeField = new FlexibleStringExpander(string);
+    }
+
+    public void setPaginatePreviousStyle(String string) {
+        this.paginatePreviousStyle = (UtilValidate.isEmpty(string) ? DEFAULT_PAG_PREV_STYLE : string);
+    }
+
+    public void setPaginateNextStyle(String string) {
+        this.paginateNextStyle = (UtilValidate.isEmpty(string) ? DEFAULT_PAG_NEXT_STYLE : string);
     }
 
     public void setViewIndex(int val) {
@@ -1845,21 +1936,26 @@ public class ModelForm {
         }
         
        if (paginate) {
+            viewIndex = 0;
+            viewSize = DEFAULT_PAGE_SIZE;
             try {
-                viewIndex = ((Integer) context.get("viewIndex")).intValue();
+                Object value = context.get(getPaginateIndexField(context));
+                if (value instanceof Integer) 
+                    viewIndex = ((Integer) value).intValue();
+                else if (value instanceof String) 
+                    viewIndex = Integer.parseInt((String) value);
             } catch (Exception e) {
-                viewIndex = 0;
             }
-    
             try {
-                viewSize = ((Integer) context.get("viewSize")).intValue();
+                Object value = context.get(getPaginateSizeField(context));
+                if (value instanceof Integer) 
+                    viewSize = ((Integer) value).intValue();
+                else if (value instanceof String) 
+                    viewSize = Integer.parseInt((String) value);
             } catch (Exception e) {
-                //viewSize = DEFAULT_PAGE_SIZE;
             }
             lowIndex = viewIndex * viewSize;
             highIndex = (viewIndex + 1) * viewSize;
-    
-    
         } else {
             viewIndex = 0;
             viewSize = DEFAULT_PAGE_SIZE;
