@@ -77,7 +77,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" widget-style="tabletext"><display/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteBillingAccountRole?billingAccountId=${billingAccountId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
