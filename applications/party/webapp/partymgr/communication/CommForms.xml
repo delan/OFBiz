@@ -236,7 +236,7 @@
         <field name="communicationEventId" widget-style="buttontext">
             <hyperlink description="${communicationEventId}" target="EditCommunicationEvent?communicationEventId=${communicationEventId}&amp;partyId=${partyId}" target-type="intra-app"/>
         </field>
-        <field name="removeLink" title=" " widget-style="buttontext">
+        <field name="removeLink" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyCommunicationEvent?partyId=${partyId}&amp;communicationEventId=${communicationEventId}"/>
         </field>
     </form>
@@ -261,7 +261,7 @@
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>
         </actions>
-        <field name="removeLink" title=" " widget-style="buttontext">
+        <field name="removeLink" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteCommunicationEvent?communicationEventId=${communicationEventId}"/>
         </field>
     </form>
@@ -304,7 +304,7 @@
         <field name="communicationEventPrpTypId" widget-style="tabletext">
             <display-entity description="${description}" entity-name="CommunicationEventPrpTyp"/>
         </field>
-        <field name="removeLink" title=" " widget-style="buttontext">
+        <field name="removeLink" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeCommunicationEventPurpose?communicationEventPrpTypId=${communicationEventPrpTypId}&amp;communicationEventId=${communicationEventId}"/>
         </field>
     </form>
@@ -332,7 +332,7 @@
             </display-entity>
         </field>
         <field name="roleTypeId" widget-style="tabletext"><display-entity description="${description}" entity-name="RoleType"/></field>
-        <field name="removeLink" title=" " widget-style="buttontext">
+        <field name="removeLink" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="/RemoveCommunicationEventRole?partyId=${partyId}&amp;roleTypeId=${roleTypeId}&amp;communicationEventId=${communicationEventId}"/>
         </field>
     </form>

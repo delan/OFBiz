@@ -62,7 +62,7 @@
         
         <field name="groupId"><hidden/></field>
         <field name="permissionId" title="${uiLabelMap.PartyPermissionId}" widget-style="tabletext"><display-entity entity-name="SecurityPermission" description="[${permissionId}] ${description}"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="removeSecurityPermissionFromSecurityGroup?permissionId=${permissionId}&amp;groupId=${groupId}"
                 description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
         </field>
@@ -112,7 +112,7 @@
             </display-entity>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink description="[${uiLabelMap.CommonRemove}]" target="removeUserLoginFromSecurityGroup?userLoginId=${userLoginId}&amp;groupId=${groupId}&amp;fromDate=${fromDate}" also-hidden="false"/>
         </field>
     </form>
@@ -146,7 +146,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink description="[${uiLabelMap.CommonRemove}]" target="userLogin_removeUserLoginFromSecurityGroup?partyId=${partyId}&amp;userLoginId=${userLoginId}&amp;groupId=${groupId}&amp;fromDate=${fromDate}" also-hidden="false"/>
         </field>
     </form>

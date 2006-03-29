@@ -49,7 +49,7 @@
         </field>
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="EditPartyGroup" type="single" target="updatePartyGroup" title="" default-map-name="partyGroup"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -62,7 +62,7 @@
 
         <field name="partyTypeId"><ignored/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="AddUserLogin" type="single"
             target="createUserLogin" title=""
@@ -73,7 +73,7 @@
         <field name="currentPassword"><password/></field>
         <field name="currentPasswordVerify"><password/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="updatePassword" type="single"
         target="updatePassword" title=""
@@ -89,7 +89,7 @@
         <field name="newPassword"><password/></field>
         <field name="newPasswordVerify"><password/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="updateUserLoginSecurity" type="single"
             target="updateUserLoginSecurity" title="" default-map-name="editUserLogin"
@@ -99,7 +99,7 @@
         <field name="partyId"><hidden/></field>
         <field name="userLoginId"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
 
     <form name="EditVendor" type="single"
@@ -197,7 +197,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deletePartyTaxAuthInfo?partyId=${partyId}&amp;taxAuthGeoId=${taxAuthGeoId}&amp;fromDate=${fromDate}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -211,7 +211,7 @@
         <field name="partyId"><hidden/></field>
         <field name="note" widget-style="textAreaBox"><textarea cols="70" rows="10"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
 
     <!-- PartyRate -->
@@ -245,7 +245,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deletePartyRate?partyId=${partyId}&amp;rateTypeId=${rateTypeId}&amp;fromDate=${fromDate}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -328,7 +328,7 @@
 
         <field name="USERNAME" title="Username" tooltip="* Customer will receive a temporary password by email."><text size="30" maxlength="250"/></field>
 
-        <field name="RequiredNote" title=" "><display description="Fields marked with (*) are required." also-hidden="false"/></field>
+        <field name="RequiredNote" title=""><display description="Fields marked with (*) are required." also-hidden="false"/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
@@ -347,7 +347,7 @@
         <field name="roleTypeId" title="${uiLabelMap.PartyRole}">
             <display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/>
         </field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteSegmentGroupRole?segmentGroupId=${segmentGroupId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -369,7 +369,7 @@
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <!-- <field name="cancelLink" title=" " widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field> -->
+        <!-- <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}?segmentGroupId=${segmentGroupId}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field> -->
     </form>
     <form name="EditPartyAttribute" type="single"
             target="updatePartyAttribute" title="" default-map-name="attribute"
