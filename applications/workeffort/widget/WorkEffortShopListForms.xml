@@ -37,7 +37,7 @@
         <field name="listName"><display/></field>
         <field name="description"><display/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${groupName} [${partyId}]"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext"><hyperlink target="deleteShoppingListWorkEffort?workEffortId=${workEffortId}&amp;shoppingListId=${shoppingListId}" also-hidden="false" description="${uiLabelMap.CommonDelete}"/></field>
+        <field name="deleteLink" title="" widget-style="buttontext"><hyperlink target="deleteShoppingListWorkEffort?workEffortId=${workEffortId}&amp;shoppingListId=${shoppingListId}" also-hidden="false" description="${uiLabelMap.CommonDelete}"/></field>
     </form>
     <form name="AddWorkEffortShopList" target="createShoppingListWorkEffort" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
