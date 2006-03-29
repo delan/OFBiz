@@ -348,4 +348,144 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.PartyAddRole}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+	
+    <form name="listCommContent" type="list" list-name="contentDataResourceList" target="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" paginate-target="/ListCommContent" view-size="20">
+        <actions>
+			<entity-and entity-name="CommEventContentDataResource" list-name="contentDataResourceList">
+				<field-map field-name="communicationEventId"/>
+			</entity-and>
+        </actions>
+    
+        <field name="editContent" title="">
+            <hyperlink also-hidden="false" description="Edit" target="EditCommContent?contentId=${contentId}&amp;dataResourceId=${dataResourceId}&amp;communicationEventId=${communicationEventId}&amp;fromDate=${fromDate}"/> 
+        </field>
+        <field name="viewContent" title="">
+            <hyperlink also-hidden="false" description="View" target="ViewCommContent?contentId=${contentId}&amp;dataResourceId=${dataResourceId}&amp;communicationEventId=${communicationEventId}&amp;fromDate=${fromDate}"/> 
+        </field>
+        <field name="contentName" title="Name" ><display/></field>
+        <field name="contentId" title="Content Id" ><display/></field>
+        <field name="fromDate" title="From Date" ><display/></field>
+        <field name="dataResourceId" title="Data Resource Id" ><display/></field>
+    </form>
+
+    <form name="addCommContent" default-map-name="" type="single" target="createCommContentDataResource"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="communicationEventId"><hidden/></field>
+        <field name="contentId"><ignored/></field>
+        <field name="contentName"><text/></field>
+        <field name="contentTypeId"><hidden value="DOCUMENT"/></field>
+        <field name="dataResourceTypeId"><hidden value="SHORT_TEXT"/></field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="thruDate"><date-time/></field>
+        <field name="sequenceNum"><text/></field>
+        
+        <field name="drMimeTypeId" title="Document Type" widget-style="smallSelect">
+            <drop-down allow-empty="false">
+                <option key="application/msword" description="MS Word"/>
+                <option key="application/pdf" description="PDF File"/>
+                <option key="application/vnd.ofbiz.survey" description="Survey"/>
+                <option key="text/html" description="HTML Text"/>
+                <option key="text/plain" description="Plain Text"/>
+                <option key="image/jpeg" description="JPEG"/>
+                <option key="image/gif" description="GIF"/>
+                <option key="image/tiff" description="TIFF"/>
+                <option key="image/png" description="PNG"/>
+                <option key="application/octet-stream" description="Other"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+	
+    <form name="editCommContent" default-map-name="commEventContentDataResource" type="single" target="updateCommContentDataResource"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        
+        <field name="communicationEventId"><display/></field>
+        <field name="contentId" widget-style="tabletext"><display/></field>
+        <field name="dataResourceId" widget-style="tabletext"><display/></field>
+        <field name="contentName"><text/></field>
+        <field name="fromDate" title="From Date" widget-style="tabletext"><display/></field>
+        <field name="thruDate" title="Thru Date"><date-time/></field>
+        <field name="sequenceNum" title="Sequence Num"><text/></field>
+        
+        <field name="drMimeTypeId" title="Document Type" widget-style="tabletext">
+            <drop-down allow-empty="false">
+                <option key="application/msword" description="MS Word"/>
+                <option key="application/pdf" description="PDF File"/>
+                <option key="application/vnd.ofbiz.survey" description="Survey"/>
+                <option key="text/html" description="HTML Text"/>
+                <option key="text/plain" description="Plain Text"/>
+                <option key="image/jpeg" description="JPEG"/>
+                <option key="image/gif" description="GIF"/>
+                <option key="image/tiff" description="TIFF"/>
+                <option key="image/png" description="PNG"/>
+                <option key="application/octet-stream" description="Other"/>
+            </drop-down>
+        </field>
+        <field name="dataResourceTypeId" entry-name="drDataResourceTypeId"  widget-style="tabletext">
+            <drop-down allow-empty="false">
+				<entity-options entity-name="DataResourceType" description="${description}">
+					
+				</entity-options>
+            </drop-down>
+        </field>
+        <!-- <field name="mimeTypeId" map-name="dataResource" title="Document Type"  widget-style="tabletext"><display/></field> -->
+        <!-- <field name="contentTypeId" map-name="content" title="Content Type"  widget-style="tabletext"><display/></field> -->
+        <!-- add these back if it looks like Surveys need to be added to CommEvents
+        <field name="relatedDetailId" map-name="dataResource" title="Survey ID"
+            use-when="dataResource!=null &amp;&amp; &quot;SURVEY&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))">
+            <lookup target-form-name="LookupSurvey">
+                <sub-hyperlink target="EditSurvey?surveyId=${dataResource.relatedDetailId}" description="Edit Survey" link-style="buttontext" 
+                    use-when="dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
+            </lookup>
+        </field>
+        <field name="relatedDetailId" map-name="dataResource" title="Survey Response ID" 
+            use-when="dataResource!=null &amp;&amp; &quot;SURVEY_RESPONSE&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))">      
+            <lookup target-form-name="LookupSurveyResponse">
+                <sub-hyperlink target="EditSurveyResponse?surveyResponseId=${dataResource.relatedDetailId}" 
+                    description="Edit Survey Response" link-style="buttontext" use-when="dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
+            </lookup>
+        </field>
+        <field name="surveyResponseLink" map-name="dummy" widget-style="buttontext" 
+            use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
+            <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse?surveyId=${templateDataResource.relatedDetailId}" also-hidden="false" target-window="_blank"/>
+        </field>
+        -->
+		<!--
+        <field name="objectInfo" title="Current File Name" map-name="dataResource" widget-style="tabletext"
+            use-when="mimeTypeId!=null &amp;&amp; !mimeTypeId.startsWith(&quot;text&quot;)">
+            <display also-hidden="false"/>
+        </field>
+			-->
+
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+	
+    <form name="uploadCommContent" type="upload" default-title-style="tableheadtext"  default-map-name="commEventContentDataResource"
+        target="uploadCommEventContent" default-tooltip-style="tabletext" default-widget-style="tabletext">
+        
+        <field name="contentId" map-name="contentAssoc"><hidden/></field>
+        <field name="drDataResourceId"><hidden/></field>
+        <field name="drDataResourceTypeId"><hidden/></field>
+        <field name="drMimeTypeId" ><hidden/></field>
+        <field name="communicationEventId"><hidden/></field>
+        <field name="fromDate"><hidden/></field>
+        <field name="drObjectInfo" title="File Name"><text/></field>
+        <!-- would show previous file name... doesn't make too much sense <field name="objectInfo" title="File Name" map-name="dataResource"><display also-hidden="false"/></field> -->
+        <field name="imageData" map-name="empty" title="File"><file/></field>
+        <field name="submitButton" title="Upload" widget-style="smallSubmit"><submit/></field>
+    </form>
+    
+    <form name="editCommTextContent" type="single" default-title-style="tableheadtext"  default-map-name="commEventContentDataResource"
+        target="uploadCommEventContent" default-tooltip-style="tabletext" default-widget-style="tabletext">
+        <field name="contentId" ><hidden/></field>
+        <field name="drDataResourceId" ><hidden/></field>
+        <field name="drDataResourceTypeId" ><hidden/></field>
+        <field name="drMimeTypeId" ><hidden/></field>
+        <field name="communicationEventId"><hidden/></field>
+        <field name="fromDate"><hidden/></field>
+        <field name="textData" map-name="electronicText" title="Text Data"><textarea rows="30" cols="60"/></field>
+        <field name="submitButton" title="Save" widget-style="smallSubmit"><submit/></field>
+    </form>
+
+
 </forms>
