@@ -143,7 +143,12 @@ public class FindServices {
         		else if (entityName.equals("Payment")) {
         			extraCond = new EntityExpr("paymentId", EntityOperator.LIKE, companyPrefix); 
         		}
-        		else if (entityName.equals("Party") || entityName.equals("PartyRelationshipAndPartyDetail") || entityName.equals("PartyNameView"))  {
+        		else if (entityName.equals("Party") || entityName.equals("PartyRelationshipAndPartyDetail")
+        				|| entityName.equals("Party")
+        				|| entityName.equals("PartyGroup")
+        				|| entityName.equals("Person")
+        				|| entityName.equals("UserLogin")
+        				|| entityName.equals("PartyNameView"))  {
         			extraCond = new EntityExpr("partyId", EntityOperator.LIKE, companyPrefix); 
         		}
         		else if (entityName.equals("ElectronicText") || entityName.equals("DataResource"))  {

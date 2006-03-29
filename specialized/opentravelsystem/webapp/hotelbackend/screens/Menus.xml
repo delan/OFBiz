@@ -36,7 +36,7 @@
         <menu-item name="Disabled" title="Disabled Parties"><link target="findParties?statusId=PARTYREL-DELETED"/></menu-item>
         <menu-item name="Security" title="Security"><link target="security"/></menu-item>
         <menu-item name="CompanyInfo" title="CompanyInfo"><link target="editCompany?organizationPartyId=${organizationPartyId}"/></menu-item>
-        <menu-item name="Help" title="Help" align-style="col-right"><link target="javascript:getHelpWindow('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}')" url-mode="plain"/></menu-item>
+        <menu-item name="Help" title="Help" align-style="col-right"><link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/></menu-item>
     </menu>
     
     <menu name="PartyTabBar" default-menu-item-name="EditParty" default-selected-style="tabButtonSelected" 

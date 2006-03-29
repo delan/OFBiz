@@ -30,6 +30,30 @@
     <!-- Opentravelsystem Party Services -->
     <!-- ================================================================ -->
     
+    <!--
+    <simple-method method-name="createPartyGroup" short-description="-Add a Party with prefix -" login-required="false">
+        <sequenced-id-to-env sequence-name="${parameters.productStoreId}Party" env-name="nextPartyId"/>
+        <set field="parameters.partyId" value="${parameters.productStoreId}${nextPartyId}"/>
+        
+        <set-service-fields service-name="createPartyGroupOfbiz" map-name="parameters" to-map-name="createPartyGroupParam"/>
+        <call-service service-name="createPartyGroupOfbiz" in-map-name="createPartyGroupParam" include-user-login="true">
+            <result-to-result result-name="partyId" service-result-name="partyId"/>
+        </call-service>
+    </simple-method>
+    
+    <simple-method method-name="createPerson" short-description="-Add a Party with prefix-" login-required="false">
+        <sequenced-id-to-env sequence-name="${parameters.productStoreId}Party" env-name="nextPartyId"/>
+        <set field="parameters.partyId" value="${parameters.productStoreId}${nextPartyId}"/>
+        
+        <set-service-fields service-name="createPersonOfbiz" map-name="parameters" to-map-name="createPersonParam"/>
+        <call-service service-name="createPersonOfbiz" in-map-name="createPersonParam" include-user-login="true">
+            <result-to-result result-name="partyId" service-result-name="partyId"/>
+        </call-service>
+    </simple-method>
+    -->
+    
+    
+
     <simple-method method-name="addParty" short-description="--Add a Party--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
             <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
@@ -50,9 +74,9 @@
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
         <set field="createPartyGroup.groupName" from-field="parameters.groupName"/>
-        <loop count="100">
-        <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Party" env-name="nextPartyId"/>
-        </loop>
+        <!--loop count="100"-->
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Party" env-name="nextPartyId"/>
+        <!--/loop-->
         <set field="createPartyGroup.partyId" value="${partyAcctgPreference.invoiceIdPrefix}${nextPartyId}"/>        
         <call-service service-name="createPartyGroup" in-map-name="createPartyGroup">
             <result-to-field result-name="partyId" field-name="partyId"/>
