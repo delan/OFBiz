@@ -84,7 +84,7 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        
+       
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteGlAccountOrganization" short-description="Delete GlAccountOrganization">
@@ -359,7 +359,7 @@
         <iterate list-name="parameters.acctgTransEntries" entry-name="acctgTransEntry">
             <!-- if any amount is negative, then get the absolute (positive) value of that amount, and flip the Debit/Credit flag  -->
             <if-compare field-name="amount" map-name="acctgTransEntry" operator="less" value="0">
-                <log level="info" message="${acctgTransEntry} is going to get inverted"/>
+                <log level="verbose" message="${acctgTransEntry} is going to get inverted"/>
                 <calculate field-name="acctgTransEntry.amount">
                     <calcop field-name="acctgTransEntry.amount" operator="negative"/>
                 </calculate>
@@ -371,7 +371,6 @@
                     </if-compare>
                 </else>
                 </if-compare>
-                <log level="info" message="result: ${acctgTransEntry}"/>
             </if-compare>
             
             <!-- now create the AcctgTransEntry using the acctgTransId we already have from above -->    

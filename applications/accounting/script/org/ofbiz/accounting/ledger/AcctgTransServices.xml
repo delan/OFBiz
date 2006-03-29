@@ -170,10 +170,10 @@ under the License.
         <call-service service-name="calculateAcctgTransTrialBalance" in-map-name="trialBalanceCallMap">
             <results-to-map map-name="trialBalanceResultMap"/>
         </call-service>
-        <if-compare field-name="trialBalanceResultMap.debitCreditDifference" operator="greater-equals" value="0.1" type="Double">
+        <if-compare field-name="trialBalanceResultMap.debitCreditDifference" operator="greater-equals" value="0.01" type="Double">
             <add-error><fail-message message="Not posting GL Accounting Transaction with ID [${parameters.acctgTransId}] because the trial balance failed: Debit Total=${trialBalanceResultMap.debitTotal} Credit Total=${trialBalanceResultMap.creditTotal} Debit/Credit Difference=${trialBalanceResultMap.debitCreditDifference}"/></add-error>
         </if-compare>
-        <if-compare field-name="trialBalanceResultMap.debitCreditDifference" operator="less-equals" value="-0.1" type="Double">
+        <if-compare field-name="trialBalanceResultMap.debitCreditDifference" operator="less-equals" value="-0.01" type="Double">
             <add-error><fail-message message="Not posting GL Accounting Transaction with ID [${parameters.acctgTransId}] because the trial balance failed: Debit Total=${trialBalanceResultMap.debitTotal} Credit Total=${trialBalanceResultMap.creditTotal} Debit/Credit Difference=${trialBalanceResultMap.debitCreditDifference}"/></add-error>
         </if-compare>
             
@@ -254,7 +254,9 @@ under the License.
                         <set from-field="acctgTransEntry.amount" field="postingAmount"/>
                         <else>
                             <if-compare field-name="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
-                                <calculate field-name="postingAmount"><calcop field-name="acctgTransEntry.amount" operator="negative"/></calculate>
+                                <calculate field-name="postingAmount" type="BigDecimal">
+                                    <calcop field-name="acctgTransEntry.amount" operator="negative"/>
+                                </calculate>
                             </if-compare>    
                         </else>
                     </if-compare>
@@ -266,7 +268,9 @@ under the License.
                             <set from-field="acctgTransEntry.amount" field="postingAmount"/>
                             <else>
                                 <if-compare field-name="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
-                                    <calculate field-name="postingAmount"><calcop field-name="acctgTransEntry.amount" operator="negative"/></calculate>
+                                    <calculate field-name="postingAmount" type="BigDecimal">
+                                        <calcop field-name="acctgTransEntry.amount" operator="negative"/>
+                                    </calculate>
                                 </if-compare>    
                             </else>
                         </if-compare>
@@ -276,16 +280,17 @@ under the License.
                     </if-compare>                    
                 </else>
             </if-compare>
-            <log level="verbose" message="initial balance: [${glAccountOrganization.postedBalance}] trans: ${acctgTransEntry.debitCreditFlag} [${acctgTransEntry.amount}] final amount: [${postedBalance}]"/>
+            <log level="verbose" message="GL account: [${acctgTransEntry.glAccountId}] initial balance: [${glAccountOrganization.postedBalance}] ${acctgTransEntry.debitCreditFlag} [${acctgTransEntry.amount}]"/>
             <!-- calculate the new posted balance for this gl account -->
-            <calculate field-name="postedBalance">
+            <calculate field-name="postedBalance" type="BigDecimal">
                 <calcop operator="get" field-name="glAccountOrganization.postedBalance"/>
                 <calcop operator="get" field-name="postingAmount"/>
             </calculate>
+            <log level="verbose" message="GL account: [${acctgTransEntry.glAccountId}] final balance: [${postedBalance}]"/>
 
             <!-- update the gl account's posted balance for this organization -->
             <set from-field="glAccount.glAccountId" field="updateGlAccountParams.glAccountId"/>
-            <set from-field="postedBalance" field="updateGlAccountParams.postedBalance"/>
+            <set from-field="postedBalance" field="updateGlAccountParams.postedBalance" type="Double"/>
             <set from-field="acctgTransEntry.organizationPartyId" field="updateGlAccountParams.organizationPartyId"/>
             <call-service service-name="updateGlAccountOrganization" in-map-name="updateGlAccountParams"/>
 
@@ -310,7 +315,7 @@ under the License.
             
                 <!-- update GlAccountHistory's debit and credit totals -->
                 <if-compare field-name="debitCreditFlag" map-name="acctgTransEntry" operator="equals" value="D">
-                    <calculate field-name="postedDebits" map-name="glAccountHistory" type="Double">
+                    <calculate field-name="postedDebits" map-name="glAccountHistory" type="BigDecimal">
                         <calcop operator="add">
                             <calcop operator="get" field-name="amount" map-name="acctgTransEntry"/>
                             <calcop operator="get" field-name="postedDebits" map-name="glAccountHistory"/>
@@ -318,7 +323,7 @@ under the License.
                     </calculate>
                 <else>
                     <if-compare field-name="debitCreditFlag" map-name="acctgTransEntry" operator="equals" value="C">
-                        <calculate field-name="postedCredits" map-name="glAccountHistory" type="Double">
+                        <calculate field-name="postedCredits" map-name="glAccountHistory" type="BigDecimal">
                             <calcop operator="add">
                                 <calcop operator="get" field-name="amount" map-name="acctgTransEntry"/>
                                 <calcop operator="get" field-name="postedCredits" map-name="glAccountHistory"/>
@@ -342,7 +347,6 @@ under the License.
         <now-timestamp-to-env env-name="updateAcctgTransParams.postedDate"/>
         <set value="Y" field="updateAcctgTransParams.isPosted"/>
 
-        <log level="info" message="about to call updateAcctgTrans from postAcctgTrans with parameters: ${updateAcctgTransParams}"/>
         <call-service service-name="updateAcctgTrans" in-map-name="updateAcctgTransParams" include-user-login="true"/>
     </simple-method>
 </simple-methods>
