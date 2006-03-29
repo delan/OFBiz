@@ -23,7 +23,7 @@ under the License.
     <!-- CompDoc forms -->
     <form name="FindCompDoc" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        default-entity-name="Content"  target="FindCompDoc" title=" " type="single"> 
+        default-entity-name="Content"  target="FindCompDoc" title="" type="single"> 
         <field name="contentId" title="Content Id" map-name="empty"><text-find/></field>
         <field name="contentName" title="Name"><text-find/></field>
         <field name="contentTypeId" title="Content Type Id">
@@ -114,19 +114,19 @@ under the License.
         <field name="contentRevisionSeqId"><display/></field>
         <field name="committedByPartyId"><display/></field>
         <field name="comments"><display/></field>
-        <field name="editLink" title=" " widget-style="buttontext">
+        <field name="editLink" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Edit" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
-        <field name="itemLink" title=" " widget-style="buttontext">
+        <field name="itemLink" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Items" target="ListContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
-        <field name="create" title=" " widget-style="buttontext">
+        <field name="create" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create" target="EditContentRevision?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
-        <field name="tree" title=" " widget-style="buttontext" use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)">
+        <field name="tree" title="" widget-style="buttontext" use-when="&quot;COMPDOC_INSTANCE&quot;.equals(contentTypeId)">
             <hyperlink also-hidden="false" description="Tree" target="ViewCompDocInstanceTree?rootContentId=${contentId}&amp;rootContentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
-        <field name="tree" title=" " widget-style="buttontext" use-when="&quot;COMPDOC_TEMPLATE&quot;.equals(contentTypeId)">
+        <field name="tree" title="" widget-style="buttontext" use-when="&quot;COMPDOC_TEMPLATE&quot;.equals(contentTypeId)">
             <hyperlink also-hidden="false" description="Tree" target="ViewCompDocTemplateTree?rootContentId=${contentId}&amp;rootContentRevisionSeqId=${contentRevisionSeqId}"/>
         </field>
     </form>
@@ -154,10 +154,10 @@ under the License.
         <field name="itemContentId"><display/></field>
         <field name="oldDataResourceId"><display/></field>
         <field name="newDataResourceId"><display/></field>
-        <field name="editLink" title=" " widget-style="buttontext">
+        <field name="editLink" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Edit" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
-        <field name="create" title=" " widget-style="buttontext">
+        <field name="create" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
     </form>
@@ -470,10 +470,10 @@ under the License.
         <field name="newDataResourceId"><display/></field>
         <field name="contentApprovalId"><display/></field>
 
-        <field name="editLink" title=" " widget-style="buttontext" use-when="approvalCount &gt; 0">
+        <field name="editLink" title="" widget-style="buttontext" use-when="approvalCount &gt; 0">
             <hyperlink also-hidden="false" description="Edit" target="EditContentRevisionItem?contentId=${contentId}&amp;contentRevisionSeqId=${contentRevisionSeqId}&amp;itemContentId=${itemContentId}&amp;rootContentId=${rootContentId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
         </field>
-        <field name="create" title=" " widget-style="buttontext">
+        <field name="create" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create" target="EditContentRevisionItem"/>
         </field>
     </form>
