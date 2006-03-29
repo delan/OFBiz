@@ -84,7 +84,7 @@
         <field name="ordersLink" widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonOrders}" target="ListRequirementOrders?requirementId=${requirementId}"/>
         </field>
-        <field name="deleteLink" widget-style="buttontext">
+        <field name="deleteLink" widget-style="buttontext" title="">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteRequirement?requirementId=${requirementId}"/>
         </field>
     </form>
