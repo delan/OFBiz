@@ -148,8 +148,9 @@ public class PartyServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.create.party_exists_not_person_type", locale));
             }
         } else {
-            // create a party if one doesn't already exist
-            Map newPartyMap = UtilMisc.toMap("partyId", partyId, "partyTypeId", "PERSON", "createdDate", now, "lastModifiedDate", now);
+            // create a party if one doesn't already exist with an initial status from the input
+            String statusId = (String) context.get("statusId");
+            Map newPartyMap = UtilMisc.toMap("partyId", partyId, "partyTypeId", "PERSON", "createdDate", now, "lastModifiedDate", now, "statusId", statusId);
             if (userLogin != null) {
                 newPartyMap.put("createdByUserLogin", userLogin.get("userLoginId"));
                 newPartyMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
@@ -239,7 +240,7 @@ public class PartyServices {
 
     /**
      * Updates a Person.
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission.
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_GRP_UPDATE permission.
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters.
      * @return Map with the result of the service, the output parameters.
@@ -251,7 +252,7 @@ public class PartyServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_GRP_UPDATE");
 
         if (result.size() > 0)
             return result;
