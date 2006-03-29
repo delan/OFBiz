@@ -364,5 +364,47 @@
         <attribute name="orderByList" type="java.util.List" mode="OUT" optional="true"/>
         <attribute name="entityConditionList" type="org.ofbiz.entity.condition.EntityConditionList" mode="OUT" optional="true"/>
     </service>
+    <!--service name="createPerson" engine="simple" default-entity-name="Person"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="createPerson" auth="false">
+        <description>Create a Person</description>
+        <auto-attributes mode="OUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="preferredCurrencyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <override name="firstName" optional="false"/>
+        <override name="lastName" optional="false"/>
+    </service>
+    <service name="createPersonOfbiz" engine="java" default-entity-name="Person"
+        location="org.ofbiz.party.party.PartyServices" invoke="createPerson" auth="false">
+        <description>Create a Person</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="preferredCurrencyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <override name="firstName" optional="false"/>
+        <override name="lastName" optional="false"/>
+    </service>
+    <service name="createPartyGroup" engine="simple" default-entity-name="PartyGroup"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="createPartyGroup" auth="false">
+        <description>Create a PartyGroup</description>
+        <auto-attributes mode="OUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="emailproductStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <override name="groupName" optional="false"/>
+    </service>
+    <service name="createPartyGroupOfbiz" engine="java" default-entity-name="PartyGroup"
+        location="org.ofbiz.party.party.PartyServices" invoke="createPartyGroup" auth="false">
+        <description>Create a PartyGroup</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <override name="groupName" optional="false"/>
+    </service-->
     
 </services>

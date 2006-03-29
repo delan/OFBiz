@@ -37,7 +37,7 @@
             </service>
         </actions>
         <auto-fields-service service-name="updateElectronicText"/>
-        <field name="textData"><textarea cols="90" rows="20" editor="true"/></field>
+        <field name="textData"><textarea cols="90" rows="20"  visual-editor-enable="true"/></field>
         <field name="dataResourceId"><hidden/></field>
         <field name="contentId"><hidden/></field>
         <field name="skipPermissionCheck"><hidden/></field>
@@ -54,7 +54,7 @@
             </service>
         </actions>
         <auto-fields-service service-name="updateElectronicText"/>
-        <field name="textData"><textarea cols="90" rows="20" editor="true"/></field>
+        <field name="textData"><textarea cols="80" rows="15" visual-editor-enable="true"/></field>
         <field name="dataResourceId"><hidden/></field>
         <field name="contentId"><hidden/></field>
         <field name="skipPermissionCheck"><hidden/></field>
@@ -77,8 +77,8 @@
             <hyperlink description="${dataResourceId}" target="editPage?contentId=${dataResourceId}"/>
         </field>
         <field name="dataResourceName"><display-entity entity-name="DataResource" key-field-name="dataResourceId" description="${dataResourceName}"></display-entity></field>
-        <field name="createdStamp" ><display/></field>
-        <field name="lastUpdatedStamp"><display/></field>
+        <field name="createdStamp" ><display type="text"/></field>
+        <field name="lastUpdatedStamp"><display type="text"/></field>
     </form>
     
  
