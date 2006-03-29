@@ -523,7 +523,7 @@ public class ModelServiceReader implements Serializable {
             param.fieldName = UtilXml.checkEmpty(attribute.getAttribute("field-name"));
             param.stringMapPrefix = UtilXml.checkEmpty(attribute.getAttribute("string-map-prefix"));
             param.stringListSuffix = UtilXml.checkEmpty(attribute.getAttribute("string-list-suffix"));
-            param.formLabel = UtilXml.checkEmpty(attribute.getAttribute("form-label"));
+            param.formLabel = attribute.hasAttribute("form-label")?attribute.getAttribute("form-label"):null;
             param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional")); // default to true
             param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
             
