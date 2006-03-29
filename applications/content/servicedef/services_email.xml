@@ -116,4 +116,14 @@
         <attribute name="body" type="String" mode="IN" optional="false"/>
         <attribute name="contentType" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="storeIncomingEmail" engine="java"
+            location="org.ofbiz.content.email.EmailServices" invoke="storeIncomingEmail" auth="true">
+        <description>Process incoming email. Try to determine partyIdFrom from email address.</description>
+        <implements service="mailProcessInterface"/>
+    </service>
+    <service name="storeForwardedEmail" engine="java"
+            location="org.ofbiz.content.email.EmailServices" invoke="storeForwardedEmail" auth="true">
+        <description>Process incoming email. Try to determine partyIdFrom from email address.</description>
+        <implements service="mailProcessInterface"/>
+    </service>
 </services>

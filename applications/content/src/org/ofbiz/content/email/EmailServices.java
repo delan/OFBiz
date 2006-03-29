@@ -42,6 +42,7 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Message;
+import javax.mail.Address;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -49,6 +50,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.mail.MessagingException;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -75,6 +77,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.mail.MimeMessageWrapper;
 import org.ofbiz.widget.html.HtmlScreenRenderer;
 import org.ofbiz.widget.screen.ScreenRenderer;
 import org.w3c.dom.Document;
@@ -553,4 +556,36 @@ public class EmailServices {
             throw new IOException("Cannot write to this read-only resource");
         }
     }
+    
+    public static Map storeIncomingEmail(DispatchContext dctx, Map context) {
+        MimeMessageWrapper wrapper = (MimeMessageWrapper) context.get("messageWrapper");
+        MimeMessage message = wrapper.getMessage();
+        InternetAddress fromAddress = null;
+        try {
+        	Address [] addresses = message.getFrom();
+        	if (addresses.length > 0) {
+        		Address addr = addresses[0];
+        		if (addr instanceof InternetAddress) {
+        			fromAddress = (InternetAddress)addr;
+        		}
+        	}
+        	
+        	if (UtilValidate.isEmpty(fromAddress) ) {
+        		return ServiceUtil.returnError("No from address found.");
+        	}
+            Debug.log("To: " + message.getAllRecipients(), module);
+            Debug.log("From: " + message.getFrom(), module);
+            Debug.log("Subject: " + message.getSubject(), module);
+            Debug.log("Sent: " + message.getSentDate().toString(), module);
+            Debug.log("Received: " + message.getReceivedDate().toString(), module);
+        } catch (MessagingException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (Exception e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
 }
