@@ -57,8 +57,8 @@
   <tr>
     <td>
       <form method="post" name="salesentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
-      <input type='hidden' name='finalizeMode' value='type'>
-      <input type='hidden' name='orderMode' value='SALES_ORDER'>
+      <input type='hidden' name='finalizeMode' value='type'/>
+      <input type='hidden' name='orderMode' value='SALES_ORDER'/>
       <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td >&nbsp;</td>
@@ -105,7 +105,7 @@
           <td>&nbsp;</td>
           <td valign='middle'>
             <div class='tabletext' valign='top'>
-              <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'>
+              <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'/>
             </div>
           </td>
         </tr>
@@ -117,7 +117,7 @@
             <div class='tabletext' valign='top'>
               <input type='text' class='inputBox' name='partyId' value='${thisPartyId?if_exists}'>
               <a href="javascript:call_fieldlookup2(document.salesentryform.partyId,'LookupPartyName');">
-                <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+                <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/>
               </a>
             </div>
           </td>
@@ -154,8 +154,8 @@
   <tr>
     <td>
       <form method="post" name="poentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
-      <input type='hidden' name='finalizeMode' value='type'>
-      <input type='hidden' name='orderMode' value='PURCHASE_ORDER'>
+      <input type='hidden' name='finalizeMode' value='type'/>
+      <input type='hidden' name='orderMode' value='PURCHASE_ORDER'/>
       <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <#if partyId?exists>
           <#assign thisPartyId = partyId>
@@ -200,7 +200,7 @@
           <td>&nbsp;</td>
           <td valign='middle'>
             <div class='tabletext' valign='top'>
-              <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'>
+              <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'/>
             </div>
           </td>
         </tr>

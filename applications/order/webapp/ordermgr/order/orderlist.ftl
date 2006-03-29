@@ -117,17 +117,17 @@
                 <#if billFromParty?has_content>
                   <#assign billFrom = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billFromParty, true)?if_exists>
                 </#if>
-                <tr><td colspan="8"><hr class="sepbar"></td></tr>
+                <tr><td colspan="8"><hr class="sepbar"/></td></tr>
                 <tr>
                   <td>
-                    <div class="tabletext"><nobr>${orderHeader.orderDate.toString()}</nobr></div>
+                    <div class="tabletext">${orderHeader.orderDate.toString()}</div>
                   </td>
                   <td>
                     <div class="tabletext"><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="buttontext">${orderHeader.orderId}</a>
                     </div>
                   </td>
                   <td>
-                    <div class="tabletext"><nobr>${orderHeader.getRelatedOneCache("OrderType").getString("description")}</nobr></div>
+                    <div class="tabletext">${orderHeader.getRelatedOneCache("OrderType").getString("description")}</div>
                   </td>
                   <td>
                     <div class="tabletext">

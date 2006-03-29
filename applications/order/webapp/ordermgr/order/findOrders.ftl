@@ -70,9 +70,9 @@ function runAction() {
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-<form method='post' name="lookuporder" action="<@ofbizUrl>findorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
-<input type='hidden' name='lookupFlag' value='Y'>
-<input type='hidden' name='hideFields' value='Y'>
+<form method="post" name="lookuporder" action="<@ofbizUrl>findorders</@ofbizUrl>" onsubmit="javascript:lookupOrders();">
+<input type="hidden" name="lookupFlag" value="Y"/>
+<input type="hidden" name="hideFields" value="Y"/>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -100,27 +100,27 @@ function runAction() {
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderOrderId}</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='orderId'></td>
+                <td><input type='text' class='inputBox' name='orderId'/></td>
               </tr>
              <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderExternalId}</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='externalId'></td>
+                <td><input type='text' class='inputBox' name='externalId'/></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderCustomerPo}</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='correspondingPoId' value='${requestParameters.correspondingPoId?if_exists}'></td>
+                <td><input type='text' class='inputBox' name='correspondingPoId' value='${requestParameters.correspondingPoId?if_exists}'/></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderInternalCode}</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='internalCode' value='${requestParameters.internalCode?if_exists}'></td>
+                <td><input type='text' class='inputBox' name='internalCode' value='${requestParameters.internalCode?if_exists}'/></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.ProductProductId}</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='productId' value='${requestParameters.productId?if_exists}'></td>
+                <td><input type='text' class='inputBox' name='productId' value='${requestParameters.productId?if_exists}'/></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyRoleType}</div></td>
@@ -141,12 +141,12 @@ function runAction() {
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='partyId' value='${requestParameters.partyId?if_exists}'></td>
+                <td><input type='text' class='inputBox' name='partyId' value='${requestParameters.partyId?if_exists}'/></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyUserLoginId}</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'></td>
+                <td><input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'/></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderOrderType}</div></td>
@@ -167,12 +167,12 @@ function runAction() {
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingBillingAccount}</div>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='billingAccountId' value='${requestParameters.billingAccountId?if_exists}'></td>
+                <td><input type='text' class='inputBox' name='billingAccountId' value='${requestParameters.billingAccountId?if_exists}'/></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonCreatedBy}</div>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='createdBy' value='${requestParameters.createdBy?if_exists}'></td>
+                <td><input type='text' class='inputBox' name='createdBy' value='${requestParameters.createdBy?if_exists}'/></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderSalesChannel}</div></td>
@@ -261,28 +261,28 @@ function runAction() {
                   <table border='0' cellspacing='0' cellpadding='0'>
                     <tr>
                       <td nowrap>
-                        <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'>
-                        <a href="javascript:call_cal(document.lookuporder.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                        <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'/>
+                        <a href="javascript:call_cal(document.lookuporder.minDate,'${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'/></a>
                         <span class='tabletext'>${uiLabelMap.CommonFrom}</span>
                       </td>
                     </tr>
                     <tr>
                       <td nowrap>
-                        <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'>
-                        <a href="javascript:call_cal(document.lookuporder.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                        <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'/>
+                        <a href="javascript:call_cal(document.lookuporder.maxDate,'${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'/></a>
                         <span class='tabletext'>${uiLabelMap.CommonThru}</span>
                       </td>
                     </tr>
                   </table>
                 </td>
               </tr>
-              <tr><td colspan="3"><hr class="sepbar"></td></tr>
+              <tr><td colspan="3"><hr class="sepbar"/></td></tr>
               <tr>
                 <td width='25%' align='right'>&nbsp;</td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <div class="tabletext">
-                    <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupOrders(true);">&nbsp;${uiLabelMap.CommonShowAllRecords}
+                    <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupOrders(true);"/>&nbsp;${uiLabelMap.CommonShowAllRecords}
                   </div>
                 </td>
               </tr>
@@ -294,7 +294,7 @@ function runAction() {
     </td>
   </tr>
 </table>
-<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:lookupOrders(true);">
+<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:lookupOrders(true);"/>
 </form>
 <#if requestParameters.hideFields?default("N") != "Y">
 <script language="JavaScript" type="text/javascript">
@@ -340,7 +340,7 @@ document.lookuporder.orderId.focus();
       <div align="right" class="tabletext">
         <input type="hidden" name="orderIdList" value=""/>
         <select name="serviceName" class="selectBox" onchange="javascript:setServiceName(this);">
-           <option value="javascript:void();"></option>
+           <option value="javascript:void();">&nbsp;</option>
            <option value="<@ofbizUrl>massApproveOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Approve Orders</option>
            <option value="<@ofbizUrl>massPickOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Pick Orders</option>
         </select>
@@ -350,7 +350,7 @@ document.lookuporder.orderId.focus();
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
           <td width="1%" align="left">
-            <input type="checkbox" name="checkAllOrders" value="1" onchange="javascript:toggleOrderId(this);">
+            <input type="checkbox" name="checkAllOrders" value="1" onchange="javascript:toggleOrderId(this);"/>
           </td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderType}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderId}</div></td>
@@ -368,7 +368,7 @@ document.lookuporder.orderId.focus();
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan='15'><hr class='sepbar'></td>
+          <td colspan='15'><hr class='sepbar'/></td>
         </tr>
         <#if orderHeaderList?has_content>
           <#assign rowClass = "viewManyTR2">
@@ -384,7 +384,7 @@ document.lookuporder.orderId.focus();
             <#assign partyId = displayParty.partyId?default("_NA_")>
             <tr class='${rowClass}'>
               <td>
-                 <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}"</td>
+                 <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}"/>
               </td>
               <td><div class='tabletext'>${orderType.description?default(orderType.orderTypeId?default(""))}</div></td>
               <td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
@@ -430,7 +430,7 @@ document.lookuporder.orderId.focus();
 
               <td>&nbsp;</td>
               <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
-              <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>
+              <td><div class="tabletext">${orderHeader.getString("orderDate")}</div></td>
               <td>
                 <#if partyId != "_NA_">
                   <a href="/partymgr/control/viewprofile?partyId=${partyId}" class="buttontext">${partyId}</a>
