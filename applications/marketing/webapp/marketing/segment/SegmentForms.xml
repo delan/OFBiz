@@ -40,7 +40,7 @@
         <field name="segmentGroupTypeId" title="${uiLabelMap.SegmentGroupSegmentGroupTypeId}"><display-entity entity-name="SegmentGroupType" description="${description}"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="productStoreId" title="${uiLabelMap.SegmentGroupProductStoreId}"><display/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteSegmentGroup?segmentGroupId=${segmentGroupId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
@@ -96,7 +96,7 @@
         </actions>
         <field name="segmentGroupId"><hidden/></field>
         <field name="partyClassificationGroupId" title="${uiLabelMap.SegmentGroupPartyClassificationGroupId}"><display/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteSegmentGroupClassification?segmentGroupId=${segmentGroupId}&amp;partyClassificationGroupId=${partyClassificationGroupId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -122,7 +122,7 @@
         </actions>
         <field name="segmentGroupId"><hidden/></field>
         <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><display-entity entity-name="Geo" description="${geoName} [Code:${geoCode}][ID:${geoId}]"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteSegmentGroupGeo?segmentGroupId=${segmentGroupId}&amp;geoId=${geoId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -162,7 +162,7 @@
             </display-entity>
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}"><display-entity entity-name="RoleType"/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteSegmentGroupRole?segmentGroupId=${segmentGroupId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
