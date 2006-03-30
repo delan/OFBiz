@@ -141,6 +141,24 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             routingTaskData.put("partyId", userLogin.getString("partyId"));
             context.put("editPrRoutingTaskWrapper",editPrRoutingTaskWrapper);
             context.put("routingTaskId",routingTaskId);
+            // Get the list of deliverable products, i.e. the WorkEffortGoodStandard entries
+            // with workEffortGoodStdTypeId = "PRUNT_PROD_DELIV":
+            // first of all we get the template task (the routing task)
+            GenericValue templateTask = EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", routingTask.getString("workEffortId"), "workEffortAssocTypeId", "WORK_EFF_TEMPLATE"))));
+            List delivProducts = null;
+            if (templateTask != null) {
+                delivProducts = EntityUtil.filterByDate(templateTask.getRelatedByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortGoodStdTypeId", "PRUNT_PROD_DELIV")));
+            }
+            HtmlFormWrapper createRoutingTaskDelivProductForm = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "CreateRoutingTaskDelivProduct", request, response);
+            createRoutingTaskDelivProductForm.putInContext("formData", UtilMisc.toMap("productionRunId", productionRunId, "workEffortId", routingTaskId));
+            context.put("createRoutingTaskDelivProductForm", createRoutingTaskDelivProductForm);
+            context.put("delivProducts", delivProducts);
+            // Get the list of delivered products, i.e. inventory items
+            List prunInventoryProduced = delegator.findByAnd("WorkEffortAndInventoryProduced", UtilMisc.toMap("workEffortId", routingTaskId));
+            context.put("prunInventoryProduced", prunInventoryProduced);
+            HtmlFormWrapper prunInventoryProducedForm = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "ProductionRunTaskInventoryProducedList", request, response);
+            prunInventoryProducedForm.putInContext("prunInventoryProduced", prunInventoryProduced);
+            context.put("prunInventoryProducedForm", prunInventoryProducedForm);
         }
 
         //  RoutingTasks list
