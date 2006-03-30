@@ -150,6 +150,26 @@
         <attribute name="createLotIfNeeded" type="Boolean" mode="IN" optional="true"/>
         <attribute name="autoCreateLot" type="Boolean" mode="IN" optional="true"/>
     </service>
+    <service name="productionRunTaskProduce" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="productionRunTaskProduce" auth="true">
+        <description>
+            Create Inventory from a Production Run Task.
+        </description>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="createSerializedInventory" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    <service name="productionRunTaskReturnMaterial" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="productionRunTaskReturnMaterial" auth="true">
+        <description>
+            Create Inventory from a Production Run Task, by returning to warehouse part of the materials allocated.
+        </description>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="createSerializedInventory" type="Boolean" mode="IN" optional="true"/>
+    </service>
     <service name="updateProductionRunTask" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="updateProductionRunTask" auth="true">
         <description>
@@ -198,11 +218,10 @@
     <service name="createProductionRunsForOrder" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="createProductionRunsForOrder" auth="true">
         <description>Explodes a product id and creates all the needed production runs; if an order id is also provided, it links the production runs to the sales order.</description>
-        <attribute mode="IN" name="productId" optional="false" type="String"/>
+        <attribute mode="IN" name="orderId" optional="false" type="String"/>
+        <attribute mode="IN" name="orderItemSeqId" optional="true" type="String"/>
         <attribute mode="IN" name="quantity" optional="true" type="Double"/>
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
-        <attribute mode="IN" name="orderId" optional="true" type="String"/>
-        <attribute mode="IN" name="orderItemSeqId" optional="true" type="String"/>
         <attribute mode="IN" name="shipmentId" optional="true" type="String"/>
         <attribute mode="OUT" name="productionRuns" type="java.util.List"/>
     </service>

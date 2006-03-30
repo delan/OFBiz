@@ -18,6 +18,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
+import org.ofbiz.product.store.ProductStoreWorker;
 
     /** It represents an (in-memory) bill of materials (in which each
      * component is an BOMNode)
@@ -316,7 +317,14 @@ public class BOMTree {
             String facilityId = null;
             if (orderId != null) {
                 GenericValue order = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-                facilityId = order.getString("originFacilityId");
+                String productStoreId = order.getString("productStoreId");
+                if (productStoreId != null) {
+                    GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+                    if (productStore != null) {
+                        facilityId = productStore.getString("inventoryFacilityId");
+                    }
+                }
+
             }
             if (facilityId == null && shipmentId != null) {
                 GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
