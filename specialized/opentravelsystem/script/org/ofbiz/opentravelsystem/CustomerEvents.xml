@@ -312,12 +312,19 @@
         <set field="createdUserLogin" from-field="userLogin"/>
         
 
-        <!-- party relationship -->
+        <!-- party relationship (cannot use service) -->
         <set field="rel.partyIdTo" from-field="tempMap.partyId"/>
         <set field="rel.partyIdFrom" from-field="parameters.emailProductStoreId"/>
         <set field="rel.partyRelationshipTypeId" value="CUSTOMER_REL"/>
         <set field="rel.statusId" value="PARTYREL-ACTIVE"/>
-        <call-service service-name="createPartyRelationship" in-map-name="rel"/>
+        <set field="rel.roleTypeIdFrom" value="_NA_"/>
+        <set field="rel.roleTypeIdTo" value="_NA_"/>
+        <now-timestamp-to-env env-name="rel.fromDate"/>
+        <log level="always" message="=============${rel}"></log>
+        <make-value value-name="partyRelationship" entity-name="PartyRelationship"/>
+        <set-pk-fields value-name="partyRelationship" map-name="rel"/>
+        <set-nonpk-fields value-name="partyRelationship" map-name="rel"/>
+        <create-value value-name="partyRelationship"/>
         
         <!-- END OF ADDITIONAL LINES -->
 

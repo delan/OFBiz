@@ -69,7 +69,7 @@
             </service>
         </actions>
         <alt-target use-when="party==null||partyId==null" target="addParty"/>
-        <auto-fields-service service-name="otsAddParty"/>
+        <auto-fields-service service-name="otsAddParty" map-name="info" default-field-type="edit"/>
         <field name="partyId"><hidden value="${parameters.partyId}"/></field>
         <field name="partyRelationshipTypeId" title="Party Type">
             <drop-down allow-empty="false">
