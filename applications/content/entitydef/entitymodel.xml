@@ -69,7 +69,7 @@
         <key-map field-name="communicationEventId"/>
       </relation>
       <relation type="one" fk-name="COMMEV_CA_TYP" rel-entity-name="CommContentAssocType">
-        <key-map field-name="contentAssocTypeId"/>
+        <key-map field-name="commContentAssocTypeId"/>
       </relation>
     </entity>
     
