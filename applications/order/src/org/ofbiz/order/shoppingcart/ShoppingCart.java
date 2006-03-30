@@ -177,6 +177,7 @@ public class ShoppingCart implements Serializable {
             
             // use the cart's default ship before and after dates here
             if ((shipBeforeDate == null) && (cart.getDefaultShipBeforeDate() != null)) {
+            	Debug.logInfo("using cart default ship before date = " + cart.getDefaultShipBeforeDate(), module);
                 shipGroup.set("shipByDate", cart.getDefaultShipBeforeDate());
             } else {
                 shipGroup.set("shipByDate", shipBeforeDate);
@@ -286,8 +287,8 @@ public class ShoppingCart implements Serializable {
          * @param newShipBeforeDate
          */
         public void resetShipBeforeDateIfAfter(Timestamp newShipBeforeDate) {
-            if (newShipBeforeDate != null) {
-                if ((this.shipBeforeDate == null) || (this.shipBeforeDate.before(newShipBeforeDate))) {
+        	if (newShipBeforeDate != null) {
+                if ((this.shipBeforeDate == null) || (!this.shipBeforeDate.before(newShipBeforeDate))) {
                     this.shipBeforeDate = newShipBeforeDate;
                 }
             }
@@ -299,7 +300,7 @@ public class ShoppingCart implements Serializable {
          */
         public void resetShipAfterDateIfBefore(Timestamp newShipAfterDate) {
             if (newShipAfterDate != null) {
-                if ((this.shipAfterDate == null) || (this.shipAfterDate.after(newShipAfterDate))) {
+                if ((this.shipAfterDate == null) || (!this.shipAfterDate.after(newShipAfterDate))) {
                     this.shipAfterDate = newShipAfterDate;
                 }
             }
