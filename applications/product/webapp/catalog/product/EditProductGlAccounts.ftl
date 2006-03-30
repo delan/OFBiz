@@ -28,21 +28,26 @@
 <#if productId?exists && product?exists>
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>
-        <td><div class="tabletext"><b>${uiLabelMap.ProductAccountType}</b></div></td>
-        <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductGlAccount}</b></div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductAccountType}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.Organization}</div></td>
+        <td align="center"><div class="tableheadtext">${uiLabelMap.ProductGlAccount}</div></td>
         <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
     <#assign line = 0>
     <#list productGlAccounts as productGlAccount>
     <#assign line = line + 1>
-    <#assign productGlAccountType = productGlAccount.getRelatedOneCache("ProductGlAccountType")>
+    <#assign productGlAccountType = productGlAccount.getRelatedOneCache("GlAccountType")>
     <#assign curGlAccount = productGlAccount.getRelatedOneCache("GlAccount")>
     <tr valign="middle">
         <td><div class="tabletext"><#if productGlAccountType?exists>${(productGlAccountType.description)?if_exists}<#else>[${(productGlAccount.productGlAccountTypeId)?if_exists}]</#if></div></td>
+        <td><div class="tabletext">
+           ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, productGlAccount.getString("organizationPartyId"), true)} [${productGlAccount.organizationPartyId}]
+        </div></td>
         <td align="center">
             <form method="post" action="<@ofbizUrl>updateProductGlAccount</@ofbizUrl>" name="lineForm${line}">
                 <input type="hidden" name="productId" value="${(productGlAccount.productId)?if_exists}"/>
-                <input type="hidden" name="productGlAccountTypeId" value="${(productGlAccount.productGlAccountTypeId)?if_exists}"/>
+                <input type="hidden" name="glAccountTypeId" value="${(productGlAccount.glAccountTypeId)?if_exists}"/>
+                <input type="hidden" name="organizationPartyId" value="${productGlAccount.organizationPartyId?if_exists}"/>
                 <select class="selectBox" name="glAccountId">
                     <#if curGlAccount?exists>
                         <option value="${(curGlAccount.glAccountId)?if_exists}">${(curGlAccount.accountCode)?if_exists} ${(curGlAccount.accountName)?if_exists}</option>
@@ -56,7 +61,7 @@
             </form>
         </td>
         <td align="center">
-        <a href="<@ofbizUrl>deleteProductGlAccount?productId=${(productGlAccount.productId)?if_exists}&productGlAccountTypeId=${(productGlAccount.productGlAccountTypeId)?if_exists}</@ofbizUrl>" class="buttontext">
+        <a href="<@ofbizUrl>deleteProductGlAccount?productId=${(productGlAccount.productId)?if_exists}&glAccountTypeId=${(productGlAccount.glAccountTypeId)?if_exists}&organizationPartyId=${productGlAccount.organizationPartyId?if_exists}</@ofbizUrl>" class="buttontext">
         [${uiLabelMap.CommonDelete}]</a>
         </td>
     </tr>
@@ -70,16 +75,22 @@
         <div class="head2">${uiLabelMap.ProductAddGlAccount} :</div>
         <div class="tabletext">
             ${uiLabelMap.ProductAccountType} :
-            <select name="productGlAccountTypeId" class="selectBox">
+            <select name="glAccountTypeId" class="selectBox">
                 <#list productGlAccountTypes as productGlAccountType>
-                    <option value="${(productGlAccountType.productGlAccountTypeId)?if_exists}">${(productGlAccountType.description)?if_exists}</option>
+                    <option value="${(productGlAccountType.glAccountTypeId)?if_exists}">${(productGlAccountType.description)?if_exists}</option>
                 </#list>
-            </select>
+            </select><br/>
             ${uiLabelMap.ProductGlAccount} : 
             <select name="glAccountId" class="inputBox">
                 <#list glAccounts as glAccount>
                     <option value="${(glAccount.glAccountId)?if_exists}">${(glAccount.accountCode)?if_exists} ${(glAccount.accountName)?if_exists}</option>
                 </#list>
+            </select><br/>
+            ${uiLabelMap.Organization} :
+            <select class="selectBox" name="organizationPartyId">
+                 <#list organizations as organization>
+                     <option value="${organization.partyId?if_exists}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, organization.getString("partyId"), true)} [${organization.partyId}]</option>
+                 </#list>
             </select>
             <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;"/>
         </div>        
