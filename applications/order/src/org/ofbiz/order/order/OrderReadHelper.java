@@ -512,7 +512,9 @@ public class OrderReadHelper {
                     if (orderStatusIter.hasNext()) {
                         orderStatusString.append("/");
                     } else {
-                        orderStatusString.append(")");
+                        if (!isCurrent) {
+                            orderStatusString.append(")");
+                        }
                     }
                 }
             }
