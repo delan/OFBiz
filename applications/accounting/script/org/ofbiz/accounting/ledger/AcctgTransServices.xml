@@ -21,9 +21,6 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- ========= AcctgTrans methods ========= -->
     <simple-method method-name="createAcctgTrans" short-description="Create an AcctgTrans">
-        <!--check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createAcctgTrans you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/-->
-
         <make-value entity-name="AcctgTrans" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set field="newEntity.isPosted" value="N"/>
@@ -38,9 +35,6 @@ under the License.
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateAcctgTrans" short-description="Update an AcctgTrans">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateAcctgTrans you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-
         <entity-one entity-name="AcctgTrans" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         
@@ -49,9 +43,6 @@ under the License.
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteAcctgTrans" short-description="Delete an AcctgTrans">
-        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteAcctgTrans you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-
         <entity-one entity-name="AcctgTrans" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
@@ -64,9 +55,6 @@ under the License.
     
     <!-- ========= AcctgTransEntry methods ========= -->
     <simple-method method-name="createAcctgTransEntry" short-description="Add Entry To AcctgTrans">
-        <!--check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createAcctgTransEntry you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/-->
-
         <make-value entity-name="AcctgTransEntry" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
@@ -89,9 +77,6 @@ under the License.
 		<!-- call-simple-method method-name="updateAcctgTransLastModified"/ -->
     </simple-method>
     <simple-method method-name="updateAcctgTransEntry" short-description="Update Entry To AcctgTrans">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateAcctgTransEntry you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-
         <entity-one entity-name="AcctgTransEntry" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
@@ -100,9 +85,6 @@ under the License.
 		<call-simple-method method-name="updateAcctgTransLastModified"/>
     </simple-method>
     <simple-method method-name="deleteAcctgTransEntry" short-description="Remove Entry From AcctgTrans">
-        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteAcctgTransEntry you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-
         <entity-one entity-name="AcctgTransEntry" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
 
@@ -163,8 +145,6 @@ under the License.
         <field-to-result field-name="debitCreditDifference"/>
     </simple-method>
     <simple-method method-name="postAcctgTrans" short-description="Post a AcctgTrans">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run postAcctgTrans you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
         <!-- check trial balance -->
         <set from-field="parameters.acctgTransId" field="trialBalanceCallMap.acctgTransId"/>
         <call-service service-name="calculateAcctgTransTrialBalance" in-map-name="trialBalanceCallMap">

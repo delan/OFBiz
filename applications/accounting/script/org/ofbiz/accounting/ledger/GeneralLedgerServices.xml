@@ -303,10 +303,6 @@
 
     <!-- ========== GL Posting Services ========== -->
     <simple-method method-name="createAcctgTransAndEntries" short-description="Verifies and posts a set of AcctgTransEntries">
-        <!-- TODO: move permission checking to service definition.  For some reason it didn't work -->
-        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to post accounting transaction entries you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-
         <!-- first loop through and make sure all the entries are valid  -->
         <iterate list-name="parameters.acctgTransEntries" entry-name="acctgTransEntry">
             <!-- the organization party must be an internal organization -->
