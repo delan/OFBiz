@@ -325,20 +325,6 @@ public class ProductionRunServices {
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problem calling the createWorkEffortAssoc service", module);
                 }
-                // Clone the list of deliverable products, i.e. the WorkEffortGoodStandard entries
-                // with workEffortGoodStdTypeId = "PRUNT_PROD_DELIV"
-                try {
-                    List delivProducts = EntityUtil.filterByDate(routingTask.getRelatedByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortGoodStdTypeId", "PRUNT_PROD_DELIV")));
-                    if (delivProducts != null) {
-                        for (int i = 0; i < delivProducts.size(); i++) {
-                            GenericValue delivProduct = (GenericValue)delivProducts.get(i);
-                            delivProduct.set("workEffortId", productionRunTaskId);
-                        }
-                        delegator.storeAll(delivProducts);
-                    }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e.getMessage(),  module);
-                }
                 // Now we iterate thru the components returned by the getManufacturingComponents service
                 // TODO: if in the BOM a routingWorkEffortId is specified, but the task is not in the routing
                 //       the component is not added to the production run.
