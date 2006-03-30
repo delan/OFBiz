@@ -334,7 +334,7 @@
     <simple-method method-name="setPartyProfileDefaults" short-description="Sets Party Profile Defaults">
         <!-- check make sure we have permission to set this -->
         <if-empty map-name="parameters" field-name="partyId">
-            <set from-field="userLogin.partyId" field="parameters.userLogin"/>
+            <set from-field="userLogin.partyId" field="parameters.partyId"/>
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_UPDATE">
