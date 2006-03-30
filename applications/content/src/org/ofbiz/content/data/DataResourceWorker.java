@@ -1082,11 +1082,11 @@ public class DataResourceWorker {
 	            GenericValue electronicText = delegator.findByPrimaryKeyCache("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
 	            if (electronicText != null) {
 	            	String text = electronicText.getString("textData");
-		            os.write(text.getBytes());
+	            	if (text != null) os.write(text.getBytes());
 	            }
 	        } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
 	        	byte[] imageBytes = acquireImage(delegator, dataResource);
-	        	os.write(imageBytes);
+	        	if (imageBytes != null) os.write(imageBytes);
 	        } else if (dataResourceTypeId.equals("LINK")) {
 	        	String text = dataResource.getString("objectInfo");
 	            os.write(text.getBytes());
