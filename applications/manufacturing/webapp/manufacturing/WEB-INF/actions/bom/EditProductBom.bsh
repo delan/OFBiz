@@ -39,7 +39,7 @@ delegator = request.getAttribute("delegator");
 nowDate = UtilDateTime.nowDate();
 context.put("nowDate", nowDate);
 
-String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+String nowTimestampString = UtilHttp.encodeBlanks(UtilDateTime.nowTimestamp().toString());
 context.put("nowTimestampString", nowTimestampString);
 
 boolean useValues = true;
