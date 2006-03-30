@@ -304,6 +304,16 @@
         <override name="city" optional="false"/>
         <override name="postalCode" optional="false"/>
     </service>
+    <!-- Party ContachMech reverse find -->
+    <service name="findPartyFromEmailAddress" engine="simple"
+            location="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="findPartyFromEmailAddress" auth="true">
+        <description>Create a Postal Address</description>
+        <attribute name="address" type="String" mode="IN" optional="false"/>
+        <attribute name="personal" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="OUT" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
+    </service>
     <service name="createPartyPostalAddress" engine="simple"
             location="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="createPartyPostalAddress" auth="true">
         <description>Create a Postal Address</description>

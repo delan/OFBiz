@@ -335,4 +335,33 @@
             <result-to-request result-name="contactMechId"/>
         </call-service>
     </simple-method>
+	
+    <simple-method method-name="findPartyFromEmailAddress" short-description="Find partyId from email address">
+		<entity-and entity-name="ContactMech" list-name="contactMechs">
+			<field-map field-name="infoString" env-name="parameters.address"/>
+		</entity-and>
+		<if-empty field-name="parameters.fromDate">
+				<now-timestamp-to-env env-name="nowTimestamp"/>
+				<set field="fromDate" from-field="nowTimestamp"/>
+			<else>
+				<set field="fromDate" from-field="parameters.fromDate"/>
+			</else>
+		</if-empty>
+		<iterate list-name="contactMechs" entry-name="contactMech">
+			<entity-condition entity-name="PartyContactMech" list-name="partyContactMechs" >
+				<condition-list>
+					<condition-expr field-name="contactMechId" env-name="contactMech.contactMechId"/>
+					<condition-expr field-name="fromDate"  operator="less-equals" env-name="fromDate"/>
+					<condition-list combine="or">
+						<condition-expr field-name="thruDate"  operator="equals" />
+						<condition-expr field-name="thruDate"  operator="greater" env-name="fromDate"/>
+					</condition-list>
+				</condition-list>
+			</entity-condition>
+			<if-not-empty field-name="partyContactMechs">
+				<field-to-result field-name="partyContactMechs[0].partyId" result-name="partyId"/>
+				<field-to-result field-name="partyContactMechs[0].contactMechId" result-name="contactMechId"/>
+			</if-not-empty>
+		</iterate>
+    </simple-method>
 </simple-methods>
