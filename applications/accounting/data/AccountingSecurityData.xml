@@ -51,7 +51,6 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_PRINT_CHECKS"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_PRINT_CHECKS"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCOUNTING_PRINT_CHECKS"/>
-
     
     <!-- Set up accounting organization preferences security -->
     <SecurityPermission description="Set organization accounting preferences" permissionId="ACCTG_PREF_CREATE"/>
@@ -61,4 +60,23 @@
     <SecurityPermission description="Set foreign exchange rates" permissionId="ACCTG_FX_ENTRY"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCTG_FX_ENTRY"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCTG_PREF_CREATE"/>
+
+    <!-- For general ledger cccounting transactions.  Note that anyone who is authorized for proesses that create accounting transaction entries,
+    	such as quick shipping an order, approving an invoice, a return, or authorizing shipments, should have the _CREATE and _POST privileges, but
+    	_UPDATE and _DELETE should be given to accountants only, as that involves changing the books. -->
+    <SecurityPermission description="Create general ledger accounting transaction and entries." permissionId="ACCOUNTING_ATX_CREATE"/>
+    <SecurityPermission description="Update general ledger accounting transaction and entries." permissionId="ACCOUNTING_ATX_UPDATE"/>
+    <SecurityPermission description="Delete general ledger accounting transaction and entries." permissionId="ACCOUNTING_ATX_DELETE"/>
+    <SecurityPermission description="Post general ledger accounting transactions." permissionId="ACCOUNTING_ATX_POST"/>
+
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCOUNTING_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_ATX_UPDATE"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCOUNTING_ATX_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_ATX_DELETE"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCOUNTING_ATX_DELETE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_ATX_POST"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCOUNTING_ATX_POST"/>
+    
+    
 </entity-engine-xml>
