@@ -70,15 +70,14 @@ public class EmailWorker {
         			commEventMap.put("drDataResourceTypeId", "ELECTRONIC_TEXT");
         			commEventMap.put("textData", content);
         		} else {
-    				//part.writeTo(baos);
+    				
         			InputStream is = part.getInputStream();
         			int c;
         			while ((c = is.read()) > -1) {
         				baos.write(c);
         			}
         			
-    				ByteWrapper imageData = null;
-    				imageData = new ByteWrapper(baos.toByteArray());
+    				ByteWrapper imageData = new ByteWrapper(baos.toByteArray());
     				int len = imageData.getLength();
     				if (Debug.infoOn()) Debug.logInfo("imageData length: " + len, module);
     				commEventMap.put("imageData", imageData);
