@@ -55,20 +55,31 @@
             title="CommunicationEvent Content Association Entity">
       <field name="contentId" type="id-ne"></field>
       <field name="communicationEventId" type="id-ne"></field>
+      <field name="commContentAssocTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="sequenceNum" type="numeric"></field>
       <prim-key field="contentId"/>
       <prim-key field="communicationEventId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="COMMEV_CONTENTASSC_FROM" title="From" rel-entity-name="Content">
+      <relation type="one" fk-name="COMMEV_CA_FROM" title="From" rel-entity-name="Content">
         <key-map field-name="contentId"/>
       </relation>
-      <relation type="one" fk-name="COMMEV_CONTENTASSC_COMMEV"  rel-entity-name="CommunicationEvent">
+      <relation type="one" fk-name="COMMEV_CA_COMMEV"  rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventId"/>
+      </relation>
+      <relation type="one" fk-name="COMMEV_CA_TYP" rel-entity-name="CommContentAssocType">
+        <key-map field-name="contentAssocTypeId"/>
       </relation>
     </entity>
     
+    <entity entity-name="CommContentAssocType"
+            package-name="org.ofbiz.content.commevent"
+            title="CommunicationEvent Content Association Type Entity">
+      <field name="commContentAssocTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="commContentAssocTypeId"/>
+    </entity>
 
 
   <!-- ========================================================= -->
