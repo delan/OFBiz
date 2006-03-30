@@ -177,7 +177,7 @@
     <WorkEffortAssocType description="Dependency" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_DEPENDENCY"/>
     <WorkEffortAssocType description="Concurrency" hasTable="N" parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_CONCURRENCY"/>
     <WorkEffortAssocType description="Precedency" hasTable="N" parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_PRECEDENCY"/>
-
+    <WorkEffortAssocType description="Template of" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_TEMPLATE"/>
     <!-- For Routing definition, (workEffort Template) -->
     <WorkEffortAssocType description="Routing and Routing Task Association" hasTable="N" parentTypeId="" workEffortAssocTypeId="ROUTING_COMPONENT"/>
     

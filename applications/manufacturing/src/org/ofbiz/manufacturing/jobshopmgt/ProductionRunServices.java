@@ -314,6 +314,17 @@ public class ProductionRunServices {
                 }
                 String productionRunTaskId = (String) resultService.get("workEffortId");
                 if (Debug.infoOn()) Debug.logInfo("ProductionRunTaskId created: " + productionRunTaskId, module);
+                // The newly created production run task is associated to the routing task
+                // to keep track of the template used to generate it.
+                serviceContext.clear();
+                serviceContext.put("workEffortIdFrom", routingTask.getString("workEffortId"));
+                serviceContext.put("workEffortIdTo", productionRunTaskId);
+                serviceContext.put("workEffortAssocTypeId", "WORK_EFF_TEMPLATE");
+                try {
+                    resultService = dispatcher.runSync("createWorkEffortAssoc", serviceContext);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problem calling the createWorkEffortAssoc service", module);
+                }
                 // Clone the list of deliverable products, i.e. the WorkEffortGoodStandard entries
                 // with workEffortGoodStdTypeId = "PRUNT_PROD_DELIV"
                 try {
