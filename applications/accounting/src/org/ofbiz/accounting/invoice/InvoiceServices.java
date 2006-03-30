@@ -189,7 +189,10 @@ public class InvoiceServices {
             Timestamp invoiceDate = UtilDateTime.nowTimestamp();
             // TODO: perhaps consider billing account net days term as well?
             Long orderTermNetDays = orh.getOrderTermNetDays();
-            Timestamp dueDate = UtilDateTime.getDayEnd(invoiceDate, (orderTermNetDays!= null? orderTermNetDays.intValue(): 0));
+            Timestamp dueDate = null;
+            if (orderTermNetDays != null) {
+            	dueDate = UtilDateTime.getDayEnd(invoiceDate, orderTermNetDays.intValue());
+            }
             
             // create the invoice record
             Map createInvoiceContext = FastMap.newInstance();
