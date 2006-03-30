@@ -314,6 +314,20 @@ public class ProductionRunServices {
                 }
                 String productionRunTaskId = (String) resultService.get("workEffortId");
                 if (Debug.infoOn()) Debug.logInfo("ProductionRunTaskId created: " + productionRunTaskId, module);
+                // Clone the list of deliverable products, i.e. the WorkEffortGoodStandard entries
+                // with workEffortGoodStdTypeId = "PRUNT_PROD_DELIV"
+                try {
+                    List delivProducts = EntityUtil.filterByDate(routingTask.getRelatedByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortGoodStdTypeId", "PRUNT_PROD_DELIV")));
+                    if (delivProducts != null) {
+                        for (int i = 0; i < delivProducts.size(); i++) {
+                            GenericValue delivProduct = (GenericValue)delivProducts.get(i);
+                            delivProduct.set("workEffortId", productionRunTaskId);
+                        }
+                        delegator.storeAll(delivProducts);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e.getMessage(),  module);
+                }
                 // Now we iterate thru the components returned by the getManufacturingComponents service
                 // TODO: if in the BOM a routingWorkEffortId is specified, but the task is not in the routing
                 //       the component is not added to the production run.
@@ -1162,28 +1176,26 @@ public class ProductionRunServices {
             try {
                 int numOfItems = quantity.intValue();
                 for (int i = 0; i < numOfItems; i++) {
-                    String inventoryItemId = delegator.getNextSeqId("InventoryItem");
-                    Map inventoryItemFields = UtilMisc.toMap("inventoryItemId", inventoryItemId,
-                                                             "inventoryItemTypeId", "SERIALIZED_INV_ITEM",
-                                                             "statusId", "INV_AVAILABLE");
-                    inventoryItemFields.put("productId", productionRun.getProductProduced().getString("productId"));
-                    inventoryItemFields.put("facilityId", productionRun.getGenericValue().getString("facilityId"));
-                    inventoryItemFields.put("datetimeReceived", UtilDateTime.nowDate());
-                    inventoryItemFields.put("comments", "Created by production run " + productionRunId);
-                    inventoryItemFields.put("serialNumber", productionRunId + "-" + inventoryItemId);
-                    inventoryItemFields.put("lotId", lotId);
-                    GenericValue inventoryItem = delegator.makeValue("InventoryItem", inventoryItemFields);
+                    Map serviceContext = UtilMisc.toMap("productId", productionRun.getProductProduced().getString("productId"), 
+                                                        "inventoryItemTypeId", "SERIALIZED_INV_ITEM",
+                                                        "statusId", "INV_AVAILABLE");
+                    serviceContext.put("facilityId", productionRun.getGenericValue().getString("facilityId"));
+                    serviceContext.put("datetimeReceived", UtilDateTime.nowDate());
+                    serviceContext.put("comments", "Created by production run " + productionRunId);
+                    //serviceContext.put("serialNumber", productionRunId);
+                    serviceContext.put("lotId", lotId);
+                    serviceContext.put("userLogin", userLogin);
+                    Map resultService = dispatcher.runSync("createInventoryItem", serviceContext);
+                    String inventoryItemId = (String)resultService.get("inventoryItemId");
                     GenericValue inventoryProduced = delegator.makeValue("WorkEffortInventoryProduced", UtilMisc.toMap("workEffortId", productionRunId , "inventoryItemId", inventoryItemId));
-                    inventoryItem.create();
                     inventoryProduced.create();
-                    Map serviceContext = new HashMap();
                     serviceContext.clear();
                     serviceContext.put("inventoryItemId", inventoryItemId);
                     serviceContext.put("workEffortId", productionRunId);
                     serviceContext.put("availableToPromiseDiff", new Double(1));
                     serviceContext.put("quantityOnHandDiff", new Double(1));
                     serviceContext.put("userLogin", userLogin);
-                    Map resultService = resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+                    resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
                     // Recompute reservations
                     serviceContext = new HashMap();
                     serviceContext.put("inventoryItemId", inventoryItemId);
@@ -1195,26 +1207,24 @@ public class ProductionRunServices {
             }
         } else {
             try {
-                String inventoryItemId = delegator.getNextSeqId("InventoryItem");
-                Map inventoryItemFields = UtilMisc.toMap("inventoryItemId", inventoryItemId,
-                                                         "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
-                inventoryItemFields.put("productId", productionRun.getProductProduced().getString("productId"));
-                inventoryItemFields.put("facilityId", productionRun.getGenericValue().getString("facilityId"));
-                inventoryItemFields.put("datetimeReceived", UtilDateTime.nowTimestamp());
-                inventoryItemFields.put("comments", "Created by production run " + productionRunId);
-                inventoryItemFields.put("lotId", lotId);
-                GenericValue inventoryItem = delegator.makeValue("InventoryItem", inventoryItemFields);
+                Map serviceContext = UtilMisc.toMap("productId", productionRun.getProductProduced().getString("productId"),
+                                                    "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+                serviceContext.put("facilityId", productionRun.getGenericValue().getString("facilityId"));
+                serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
+                serviceContext.put("comments", "Created by production run " + productionRunId);
+                serviceContext.put("lotId", lotId);
+                serviceContext.put("userLogin", userLogin);
+                Map resultService = dispatcher.runSync("createInventoryItem", serviceContext);
+                String inventoryItemId = (String)resultService.get("inventoryItemId");
                 GenericValue inventoryProduced = delegator.makeValue("WorkEffortInventoryProduced", UtilMisc.toMap("workEffortId", productionRunId , "inventoryItemId", inventoryItemId));
-                inventoryItem.create();
                 inventoryProduced.create();
-                Map serviceContext = new HashMap();
                 serviceContext.clear();
                 serviceContext.put("inventoryItemId", inventoryItemId);
                 serviceContext.put("workEffortId", productionRunId);
                 serviceContext.put("availableToPromiseDiff", quantity);
                 serviceContext.put("quantityOnHandDiff", quantity);
                 serviceContext.put("userLogin", userLogin);
-                Map resultService = resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+                resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
                 // Recompute reservations
                 serviceContext = new HashMap();
                 serviceContext.put("inventoryItemId", inventoryItemId);
@@ -1246,6 +1256,164 @@ public class ProductionRunServices {
         }
         result.put("quantity", quantity);
         return result;
+    }
+
+    public static Map productionRunTaskProduce(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        Timestamp now = UtilDateTime.nowTimestamp();
+        List msgResult = new LinkedList();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        // Mandatory input fields
+        String productionRunTaskId = (String)context.get("workEffortId");
+        String productId = (String)context.get("productId");
+        Double quantity = (Double)context.get("quantity");
+        
+        // Optional input fields
+        Boolean createSerializedInventory = (Boolean)context.get("createSerializedInventory");
+        
+        // The default is non-serialized inventory item
+        if (createSerializedInventory == null) {
+            createSerializedInventory = new Boolean(false);
+        }
+        // TODO: if the task is not running, then return an error message.
+
+        // The production run is loaded
+        ProductionRun productionRun = new ProductionRun(productionRunTaskId, delegator, dispatcher);
+
+        if (createSerializedInventory.booleanValue()) {
+            try {
+                int numOfItems = quantity.intValue();
+                for (int i = 0; i < numOfItems; i++) {
+                    Map serviceContext = UtilMisc.toMap("productId", productId,
+                                                        "inventoryItemTypeId", "SERIALIZED_INV_ITEM",
+                                                        "statusId", "INV_AVAILABLE");
+                    serviceContext.put("facilityId", productionRun.getGenericValue().getString("facilityId"));
+                    serviceContext.put("datetimeReceived", UtilDateTime.nowDate());
+                    serviceContext.put("comments", "Created by production run task " + productionRunTaskId);
+                    //serviceContext.put("serialNumber", productionRunTaskId);
+                    serviceContext.put("userLogin", userLogin);
+                    Map resultService = dispatcher.runSync("createInventoryItem", serviceContext);
+                    String inventoryItemId = (String)resultService.get("inventoryItemId");
+                    GenericValue inventoryProduced = delegator.makeValue("WorkEffortInventoryProduced", UtilMisc.toMap("workEffortId", productionRunTaskId , "inventoryItemId", inventoryItemId));
+                    inventoryProduced.create();
+                    serviceContext.clear();
+                    serviceContext.put("inventoryItemId", inventoryItemId);
+                    serviceContext.put("workEffortId", productionRunTaskId);
+                    serviceContext.put("availableToPromiseDiff", new Double(1));
+                    serviceContext.put("quantityOnHandDiff", new Double(1));
+                    serviceContext.put("userLogin", userLogin);
+                    resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+                    // Recompute reservations
+                    serviceContext = new HashMap();
+                    serviceContext.put("inventoryItemId", inventoryItemId);
+                    serviceContext.put("userLogin", userLogin);
+                    resultService = dispatcher.runSync("balanceInventoryItems", serviceContext);
+                }
+            } catch(Exception exc) {
+                return ServiceUtil.returnError(exc.getMessage());
+            }
+        } else {
+            try {
+                Map serviceContext = UtilMisc.toMap("productId", productId,
+                                                    "inventoryItemTypeId", "NON_SERIAL_INV_ITEM");
+                serviceContext.put("facilityId", productionRun.getGenericValue().getString("facilityId"));
+                serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
+                serviceContext.put("comments", "Created by production run task " + productionRunTaskId);
+                serviceContext.put("userLogin", userLogin);
+                Map resultService = dispatcher.runSync("createInventoryItem", serviceContext);
+                String inventoryItemId = (String)resultService.get("inventoryItemId");
+                
+                GenericValue inventoryProduced = delegator.makeValue("WorkEffortInventoryProduced", UtilMisc.toMap("workEffortId", productionRunTaskId , "inventoryItemId", inventoryItemId));
+                inventoryProduced.create();
+                
+                serviceContext.clear();
+                serviceContext.put("inventoryItemId", inventoryItemId);
+                serviceContext.put("workEffortId", productionRunTaskId);
+                serviceContext.put("availableToPromiseDiff", quantity);
+                serviceContext.put("quantityOnHandDiff", quantity);
+                serviceContext.put("userLogin", userLogin);
+                resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+                // Recompute reservations
+                serviceContext = new HashMap();
+                serviceContext.put("inventoryItemId", inventoryItemId);
+                serviceContext.put("userLogin", userLogin);
+                resultService = dispatcher.runSync("balanceInventoryItems", serviceContext);
+            } catch(Exception exc) {
+                return ServiceUtil.returnError(exc.getMessage());
+            }
+        }
+        return result;
+    }
+
+    public static Map productionRunTaskReturnMaterial(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        Timestamp now = UtilDateTime.nowTimestamp();
+        List msgResult = new LinkedList();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        // Mandatory input fields
+        String productionRunTaskId = (String)context.get("workEffortId");
+        String productId = (String)context.get("productId");
+        // Optional input fields
+        Double quantity = (Double)context.get("quantity");
+        if (quantity == null || quantity.doubleValue() == 0) {
+            return ServiceUtil.returnSuccess();
+        }
+        // Verify how many items of the given productId
+        // are currently assigned to this task.
+        // If less than passed quantity then return an error message.
+        try {
+            Iterator issuances = (delegator.findByAnd("WorkEffortAndInventoryAssign", UtilMisc.toMap("workEffortId", productionRunTaskId, "productId", productId))).iterator();
+            double totalIssued = 0.0;
+            while (issuances.hasNext()) {
+                GenericValue issuance = (GenericValue)issuances.next();
+                Double issued = issuance.getDouble("quantity");
+                if (issued != null) {
+                    totalIssued += issued.doubleValue();
+                }
+            }
+            Iterator returns = (delegator.findByAnd("WorkEffortAndInventoryProduced", UtilMisc.toMap("workEffortId", productionRunTaskId, "productId", productId))).iterator();
+            double totalReturned = 0.0;
+            while (returns.hasNext()) {
+                GenericValue returned = (GenericValue)returns.next();
+                GenericValue returnDetail = EntityUtil.getFirst(delegator.findByAnd("InventoryItemDetail", UtilMisc.toMap("inventoryItemId", returned.getString("inventoryItemId")), UtilMisc.toList("inventoryItemDetailSeqId")));
+                if (returnDetail != null) {
+                    Double qtyReturned = returnDetail.getDouble("quantityOnHandDiff");
+                    if (qtyReturned != null) {
+                        totalReturned += qtyReturned.doubleValue();
+                    }
+                }
+            }
+            if (quantity.doubleValue() > totalIssued - totalReturned) {
+                return ServiceUtil.returnError("Production Run Task with id [" + productionRunTaskId + "] cannot return more items [" + quantity + "] than the ones currently allocated [" + (totalIssued - totalReturned) + "]");
+            }
+        } catch(GenericEntityException gee) {
+            return ServiceUtil.returnError(gee.getMessage());
+        }
+        Boolean createSerializedInventory = (Boolean)context.get("createSerializedInventory");
+        // The default is non-serialized inventory item
+        if (createSerializedInventory == null) {
+            createSerializedInventory = new Boolean(false);
+        }
+        // TODO: if the task is not running, then return an error message.
+
+        try {
+            Map inventoryResult = dispatcher.runSync("productionRunTaskProduce", UtilMisc.toMap("workEffortId", productionRunTaskId,
+                                                                                                "productId", productId,
+                                                                                                "quantity", quantity,
+                                                                                                "createSerializedInventory", createSerializedInventory,
+                                                                                                "userLogin", userLogin));
+            if (ServiceUtil.isError(inventoryResult)) {
+                return ServiceUtil.returnError("Error calling productionRunTaskProduce: " + ServiceUtil.getErrorMessage(inventoryResult));
+            }
+        } catch(GenericServiceException exc) {
+            return ServiceUtil.returnError(exc.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
     }
     
     public static Map updateProductionRunTask(DispatchContext ctx, Map context) {
@@ -1573,17 +1741,16 @@ public class ProductionRunServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String productId = (String) context.get("productId");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+
+        String orderId = (String) context.get("orderId");
+
+        String shipmentId = (String) context.get("shipmentId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
         Double quantity = (Double) context.get("quantity");
         String fromDateStr = (String) context.get("fromDate");
-        String orderId = (String) context.get("orderId");
-        String orderItemSeqId = (String) context.get("orderItemSeqId");
-        String shipmentId = (String) context.get("shipmentId");
-        GenericValue userLogin = (GenericValue)context.get("userLogin");
         
-        if (quantity == null) {
-            quantity = new Double(1);
-        }
+        Double amount = null;
         Date fromDate = null;
         if (UtilValidate.isNotEmpty(fromDateStr)) {
             try {
@@ -1594,35 +1761,69 @@ public class ProductionRunServices {
         if (fromDate == null) {
             fromDate = new Date();
         }
-        
-        BOMTree tree = null;
-        ArrayList components = new ArrayList();
-        ArrayList productionRuns = new ArrayList();
 
-        Double amount = null;
-        if (orderId != null && orderItemSeqId != null) {
+        List orderItems = null;
+        
+        if (orderItemSeqId != null) {
             try {
                 GenericValue orderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
-                if (orderItem != null && orderItem.get("selectedAmount") != null) {
-                    amount = orderItem.getDouble("selectedAmount");
+                if (orderItem == null) {
+                    return ServiceUtil.returnError("OrderItem [" + orderItemSeqId + "] not found.");
                 }
+                if (quantity != null) {
+                    orderItem.set("quantity", quantity);
+                }
+                orderItems = UtilMisc.toList(orderItem);
             } catch(GenericEntityException gee) {
                 return ServiceUtil.returnError("Error reading the OrderItem: " + gee.getMessage());
             }
+        } else {
+            try {
+                orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+                if (orderItems == null) {
+                    return ServiceUtil.returnError("OrderItems for order [" + orderId + "] not found.");
+                }
+            } catch(GenericEntityException gee) {
+                return ServiceUtil.returnError("Error reading the OrderItems: " + gee.getMessage());
+            }
         }
-        if (amount == null) {
-            amount = new Double(0);
+        for (int i = 0; i < orderItems.size(); i++) {
+            GenericValue orderItem = (GenericValue)orderItems.get(i);
+            if (orderItem.get("productId") == null) {
+                continue;
+            }
+            if (orderItem.get("quantity") != null) {
+                quantity = orderItem.getDouble("quantity");
+            } else {
+                continue;
+            }
+            try {
+                List existingProductionRuns = delegator.findByAndCache("WorkOrderItemFulfillment", UtilMisc.toMap("orderId", orderItem.getString("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
+                if (existingProductionRuns != null && existingProductionRuns.size() > 0) {
+                    Debug.logWarning("Production Run for order item [" + orderItem.getString("orderId") + "/" + orderItem.getString("orderItemSeqId") + "] already exists.", module);
+                    continue;
+                }
+            } catch(GenericEntityException gee) {
+                return ServiceUtil.returnError("Error reading the WorkOrderItemFulfillment: " + gee.getMessage());
+            }
+            if (orderItem.get("selectedAmount") != null) {
+                amount = orderItem.getDouble("selectedAmount");
+            }
+            if (amount == null) {
+                amount = new Double(0);
+            }
+            try {
+                ArrayList components = new ArrayList();
+                BOMTree tree = new BOMTree(orderItem.getString("productId"), "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
+                tree.setRootQuantity(quantity.doubleValue());
+                tree.setRootAmount(amount.doubleValue());
+                tree.print(components);
+                tree.createManufacturingOrders(orderId, orderItem.getString("orderItemSeqId"), shipmentId, fromDate, userLogin);
+            } catch(GenericEntityException gee) {
+                return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
+            }
         }
-
-        try {
-            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
-            tree.setRootQuantity(quantity.doubleValue());
-            tree.setRootAmount(amount.doubleValue());
-            tree.print(components);
-            tree.createManufacturingOrders(orderId, orderItemSeqId, shipmentId, fromDate, userLogin);
-        } catch(GenericEntityException gee) {
-            return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
-        }
+        ArrayList productionRuns = new ArrayList();
         result.put("productionRuns" , productionRuns);
         return result;
     }
