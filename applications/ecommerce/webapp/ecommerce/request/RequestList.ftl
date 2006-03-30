@@ -86,8 +86,8 @@
                     <td width="10">&nbsp;</td>
                     <td>
                         <div class="tabletext"><nobr>${custRequest.custRequestDate?if_exists}</nobr></div>
-                        <div class="tabletext"><nobr>${custRequest.custRequestCreatedDate?if_exists}</nobr></div>
-                        <div class="tabletext"><nobr>${custRequest.custRequestLastModifiedDate?if_exists}</nobr></div>
+                        <div class="tabletext"><nobr>${custRequest.createdDate?if_exists}</nobr></div>
+                        <div class="tabletext"><nobr>${custRequest.lastModifiedDate?if_exists}</nobr></div>
                     </td>
                     <td width="10">&nbsp;</td>
                     <td align="right">
