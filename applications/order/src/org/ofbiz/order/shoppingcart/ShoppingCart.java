@@ -177,7 +177,6 @@ public class ShoppingCart implements Serializable {
             
             // use the cart's default ship before and after dates here
             if ((shipBeforeDate == null) && (cart.getDefaultShipBeforeDate() != null)) {
-            	Debug.logInfo("using cart default ship before date = " + cart.getDefaultShipBeforeDate(), module);
                 shipGroup.set("shipByDate", cart.getDefaultShipBeforeDate());
             } else {
                 shipGroup.set("shipByDate", shipBeforeDate);
