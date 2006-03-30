@@ -31,8 +31,7 @@
         <field name="workEffortTypeId"><hidden value="PROD_ORDER_HEADER"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingProductionRunId}"><text-find/></field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
-            <drop-down>
-                <option key="" description=""/>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
                     <entity-constraint name="statusTypeId" value="PRODUCTION_RUN"/>
                 </entity-options>
@@ -42,8 +41,7 @@
         <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><text-find/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><date-find/></field>
         <field name="facilityId" title="${uiLabelMap.ProductFacilityId}">
-            <drop-down>
-                <option key="" description=""/>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
                     <entity-constraint name="facilityTypeId" value="WAREHOUSE"/>
                 </entity-options>
@@ -62,7 +60,7 @@
                 <field-map field-name="entityName" value="WorkEffortAndGoods"/>
             </service>
         </actions>
-        <field name="workEffortId" title=" " widget-style="buttontext">
+        <field name="workEffortId" title="" widget-style="buttontext">
             <hyperlink target="ShowProductionRun?productionRunId=${workEffortId}" description="${workEffortId}" also-hidden="false"/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><display/></field>
@@ -110,10 +108,10 @@
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
         <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
-        <field name="editLink" title=" " widget-style="smallSubmit">
+        <field name="editLink" title="" widget-style="smallSubmit">
             <hyperlink target="EditProductionRun?actionForm=EditRoutingTask&amp;routingTaskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
         </field>
-        <field name="deleteLink" title=" " widget-style="smallSubmit">
+        <field name="deleteLink" title="" widget-style="smallSubmit">
             <!--<hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;fromDate=${fromDate}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>-->
             <hyperlink target="deleteProductionRunRoutingTask?workEffortId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -129,10 +127,10 @@
             <display description="${productName} [${productId}]"/>
         </field> 
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
-        <field name="editLink" title=" " widget-style="smallSubmit">
+        <field name="editLink" title="" widget-style="smallSubmit">
             <hyperlink target="EditProductionRun?actionForm=EditProductComponent&amp;workEffortId=${workEffortId}&amp;productId=${productId}&amp;productionRunId=${productionRunId}" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
         </field>
-        <field name="deleteLink" title=" " widget-style="smallSubmit">
+        <field name="deleteLink" title="" widget-style="smallSubmit">
             <!--<hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>-->
             <hyperlink target="deleteProductionRunComponent?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;productionRunId=${productionRunId}&amp;workEffortGoodStdTypeId=PRUNT_PROD_NEEDED" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
@@ -276,26 +274,27 @@
         <field name="actualSetupMillis" title="${uiLabelMap.ManufacturingTaskActualSetupMillis}" ><display/></field>
         <field name="actualMilliSeconds" title="${uiLabelMap.ManufacturingTaskActualMilliSeconds}" ><display/></field>
         <field name="quantityProduced" title="${uiLabelMap.ManufacturingQuantityProduced}" ><display/></field>
-        <field name="startLink" title=" " widget-style="smallSubmit" use-when="&quot;${startTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
+        <field name="startLink" title="" widget-style="smallSubmit" use-when="&quot;${startTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
             <hyperlink target="changeProductionRunTaskStatus?taskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.ManufacturingStartProductionRunTask}" also-hidden="false"/>
         </field>
-        <field name="issueLink" title=" " widget-style="smallSubmit" use-when="&quot;${issueTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
+        <field name="issueLink" title="" widget-style="smallSubmit" use-when="&quot;${issueTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
             <hyperlink target="issueProductionRunRoutingTask?workEffortId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.ManufacturingIssueProductionRunTask}" also-hidden="false"/>
         </field>
-        <field name="declareLink" title=" " widget-style="smallSubmit" use-when="&quot;PRUN_RUNNING&quot;.equals(&quot;${currentStatusId}&quot;)">
+        <field name="declareLink" title="" widget-style="smallSubmit" use-when="&quot;PRUN_RUNNING&quot;.equals(&quot;${currentStatusId}&quot;)">
             <hyperlink target="ProductionRunDeclaration?actionForm=EditRoutingTask&amp;routingTaskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.ManufacturingDeclareProductionRunTask}" also-hidden="false"/>
         </field>
-        <field name="completeLink" title=" " widget-style="smallSubmit" use-when="&quot;${completeTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
+        <field name="completeLink" title="" widget-style="smallSubmit" use-when="&quot;${completeTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
             <hyperlink target="changeProductionRunTaskStatus?taskId=${workEffortId}&amp;productionRunId=${workEffortParentId}" description="${uiLabelMap.ManufacturingCompleteProductionRunTask}" also-hidden="false"/>
         </field>
     </form>
-   <form name="ListProductionRunDeclComponents" type="list" 
-            target="ProductionRunDeclaration" title="" list-name="productionRunComponentsData"
+   <form name="ListProductionRunDeclComponents" type="multi" use-row-submit="true"
+            target="productionRunTaskReturnMaterials?productionRunId=${productionRunId}" title="" list-name="productionRunComponentsData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="actionForm"><hidden value="EditProductComponent"/></field>
+        <field name="productId"><hidden/></field>
         <field name="productionRunId"><hidden/></field>
-        <field name="productId" ><hidden/></field>
-        <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
+        <field name="workEffortId"><hidden/></field>
+        <field name="task" entry-name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
             <display description="${workEffortName} [${workEffortId}]"/>
         </field>
         <field name="internalName" title="${uiLabelMap.ProductProductName}">
@@ -303,6 +302,12 @@
         </field> 
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
         <field name="issuedQuantity" title="${uiLabelMap.ManufacturingIssuedQuantity}"><display/></field>
+        <field name="returnedQuantity" title="${uiLabelMap.ManufacturingReturnedQuantity}"><display/></field>
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><text/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
+        <!--<field name="quantity" use-when="&quot;PRUN_RUNNING&quot;.equals(&quot;${currentStatusId}&quot;)" title="${uiLabelMap.CommonQuantity}"><text/></field>
+        <field name="quantity2" use-when="&quot;PRUN_CREATED&quot;.equals(&quot;${currentStatusId}&quot;)" title="${uiLabelMap.CommonQuantity}"><display/></field>-->
     </form>
     
      <form name="EditProductionRunDeclRoutingTask" type="single" 
@@ -379,6 +384,31 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="CreateRoutingTaskDelivProduct" type="single" 
+            target="createProductionRunTaskProduct" title="" default-map-name="formData"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="productionRunId"><hidden/></field>
+        <field name="workEffortId"><hidden/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="selectBox" use-when="${bsh:delivProducts.size()>0}">
+            <drop-down allow-empty="false">
+                <list-options list-name="delivProducts" key-name="productId" description="${productId}"/>
+            </drop-down>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="${bsh:delivProducts.size()==0}"><lookup target-form-name="LookupProduct"/></field>
+        <field name="quantity" title="${uiLabelMap.ManufacturingAddQuantityProduced}">
+            <text/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ProductionRunTaskInventoryProducedList" type="list" 
+            title="" list-name="prunInventoryProduced"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="inventoryItemId" title="${uiLabelMap.FacilityInventoryItem}" widget-style="buttontext">
+            <hyperlink target="/facility/control/EditInventoryItem?inventoryItemId=${inventoryItemId}" description="${inventoryItemId}" also-hidden="false" target-type="inter-app"/>
+        </field>
+    </form>
     <!-- ******************* -->
     <!-- Shipment Plan Forms -->
     <!-- ******************* -->
@@ -412,7 +442,7 @@
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field name="estimatedShipDate"><display/></field>
-        <field name="viewShipmentPlanLink" title=" " widget-style="buttontext">
+        <field name="viewShipmentPlanLink" title="" widget-style="buttontext">
             <hyperlink target="WorkWithShipmentPlans?shipmentId=${shipmentId}" description="${uiLabelMap.CommonView}" also-hidden="false"/>
         </field>
     </form>
@@ -427,7 +457,7 @@
     <form name="mandatoryWorkEfforts" type="list" 
             target="" title="" list-name="mandatoryWorkEfforts"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <field name="workEffortIdFrom" title=" " widget-style="buttontext">
+        <field name="workEffortIdFrom" title="" widget-style="buttontext">
             <hyperlink target="ShowProductionRun?productionRunId=${workEffortIdFrom}" description="${workEffortIdFrom}" also-hidden="false"/>
         </field>
         <field name="workEffortName" entry-name="workEffortIdFrom">
@@ -455,7 +485,7 @@
     <form name="dependentWorkEfforts" type="list" 
             target="" title="" list-name="dependentWorkEfforts"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <field name="workEffortIdTo" title=" " widget-style="buttontext">
+        <field name="workEffortIdTo" title="" widget-style="buttontext">
             <hyperlink target="ShowProductionRun?productionRunId=${workEffortIdTo}" description="${workEffortIdTo}" also-hidden="false"/>
         </field>
         <field name="workEffortName" entry-name="workEffortIdTo">

@@ -39,7 +39,7 @@
     <td><div class="tableheadtext">${uiLabelMap.ManufacturingCalendarWeekId}</div></td>
     <td>&nbsp;</td>
   </tr>  
-  <tr><td colspan="4"><hr class="sepbar"></td></tr>    
+  <tr><td colspan="4"><hr class="sepbar"/></td></tr>    
   <#if techDataCalendars?has_content>
     <#list techDataCalendars as techDataCalendar>
       <tr>

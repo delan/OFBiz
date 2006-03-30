@@ -165,7 +165,7 @@
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
-        <field name="editRouting" title=" " widget-style="buttontext">
+        <field name="editRouting" title="" widget-style="buttontext">
             <hyperlink target="EditRouting?workEffortId=${workEffortIdFrom}" description="${uiLabelMap.ManufacturingEditRouting}" also-hidden="false"/>
         </field>
     </form>
@@ -185,7 +185,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ><display/></field>
         <field name="workEffortToSetup" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
         <field name="workEffortToRun" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="RemoveRoutingTaskAssoc?workEffortId=${workEffortIdFrom}&amp;workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;fromDate=${fromDate}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
         <sort-order>
@@ -243,11 +243,46 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
-        <field name="editLink" title=" " widget-style="buttontext">
+        <field name="editLink" title="" widget-style="buttontext">
             <hyperlink target="EditRoutingProductLink?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;workEffortGoodStdTypeId=ROU_PROD_TEMPLATE" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
         </field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+        <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="removeRoutingProductLink?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;workEffortGoodStdTypeId=ROU_PROD_TEMPLATE" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
+        </field>
+    </form>
+   <form name="ListRoutingTaskProducts" type="list" 
+            target="ListRoutingTaskProducts" title="" list-name="allProducts"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="productId" title="${uiLabelMap.ProductProductName}">
+            <display-entity entity-name="Product" description="[${productId}] ${internalName}"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="editLink" title="" widget-style="buttontext">
+            <hyperlink target="EditRoutingTaskProduct?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;workEffortGoodStdTypeId=PRUNT_PROD_DELIV" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
+        </field>
+        <field name="deleteLink" title="" widget-style="buttontext">
+            <hyperlink target="removeRoutingTaskProduct?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;workEffortGoodStdTypeId=PRUNT_PROD_DELIV" description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="EditRoutingTaskProduct" type="single" 
+            target="updateRoutingTaskProduct" title="" default-map-name="routingProductLink"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <alt-target use-when="routingProductLink==null" target="addRoutingTaskProduct"/>
+        <auto-fields-entity entity-name="WorkEffortGoodStandard" default-field-type="edit"/>
+        <field name="workEffortId"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+        <field name="estimatedQuantity"><hidden/></field>
+        <field name="estimatedCost"><hidden/></field>
+        <field name="workEffortGoodStdTypeId"><hidden value="PRUNT_PROD_DELIV"/></field>
+        <field name="productId" use-when="routingProductLink!=null" ><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="routingProductLink==null" >
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" use-when="routingProductLink!=null"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" >
+            <submit button-type="button"/>
         </field>
     </form>
 
