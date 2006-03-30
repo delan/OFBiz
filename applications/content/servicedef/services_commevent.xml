@@ -44,6 +44,7 @@
         <description>Create CommunicationEvent and Content</description>
 		<implements service="persistContentAndAssoc"/>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="OUT" optional="false"/>
     </service>
 
     <service name="updateCommContentDataResource" engine="simple"
@@ -51,6 +52,7 @@
         <description>Update CommunicationEvent and Content</description>
 		<implements service="persistContentAndAssoc"/>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
     </service>
 
     <service name="createCommEventContentAssoc" engine="simple"
@@ -58,8 +60,8 @@
         <description>Create CommEventContentAssoc</description>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="INOUT" optional="true"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
  		<attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
 	</service>
 	
@@ -68,8 +70,8 @@
         <description>Update CommEventContentAssoc</description>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
  		<attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
 	</service>
 	
@@ -78,10 +80,7 @@
         <description>Remove CommEventContentAssoc</description>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
     </service>
 
-    <service name="storeIncomingEmail" engine="java"
-                location="org.ofbiz.content.email" invoke="storeIncomingEmail" auth="true">
-    </service>
 </services>

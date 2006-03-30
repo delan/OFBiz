@@ -119,7 +119,7 @@
     <service name="storeIncomingEmail" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="storeIncomingEmail" auth="true">
         <description>Process incoming email. Try to determine partyIdFrom from email address.</description>
-        <implements service="mailProcessInterface"/>
+        <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="IN"/>
     </service>
     <service name="storeForwardedEmail" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="storeForwardedEmail" auth="true">
