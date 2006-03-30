@@ -158,7 +158,6 @@
     <entity-group group="org.ofbiz" entity="ProductContentAndInfo" />
     <entity-group group="org.ofbiz" entity="ProductContentType" />
     <entity-group group="org.ofbiz" entity="ProductGlAccount" />
-    <entity-group group="org.ofbiz" entity="ProductGlAccountType" />
     <entity-group group="org.ofbiz" entity="ProductInventoryItem" />
     <entity-group group="org.ofbiz" entity="ProductKeyword" />
     <entity-group group="org.ofbiz" entity="OldProductKeywordResult" />

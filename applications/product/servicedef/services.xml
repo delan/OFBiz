@@ -285,8 +285,6 @@
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductGlAccount" auth="true">
         <description>Delete a ProductGlAccount</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productGlAccountTypeId" type="String" mode="IN" optional="false"/>
     </service>
 
     <!-- Product Catalog Services -->

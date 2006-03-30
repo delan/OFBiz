@@ -472,13 +472,16 @@
 
                 <entity-condition entity-name="ProductGlAccount" list-name="productGlAccounts">
                     <condition-expr field-name="productId" env-name="productId"/>
-                    <order-by field-name="productGlAccountTypeId"/>
+                    <order-by field-name="glAccountTypeId"/>
                 </entity-condition>
-                <entity-condition entity-name="ProductGlAccountType" list-name="productGlAccountTypes" use-cache="true">
+                <entity-condition entity-name="GlAccountType" list-name="productGlAccountTypes" use-cache="true">
                     <order-by field-name="description"/>
                 </entity-condition>
                 <entity-condition entity-name="GlAccount" list-name="glAccounts" use-cache="true">
                     <order-by field-name="accountCode"/>
+                </entity-condition>
+                <entity-condition entity-name="PartyRole" list-name="organizations" use-cache="true">
+                	   <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
             </actions>
             <widgets>

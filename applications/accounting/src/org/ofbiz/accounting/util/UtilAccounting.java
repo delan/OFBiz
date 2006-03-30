@@ -48,13 +48,12 @@ public class UtilAccounting {
      * organizationPartyId with type glAccountTypeId.
      *
      * @param   productId                  When searching for ProductGlAccounts, specify the productId
-     * @param   productGlAccountTypeId     When searching for ProductGlAccounts, specify the productGlAccountTypeId
      * @param   glAccountTypeId            The default glAccountTypeId to look for if no ProductGlAccount is found
      * @param   organizationPartyId        The organization party of the default account
      * @return  The account ID (glAccountId) found
      * @throws  AccountingException        When the no accounts found or an entity exception occurs
      */
-    public static String getProductOrgGlAccountId(String productId, String productGlAccountTypeId, 
+    public static String getProductOrgGlAccountId(String productId, 
             String glAccountTypeId, String organizationPartyId, GenericDelegator delegator) 
         throws AccountingException {
 
@@ -62,9 +61,9 @@ public class UtilAccounting {
         try {
             // first try to find the account in ProductGlAccount
             account = delegator.findByPrimaryKeyCache("ProductGlAccount", 
-                    UtilMisc.toMap("productId", productId, "productGlAccountTypeId", productGlAccountTypeId));
+                    UtilMisc.toMap("productId", productId, "glAccountTypeId", glAccountTypeId, "organizationPartyId", organizationPartyId));
         } catch (GenericEntityException e) {
-            throw new AccountingException("Failed to find a ProductGLAccount for productId [" + productId + "] and productGlAccountTypeId [" + productGlAccountTypeId + "].", e);
+            throw new AccountingException("Failed to find a ProductGLAccount for productId [" + productId + "], organization [" + organizationPartyId + "], and productGlAccountTypeId [" + glAccountTypeId + "].", e);
         }
 
         // otherwise try the default accounts
@@ -78,7 +77,7 @@ public class UtilAccounting {
 
         // if no results yet, serious problem
         if (account == null) {
-            throw new AccountingException("Failed to find any accounts in ProductGlAccount for  productId [" + productId + "] and productGlAccountTypeId [" + productGlAccountTypeId + "] or any accounts in GlAccountTypeDefault for glAccountTypeId [" + glAccountTypeId + "] and organizationPartyId [" + organizationPartyId+ "]. Please check your data to make sure that at least a GlAccountTypeDefault is defined for this account type and organization.");
+            throw new AccountingException("Failed to find any accounts for  productId [" + productId + "], organization [" + organizationPartyId + "], and productGlAccountTypeId [" + glAccountTypeId + "] or any accounts in GlAccountTypeDefault for glAccountTypeId [" + glAccountTypeId + "] and organizationPartyId [" + organizationPartyId+ "]. Please check your data to make sure that at least a GlAccountTypeDefault is defined for this account type and organization.");
         }
 
         // otherwise return the glAccountId
@@ -94,7 +93,7 @@ public class UtilAccounting {
      * @throws  AccountingException     When the default is not configured
      */
     public static String getDefaultAccountId(String glAccountTypeId, String organizationPartyId, GenericDelegator delegator) throws AccountingException {
-        return getProductOrgGlAccountId(null, null, glAccountTypeId, organizationPartyId, delegator);
+        return getProductOrgGlAccountId(null, glAccountTypeId, organizationPartyId, delegator);
     }
 
     /**

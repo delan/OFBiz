@@ -389,7 +389,8 @@
                 <not>
                     <or>
                         <if-empty field-name="parameters.productId"/>
-                        <if-empty field-name="parameters.productGlAccountTypeId"/>
+                        <if-empty field-name="parameters.glAccountTypeId"/>
+                        <if-empty field-name="parameters.organizationPartyId"/>
                     </or>
                 </not>
             </condition>

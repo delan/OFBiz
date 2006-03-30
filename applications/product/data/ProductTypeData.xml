@@ -252,10 +252,6 @@
     <ProductFeature productFeatureId="EC_TANKER" description="Tanker" productFeatureCategoryId="1002" productFeatureTypeId="EQUIP_CLASS"/>
     <ProductFeature productFeatureId="EC_REEL_STAND" description="Reel Stand" productFeatureCategoryId="1002" productFeatureTypeId="EQUIP_CLASS"/>
     
-    <ProductGlAccountType description="Sales" productGlAccountTypeId="SALES"/>
-    <ProductGlAccountType description="Cost of Goods Sold" productGlAccountTypeId="COGS"/>
-    <ProductGlAccountType description="Inventory" productGlAccountTypeId="INVENTORY"/>
-
     <ProductMeterType description="Speedometer" productMeterTypeId="SPEEDOMETER"/>
     <ProductMeterType description="Tachometer" productMeterTypeId="TACHOMETER"/>
     <ProductMeterType description="Distance Meter" productMeterTypeId="DISTANCE"/>

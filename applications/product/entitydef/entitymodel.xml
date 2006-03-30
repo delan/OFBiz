@@ -2013,26 +2013,24 @@
             package-name="org.ofbiz.product.product"
             title="Product GlAccount Entity">
       <field name="productId" type="id-ne"></field>
-      <field name="productGlAccountTypeId" type="id-ne"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
+      <field name="glAccountTypeId" type="id-ne"></field>
       <field name="glAccountId" type="id-ne"></field>
       <prim-key field="productId"/>
-      <prim-key field="productGlAccountTypeId"/>
+      <prim-key field="organizationPartyId"/>
+      <prim-key field="glAccountTypeId"/>
       <relation type="one" fk-name="PROD_GLACT_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" fk-name="PROD_GLACT_TYPE" rel-entity-name="ProductGlAccountType">
-        <key-map field-name="productGlAccountTypeId"/>
+      <relation type="one" fk-name="PROD_GLACT_PARTY" rel-entity-name="Party">
+      	<key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_GLACT_TYPE" rel-entity-name="GlAccountType">
+        <key-map field-name="glAccountTypeId"/>
       </relation>
       <relation type="one" fk-name="PROD_GLACT_GLACT" rel-entity-name="GlAccount">
         <key-map field-name="glAccountId"/>
       </relation>
-    </entity>
-    <entity entity-name="ProductGlAccountType"
-            package-name="org.ofbiz.product.product"
-            title="Product GlAccount Type Entity">
-      <field name="productGlAccountTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="productGlAccountTypeId"/>
     </entity>
     <view-entity entity-name="ProductInventoryItem"
         package-name="org.ofbiz.product.product"
