@@ -360,7 +360,7 @@
             <hyperlink also-hidden="false" description="Edit" target="EditCommContent?contentId=${contentId}&amp;dataResourceId=${dataResourceId}&amp;communicationEventId=${communicationEventId}&amp;fromDate=${fromDate}"/> 
         </field>
         <field name="viewContent" title="">
-            <hyperlink also-hidden="false" description="View" target="ViewCommContent?contentId=${contentId}&amp;dataResourceId=${dataResourceId}&amp;communicationEventId=${communicationEventId}&amp;fromDate=${fromDate}"/> 
+            <hyperlink also-hidden="false" description="View" target="ViewSimpleContent?contentId=${contentId}&amp;dataResourceId=${dataResourceId}&amp;communicationEventId=${communicationEventId}&amp;fromDate=${fromDate}"/> 
         </field>
         <field name="contentName" title="Name" ><display/></field>
         <field name="contentId" title="Content Id" ><display/></field>
