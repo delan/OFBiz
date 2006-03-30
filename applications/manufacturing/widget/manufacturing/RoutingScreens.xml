@@ -220,6 +220,57 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ListRoutingTaskProducts">
+        <section>
+            <actions>
+                <set field="title" value="List Routing Task Products"/>
+                <set field="titleProperty" value="PageTitleListRoutingTaskProducts"/>
+                <set field="headerItem" value="routingTask"/>
+                <set field="tabButtonItem" value="listRoutingTaskProducts"/>
+                
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <entity-one entity-name="WorkEffort" value-name="routingTask"/>
+                <entity-and entity-name="WorkEffortGoodStandard" list-name="allProducts">
+                    <field-map field-name="workEffortGoodStdTypeId" value="PRUNT_PROD_DELIV"/>
+                    <field-map env-name="workEffortId" field-name="workEffortId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRoutingTaskDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="EditRoutingTaskProduct?workEffortId=${workEffortId}" text="${uiLabelMap.ManufacturingNewRoutingTaskProduct}" style="buttontext"/>
+                        </container>
+                        <include-form name="ListRoutingTaskProducts" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditRoutingTaskProduct">
+        <section>
+            <actions>
+                <set field="title" value="Edit a Routing Task Product"/>
+                <set field="titleProperty" value="PageTitleEditRoutingTaskProduct"/>
+                <set field="headerItem" value="routingTask"/>
+                <set field="tabButtonItem" value="listRoutingTaskProducts"/>
+                
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <entity-and entity-name="WorkEffortGoodStandard" list-name="allRoutingProductLinks">
+                    <field-map env-name="workEffortId" field-name="workEffortId"/>
+                    <field-map field-name="workEffortGoodStdTypeId" value="PRUNT_PROD_DELIV"/>
+                </entity-and>
+                <entity-one entity-name="WorkEffortGoodStandard" value-name="routingProductLink" auto-field-map="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRoutingTaskDecorator">
+                    <decorator-section name="body">
+                        <include-form name="EditRoutingTaskProduct" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     
     
