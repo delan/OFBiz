@@ -89,7 +89,7 @@
                       </div>
 
                       <#-- INVENTORY -->
-                      <#if (orderHeader.statusId != "ORDER_COMPLETED") && availableToPromiseMap.get(productId)?exists && quantityOnHandMap.get(productId)?exists>
+                      <#if (orderHeader.statusId != "ORDER_COMPLETED") && availableToPromiseMap?exists && quantityOnHandMap?exists && availableToPromiseMap.get(productId)?exists && quantityOnHandMap.get(productId)?exists>
                       <#assign quantityToProduce = 0>
                       <#assign atpQuantity = availableToPromiseMap.get(productId)?default(0)>
                       <#assign qohQuantity = quantityOnHandMap.get(productId)?default(0)>
