@@ -54,12 +54,13 @@
 
                 <#-- company postal addresses -->
                 
+                <#assign i = 0>
                 <#list shippingContactMechListF as shippingContactMech>
                   <#if shippingContactMech.postalAddress?exists>
                   <#assign shippingAddress = shippingContactMech.postalAddress>
                   <tr>
-                    <td valign="top" nowrap>
-                      <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>
+                    <td valign="top" nowrap>$
+                      <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if i == 0>checked</#if>>
                     </td>
                     <td nowrap>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td align="left" valign="top" width="100%" nowrap>
@@ -82,6 +83,7 @@
                   <tr><td colspan="4"><hr class='sepbar'></td></tr>
                   </#if>
                   </#if>
+                  <#assign i = i + 1>
                 </#list>
               </form>
             </table>
@@ -97,11 +99,12 @@
                 <input type="hidden" name="finalizeMode" value="ship">
                                 
                 <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                <#assign i = 0>
                 <#list shippingContactMechList as shippingContactMech>
                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                   <tr>
                     <td align="left" valign="top" width="1%" nowrap>
-                      <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>        
+                      <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if i == 0>checked</#if>>        
                     </td>
                     <td align="left" valign="top" width="99%" nowrap>
                       <div class="tabletext">
@@ -122,6 +125,7 @@
                   <#if shippingContactMech_has_next>
                   <tr><td colspan="3"><hr class='sepbar'></td></tr>
                   </#if>
+                  <#assign i = i + 1>
                 </#list>
               </form>
             </table>  
