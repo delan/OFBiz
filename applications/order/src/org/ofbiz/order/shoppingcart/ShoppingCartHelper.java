@@ -629,14 +629,14 @@ public class ShoppingCartHelper {
                                 item.setReservPersons(reservPersons);
                         }
                     } else if (o.startsWith("shipBeforeDate")) {
-                        if (item != null) {
+                        if (item != null && quantString.length() > 0) {
                             // input is either yyyy-mm-dd or a full timestamp
                             if (quantString.length() == 10)
                                 quantString += " 00:00:00.000"; 
                             item.setShipBeforeDate(Timestamp.valueOf(quantString));
                         }
                     } else if (o.startsWith("shipAfterDate")) {
-                        if (item != null) {
+                        if (item != null && quantString.length() > 0) {
                             // input is either yyyy-mm-dd or a full timestamp
                             if (quantString.length() == 10)
                                 quantString += " 00:00:00.000"; 
