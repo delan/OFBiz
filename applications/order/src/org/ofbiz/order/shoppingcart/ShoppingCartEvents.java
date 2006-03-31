@@ -318,7 +318,7 @@ public class ShoppingCartEvents {
 
         // get the ship before date (handles both yyyy-mm-dd input and full timestamp)
         shipBeforeDateStr = (String) paramMap.remove("shipBeforeDate");
-        if (shipBeforeDateStr != null) {
+        if (shipBeforeDateStr != null && shipBeforeDateStr.length() > 0) {
             if (shipBeforeDateStr.length() == 10) shipBeforeDateStr += " 00:00:00.000";
             try {
                 shipBeforeDate = java.sql.Timestamp.valueOf(shipBeforeDateStr);
@@ -330,7 +330,7 @@ public class ShoppingCartEvents {
 
         // get the ship after date (handles both yyyy-mm-dd input and full timestamp)
         shipAfterDateStr = (String) paramMap.remove("shipAfterDate");
-        if (shipAfterDateStr != null) {
+        if (shipAfterDateStr != null && shipAfterDateStr.length() > 0) {
             if (shipAfterDateStr.length() == 10) shipAfterDateStr += " 00:00:00.000";
             try {
                 shipAfterDate = java.sql.Timestamp.valueOf(shipAfterDateStr);
