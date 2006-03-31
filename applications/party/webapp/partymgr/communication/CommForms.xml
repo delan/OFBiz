@@ -180,6 +180,11 @@
         <field name="communicationEventId" use-when="communicationEvent != null"><text-find/></field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} From"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} To"><lookup target-form-name="LookupPartyName"/></field>
+		<field name="communicationEventTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="CommunicationEventType" key-field-name="communicationEventTypeId"/>
+			</drop-down>
+		</field>
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
@@ -215,6 +220,7 @@
         <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} To">
             <display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/>
         </field>
+        <field name="communicationEventTypeId"><display-entity description="${description}" entity-name="CommunicationEventType" key-field-name="communicationEventTypeId"/></field>
         <field name="statusId"><display-entity description="${description}" entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="contactMechTypeId"><display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/></field>
         <field name="roleTypeIdFrom"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
@@ -374,7 +380,7 @@
         <field name="contentId"><ignored/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId"><hidden value="DOCUMENT"/></field>
-        <field name="dataResourceTypeId"><hidden value="SHORT_TEXT"/></field>
+        <field name="dataResourceTypeId"><hidden value=""/></field>
         <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="thruDate"><date-time/></field>
         <field name="sequenceNum"><text/></field>
