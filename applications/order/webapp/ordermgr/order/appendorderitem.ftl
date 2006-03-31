@@ -43,7 +43,6 @@
           <tr>
             <td>
               <form method="post" action="<@ofbizUrl>appendItemToOrder?${paramString}</@ofbizUrl>" name="appendItemForm" style="margin: 0;">
-              <input type="hidden" name="orderId" value="${orderId}"/>
               <table border="0">
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :</div></td>
