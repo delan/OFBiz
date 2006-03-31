@@ -99,7 +99,9 @@
 ${postalAddress.attnName}</#if>
 ${postalAddress.address1}<#if postalAddress.address2?has_content>
 ${postalAddress.address2}</#if>
-${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if></#if></fo:block>
+${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if></#if><#if postalAddress.postalCode?has_content>
+${postalAddress.postalCode}</#if>
+</fo:block>
                 </fo:table-cell>
                 </#if>
              </#list>
