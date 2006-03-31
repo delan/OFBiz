@@ -348,20 +348,20 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (selectedAmount > 0) {
             newItem.setSelectedAmount(selectedAmount);
         }
+        
+        // set the ship before/after dates.  this needs to happen before setQuantity because setQuantity causes the ship group's dates to be
+        // checked versus the cart item's
+        newItem.setShipBeforeDate(shipBeforeDate != null ? shipBeforeDate : cart.getDefaultShipBeforeDate());
+        newItem.setShipAfterDate(shipAfterDate != null ? shipAfterDate : cart.getDefaultShipAfterDate());
 
         try {
-            // the last argument is false, otherwise the cart info would be cleared
-            newItem.setQuantity(quantity, dispatcher, cart, true, false);
+            newItem.setQuantity(quantity, dispatcher, cart, true);
         } catch (CartItemModifyException e) {
             cart.removeCartItem(cart.getItemIndex(newItem), dispatcher);
             cart.clearItemShipInfo(newItem);
             cart.removeEmptyCartItems();
             throw e;
         }
-
-        // set the ship before/after dates
-        newItem.setShipBeforeDate(shipBeforeDate != null ? shipBeforeDate : cart.getDefaultShipBeforeDate());
-        newItem.setShipAfterDate(shipAfterDate != null ? shipAfterDate : cart.getDefaultShipAfterDate());
 
         // specific for purchase orders - description is set to supplierProductId + supplierProductName, price set to lastPrice of SupplierProduct
         // if supplierProduct has no supplierProductName, use the regular supplierProductId
