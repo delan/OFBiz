@@ -2128,7 +2128,7 @@
     	       on a range of transactionDates for a given finAccountId, finAccountTransTypeId">
     	   <member-entity entity-alias="FAT" entity-name="FinAccountTrans"/>
     	   <alias entity-alias="FAT" name="finAccountId" group-by="true"/>
-    	   <alias entity-alias="FAT" name="finAccountTransTypeId" group-by="true"/>
+    	   <alias entity-alias="FAT" name="finAccountTransTypeId" group-by="false"/> <!-- must not group-by this, or aggregating DEPOSIT and ADJUSTMENT won't work -->
     	   <alias entity-alias="FAT" name="transactionDate" group-by="false"/>
        <alias entity-alias="FAT" name="amount" function="sum"/>
        <alias entity-alias="FAT" name="currencyUomId" group-by="true"/>
