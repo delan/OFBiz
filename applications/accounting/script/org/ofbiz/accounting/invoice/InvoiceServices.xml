@@ -310,6 +310,7 @@ under the License.
         </if-compare-field>
     </simple-method>
     <simple-method method-name="removeInvoiceItem" short-description="Remove an existing Invoice Item">
+        <call-simple-method method-name="InvoiceStatusInProgress"/>
         <set field="invoiceId" from-field="parameters.invoiceId"/>
         <call-simple-method method-name="InvoiceStatusInProgress"/>
 
@@ -329,6 +330,23 @@ under the License.
     
     <simple-method method-name="removePaymentApplication" 
         short-description="Remove an existing payment application">
+        <!-- check access to the accounting function -->
+        <check-permission permission="ACCOUNTING" action="_UPDATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: To update an Invoice you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>
+        <!-- find the current header record -->
+        <entity-one entity-name="Invoice" value-name="headerValue"/>
+        <if-empty field-name="headerValue">
+            <add-error><fail-message message="Invoice not found, invoice Id: ${invoiceId}"/></add-error>
+            <log level="info" message="Invoice not found, invoice Id: ${invoiceId}"/>
+            <check-errors/>
+        </if-empty>
+        <!-- check if the status is not Paid... -->            
+        <if-compare field-name="headerValue.statusId" operator="equals" value="INVOICE_PAID">
+            <add-error><fail-message message="Can only remove payment application, when status is not 'paid'"/></add-error>
+        </if-compare>
+        <check-errors/>
         <entity-one entity-name="PaymentApplication" value-name="lookedUpValue">
             <field-map field-name="paymentApplicationId" value="${parameters.paymentApplicationId}"/>
         </entity-one>
