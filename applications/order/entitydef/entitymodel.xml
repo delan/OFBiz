@@ -2579,6 +2579,21 @@
         </relation>            
     </entity>
 
+    <entity entity-name="SalesOpportunityQuote"
+            package-name="org.ofbiz.order.opportunity"
+            title="Relates sales opportunities to their quotes.">
+        <field name="salesOpportunityId" type="id-ne"></field>
+        <field name="quoteId" type="id-ne"></field>
+        <prim-key field="salesOpportunityId"/>
+        <prim-key field="quoteId"/>
+        <relation type="one" fk-name="SOPPQTE_SOPP" rel-entity-name="SalesOpportunity">
+            <key-map field-name="salesOpportunityId"/>
+        </relation>
+        <relation type="one" fk-name="SOPPQTE_QTE" rel-entity-name="Quote">
+            <key-map field-name="quoteId"/>
+        </relation>            
+    </entity>
+
     <entity entity-name="SalesForecast"
             package-name="org.ofbiz.order.opportunity"
             title="Stores sales forecast data for sales opportunities.">
