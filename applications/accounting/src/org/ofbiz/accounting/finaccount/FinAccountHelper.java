@@ -30,11 +30,13 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityUtil;
 
 /**
@@ -105,18 +107,28 @@ public class FinAccountHelper {
          if (finAccountCode == null) {
              return null;
          }
+         
          Pattern filterRegex = Pattern.compile("[^0-9A-Z]");
          finAccountCode = finAccountCode.toUpperCase().replaceAll(filterRegex.pattern(), "");
          
+         // now we need to get the encrypted version of the fin account code the user passed in to look up against FinAccount
+         // we do this by making a temporary generic entity with same finAccountCode and then doing a match
+         ModelEntity finAccountEntity = delegator.getModelEntity("FinAccount");
+         GenericEntity encryptedFinAccount = GenericEntity.createGenericEntity(finAccountEntity, UtilMisc.toMap("finAccountCode", finAccountCode));
+         delegator.encryptFields(encryptedFinAccount);
+         String encryptedFinAccountCode = encryptedFinAccount.getString("finAccountCode");
+         
          // now look for the account
-         List accounts = delegator.findByAnd("FinAccount", UtilMisc.toMap("finAccountCode", finAccountCode));
+         List accounts = delegator.findByAnd("FinAccount", UtilMisc.toMap("finAccountCode", encryptedFinAccountCode));
          accounts = EntityUtil.filterByDate(accounts);
+         
          if ((accounts == null) || (accounts.size() == 0)) {
+             // OK to display - not a code anyway
              Debug.logWarning("No fin account found for account code ["  + finAccountCode + "]", module);
              return null;
          } else if (accounts.size() > 1) {
-             // This should never happen
-             Debug.logError("Multiple fin accounts found for code [" + finAccountCode + "]", module);
+             // This should never happen, but don't display the code if it does -- it is supposed to be encrypted!
+             Debug.logError("Multiple fin accounts found", module);
              return null;
          } else {
              return (GenericValue) accounts.get(0);
