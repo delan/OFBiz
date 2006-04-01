@@ -37,7 +37,7 @@
     </tr>
     <#list productStores as productStore>
       <tr valign="middle">
-        <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>" class="buttontext">${productStore.storeName} [${productStore.productStoreId}]</a></div></td>
+        <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>" class="buttontext">${productStore.storeName?if_exists} [${productStore.productStoreId}]</a></div></td>
         <td><div class="tabletext">&nbsp;${productStore.title?if_exists}</div></td>
         <td><div class="tabletext">&nbsp;${productStore.subtitle?if_exists}</div></td>
         <td>
