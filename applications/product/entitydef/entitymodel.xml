@@ -3093,6 +3093,30 @@
         <key-map field-name="emailType" rel-field-name="enumId"/>
       </relation>
     </entity>
+    <entity entity-name="ProductStoreFinActSetting"
+    	        package-name="org.ofbiz.product.store"
+    	        title="Allows financial account, such as gift certificate or calling cards, to be configured at store level">
+      <field type="id-ne" name="productStoreId"/>
+      <field name="finAccountTypeId" type="id-ne"/>
+      <field name="accountCodeLength" type="numeric">
+      	<description>length of auto-generated account code</description>
+      </field>
+      <field name="accountValidDays" type="numeric">
+      	<description>number of days an account of this type would be valid for</description>
+      </field>
+      <field name="authValidDays" type="numeric">
+      	<description>number of days an authorization of this type would be valid for</description>
+      </field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="finAccountTypeId"/>
+      <relation rel-entity-name="ProductStore" type="one" fk-name="PRSTFNAC_PRDS">
+      	<key-map field-name="productStoreId"/>
+      </relation>	
+      <relation rel-entity-name="FinAccountType" type="one" fk-name="PRSTFNAC_FNACTP">
+      	<key-map field-name="finAccountTypeId"/>
+      </relation>
+    	</entity>
+    	         
     <entity entity-name="ProductStoreFacility"
             package-name="org.ofbiz.product.store"
             title="Product Store Inventory Facility Applicability Entity">

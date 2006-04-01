@@ -410,6 +410,9 @@
       <field name="productFeatureId" type="id"></field>
       <field name="prodCatalogId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
+      <field name="finAccountId" type="id">
+      	<description>For cases when the order item is for purchasing value on a fin account (ie, gift certificate, calling card)</description>
+      </field>
       <field name="isPromo" type="indicator"></field>
       <field name="quoteId" type="id"></field>
       <field name="quoteItemSeqId" type="id"></field>
@@ -452,6 +455,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITEM_FINACT" rel-entity-name="FinAccount">
+      	<key-map field-name="finAccountId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_RFUOM" title="RecurringFreq" rel-entity-name="Uom">
         <key-map field-name="recurringFreqUomId" rel-field-name="uomId"/>
@@ -812,6 +818,7 @@
       <field name="productPricePurposeId" type="id"></field>
       <field name="paymentMethodTypeId" type="id"></field>
       <field name="paymentMethodId" type="id"></field>
+      <field name="finAccountId" type="id"><description>For paying with a fin account instead of payment method on file</description></field>
       <field name="securityCode" type="long-varchar" encrypt="true"></field>
       <field name="presentFlag" type="indicator"></field>
       <field name="overflowFlag" type="indicator"></field>

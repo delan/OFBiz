@@ -219,6 +219,7 @@
     <entity-group group="org.ofbiz" entity="ProductStore" />
     <entity-group group="org.ofbiz" entity="ProductStoreCatalog" />
     <entity-group group="org.ofbiz" entity="ProductStoreEmailSetting" />
+    <entity-group group="org.ofbiz" entity="ProductStoreFinActSetting" />
     <entity-group group="org.ofbiz" entity="ProductStoreFacility" />
     <entity-group group="org.ofbiz" entity="ProductStoreFacilityByOrder" />
     <entity-group group="org.ofbiz" entity="ProductStoreGroup" />
