@@ -51,7 +51,7 @@ public class FinAccountHelper {
       * A word on precision: since we're just adding and subtracting, the interim figures should have one more decimal place of precision than the final numbers.
       */
      public static int decimals = UtilNumber.getBigDecimalScale("finaccount.decimals");
-     public static int rounding = UtilNumber.getBigDecimalScale("finaccount.rounding");
+     public static int rounding = UtilNumber.getBigDecimalRoundingMode("finaccount.rounding");
      public static final BigDecimal ZERO = (new BigDecimal("0.0")).setScale(decimals, rounding);
      
 	 // pool of available characters for account codes, here numbers plus uppercase characters
@@ -161,7 +161,7 @@ public class FinAccountHelper {
                  EntityOperator.AND);
          List transSums = delegator.findByCondition("FinAccountTransSum", incrementConditions, UtilMisc.toList("amount"), null);
          incrementTotal = UtilAccounting.addFirstEntryAmount(incrementTotal, transSums, "amount", (decimals+1), rounding);
-         
+
          // now find sum of all transactions with decrease the value
          EntityConditionList decrementConditions = new EntityConditionList(UtilMisc.toList(
                  new EntityExpr("finAccountId", EntityOperator.EQUALS, finAccountId),
@@ -174,7 +174,6 @@ public class FinAccountHelper {
          
          // the net balance is just the incrementTotal minus the decrementTotal
          BigDecimal netBalance = incrementTotal.subtract(decrementTotal).setScale(decimals, rounding);
-         
          return netBalance;
      }
 
