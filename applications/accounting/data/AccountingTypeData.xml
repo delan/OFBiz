@@ -398,12 +398,14 @@
     	<!-- this is the simplest process: IN_PROCESS -> READY or CANCELLED -->
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_READY" transitionName="Mark Ready"/>
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
-    <!-- this is a more complicated process: IN_PROCESS -> SENT -> (optionally RECEIVED) -> READY -->
+    <!-- this is a more complicated process: IN_PROCESS -> SENT -> (optionally RECEIVED) -> READY or CANCELLED -->
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_SENT" transitionName="Send"/>
     <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_RECEIVED" transitionName="Receive"/>
     <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_READY" transitionName="Mark Ready"/>
     <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_RECEIVED" transitionName="Receive"/>
     <StatusValidChange condition="" statusId="INVOICE_RECEIVED" statusIdTo="INVOICE_READY" transitionName="Mark Receive"/>
+    <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="INVOICE_RECEIVED" statusIdTo="INVOICE_CANCELLED" transitionName="Cancel"/>
     <!-- this is a process to enable modification via the Status IN_PROCESS when the receiver/sender wants an invoice change or to cancel it -->
     <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_IN_PROCESS" transitionName="Enable sales invoice update"/>
     <StatusValidChange condition="" statusId="INVOICE_RECEIVED" statusIdTo="INVOICE_IN_PROCESS" transitionName="Enable purch.invoice update"/>

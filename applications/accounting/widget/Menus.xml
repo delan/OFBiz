@@ -212,7 +212,11 @@ under the License.
             <condition>
                 <and>
                     <not><if-empty field-name="invoice.invoiceId"/></not>
-                    <if-compare field-name="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                    <or>
+                        <if-compare field-name="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
+                        <if-compare field-name="invoice.statusId" operator="equals" value="INVOICE_SENT"/>
+                        <if-compare field-name="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/>
+                    </or>                
                 </and>
             </condition>
             <link target="javascript:confirmActionLink('You want to cancel this invoice number ${invoice.invoiceId}?','setInvoiceStatus?invoiceId=${invoice.invoiceId}&amp;statusId=INVOICE_CANCELLED')" url-mode="plain"/>
