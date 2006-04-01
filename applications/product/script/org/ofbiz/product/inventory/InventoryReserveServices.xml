@@ -163,11 +163,16 @@
                     <!-- no non-ser inv item, create a non-ser InventoryItem with availableToPromise = -quantityNotReserved -->
                     <clear-field field-name="createInventoryItemInMap"/>
                     <clear-field field-name="createInventoryItemOutMap"/>
+                    <!-- the createInventoryItem service is run by the the system user here -->
+                    <entity-one entity-name="UserLogin" value-name="permUserLogin">
+                        <field-map field-name="userLoginId" value="system"/>
+                    </entity-one>
                     <set from-field="parameters.productId" field="createInventoryItemInMap.productId"/>
                     <set from-field="parameters.facilityId" field="createInventoryItemInMap.facilityId"/>
                     <set from-field="parameters.containerId" field="createInventoryItemInMap.containerId"/>
                     <set value="NON_SERIAL_INV_ITEM" field="createInventoryItemInMap.inventoryItemTypeId"/>
-                    <call-service service-name="createInventoryItem" in-map-name="createInventoryItemInMap">
+                    <set from-field="permUserLogin" field="createInventoryItemInMap.userLogin"/>
+                    <call-service service-name="createInventoryItem" in-map-name="createInventoryItemInMap" include-user-login="false">
                         <result-to-field result-name="inventoryItemId" field-name="createInventoryItemOutMap.inventoryItemId"/>
                     </call-service>
                     <entity-one entity-name="InventoryItem" value-name="newNonSerInventoryItem">
