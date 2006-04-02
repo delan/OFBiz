@@ -38,11 +38,11 @@
 <#if productPromoCategoryIncludeList?has_content || productPromoCategoryExcludeList?has_content || productPromoCategoryAlwaysList?has_content>
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">&nbsp;Categories For Promotion:</div>
+        <div class="boxhead">&nbsp;${uiLabelMap.EcommercePromotionCategories}:</div>
     </div>
     <div class="screenlet-body">
         <#if productPromoCategoryIncludeList?has_content>
-          <div class="tabletext">This promotion includes all products in these categories:</div>
+          <div class="tabletext">${uiLabelMap.EcommercePromotionProductsInCategories}:</div>
           <#list productPromoCategoryIncludeList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
             <div class="tabletext">
@@ -90,7 +90,7 @@
                     <#if (viewIndex > 0)>
                     <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
                     </#if>
-                    ${lowIndex+1} - ${highIndex} of ${listSize}
+                    ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                     <#if (listSize > highIndex)>
                     | <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoId?if_exists}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
                     </#if>

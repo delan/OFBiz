@@ -47,7 +47,7 @@
         <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="buttontext">${uiLabelMap.PartyShowOld}</a>&nbsp;&nbsp;
       </#if>
       <#if (productStore.enableDigProdUpload)?if_exists == "Y">
-      &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="buttontext">Digital Product Upload</a>
+      &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDigitalProductUpload}</a>
       </#if>
     </td>
   </tr>
@@ -344,13 +344,13 @@
 <#-- ============================================================= -->
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">&nbsp;Tax Identification and Exemption</div>
+        <div class="boxhead">&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
     </div>
     <div class="screenlet-body">
         <form method="post" action="<@ofbizUrl>createCustomerTaxAuthInfo</@ofbizUrl>" name="createCustTaxAuthInfoForm">
             <input type="hidden" name="partyId" value="${party.partyId}"/>
             ${screens.render("component://ecommerce/widget/CustomerScreens.xml#customertaxinfo")}
-            <input type="submit" value="Add" class="smallSubmit"/>
+            <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallSubmit"/>
         </form>
     </div>
 </div>
@@ -457,11 +457,11 @@
     <div class="screenlet-body">
         <table width="100%" border="0" cellpadding="1" cellspacing="0">
             <tr>
-              <td width="15%" nowrap><div class="tableheadtext">List Name</div></td>
-              <#-- <td width="15%" nowrap><div class="tableheadtext">List Type</div></td> -->
-              <td width="15%" nowrap><div class="tableheadtext">From Date</div></td>
-              <td width="15%" nowrap><div class="tableheadtext">Thru Date</div></td>
-              <td width="15%" nowrap><div class="tableheadtext">Status</div></td>
+              <td width="15%" nowrap><div class="tableheadtext">${uiLabelMap.EcommerceListName}</div></td>
+              <#-- <td width="15%" nowrap><div class="tableheadtext">${uiLabelMap.EcommerceListType}</div></td> -->
+              <td width="15%" nowrap><div class="tableheadtext">${uiLabelMap.CommonFromDate}</div></td>
+              <td width="15%" nowrap><div class="tableheadtext">${uiLabelMap.CommonThruDate}</div></td>
+              <td width="15%" nowrap><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
               <td width="5">&nbsp;</td>
               <td width="20%" nowrap><div class="tableheadtext"><b>&nbsp;</b></div></td>
             </tr>
@@ -479,7 +479,7 @@
               <td width="5">&nbsp;</td>
               <td width="20%" nowrap>
               <#if (contactListParty.statusId?if_exists == "CLPT_ACCEPTED")>
-                <a href="<@ofbizUrl>updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_REJECTED</@ofbizUrl>" class="buttontext">Unsubscribe</a>
+                <a href="<@ofbizUrl>updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_REJECTED</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonUnsubscribe}</a>
               <#elseif (contactListParty.statusId?if_exists == "CLPT_PENDING")>
                 <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistAcceptForm${contactListParty_index}">
                   <input type="hidden" name="partyId" value="${party.partyId}"/>
@@ -487,10 +487,10 @@
                   <input type="hidden" name="fromDate" value="${contactListParty.fromDate}"/>
                   <input type="hidden" name="statusId" value="CLPT_ACCEPTED"/>
                   <input type="text" size="10" name="optInVerifyCode" value="" class="inputBox"/>
-                  <input type="submit" value="Verify Subscription" class="smallSubmit"/>
+                  <input type="submit" value="${uiLabelMap.CommonVerifySubscription}" class="smallSubmit"/>
                 </form>
               <#elseif (contactListParty.statusId?if_exists == "CLPT_REJECTED")>
-                <a href="<@ofbizUrl>updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_PENDING</@ofbizUrl>" class="buttontext">Subscribe</a>
+                <a href="<@ofbizUrl>updateContactListParty?partyId=${party.partyId}&amp;contactListId=${contactListParty.contactListId}&amp;fromDate=${contactListParty.fromDate}&amp;statusId=CLPT_PENDING</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonSubscribe}</a>
               </#if>
               </td>
             </tr>
@@ -501,7 +501,7 @@
           <form method="post" action="<@ofbizUrl>createContactListParty</@ofbizUrl>" name="clistPendingForm">
             <input type="hidden" name="partyId" value="${party.partyId}"/>
             <input type="hidden" name="statusId" value="CLPT_PENDING"/>
-            <span class="tableheadtext">New List Subscription: </span>
+            <span class="tableheadtext">${uiLabelMap.CommonNewListSubscription}: </span>
             <select name="contactListId" class="selectBox">
               <#list publicContactLists as publicContactList>
                 <#-- <#assign publicContactListType = publicContactList.getRelatedOneCache("ContactListType")> -->
@@ -515,11 +515,11 @@
                 <option value="${partyAndContactMech.contactMechId}"><#if partyAndContactMech.infoString?has_content>${partyAndContactMech.infoString}<#elseif partyAndContactMech.tnContactNumber?has_content>${partyAndContactMech.tnCountryCode?if_exists}-${partyAndContactMech.tnAreaCode?if_exists}-${partyAndContactMech.tnContactNumber}<#elseif partyAndContactMech.paAddress1?has_content>${partyAndContactMech.paAddress1}, ${partyAndContactMech.paAddress2?if_exists}, ${partyAndContactMech.paCity?if_exists}, ${partyAndContactMech.paStateProvinceGeoId?if_exists}, ${partyAndContactMech.paPostalCode?if_exists}, ${partyAndContactMech.paPostalCodeExt?if_exists} ${partyAndContactMech.paCountryGeoId?if_exists}</#if></option>
               </#list>
             </select>
-            <input type="submit" value="Subscribe" class="smallSubmit"/>
+            <input type="submit" value="${uiLabelMap.CommonSubscribe}" class="smallSubmit"/>
           </form>
         </div>
         <div class="tabletext">
-        NOTE: When you subscribe to an email contact list you will receive an email with an opt-in verification code and a link to verify your subscription. As an alternative to the link you can enter you opt-in verify code here.
+        ${uiLabelMap.EcommerceListNote}
         </div>
     </div>
 </div>

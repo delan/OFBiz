@@ -26,21 +26,21 @@
     <#list partyTaxAuthInfoAndDetailList as partyTaxAuthInfoAndDetail>
         <div class="tabletext">
             <a href="<@ofbizUrl>deleteCustomerTaxAuthInfo?partyId=${partyId}&amp;taxAuthPartyId=${partyTaxAuthInfoAndDetail.taxAuthPartyId}&amp;taxAuthGeoId=${partyTaxAuthInfoAndDetail.taxAuthGeoId}&amp;fromDate=${partyTaxAuthInfoAndDetail.fromDate}</@ofbizUrl>" class="buttontext">X</a>
-            [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName}): Tax ID [${partyTaxAuthInfoAndDetail.partyTaxId?default("N/A")}], Is Exempt? [${partyTaxAuthInfoAndDetail.isExempt?default("N")}]
+            [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName}): ${uiLabelMap.PartyTaxId} [${partyTaxAuthInfoAndDetail.partyTaxId?default("N/A")}], ${uiLabelMap.PartyTaxIsExempt} [${partyTaxAuthInfoAndDetail.isExempt?default("N")}]
         </div>
     </#list>
     <div>
-        <span class="tableheadtext">Add Tax Info:</span>
+        <span class="tableheadtext">${uiLabelMap.PartyTaxAddInfo}:</span>
         <select name="taxAuthPartyGeoIds" class="selectBox">
           <option></option>
           <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>
             <option value="${taxAuthorityAndDetail.taxAuthPartyId}::${taxAuthorityAndDetail.taxAuthGeoId}">[${taxAuthorityAndDetail.geoCode}] ${taxAuthorityAndDetail.geoName} (${taxAuthorityAndDetail.groupName?if_exists})</option>
           </#list>
         </select>
-        <span class="tabletext">ID: </span><input type="text" name="partyTaxId" class="inputBox" size="12" maxlength="40"/>
+        <span class="tabletext">${uiLabelMap.CommonId}: </span><input type="text" name="partyTaxId" class="inputBox" size="12" maxlength="40"/>
 
         <#if productStore.showTaxIsExempt?default("Y") == "Y">
-        <span class="tabletext">Is Exempt? </span><input type="checkbox" name="isExempt" class="inputBox" value="Y"/>
+        <span class="tabletext">${uiLabelMap.PartyTaxIsExempt} </span><input type="checkbox" name="isExempt" class="inputBox" value="Y"/>
         <#else/>
         <input type="hidden" name="isExempt" value="N"/>
         </#if>

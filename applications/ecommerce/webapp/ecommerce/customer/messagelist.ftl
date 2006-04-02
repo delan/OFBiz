@@ -59,7 +59,7 @@
               <a href="<@ofbizUrl>messagelist?showSent=true</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
             </#if>
         </div>
-        <div class="boxhead">&nbsp;Messages</div>
+        <div class="boxhead">&nbsp;${uiLabelMap.CommonMessages}</div>
     </div>
     <div class="screenlet-body">
         <table width="100%" border="0" cellpadding="1">
