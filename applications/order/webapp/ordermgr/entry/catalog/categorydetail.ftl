@@ -58,9 +58,9 @@
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
-        <option value="#">Page ${viewIndex?int} of ${viewIndexMax}</option>
+        <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int} ${uiLabelMap.CommonOf} ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
-          <option value="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+          <option value="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum}</option>
         </#list>
       </select>
       <#-- End Page Select Drop-Down -->
@@ -69,7 +69,7 @@
           <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
-          <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
+          <span class="tabletext">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
           | <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
@@ -90,7 +90,7 @@
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
-        <option value="#">Page ${viewIndex?int} of ${viewIndexMax}</option>
+        <option value="#">Page ${viewIndex?int} ${uiLabelMap.CommonOf} ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
           <option value="<@ofbizUrl>category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}</@ofbizUrl>">Go to Page ${curViewNum}</option>
         </#list>
@@ -101,7 +101,7 @@
           <a href="<@ofbizUrl>category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if (listSize?int > 0)>
-          <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
+          <span class="tabletext">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
           | <a href="<@ofbizUrl>category?category_id=${productCategoryId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>

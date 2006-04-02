@@ -272,7 +272,7 @@ ${virtualJavaScript?if_exists}
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+            ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
              <#if product.productTypeId?if_exists == "ASSET_USAGE">
             <#if product.reserv2ndPPPerc?exists && product.reserv2ndPPPerc != 0><br/><span class="${priceStyle}">Price for the 2nd <#if !product.reservNthPPPerc?exists || product.reservNthPPPerc == 0>until the ${product.reservMaxPersons}</#if>  person: <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
             <#if product.reservNthPPPerc?exists &&product.reservNthPPPerc != 0><br/><span class="${priceStyle}">Price for the <#if !product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0>second <#else> 3rd </#if> until the ${product.reservMaxPersons}th person, each: <@ofbizCurrency amount=product.reservNthPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
