@@ -49,7 +49,7 @@
 
 <#list productFeatureCategories as productFeatureCategory>
   <tr valign="middle">
-    <FORM method="post" action="<@ofbizUrl>UpdateFeatureCategory</@ofbizUrl>">
+    <form method="post" action="<@ofbizUrl>UpdateFeatureCategory</@ofbizUrl>">
     <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategory.productFeatureCategoryId}">
     <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategory.productFeatureCategoryId}</@ofbizUrl>" class="buttontext">${productFeatureCategory.productFeatureCategoryId}</a></td>
     <td><input type="text" class="inputBox" size="30" name="description" value="${productFeatureCategory.description?if_exists}"></td>
@@ -68,7 +68,7 @@
     </td>
     <td><INPUT type="submit" value="${uiLabelMap.CommonUpdate}"></td>
     <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategory.productFeatureCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></td>
-    </FORM>
+    </form>
   </tr>
 </#list>
 </table>
