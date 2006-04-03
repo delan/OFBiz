@@ -59,7 +59,7 @@
                   <#if shippingContactMech.postalAddress?exists>
                   <#assign shippingAddress = shippingContactMech.postalAddress>
                   <tr>
-                    <td valign="top" nowrap>$
+                    <td valign="top" nowrap>
                       <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if i == 0>checked</#if>>
                     </td>
                     <td nowrap>&nbsp;&nbsp;&nbsp;&nbsp;</td>
