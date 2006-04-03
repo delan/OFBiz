@@ -173,13 +173,42 @@ under the License.
             </fo:table-header>
             
             <fo:table-body font-size="10pt">
+                <#assign currentShipmentId = "">
+                <#assign newShipmentId = "">
                 <#-- if the item has a description, then use its description.  Otherwise, use the description of the invoiceItemType -->
                 <#list invoiceItems as invoiceItem>
                     <#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
+                    <#assign taxRate = invoiceItem.getRelatedOne("TaxAuthorityRateProduct")?if_exists>
+                    <#assign itemBillings = invoiceItem.getRelated("OrderItemBilling")?if_exists>
+                    <#if itemBillings?has_content>
+                        <#assign itemBilling = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(itemBillings)>
+                        <#if itemBilling?has_content>
+                            <#assign itemIssuance = itemBilling.getRelatedOne("ItemIssuance")?if_exists>
+                            <#if itemIssuance?has_content>
+                                <#assign newShipmentId = itemIssuance.shipmentId>
+                            </#if>
+                        </#if>
+                    </#if>
                     <#if invoiceItem.description?has_content>
                         <#assign description=invoiceItem.description>
+                    <#elseif taxRate?exists & taxRate.description?has_content>
+                        <#assign description=taxRate.description>
                     <#elseif itemType.description?has_content>
                         <#assign description=itemType.description>
+                    </#if>
+                    
+                    <#if newShipmentId?exists & newShipmentId != currentShipmentId>
+                        <#-- the shipment id is printed at the beginning for each 
+                             group of invoice items created for the same shipment
+                        -->
+                        <fo:table-row height="14px">
+                        </fo:table-row>
+                        <fo:table-row height="14px">
+                           <fo:table-cell number-columns-spanned="6">
+                                <fo:block font-weight="bold"> Shipment: ${newShipmentId} </fo:block>
+                           </fo:table-cell>
+                        </fo:table-row>
+                        <#assign currentShipmentId = newShipmentId>
                     </#if>
                         <fo:table-row height="14px">
                         </fo:table-row>
