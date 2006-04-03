@@ -27,7 +27,7 @@
   
 <table border="1" cellpadding="2" cellspacing="0">
     <tr>
-      <td nowrap><div class="tableheadtext">${uiLabelMap.AccountingPaymentMethodType}</td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.AccountingPaymentMethodType}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductServiceType}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductServiceName}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.AccountingPaymentProps}</div></td>         
@@ -44,14 +44,13 @@
         <td><div class="tabletext">${setting.paymentPropertiesPath?default("[global]")}</div></td>
         <td><div class="tabletext">${setting.applyToAllProducts?if_exists}</div></td>
         <td align="center" nowrap>
-          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div>
+          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>storeRemovePaySetting?productStoreId=${productStoreId}&amp;paymentMethodTypeId=${setting.paymentMethodTypeId}&amp;paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>EditProductStorePaySetup?productStoreId=${productStoreId}&amp;paymentMethodTypeId=${setting.paymentMethodTypeId}&amp;paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div>
         </td>        
       </tr>
     </#list>
 </table>
   
 <br/>
-<table>
     <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
       <#if editSetting?has_content>
         <#assign requestName = "/storeUpdatePaySetting">
@@ -61,7 +60,8 @@
         <#assign buttonText = "Create">
       </#if>
       <form method="get" name="addrate" action="<@ofbizUrl>${requestName}</@ofbizUrl>">
-        <input type="hidden" name="productStoreId" value="${productStoreId}">
+      <input type="hidden" name="productStoreId" value="${productStoreId}"/>
+      <table>
         <tr>
           <td><span class="tableheadtext">${uiLabelMap.AccountingPaymentMethodType}</span></td>
           <td>
@@ -94,11 +94,11 @@
         </tr>
         <tr>
           <td><span class="tableheadtext">${uiLabelMap.ProductServiceName}</span></td>      
-          <td><input type="text" size="30" name="paymentService" class="inputBox" value="${(editSetting.paymentService)?if_exists}"></td>      
+          <td><input type="text" size="30" name="paymentService" class="inputBox" value="${(editSetting.paymentService)?if_exists}"/></td>
         </tr>
         <tr>
           <td><span class="tableheadtext">${uiLabelMap.AccountingPaymentProperties}</span></td>
-          <td><input type="text" size="30" name="paymentPropertiesPath" class="inputBox" value="${(editSetting.paymentPropertiesPath)?if_exists}"></td>      
+          <td><input type="text" size="30" name="paymentPropertiesPath" class="inputBox" value="${(editSetting.paymentPropertiesPath)?if_exists}"/></td>      
         </tr>               
         <tr>
           <td><span class="tableheadtext">Apply to All Products?</span></td>
@@ -114,8 +114,8 @@
           </td>
         </tr>               
         <tr>
-          <td><input type="submit" class="smallSubmit" value="${buttonText}"></td>
+          <td><input type="submit" class="smallSubmit" value="${buttonText}"/></td>
         </tr>
+      </table>  
       </form>
     </#if>
-</table>  
