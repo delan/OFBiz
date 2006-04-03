@@ -1725,6 +1725,17 @@ public class InvoiceServices {
             return ServiceUtil.returnError(errorMessageList);
         }
 
+        // if the amount to apply was not provided or was zero fill it with the maximum possible
+        if (amountApplied.signum() == 0)	{
+        	amountApplied = newPaymentApplyAvailable; 
+        }
+        else if (invoiceId != null && newInvoiceApplyAvailable.compareTo(amountApplied) == 1) {
+        	amountApplied = newInvoiceApplyAvailable;
+        }
+        else if (toPaymentId != null && newToPaymentApplyAvailable.compareTo(amountApplied) == 1) {
+        	amountApplied = newToPaymentApplyAvailable;
+        }
+        
         // if the application is specified it is easy, update the existing record only
         if (paymentApplicationId != null) { 
             // record is already retrieved previously
