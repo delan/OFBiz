@@ -320,6 +320,7 @@ public class TaxAuthorityServices {
                 }
 
                 GenericValue adjValue = delegator.makeValue("OrderAdjustment", null);
+                adjValue.set("taxAuthorityRateSeqId", taxAuthorityRateProduct.getString("taxAuthorityRateSeqId"));
                 adjValue.set("amount", taxAmount);
                 adjValue.set("sourcePercentage", taxRate);
                 adjValue.set("orderAdjustmentTypeId", "SALES_TAX");

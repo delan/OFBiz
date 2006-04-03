@@ -41,6 +41,9 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
@@ -453,6 +456,7 @@ public class InvoiceServices {
                             adjInvItem.set("taxAuthPartyId", adj.get("taxAuthPartyId"));
                             adjInvItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
                             adjInvItem.set("taxAuthGeoId", adj.get("taxAuthGeoId"));
+                            adjInvItem.set("taxAuthorityRateSeqId", adj.get("taxAuthorityRateSeqId"));
                             toStore.add(adjInvItem);
                             // this adjustment amount
                             BigDecimal thisAdjAmount = adjInvItem.getBigDecimal("amount").multiply(adjInvItem.getBigDecimal("quantity")).setScale(decimals, rounding);
@@ -625,34 +629,67 @@ public class InvoiceServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String shipmentId = (String) context.get("shipmentId");
+        List invoicesCreated = new ArrayList();
+        
+        Map serviceContext = UtilMisc.toMap("shipmentIds", UtilMisc.toList(shipmentId), "userLogin", context.get("userLogin"));
+        try {
+            Map result = dispatcher.runSync("createInvoicesFromShipments", serviceContext);
+            invoicesCreated = (List)result.get("invoicesCreated");
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Trouble calling createInvoicesFromShipments service; invoice not created for shipment [" + shipmentId + "]", module);
+            return ServiceUtil.returnError("Trouble calling createInvoicesFromShipments service; invoice not created for shipment [" + shipmentId + "]");
+        }
+        Map response = ServiceUtil.returnSuccess();
+        response.put("invoicesCreated", invoicesCreated);
+        return response;
+    }
+    
+    public static Map createInvoicesFromShipments(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        List shipmentIds = (List) context.get("shipmentIds");
 
+        boolean salesShipmentFound = false;
+        boolean purchaseShipmentFound = false;
+        
         List invoicesCreated = new ArrayList();
 
-        GenericValue shipment = null;
-        try {
-            shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Trouble getting Shipment entity", module);
-            return ServiceUtil.returnError("Trouble getting Shipment entity");
+        List shipmentIdList = new LinkedList();
+        for (int i = 0; i < shipmentIds.size(); i++) {
+            String tmpShipmentId = (String)shipmentIds.get(i);
+            try {
+                GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", tmpShipmentId));
+                if ((shipment.getString("shipmentTypeId") != null) && (shipment.getString("shipmentTypeId").equals("PURCHASE_SHIPMENT"))) {
+                    purchaseShipmentFound = true;
+                } else {
+                    salesShipmentFound = true;
+                }
+                if (purchaseShipmentFound && salesShipmentFound) {
+                    return ServiceUtil.returnError("Shipments of different types found; shipment [" + tmpShipmentId + "] of type [" + shipment.getString("shipmentTypeId") + "] is of different type from the previous ones.");
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Trouble getting Shipment entity for shipment [" + tmpShipmentId + "]", module);
+                return ServiceUtil.returnError("Trouble getting Shipment entity for shipment [" + tmpShipmentId + "]");
+            }
         }
-
+        EntityCondition shipmentIdsCond = new EntityExpr("shipmentId", EntityOperator.IN, shipmentIds);
         // check the status of the shipment
 
         // get the items of the shipment.  They can come from ItemIssuance if the shipment were from a sales order or ShipmentReceipt
         // if it were a purchase order
         List items = null;
         try {
-            if ((shipment.getString("shipmentTypeId") != null) && (shipment.getString("shipmentTypeId").equals("PURCHASE_SHIPMENT"))) {
-                items = delegator.findByAnd("ShipmentReceipt", UtilMisc.toMap("shipmentId", shipmentId));
+            if (purchaseShipmentFound) {
+                items = delegator.findByCondition("ShipmentReceipt", shipmentIdsCond, null, UtilMisc.toList("shipmentId"));
             } else {
-                items = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("shipmentId", shipmentId));
+                items = delegator.findByCondition("ItemIssuance", shipmentIdsCond, null, UtilMisc.toList("shipmentId"));
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting issued items from Shipment [" + shipmentId + "]", module);
-            return ServiceUtil.returnError("Problem getting issued items from Shipment [" + shipmentId + "]");
+            Debug.logError(e, "Problem getting issued items from shipments", module);
+            return ServiceUtil.returnError("Problem getting issued items from shipments");
         }
         if (items == null) {
-            Debug.logInfo("No items issued for shipment [" + shipmentId + "]", module);
+            Debug.logInfo("No items issued for shipments", module);
             return ServiceUtil.returnSuccess();
         }
 
