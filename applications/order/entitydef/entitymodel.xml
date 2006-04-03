@@ -72,6 +72,7 @@
       <field name="productPromoActionSeqId" type="id"></field>
       <field name="productFeatureId" type="id"></field>
       <field name="correspondingProductId" type="id"></field>
+      <field name="taxAuthorityRateSeqId" type="id-ne"></field>
       <field name="sourceReferenceId" type="id-long"></field>
       <field name="sourcePercentage" type="floating-point">
           <description>for tax entries this is the tax percentage</description>          
@@ -152,6 +153,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_ADJ_OGLA" title="Override" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ADJ_TARP" rel-entity-name="TaxAuthorityRateProduct">
+        <key-map field-name="taxAuthorityRateSeqId"/>
       </relation>
     </entity>
     <entity entity-name="OrderAdjustmentAttribute"
@@ -562,6 +566,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITBL_SHIPRCP" rel-entity-name="ShipmentReceipt">
         <key-map field-name="shipmentReceiptId" rel-field-name="receiptId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITBLNG_IISS" rel-entity-name="ItemIssuance">
+        <key-map field-name="itemIssuanceId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemContactMech"
@@ -1959,6 +1966,7 @@
       <field name="productPromoActionSeqId" type="id"></field>
       <field name="productFeatureId" type="id"></field>
       <field name="correspondingProductId" type="id"></field>
+      <field name="taxAuthorityRateSeqId" type="id-ne"></field>
       <field name="sourceReferenceId" type="id-long"></field>
       <field name="sourcePercentage" type="floating-point">
           <description>for tax entries this is the tax percentage</description>          
@@ -2030,6 +2038,9 @@
       </relation>
       <relation type="one" fk-name="RETURN_ADJ_ORDADJ" rel-entity-name="OrderAdjustment">
             <key-map field-name="orderAdjustmentId"/>
+      </relation>
+      <relation type="one" fk-name="RETURN_ADJ_TARP" rel-entity-name="TaxAuthorityRateProduct">
+        <key-map field-name="taxAuthorityRateSeqId"/>
       </relation>
     </entity>
     <entity entity-name="ReturnAdjustmentType"

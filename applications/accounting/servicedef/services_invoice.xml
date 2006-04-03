@@ -156,9 +156,23 @@ under the License.
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoicesFromShipment">
         <description>
             Create invoice(s) from a Shipment
+            All the order items associated with the shipment will be selected and
+            one invoice for each order in the shipment will be created.
             invoicesCreated = List of invoiceIds which were created by this service
         </description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoicesCreated" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="createInvoicesFromShipments" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoicesFromShipments">
+        <description>
+            Create invoice(s) from a shipment list.
+            All the order items associated with the shipments will be selected and
+            one invoice for each order will be created (each invoice could contain
+            items shipped in different shipments).
+            invoicesCreated = List of invoiceIds which were created by this service
+        </description>
+        <attribute name="shipmentIds" type="List" mode="IN" optional="false"/>
         <attribute name="invoicesCreated" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="createInvoicesFromReturnShipment" engine="java"

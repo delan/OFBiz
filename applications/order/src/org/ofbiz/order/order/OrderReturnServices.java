@@ -1401,6 +1401,9 @@ public class OrderReturnServices {
 
         try {
             newReturnAdjustment.setNonPKFields(context);
+            if (orderAdjustment != null && orderAdjustment.get("taxAuthorityRateSeqId") != null) {
+                newReturnAdjustment.set("taxAuthorityRateSeqId", orderAdjustment.getString("taxAuthorityRateSeqId"));
+            }
             newReturnAdjustment.set("amount", amount);
             newReturnAdjustment.set("returnAdjustmentTypeId", returnAdjustmentTypeId);
             newReturnAdjustment.set("description", description);

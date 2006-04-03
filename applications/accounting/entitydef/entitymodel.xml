@@ -751,6 +751,7 @@
       <field name="description" type="description"></field>
       <field name="taxAuthPartyId" type="id-ne"/>
       <field name="taxAuthGeoId" type="id-ne"/>
+      <field name="taxAuthorityRateSeqId" type="id-ne"></field>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
       <relation type="one" fk-name="INVOICE_ITMITYP" rel-entity-name="InvoiceItemType">
@@ -785,6 +786,9 @@
       </relation>
       <relation type="one" fk-name="INVCE_ITM_TAXGEO" title="Tax" rel-entity-name="Geo">
           <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
+      </relation>
+      <relation type="one" fk-name="INVOICE_ITM_TARP" rel-entity-name="TaxAuthorityRateProduct">
+        <key-map field-name="taxAuthorityRateSeqId"/>
       </relation>
     </entity>
     <entity entity-name="InvoiceItemAttribute"
