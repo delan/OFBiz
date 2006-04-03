@@ -51,8 +51,14 @@
         </call-service>
     </simple-method>
     -->
-    
-    
+    <simple-method method-name="getOrganizationParty" short-description="-get all info about the organizational party-">
+        <set field="partyData.partyId" from-field="parameters.organizationPartyId"/>
+        <call-service service-name="otsGetParty" in-map-name="partyData">
+            <result-to-result result-name="organizationPartyId" service-result-name="partyId"/>
+            <result-to-result result-name="groupName" service-result-name="groupName"/>
+            <result-to-result result-name="accountNumber" service-result-name="accountNumber"/>
+        </call-service>
+    </simple-method>
 
     <simple-method method-name="addParty" short-description="--Add a Party--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
@@ -544,6 +550,26 @@
             <field-to-result field-name="postalAddress.countryGeoId" result-name="countryGeoId"/>
         </if-not-empty>
     
+    </simple-method>
+
+    <simple-method method-name="createContactList" short-description="Create an ContactList">
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
+            <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
+        </entity-one>
+        <if-not-empty field-name="partyAcctgPreference">
+            <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+                <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+                <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            </check-permission>        
+            <check-errors/>
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}ContactList" env-name="nextContactListId"/>
+            <set field="parameters.contactListId" value="${partyAcctgPreference.invoiceIdPrefix}${nextContactListId}"/>
+        </if-not-empty>
+        <!-- call original ofbiz service with preset contactListId -->
+        <set-service-fields service-name="createContactListOfbiz" map-name="parameters" to-map-name="createContactList"/>
+        <call-service service-name="createContactListOfbiz" in-map-name="createContactList">
+            <result-to-result result-name="contactListId" service-result-name="contactListId"/>
+        </call-service>
     </simple-method>
     
 </simple-methods>

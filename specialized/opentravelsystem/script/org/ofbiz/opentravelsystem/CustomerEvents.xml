@@ -320,7 +320,6 @@
         <set field="rel.roleTypeIdFrom" value="_NA_"/>
         <set field="rel.roleTypeIdTo" value="_NA_"/>
         <now-timestamp-to-env env-name="rel.fromDate"/>
-        <log level="always" message="=============${rel}"></log>
         <make-value value-name="partyRelationship" entity-name="PartyRelationship"/>
         <set-pk-fields value-name="partyRelationship" map-name="rel"/>
         <set-nonpk-fields value-name="partyRelationship" map-name="rel"/>

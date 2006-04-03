@@ -68,20 +68,18 @@
     <service name="otsGetOrganizationParty" engine="simple" location="org/ofbiz/opentravelsystem/PartyServices.xml"
         invoke="getOrganizationParty" auth="true">
         <description>Retrieve the organization party information (partyId from the loginId)</description>
-        <attribute name="groupName" type="String" mode="IN" optional="true"/>
-        <attribute name="address1" type="String" mode="IN" optional="true"/>
-        <attribute name="address2" type="String" mode="IN" optional="true"/>
-        <attribute name="city" type="String" mode="IN" optional="true"/>
-        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
-        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
-        <attribute name="webSite" type="String" mode="IN" optional="true"/>
-        <attribute name="telephone" type="String" mode="IN" optional="true"/>
-        <attribute name="fax" type="String" mode="IN" optional="true"/>
-        <attribute name="bankName" type="String" mode="IN" optional="true"/>
-        <attribute name="routingCode" type="String" mode="IN" optional="true"/>
-        <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
-        <attribute name="productStoreActive" type="String" mode="IN" optional="true"/><!-- set productStore active.. -->
+        <attribute name="organizationPartyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyRelationshipTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="groupName" type="String" mode="OUT" optional="true"/>
+        <attribute name="address1" type="String" mode="OUT" optional="true"/>
+        <attribute name="address2" type="String" mode="OUT" optional="true"/>
+        <attribute name="city" type="String" mode="OUT" optional="true"/>
+        <attribute name="postalCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="countryGeoId" type="String" mode="OUT" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="OUT" optional="true"/>
+        <attribute name="telephone" type="String" mode="OUT" optional="true"/>
+        <attribute name="fax" type="String" mode="OUT" optional="true"/>
+        <attribute name="accountNumber" type="String" mode="OUT" optional="true"/>
     </service>
     
     <service name="otsUpdateParty" engine="simple"
@@ -406,5 +404,24 @@
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <override name="groupName" optional="false"/>
     </service-->
+    
+    <!-- ContactList Services -->
+    <service name="createContactList" default-entity-name="ContactList" engine="simple"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="createContactList" auth="true">
+        <description>Create a ContactList record</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="contactListTypeId" optional="false"/>
+        <override name="contactListName" optional="false"/>
+    </service>
+    <!-- ContactList Services -->
+    <service name="createContactListOfbiz" default-entity-name="ContactList" engine="simple"
+        location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="createContactList" auth="true">
+        <description>Create a ContactList record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="contactListTypeId" optional="false"/>
+        <override name="contactListName" optional="false"/>
+    </service>
     
 </services>

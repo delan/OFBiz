@@ -143,16 +143,24 @@ public class FindServices {
         		else if (entityName.equals("Payment")) {
         			extraCond = new EntityExpr("paymentId", EntityOperator.LIKE, companyPrefix); 
         		}
-        		else if (entityName.equals("Party") || entityName.equals("PartyRelationshipAndPartyDetail")
+        		else if (entityName.equals("Party") 
+        				|| entityName.equals("PartyRelationshipAndPartyDetail")
         				|| entityName.equals("Party")
         				|| entityName.equals("PartyGroup")
         				|| entityName.equals("Person")
         				|| entityName.equals("UserLogin")
+        				|| entityName.equals("PartyAndUserLoginAndPerson")
         				|| entityName.equals("PartyNameView"))  {
         			extraCond = new EntityExpr("partyId", EntityOperator.LIKE, companyPrefix); 
         		}
         		else if (entityName.equals("ElectronicText") || entityName.equals("DataResource"))  {
         			extraCond = new EntityExpr("dataResourceId", EntityOperator.LIKE, companyPrefix); 
+        		}
+        		else if (entityName.equals("ContactList")
+        				|| entityName.equals("ContactListParty")
+        				|| entityName.equals("ContactListPartyStatus")
+        				|| entityName.equals("ContactListPartyAndStatus"))  {
+        			extraCond = new EntityExpr("contactListId", EntityOperator.LIKE, companyPrefix); 
         		}
         		else {
                 	Debug.logInfo("OrganizationPartyId found but no limitation on entity: " + entityName,module);

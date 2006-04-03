@@ -542,28 +542,8 @@
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     
-
-    <request-map uri="visitdetail">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="visitdetail"/>
-    </request-map>
-    
-        <request-map uri="pushPage">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setFollowerPage"/>
-        <response name="success" type="view" value="visitdetail"/>
-    </request-map>
-
-    <request-map uri="setAppletFollower">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setAppletFollower"/>
-        <response name="success" type="view" value="visitdetail"/>
-    </request-map>
-
-    <request-map uri="findordersCust"><!-- list orders from the customerlist  same as findorders-->
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="findordersCust"/>
-    </request-map>
+    <request-map uri="showvisits"><security https="true" auth="true"/><response name="success" type="view" value="showvisits"/></request-map>
+    <request-map uri="visitdetail"><security https="true" auth="true"/><response name="success" type="view" value="visitdetail"/></request-map>
     
     <!-- communication event requests -->
     <request-map uri="FindCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="FindCommunicationEvents"/></request-map>
@@ -629,6 +609,7 @@
     <request-map uri="ListPartyCommEvents"><security https="true" auth="true"/><response name="success" type="view" value="ListPartyCommEvents"/></request-map>
     <request-map uri="ListLookupCommEvents"><security https="true" auth="true"/><response name="success" type="view" value="ListLookupCommEvents"/></request-map>
     <request-map uri="ListCommCustRequests"><security https="true" auth="true"/><response name="success" type="view" value="ListCommCustRequests"/></request-map>
+    <request-map uri="LookupContactList"><security https="true" auth="true"/><response name="success" type="view" value="LookupContactList"/></request-map>
     
     <!-- ===============   TAX  ======================== -->
     <request-map uri="EditPartyTaxInfos"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyTaxInfos"/></request-map>
@@ -3046,7 +3027,73 @@
         <!--event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="ListInvoices"/-->
         <response name="success" type="view" value="InvoicesList"/>
     </request-map>    
-    <view-map name="InvoicesList" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#InvoicesList"/>
+
+    <!--  ContactList request mappings -->
+    <request-map uri="ListContactLists"><security https="true" auth="true"/><response name="success" type="view" value="ListContactLists"/></request-map>
+    <request-map uri="EditContactList"><security https="true" auth="true"/><response name="success" type="view" value="EditContactList"/></request-map>
+    <request-map uri="LookupContactList"><security https="true" auth="true"/><response name="success" type="view" value="LookupContactList"/></request-map>
+    <request-map uri="createContactList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createContactList"/>
+        <response name="success" type="view" value="EditContactList"/>
+        <response name="error" type="view" value="EditContactList"/>
+    </request-map>
+    <request-map uri="updateContactList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateContactList"/>
+        <response name="success" type="view" value="EditContactList"/>
+        <response name="error" type="view" value="EditContactList"/>
+    </request-map>
+    <request-map uri="removeContactList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeContactList"/>
+        <response name="success" type="view" value="ListContactLists"/>
+        <response name="error" type="view" value="ListContactLists"/>
+    </request-map>
+    
+    <request-map uri="EditContactListParty"><security https="true" auth="true"/><response name="success" type="view" value="EditContactListParty"/></request-map>
+    <request-map uri="FindContactListParties"><security https="true" auth="true"/><response name="success" type="view" value="FindContactListParties"/></request-map>
+    <request-map uri="ListContactListParties"><security https="true" auth="true"/><response name="success" type="view" value="ListContactListParties"/></request-map>
+    <request-map uri="createContactListParty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createContactListParty"/>
+        <response name="success" type="view" value="EditContactListParty"/>
+        <response name="error" type="view" value="EditContactListParty"/>
+    </request-map>
+    <request-map uri="updateContactListParty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateContactListParty"/>
+        <response name="success" type="view" value="EditContactListParty"/>
+        <response name="error" type="view" value="EditContactListParty"/>
+    </request-map>
+    <request-map uri="removeContactListParty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteContactListParty"/>
+        <response name="success" type="view" value="ListContactListParties"/>
+        <response name="error" type="view" value="ListContactListParties"/>
+    </request-map>
+    
+    <request-map uri="ListContactListCommEvents"><security https="true" auth="true"/><response name="success" type="view" value="ListContactListCommEvents"/></request-map>
+    <request-map uri="EditContactListCommEvent"><security https="true" auth="true"/><response name="success" type="view" value="EditContactListCommEvent"/></request-map>
+    <request-map uri="FindContactListCommEvents"><security https="true" auth="true"/><response name="success" type="view" value="FindContactListCommEvents"/></request-map>
+    <request-map uri="createContactListCommEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCommunicationEvent"/>
+        <response name="success" type="view" value="EditContactListCommEvent"/>
+        <response name="error" type="view" value="EditContactListCommEvent"/>
+    </request-map>
+    <request-map uri="updateContactListCommEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCommunicationEvent"/>
+        <response name="success" type="view" value="EditContactListCommEvent"/>
+        <response name="error" type="view" value="EditContactListCommEvent"/>
+    </request-map>
+    <request-map uri="removeContactListCommEvent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCommunicationEvent"/>
+        <response name="success" type="view" value="ListContactListCommEvents"/>
+        <response name="error" type="view" value="ListContactListEvents"/>
+    </request-map>
     <!-- end of request mappings -->
     
     <!-- View Mappings -->
@@ -3193,6 +3240,7 @@
     <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
+    <view-map name="LookupContactList" type="screen" page="component://party/widget/partymgr/PartyContactListScreens.xml#ListLookupContactList"/>
     
     <!-- Lookup request mappings accounting component-->
     <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
@@ -3218,6 +3266,7 @@
     <!-- Accounting Utilities -->
     <view-map name="Utilities" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#Utilities"/>
     <!-- accounting reports -->
+    <view-map name="InvoicesList" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#InvoicesList"/>
     <view-map name="AccountingReports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#reports"/>
     <view-map name="VatReport" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#VatReport"/>
     <view-map name="OpenInvoiceReport" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#OpenInvoiceReport"/>
@@ -3257,6 +3306,24 @@
     <view-map name="ViewGlReconciliation" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlReconciliation"/>
     <!-- electronic texts -->
     <view-map name="findElectronicTexts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#findElectronicTexts"/>
+    <view-map name="ListContactLists" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactLists"/>
+    <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>
+    <view-map name="ListContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParties"/>
+    <view-map name="EditContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListParty"/>
+    <view-map name="FindContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListParties"/>
+    <view-map name="ListContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListCommEvents"/>
+    <view-map name="EditContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListCommEvent"/>
+    <view-map name="FindContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvents"/>
+    
+    <view-map name="ListContactLists" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactLists"/>
+    <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>
+    <view-map name="ListContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParties"/>
+    <view-map name="EditContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListParty"/>
+    <view-map name="FindContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListParties"/>
+    
+    <view-map name="ListContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListCommEvents"/>
+    <view-map name="EditContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListCommEvent"/>
+    <view-map name="FindContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvents"/>
     <!-- PDFs  -->
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
     
