@@ -54,15 +54,19 @@ import org.ofbiz.service.ServiceUtil;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:sichen@opensourcestrategies.com">Si Chen</a>
  * @version    $Rev$
  * @since      3.3
  */
 public class GiftCertificateServices {
 
     public static final String module = GiftCertificateServices.class.getName();
+    // TODO: these are to be replaced with store specific settings in ProductStoreFinActSetting
     public static final int CARD_NUMBER_LENGTH = 14;
     public static final int PIN_NUMBER_LENGTH = 6;
 
+    public static final String giftCertFinAccountTypeId = "GIFTCERT_ACCOUNT";
+    
     // Base Gift Certificate Services
     public static Map createGiftCertificate(DispatchContext dctx, Map context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -86,24 +90,35 @@ public class GiftCertificateServices {
         String refNum = null;
         try {
             final String accountName = "Gift Certificate Account";
-            final String accountType = "GIFTCERT_ACCOUNT";
             final String deposit = "DEPOSIT";
 
-            cardNumber = generateNumber(delegator, CARD_NUMBER_LENGTH, true);
-            pinNumber = generateNumber(delegator, PIN_NUMBER_LENGTH, false);
+            GenericValue giftCertSettings = delegator.findByPrimaryKey("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
+            Map acctResult = null;
+            
+            if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
+                // TODO: move this code to createFinAccountForStore as well
+                cardNumber = generateNumber(delegator, giftCertSettings.getInteger("accountCodeLength").intValue(), true);
+                pinNumber = generateNumber(delegator, giftCertSettings.getInteger("pinCodeLength").intValue(), false);
 
-            // create the FinAccount
-            Map acctCtx = UtilMisc.toMap("finAccountId", cardNumber);
-            acctCtx.put("finAccountTypeId", accountType);
-            acctCtx.put("finAccountName", accountName);
-            acctCtx.put("finAccountCode", pinNumber);
-            acctCtx.put("userLogin", userLogin);
-            Map acctResult = dispatcher.runSync("createFinAccount", acctCtx);
+                // create the FinAccount
+                Map acctCtx = UtilMisc.toMap("finAccountId", cardNumber);
+                acctCtx.put("finAccountTypeId", giftCertFinAccountTypeId);
+                acctCtx.put("finAccountName", accountName);
+                acctCtx.put("finAccountCode", pinNumber);
+                acctCtx.put("userLogin", userLogin);
+                acctResult = dispatcher.runSync("createFinAccount", acctCtx);
+            } else {
+                acctResult = dispatcher.runSync("createFinAccountForStore", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId, "userLogin", userLogin));  
+                if (acctResult.get("finAccountId") != null) {
+                    cardNumber = (String) acctResult.get("finAccountId");
+                }
+            }
+            
             if (ServiceUtil.isError(acctResult)) {
                 String error = ServiceUtil.getErrorMessage(acctResult);
                 return ServiceUtil.returnError(error);
             }
-
+            
             // create the initial (deposit) transaction
             refNum = GiftCertificateServices.createTransaction(delegator, dispatcher, userLogin, initialAmount,
                     productStoreId, partyId, currencyUom, deposit, cardNumber);
@@ -461,16 +476,6 @@ public class GiftCertificateServices {
             return ServiceUtil.returnError("Unable to process gift card purchase; no productStoreId on OrderHeader : " + orderId);
         }
 
-        // payment config
-        GenericValue paymentSetting = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, "GIFT_CARD", null, true);
-        String paymentConfig = null;
-        if (paymentSetting != null) {
-            paymentConfig = paymentSetting.getString("paymentPropertiesPath");
-        }
-        if (paymentConfig == null) {
-            return ServiceUtil.returnError("Unable to get payment configuration file");
-        }
-
         // party ID for tracking
         GenericValue placingParty = orh.getPlacingParty();
         String partyId = null;
@@ -493,8 +498,17 @@ public class GiftCertificateServices {
             return ServiceUtil.returnError("No product associated with OrderItem, cannot fulfill gift card");
         }
 
+        // Gift certificate settings are per store in this entity
+        GenericValue giftCertSettings = null;
+        try {
+            giftCertSettings = delegator.findByPrimaryKey("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));    
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get Product Store FinAccount settings for " + giftCertFinAccountTypeId, module);
+            ServiceUtil.returnError("Unable to get Product Store FinAccount settings for " + giftCertFinAccountTypeId + ": " + e.getMessage());
+        }
+       
         // survey information
-        String surveyId = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.purchase.surveyId");
+        String surveyId = giftCertSettings.getString("purchaseSurveyId");
 
         // get the survey response
         GenericValue surveyResponse = null;
@@ -542,13 +556,13 @@ public class GiftCertificateServices {
             }
         }
 
-        // get the send to email address - key defined in properties file
-        String sendToKey = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.purchase.survey.sendToEmail");
+        // get the send to email address - key defined in product store settings entity
+        String sendToKey = giftCertSettings.getString("purchSurveySendTo");
         String sendToEmail = (String) answerMap.get(sendToKey);
 
         // get the copyMe flag and set the order email address
         String orderEmails = orh.getOrderEmailString();
-        String copyMeField = UtilProperties.getPropertyValue(paymentConfig, "payment.giftcert.purchase.survey.copyMe");
+        String copyMeField = giftCertSettings.getString("purchSurveyCopyMe");
         String copyMeResp = copyMeField != null ? (String) answerMap.get(copyMeField) : null;
         boolean copyMe = (UtilValidate.isNotEmpty(copyMeField)
                 && UtilValidate.isNotEmpty(copyMeResp) && "true".equalsIgnoreCase(copyMeResp)) ? true : false;
@@ -1119,11 +1133,11 @@ public class GiftCertificateServices {
         String partyIdFrom = null;
         String partyIdTo = null;
         if ("DEPOSIT".equals(txType)) {
-            paymentType = "RECEIPT";
+            paymentType = "GC_DEPOSIT";
             partyIdFrom = partyId;
             partyIdTo = coParty;
         } else if ("WITHDRAWAL".equals(txType)) {
-            paymentType = "DISBURSEMENT";
+            paymentType = "GC_WITHDRAWAL";
             partyIdFrom = coParty;
             partyIdTo = partyId;
         } else {
