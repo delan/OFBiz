@@ -29,11 +29,11 @@
      from surveyId 1000 - The gift card purchase survey.
  -->
 
-${recipientName},
+<#if recipientName?exists>${recipientName},</#if>
 <br/>
 
 <#-- MyCompany.com (not a variable why?) must be adapted - JLR 1/6/5 -->
-${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}!
+${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com <#if senderName?exists> ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}</#if>!
 <br/><br/>
 <#if giftMessage?has_content>
   ${uiLabelMap.OrderGiftMessage}
