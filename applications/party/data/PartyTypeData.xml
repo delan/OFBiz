@@ -19,7 +19,6 @@
     <CommunicationEventPrpTyp communicationEventPrpTypId="SALES_FOLLOW_UP" description="Sales Follow Up" hasTable="N" parentTypeId=""/>
     <CommunicationEventPrpTyp communicationEventPrpTypId="SEMINAR" description="Seminar" hasTable="N" parentTypeId=""/>
     <CommunicationEventPrpTyp communicationEventPrpTypId="SUPPORT_CALL" description="Support Call" hasTable="N" parentTypeId=""/>
-    <CommunicationEventPrpTyp communicationEventPrpTypId="GIFT_MESSAGE" description="Gift Message" hasTable="N" parentTypeId=""/>
     
     <CommunicationEventType communicationEventTypeId="EMAIL_COMMUNICATION" description="Email" hasTable="N" parentTypeId=""/>
     <CommunicationEventType communicationEventTypeId="FACE_TO_FACE_COMMUNI" description="Face-To-Face" hasTable="N" parentTypeId=""/>
@@ -53,7 +52,6 @@
     <ContactMechPurposeType contactMechPurposeTypeId="OTHER_EMAIL" description="Other Email Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="ORDER_EMAIL" description="Order Notification Email Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PRIMARY_WEB_URL" description="Primary Website URL"/>
-    <ContactMechPurposeType contactMechPurposeTypeId="RECIPIENT_EMAIL" description="Recipient Email"/>
 
     <ContactMechType contactMechTypeId="ELECTRONIC_ADDRESS" description="Electronic Address" hasTable="N" parentTypeId=""/>
     <ContactMechType contactMechTypeId="POSTAL_ADDRESS" description="Postal Address" hasTable="Y" parentTypeId=""/>
