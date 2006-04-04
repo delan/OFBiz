@@ -110,7 +110,7 @@
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="cardNumber" type="String" mode="OUT" optional="false"/>
-        <attribute name="pinNumber" type="String" mode="OUT" optional="false"/>
+        <attribute name="pinNumber" type="String" mode="OUT" optional="true"/>
         <attribute name="processResult" type="Boolean" mode="OUT" optional="false"/>
         <attribute name="responseCode" type="String" mode="OUT" optional="false"/>
         <attribute name="referenceNum" type="String" mode="OUT" optional="false"/>
