@@ -2651,7 +2651,7 @@ public class OrderServices {
     }
 
     public static Map fulfillDigitalItems(DispatchContext ctx, Map context) {
-        //appears to not be used: GenericDelegator delegator = ctx.getDelegator();
+        GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         //appears to not be used: String orderId = (String) context.get("orderId");
         List orderItems = (List) context.get("orderItems");
@@ -2679,6 +2679,13 @@ public class OrderServices {
                     }
 
                     List allProductContent = product.getRelated("ProductContent");
+                    
+                    // try looking up the parent product if the product has no content and is a variant
+                    if (((allProductContent == null) || allProductContent.size() == 0) && ("Y".equals(product.getString("isVariant")))) {
+                        GenericValue parentProduct = ProductWorker.getParentProduct(product.getString("productId"), delegator);
+                        allProductContent.addAll(parentProduct.getRelated("ProductContent"));
+                    }
+                    
                     if (allProductContent != null && allProductContent.size() > 0) {
                         // only keep ones with valid dates
                         productContent = EntityUtil.filterByDate(allProductContent, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", true);
