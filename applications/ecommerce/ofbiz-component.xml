@@ -50,6 +50,7 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrderPeopleData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoMarketing.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoStandardCosting.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoStoreGiftCertificateSettings.xml"/>
     <webapp name="ecommerce"
         title="ECommerce"
         server="default-server"
