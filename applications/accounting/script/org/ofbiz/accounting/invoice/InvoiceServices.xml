@@ -335,46 +335,73 @@ under the License.
             <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
             <fail-message message="Security Error: To update an Invoice you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
         </check-permission>
-        <!-- find the current header record -->
-        <entity-one entity-name="Invoice" value-name="headerValue"/>
-        <if-empty field-name="headerValue">
-            <add-error><fail-message message="Invoice not found, invoice Id: ${invoiceId}"/></add-error>
-            <log level="info" message="Invoice not found, invoice Id: ${invoiceId}"/>
-            <check-errors/>
-        </if-empty>
-        <!-- check if the status is not Paid... -->            
-        <if-compare field-name="headerValue.statusId" operator="equals" value="INVOICE_PAID">
-            <add-error><fail-message message="Can only remove payment application, when status is not 'paid'"/></add-error>
-        </if-compare>
-        <check-errors/>
-        <entity-one entity-name="PaymentApplication" value-name="lookedUpValue">
+        <entity-one entity-name="PaymentApplication" value-name="paymentApplication">
             <field-map field-name="paymentApplicationId" value="${parameters.paymentApplicationId}"/>
         </entity-one>
-        <if-empty field-name="lookedUpValue">
+        <if-empty field-name="paymentApplication">
             <add-error>
                 <fail-message message="Cannot find payment application record [${parameters.paymentApplicationId}]"/>
             </add-error>
-            <return/>
+            <check-errors/>
         </if-empty>
-        <remove-value value-name="lookedUpValue"/>
-        <if-not-empty field-name="lookedUpValue.invoiceId">
-            <field-to-result field-name="lookedUpValue.invoiceId" result-name="invoiceId"/>
+        <!-- check invoice -->
+        <if-not-empty field-name="paymentApplication.invoiceId">
+            <entity-one entity-name="Invoice" value-name="invoice">
+                <field-map field-name="invoiceId" value="${paymentApplication.invoiceId}"/>
+            </entity-one>
+            <if-empty field-name="invoice">
+                <add-error><fail-message message="Invoice not found, invoice Id: ${paymentApplication.invoiceId}"/></add-error>
+                <log level="info" message="Invoice not found, invoice Id: ${invoiceId}"/>
+                <check-errors/>
+            </if-empty>
+            <!-- check if the status is not Paid... -->            
+            <if-compare field-name="invoice.statusId" operator="equals" value="INVOICE_PAID">
+                <add-error><fail-message message="Invoice ${invoice.invoiceId} has status 'Paid', cannot remove application."/></add-error>
+            </if-compare>
+            <check-errors/>
+            <field-to-result field-name="paymentApplication.invoiceId" result-name="invoiceId"/>
         </if-not-empty>
-        <if-not-empty field-name="lookedUpValue.invoiceItemSeqId">
-            <field-to-result field-name="lookedUpValue.invoiceItemSeqId" result-name="invoiceItemSeqId"/>
+        <!-- invoice item -->
+        <if-not-empty field-name="paymentApplication.invoiceItemSeqId">
+            <field-to-result field-name="paymentApplication.invoiceItemSeqId" result-name="invoiceItemSeqId"/>
         </if-not-empty>
-        <if-not-empty field-name="lookedUpValue.paymentId">
-            <field-to-result field-name="lookedUpValue.paymentId" result-name="paymentId"/>
+        <!-- payment -->
+        <if-not-empty field-name="paymentApplication.paymentId">
+            <entity-one entity-name="Payment" value-name="payment">
+                <field-map field-name="paymentId" value="${paymentApplication.paymentId}"/>
+            </entity-one>
+            <if-not-empty field-name="payment">
+                <if-compare field-name="payment.statusId" operator="equals" value="PMNT_CONFIRMED">
+                    <add-error><fail-message message="Payment ${payment.paymentId} has status 'confirmed', cannot remove application."/></add-error>
+                </if-compare>
+                <check-errors/>
+            </if-not-empty>
+            <field-to-result field-name="paymentApplication.paymentId" result-name="paymentId"/>
         </if-not-empty>
-        <if-not-empty field-name="lookedUpValue.toPaymentId">
-            <field-to-result field-name="lookedUpValue.toPaymentId" result-name="toPaymentId"/>
+        <!-- toPayment -->
+        <if-not-empty field-name="paymentApplication.toPaymentId">
+            <entity-one entity-name="Payment" value-name="toPayment">
+                <field-map field-name="paymentId" value="${paymentApplication.toPaymentId}"/>
+            </entity-one>
+            <if-not-empty field-name="toPayment">
+                <if-compare field-name="toPayment.statusId" operator="equals" value="PMNT_CONFIRMED">
+                    <add-error><fail-message message="Related payment ${toPayment.paymentId} has status 'confirmed', cannot remove application."/></add-error>
+                </if-compare>
+                <check-errors/>
+            </if-not-empty>
+            <field-to-result field-name="paymentApplication.toPaymentId" result-name="toPaymentId"/>
         </if-not-empty>
-        <if-not-empty field-name="lookedUpValue.billingAccountId">
-            <field-to-result field-name="lookedUpValue.billingAccountId" result-name="billingAccountId"/>
+        <!-- billing account -->
+        <if-not-empty field-name="paymentApplication.billingAccountId">
+            <field-to-result field-name="paymentApplication.billingAccountId" result-name="billingAccountId"/>
         </if-not-empty>
-        <if-not-empty field-name="lookedUpValue.taxAuthGeoId">
-            <field-to-result field-name="lookedUpValue.taxAuthGeoId" result-name="taxAuthGeoId"/>
+        <!-- tax authority -->
+        <if-not-empty field-name="paymentApplication.taxAuthGeoId">
+            <field-to-result field-name="paymentApplication.taxAuthGeoId" result-name="taxAuthGeoId"/>
         </if-not-empty>
+        <!-- finaly delete application -->
+        <remove-value value-name="paymentApplication"/>
+        <string-to-list string="Payment application to payment ${paymentApplication.paymentId} removed..." list-name="successMessageList"/>
     </simple-method>
     
     <simple-method method-name="createInvoiceRole" short-description="Create a Invoice Role">
