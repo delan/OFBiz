@@ -1306,6 +1306,7 @@ public class InvoiceServices {
         String taxAuthGeoId = (String) context.get("taxAuthGeoId");
 
         List errorMessageList = new LinkedList();
+        String successMessage = null;
         if (debug) Debug.logInfo("Input parameters..." + 
         		" defaultInvoiceProcessing: " + defaultInvoiceProcessing + 
         		" changeDefaultInvoiceProcessing: " + changeProcessing + 
@@ -1762,15 +1763,22 @@ public class InvoiceServices {
             return ServiceUtil.returnError(errorMessageList);
         }
 
-        // if the amount to apply was not provided or was zero fill it with the maximum possible
+        // if the amount to apply was not provided or was zero fill it with the maximum possible and provide information to the user
         if (amountApplied.signum() == 0)	{
-        	amountApplied = newPaymentApplyAvailable; 
+        	String msgInsert = null;
+        	amountApplied = newPaymentApplyAvailable;
+        	if (invoiceId != null && newInvoiceApplyAvailable.compareTo(amountApplied) == 1) {
+        		amountApplied = newInvoiceApplyAvailable;
+        		msgInsert = new String("invoice id " + invoiceId);
+        	}
+        	if (toPaymentId != null && newToPaymentApplyAvailable.compareTo(amountApplied) == 1) {
+        		amountApplied = newToPaymentApplyAvailable;
+        		msgInsert = new String("paymentId " + toPaymentId);
+        	}
+        	if (msgInsert != null) successMessage = new String("Applying " + amountApplied + " from payment " + paymentId + " to " + msgInsert);
         }
-        else if (invoiceId != null && newInvoiceApplyAvailable.compareTo(amountApplied) == 1) {
-        	amountApplied = newInvoiceApplyAvailable;
-        }
-        else if (toPaymentId != null && newToPaymentApplyAvailable.compareTo(amountApplied) == 1) {
-        	amountApplied = newToPaymentApplyAvailable;
+        else {
+        	successMessage = new String("Applying " + amountApplied + " from payment " + paymentId);
         }
         
         // if the application is specified it is easy, update the existing record only
@@ -1920,7 +1928,12 @@ public class InvoiceServices {
                     if (errorMessageList.size() > 0) {
                         return ServiceUtil.returnError(errorMessageList);
                     } else {
-                        return ServiceUtil.returnSuccess();
+                    	if (successMessage != null) {
+                    		return ServiceUtil.returnSuccess(successMessage);
+                    	}
+                    	else {
+                    		return ServiceUtil.returnSuccess();
+                    	}
                     }
                 }
             }
