@@ -741,9 +741,6 @@
       <field name="inventoryItemId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="productFeatureId" type="id"></field>
-      <field name="finAccountId" type="id">
-      	<description>For cases where an invoice item is for purchasing additional value on a FinAccount (ie, gift certificate or calling card)</description>
-      </field>
       <field name="uomId" type="id"></field>
       <field name="taxableFlag" type="indicator"></field>
       <field name="quantity" type="floating-point"></field>
