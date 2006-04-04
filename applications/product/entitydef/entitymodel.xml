@@ -3101,14 +3101,27 @@
     	        title="Allows financial account, such as gift certificate or calling cards, to be configured at store level">
       <field type="id-ne" name="productStoreId"/>
       <field name="finAccountTypeId" type="id-ne"/>
+      <field name="requirePinCode" type="indicator"/>
       <field name="accountCodeLength" type="numeric">
       	<description>length of auto-generated account code</description>
+      </field>
+      <field name="pinCodeLength" type="numeric">
+      	<description>length of auto-generated pin code, if it is required</description>
       </field>
       <field name="accountValidDays" type="numeric">
       	<description>number of days an account of this type would be valid for</description>
       </field>
       <field name="authValidDays" type="numeric">
       	<description>number of days an authorization of this type would be valid for</description>
+      </field>
+      <field name="purchaseSurveyId" type="id">
+      	<description>This survey is typically used to collect information such as name of buyer, recipient, email, message, etc. and is quite flexible</description>
+      </field>
+      <field name="purchSurveySendTo" type="id">
+      	<description>Field name on the purchase survey with the send to email address</description>
+      </field>
+      <field name="purchSurveyCopyMe" type="id">
+      	<description>Whether the BCC on ProductStoreEmailSetting should be copied for email notifications</description>
       </field>
       <prim-key field="productStoreId"/>
       <prim-key field="finAccountTypeId"/>
@@ -3117,6 +3130,9 @@
       </relation>	
       <relation rel-entity-name="FinAccountType" type="one" fk-name="PRSTFNAC_FNACTP">
       	<key-map field-name="finAccountTypeId"/>
+      </relation>
+      <relation rel-entity-name="Survey" type="one" fk-name="PRSTFNAC_SRVY">
+      	<key-map field-name="purchaseSurveyId" rel-field-name="surveyId"/>
       </relation>
     	</entity>
     	         
