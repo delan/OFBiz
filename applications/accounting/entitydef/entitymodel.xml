@@ -1966,10 +1966,6 @@
       <field name="transactionDate" type="date-time"></field>
       <field name="entryDate" type="date-time"></field>
       <field name="paymentId" type="id-ne"></field>
-      <field name="amount" type="currency-amount">
-      	<description>If the Payment is for several FinAccount transactions, it is important to track the amount of each one.</description>
-      </field>
-      <field name="currencyUomId" type="id-ne"/>
       <prim-key field="finAccountTransId"/>
       <relation type="one" fk-name="FINACCT_TX_TYPE" rel-entity-name="FinAccountTransType">
         <key-map field-name="finAccountTransTypeId"/>
@@ -1985,9 +1981,6 @@
       </relation>
       <relation type="one" fk-name="FIN_ACT_TX_PMT" rel-entity-name="Payment">
         <key-map field-name="paymentId"/>
-      </relation>
-      <relation type="one" fk-name="FIN_ACT_TX_CURNCY" title="Currency" rel-entity-name="Uom">
-      	<key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="FinAccountAuth"
@@ -2081,58 +2074,20 @@
         <key-map field-name="finAccountTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="CommunicationEventFinAcct"
-            package-name="org.ofbiz.accounting.finaccount"
-            title="Communication Events related to a Financial Account">
-      <field name="finAccountId" type="id-ne"></field>
-      <field name="communicationEventId" type="id-ne"></field>
-      <prim-key field="finAccountId"/>
-      <prim-key field="communicationEventId"/>
-      <relation type="one" fk-name="COMEVFINACT_FINACT" rel-entity-name="FinAccount">
-        <key-map field-name="finAccountId"/>
-      </relation>
-      <relation type="one" fk-name="COMEVFINACT_CMEV" rel-entity-name="CommunicationEvent">
-        <key-map field-name="communicationEventId"/>
-      </relation>
-    </entity>
-    <entity entity-name="FinAcctContactMechPurpose"
-            package-name="org.ofbiz.accounting.finaccount"
-            title="Contact mechs (emails) for a FinAccount">
-      <field name="finAccountId" type="id-ne"></field>
-      <field name="contactMechId" type="id-ne"></field>
-      <field name="contactMechPurposeTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <prim-key field="finAccountId"/>
-      <prim-key field="contactMechId"/>
-      <prim-key field="contactMechPurposeTypeId"/>
-      <prim-key field="fromDate"/>
-      <relation type="one" fk-name="FINACT_CMPRP_TYPE" rel-entity-name="ContactMechPurposeType">
-        <key-map field-name="contactMechPurposeTypeId"/>
-      </relation>
-      <relation type="one" fk-name="FINACT_CMPRP_PARTY" rel-entity-name="FinAccount">
-        <key-map field-name="finAccountId"/>
-      </relation>
-      <relation type="one" fk-name="FINACT_CMPRP_CMECH" rel-entity-name="ContactMech">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="PostalAddress">
-        <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="TelecomNumber">
-        <key-map field-name="contactMechId"/>
-      </relation>
-    </entity>
     <view-entity entity-name="FinAccountTransSum"
     	       package-name="org.ofbiz.accounting.finaccount"
     	       title="View entity to help calculate total of financial account transactions by doing a query for the sum of all amounts 
     	       on a range of transactionDates for a given finAccountId, finAccountTransTypeId">
     	   <member-entity entity-alias="FAT" entity-name="FinAccountTrans"/>
+    	   <member-entity entity-alias="P" entity-name="Payment"/>
     	   <alias entity-alias="FAT" name="finAccountId" group-by="true"/>
     	   <alias entity-alias="FAT" name="finAccountTransTypeId" group-by="false"/> <!-- must not group-by this, or aggregating DEPOSIT and ADJUSTMENT won't work -->
     	   <alias entity-alias="FAT" name="transactionDate" group-by="false"/>
-       <alias entity-alias="FAT" name="amount" function="sum"/>
-       <alias entity-alias="FAT" name="currencyUomId" group-by="true"/>
+       <alias entity-alias="P" name="amount" function="sum"/>
+       <alias entity-alias="P" name="currencyUomId" group-by="true"/>
+    	   <view-link entity-alias="FAT" rel-entity-alias="P">
+    	   	   <key-map field-name="paymentId"/>
+    	   </view-link>       
     	</view-entity>
     <view-entity entity-name="FinAccountAuthSum"
            package-name="org.ofbiz.accounting.finaccount"
