@@ -148,8 +148,6 @@
     <entity-group group="org.ofbiz" entity="FinAccountTransTypeAttr" />
     <entity-group group="org.ofbiz" entity="FinAccountType" />
     <entity-group group="org.ofbiz" entity="FinAccountTypeAttr" />
-    <entity-group group="org.ofbiz" entity="CommunicationEventFinAcct" />
-    <entity-group group="org.ofbiz" entity="FinAcctContactMechPurpose" />
     <entity-group group="org.ofbiz" entity="FinAccountTransSum" />
     <entity-group group="org.ofbiz" entity="FinAccountAuthSum" />
     <entity-group group="org.ofbiz" entity="GiftCard" />
