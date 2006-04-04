@@ -349,8 +349,8 @@ under the License.
         <field name="billingAccountId"><hidden/></field>
         <field name="amountApplied" widget-style="inputBox"><text size="10"/></field>
         <field name="Update" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="Remove" widget-style="buttontext" use-when="&quot;${paymentApplicationId}&quot; != &quot;&quot;">
-            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceApplication?paymentApplicationId=${paymentApplicationId}&amp;invoiceId=${invoiceId}"/>
+        <field name="Remove" widget-style="buttontext" use-when="&quot;${paymentApplicationId}&quot; != null">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceApplication?paymentApplicationId=${paymentApplicationId}"/>
         </field>
     </form>
         
@@ -358,13 +358,9 @@ under the License.
         target="updateInvoiceApplication" title=""
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="invoiceId"><hidden/></field>
-        <field name="invoiceItemSeqId"><hidden/></field>
-        <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><lookup target-form-name="LookupPayment"/></field>
-        <field name="billingAccountId"><hidden/></field>
-        <field name="taxAuthGeoId" title="Tax Auth Geo Id"><hidden/></field>
         <field name="amountApplied"><text size="10"/></field>
-        <field name="invoiceProcessing"><check/></field>
+        <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
