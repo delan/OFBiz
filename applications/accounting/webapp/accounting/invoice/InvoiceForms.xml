@@ -184,7 +184,7 @@ under the License.
         <field name="invoiceId"><hidden/></field>
         <field position="1" name="invoiceDate" title="${uiLabelMap.AccountingInvoiceDate}"><date-time/></field>
         <field position="2" name="dueDate" title="${uiLabelMap.AccountingDueDate}"><date-time/></field>
-        <field position="1" name="invoiceTypeId" use-when="invoice!=null"><display/></field>
+        <field position="1" name="invoiceTypeId" title-style="tabletext" widget-style="tabletext" use-when="invoice!=null"><display-entity entity-name="InvoiceType" description="${description}"/></field>
         <field position="1" name="invoiceTypeId" use-when="invoice==null">
                 <drop-down allow-empty="false" no-current-selected-key="SALES_INVOICE">
                 <entity-options description="${description}" entity-name="InvoiceType">
@@ -193,7 +193,7 @@ under the License.
             </drop-down>
         </field> 
         <field name="statusId" use-when="invoice==null"><hidden value="INVOICE_IN_PROCESS"/></field>
-        <field position="2" name="statusId" use-when="invoice!=null"><display-entity entity-name="StatusItem"/></field>
+        <field position="2" name="statusId" title-style="tabletext" widget-style="tabletext" use-when="invoice!=null"><display-entity entity-name="StatusItem"/></field>
         <field position="1" name="description"><text size="100"/></field>
         <field position="1" name="partyIdFrom" title="Party billed from"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyId" title="Party billed to"><lookup target-form-name="LookupPartyName"/></field>
