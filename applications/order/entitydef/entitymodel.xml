@@ -457,9 +457,6 @@
       <relation type="one" fk-name="ORDER_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" fk-name="ORDER_ITEM_FINACT" rel-entity-name="FinAccount">
-      	<key-map field-name="finAccountId"/>
-      </relation>
       <relation type="one" fk-name="ORDER_ITEM_RFUOM" title="RecurringFreq" rel-entity-name="Uom">
         <key-map field-name="recurringFreqUomId" rel-field-name="uomId"/>
       </relation>

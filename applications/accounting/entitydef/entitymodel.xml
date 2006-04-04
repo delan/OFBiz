@@ -769,9 +769,6 @@
       <relation type="one" fk-name="INVCE_ITM_PRDFT" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId"/>
       </relation>
-      <relation type="one" fk-name="INVCE_ITM_FINACT" rel-entity-name="FinAccount">
-        <key-map field-name="finAccountId"/>
-      </relation>
       <relation type="one" fk-name="INVCE_ITM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
       </relation>
