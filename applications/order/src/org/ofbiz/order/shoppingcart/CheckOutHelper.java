@@ -1443,18 +1443,7 @@ public class CheckOutHelper {
             }
         }
 
-        double availableBalance = (accountLimit.doubleValue() - accountBalance.doubleValue());
-        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
-        DecimalFormat formatter = new DecimalFormat(currencyFormat);
-        String availableString = formatter.format(availableBalance);
-        Double available = null;
-        try {
-            available = new Double(formatter.parse(availableString).doubleValue());
-        } catch (ParseException e) {
-            Debug.logError(e, "Problem getting parsed available amount", module);
-        }
-        //Debug.logInfo("Billing Account : " + billingAccountId + " - " + available, module);
-        return available.doubleValue();
+        return (accountLimit.doubleValue() - accountBalance.doubleValue());
     }
 
     public Map makeBillingAccountMap(List paymentPrefs) {
