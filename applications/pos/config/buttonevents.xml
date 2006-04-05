@@ -17,6 +17,7 @@ $Id$
     <event button-name="numZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerZero" disable-lock="true"/>
     <event button-name="numDZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerDZero" disable-lock="true"/>
     <event button-name="numPercent" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerPercent" disable-lock="true"/>
+    <event button-name="numMinus" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerMinus" disable-lock="true"/>
 
     <!-- character events -->
     <event button-name="charShift" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerShift" disable-lock="false"/>
@@ -47,6 +48,7 @@ $Id$
     <event button-name="charX" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerX" disable-lock="false"/>
     <event button-name="charY" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerY" disable-lock="false"/>
     <event button-name="charZ" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerZ" disable-lock="false"/>
+    <event button-name="charDel" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerDel" disable-lock="false"/>
 
     <!-- base menu events -->
     <event button-name="menuClear" class-name="org.ofbiz.pos.event.MenuEvents" method-name="triggerClear" disable-lock="true"/>

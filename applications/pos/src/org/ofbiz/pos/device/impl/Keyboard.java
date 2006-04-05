@@ -39,7 +39,7 @@ import org.ofbiz.pos.screen.PosScreen;
  *
  * This class will invoke button events based on a key press.
  * The key -> code mapping is handled in the jpos.xml file.
- * The code -> button mapping is handled in the buttonconfig.xml file.
+ * The code -> button mapping is handled in the buttonevents.xml file.
  * It is advised to map to key codes > 200.
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>

@@ -84,6 +84,10 @@ public class NumericEvents {
     public static void triggerPercent(PosScreen pos) {
         pos.getInput().appendString("%");
     }
+
+    public static void triggerMinus(PosScreen pos) {
+        pos.getInput().appendString("-");
+    }
 }
 
 
