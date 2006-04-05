@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
 public class GiftCertificateServices {
 
     public static final String module = GiftCertificateServices.class.getName();
-    // TODO: these are to be replaced with store specific settings in ProductStoreFinActSetting
+    // These are default settings, in case ProductStoreFinActSetting does not have them
     public static final int CARD_NUMBER_LENGTH = 14;
     public static final int PIN_NUMBER_LENGTH = 6;
 
@@ -97,8 +97,16 @@ public class GiftCertificateServices {
             
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                 // TODO: move this code to createFinAccountForStore as well
-                cardNumber = generateNumber(delegator, giftCertSettings.getInteger("accountCodeLength").intValue(), true);
-                pinNumber = generateNumber(delegator, giftCertSettings.getInteger("pinCodeLength").intValue(), false);
+                int cardNumberLength = CARD_NUMBER_LENGTH;
+                int pinNumberLength = PIN_NUMBER_LENGTH;
+                if (giftCertSettings.getLong("accountCodeLength") != null) {
+                    cardNumberLength = giftCertSettings.getLong("accountCodeLength").intValue();
+                }
+                if (giftCertSettings.getLong("pinCodeLength") != null) {
+                    pinNumberLength = giftCertSettings.getLong("pinCodeLength").intValue();
+                }
+                cardNumber = generateNumber(delegator, cardNumberLength, true);
+                pinNumber = generateNumber(delegator, pinNumberLength, false);
 
                 // create the FinAccount
                 Map acctCtx = UtilMisc.toMap("finAccountId", cardNumber);
@@ -632,7 +640,7 @@ public class GiftCertificateServices {
                 uiLabelMap.addBottomResourceBundle("CommonUiLabels");
                 answerMap.put("uiLabelMap", uiLabelMap);
                 answerMap.put("locale", locale);
-
+                
                 // set the bcc address(s)
                 String bcc = productStoreEmail.getString("bccAddress");
                 if (copyMe) {
@@ -659,8 +667,10 @@ public class GiftCertificateServices {
                 emailCtx.put("userLogin", userLogin);
 
                 // send off the email async so we will retry on failed attempts
+                // SC 20060405: Changed to runSync because runAsync kept getting an error: 
+                // Problem serializing service attributes (Cannot serialize object of class java.util.PropertyResourceBundle)
                 try {
-                    dispatcher.runAsync("sendMailFromScreen", emailCtx);
+                    dispatcher.runSync("sendMailFromScreen", emailCtx);
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problem sending mail", module);
                     // this is fatal; we will rollback and try again later
