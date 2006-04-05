@@ -151,6 +151,9 @@
     <GlAccountType description="Product" glAccountTypeId="PRODUCT_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Inventory" glAccountTypeId="INVENTORY_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Inventory Adjustment from Average Cost" glAccountTypeId="INV_ADJ_AVG_COST" hasTable="N" parentTypeId="INVENTORY_ACCOUNT"/>
+    <GlAccountType description="Raw Materials Inventory" glAccountTypeId="RAWMAT_INVENTORY" hasTable="N" parentTypeId=""/>
+    <GlAccountType description="Work In Progress Inventory" glAccountTypeId="WIP_INVENTORY" hasTable="N" parentTypeId=""/>
+    
     <GlAccountType description="Tax" glAccountTypeId="TAX_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Profit Loss" glAccountTypeId="PROFIT_LOSS_ACCOUNT" hasTable="N" parentTypeId=""/>
     <GlAccountType description="Sales" glAccountTypeId="SALES_ACCOUNT" hasTable="N" parentTypeId=""/>
