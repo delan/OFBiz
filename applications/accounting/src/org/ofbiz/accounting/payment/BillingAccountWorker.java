@@ -38,6 +38,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
@@ -136,6 +137,7 @@ public class BillingAccountWorker {
         List exprs2 = new LinkedList();
         exprs2.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));       
         exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+        exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_PAID"));
 
         invoices = delegator.findByAnd("Invoice", exprs2);
 
@@ -143,14 +145,15 @@ public class BillingAccountWorker {
             Iterator ii = invoices.iterator();
             while (ii.hasNext()) {
                 GenericValue invoice = (GenericValue) ii.next();
-                balance += InvoiceWorker.getInvoiceTotal(invoice);              
+                balance += (InvoiceWorker.getInvoiceNotApplied(invoice)).doubleValue();
             }
         }
         
         // finally apply any payments to the balance
         List credits = null;
         List exprs3 = new LinkedList();
-        exprs3.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));       
+        exprs3.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
+        exprs3.add(new EntityExpr("invoiceId", EntityOperator.EQUALS, GenericEntity.NULL_FIELD));
 
         credits = delegator.findByAnd("PaymentApplication", exprs3);
 
