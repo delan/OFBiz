@@ -498,9 +498,8 @@
                                 <section>
                                     <condition><not><if-empty field-name="invoiceId"/></not></condition>
                                     <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/accounting/invoice/InvoiceTabBar.ftl"/></html>
-                                        </platform-specific>
+                                        <include-menu name="InvoiceTabBar" location="component://accounting/widget/Menus.xml"/>
+                                        <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/Menus.xml"/>
                                         <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                 </section>
