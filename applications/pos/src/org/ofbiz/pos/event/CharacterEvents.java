@@ -47,6 +47,10 @@ public class CharacterEvents {
         // TODO refresh the button display
     }
 
+    public static void triggerDel(PosScreen pos) {
+        pos.getInput().stripLastChar();
+    }
+
     public static void triggerA(PosScreen pos) {
         Input input = pos.getInput();
         if (capsLockSet || input.isFunctionSet("SHIFT")) {

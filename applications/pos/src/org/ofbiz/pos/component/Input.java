@@ -176,6 +176,12 @@ public class Input implements KeyboardReceiver, KeyListener {
         input.setText(this.input.getText() + str);
     }
 
+    public void stripLastChar() {
+        if (this.value().length() > 0) {
+            this.input.setText(this.value().substring(0, this.value().length() - 1));
+        }
+    }
+
     // KeyboardReceiver
     public synchronized void receiveData(int[] codes, char[] chars) {
         if (chars.length > 0 && checkChars(chars))

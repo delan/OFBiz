@@ -120,6 +120,24 @@ $Id$
         <prop name="portSettings" type="String" value="9600,none,8,1,hdwr"/>
         <prop name="statusTimeDelay" type="Long" value="500"/>
     </JposEntry>
+    <JposEntry logicalName="StarTSP600Cutter">
+        <creation factoryClass="com.starmicronics.javapos.StarJposServiceInstanceFactory" serviceClass="com.starmicronics.javapos.StarJPOSPOSPrinter"/>
+        <vendor name="Star Micronics Co., Ltd." url="http://www.star-micronics.co.jp"/>
+        <jpos category="POSPrinter" version="1.4a"/>
+        <product description="Thermal receipt printer" name="TSP600" url="http://www.star-micronics.co.jp"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="portName" type="String" value="/dev/ttyS0"/>
+        <prop name="errorResponseTimeout" type="Long" value="5000"/>
+        <prop name="capLogoStore" type="Boolean" value="false"/>
+        <prop name="statusTimeout" type="Long" value="500"/>
+        <prop name="timeout" type="Long" value="10000"/>
+        <prop name="starModel" type="String" value="TSP600"/>
+        <prop name="capRecRaster" type="Boolean" value="true"/>
+        <prop name="deviceClassName" type="String" value="com.starmicronics.javapos.DeviceTSP643"/>
+        <prop name="portSettings" type="String" value="9600,none,8,1,hdwr"/>
+        <prop name="statusTimeDelay" type="Long" value="500"/>
+    </JposEntry>
 
     <!-- Star TSP600 Connected CashDrawer (requires startjavapos.jar) -->
     <JposEntry logicalName="StarTSP600CashDrawer">
