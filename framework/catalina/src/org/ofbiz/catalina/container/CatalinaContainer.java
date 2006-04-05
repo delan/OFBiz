@@ -500,6 +500,7 @@ public class CatalinaContainer implements Container {
 
         context.setDisplayName(appInfo.name);
         context.setDocBase(location);
+        context.setAllowLinking(true);
 
         context.setReloadable(contextReloadable);
         context.setDistributable(distribute);
