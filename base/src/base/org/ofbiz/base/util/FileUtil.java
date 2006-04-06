@@ -29,6 +29,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 /**
  * File Utilities
@@ -45,7 +48,7 @@ public class FileUtil {
         writeString(null, fileName, s);
     }
 
-    public static void writeString(String path, String name, String s) throws IOException {      
+    public static void writeString(String path, String name, String s) throws IOException {
         Writer out = getBufferedWriter(path, name);
 
         try {
@@ -95,5 +98,24 @@ public class FileUtil {
         }
 
         return fileName;
+    }
+
+    public static StringBuffer readTextFile(String fileName, boolean newline) throws FileNotFoundException, IOException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            throw new FileNotFoundException();
+        }
+
+        StringBuffer buf = new StringBuffer();
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        String str;
+        while ((str = in.readLine()) != null) {
+            buf.append(str);
+            if (newline) {
+                buf.append(System.getProperty("line.separator"));
+            }
+        }
+
+        return buf;
     }
 }
