@@ -453,11 +453,30 @@ public class GiftCertificateServices {
     }
 
     public static Map giftCertificateRelease(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+
         GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
-        String currency = (String) context.get("currency");
-        Double amount = (Double) context.get("releaseAmount");
-        return giftCertificateRestore(dctx, userLogin, paymentPref, amount, currency, "release");
+
+        String err = "Unable to expire financial account authorization for Gift Certificate: ";
+        try {
+            // expire the related financial authorization transaction
+            GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(paymentPref);
+            if (authTransaction == null) {
+                return ServiceUtil.returnError(err + " Could not find authorization transaction.");
+            }
+            Map input = UtilMisc.toMap("userLogin", userLogin, "finAccountAuthId", authTransaction.get("referenceNum"));
+            Map serviceResults = dispatcher.runSync("expireFinAccountAuth", input);
+
+            // if there's an error, don't release
+            if (ServiceUtil.isError(serviceResults)) {
+                return ServiceUtil.returnError(err + ServiceUtil.getErrorMessage(serviceResults));
+            }
+        } catch (GenericServiceException e) {
+            Debug.logError(e, e.getMessage(), module);
+            return ServiceUtil.returnError(err + e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
     }
 
     private static Map giftCertificateRestore(DispatchContext dctx, GenericValue userLogin, GenericValue paymentPref, Double amount, String currency, String resultPrefix) {
