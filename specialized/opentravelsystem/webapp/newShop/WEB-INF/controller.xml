@@ -308,7 +308,7 @@
     </request-map>
     <request-map uri="setBasicInfo">
         <security https="true" auth="false"/>
-        <event type="simple" path="org/ofbiz/opentravelsystem/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <event type="simple" path="org/ofbiz/opentravelsystem/CustomerEvents.xml" invoke="createCustomer"/>
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="custsetting"/>
     </request-map>

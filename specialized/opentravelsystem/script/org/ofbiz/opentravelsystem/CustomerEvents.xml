@@ -285,7 +285,7 @@
         <!-- get the visit from the session to get the visitId -->
         <session-to-field field-name="visit"/>
         <field-to-field field-name="visitId" map-name="visit" to-map-name="partyDataSource"/>
-
+<log level="always" message="=========================locale: ${locale}"></log>
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         
         <!-- KVK (Chamber of Commerce Number Missing) number missing -->
@@ -301,13 +301,12 @@
         <!-- create partyId -->
         <sequenced-id-to-env sequence-name="${parameters.emailProductStoreId}Party" env-name="nextPartyId"/>
         <set field="partyGroupContextServ.partyId" value="${parameters.emailProductStoreId}${nextPartyId}"/>
-        
         <set-service-fields map-name="personContext" service-name="createPartyGroup" to-map-name="partyGroupContextServ"/>
         <set field="partyGroupContextServ.comments" value="KamerVanKoophandel=&quot;"/>
         <string-append field-name="partyGroupContextServ.comments" string="${parameters.KVK}&quot;"/>
 
         <!-- partyGroup -->
-        <set field="partyGroupContextServ.groupName" from-field="parameters.USER_LAST_NAME"/>
+        <set field="partyGroupContextServ.groupName" from-field="parameters.USER_FIRST_NAME"/>  
         <string-append field-name="partyGroupContextServ.groupName" string=", "/>
         <string-append field-name="partyGroupContextServ.groupName" string="${parameters.USER_LAST_NAME}"/>
         <call-service service-name="createPartyGroup" in-map-name="partyGroupContextServ">

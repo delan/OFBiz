@@ -85,7 +85,6 @@ public class FindServices {
             // try finding in inputFields Map
             noConditionFind = (String) inputFields.get("noConditionFind");
         }
-        noConditionFind = "Y";			// to show the full list, this line is added....
         String filterByDate = (String) context.get("filterByDate");
         if (UtilValidate.isEmpty(filterByDate)) {
             // try finding in inputFields Map

@@ -80,4 +80,17 @@
             <link target="ListPartyContactLists?partyId=${partyId}"/>
         </menu-item>
     </menu>
+    <menu name="ContactListTabBar" default-menu-item-name="ContactList" default-selected-style="tabButtonSelected" 
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
+        orientation="horizontal" type="simple">
+        <menu-item name="ContactList" title="${uiLabelMap.ContactList}">
+            <link target="/EditContactList?contactListId=${contactListId}"/>
+        </menu-item>
+        <menu-item name="ContactListParty" title="${uiLabelMap.PartyParties}">
+            <link target="/FindContactListParties?contactListId=${contactListId}"/>
+        </menu-item>
+        <menu-item name="SendEmail" title="${uiLabelMap.CommonSendPerEmail}">
+            <link target="CreateEmailToContactList?contactListId=${contactListId}"/>
+        </menu-item>
+    </menu>
 </menus>
