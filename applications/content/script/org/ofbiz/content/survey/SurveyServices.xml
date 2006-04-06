@@ -596,7 +596,7 @@
             </if-validate-method>
         </if-compare>
     </simple-method>
-    <simple-method method-name="processSurveyResponseInline" short-description="processSurveyResponseInline">
+    <simple-method method-name="processSurveyResponseInline" short-description="processSurveyResponseInline" login-required="false">
         <if-not-empty field-name="currentAnswers">
             <set field="responseAnswer" from-field="currentAnswers.${currentFieldName}"/>
         </if-not-empty>
