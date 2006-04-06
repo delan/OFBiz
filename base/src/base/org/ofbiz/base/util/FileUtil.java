@@ -107,15 +107,30 @@ public class FileUtil {
         }
 
         StringBuffer buf = new StringBuffer();
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        String str;
-        while ((str = in.readLine()) != null) {
-            buf.append(str);
-            if (newline) {
-                buf.append(System.getProperty("line.separator"));
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(file));
+
+            String str;
+            while ((str = in.readLine()) != null) {
+                buf.append(str);
+                if (newline) {
+                    buf.append(System.getProperty("line.separator"));
+                }
+            }
+        } catch (IOException e) {
+            Debug.logError(e, module);
+            throw e;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    Debug.logError(e, module);
+                }
             }
         }
-
+        
         return buf;
     }
 }
