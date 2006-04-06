@@ -38,7 +38,9 @@ import org.ofbiz.entity.condition.*;
 delegator = parameters.get("delegator");
 String organizationPartyId = parameters.get("organizationPartyId");
 GenericValue partyAcctgPreference = delegator.findByPrimaryKey("PartyAcctgPreference",UtilMisc.toMap("partyId",organizationPartyId));
-String prefix = partyAcctgPreference.getString("invoiceIdPrefix");
+String prefix = new Srting("");
+if (partyAcctgPreference != null
+	prefix = partyAcctgPreference.getString("invoiceIdPrefix");
 
 String year = parameters.get("year");
 if (year.equals("")) {

@@ -227,7 +227,7 @@
                                     <section>
                                         <condition><not><if-empty field-name="contactListId"/></not></condition>
                                         <widgets>
-                                            <include-menu name="ContactListTabBar" location="component://marketing/webapp/marketing/contact/ContactListMenus.xml"/>
+                                            <include-menu name="ContactListTabBar" location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml"/>
                                         </widgets>
                                     </section>
                                     <decorator-section-include name="body"/>
