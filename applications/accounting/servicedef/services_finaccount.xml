@@ -184,14 +184,19 @@
         <description>Process a sale using FinAccount Gift Certificate</description>
         <implements service="giftCardProcessInterface"/>
     </service>
+    <service name="ofbGcAuthorize" engine="java"
+             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateAuthorize" auth="true">
+        <description>Authorize a potential transaction against a Gift Certificate</description>
+        <implements service="giftCardProcessInterface"/>
+    </service>
     <service name="ofbGcRelease" engine="java"
              location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateRelease" auth="true">
-        <description>Return funds back to a Gift Certificate (Same as Refund)</description>
+        <description>Release authorizations back to a Gift Certificate.  No amount is added back, but an authorization is cancelled.</description>
         <implements service="paymentReleaseInterface"/>
     </service>
     <service name="ofbGcRefund" engine="java"
              location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateRefund" auth="true">
-        <description>Return funds back to a Gift Certificate (Same as Release)</description>
+        <description>Return funds back to a Gift Certificate.  Amounts are added back to the gift certificate.</description>
         <implements service="paymentRefundInterface"/>
     </service>
 
