@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 	<!-- sample settings for gift certificates.  DemoProduct.xml must be loaded -->
-	<ProductStoreFinActSetting productStoreId="9000" finAccountTypeId="GIFTCERT_ACCOUNT" requirePinCode="N" 
-		purchaseSurveyId="1000" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" accountValidDays="365" authValidDays="30"/>
+	<ProductStoreFinActSetting productStoreId="9000" finAccountTypeId="GIFTCERT_ACCOUNT" requirePinCode="Y" 
+		purchaseSurveyId="1000" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="30"/>
     
     <!-- service for purchasing gift certificate configured as a Content and to be associated with products -->
     <Content contentId="GC_PURCHASE" serviceName="ofbGcPurchase"/>
@@ -13,10 +13,10 @@
     	
     <!-- payment settings for gift certificates.  the idea is that you re-configure this store's GIFT_CARD settings to use the gift certificate services,
     	rather than the gift card services. -->
-    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="ofbGcProcessor"/>
+    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="ofbGcAuthorize"/>
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="ofbGcRelease"/>
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="ofbGcProcessor"/>
-    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="ofbGcProcessor"/>
+    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="ofbGcAuthorize"/>
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="ofbGcRefund"/>
     
     	
