@@ -130,11 +130,11 @@
               <fo:table-body>
                 <fo:table-row><fo:table-cell border-style="solid" border-width="0.2pt" padding="1mm"><fo:block font-weight="bold">Return From</fo:block></fo:table-cell></fo:table-row>
                 <fo:table-row><fo:table-cell padding="1mm">
-                  <fo:block white-space-collapse="false"><#if fromPartyNameResult.fullName?has_content>${fromPartyNameResult.fullName}<#else/><#if (postalAddressFrom.toName)?has_content>${postalAddressFrom.toName}</#if><#if (postalAddressFrom.attnName)?has_content>
-${postalAddressFrom.attnName}</#if></#if>
+                  <fo:block white-space-collapse="false"><#if fromPartyNameResult.fullName?has_content>${fromPartyNameResult.fullName}<#else/><#if postalAddressFrom?exists><#if (postalAddressFrom.toName)?has_content>${postalAddressFrom.toName}</#if><#if (postalAddressFrom.attnName)?has_content>
+${postalAddressFrom.attnName}</#if></#if></#if><#if postalAddressFrom?exists>
 ${postalAddressFrom.address1}<#if (postalAddressFrom.address2)?has_content>
 ${postalAddressFrom.address2}</#if>
-${postalAddressFrom.city}<#if (postalAddressFrom.stateProvinceGeoId)?has_content>, ${postalAddressFrom.stateProvinceGeoId}</#if><#if (postalAddressFrom.postalCode)?has_content>, ${postalAddressFrom.postalCode}</#if>
+${postalAddressFrom.city}<#if (postalAddressFrom.stateProvinceGeoId)?has_content>, ${postalAddressFrom.stateProvinceGeoId}</#if><#if (postalAddressFrom.postalCode)?has_content>, ${postalAddressFrom.postalCode}</#if></#if>
                   </fo:block>
 
                 </fo:table-cell></fo:table-row>
@@ -150,11 +150,11 @@ ${postalAddressFrom.city}<#if (postalAddressFrom.stateProvinceGeoId)?has_content
               <fo:table-body>
                 <fo:table-row><fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt"><fo:block font-weight="bold">Return To</fo:block></fo:table-cell></fo:table-row>
                 <fo:table-row><fo:table-cell padding="1mm">
-                  <fo:block white-space-collapse="false"><#if toPartyNameResult.fullName?has_content>${toPartyNameResult.fullName}<#else/><#if (postalAddressTo.toName)?has_content>${postalAddressTo.toName}</#if><#if (postalAddressTo.attnName)?has_content>
-${postalAddressTo.attnName}</#if></#if>
+                  <fo:block white-space-collapse="false"><#if toPartyNameResult.fullName?has_content>${toPartyNameResult.fullName}<#else/><#if postalAddressTo?exists><#if (postalAddressTo.toName)?has_content>${postalAddressTo.toName}</#if><#if (postalAddressTo.attnName)?has_content>
+${postalAddressTo.attnName}</#if></#if></#if><#if postalAddressTo?exists>
 ${postalAddressTo.address1}<#if (postalAddressTo.address2)?has_content>
 ${postalAddressTo.address2}</#if>
-${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, ${postalAddressTo.stateProvinceGeoId}</#if><#if (postalAddressTo.postalCode)?has_content>, ${postalAddressTo.postalCode}</#if></fo:block>
+${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, ${postalAddressTo.stateProvinceGeoId}</#if><#if (postalAddressTo.postalCode)?has_content>, ${postalAddressTo.postalCode}</#if></#if></fo:block>
                 </fo:table-cell></fo:table-row>
               </fo:table-body>
             </fo:table>
