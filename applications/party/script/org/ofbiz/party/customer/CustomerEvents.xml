@@ -256,7 +256,7 @@
         <string-to-field string="Y" field-name="isCreate" map-name="partyDataSource"/>
         <!-- get the visit from the session to get the visitId -->
         <session-to-field field-name="visit"/>
-        <field-to-field field-name="visitId" map-name="visit" to-map-name="partyDataSource"/>
+	<set from-field="visit.visitId" field="partyDataSource.visitId"/>
 
 
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
