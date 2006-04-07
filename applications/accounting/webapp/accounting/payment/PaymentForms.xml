@@ -231,7 +231,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="amountApplied" title="${uiLabelMap.AccountingAmountApplied}" tooltip="${uiLabelMap.AccountingEmptyForMaxAmount}"><text/></field>
+        <field name="amountApplied" title="${uiLabelMap.AccountingAmountApplied}"><text/></field>
         <field name="invoiceProcessing" title="${uiLabelMap.AccountingApplyToInvoiceItems}" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" title="${uiLabelMap.AccountingIgnoreInvoiceItems}" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
