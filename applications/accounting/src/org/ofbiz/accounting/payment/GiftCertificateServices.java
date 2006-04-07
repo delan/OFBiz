@@ -427,7 +427,6 @@ public class GiftCertificateServices {
                         return ServiceUtil.returnError("Gift certificate not found");
                     }
                     finAccountId = finAccount.getString("finAccountId");
-                }
             }
             if (finAccountId == null) {
                 return ServiceUtil.returnError("Gift certificate pin number is invalid");
