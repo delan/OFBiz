@@ -84,5 +84,35 @@
          </call-service>
          
      </simple-method>
-     
+
+     <simple-method method-name="updatePaymentApplication" short-description="-- add a payment application with maximum value when not provided--">
+         <if-empty field-name="parameters.amountApplied">
+             <if-not-empty field-name="parameters.paymentId">
+                <entity-one entity-name="Payment" value-name="payment"/>
+                <set field="parameters.amountApplied" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment)}"/>
+             </if-not-empty>
+
+             <if-not-empty field-name="parameters.invoiceId">
+                 <entity-one entity-name="Invoice" value-name="invoice"/>
+                 <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
+                 <if-compare-field field-name="parameters.amountApplied" operator="greater" to-field-name="notAppliedAmount">
+                     <set field="parameters.amountApplied" from-field="notAppliedAmount"/>
+                 </if-compare-field>
+             </if-not-empty>
+             
+             <if-not-empty field-name="parameters.toPaymentId">
+                 <entity-one entity-name="Payment" value-name="toPayment">
+                     <field-map field-name="paymentId" env-name="parameters.toPaymentId"/>
+                 </entity-one>
+                 <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(toPayment)}"/>
+                 <if-compare-field field-name="parameters.amountApplied" operator="greater" to-field-name="notAppliedAmount">
+                     <set field="parameters.amountApplied" from-field="notAppliedAmount"/>
+                 </if-compare-field>
+             </if-not-empty>
+         </if-empty>
+         
+         <set-service-fields service-name="updatePaymentApplicationOfbiz" map-name="parameters" to-map-name="updatePaymentApplicationParam"/>
+         <call-service service-name="updatePaymentApplicationOfbiz" in-map-name="updatePaymentApplicationParam"/>
+     </simple-method>
+
  </simple-methods>
