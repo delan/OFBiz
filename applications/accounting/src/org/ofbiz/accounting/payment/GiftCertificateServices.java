@@ -342,10 +342,14 @@ public class GiftCertificateServices {
         try {
             GenericValue finAccountAuth = delegator.findByPrimaryKey("FinAccountAuth", UtilMisc.toMap("finAccountAuthId", finAccountAuthId));
             GenericValue giftCard = finAccountAuth.getRelatedOne("FinAccount");   
-            // make sure it has not expired
+            // make sure authorization has not expired
             Timestamp authExpiration = finAccountAuth.getTimestamp("thruDate");
             if ((authExpiration != null) && (authExpiration.before(UtilDateTime.nowTimestamp()))) {
                 return ServiceUtil.returnError("Authorization transaction [" + authTransaction.getString("paymentGatewayResponseId") + "] has expired as of " + authExpiration);
+            }
+            // make sure the fin account itself has not expired 
+            if ((giftCard.getTimestamp("thruDate") != null) && (giftCard.getTimestamp("thruDate").before(UtilDateTime.nowTimestamp()))) {
+                return ServiceUtil.returnError("Gift certificate has expired as of " + giftCard.getTimestamp("thruDate"));
             }
             
             // obtain the order information
@@ -416,13 +420,15 @@ public class GiftCertificateServices {
             // if the store requires pin codes, then validate pin code against card number, and the gift certificate's finAccountId is the gift card's card number
             // otherwise, the gift card's card number is an ecrypted string, which must be decoded to find the FinAccount
             GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
+            GenericValue finAccount = null;
             String finAccountId = null;
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                 if (validatePin(delegator, giftCard.getString("cardNumber"), giftCard.getString("pinNumber"))) {
                     finAccountId = giftCard.getString("cardNumber");
+                    finAccount = delegator.findByPrimaryKey("FinAccount", UtilMisc.toMap("finAccountId", finAccountId));
                 } 
             } else {
-                    GenericValue finAccount = FinAccountHelper.getFinAccountFromCode(giftCard.getString("cardNumber"), delegator);
+                    finAccount = FinAccountHelper.getFinAccountFromCode(giftCard.getString("cardNumber"), delegator);
                     if (finAccount == null) {
                         return ServiceUtil.returnError("Gift certificate not found");
                     }
@@ -430,6 +436,11 @@ public class GiftCertificateServices {
             }
             if (finAccountId == null) {
                 return ServiceUtil.returnError("Gift certificate pin number is invalid");
+            }
+            
+            // check for expiration date
+            if ((finAccount.getTimestamp("thruDate") != null) && (finAccount.getTimestamp("thruDate").before(UtilDateTime.nowTimestamp()))) {
+                return ServiceUtil.returnError("Gift certificate has expired as of " + finAccount.getTimestamp("thruDate"));
             }
             
             // check the amount to authorize against the available balance of fin account, which includes active authorizations as well as transactions
