@@ -1763,25 +1763,7 @@ public class InvoiceServices {
             return ServiceUtil.returnError(errorMessageList);
         }
 
-        // if the amount to apply was not provided or was zero fill it with the maximum possible and provide information to the user
-        if (amountApplied.signum() == 0)	{
-        	String msgInsert = null;
-        	amountApplied = newPaymentApplyAvailable;
-        	if (invoiceId != null && newInvoiceApplyAvailable.compareTo(amountApplied) == 1) {
-        		amountApplied = newInvoiceApplyAvailable;
-        		msgInsert = new String("invoice id " + invoiceId);
-        	}
-        	if (toPaymentId != null && newToPaymentApplyAvailable.compareTo(amountApplied) == 1) {
-        		amountApplied = newToPaymentApplyAvailable;
-        		msgInsert = new String("paymentId " + toPaymentId);
-        	}
-        	if (msgInsert != null) successMessage = new String("Applying " + amountApplied + " from payment " + paymentId + " to " + msgInsert);
-        }
-        else {
-        	successMessage = new String("Applying " + amountApplied + " from payment " + paymentId);
-        }
-        
-        // if the application is specified it is easy, update the existing record only
+       	// if the application is specified it is easy, update the existing record only
         if (paymentApplicationId != null) { 
             // record is already retrieved previously
             if (debug) Debug.logInfo("Process an existing paymentApplication record: " + paymentApplicationId, module);

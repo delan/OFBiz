@@ -293,4 +293,11 @@ public class PaymentWorker {
         }
         return paymentApplied;        
     }
+    public static double getPaymentNotApplied(GenericValue payment) {
+        return getPaymentNotAppliedBd(payment).doubleValue();
+    }
+
+    public static BigDecimal getPaymentNotAppliedBd(GenericValue payment) {
+        return payment.getBigDecimal("amount").subtract(getPaymentAppliedBd(payment));        
+    }
 }
