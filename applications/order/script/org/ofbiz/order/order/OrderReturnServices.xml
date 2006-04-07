@@ -291,10 +291,14 @@
             <if-compare-field field-name="returnPriceDelta" operator="less" to-field-name="zero" type="Double">
                 <calculate field-name="returnPriceDelta" type="Double"><calcop field-name="returnPriceDelta" operator="negative"/></calculate>
             </if-compare-field>
-
-            <if-compare-field field-name="returnPriceDelta" operator="greater-equals" to-field-name="epsilon" type="Double">
-                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedThePurchasePrice"/></add-error>
+			
+			<!-- just checking greater-equals sometimes returns an error if the difference is actually zero -->
+            <if-compare-field field-name="returnPriceDelta" operator="not-equals" to-field-name="zero" type="Double">
+				<if-compare-field field-name="returnPriceDelta" operator="greater-equals" to-field-name="epsilon" type="Double">
+					<add-error><fail-property resource="OrderErrorUiLabels" property="OrderReturnPriceCannotExceedThePurchasePrice"/></add-error>
+				</if-compare-field >
             </if-compare-field>
+
             <check-errors/>
 
             <else>
