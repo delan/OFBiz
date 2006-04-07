@@ -63,6 +63,7 @@ if (payments != null && payments.size() > 0)    {
            paymentMap.put("paymentId", payment.getString("paymentId"));
            paymentMap.put("effectiveDate", payment.getString("effectiveDate").substring(0,10)); // list as YYYY-MM-DD
            paymentMap.put("amount", payment.getBigDecimal("amount").setScale(decimals,rounding).toString());
+           paymentMap.put("currencyUomId", payment.getString("currencyUomId"));
            paymentMap.put("paymentApplied", paymentApplied.toString());
            BigDecimal paymentToApply = payment.getBigDecimal("amount").setScale(decimals,rounding).subtract(paymentApplied);
            if (paymentToApply.compareTo(invoiceToApply) < 0 ) {
