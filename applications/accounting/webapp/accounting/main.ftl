@@ -66,7 +66,7 @@
   <tr valign="top">
 <td>
 <ul>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y</@ofbizUrl>">Show All Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?noConditionFind=Y&lookupFlag=Y</@ofbizUrl>">Show All Invoices</a></li>
 </ul>
 </td>
 
@@ -80,7 +80,7 @@
 <td>
 <ul>
 <#list invoiceStatus as status>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceStatusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Invoices</a></li>
 </#list>
 </ul>
 </td>
@@ -93,7 +93,7 @@
 <tr valign="top">
 <td>
 <ul>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y</@ofbizUrl>">Show all Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?noConditionFind=Y&lookupFlag=Y</@ofbizUrl>">Show all Payments</a></li>
 </ul>
 </td>
 <td>
@@ -117,7 +117,7 @@
 <td>
 <ul>
 <#list paymentStatus as status>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&paymentStatusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Payments</a></li>
 </#list>
 </ul>
 </td>
@@ -125,6 +125,6 @@
 </table>
 
 <p><b>NOTE</b><br/>
-A full accounting/GL component for OFBiz is under development.  
+A full accounting and financials component for OFBiz is available.  
 <a href="http://www.opensourcestrategies.com/ofbiz/accounting.php">Click here</a> for complete details.</p>
 </div>
