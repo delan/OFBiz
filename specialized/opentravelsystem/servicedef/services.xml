@@ -423,5 +423,26 @@
         <override name="contactListTypeId" optional="false"/>
         <override name="contactListName" optional="false"/>
     </service>
+    <service name="updatePaymentApplication" default-entity-name="PaymentApplication" engine="simple"
+        location="org/ofbiz/opentravelsystem/InvoiceServices.xml" invoke="updatePaymentApplication">
+        <description>
+            Apply a payment to a Invoice, create/update paymentApplication records, modified version, will apply
+            the maximum amount when no amount is supplied.
+        </description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/> <!-- a "Y" will activate this option -->
+        <override name="paymentId" optional="false"/>        
+    </service>
+    <service name="updatePaymentApplicationOfbiz" default-entity-name="PaymentApplication" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="updatePaymentApplication">
+        <description>
+            Apply a payment to a Invoice, create/update paymentApplication records
+        </description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/> <!-- a "Y" will activate this option -->
+        <override name="paymentId" optional="false"/>        
+    </service>
     
 </services>
