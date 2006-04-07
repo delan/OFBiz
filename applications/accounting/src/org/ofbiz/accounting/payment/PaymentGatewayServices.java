@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Calendar;
+import java.util.Set;
 import java.sql.Timestamp;
 
 import org.ofbiz.accounting.invoice.InvoiceWorker;
@@ -1095,9 +1096,24 @@ public class PaymentGatewayServices {
         captureContext.put("userLogin", userLogin);
         captureContext.put("orderPaymentPreference", paymentPref);
         captureContext.put("paymentConfig", paymentConfig);
-        captureContext.put("captureAmount", new Double(amount));
         captureContext.put("currency", orh.getCurrency());
 
+        // this is necessary because the ccCaptureInterface uses "captureAmount" but the paymentProcessInterface uses "processAmount"
+        try {
+            ModelService captureService = dctx.getModelService(serviceName);
+            Set inParams = captureService.getInParamNames();
+            if (inParams.contains("captureAmount")) {
+                captureContext.put("captureAmount", new Double(amount));    
+            } else if (inParams.contains("processAmount")) {
+                captureContext.put("processAmount", new Double(amount));    
+            } else {
+                return ServiceUtil.returnError("Service [" + serviceName + "] does not have a captureAmount or processAmount.  Its parameters are: " + inParams);
+            }
+        } catch (GenericServiceException ex) {
+            return ServiceUtil.returnError("Cannot get model service for " + serviceName);
+        }
+        
+        
         if (authTrans != null) {
             captureContext.put("authTrans", authTrans);
         }
