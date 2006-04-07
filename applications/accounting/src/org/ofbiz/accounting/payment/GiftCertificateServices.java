@@ -95,7 +95,7 @@ public class GiftCertificateServices {
             final String accountName = "Gift Certificate Account";
             final String deposit = "DEPOSIT";
 
-            GenericValue giftCertSettings = delegator.findByPrimaryKey("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
+            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
             Map acctResult = null;
             
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
@@ -234,20 +234,25 @@ public class GiftCertificateServices {
         }
 
         // validate the amount
-        if (amount.doubleValue() < -1) {
+        if (amount.doubleValue() < 0.00) {
             return ServiceUtil.returnError("Amount should be a positive number.");
         }
 
-        // validate the pin
-        if (!validatePin(delegator, cardNumber, pinNumber)) {
-            return ServiceUtil.returnError("PIN number is not valid!");
+        // validate the pin if the store requires it
+        try {
+            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
+            if ("Y".equals(giftCertSettings.getString("requirePinCode")) && !validatePin(delegator, cardNumber, pinNumber)) {
+                return ServiceUtil.returnError("PIN number is not valid!");
+            }
+        } catch (GenericEntityException ex) {
+            return ServiceUtil.returnError("Cannot get store fin account settings " + ex.getMessage());
         }
-        Debug.log("Attempting to redeem GC for " + amount, module);
+        Debug.logInfo("Attempting to redeem GC for " + amount, module);
 
-        // create the transaction
+        // check the actual balance (excluding authorized amounts) and create the transaction if it is sufficient
         double previousBalance = 0.00;
         try {
-            previousBalance = FinAccountHelper.getAvailableBalance(cardNumber, currencyUom, delegator).doubleValue();
+            previousBalance = FinAccountHelper.getBalance(cardNumber, currencyUom, delegator).doubleValue();
         } catch (GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -315,55 +320,78 @@ public class GiftCertificateServices {
         GenericDelegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-        GenericValue giftCard = (GenericValue) context.get("giftCard");
-        GenericValue party = (GenericValue) context.get("billToParty");
-        String currency = (String) context.get("currency");
-        String orderId = (String) context.get("orderId");
         Double amount = (Double) context.get("processAmount");
-
+        String currency = (String) context.get("currency");
         // make sure we have a currency
         if (currency == null) {
             currency = UtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD");
         }
 
-        // obtain the order information
-        OrderReadHelper orh = new OrderReadHelper(delegator, orderId);
-
-        Map redeemCtx = new HashMap();
-        redeemCtx.put("userLogin", userLogin);
-        redeemCtx.put("productStoreId", orh.getProductStoreId());
-        //redeemCtx.put("paymentConfig", paymentConfig);
-        redeemCtx.put("cardNumber", giftCard.get("cardNumber"));
-        redeemCtx.put("pinNumber", giftCard.get("pinNumber"));
-        redeemCtx.put("currency", currency);
-        //redeemCtx.put("orderId", orderId);
-        redeemCtx.put("partyId", party.get("partyId"));
-        redeemCtx.put("amount", amount);
-
-        // invoke the redeem service
-        Map redeemResult = null;
+        // get the authorizations
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");        
+        GenericValue authTransaction = (GenericValue) context.get("authTrans");
+        if (authTransaction == null){
+            authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        }
+        if (authTransaction == null) {
+            return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot capture");
+        }
+       
+        // get the gift certificate and its authorization from the authorization
+        String finAccountAuthId = authTransaction.getString("referenceNum");
         try {
+            GenericValue finAccountAuth = delegator.findByPrimaryKey("FinAccountAuth", UtilMisc.toMap("finAccountAuthId", finAccountAuthId));
+            GenericValue giftCard = finAccountAuth.getRelatedOne("FinAccount");   
+            // make sure it has not expired
+            Timestamp authExpiration = finAccountAuth.getTimestamp("thruDate");
+            if ((authExpiration != null) && (authExpiration.before(UtilDateTime.nowTimestamp()))) {
+                return ServiceUtil.returnError("Authorization transaction [" + authTransaction.getString("paymentGatewayResponseId") + "] has expired as of " + authExpiration);
+            }
+            
+            // obtain the order information
+            OrderReadHelper orh = new OrderReadHelper(delegator, orderPaymentPreference.getString("orderId"));
+            
+            Map redeemCtx = new HashMap();
+            redeemCtx.put("userLogin", userLogin);
+            redeemCtx.put("productStoreId", orh.getProductStoreId());
+            redeemCtx.put("cardNumber", giftCard.get("finAccountId"));
+            redeemCtx.put("pinNumber", giftCard.get("finAccountCode"));
+            redeemCtx.put("currency", currency);
+            if (orh.getBillToParty() != null) {
+                redeemCtx.put("partyId", orh.getBillToParty().get("partyId"));    
+            }
+            redeemCtx.put("amount", amount);
+
+            // invoke the redeem service
+            Map redeemResult = null;
             redeemResult = dispatcher.runSync("redeemGiftCertificate", redeemCtx);
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Problem calling the redeem service", module);
-            return ServiceUtil.returnError("Redeem service failed");
-        }
+            if (ServiceUtil.isError(redeemResult)) {
+                return redeemResult;
+            }
+            
+            // now release the authorization should this use the gift card release service?
+            Map releaseResult = dispatcher.runSync("expireFinAccountAuth", UtilMisc.toMap("userLogin", userLogin, "finAccountAuthId", finAccountAuthId));
+            if (ServiceUtil.isError(releaseResult)) {
+                return releaseResult;
+            }
+            
+            Map result = ServiceUtil.returnSuccess();
+            if (redeemResult != null) {
+                Boolean processResult = (Boolean) redeemResult.get("processResult");
+                result.put("processAmount", amount);
+                result.put("captureResult", processResult);
+                result.put("captureCode", "C");
+                result.put("captureRefNum", redeemResult.get("referenceNum"));
+            }
 
-        Map result = ServiceUtil.returnSuccess();
-        if (redeemResult != null) {
-            Boolean processResult = (Boolean) redeemResult.get("processResult");
-            result.put("processAmount", amount);
-            result.put("authFlag", redeemResult.get("responseCode"));
-            result.put("authResult", processResult);
-            result.put("captureResult", processResult);
-            result.put("authCode", "A");
-            result.put("captureCode", "C");
-            result.put("authRefNum", redeemResult.get("referenceNum"));
-            result.put("captureRefNum", redeemResult.get("referenceNum"));
-        }
+            return result;
 
-        return result;
-    }
+        } catch (GenericEntityException ex) {
+            return ServiceUtil.returnError("Cannot process gift card: " + ex.getMessage());
+        } catch (GenericServiceException ex) {
+            return ServiceUtil.returnError("Cannot process gift card: " + ex.getMessage());
+        }
+}
 
     
     public static Map giftCertificateAuthorize(DispatchContext dctx, Map context) {
@@ -372,7 +400,6 @@ public class GiftCertificateServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         GenericValue giftCard = (GenericValue) context.get("giftCard");
-        GenericValue party = (GenericValue) context.get("billToParty");
         String currency = (String) context.get("currency");
         String orderId = (String) context.get("orderId");
         Double amount = (Double) context.get("processAmount");
@@ -388,13 +415,17 @@ public class GiftCertificateServices {
         try {
             // if the store requires pin codes, then validate pin code against card number, and the gift certificate's finAccountId is the gift card's card number
             // otherwise, the gift card's card number is an ecrypted string, which must be decoded to find the FinAccount
-            GenericValue giftCertSettings = delegator.findByPrimaryKey("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
+            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
             String finAccountId = null;
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                 if (validatePin(delegator, giftCard.getString("cardNumber"), giftCard.getString("pinNumber"))) {
                     finAccountId = giftCard.getString("cardNumber");
-                } else {
+                } 
+            } else {
                     GenericValue finAccount = FinAccountHelper.getFinAccountFromCode(giftCard.getString("cardNumber"), delegator);
+                    if (finAccount == null) {
+                        return ServiceUtil.returnError("Gift certificate not found");
+                    }
                     finAccountId = finAccount.getString("finAccountId");
                 }
             }
@@ -612,7 +643,7 @@ public class GiftCertificateServices {
         // Gift certificate settings are per store in this entity
         GenericValue giftCertSettings = null;
         try {
-            giftCertSettings = delegator.findByPrimaryKey("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));    
+            giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));    
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get Product Store FinAccount settings for " + giftCertFinAccountTypeId, module);
             ServiceUtil.returnError("Unable to get Product Store FinAccount settings for " + giftCertFinAccountTypeId + ": " + e.getMessage());
