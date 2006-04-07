@@ -268,7 +268,7 @@ under the License.
                 	<order-by field-name="statusId"/>
                 </entity-condition>
                 <entity-condition entity-name="StatusItem" list-name="paymentStatus">
-                    <condition-expr field-name="statusTypeId" operator="equals" value="PAYMENT_PREF_STATUS"/>
+                    <condition-expr field-name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
                 	<order-by field-name="statusId"/>
                 </entity-condition>
             </actions>
