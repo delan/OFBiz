@@ -1689,6 +1689,7 @@ public class PaymentGatewayServices {
                     paymentCtx.put("partyIdFrom", payFromPartyId);
                     paymentCtx.put("statusId", "PMNT_SENT");
                     paymentCtx.put("paymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
+                    paymentCtx.put("currencyUomId", orh.getCurrency());   
                     paymentCtx.put("amount", refundResponse.get("refundAmount"));
                     paymentCtx.put("userLogin", userLogin);
                     paymentCtx.put("paymentRefNum", refundResponse.get("refundRefNum"));
@@ -2021,7 +2022,8 @@ public class PaymentGatewayServices {
             }
             requestContext.put("billToEmail", billToEmail);
             requestContext.put("referenceCode", referenceCode);
-            requestContext.put("currency", "USD");
+            String currency = UtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD");
+            requestContext.put("currency", currency);
             requestContext.put("creditAmount", context.get("amount")); // TODO fix me to work w/ other services
         } else {
             return ServiceUtil.returnError("Payment method type : " + paymentMethodTypeId + " is not yet implemented for manual transactions");
