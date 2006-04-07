@@ -80,7 +80,10 @@ under the License.
                     <field-map env-name="parameters.invoiceId" field-name="invoiceId"/>
                 </entity-and>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/createApplicationList.bsh"/>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/createItemList.bsh"/>
+                <entity-and entity-name="InvoiceItem" list-name="invoiceItems">
+                    <field-map field-name="invoiceId" value="${parameters.invoiceId}"/>
+                </entity-and>
+                <!--script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/createItemList.bsh"/-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
@@ -195,6 +198,9 @@ under the License.
                 <set field="invoiceItemSeqd" from-field="parameters.invoiceItemSeqId"/>
                 <entity-one entity-name="Invoice" value-name="invoice"/>
                 <entity-one entity-name="InvoiceItem" value-name="invoiceItem"/>
+                <entity-and entity-name="InvoiceItem" list-name="invoiceItems">
+                    <field-map field-name="invoiceId" env-name="parameters.invoiceId"/>
+                </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">

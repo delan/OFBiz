@@ -115,20 +115,23 @@ under the License.
         <field position="1" name="invoiceDate" title="${uiLabelMap.AccountingInvoiceDate}"><display/></field>
         <field position="2" name="dueDate" title="${uiLabelMap.AccountingDueDate}"><display/></field>
         <field position="1" name="paidDate" title="${uiLabelMap.AccountingPaidDate}"><display/></field>
-        <field position="1" name="invoiceAmount"><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(delegator,invoiceId)}" type="currency" currency="${invoice.currencyUomId}" also-hidden="false"/></field>
+        <field position="1" name="invoiceAmount" ><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(delegator,invoiceId)}" type="currency" currency="${invoice.currencyUomId}" also-hidden="false"/></field>
         <field position="2" name="currencyUomId" title="${uiLabelMap.CommonCurrencyUom}"><display/></field>
     </form>
 
     <form name="invoiceItems" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="invoiceItems"
         target="" paginate-target="InvoiceItems" title="" type="list" separate-columns="true">
+        <row-actions>
+            <set field="total" value="${bsh:if(quantity == null) quantity = 1;if(amount==null) amount = 0;return(quantity*amount);}"/>
+        </row-actions>
         <auto-fields-entity entity-name="InvoiceItem" default-field-type="display"/>
         <field name="invoiceId"><hidden/></field>
         <field name="invoiceItemSeqId" title="Item No."><display/></field>
         <field name="invoiceItemTypeId" title="ItemType"><display-entity description="${description}" entity-name="InvoiceItemType"/></field>
         <field name="inventoryItemId" widget-area-style="tabletextright"><display/></field>
         <field name="quantity" widget-area-style="tabletextright"><display/></field>
-        <field name="amount" title="Amount" widget-area-style="tabletextright"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="amount" title="Amount" widget-area-style="tabletextright"><display type="currency" currency="${invoice.currencyUomId}" description="${amount}"/></field>
         <field name="total" title="Line Total" widget-area-style="tabletextright"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="productId" widget-style="linktext"><hyperlink target="EditProduct?productId=${productId}" description="${productId}"/></field>
         <field name="overrideGlAccountId" title="Override GlAccount" widget-area-style="tabletextright"><hyperlink target="GlAccountNavigate?glAccountId=${overrideGlAccountId}" description="${overrideGlAccountId}"/></field>
@@ -225,10 +228,10 @@ under the License.
     
    <form name="EditInvoiceItems" type="list"  list-name="invoiceItems" default-entity-name="InvoiceItem"
         target="updateInvoiceItem" title="Edit Invoice Items" default-title-style="tableheadtext"
-        default-widget-style="inputBox" default-tooltip-style="tabletext" separate-columns="true">
-       <actions>
-           <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/createItemList.bsh"/>
-       </actions>
+        default-widget-style="inputBox" default-tooltip-style="tabletext">
+       <row-actions>
+           <set field="total" value="${bsh:if(quantity==null||quantity==1) quantity = 1; total=quantity*amount;}"/>
+       </row-actions>
        <field name="invoiceId"><hidden/></field>
        <field name="invoiceItemSeqId" title="Item No." widget-style="buttontext"><hyperlink target="listInvoiceItems?invoiceId=${invoiceId}&amp;invoiceItemSeqId=${invoiceItemSeqId}" description="${invoiceItemSeqId}"/></field>
        <field name="quantity"><text size="3"/></field>
@@ -252,24 +255,12 @@ under the License.
        </field>
        <!--field name="overrideGlAccountId"><text size="10"/></field-->
        <field name="amount"><text size="7"/></field>
-       <field name="total" title="Line Total" widget-style="tabletext"><display type="currency" currency="${uomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
+       <field name="total" title="Line Total" widget-style="tabletext" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
+       <field name="total" title="Line Total" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
        <field name="uomId"><hidden/></field>
-       <!--field position="2" name="uomId" title="${uiLabelMap.CommonUom}">
-           <drop-down allow-empty="true" current="selected" no-current-selected-key="${invoice.currencyUomId}">
-               <entity-options key-field-name="uomId" description="${abbreviation}" entity-name="Uom">
-                   <entity-order-by field-name="abbreviation"/>
-               </entity-options>            
-           </drop-down>
-       </field-->
        <field name="taxableFlag"><hidden/></field>
-       <!--field name="taxableFlag">
-          <drop-down allow-empty="false" current="selected">
-              <option key="Y" description="Yes"/>
-              <option key="N" description="No"/>
-          </drop-down>
-       </field-->
-       <field name="Update" widget-style="buttontext"><submit button-type="text-link"/></field>
-       <field name="Remove" widget-style="buttontext">
+       <field name="Update" widget-style="buttontext" ><submit button-type="text-link"/></field>
+       <field name="Remove"  widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem?invoiceId=${invoiceId}&amp;invoiceItemSeqId=${invoiceItemSeqId}"/>
        </field>
     </form>
@@ -343,7 +334,8 @@ under the License.
         <field name="invoiceItemSeqId" title="ItemNr"><display/></field>
         <field name="productId"><display/></field>
         <field name="description"><display/></field>
-        <field name="total" title="Amt"><display/></field>
+        <field name="total" title="Line Total" widget-style="tabletext" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
+        <field name="total" title="Line Total" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId" widget-style="inputBox"><lookup target-form-name="LookupPayment"/></field>
         <field name="billingAccountId"><hidden/></field>
@@ -368,15 +360,15 @@ under the License.
 
     <form name="ListPaymentsNotApplied" type="list" list-name="payments"
         target="updateInvoiceApplication" title=""
-        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/listNotAppliedPayments.bsh"/>
         </actions>
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId" widget-style="buttontext"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="[${paymentId}]"/></field>
-        <field name="amount"><display/></field>
+        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="effectiveDate"><display/></field>
-        <field name="paymentApplied" title="Already Applied"><display/></field>
+        <field name="paymentApplied" title="Already Applied"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" title="to apply now" parameter-name="amountApplied"><text size="10"/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit">
             <submit button-type="button"/>

@@ -262,7 +262,7 @@
         <field name="partyIdTo" position="2"><hyperlink target="/partymgr/control/viewprofile?partyId=${payment.partyIdTo}" target-type="inter-app" description="${partyNameResultTo.fullName} [${payment.partyIdFrom}]"/></field>
         <field name="paymentRefNum" position="1"><display/></field>
         <field name="paymentPreferenceId" position="2"><display/></field>
-        <field name="amount" position="1"><display/></field>
+        <field name="amount" position="1"><display type="currency" currency="${payment.currencyUomId}"/></field>
         <field name="currencyUomId" position="2"><display/></field>
         <field name="effectiveDate" position="1"><display/></field>
         <field name="comments" position="2"><display/></field>
