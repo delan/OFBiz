@@ -746,7 +746,6 @@ public class OrderReturnServices {
                 List prefsToUse = new ArrayList();
                 Map prefsAmount = new HashMap();
                 double neededAmount = orderTotal.doubleValue();
-                Debug.logInfo("before orderTotal:" + neededAmount, module);
                 if (orderPayPrefs != null && orderPayPrefs.size() > 0) {
                     Iterator payPrefIter = orderPayPrefs.iterator();
                     do {
@@ -775,7 +774,6 @@ public class OrderReturnServices {
                         }
                     } while (neededAmount > 0 && payPrefIter.hasNext());
                 }
-                Debug.logInfo("after orderTotal:"+ neededAmount, module);
                 if (neededAmount != 0) {
                     Debug.logError("Was not able to find needed payment preferences for the order RTN: " + returnId + " ORD: " + orderId, module);
                     return ServiceUtil.returnError("Unable to refund order #" + orderId + "; there are no available payment preferences.");
@@ -899,7 +897,6 @@ public class OrderReturnServices {
             }
         }
 
-        //Debug.log("Finished refund process");
         return ServiceUtil.returnSuccess();
     }
 
