@@ -137,7 +137,7 @@
               <option>${creditCard.cardType}</option>
               <option value="${creditCard.cardType}">---</option>
             </#if>
-            ${common.get("/includes/cctypes.ftl")}
+            ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
           </select>
         *</td>
       </tr>
@@ -177,7 +177,7 @@
             <#if ccExprMonth?has_content>
               <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
             </#if>
-            ${common.get("/includes/ccmonths.ftl")}
+            ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
           </select>
           <select name="expYear" class='selectBox'>
             <#if creditCard?has_content && expYear?has_content>
@@ -188,7 +188,7 @@
             <#if ccExprYear?has_content>
               <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
             </#if>
-            ${common.get("/includes/ccyears.ftl")}
+            ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
           </select>
         *</td>
       </tr>
@@ -243,7 +243,7 @@
             <#else>
               <option value="">No State</option>
             </#if>
-            ${common.get("/includes/states.ftl")}
+            ${screens.render("component://common/widget/CommonScreens.xml#states")}
           </select>
         </td>
       </tr>
@@ -263,7 +263,7 @@
               <option>${postalFields.countryGeoId}</option>
               <option value="${postalFields.countryGeoId}">---</option>
             </#if>
-            ${common.get("/includes/countries.ftl")}
+            ${screens.render("component://common/widget/CommonScreens.xml#countries")}
           </select>
         *</td>
       </tr>

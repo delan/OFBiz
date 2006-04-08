@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    $Id: $
-    
-    Copyright 2001-2006 The Apache Software Foundation
-    
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not
-    use this file except in compliance with the License. You may obtain a copy of
-    the License at
-    
-    http://www.apache.org/licenses/LICENSE-2.0
-    
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-    License for the specific language governing permissions and limitations
-    under the License.
+$Id: $
+
+Copyright 2001-2006 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -40,7 +40,6 @@
             </widgets>
         </section>
     </screen>
-    
     <screen name="EditPayment">
         <section>
             <actions>
@@ -100,7 +99,6 @@
             </widgets>
         </section>
     </screen>
-    
     <screen name="PaymentOverview">
         <section>
             <actions>
@@ -156,8 +154,44 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>   
-
+    </screen>
+    
+    <screen name="ManualTransaction">
+        <section>
+            <actions>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/manualTx.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://accounting/webapp/accounting/payment/manualTx.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="manualCCTx">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://accounting/webapp/accounting/payment/manualCCTx.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="manualGCTx">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <!-- TODO: problem here: the original manualTx file referred to manualGCTx, but no such ftl files seems to exist, so this will blow up -->
+                    <html><html-template location="component://accounting/webapp/accounting/payment/manualGCTx.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="PrintChecks">
         <section>
             <actions>
@@ -173,6 +207,4 @@
             </widgets>
         </section>
     </screen>
-
 </screens>
-

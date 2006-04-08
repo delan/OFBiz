@@ -26,14 +26,12 @@
 
 import org.ofbiz.base.util.*;
 
-delegator = request.getAttribute("delegator");
-
 // stores
 productStores = delegator.findAllCache("ProductStore", UtilMisc.toList("storeName"));
 context.put("productStores", productStores);
 
 // current store
-productStoreId = request.getParameter("productStoreId");
+productStoreId = parameters.get("productStoreId");
 if (productStoreId != null) {
     productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
     context.put("currentStore", productStore);
@@ -44,15 +42,15 @@ paymentSettings = delegator.findByAnd("Enumeration", UtilMisc.toMap("enumTypeId"
 context.put("paymentSettings", paymentSettings);
 
 // payment method (for auto-fill)
-paymentMethodId = request.getParameter("paymentMethodId");
+paymentMethodId = parameters.get("paymentMethodId");
 context.put("paymentMethodId", paymentMethodId);
 
 // payment method type
-paymentMethodTypeId = request.getParameter("paymentMethodTypeId");
+paymentMethodTypeId = parameters.get("paymentMethodTypeId");
 context.put("paymentMethodTypeId", paymentMethodTypeId);
 
 // service type (transaction type)
-txType = request.getParameter("transactionType");
+txType = parameters.get("transactionType");
 context.put("txType", txType);
 if (txType != null) {
     currentTx = delegator.findByPrimaryKey("Enumeration", UtilMisc.toMap("enumId", txType));
