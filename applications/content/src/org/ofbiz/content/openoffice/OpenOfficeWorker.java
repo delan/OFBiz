@@ -17,7 +17,6 @@
  */
 package org.ofbiz.content.openoffice;
 
-
 import java.io.IOException;
 import java.util.List;
 
@@ -40,24 +39,25 @@ import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 
-
 /**
  * OpenOfficeWorker Class
  * 
- * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev: 5462 $
- * @since 3.2
+ * Note that for this to work you must start OpenOffice with a command such as the following: 
+ *   <code>soffice -accept=socket,host=localhost,port=8100;urp;</code>
  * 
- *  
+ * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  */
 public class OpenOfficeWorker{
 
     public static final String module = OpenOfficeWorker.class.getName();
-
+    
     /**
      * Use OpenOffice to convert documents between types
      */
     public static XMultiComponentFactory getRemoteServer(String host, String port) throws IOException, Exception {
+        
+        if (UtilValidate.isEmpty(host)) host = UtilProperties.getPropertyValue("openoffice-uno", "oo.host", "localhost");
+        if (UtilValidate.isEmpty(port)) port = UtilProperties.getPropertyValue("openoffice-uno", "oo.port", "8100");
         
         XMultiComponentFactory xmulticomponentfactory = null;
         XComponentContext xcomponentcontext = null;
@@ -91,9 +91,9 @@ public class OpenOfficeWorker{
             xmulticomponentfactory = (XMultiComponentFactory) UnoRuntime.queryInterface(XMultiComponentFactory.class, objectInitial);
         } catch(Exception e) {
             // TODO: None of this works. Need a programmable start solution.
-            //String ooxvfb = UtilProperties.getPropertyValue("openoffice", "oo.start.xvfb");
-            //String ooexport = UtilProperties.getPropertyValue("openoffice", "oo.start.export");
-            String oosoffice = UtilProperties.getPropertyValue("openoffice", "oo.start.soffice");
+            //String ooxvfb = UtilProperties.getPropertyValue("openoffice-uno", "oo.start.xvfb");
+            //String ooexport = UtilProperties.getPropertyValue("openoffice-uno", "oo.start.export");
+            String oosoffice = UtilProperties.getPropertyValue("openoffice-uno", "oo.start.soffice");
             //Process procXvfb = Runtime.getRuntime().exec(ooxvfb);
             //Process procExport = Runtime.getRuntime().exec(ooexport);
             /*
@@ -238,21 +238,27 @@ public class OpenOfficeWorker{
         XComponentLoader xcomponentloader = (XComponentLoader) UnoRuntime.queryInterface(XComponentLoader.class, desktopObj);
         
         // Preparing properties for loading the document
-        PropertyValue propertyvalue[] = new PropertyValue[ 2 ];
+        PropertyValue propertyvalue[] = new PropertyValue[2];
         // Setting the flag for hidding the open document
-        propertyvalue[ 0 ] = new PropertyValue();
-        propertyvalue[ 0 ].Name = "Hidden";
-        propertyvalue[ 0 ].Value = new Boolean(true);
+        propertyvalue[0] = new PropertyValue();
+        propertyvalue[0].Name = "Hidden";
+        propertyvalue[0].Value = Boolean.TRUE;
         //
-        propertyvalue[ 1 ] = new PropertyValue();
-        propertyvalue[ 1 ].Name = "InputStream";
-        propertyvalue[ 1 ].Value = is;
+        propertyvalue[1] = new PropertyValue();
+        propertyvalue[1].Name = "InputStream";
+        propertyvalue[1].Value = is;
         
         // Loading the wanted document
         Object objectDocumentToStore = xcomponentloader.loadComponentFromURL("private:stream", "_blank", 0, propertyvalue);
+        if (objectDocumentToStore == null) {
+            Debug.logError("Could not get objectDocumentToStore object from xcomponentloader.loadComponentFromURL", module);
+        }
         
         // Getting an object that will offer a simple way to store a document to a URL.
         XStorable xstorable = (XStorable) UnoRuntime.queryInterface(XStorable.class, objectDocumentToStore);
+        if (xstorable == null) {
+            Debug.logError("Could not get XStorable object from UnoRuntime.queryInterface", module);
+        }
         
         // Preparing properties for converting the document
         String filterName = "";
@@ -267,25 +273,24 @@ public class OpenOfficeWorker{
         } else {
             filterName = "HTML";
         }
-        propertyvalue = new PropertyValue[ 4 ];
+        propertyvalue = new PropertyValue[4];
         
-        // Setting the flag for overwriting
-        propertyvalue[ 3 ] = new PropertyValue();
-        propertyvalue[ 3 ].Name = "Overwrite";
-        propertyvalue[ 3 ].Value = new Boolean(true);
-        // Setting the filter name
-        propertyvalue[ 1 ] = new PropertyValue();
-        propertyvalue[ 1 ].Name = "FilterName";
-        propertyvalue[ 1 ].Value = filterName;
-        // For PDFs
-        propertyvalue[ 2 ] = new PropertyValue();
-        propertyvalue[ 2 ].Name = "CompressionMode";
-        propertyvalue[ 2 ].Value = "1";
-        
-        propertyvalue[ 0 ] = new PropertyValue();
-        propertyvalue[ 0 ].Name = "OutputStream";
+        propertyvalue[0] = new PropertyValue();
+        propertyvalue[0].Name = "OutputStream";
         OpenOfficeByteArrayOutputStream os = new OpenOfficeByteArrayOutputStream();
-        propertyvalue[ 0 ].Value = os;
+        propertyvalue[0].Value = os;
+        // Setting the filter name
+        propertyvalue[1] = new PropertyValue();
+        propertyvalue[1].Name = "FilterName";
+        propertyvalue[1].Value = filterName;
+        // Setting the flag for overwriting
+        propertyvalue[3] = new PropertyValue();
+        propertyvalue[3].Name = "Overwrite";
+        propertyvalue[3].Value = Boolean.TRUE;
+        // For PDFs
+        propertyvalue[2] = new PropertyValue();
+        propertyvalue[2].Name = "CompressionMode";
+        propertyvalue[2].Value = "1";
         
         xstorable.storeToURL("private:stream", propertyvalue);
         //xstorable.storeToURL("file:///home/byersa/testdoc1_file.pdf", propertyvalue);
