@@ -27,8 +27,6 @@
 <div class="head1">Manual Electronic Transaction</div>
 <br/>
 
-<#assign locale = requestAttributes.locale>
-
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
   ${setRequestAttribute("validTx", "false")}
   <form name="manualTxForm" method="get" action="<@ofbizUrl>manualETx</@ofbizUrl>">
@@ -86,9 +84,9 @@
 
       <#-- payment method information -->
       <#if paymentMethodType?has_content && paymentMethodTypeId == "CREDIT_CARD">
-        ${pages.get("/payment/manualCCTx.ftl")}
+        ${screens.render("component://accounting/widget/PaymentScreens.xml#manualCCTx")}
       <#elseif paymentMethodType?has_content && paymentMethodTypeId == "GIFT_CARD">
-        ${pages.get("/payment/manualGCTx.ftl")}
+        ${screens.render("component://accounting/widget/PaymentScreens.xml#manualGCTx")}
       </#if>
 
      <#if requestAttributes.validTx?default("false") == "true">
@@ -127,4 +125,3 @@
 <#else>
   <h3>You do not have permission for this function.</h3>
 </#if>
-
