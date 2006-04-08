@@ -48,10 +48,6 @@ import com.sun.star.uno.XComponentContext;
  * OpenOfficeServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev: 5462 $
- * @since 3.2
- * 
- *  
  */
 public class OpenOfficeServices {
     public static final String module = OpenOfficeServices.class.getName();
@@ -65,14 +61,16 @@ public class OpenOfficeServices {
         ByteWrapper inByteWrapper = (ByteWrapper) context.get("inByteWrapper");
         String inputMimeType = (String) context.get("inputMimeType");
         String outputMimeType = (String) context.get("outputMimeType");
+
+        // if these are empty don't worry, the OpenOfficeWorker down below will take care of it
         String oooHost = (String) context.get("oooHost");
-        if (UtilValidate.isEmpty(oooHost)) oooHost = "localhost";
         String oooPort = (String) context.get("oooPort");
-        if (UtilValidate.isEmpty(oooPort)) oooPort = "8100";
         
         try {   
             xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
-            OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(inByteWrapper.getBytes());
+            byte[] inByteArray = inByteWrapper.getBytes();
+            OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(inByteArray);
+            Debug.logInfo("Doing convertDocumentByteWrapper, inBytes size is [" + inByteArray.length + "]", module);
             OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, outputMimeType);
             
             Map results = ServiceUtil.returnSuccess();
@@ -99,10 +97,10 @@ public class OpenOfficeServices {
         String stringUrl = "file:///" + context.get("filenameFrom");
         String stringConvertedFile = "file:///" + context.get("filenameTo");
         String filterName = "file:///" + context.get("filterName");
+
+        // if these are empty don't worry, the OpenOfficeWorker down below will take care of it
         String oooHost = (String) context.get("oooHost");
-        if (UtilValidate.isEmpty(oooHost)) oooHost = "localhost";
         String oooPort = (String) context.get("oooPort");
-        if (UtilValidate.isEmpty(oooPort)) oooPort = "8100";
         
         try {    
             xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
@@ -129,10 +127,10 @@ public class OpenOfficeServices {
         String stringConvertedFile = (String) context.get("filenameTo");
         String inputMimeType = (String) context.get("inputMimeType");
         String outputMimeType = (String) context.get("outputMimeType");
+
+        // if these are empty don't worry, the OpenOfficeWorker down below will take care of it
         String oooHost = (String) context.get("oooHost");
-        if (UtilValidate.isEmpty(oooHost)) oooHost = "localhost";
         String oooPort = (String) context.get("oooPort");
-        if (UtilValidate.isEmpty(oooPort)) oooPort = "8100";
         
         try {    
             xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
@@ -164,7 +162,6 @@ public class OpenOfficeServices {
         }
     }
 
-
     /**
      * Use OpenOffice to convert documents between types
      */
@@ -173,12 +170,12 @@ public class OpenOfficeServices {
         
         String stringUrl = "file:///" + context.get("filenameFrom");
         String stringConvertedFile = "file:///" + context.get("filenameTo");
-        String inputMimeType = (String)context.get("inputMimeType");
-        String outputMimeType = (String)context.get("outputMimeType");
-        String oooHost = (String)context.get("oooHost");
-        if (UtilValidate.isEmpty(oooHost)) oooHost = "localhost";
-        String oooPort = (String)context.get("oooPort");
-        if (UtilValidate.isEmpty(oooPort)) oooPort = "8100";
+        String inputMimeType = (String) context.get("inputMimeType");
+        String outputMimeType = (String) context.get("outputMimeType");
+
+        // if these are empty don't worry, the OpenOfficeWorker down below will take care of it
+        String oooHost = (String) context.get("oooHost");
+        String oooPort = (String) context.get("oooPort");
         
         try {    
             xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
@@ -219,10 +216,10 @@ public class OpenOfficeServices {
         String stringUrl = "file:///" + context.get("filenameFrom");
         String stringOriginalFile = "file:///" + context.get("filenameOriginal");
         String stringOutFile = "file:///" + context.get("filenameOut");
+
+        // if these are empty don't worry, the OpenOfficeWorker down below will take care of it
         String oooHost = (String)context.get("oooHost");
-        if (UtilValidate.isEmpty(oooHost)) oooHost = "localHost";
         String oooPort = (String)context.get("oooPort");
-        if (UtilValidate.isEmpty(oooPort)) oooPort = "8100";
         
         try {    
             xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);

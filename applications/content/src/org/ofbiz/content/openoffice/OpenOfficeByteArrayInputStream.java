@@ -29,10 +29,6 @@ import com.sun.star.io.NotConnectedException;
  * OpenOfficeByteArrayInputStream Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev: 5462 $
- * @since 3.2
- * 
- *  
  */
 
 public class OpenOfficeByteArrayInputStream extends ByteArrayInputStream implements XInputStream, XSeekable {

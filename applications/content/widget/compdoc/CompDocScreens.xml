@@ -790,7 +790,7 @@ under the License.
     </screen>
     <screen name="AddRootCompDocTemplate">
         <section>
-             <condition>
+            <condition>
                 <if-has-permission permission="CONTENTMGR" action="CREATE"/>
             </condition>
             <actions>
@@ -826,11 +826,14 @@ under the License.
                 <get-related-one value-name="templateContent" relation-name="DataResource" to-value-name="templateDataResource"/>
                 <set field="templateDataResourceTypeId" from-field="templateDataResource.dataResourceTypeId"/>
                 <set field="mimeTypeId" from-field="templateDataResource.mimeTypeId"/>
+
                 <set field="contentAssocTypeId" value="COMPDOC_PART"/>
                 <set field="contentTypeId" value="DOCUMENT"/>
                 <set field="sequenceNum" from-field="parameters.caSequenceNum" default-value="${parameters.sequenceNum}"/>
                 <set field="childCompDocTarget" value="createChildCompDocInstance"/>
                 <set field="contentId" from-field="parameters.contentId"/>
+
+                <set field="rootContentId" from-field="parameters.rootContentId" default-value="${parameters.contentIdTo}"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
