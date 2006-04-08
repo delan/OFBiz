@@ -40,8 +40,6 @@ import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
  * Routing related services
  *
  * @author     <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
- * @version    $Rev$
- * @since      3.0
  */
 public class RoutingServices {
     
