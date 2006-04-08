@@ -50,8 +50,6 @@ import org.ofbiz.service.ServiceUtil;
  * TechDataServices - TechData related Services
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Rev$
- * @since      3.0
  */
 public class TechDataServices {
     

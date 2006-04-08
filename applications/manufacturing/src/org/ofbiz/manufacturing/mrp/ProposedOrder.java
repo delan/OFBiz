@@ -51,8 +51,6 @@ import org.ofbiz.manufacturing.bom.BOMTree;
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
  * @author     <a href=mailto:thierry.grauss@etu.univ-tours.fr">Thierry GRAUSS</a>
- * @version    $Rev$
- * @since      3.0
  */
 public class ProposedOrder {
     

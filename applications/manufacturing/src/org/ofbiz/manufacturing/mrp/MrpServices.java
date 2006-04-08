@@ -59,8 +59,6 @@ import org.ofbiz.service.ServiceUtil;
  * Services for running MRP
  *
  * @author     <a href=mailto:thierry.grauss@etu.univ-tours.fr">Thierry GRAUSS</a>
- * @version    $Rev$
- * @since      0.1
  */
 public class MrpServices {
     

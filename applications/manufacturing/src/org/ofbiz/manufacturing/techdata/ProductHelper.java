@@ -50,8 +50,6 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
  * @author     <a href="mailto:nicolas@librenberry.net">Nicolas MALIN</a>
  * @author     <a href=mailto:tgrauss@free.fr">Thierry GRAUSS</a>
- * @version    $Rev$
- * @since      3.0
  */
 public class ProductHelper {
     

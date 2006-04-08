@@ -50,8 +50,6 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
  * 	this object is used to find or updated an existing ProductionRun.
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Rev$
- * @since      3.0
  */
 public class ProductionRun {
     
