@@ -1065,8 +1065,9 @@
     <view-map name="AssignGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AssignGlAccount"/>
  
     <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
-    <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
-    <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
+    <!-- NOTE/TODO: these 2 appear to never have been implemented all the way, just request and view defs so far... -->
+    <view-map name="EditGlobalGlAccountOrganizations" type="screen" page="component://accounting/widget/AccountingScreens.xml#EditGlobalGlAccountOrganizations"/>
+    <view-map name="EditGlobalGlAccountRoles" type="screen" page="component://accounting/widget/AccountingScreens.xml#EditGlobalGlAccountRoles"/>
 
     <view-map name="AccountActivitiesDetail" type="screen" page="component://accounting/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
     <view-map name="ListGlAccountEntries" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccountEntries"/>

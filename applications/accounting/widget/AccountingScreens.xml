@@ -290,12 +290,11 @@
             </widgets>
         </section>
     </screen>
-
     <screen name="GlAccountDetail">
         <section>
             <actions>
                 <entity-one entity-name="GlAccount" value-name="currentValue" use-cache="true">
-                    <field-map env-name="glAccountId" />
+                    <field-map field-name="glAccountId"/>
                 </entity-one>
             </actions>
             <widgets>
