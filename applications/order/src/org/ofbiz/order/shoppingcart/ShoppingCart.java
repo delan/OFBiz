@@ -1871,7 +1871,7 @@ public class ShoppingCart implements Serializable {
                     return false;
                 }
             } else {
-                Debug.logWarning("No product store gift certificate settings found for store [" + productStoreId + "]", module);
+                Debug.logWarning("No product store gift certificate settings found for store [" + getProductStoreId() + "]", module);
                 return FinAccountHelper.defaultPinRequired;
             }
         } catch (GenericEntityException ex) {
@@ -1895,7 +1895,7 @@ public class ShoppingCart implements Serializable {
                     return false;
                 }
             } else {
-                Debug.logWarning("No product store gift certificate settings found for store [" + productStoreId + "]", module);
+                Debug.logWarning("No product store gift certificate settings found for store [" + getProductStoreId() + "]", module);
                 return false;
             }
         } catch (GenericEntityException ex) {
