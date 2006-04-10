@@ -920,7 +920,16 @@ public class ModelFormField {
                 // this should never happen, ie name is required
                 return "";
             }
-
+            
+            // search for a localized label for the field's name
+            Map uiLabelMap = (Map) context.get("uiLabelMap");
+            String titleFieldName = "FormFieldTitle_" + this.name;
+            String localizedName = (String) uiLabelMap.get(titleFieldName);
+            if (!localizedName.equals(titleFieldName)) {
+                return localizedName;
+            }
+            
+            // create a title from the name of this field; expecting a Java method/field style name, ie productName or productCategoryId
             StringBuffer autoTitleBuffer = new StringBuffer();
 
             // always use upper case first letter...
