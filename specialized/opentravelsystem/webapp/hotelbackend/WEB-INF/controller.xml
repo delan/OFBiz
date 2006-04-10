@@ -995,7 +995,7 @@
     <request-map uri="updateProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProduct"/>
-        <response name="success" type="view" value="EditProducts"/>
+        <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
     </request-map>
     <request-map uri="DuplicateProduct">
@@ -3078,7 +3078,7 @@
         <response name="success" type="view" value="CreateEmailToContactList"/>
     </request-map>
     
-!!!!!!    <request-map uri="removeContactListParty">
+    <request-map uri="removeContactListParty">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteContactListParty"/>
         <response name="success" type="view" value="CreateEmailToContactList"/>
