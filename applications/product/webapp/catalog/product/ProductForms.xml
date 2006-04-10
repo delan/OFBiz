@@ -919,6 +919,9 @@
             title="" list-name="costs" paginate-target="EditProductCosts"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="CostComponent" default-field-type="display"/>
+        <field name="cost">
+        	    <display type="currency" currency="${costUomId}"/>
+        </field>
         <field name="costComponentId" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${costComponentId}" target="EditProductCosts?productId=${productId}&amp;productCostComponentId=${costComponentId}"/>
         </field>
@@ -945,8 +948,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="costUomId" title="${uiLabelMap.CommonCurrencyUomId}" widget-style="selectBox">
-            <drop-down allow-empty="false">
+        <field name="costUomId" title="${uiLabelMap.CommonCurrency}" widget-style="selectBox">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultCurrencyUomId}">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]">
                     <entity-constraint name="uomTypeId" value="CURRENCY_MEASURE"/>
                     <entity-order-by field-name="description"/>
@@ -966,7 +969,7 @@
                 <option key="EST_STD" description="Estimated Standard Costs"/>
             </drop-down>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}" widget-style="selectBox">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}" widget-style="selectBox">
             <drop-down allow-empty="false" no-current-selected-key="${defaultCurrencyUomId}">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]">
                     <entity-constraint name="uomTypeId" value="CURRENCY_MEASURE"/>

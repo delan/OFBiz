@@ -254,6 +254,9 @@
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="productCostComponentId" from-field="parameters.productCostComponentId"/>
                 
+                <!-- default currency in framework/common/config/general.properties -->
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD" />
+                
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-one entity-name="CostComponent" value-name="costComponent" auto-field-map="false">
                     <field-map field-name="costComponentId" env-name="productCostComponentId"/>
@@ -269,7 +272,7 @@
                     <decorator-section name="body">
                         <container><label style="head2">${uiLabelMap.ProductCosts}</label></container>    
                         <include-form name="ListCostComponents" location="component://product/webapp/catalog/product/ProductForms.xml"/>
-                        <container><label style="head2">${uiLabelMap.ProductEditCostComponent}</label></container>
+                        <container><label style="head2">${uiLabelMap.ProductAddCostComponent}</label></container>
                         <include-form name="EditCostComponent" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <container><label style="head2">${uiLabelMap.ProductAutoCreateCosts}</label></container>
                         <include-form name="CalculateProductCosts" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -551,7 +554,8 @@
                 <set field="tabButtonItem" value="EditSupplierProduct"/>
                 <set field="labelTitleProperty" value="ProductSuppliers"/>
 
-                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+                <!-- default currency in framework/common/config/general.properties -->
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD" />
 
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="orderBy" from-field="parameters.orderBy" default-value="partyId"/>
