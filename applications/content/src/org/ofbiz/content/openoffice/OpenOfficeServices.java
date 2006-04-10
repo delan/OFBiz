@@ -23,11 +23,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.util.ByteWrapper;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -56,7 +59,15 @@ public class OpenOfficeServices {
      * Use OpenOffice to convert documents between types
      */
     public static Map convertDocumentByteWrapper(DispatchContext dctx, Map context) {
+        
+        Map results = ServiceUtil.returnSuccess();
+        GenericDelegator delegator = dctx.getDelegator();
         XMultiComponentFactory xmulticomponentfactory = null;
+        String uniqueSeqNum = delegator.getNextSeqId("OOTempDir");
+        String fileInName = "OOIN_" + uniqueSeqNum;
+        String fileOutName = "OOOUT_" + uniqueSeqNum;
+        File fileIn = null;
+        File fileOut = null;
         
         ByteWrapper inByteWrapper = (ByteWrapper) context.get("inByteWrapper");
         String inputMimeType = (String) context.get("inputMimeType");
@@ -69,23 +80,45 @@ public class OpenOfficeServices {
         try {   
             xmulticomponentfactory = OpenOfficeWorker.getRemoteServer(oooHost, oooPort);
             byte[] inByteArray = inByteWrapper.getBytes();
-            OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(inByteArray);
-            Debug.logInfo("Doing convertDocumentByteWrapper, inBytes size is [" + inByteArray.length + "]", module);
-            OpenOfficeByteArrayOutputStream oobaos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, outputMimeType);
             
-            Map results = ServiceUtil.returnSuccess();
-            results.put("outByteWrapper", new ByteWrapper(oobaos.toByteArray()));
-            oobais.close();
-            oobaos.close();
+            // The following line work in linux, but not Windows or Mac environment. It is preferred because it does not use temporary files
+            //OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(inByteArray);
+            //Debug.logInfo("Doing convertDocumentByteWrapper, inBytes size is [" + inByteArray.length + "]", module);
+            // OpenOfficeByteArrayOutputStream baos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, outputMimeType);
+            
+            
+            String tempDir = UtilProperties.getPropertyValue("content", "content.temp.dir");
+            fileIn = new File(tempDir + fileInName);
+            FileOutputStream fos = new FileOutputStream(fileIn);
+            fos.write(inByteArray);
+            fos.close();
+            OpenOfficeWorker.convertOODocToFile(xmulticomponentfactory, tempDir + fileInName, tempDir + fileOutName, outputMimeType);
+            fileOut = new File(tempDir + fileOutName);
+            FileInputStream fis = new FileInputStream(fileOut);
+            int c;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            while ((c=fis.read()) > -1) {
+                baos.write(c);
+            }
+            fis.close();
+            
+            results.put("outByteWrapper", new ByteWrapper(baos.toByteArray()));
+            baos.close();
 
-            return results;
+        } catch (FileNotFoundException e) {
+            Debug.logError(e, "Error in OpenOffice operation: ", module);
+            return ServiceUtil.returnError(e.toString());
         } catch (IOException e) {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
             return ServiceUtil.returnError(e.toString());
         } catch(Exception e) {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
             return ServiceUtil.returnError(e.toString());
+        } finally {
+            fileIn.delete();
+            fileOut.delete();
         }
+        return results;
     }
 
     /**

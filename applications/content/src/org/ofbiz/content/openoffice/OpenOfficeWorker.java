@@ -18,7 +18,11 @@
 package org.ofbiz.content.openoffice;
 
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +42,7 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
+import com.sun.star.comp.helper.Bootstrap;
 
 /**
  * OpenOfficeWorker Class
@@ -51,6 +56,26 @@ public class OpenOfficeWorker{
 
     public static final String module = OpenOfficeWorker.class.getName();
     
+    public static XMultiComponentFactory getRemoteServer_test(String host, String port) throws IOException, Exception {
+        XMultiComponentFactory xmulticomponentfactory = null;
+        String sofficepath = "file:///usr/lib/openoffice2/program";
+
+        String unoini = sofficepath + "/unorc";  // To change in uno.ini for Windows
+
+     
+
+        Hashtable params = new Hashtable();
+
+        params.put("SYSBINDIR", sofficepath);
+        //XComponentContext xComponentContext = Bootstrap.defaultBootstrap_InitialComponentContext(unoini, params);
+        XComponentContext xComponentContext = Bootstrap.bootstrap();
+
+//        XComponentContext xComponentContext = Bootstrap.bootstrap();
+        if (xComponentContext != null) {
+            xmulticomponentfactory = xComponentContext.getServiceManager();
+        }
+        return xmulticomponentfactory;
+    }
     /**
      * Use OpenOffice to convert documents between types
      */
@@ -93,7 +118,7 @@ public class OpenOfficeWorker{
             // TODO: None of this works. Need a programmable start solution.
             //String ooxvfb = UtilProperties.getPropertyValue("openoffice-uno", "oo.start.xvfb");
             //String ooexport = UtilProperties.getPropertyValue("openoffice-uno", "oo.start.export");
-            String oosoffice = UtilProperties.getPropertyValue("openoffice-uno", "oo.start.soffice");
+           // String oosoffice = UtilProperties.getPropertyValue("openoffice-uno", "oo.start.soffice");
             //Process procXvfb = Runtime.getRuntime().exec(ooxvfb);
             //Process procExport = Runtime.getRuntime().exec(ooexport);
             /*
@@ -156,7 +181,7 @@ public class OpenOfficeWorker{
         return filterNameList;
     }
     
-    public static void convertOODocToFile(XMultiComponentFactory xmulticomponentfactory, String stringUrl, String stringConvertedFile, String convertFilterName) throws Exception {
+    public static void convertOODocToFile(XMultiComponentFactory xmulticomponentfactory, String stringUrl, String stringConvertedFile, String outputMimeType) throws FileNotFoundException, IOException, Exception {
         // Converting the document to the favoured type
         // Query for the XPropertySet interface.
         XPropertySet xpropertysetMultiComponentFactory = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xmulticomponentfactory);
@@ -183,6 +208,7 @@ public class OpenOfficeWorker{
         propertyvalue[ 0 ] = new PropertyValue();
         propertyvalue[ 0 ].Name = "Hidden";
         propertyvalue[ 0 ].Value = new Boolean(true);
+
         //TODO: Hardcoding opening word documents -- this will need to change.
         //propertyvalue[ 1 ] = new PropertyValue();
         //propertyvalue[ 1 ].Name = "FilterName";
@@ -195,15 +221,17 @@ public class OpenOfficeWorker{
         XStorable xstorable = (XStorable) UnoRuntime.queryInterface(XStorable.class, objectDocumentToStore);
         
         // Preparing properties for converting the document
-        propertyvalue = new PropertyValue[ 1 ];
+        propertyvalue = new PropertyValue[ 2 ];
         // Setting the flag for overwriting
         propertyvalue[ 0 ] = new PropertyValue();
         propertyvalue[ 0 ].Name = "Overwrite";
         propertyvalue[ 0 ].Value = new Boolean(true);
         // Setting the filter name
-        //propertyvalue[ 1 ] = new PropertyValue();
-        //propertyvalue[ 1 ].Name = "FilterName";
-        //propertyvalue[ 1 ].Value = convertFilterName;         
+        // Preparing properties for converting the document
+        String filterName = getFilterNameFromMimeType(outputMimeType);
+        propertyvalue[ 1 ] = new PropertyValue();
+        propertyvalue[ 1 ].Name = "FilterName";
+        propertyvalue[ 1 ].Value = filterName;         
         Debug.logInfo("stringConvertedFile: "+stringConvertedFile, module);
         // Storing and converting the document
         xstorable.storeToURL(stringConvertedFile, propertyvalue);
@@ -261,18 +289,7 @@ public class OpenOfficeWorker{
         }
         
         // Preparing properties for converting the document
-        String filterName = "";
-        if (UtilValidate.isEmpty(outputMimeType)) {
-            filterName = "HTML";
-        } else if (outputMimeType.equalsIgnoreCase("application/pdf")) {
-            filterName = "writer_pdf_Export";
-        } else if (outputMimeType.equalsIgnoreCase("application/msword")) {
-            filterName = "MS Word 97";
-        } else if (outputMimeType.equalsIgnoreCase("text/html")) {
-            filterName = "HTML (StarWriter)";
-        } else {
-            filterName = "HTML";
-        }
+        String filterName = getFilterNameFromMimeType(outputMimeType);
         propertyvalue = new PropertyValue[4];
         
         propertyvalue[0] = new PropertyValue();
@@ -302,5 +319,22 @@ public class OpenOfficeWorker{
         xcomponent.dispose();
       
         return os;
+    }
+    
+    public static String getFilterNameFromMimeType(String mimeType) {
+        String filterName = "";
+        if (UtilValidate.isEmpty(mimeType)) {
+            filterName = "HTML";
+        } else if (mimeType.equalsIgnoreCase("application/pdf")) {
+            filterName = "writer_pdf_Export";
+        } else if (mimeType.equalsIgnoreCase("application/msword")) {
+            filterName = "MS Word 97";
+        } else if (mimeType.equalsIgnoreCase("text/html")) {
+            filterName = "HTML (StarWriter)";
+        } else {
+            filterName = "HTML";
+        }
+        return filterName;
+
     }
 }
