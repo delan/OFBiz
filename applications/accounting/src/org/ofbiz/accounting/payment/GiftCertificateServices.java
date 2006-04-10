@@ -419,7 +419,6 @@ public class GiftCertificateServices {
             // otherwise, the gift card's card number is an ecrypted string, which must be decoded to find the FinAccount
             GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));
             GenericValue finAccount = null;
-            GenericValue finAccount = null;
             String finAccountId = null;
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                 if (validatePin(delegator, giftCard.getString("cardNumber"), giftCard.getString("pinNumber"))) {
