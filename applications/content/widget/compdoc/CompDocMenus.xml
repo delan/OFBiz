@@ -169,7 +169,7 @@
     <menu name="childInstanceLine" default-title-style="tabButton" default-selected-style="tabButtonSelected" default-menu-item-name="content"
         orientation="horizontal" menu-width="100%" default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
-        <menu-item name="edit-inplace" title="${contentName}[${assocRevisionItemView.itemContentId}] - ${instanceDataResource.objectInfo}">
+        <menu-item name="edit-inplace" title="${contentName}[${assocRevisionItemView.itemContentId}] - ${instanceDataResource.objectInfo} ${instanceDataResource.relatedDetailId}">
             <condition>
                 <not><if-empty field-name="assocRevisionItemView"/></not>
             </condition>

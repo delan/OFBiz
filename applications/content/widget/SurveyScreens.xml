@@ -227,6 +227,10 @@ under the License.
                 <decorator-screen name="CommonSurveyDecorator">
                     <decorator-section name="body">
                         <container><link  text="${uiLabelMap.SurveyCreateResponse}" target="EditSurveyResponse?surveyId=${surveyId}" style="buttontext"/></container>
+                        <section>
+                            <condition><not><if-empty field-name="parameters.rootContentId"/></not></condition>
+                            <widgets><container><link text="Go Back to CompDoc Root [${parameters.rootContentId}]" target="ViewCompDocInstanceTree?rootContentId=${parameters.rootContentId}" style="buttontext"/></container></widgets>
+                        </section>
                         <container><label style="head1">${uiLabelMap.PageTitleViewSurveyResponses}, ${uiLabelMap.SurveySurveyId}: ${surveyId}</label></container>
                         <platform-specific><html><html-template location="component://content/webapp/content/survey/ViewSurveyResponses.ftl"/></html></platform-specific>
                     </decorator-section>

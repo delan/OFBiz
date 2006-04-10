@@ -347,7 +347,7 @@ under the License.
         </field>
         <field name="rootContentId"><hidden/></field>
         <field name="rootContentRevisionSeqId"><hidden/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="EditChildCompDoc" default-map-name="contentAssoc" type="single" target="${childCompDocTarget}"
@@ -403,17 +403,21 @@ under the License.
                     description="Edit Survey Response" link-style="buttontext" use-when="dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)!=null"/>
             </lookup>
         </field>
-        <field name="surveyResponseLink" map-name="dummy" widget-style="buttontext" 
+        <field name="addSurveyResponse" map-name="dummy" widget-style="buttontext" 
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
-            <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse?surveyId=${templateDataResource.relatedDetailId}" also-hidden="false" target-window="_blank"/>
+            <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse?surveyId=${templateDataResource.relatedDetailId}&amp;dataResourceId=${dataResource.dataResourceId}&amp;rootContentId=${rootContentId}" also-hidden="false" target-window="_blank"/>
         </field>
-
+        <field name="updateSurveyResponse" map-name="dummy" widget-style="buttontext" 
+            use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)!=null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
+            <hyperlink description="Update Response (for Survey ${templateDataResource.relatedDetailId}, Response ${dataResource.relatedDetailId})" target="EditSurveyResponse?surveyId=${templateDataResource.relatedDetailId}&amp;surveyResponseId=${dataResource.relatedDetailId}&amp;dataResourceId=${dataResource.dataResourceId}&amp;rootContentId=${rootContentId}" also-hidden="false" target-window="_blank"/>
+        </field>
+        
         <field name="objectInfo" title="Current File Name" map-name="dataResource" widget-style="tabletext"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; mimeTypeId!=null &amp;&amp; !&quot;application/vnd.ofbiz.survey&quot;.equals(mimeTypeId)">
             <display also-hidden="false"/>
         </field>
 
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="ViewChildCompDoc" default-map-name="contentAssoc" type="single" target=""

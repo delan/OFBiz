@@ -261,6 +261,7 @@
         <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_"/>
         <attribute name="surveyResponseId" type="String" mode="INOUT" optional="true"/>
         <attribute name="productStoreSurveyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="dataResourceId" type="String" mode="IN" optional="true"/>
         <override name="surveyId" mode="INOUT" optional="false"/>
     </service>
 
