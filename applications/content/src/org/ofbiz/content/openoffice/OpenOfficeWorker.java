@@ -42,7 +42,6 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
-import com.sun.star.comp.helper.Bootstrap;
 
 /**
  * OpenOfficeWorker Class
@@ -56,26 +55,6 @@ public class OpenOfficeWorker{
 
     public static final String module = OpenOfficeWorker.class.getName();
     
-    public static XMultiComponentFactory getRemoteServer_test(String host, String port) throws IOException, Exception {
-        XMultiComponentFactory xmulticomponentfactory = null;
-        String sofficepath = "file:///usr/lib/openoffice2/program";
-
-        String unoini = sofficepath + "/unorc";  // To change in uno.ini for Windows
-
-     
-
-        Hashtable params = new Hashtable();
-
-        params.put("SYSBINDIR", sofficepath);
-        //XComponentContext xComponentContext = Bootstrap.defaultBootstrap_InitialComponentContext(unoini, params);
-        XComponentContext xComponentContext = Bootstrap.bootstrap();
-
-//        XComponentContext xComponentContext = Bootstrap.bootstrap();
-        if (xComponentContext != null) {
-            xmulticomponentfactory = xComponentContext.getServiceManager();
-        }
-        return xmulticomponentfactory;
-    }
     /**
      * Use OpenOffice to convert documents between types
      */

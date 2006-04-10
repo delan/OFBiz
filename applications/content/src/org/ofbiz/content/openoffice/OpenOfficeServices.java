@@ -82,11 +82,11 @@ public class OpenOfficeServices {
             byte[] inByteArray = inByteWrapper.getBytes();
             
             // The following line work in linux, but not Windows or Mac environment. It is preferred because it does not use temporary files
-            //OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(inByteArray);
+            OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(inByteArray);
             //Debug.logInfo("Doing convertDocumentByteWrapper, inBytes size is [" + inByteArray.length + "]", module);
-            // OpenOfficeByteArrayOutputStream baos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, outputMimeType);
+             OpenOfficeByteArrayOutputStream baos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, outputMimeType);
             
-            
+            /*
             String tempDir = UtilProperties.getPropertyValue("content", "content.temp.dir");
             fileIn = new File(tempDir + fileInName);
             FileOutputStream fos = new FileOutputStream(fileIn);
@@ -101,7 +101,7 @@ public class OpenOfficeServices {
                 baos.write(c);
             }
             fis.close();
-            
+            */
             results.put("outByteWrapper", new ByteWrapper(baos.toByteArray()));
             baos.close();
 
@@ -115,8 +115,8 @@ public class OpenOfficeServices {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
             return ServiceUtil.returnError(e.toString());
         } finally {
-            fileIn.delete();
-            fileOut.delete();
+            //fileIn.delete();
+           // fileOut.delete();
         }
         return results;
     }
