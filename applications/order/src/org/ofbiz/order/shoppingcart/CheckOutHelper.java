@@ -36,6 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.accounting.finaccount.FinAccountHelper;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -377,11 +378,37 @@ public class CheckOutHelper {
                 errorMessages.add(errMsg);
                 gcFieldsOkay = false;
             }
-            if ((cart.isPinRequiredForGC(delegator)) && ((gcPin == null) || (gcPin.length() == 0))) {
-                errMsg = UtilProperties.getMessage(resource,"checkhelper.enter_gift_card_pin_number", (cart != null ? cart.getLocale() : Locale.getDefault()));
-                errorMessages.add(errMsg);
-                gcFieldsOkay = false;
-            }
+            if (cart.isPinRequiredForGC(delegator)) {
+                //  if a PIN is required, make sure the PIN is valid
+                if ((gcPin == null) || (gcPin.length() == 0)) {
+                    errMsg = UtilProperties.getMessage(resource,"checkhelper.enter_gift_card_pin_number", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    errorMessages.add(errMsg);
+                    gcFieldsOkay = false;
+                }
+            } 
+            // if no PIN is required, then validate gift card code against FinAccount's accountCode
+            if (cart.isValidateGCFinAccount(delegator)) {
+                try {
+                    if (!cart.isPinRequiredForGC(delegator)) {
+                        GenericValue finAccount = FinAccountHelper.getFinAccountFromCode(gcNum, delegator);
+                        if (finAccount == null) {
+                            errMsg = UtilProperties.getMessage(resource,"checkhelper.gift_card_does_not_exist", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                            errorMessages.add(errMsg);
+                            gcFieldsOkay = false;
+                        } else if (FinAccountHelper.getAvailableBalance(finAccount.getString("finAccountId"), cart.getCurrency(), delegator).compareTo(FinAccountHelper.ZERO) == -1) {
+                            // if account's available balance (including authorizations) is less than zero, then return an error
+                            errMsg = UtilProperties.getMessage(resource,"checkhelper.gift_card_has_no_value", (cart != null ? cart.getLocale() : Locale.getDefault()));
+                            errorMessages.add(errMsg);
+                            gcFieldsOkay = false;
+                        }
+                    }
+                    // TODO: else case when pin is required - we should validate gcNum and gcPin
+                } catch (GenericEntityException ex) {
+                    errorMessages.add(ex.getMessage());
+                    gcFieldsOkay = false;
+                }   
+            }                
+            
             if (selectedPaymentMethods != null && selectedPaymentMethods.size() > 0) {
                 if (gcAmt == null || gcAmt.length() == 0) {
                     errMsg = UtilProperties.getMessage(resource,"checkhelper.enter_amount_to_place_on_gift_card", (cart != null ? cart.getLocale() : Locale.getDefault()));

@@ -1848,12 +1848,22 @@ public class ShoppingCart implements Serializable {
     }
 
     /**
+     * Returns ProductStoreFinActSetting based on cart's productStoreId and FinAccountHelper's defined giftCertFinAcctTypeId
+     * @param delegator
+     * @return
+     * @throws GenericEntityException
+     */
+    public GenericValue getGiftCertSettingFromStore(GenericDelegator delegator) throws GenericEntityException {
+        return delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", getProductStoreId(), "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));
+    }
+    
+    /**
      * Determines whether pin numbers are required for gift cards, based on ProductStoreFinActSetting.  Default in FinAccountHelper.
      * @return
      */
     public boolean isPinRequiredForGC(GenericDelegator delegator) {
         try {
-            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", getProductStoreId(), "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));
+            GenericValue giftCertSettings = getGiftCertSettingFromStore(delegator);
             if (giftCertSettings != null) {
                 if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                     return true;
@@ -1861,11 +1871,36 @@ public class ShoppingCart implements Serializable {
                     return false;
                 }
             } else {
+                Debug.logWarning("No product store gift certificate settings found for store [" + productStoreId + "]", module);
                 return FinAccountHelper.defaultPinRequired;
             }
         } catch (GenericEntityException ex) {
             Debug.logError("Error checking if store requires pin number for GC: " + ex.getMessage(), module);
             return FinAccountHelper.defaultPinRequired;
+        }
+    }
+    
+    /**
+     * Returns whether the cart should validate gift cards against FinAccount (ie, internal gift certificates).  Defaults to false.
+     * @param delegator
+     * @return
+     */
+    public boolean isValidateGCFinAccount(GenericDelegator delegator) {
+        try {
+            GenericValue giftCertSettings = getGiftCertSettingFromStore(delegator);
+            if (giftCertSettings != null) {
+                if ("Y".equals(giftCertSettings.getString("validateGCFinAcct"))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                Debug.logWarning("No product store gift certificate settings found for store [" + productStoreId + "]", module);
+                return false;
+            }
+        } catch (GenericEntityException ex) {
+            Debug.logError("Error checking if store requires pin number for GC: " + ex.getMessage(), module);
+            return false;
         }
     }
     
