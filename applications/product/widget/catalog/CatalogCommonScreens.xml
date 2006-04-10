@@ -31,7 +31,7 @@
                 <!-- base/top/specific map first, then more common map added for shared labels --> 
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-
+                
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.CatalogCompanyName" global="true"/>
@@ -41,6 +41,8 @@
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="catalogmgr" global="true"/>
                 <set field="appheaderTemplate" value="component://product/webapp/catalog/includes/appheader.ftl" global="true"/>
+
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
             <widgets>
                 <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
