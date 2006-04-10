@@ -386,9 +386,10 @@ public class CheckOutHelper {
                     gcFieldsOkay = false;
                 }
             } 
-            // if no PIN is required, then validate gift card code against FinAccount's accountCode
+            // See if we should validate gift card code against FinAccount's accountCode
             if (cart.isValidateGCFinAccount(delegator)) {
                 try {
+                    // No PIN required - validate gift card number against account code
                     if (!cart.isPinRequiredForGC(delegator)) {
                         GenericValue finAccount = FinAccountHelper.getFinAccountFromCode(gcNum, delegator);
                         if (finAccount == null) {
