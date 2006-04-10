@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.map.LinkedMap;
+import org.ofbiz.accounting.finaccount.FinAccountHelper;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -1846,6 +1847,28 @@ public class ShoppingCart implements Serializable {
         }
     }
 
+    /**
+     * Determines whether pin numbers are required for gift cards, based on ProductStoreFinActSetting.  Default in FinAccountHelper.
+     * @return
+     */
+    public boolean isPinRequiredForGC(GenericDelegator delegator) {
+        try {
+            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", getProductStoreId(), "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));
+            if (giftCertSettings != null) {
+                if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return FinAccountHelper.defaultPinRequired;
+            }
+        } catch (GenericEntityException ex) {
+            Debug.logError("Error checking if store requires pin number for GC: " + ex.getMessage(), module);
+            return FinAccountHelper.defaultPinRequired;
+        }
+    }
+    
     // =======================================================================
     // Billing Accounts
     // =======================================================================
