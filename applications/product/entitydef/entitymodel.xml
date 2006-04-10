@@ -3106,6 +3106,10 @@
       <field type="id-ne" name="productStoreId"/>
       <field name="finAccountTypeId" type="id-ne"/>
       <field name="requirePinCode" type="indicator"/>
+      <field name="validateGCFinAcct" type="indicator">
+          <description>determines whether the store should validate gift card numbers against the gift certificate codes stored in FinAccount.
+              Set to N if using external gift card provider.</description>
+      </field>
       <field name="accountCodeLength" type="numeric">
       	<description>length of auto-generated account code</description>
       </field>
