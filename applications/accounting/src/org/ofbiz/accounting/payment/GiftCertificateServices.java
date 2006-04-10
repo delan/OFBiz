@@ -68,8 +68,6 @@ public class GiftCertificateServices {
 
     public static BigDecimal ZERO = new BigDecimal("0.00");
     
-    public static final String giftCertFinAccountTypeId = "GIFTCERT_ACCOUNT";
-    
     // Base Gift Certificate Services
     public static Map createGiftCertificate(DispatchContext dctx, Map context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -95,7 +93,7 @@ public class GiftCertificateServices {
             final String accountName = "Gift Certificate Account";
             final String deposit = "DEPOSIT";
 
-            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
+            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));
             Map acctResult = null;
             
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
@@ -113,13 +111,13 @@ public class GiftCertificateServices {
 
                 // create the FinAccount
                 Map acctCtx = UtilMisc.toMap("finAccountId", cardNumber);
-                acctCtx.put("finAccountTypeId", giftCertFinAccountTypeId);
+                acctCtx.put("finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId);
                 acctCtx.put("finAccountName", accountName);
                 acctCtx.put("finAccountCode", pinNumber);
                 acctCtx.put("userLogin", userLogin);
                 acctResult = dispatcher.runSync("createFinAccount", acctCtx);
             } else {
-                acctResult = dispatcher.runSync("createFinAccountForStore", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId, "userLogin", userLogin));  
+                acctResult = dispatcher.runSync("createFinAccountForStore", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId, "userLogin", userLogin));  
                 if (acctResult.get("finAccountId") != null) {
                     cardNumber = (String) acctResult.get("finAccountId");
                 }
@@ -240,7 +238,7 @@ public class GiftCertificateServices {
 
         // validate the pin if the store requires it
         try {
-            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
+            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));
             if ("Y".equals(giftCertSettings.getString("requirePinCode")) && !validatePin(delegator, cardNumber, pinNumber)) {
                 return ServiceUtil.returnError("PIN number is not valid!");
             }
@@ -419,7 +417,8 @@ public class GiftCertificateServices {
         try {
             // if the store requires pin codes, then validate pin code against card number, and the gift certificate's finAccountId is the gift card's card number
             // otherwise, the gift card's card number is an ecrypted string, which must be decoded to find the FinAccount
-            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));
+            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));
+            GenericValue finAccount = null;
             GenericValue finAccount = null;
             String finAccountId = null;
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
@@ -653,10 +652,10 @@ public class GiftCertificateServices {
         // Gift certificate settings are per store in this entity
         GenericValue giftCertSettings = null;
         try {
-            giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", giftCertFinAccountTypeId));    
+            giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));    
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Unable to get Product Store FinAccount settings for " + giftCertFinAccountTypeId, module);
-            ServiceUtil.returnError("Unable to get Product Store FinAccount settings for " + giftCertFinAccountTypeId + ": " + e.getMessage());
+            Debug.logError(e, "Unable to get Product Store FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+            ServiceUtil.returnError("Unable to get Product Store FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId + ": " + e.getMessage());
         }
        
         // survey information

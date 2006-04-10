@@ -54,6 +54,9 @@ public class FinAccountHelper {
      public static int rounding = UtilNumber.getBigDecimalRoundingMode("finaccount.rounding");
      public static final BigDecimal ZERO = (new BigDecimal("0.0")).setScale(decimals, rounding);
      
+     public static final String giftCertFinAccountTypeId = "GIFTCERT_ACCOUNT";
+     public static final boolean defaultPinRequired = false;
+     
 	 // pool of available characters for account codes, here numbers plus uppercase characters
 	 static char[] char_pool = new char[10+26];
      static {
