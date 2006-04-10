@@ -99,6 +99,8 @@ public class PdfSurveyServices {
                 surveyId = delegator.getNextSeqId("Survey");
                 survey = delegator.makeValue("Survey", UtilMisc.toMap("surveyName", surveyName));
                 survey.set("surveyId", surveyId);
+                survey.set("allowMultiple", "Y");
+                survey.set("allowUpdate", "Y");
                 survey.create();
             }
             

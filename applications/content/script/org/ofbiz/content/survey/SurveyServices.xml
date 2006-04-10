@@ -444,7 +444,7 @@
             <add-error><fail-message message="No answers were found"/></add-error>
             <check-errors/>
         </if-empty>
-        <set from-field="parameters.answers" field="answers"/>
+        <set field="answers" from-field="parameters.answers"/>
 
         <!-- make sure all required fields were responded to -->
         <iterate entry-name="surveyQuestionAndAppl" list-name="surveyQuestionAndApplList">
@@ -489,6 +489,13 @@
 
         <store-value value-name="surveyResponse"/>
         <field-to-result field-name="surveyResponse.surveyResponseId" result-name="surveyResponseId"/>
+        
+        <!-- if a dataResourceId was passed in use it to set DataResource.relatedDetailId to the surveyResponse.surveyResponseId -->
+        <if-not-empty field-name="parameters.dataResourceId">
+            <entity-one entity-name="DataResource" value-name="dataResource"/>
+            <set field="dataResource.relatedDetailId" from-field="surveyResponse.surveyResponseId"/>
+            <store-value value-name="dataResource"/>
+        </if-not-empty>
 
         <!-- lookup any existing response answers -->
         <get-related value-name="surveyResponse" relation-name="SurveyResponseAnswer" list-name="existingAnswers"/>
