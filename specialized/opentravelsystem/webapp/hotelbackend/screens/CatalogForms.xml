@@ -96,17 +96,17 @@
     </form>  
     <!-- Edit/Create a product --> 
     <form name="EditProduct" type="single"
-            target="updateProduct" title="" default-map-name="product"
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <actions>
-                <set field="productStoreId" value="${productStoreId}"/>
-        </actions>
+        target="updateProduct" title="" default-map-name="product"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
         <alt-target use-when="product==null" target="createProduct"/>
-
+        
         <field use-when="product==null" name="isCreate"><hidden value="true"/></field>
-
-        <field use-when="product!=null" name="productId"><hidden value="productId"/></field>
-
+        
+        <field use-when="product!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProduct}"><display/></field>
+        <!--field use-when="product==null&amp;&amp;productId==null" name="productId" title="${uiLabelMap.ProductProductId}"><text size="20" maxlength="20"/></field-->
+        <field use-when="product==null&amp;&amp;productId!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotFindProductId} [${productId}]"><display/></field>
+        
         <field position="1" name="isVirtual" title="${uiLabelMap.ProductVirtualProduct}" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}" /><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
@@ -142,9 +142,9 @@
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field-->
 
-        <!--field position="1" name="manufacturerPartyId" title="${uiLabelMap.ProductOemPartyId}" red-when="before-now"><text size="20" maxlength="20"/></field>
-
-        <field position="1" name="requireInventory" widget-style="selectBox" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}">
+        <!--field position="1" name="manufacturerPartyId" title="${uiLabelMap.ProductOemPartyId}" red-when="before-now"><text size="20" maxlength="20"/></field-->
+        <field name="requireInventory"><hidden value="N"/></field>
+        <!--field position="1" name="requireInventory" widget-style="selectBox" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
         <field position="2" name="inventoryMessage"  title="${uiLabelMap.ProductInventoryMessage}"><text size="20" maxlength="255"/></field>
