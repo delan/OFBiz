@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.math.BigDecimal;
 
 import javolution.util.FastList;
 
@@ -36,6 +37,7 @@ import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericEntity;
@@ -61,6 +63,16 @@ import org.ofbiz.service.ServiceUtil;
 public class BillingAccountWorker {
     
     public static final String module = BillingAccountWorker.class.getName();
+    private static BigDecimal ZERO = new BigDecimal("0");
+    private static int decimals = -1;
+    private static int rounding = -1;
+    static {
+        decimals = UtilNumber.getBigDecimalScale("order.decimals");
+        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+
+        // set zero to the proper scale
+        if (decimals != -1) ZERO.setScale(decimals);
+    }
 
     public static List makePartyBillingAccountList(GenericValue userLogin, String currencyUomId, String partyId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GeneralException {
         List billingAccountList = FastList.newInstance();
@@ -86,7 +98,7 @@ public class BillingAccountWorker {
                 GenericValue billingAccountRole = (GenericValue) billingAcctIter.next();        
                 GenericValue billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");
                 if (currencyUomId.equals(billingAccountVO.getString("accountCurrencyUomId"))) {
-                    double accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
+                    double accountBalance = (BillingAccountWorker.getBillingAccountBalance(billingAccountVO)).doubleValue();
                 
                     Map billingAccount = new HashMap(billingAccountVO);
                     double accountLimit = 0.0;
@@ -106,13 +118,14 @@ public class BillingAccountWorker {
         return billingAccountList;
     }
     
-    public static double getBillingAccountBalance(GenericValue billingAccount) throws GenericEntityException {
+    public static BigDecimal getBillingAccountBalance(GenericValue billingAccount) throws GenericEntityException {
         return getBillingAccountBalance(billingAccount.getDelegator(), billingAccount.getString("billingAccountId"));
     }
         
-    public static double getBillingAccountBalance(GenericDelegator delegator, String billingAccountId) throws GenericEntityException {
-        double balance = 0.00;
-        
+    public static BigDecimal getBillingAccountBalance(GenericDelegator delegator, String billingAccountId) throws GenericEntityException {
+        int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+        int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+        BigDecimal balance = new BigDecimal("0.00");
         // first get all the pending orders (not cancelled, rejected or completed)
         List orderHeaders = null;
         List exprs1 = new LinkedList();
@@ -128,14 +141,14 @@ public class BillingAccountWorker {
             while (ohi.hasNext()) {
                 GenericValue orderHeader = (GenericValue) ohi.next();
                 OrderReadHelper orh = new OrderReadHelper(orderHeader);
-                balance += orh.getOrderGrandTotal();            
+                balance = balance.add(orh.getOrderGrandTotalBd());
             }
         }
         
         // next get all the un-paid invoices (this will include all completed orders)
         List invoices = null;
         List exprs2 = new LinkedList();
-        exprs2.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));       
+        exprs2.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
         exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
         exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_PAID"));
 
@@ -145,7 +158,7 @@ public class BillingAccountWorker {
             Iterator ii = invoices.iterator();
             while (ii.hasNext()) {
                 GenericValue invoice = (GenericValue) ii.next();
-                balance += (InvoiceWorker.getInvoiceNotApplied(invoice)).doubleValue();
+                balance = balance.add(InvoiceWorker.getInvoiceNotApplied(invoice));
             }
         }
         
@@ -161,15 +174,15 @@ public class BillingAccountWorker {
             Iterator ci = credits.iterator();
             while (ci.hasNext()) {
                 GenericValue credit = (GenericValue) ci.next();
-                Double amount = credit.getDouble("amountApplied");
+                BigDecimal amount = credit.getBigDecimal("amountApplied");
                 if (amount != null) {
-                    balance -= amount.doubleValue();
-                }                
+                    balance = balance.subtract(amount);
+                }
             }
         }
-        
+        balance = balance.setScale(decimals, rounding);
         return balance;
-    }   
+    }
     
     public static Map calcBillingAccountBalance(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -178,7 +191,7 @@ public class BillingAccountWorker {
         Double accountBalance = null;
         try {
             billingAccount = delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", billingAccountId));
-            accountBalance = new Double(getBillingAccountBalance(delegator, billingAccountId));
+            accountBalance = new Double((getBillingAccountBalance(delegator, billingAccountId)).doubleValue());
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Error getting billing account or calculating balance for billing account #" + billingAccountId);
