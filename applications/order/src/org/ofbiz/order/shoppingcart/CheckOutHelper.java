@@ -377,7 +377,7 @@ public class CheckOutHelper {
                 errorMessages.add(errMsg);
                 gcFieldsOkay = false;
             }
-            if (gcPin == null || gcPin.length() == 0) {
+            if ((cart.isPinRequiredForGC(delegator)) && ((gcPin == null) || (gcPin.length() == 0))) {
                 errMsg = UtilProperties.getMessage(resource,"checkhelper.enter_gift_card_pin_number", (cart != null ? cart.getLocale() : Locale.getDefault()));
                 errorMessages.add(errMsg);
                 gcFieldsOkay = false;
@@ -405,7 +405,9 @@ public class CheckOutHelper {
                 Map gcCtx = new HashMap();
                 gcCtx.put("partyId", params.get("partyId"));
                 gcCtx.put("cardNumber", gcNum);
-                gcCtx.put("pinNumber", gcPin);
+                if (cart.isPinRequiredForGC(delegator)) {
+                    gcCtx.put("pinNumber", gcPin);
+                }
                 gcCtx.put("userLogin", cart.getUserLogin());
                 Map gcResult = null;
                 try {
