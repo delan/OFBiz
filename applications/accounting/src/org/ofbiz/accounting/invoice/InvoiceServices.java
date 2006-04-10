@@ -1461,7 +1461,7 @@ public class InvoiceServices {
             }
             try {
                 billingAccountApplyAvailable = billingAccount.getBigDecimal("accountLimit").add(
-                        new BigDecimal(BillingAccountWorker.getBillingAccountBalance(billingAccount))).setScale(decimals,rounding);
+                        BillingAccountWorker.getBillingAccountBalance(billingAccount)).setScale(decimals,rounding);
             } catch (GenericEntityException e) {
                 ServiceUtil.returnError(e.getMessage());
                 errorMessageList.add("- Billing Account(" + billingAccountId + ") balance could not be retrieved, see log for more info...(\n");
