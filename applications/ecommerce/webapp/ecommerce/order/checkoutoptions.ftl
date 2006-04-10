@@ -498,6 +498,7 @@ function toggleBillingAccount(box) {
                       <input type="text" size="15" class="inputBox" name="giftCardNumber" value="${(requestParameters.giftCardNumber)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
                     </td>
                   </tr>
+                  <#if shoppingCart.isPinRequiredForGC(delegator)>
                   <tr>
                     <td width="1%">
                       <div class="tabletext">${uiLabelMap.AccountingPIN}</div>
@@ -506,6 +507,7 @@ function toggleBillingAccount(box) {
                       <input type="text" size="10" class="inputBox" name="giftCardPin" value="${(requestParameters.giftCardPin)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
                     </td>
                   </tr>
+                  </#if>
                   <tr>
                     <td width="1%">
                       <div class="tabletext">${uiLabelMap.AccountingAmount}</div>
