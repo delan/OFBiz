@@ -1662,7 +1662,7 @@
 
     <!-- Work Effort Costing -->
     <entity entity-name="WorkEffortCostCalc"
-            package-name="org.ofbiz.workeffort.workeffort"
+            package-name="org.ofbiz.accounting.costs"
             title="Work Effort Cost Calculation Entity">
         <field name="workEffortId" type="id-ne"></field>
         <field name="costComponentTypeId" type="id-ne"></field>
@@ -1683,7 +1683,7 @@
         </relation>
     </entity>
     <entity entity-name="CostComponentCalc"
-            package-name="org.ofbiz.workeffort.workeffort"
+            package-name="org.ofbiz.accounting.costs"
             title="Cost Component Calculation Entity">
         <field name="costComponentCalcId" type="id-ne"></field>
         <field name="costGlAccountTypeId" type="id"></field>
