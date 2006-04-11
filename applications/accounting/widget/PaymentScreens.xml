@@ -120,7 +120,6 @@ under the License.
                                 <container>
                                     <label style="head1"> Header detailed information</label>
                                     <link target="editPayment?paymentId=${paymentId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/>
-                                    <link target="printChecks.pdf?paymentId=${paymentId}" text="${uiLabelMap.AccountingPrintAsCheck}" style="buttontext"/>
                                     <include-form name="paymentHeader" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
                                 </container>
                                 <container>
@@ -136,7 +135,6 @@ under the License.
                             <fail-widgets>
                                 <container>
                                     <label style="head1">Header Detailed Information</label>
-                                    <link target="printChecks.pdf?paymentId=${paymentId}" text="${uiLabelMap.AccountingPrintAsCheck}" style="buttontext"/>
                                     <include-form name="paymentHeader" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
                                 </container>
                                 <container>
