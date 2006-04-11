@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.map.LinkedMap;
-import org.ofbiz.accounting.finaccount.FinAccountHelper;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -54,6 +53,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.finaccount.FinAccountHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
@@ -1858,7 +1858,7 @@ public class ShoppingCart implements Serializable {
     }
     
     /**
-     * Determines whether pin numbers are required for gift cards, based on ProductStoreFinActSetting.  Default in FinAccountHelper.
+     * Determines whether pin numbers are required for gift cards, based on ProductStoreFinActSetting.  Default to true.
      * @return
      */
     public boolean isPinRequiredForGC(GenericDelegator delegator) {
@@ -1872,11 +1872,11 @@ public class ShoppingCart implements Serializable {
                 }
             } else {
                 Debug.logWarning("No product store gift certificate settings found for store [" + getProductStoreId() + "]", module);
-                return FinAccountHelper.defaultPinRequired;
+                return true;
             }
         } catch (GenericEntityException ex) {
             Debug.logError("Error checking if store requires pin number for GC: " + ex.getMessage(), module);
-            return FinAccountHelper.defaultPinRequired;
+            return true;
         }
     }
     

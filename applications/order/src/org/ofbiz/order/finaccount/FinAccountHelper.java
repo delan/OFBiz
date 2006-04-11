@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.ofbiz.accounting.finaccount;
+package org.ofbiz.order.finaccount;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -69,6 +68,32 @@ public class FinAccountHelper {
          }
      }
      
+
+     /**
+      * A convenience method which adds transactions.get(0).get(fieldName) to initialValue, all done in BigDecimal to decimals and rounding
+      * @param initialValue
+      * @param transactions
+      * @param fieldName
+      * @param decimals
+      * @param rounding
+      * @return
+      * @throws GenericEntityException
+      */
+     public static BigDecimal addFirstEntryAmount(BigDecimal initialValue, List transactions, String fieldName, int decimals, int rounding) throws GenericEntityException {
+          if ((transactions != null) && (transactions.size() == 1)) {
+              GenericValue firstEntry = (GenericValue) transactions.get(0);
+              if (firstEntry.get(fieldName) != null) {
+                  BigDecimal valueToAdd = new BigDecimal(firstEntry.getDouble(fieldName).doubleValue());
+                  BigDecimal newValue = initialValue.add(valueToAdd).setScale(decimals, rounding);
+                  return newValue;
+              } else {
+                  return initialValue;
+              }
+          } else {
+              return initialValue;
+          }
+     }
+
      /**
       * Returns a unique randomly generated account code for FinAccount.finAccountCode composed of uppercase letters and numbers
       * @param codeLength length of code in number of characters
@@ -163,7 +188,7 @@ public class FinAccountHelper {
                      EntityOperator.OR)),
                  EntityOperator.AND);
          List transSums = delegator.findByCondition("FinAccountTransSum", incrementConditions, UtilMisc.toList("amount"), null);
-         incrementTotal = UtilAccounting.addFirstEntryAmount(incrementTotal, transSums, "amount", (decimals+1), rounding);
+         incrementTotal = addFirstEntryAmount(incrementTotal, transSums, "amount", (decimals+1), rounding);
 
          // now find sum of all transactions with decrease the value
          EntityConditionList decrementConditions = new EntityConditionList(UtilMisc.toList(
@@ -173,7 +198,7 @@ public class FinAccountHelper {
                  new EntityExpr("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL")),
              EntityOperator.AND);
          transSums = delegator.findByCondition("FinAccountTransSum", decrementConditions, UtilMisc.toList("amount"), null);
-         decrementTotal = UtilAccounting.addFirstEntryAmount(decrementTotal, transSums, "amount", (decimals+1), rounding);
+         decrementTotal = addFirstEntryAmount(decrementTotal, transSums, "amount", (decimals+1), rounding);
          
          // the net balance is just the incrementTotal minus the decrementTotal
          BigDecimal netBalance = incrementTotal.subtract(decrementTotal).setScale(decimals, rounding);
@@ -214,7 +239,7 @@ public class FinAccountHelper {
          
          List authSums = delegator.findByCondition("FinAccountAuthSum", authorizationConditions, UtilMisc.toList("amount"), null);
          
-         BigDecimal authorizationsTotal = UtilAccounting.addFirstEntryAmount(ZERO, authSums, "amount", (decimals+1), rounding);
+         BigDecimal authorizationsTotal = addFirstEntryAmount(ZERO, authSums, "amount", (decimals+1), rounding);
          
          // the total available balance is transactions total minus authorizations total
          BigDecimal netAvailableBalance = netBalance.subtract(authorizationsTotal).setScale(decimals, rounding);

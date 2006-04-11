@@ -36,7 +36,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.ofbiz.accounting.finaccount.FinAccountHelper;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,6 +45,7 @@ import org.ofbiz.entity.condition.EntityFieldValue;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.finaccount.FinAccountHelper;
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -396,7 +396,8 @@ public class CheckOutHelper {
                             errMsg = UtilProperties.getMessage(resource,"checkhelper.gift_card_does_not_exist", (cart != null ? cart.getLocale() : Locale.getDefault()));
                             errorMessages.add(errMsg);
                             gcFieldsOkay = false;
-                        } else if (FinAccountHelper.getAvailableBalance(finAccount.getString("finAccountId"), cart.getCurrency(), delegator).compareTo(FinAccountHelper.ZERO) == -1) {
+                        } else if ((FinAccountHelper.getAvailableBalance(finAccount.getString("finAccountId"), cart.getCurrency(), delegator) == null) || 
+                                (FinAccountHelper.getAvailableBalance(finAccount.getString("finAccountId"), cart.getCurrency(), delegator).compareTo(FinAccountHelper.ZERO) == -1)) {
                             // if account's available balance (including authorizations) is less than zero, then return an error
                             errMsg = UtilProperties.getMessage(resource,"checkhelper.gift_card_has_no_value", (cart != null ? cart.getLocale() : Locale.getDefault()));
                             errorMessages.add(errMsg);

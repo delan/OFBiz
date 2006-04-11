@@ -121,31 +121,6 @@ public class UtilAccounting {
     }
 
     /**
-     * A convenience method which adds transactions.get(0).get(fieldName) to initialValue, all done in BigDecimal to decimals and rounding
-     * @param initialValue
-     * @param transactions
-     * @param fieldName
-     * @param decimals
-     * @param rounding
-     * @return
-     * @throws GenericEntityException
-     */
-    public static BigDecimal addFirstEntryAmount(BigDecimal initialValue, List transactions, String fieldName, int decimals, int rounding) throws GenericEntityException {
-         if ((transactions != null) && (transactions.size() == 1)) {
-             GenericValue firstEntry = (GenericValue) transactions.get(0);
-             if (firstEntry.get(fieldName) != null) {
-                 BigDecimal valueToAdd = new BigDecimal(firstEntry.getDouble(fieldName).doubleValue());
-                 BigDecimal newValue = initialValue.add(valueToAdd).setScale(decimals, rounding);
-                 return newValue;
-             } else {
-                 return initialValue;
-             }
-         } else {
-             return initialValue;
-         }
-    }
-
-    /**
      * Recurses up payment type tree via parentTypeId to see if input payment type ID is in tree.
      */
     private static boolean isPaymentTypeRecurse(GenericValue paymentType, String inputTypeId) throws GenericEntityException {
