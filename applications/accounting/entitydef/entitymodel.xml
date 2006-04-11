@@ -2177,8 +2177,8 @@
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="surveyResponseId" type="id-ne"></field>
-      <field name="cardNumber" type="short-varchar"></field>
-      <field name="pinNumber" type="short-varchar"></field>
+      <field name="cardNumber" type="long-varchar" encrypt="true"></field>
+      <field name="pinNumber" type="long-varchar" encrypt="true"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="responseCode" type="short-varchar"></field>
       <field name="referenceNum" type="short-varchar"></field>
