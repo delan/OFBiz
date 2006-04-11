@@ -44,6 +44,7 @@
     <entity-group group="org.ofbiz" entity="AgreementTermAttribute" />
     <entity-group group="org.ofbiz" entity="AgreementType" />
     <entity-group group="org.ofbiz" entity="AgreementTypeAttr" />
+    <entity-group group="org.ofbiz" entity="AgreementWorkEffortAppl" />
     <entity-group group="org.ofbiz" entity="TermType" />
     <entity-group group="org.ofbiz" entity="TermTypeAttr" />
 
