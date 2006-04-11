@@ -264,6 +264,9 @@ ${virtualJavaScript?if_exists}
       <#if price.listPrice?exists && price.defaultPrice?exists && price.price?exists && price.price?double < price.defaultPrice?double && price.defaultPrice?double < price.listPrice?double>
         <div class="tabletext">${uiLabelMap.ProductRegularPrice}: <span class="basePrice"><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
       </#if>
+      <#if price.specialPromoPrice?exists>
+        <div class="tabletext">Special Promo Price: <span class="basePrice"><@ofbizCurrency amount=price.specialPromoPrice isoCode=price.currencyUsed/></span></div>
+      </#if>
       <div class="tabletext">
         <b>
           <#if price.isSale?exists && price.isSale>

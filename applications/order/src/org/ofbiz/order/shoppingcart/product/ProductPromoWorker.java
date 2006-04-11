@@ -37,6 +37,8 @@ import java.util.Set;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import javolution.util.FastList;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -75,7 +77,7 @@ public class ProductPromoWorker {
     public static final String resource_error = "OrderErrorUiLabels";
 
     public static List getStoreProductPromos(GenericDelegator delegator, LocalDispatcher dispatcher, ServletRequest request) {
-        List productPromos = new LinkedList();
+        List productPromos = FastList.newInstance();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         // get the ShoppingCart out of the session.
@@ -103,7 +105,7 @@ public class ProductPromoWorker {
                 Debug.logError(e, "Error looking up store with id " + productStoreId, module);
             }
             if (productStore == null) {
-            	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
+                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
                 return productPromos;
             }
 
@@ -149,7 +151,7 @@ public class ProductPromoWorker {
     }
 
     public static List getProductStorePromotions(ShoppingCart cart, Timestamp nowTimestamp, LocalDispatcher dispatcher) {
-        List productPromoList = new LinkedList();
+        List productPromoList = FastList.newInstance();
         
         GenericDelegator delegator = cart.getDelegator();
 
@@ -187,7 +189,7 @@ public class ProductPromoWorker {
     }
 
     public static List getAgreementPromotions(ShoppingCart cart, Timestamp nowTimestamp, LocalDispatcher dispatcher) {
-        List productPromoList = new LinkedList();
+        List productPromoList = FastList.newInstance();
         
         GenericDelegator delegator = cart.getDelegator();
 
@@ -272,8 +274,8 @@ public class ProductPromoWorker {
             // create a List of Maps with productPromo and totalDiscountAmount, use the Map sorter to sort them descending by totalDiscountAmount
             
             // before sorting split into two lists and sort each list; one list for promos that have a order total condition, and the other list for all promos that don't; then we'll always run the ones that have no condition on the order total first
-            List productPromoDiscountMapList = new LinkedList();
-            List productPromoDiscountMapListOrderTotal = new LinkedList();
+            List productPromoDiscountMapList = FastList.newInstance();
+            List productPromoDiscountMapListOrderTotal = FastList.newInstance();
             Iterator productPromoIter = productPromoList.iterator();
             while (productPromoIter.hasNext()) {
                 GenericValue productPromo = (GenericValue) productPromoIter.next();
@@ -1010,7 +1012,7 @@ public class ProductPromoWorker {
                 return false;
             }
         } else {
-        	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondInputParameterLhs", UtilMisc.toMap("inputParamEnumId",productPromoCond.getString("inputParamEnumId")), cart.getLocale()), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondInputParameterLhs", UtilMisc.toMap("inputParamEnumId",productPromoCond.getString("inputParamEnumId")), cart.getLocale()), module);
             return false;
         }
 
@@ -1031,7 +1033,7 @@ public class ProductPromoWorker {
             } else if ("PPC_GTE".equals(operatorEnumId)) {
                 if (compare >= 0) return true;
             } else {
-            	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondCondition", UtilMisc.toMap("operatorEnumId",operatorEnumId) , cart.getLocale()), module);
+                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondCondition", UtilMisc.toMap("operatorEnumId",operatorEnumId) , cart.getLocale()), module);
                 return false;
             }
         }
@@ -1064,7 +1066,7 @@ public class ProductPromoWorker {
             } else {
                 double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
                 
-                List optionProductIds = new LinkedList();
+                List optionProductIds = FastList.newInstance();
                 String productId = productPromoAction.getString("productId");
                 
                 GenericValue product = null;
@@ -1146,7 +1148,7 @@ public class ProductPromoWorker {
                         productId = alternateGwpProductId;
                         product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
                     } else {
-                    	Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnAlternateGwpProductIdWasInPlaceButWasEitherNotValidOrIsNoLongerInStockForId", UtilMisc.toMap("alternateGwpProductId",alternateGwpProductId), cart.getLocale()), module);
+                        Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnAlternateGwpProductIdWasInPlaceButWasEitherNotValidOrIsNoLongerInStockForId", UtilMisc.toMap("alternateGwpProductId",alternateGwpProductId), cart.getLocale()), module);
                     }
                 }
                 
@@ -1295,7 +1297,7 @@ public class ProductPromoWorker {
 
             Set productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
 
-            List cartItemsUsed = new LinkedList();
+            List cartItemsUsed = FastList.newInstance();
             List lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
             Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
@@ -1346,6 +1348,40 @@ public class ProductPromoWorker {
                 actionResultInfo.ranAction = true;
                 actionResultInfo.totalDiscountAmount = amount;
             }
+        } else if ("PROMO_PROD_SPPRC".equals(productPromoActionEnumId)) {
+            // if there are productIds associated with the action then restrict to those productIds, otherwise apply for all products
+            Set productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
+
+            // go through the cart items and for each product that has a specialPromoPrice use that price
+            Iterator cartItemIter = cart.items().iterator();
+            while (cartItemIter.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
+                String itemProductId = cartItem.getProductId();
+                if (UtilValidate.isEmpty(itemProductId)) {
+                    continue;
+                }
+                
+                if (productIds.size() > 0 && !productIds.contains(itemProductId)) {
+                    continue;
+                }
+                
+                if (cartItem.getSpecialPromoPrice() == null) {
+                    continue;
+                }
+                
+                // get difference between basePrice and specialPromoPrice and adjust for that
+                double difference = -(cartItem.getBasePrice() - cartItem.getSpecialPromoPrice().doubleValue());
+
+                if (difference != 0.0) {
+                    double quantityUsed = cartItem.addPromoQuantityCandidateUse(cartItem.getQuantity(), productPromoAction, false);
+                    if (quantityUsed > 0) {
+                        double amount = difference * quantityUsed;
+                        doOrderItemPromoAction(productPromoAction, cartItem, amount, "amount", delegator);
+                        actionResultInfo.ranAction = true;
+                        actionResultInfo.totalDiscountAmount = amount;
+                    }
+                }
+            }
         } else {
             Debug.logError("An un-supported productPromoActionType was used: " + productPromoActionEnumId + ", not performing any action", module);
             actionResultInfo.ranAction = false;
@@ -1362,7 +1398,7 @@ public class ProductPromoWorker {
     }
     
     protected static List getCartItemsUsed(ShoppingCart cart, GenericValue productPromoAction) {
-        List cartItemsUsed = new LinkedList();
+        List cartItemsUsed = FastList.newInstance();
         Iterator cartItemsIter = cart.iterator();
         while (cartItemsIter.hasNext()) {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartItemsIter.next();
@@ -1522,7 +1558,7 @@ public class ProductPromoWorker {
     }
 
     public static void makeProductPromoCondActionIdSets(String productPromoId, Set productIdsCond, Set productIdsAction, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
-    	makeProductPromoCondActionIdSets(productPromoId, productIdsCond, productIdsAction, delegator, nowTimestamp, false);
+        makeProductPromoCondActionIdSets(productPromoId, productIdsCond, productIdsAction, delegator, nowTimestamp, false);
     }
     
     public static void makeProductPromoCondActionIdSets(String productPromoId, Set productIdsCond, Set productIdsAction, GenericDelegator delegator, Timestamp nowTimestamp, boolean filterOldProducts) throws GenericEntityException {
@@ -1533,10 +1569,10 @@ public class ProductPromoWorker {
         List productPromoCategoriesAll = delegator.findByAndCache("ProductPromoCategory", UtilMisc.toMap("productPromoId", productPromoId));
         List productPromoProductsAll = delegator.findByAndCache("ProductPromoProduct", UtilMisc.toMap("productPromoId", productPromoId));
 
-        List productPromoProductsCond = new LinkedList();
-        List productPromoCategoriesCond = new LinkedList();
-        List productPromoProductsAction = new LinkedList();
-        List productPromoCategoriesAction = new LinkedList();
+        List productPromoProductsCond = FastList.newInstance();
+        List productPromoCategoriesCond = FastList.newInstance();
+        List productPromoProductsAction = FastList.newInstance();
+        List productPromoCategoriesAction = FastList.newInstance();
 
         Iterator productPromoProductsAllIter = productPromoProductsAll.iterator();
         while (productPromoProductsAllIter.hasNext()) {
@@ -1565,32 +1601,32 @@ public class ProductPromoWorker {
         
         // last of all filterOldProducts, done here to make sure no product gets looked up twice
         if (filterOldProducts) {
-        	Iterator productIdsCondIter = productIdsCond.iterator();
-        	while (productIdsCondIter.hasNext()) {
-        		String productId = (String) productIdsCondIter.next();
-        		if (isProductOld(productId, delegator, nowTimestamp)) {
-        			productIdsCondIter.remove();
-        		}
-        	}
-        	Iterator productIdsActionIter = productIdsAction.iterator();
-        	while (productIdsActionIter.hasNext()) {
-        		String productId = (String) productIdsActionIter.next();
-        		if (isProductOld(productId, delegator, nowTimestamp)) {
-        			productIdsActionIter.remove();
-        		}
-        	}
+            Iterator productIdsCondIter = productIdsCond.iterator();
+            while (productIdsCondIter.hasNext()) {
+                String productId = (String) productIdsCondIter.next();
+                if (isProductOld(productId, delegator, nowTimestamp)) {
+                    productIdsCondIter.remove();
+                }
+            }
+            Iterator productIdsActionIter = productIdsAction.iterator();
+            while (productIdsActionIter.hasNext()) {
+                String productId = (String) productIdsActionIter.next();
+                if (isProductOld(productId, delegator, nowTimestamp)) {
+                    productIdsActionIter.remove();
+                }
+            }
         }
     }
     
     protected static boolean isProductOld(String productId, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
-		GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-		if (product != null) {
-			Timestamp salesDiscontinuationDate = product.getTimestamp("salesDiscontinuationDate");
-			if (salesDiscontinuationDate != null && salesDiscontinuationDate.before(nowTimestamp)) {
-				return true;
-			}
-		}
-		return false;
+        GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+        if (product != null) {
+            Timestamp salesDiscontinuationDate = product.getTimestamp("salesDiscontinuationDate");
+            if (salesDiscontinuationDate != null && salesDiscontinuationDate.before(nowTimestamp)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected static void handleProductPromoCategories(Set productIds, List productPromoCategories, String productPromoApplEnumId, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
@@ -1615,7 +1651,7 @@ public class ProductPromoWorker {
                 } else {
                     List catIdSetList = (List) productCategoryGroupSetListMap.get(andGroupId);
                     if (catIdSetList == null) {
-                        catIdSetList = new LinkedList();
+                        catIdSetList = FastList.newInstance();
                     }
                     catIdSetList.add(tempCatIdSet);
                 }
@@ -1653,7 +1689,7 @@ public class ProductPromoWorker {
             Map.Entry entry = (Map.Entry) pcgslmIter.next();
             List catIdSetList = (List) entry.getValue();
             // get all productIds for this catIdSetList
-            List productIdSetList = new LinkedList();
+            List productIdSetList = FastList.newInstance();
             
             Iterator cidslIter = catIdSetList.iterator();
             while (cidslIter.hasNext()) {

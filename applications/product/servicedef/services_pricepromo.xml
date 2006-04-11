@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -51,6 +51,7 @@
         <attribute name="competitivePrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="averageCost" type="Double" mode="OUT" optional="true"/>
         <attribute name="promoPrice" type="Double" mode="OUT" optional="true"/>      
+        <attribute name="specialPromoPrice" type="Double" mode="OUT" optional="true"><!-- used for the Product [Special Promo] Type ProductPromo Action --></attribute>
         <attribute name="isSale" type="Boolean" mode="OUT" optional="false"/>
         <attribute name="validPriceFound" type="Boolean" mode="OUT" optional="false"/>
         <attribute name="currencyUsed" type="String" mode="OUT" optional="false"/>
