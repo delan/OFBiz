@@ -75,8 +75,11 @@ public class PriceServices {
      *   <li>partyId
      *   <li>prodCatalogId
      *   <li>webSiteId
+     *   <li>productStoreId
      *   <li>productStoreGroupId
      *   <li>quantity
+     *   <li>currencyUomId
+     *   <li>checkIncludeVat
      * </ul>
      */
     public static Map calculateProductPrice(DispatchContext dctx, Map context) {
@@ -270,6 +273,12 @@ public class PriceServices {
             if (Debug.infoOn()) Debug.logInfo("There is more than one WHOLESALE_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + wholesalePriceValue.getDouble("price"), module);
         }
 
+        List specialPromoPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "SPECIAL_PROMO_PRICE"));
+        GenericValue specialPromoPriceValue = EntityUtil.getFirst(specialPromoPrices);
+        if (specialPromoPrices != null && specialPromoPrices.size() > 1) {
+            if (Debug.infoOn()) Debug.logInfo("There is more than one SPECIAL_PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + specialPromoPriceValue.getDouble("price"), module);
+        }
+
         // if any of these prices is missing and this product is a variant, default to the corresponding price on the virtual product
         if (virtualProductPrices != null && virtualProductPrices.size() > 0) {
             if (listPriceValue == null) {
@@ -321,108 +330,122 @@ public class PriceServices {
                     if (Debug.infoOn()) Debug.logInfo("There is more than one WHOLESALE_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + wholesalePriceValue.getDouble("price"), module);
                 }
             }
+            if (specialPromoPriceValue == null) {
+                List virtualTempPrices = EntityUtil.filterByAnd(virtualProductPrices, UtilMisc.toMap("productPriceTypeId", "SPECIAL_PROMO_PRICE"));
+                specialPromoPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                    if (Debug.infoOn()) Debug.logInfo("There is more than one SPECIAL_PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + specialPromoPriceValue.getDouble("price"), module);
+                }
+            }
         }
 
         // now if this is a virtual product check each price type, if doesn't exist get from variant with lowest DEFAULT_PRICE
         if ("Y".equals(product.getString("isVirtual"))) {
-                // only do this if there is no default price, consider the others optional for performance reasons
-                if (defaultPriceValue == null) {
-                    // Debug.logInfo("Product isVirtual and there is no default price for ID " + productId + ", trying variant prices", module);
+            // only do this if there is no default price, consider the others optional for performance reasons
+            if (defaultPriceValue == null) {
+                // Debug.logInfo("Product isVirtual and there is no default price for ID " + productId + ", trying variant prices", module);
 
-                    //use the cache to find the variant with the lowest default price
-                    try {
-                            List variantAssocList = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate")));
-                            Iterator variantAssocIter = variantAssocList.iterator();
-                            double minDefaultPrice = Double.MAX_VALUE;
-                            List variantProductPrices = null;
-                            String variantProductId = null;
-                            while (variantAssocIter.hasNext()) {
-                                GenericValue variantAssoc = (GenericValue) variantAssocIter.next();
-                                String curVariantProductId = variantAssoc.getString("productIdTo");
-                                List curVariantPriceList = EntityUtil.filterByDate(delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", curVariantProductId), UtilMisc.toList("-fromDate")), nowTimestamp);
-                                List tempDefaultPriceList = EntityUtil.filterByAnd(curVariantPriceList, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
-                                GenericValue curDefaultPriceValue = EntityUtil.getFirst(tempDefaultPriceList);
-                                if (curDefaultPriceValue != null) {
-                                    Double curDefaultPrice = curDefaultPriceValue.getDouble("price");
-                                    if (curDefaultPrice.doubleValue() < minDefaultPrice) {
-                                        // check to see if the product is discontinued for sale before considering it the lowest price
-                                        GenericValue curVariantProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", curVariantProductId));
-                                        if (curVariantProduct != null) {
-                                            Timestamp salesDiscontinuationDate = curVariantProduct.getTimestamp("salesDiscontinuationDate");
-                                            if (salesDiscontinuationDate == null || salesDiscontinuationDate.after(nowTimestamp)) {
-                                                minDefaultPrice = curDefaultPrice.doubleValue();
-                                                variantProductPrices = curVariantPriceList;
-                                                variantProductId = curVariantProductId;
-                                                // Debug.logInfo("Found new lowest price " + minDefaultPrice + " for variant with ID " + variantProductId, module);
-                                            }
-                                        }
+                //use the cache to find the variant with the lowest default price
+                try {
+                    List variantAssocList = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate")));
+                    Iterator variantAssocIter = variantAssocList.iterator();
+                    double minDefaultPrice = Double.MAX_VALUE;
+                    List variantProductPrices = null;
+                    String variantProductId = null;
+                    while (variantAssocIter.hasNext()) {
+                        GenericValue variantAssoc = (GenericValue) variantAssocIter.next();
+                        String curVariantProductId = variantAssoc.getString("productIdTo");
+                        List curVariantPriceList = EntityUtil.filterByDate(delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", curVariantProductId), UtilMisc.toList("-fromDate")), nowTimestamp);
+                        List tempDefaultPriceList = EntityUtil.filterByAnd(curVariantPriceList, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
+                        GenericValue curDefaultPriceValue = EntityUtil.getFirst(tempDefaultPriceList);
+                        if (curDefaultPriceValue != null) {
+                            Double curDefaultPrice = curDefaultPriceValue.getDouble("price");
+                            if (curDefaultPrice.doubleValue() < minDefaultPrice) {
+                                // check to see if the product is discontinued for sale before considering it the lowest price
+                                GenericValue curVariantProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", curVariantProductId));
+                                if (curVariantProduct != null) {
+                                    Timestamp salesDiscontinuationDate = curVariantProduct.getTimestamp("salesDiscontinuationDate");
+                                    if (salesDiscontinuationDate == null || salesDiscontinuationDate.after(nowTimestamp)) {
+                                        minDefaultPrice = curDefaultPrice.doubleValue();
+                                        variantProductPrices = curVariantPriceList;
+                                        variantProductId = curVariantProductId;
+                                        // Debug.logInfo("Found new lowest price " + minDefaultPrice + " for variant with ID " + variantProductId, module);
                                     }
                                 }
                             }
-
-                            if (variantProductPrices != null) {
-                                // we have some other options, give 'em a go...
-                            if (listPriceValue == null) {
-                                List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
-                                listPriceValue = EntityUtil.getFirst(virtualTempPrices);
-                                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                                    if (Debug.infoOn()) Debug.logInfo("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + listPriceValue.getDouble("price"), module);
-                                }
-                            }
-                            if (defaultPriceValue == null) {
-                                List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
-                                defaultPriceValue = EntityUtil.getFirst(virtualTempPrices);
-                                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                                    if (Debug.infoOn()) Debug.logInfo("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"), module);
-                                }
-                            }
-                            if (competitivePriceValue == null) {
-                                List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "COMPETITIVE_PRICE"));
-                                competitivePriceValue = EntityUtil.getFirst(virtualTempPrices);
-                                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                                    if (Debug.infoOn()) Debug.logInfo("There is more than one COMPETITIVE_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + competitivePriceValue.getDouble("price"), module);
-                                }
-                            }
-                            if (averageCostValue == null) {
-                                List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
-                                averageCostValue = EntityUtil.getFirst(virtualTempPrices);
-                                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                                    if (Debug.infoOn()) Debug.logInfo("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + averageCostValue.getDouble("price"), module);
-                                }
-                            }
-                            if (promoPriceValue == null) {
-                                List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "PROMO_PRICE"));
-                                promoPriceValue = EntityUtil.getFirst(virtualTempPrices);
-                                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                                    if (Debug.infoOn()) Debug.logInfo("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + promoPriceValue.getDouble("price"), module);
-                                }
-                            }
-                            if (minimumPriceValue == null) {
-                                List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
-                                minimumPriceValue = EntityUtil.getFirst(virtualTempPrices);
-                                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                                    if (Debug.infoOn()) Debug.logInfo("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"), module);
-                                }
-                            }
-                            if (maximumPriceValue == null) {
-                                List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
-                                maximumPriceValue = EntityUtil.getFirst(virtualTempPrices);
-                                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                                    if (Debug.infoOn()) Debug.logInfo("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
-                                }
-                            }
-                        if (wholesalePriceValue == null) {
-                                List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "WHOLESALE_PRICE"));
-                                wholesalePriceValue = EntityUtil.getFirst(virtualTempPrices);
-                                if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                                    if (Debug.infoOn()) Debug.logInfo("There is more than one WHOLESALE_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + wholesalePriceValue.getDouble("price"), module);
-                                }
-                            }
-                            }
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "An error occurred while getting the product prices", module);
+                        }
                     }
+
+                    if (variantProductPrices != null) {
+                        // we have some other options, give 'em a go...
+                        if (listPriceValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
+                            listPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + listPriceValue.getDouble("price"), module);
+                            }
+                        }
+                        if (defaultPriceValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
+                            defaultPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"), module);
+                            }
+                        }
+                        if (competitivePriceValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "COMPETITIVE_PRICE"));
+                            competitivePriceValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one COMPETITIVE_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + competitivePriceValue.getDouble("price"), module);
+                            }
+                        }
+                        if (averageCostValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
+                            averageCostValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + averageCostValue.getDouble("price"), module);
+                            }
+                        }
+                        if (promoPriceValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "PROMO_PRICE"));
+                            promoPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + promoPriceValue.getDouble("price"), module);
+                            }
+                        }
+                        if (minimumPriceValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
+                            minimumPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"), module);
+                            }
+                        }
+                        if (maximumPriceValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
+                            maximumPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
+                            }
+                        }
+                        if (wholesalePriceValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "WHOLESALE_PRICE"));
+                            wholesalePriceValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one WHOLESALE_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + wholesalePriceValue.getDouble("price"), module);
+                            }
+                        }
+                        if (specialPromoPriceValue == null) {
+                            List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "SPECIAL_PROMO_PRICE"));
+                            specialPromoPriceValue = EntityUtil.getFirst(virtualTempPrices);
+                            if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+                                if (Debug.infoOn()) Debug.logInfo("There is more than one SPECIAL_PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + wholesalePriceValue.getDouble("price"), module);
+                            }
+                        }
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "An error occurred while getting the product prices", module);
                 }
+            }
         }
 
         //boolean validPromoPriceFound = false;
@@ -470,6 +493,7 @@ public class PriceServices {
             result.put("competitivePrice", competitivePriceValue != null ? competitivePriceValue.getDouble("price") : null);
             result.put("averageCost", averageCostValue != null ? averageCostValue.getDouble("price") : null);
             result.put("promoPrice", promoPriceValue != null ? promoPriceValue.getDouble("price") : null);
+            result.put("specialPromoPrice", specialPromoPriceValue != null ? specialPromoPriceValue.getDouble("price") : null);
         } else {
             try {
                 // get some of the base values to calculate with
@@ -889,6 +913,7 @@ public class PriceServices {
         }
 
         result.put("competitivePrice", competitivePriceValue != null ? competitivePriceValue.getDouble("price") : null);
+        result.put("specialPromoPrice", specialPromoPriceValue != null ? specialPromoPriceValue.getDouble("price") : null);
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
         result.put("validPriceFound", new Boolean(validPriceFound));
