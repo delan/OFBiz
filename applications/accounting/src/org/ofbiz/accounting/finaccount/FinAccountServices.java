@@ -33,6 +33,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
+import org.ofbiz.order.finaccount.FinAccountHelper;
+
 public class FinAccountServices {
     
     public static final String module = FinAccountServices.class.getName();
