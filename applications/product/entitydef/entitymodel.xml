@@ -656,6 +656,7 @@
       <field name="partyId" type="id"></field>
       <field name="geoId" type="id"></field>
       <field name="workEffortId" type="id"></field>
+      <field name="costComponentCalcId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="cost" type="floating-point"><description>Higher precision in case it is a calculated number</description></field>
@@ -681,6 +682,9 @@
       </relation>
       <relation type="one" fk-name="COST_COMP_WEFF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="COST_COMP_CALC" rel-entity-name="CostComponentCalc">
+        <key-map field-name="costComponentCalcId"/>
       </relation>
       <relation type="one" fk-name="COST_COMP_CUOM" title="Currency" rel-entity-name="Uom">
         <key-map field-name="costUomId" rel-field-name="uomId"/>
