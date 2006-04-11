@@ -25,9 +25,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.Random;
+import java.sql.Timestamp;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.entity.GenericDelegator;
@@ -63,7 +66,10 @@ public class OpenOfficeServices {
         Map results = ServiceUtil.returnSuccess();
         GenericDelegator delegator = dctx.getDelegator();
         XMultiComponentFactory xmulticomponentfactory = null;
-        String uniqueSeqNum = delegator.getNextSeqId("OOTempDir");
+        //String uniqueSeqNum = delegator.getNextSeqId("OOTempDir");
+        Timestamp ts = UtilDateTime.nowTimestamp();
+        Random random = new Random(ts.getTime());
+        String uniqueSeqNum = Long.toString(random.nextLong());
         String fileInName = "OOIN_" + uniqueSeqNum;
         String fileOutName = "OOOUT_" + uniqueSeqNum;
         File fileIn = null;
@@ -72,6 +78,8 @@ public class OpenOfficeServices {
         ByteWrapper inByteWrapper = (ByteWrapper) context.get("inByteWrapper");
         String inputMimeType = (String) context.get("inputMimeType");
         String outputMimeType = (String) context.get("outputMimeType");
+        String extName = OpenOfficeWorker.getExtensionFromMimeType(outputMimeType);
+        fileOutName += "." + extName;
 
         // if these are empty don't worry, the OpenOfficeWorker down below will take care of it
         String oooHost = (String) context.get("oooHost");
@@ -82,17 +90,17 @@ public class OpenOfficeServices {
             byte[] inByteArray = inByteWrapper.getBytes();
             
             // The following line work in linux, but not Windows or Mac environment. It is preferred because it does not use temporary files
-            OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(inByteArray);
+            //OpenOfficeByteArrayInputStream oobais = new OpenOfficeByteArrayInputStream(inByteArray);
             //Debug.logInfo("Doing convertDocumentByteWrapper, inBytes size is [" + inByteArray.length + "]", module);
-             OpenOfficeByteArrayOutputStream baos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, outputMimeType);
+             //OpenOfficeByteArrayOutputStream baos = OpenOfficeWorker.convertOODocByteStreamToByteStream(xmulticomponentfactory, oobais, inputMimeType, outputMimeType);
             
-            /*
+            
             String tempDir = UtilProperties.getPropertyValue("content", "content.temp.dir");
             fileIn = new File(tempDir + fileInName);
             FileOutputStream fos = new FileOutputStream(fileIn);
             fos.write(inByteArray);
             fos.close();
-            OpenOfficeWorker.convertOODocToFile(xmulticomponentfactory, tempDir + fileInName, tempDir + fileOutName, outputMimeType);
+            OpenOfficeWorker.convertOODocToFile(xmulticomponentfactory, "file://" + tempDir + fileInName, "file://" + tempDir + fileOutName, outputMimeType);
             fileOut = new File(tempDir + fileOutName);
             FileInputStream fis = new FileInputStream(fileOut);
             int c;
@@ -101,7 +109,7 @@ public class OpenOfficeServices {
                 baos.write(c);
             }
             fis.close();
-            */
+            
             results.put("outByteWrapper", new ByteWrapper(baos.toByteArray()));
             baos.close();
 
@@ -115,8 +123,8 @@ public class OpenOfficeServices {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
             return ServiceUtil.returnError(e.toString());
         } finally {
-            //fileIn.delete();
-           // fileOut.delete();
+            if (fileIn != null) fileIn.delete();
+            if (fileOut != null)  fileOut.delete();
         }
         return results;
     }
