@@ -19,6 +19,7 @@ package org.ofbiz.content.openoffice;
 
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.File;
 import java.util.List;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -89,7 +90,8 @@ public class OpenOfficeWorker{
          
             // Resolves an object that is specified as follow:
             // uno:<connection description>;<protocol description>;<initial object name>
-            objectInitial = xurlresolver.resolve("uno:socket,host=" + host + ",port=" + port + ";urp;StarOffice.ServiceManager");
+            String url = "uno:socket,host=" + host + ",port=" + port + ";urp;StarOffice.ServiceManager";
+            objectInitial = xurlresolver.resolve(url);
          
             // Create a service manager from the initial object
             xmulticomponentfactory = (XMultiComponentFactory) UnoRuntime.queryInterface(XMultiComponentFactory.class, objectInitial);
@@ -182,17 +184,16 @@ public class OpenOfficeWorker{
        
         
         // Preparing properties for loading the document
-        PropertyValue propertyvalue[] = new PropertyValue[ 1 ];
+        PropertyValue propertyvalue[] = new PropertyValue[ 2 ];
         // Setting the flag for hidding the open document
         propertyvalue[ 0 ] = new PropertyValue();
         propertyvalue[ 0 ].Name = "Hidden";
         propertyvalue[ 0 ].Value = new Boolean(true);
 
-        //TODO: Hardcoding opening word documents -- this will need to change.
-        //propertyvalue[ 1 ] = new PropertyValue();
-        //propertyvalue[ 1 ].Name = "FilterName";
-        //propertyvalue[ 1 ].Value = "HTML (StarWriter)";
-        
+        propertyvalue[ 1 ] = new PropertyValue();
+        propertyvalue[ 1 ].Name = "UpdateDocMode";
+        propertyvalue[ 1 ].Value = "1";
+
         // Loading the wanted document
         Object objectDocumentToStore = xcomponentloader.loadComponentFromURL(stringUrl, "_blank", 0, propertyvalue);
         
@@ -200,7 +201,7 @@ public class OpenOfficeWorker{
         XStorable xstorable = (XStorable) UnoRuntime.queryInterface(XStorable.class, objectDocumentToStore);
         
         // Preparing properties for converting the document
-        propertyvalue = new PropertyValue[ 2 ];
+        propertyvalue = new PropertyValue[ 3 ];
         // Setting the flag for overwriting
         propertyvalue[ 0 ] = new PropertyValue();
         propertyvalue[ 0 ].Name = "Overwrite";
@@ -208,11 +209,20 @@ public class OpenOfficeWorker{
         // Setting the filter name
         // Preparing properties for converting the document
         String filterName = getFilterNameFromMimeType(outputMimeType);
+        
         propertyvalue[ 1 ] = new PropertyValue();
         propertyvalue[ 1 ].Name = "FilterName";
-        propertyvalue[ 1 ].Value = filterName;         
+        propertyvalue[ 1 ].Value = filterName;  
+        
+        propertyvalue[2] = new PropertyValue();
+        propertyvalue[2].Name = "CompressionMode";
+        propertyvalue[2].Value = "1";
+        
         Debug.logInfo("stringConvertedFile: "+stringConvertedFile, module);
         // Storing and converting the document
+        //File newFile = new File(stringConvertedFile);
+        //newFile.createNewFile();
+        
         xstorable.storeToURL(stringConvertedFile, propertyvalue);
         
         // Getting the method dispose() for closing the document
@@ -314,6 +324,23 @@ public class OpenOfficeWorker{
             filterName = "HTML";
         }
         return filterName;
+
+    }
+    
+    public static String getExtensionFromMimeType(String mimeType) {
+        String extension = "";
+        if (UtilValidate.isEmpty(mimeType)) {
+            extension = "html";
+        } else if (mimeType.equalsIgnoreCase("application/pdf")) {
+            extension = "pdf";
+        } else if (mimeType.equalsIgnoreCase("application/msword")) {
+            extension = "doc";
+        } else if (mimeType.equalsIgnoreCase("text/html")) {
+            extension = "html";
+        } else {
+            extension = "html";
+        }
+        return extension;
 
     }
 }
