@@ -141,7 +141,7 @@
     
     <form name="editPaymentApplications" default-title-style="tableheadtext" default-entity-name="PaymentApplication"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        target="updatePaymentApplication" title="List payment Applications" type="list" separate-columns="true">
+        target="updatePaymentApplication" title="List payment Applications" type="list" separate-columns="false">
         <actions>
             <entity-condition entity-name="PaymentApplication">
                 <condition-list combine="or">
@@ -200,7 +200,7 @@
     </form>
 
     <form name="listPaymentsNotApplied" type="list" list-name="payments"
-        target="updatePaymentApplication" title=""
+        target="updatePaymentApplication" title="" 
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/listNotAppliedPayments.bsh"/>
