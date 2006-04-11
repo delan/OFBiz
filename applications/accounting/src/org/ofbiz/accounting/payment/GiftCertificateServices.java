@@ -89,6 +89,7 @@ public class GiftCertificateServices {
         String cardNumber = null;
         String pinNumber = null;
         String refNum = null;
+        String finAccountId = null;
         try {
             final String accountName = "Gift Certificate Account";
             final String deposit = "DEPOSIT";
@@ -109,8 +110,11 @@ public class GiftCertificateServices {
                 cardNumber = generateNumber(delegator, cardNumberLength, true);
                 pinNumber = generateNumber(delegator, pinNumberLength, false);
 
+                // in this case, the card number is the finAccountId
+                finAccountId = cardNumber;
+                
                 // create the FinAccount
-                Map acctCtx = UtilMisc.toMap("finAccountId", cardNumber);
+                Map acctCtx = UtilMisc.toMap("finAccountId", finAccountId);
                 acctCtx.put("finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId);
                 acctCtx.put("finAccountName", accountName);
                 acctCtx.put("finAccountCode", pinNumber);
@@ -121,6 +125,9 @@ public class GiftCertificateServices {
                 if (acctResult.get("finAccountId") != null) {
                     cardNumber = (String) acctResult.get("finAccountId");
                 }
+                if (acctResult.get("finAccountCode") != null) {
+                    cardNumber = (String) acctResult.get("finAccountCode");
+                }
             }
             
             if (ServiceUtil.isError(acctResult)) {
@@ -130,7 +137,7 @@ public class GiftCertificateServices {
             
             // create the initial (deposit) transaction
             refNum = GiftCertificateServices.createTransaction(delegator, dispatcher, userLogin, initialAmount,
-                    productStoreId, partyId, currencyUom, deposit, cardNumber);
+                    productStoreId, partyId, currencyUom, deposit, finAccountId);
 
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
