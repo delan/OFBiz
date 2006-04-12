@@ -23,6 +23,7 @@
  */
 package org.ofbiz.base.util;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -33,8 +34,12 @@ import java.util.Map;
 import org.apache.avalon.util.exception.ExceptionHelper;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.RollingFileAppender;
+import org.apache.log4j.Appender;
 import org.apache.log4j.spi.LoggerRepository;
+
 import org.ofbiz.base.util.collections.FlexibleProperties;
 
 /**
@@ -337,5 +342,72 @@ public final class Debug {
         if (!useLevelOnCache)
             return;
         levelOnCache[level] = on;
+    }
+
+    public static synchronized Appender getNewFileAppender(String name, String logFile, long maxSize, int backupIdx, String pattern) {
+        if (pattern == null) {
+            pattern = "%-5r[%24F:%-3L:%-5p]%x %m%n";
+        }
+
+        PatternLayout layout = new PatternLayout(pattern);
+        layout.activateOptions();
+
+        RollingFileAppender newAppender = null;
+        try {
+            newAppender = new RollingFileAppender(layout, logFile, true);
+        } catch (IOException e) {
+            logFatal(e, Debug.class.getName());
+        }
+
+        if (newAppender != null) {
+            if (backupIdx > 0) {
+                newAppender.setMaxBackupIndex(backupIdx);
+            }
+            if (maxSize > 0) {
+                newAppender.setMaximumFileSize(maxSize);
+            }
+            newAppender.activateOptions();
+            newAppender.setName(name);
+        }
+
+        return newAppender;
+    }
+
+    public static boolean registerFileAppender(String module, String name, String logFile, long maxSize, int backupIdx, String pattern) {
+        Logger logger = Logger.getLogger(module);
+        boolean found = false;
+
+        Appender foundAppender = logger.getAppender(name);
+        if (foundAppender == null) {
+            Enumeration enum = Logger.getRootLogger().getLoggerRepository().getCurrentLoggers();
+            while (enum.hasMoreElements() && foundAppender == null) {
+                Logger log = (Logger) enum.nextElement();
+                foundAppender = log.getAppender(name);
+            }
+        } else {
+            return true;
+        }
+
+        if (foundAppender == null) {
+            if (logFile != null) {
+                foundAppender = getNewFileAppender(name, logFile, maxSize, backupIdx, pattern);
+                if (foundAppender != null) {
+                    found = true;
+                }
+            }
+        } else {
+            found = true;
+        }
+
+        logger.addAppender(foundAppender);
+        return found;
+    }
+
+    public static boolean registerFileAppender(String module, String name, String logFile) {
+        return registerFileAppender(module, name, logFile, 0, 10, null);
+    }
+
+    public static boolean registerFileAppender(String module, String name) {
+        return registerFileAppender(module, name, null, -1, -1, null);
     }
 }
