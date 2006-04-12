@@ -25,16 +25,16 @@
 package org.ofbiz.service;
 
 import java.util.Map;
-
-import javax.transaction.*;
+import javax.transaction.Status;
+import javax.transaction.Transaction;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.entity.transaction.GenericXaResource;
-import org.ofbiz.entity.transaction.TransactionFactory;
-import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.GenericXaResource;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * ServiceXaWrapper - XA Resource wrapper for running services on commit() or rollback()
@@ -46,6 +46,10 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 public class ServiceXaWrapper extends GenericXaResource {
 
     public static final String module = ServiceXaWrapper.class.getName();
+    public static final int TYPE_ROLLBACK = 600;
+    public static final int TYPE_COMMIT = 500;
+    public static final int MODE_ASYNC = 100;
+    public static final int MODE_SYNC = 200;
 
     protected DispatchContext dctx = null;
     protected String rollbackService = null;
@@ -167,67 +171,21 @@ public class ServiceXaWrapper extends GenericXaResource {
             throw new XAException(XAException.XAER_NOTA);
         }
 
-        if (this.commitService != null) {
-            // suspend this transaction
-            TransactionManager tm = TransactionFactory.getTransactionManager();
-            Transaction parentTransaction = null;
-            try {
-                parentTransaction = tm.suspend();
-            } catch (SystemException e) {
-                throw new XAException(XAException.XA_RBOTHER);
-            }
+        final String service = commitService;
+        final Map context = commitContext;
+        final boolean persist = commitAsyncPersist;
+        final boolean async = commitAsync;
 
-            // invoke the service
-            boolean serviceError = false;
-            try {
-                // obtain the model and get the valid context
-                ModelService model = dctx.getModelService(this.commitService);
-                Map thisContext = this.commitContext;
-                if (model.validate) {
-                    thisContext = model.makeValid(this.commitContext, ModelService.IN_PARAM);
-                }
-
-                // set the userLogin object
-                thisContext.put("userLogin", ServiceUtil.getUserLogin(dctx, thisContext, runAsUser));
-
-                if (this.commitAsync) {
-                    Debug.log("[Commit] Invoking [" + this.commitService + "] via runAsync", module);
-                    dctx.getDispatcher().runAsync(this.commitService, thisContext, this.commitAsyncPersist);
-                } else {
-                    Debug.log("[Commit] Invoking [" + this.commitService + "] via runSyncIgnore", module);
-                    dctx.getDispatcher().runSyncIgnore(this.commitService, thisContext);
-                }
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Problem calling commit service : " + this.commitService + " / " + this.commitContext, module);
-                // async calls are assumed to not effect this TX
-                if (!this.commitAsync) {
-                    serviceError = true; // don't throw the exception until we resume the transaction
-                }
-            }
-
-            // resume the transaction
-            if (parentTransaction != null) {
+        Thread thread = new Thread() {
+            public void run() {
                 try {
-                    tm.resume(parentTransaction);
-                } catch (InvalidTransactionException e) {
+                    runService(service, context, persist, (async ? MODE_ASYNC : MODE_SYNC), TYPE_COMMIT);
+                } catch (XAException e) {
                     Debug.logError(e, module);
-                    throw new XAException(XAException.XA_RBOTHER);
-                } catch (IllegalStateException e) {
-                    Debug.logError(e, module);
-                    throw new XAException(XAException.XA_RBOTHER);
-                } catch (SystemException e) {
-                    Debug.logError(e, module);
-                    throw new XAException(XAException.XA_RBOTHER);
                 }
             }
-
-            // now throw the exception
-            if (serviceError) {
-                throw new XAException(XAException.XA_RBOTHER);
-            }
-        } else {
-            Debug.log("No commit service defined; nothing to do", module);
-        }
+        };
+        thread.start();
 
         this.xid = null;
         this.active = false;
@@ -246,52 +204,21 @@ public class ServiceXaWrapper extends GenericXaResource {
             throw new XAException(XAException.XAER_NOTA);
         }
 
-        if (this.rollbackService != null) {
-            int currentTxStatus = Status.STATUS_UNKNOWN;
-            try {
-                currentTxStatus = TransactionUtil.getStatus();
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, module);
-            }
+        final String service = rollbackService;
+        final Map context = rollbackContext;
+        final boolean persist = rollbackAsyncPersist;
+        final boolean async = rollbackAsync;
 
-            TransactionManager tm = TransactionFactory.getTransactionManager();
-            Transaction parentTransaction = null;
-            if (currentTxStatus != Status.STATUS_NO_TRANSACTION) {
+        Thread thread = new Thread() {
+            public void run() {
                 try {
-                    parentTransaction = tm.suspend();
-                } catch (SystemException e) {
+                    runService(service, context, persist, (async ? MODE_ASYNC : MODE_SYNC), TYPE_ROLLBACK);
+                } catch (XAException e) {
                     Debug.logError(e, module);
                 }
             }
-
-            // invoke the service
-            try {
-                ModelService model = dctx.getModelService(this.rollbackService);
-                Map thisContext = this.rollbackContext;
-                if (model.validate) {
-                    thisContext = model.makeValid(this.rollbackContext, ModelService.IN_PARAM);
-                }
-                if (this.rollbackAsync) {
-                    Debug.log("[Rollback] Invoking [" + this.rollbackService + "] via runAsync", module);
-                    dctx.getDispatcher().runAsync(this.rollbackService, thisContext, this.rollbackAsyncPersist);
-                } else {
-                    Debug.log("[Rollback] Invoking [" + this.rollbackService + "] via runSyncIgnore", module);
-                    dctx.getDispatcher().runSyncIgnore(this.rollbackService, thisContext);
-                }
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Problem calling async service : " + this.rollbackService + " / " + this.rollbackContext, module);
-            }
-
-            if (parentTransaction != null) {
-                try {
-                    tm.resume(parentTransaction);
-                } catch (Exception e) {
-                    Debug.logError(e, module);
-                }
-            }
-        } else {
-            Debug.log("No rollback service defined; nothing to do", module);
-        }
+        };
+        thread.start();
 
         this.xid = null;
         this.active = false;
@@ -300,7 +227,7 @@ public class ServiceXaWrapper extends GenericXaResource {
     public int prepare(Xid xid) throws XAException {
         // overriding to log two phase commits
         Debug.log("ServiceXaWrapper#prepare() : " + xid.toString(), module);
-        int rtn = XA_OK;
+        int rtn;
         try {
             rtn = super.prepare(xid);
         } catch (XAException e) {
@@ -309,5 +236,106 @@ public class ServiceXaWrapper extends GenericXaResource {
         }
         Debug.log("ServiceXaWrapper#prepare() : " + rtn + " / " + (rtn == XA_OK) , module);
         return rtn;
+    }
+
+
+
+    protected final void runService(String service, Map context, boolean persist, int mode, int type) throws XAException {
+        // set the logging prefix
+        String msgPrefix = "[XaWrapper] ";
+        switch (type) {
+            case TYPE_ROLLBACK:
+                msgPrefix = "[Rollback] ";
+                break;
+            case TYPE_COMMIT:
+                msgPrefix = "[Commit] ";
+                break;
+        }
+
+        // if a service exists; run it
+        if (UtilValidate.isNotEmpty(service)) {
+
+            // suspend this transaction
+            Transaction parentTx = null;
+            boolean beganTx;
+
+            try {
+                int currentTxStatus = Status.STATUS_UNKNOWN;
+                try {
+                    currentTxStatus = TransactionUtil.getStatus();
+                } catch (GenericTransactionException e) {
+                    Debug.logWarning(e, module);
+                }
+
+                // suspend the parent tx
+                if (currentTxStatus != Status.STATUS_NO_TRANSACTION) {
+                    parentTx = TransactionUtil.suspend();
+                }
+
+                // begin the new tx
+                beganTx = TransactionUtil.begin();
+
+                // configure and run the service
+                try {
+                    // obtain the model and get the valid context
+                    ModelService model = dctx.getModelService(service);
+                    Map thisContext = context;
+                    if (model.validate) {
+                        thisContext = model.makeValid(context, ModelService.IN_PARAM);
+                    }
+
+                    // set the userLogin object
+                    thisContext.put("userLogin", ServiceUtil.getUserLogin(dctx, thisContext, runAsUser));
+
+                    // invoke based on mode
+                    switch (mode) {
+                        case MODE_ASYNC:
+                            Debug.log(msgPrefix + "Invoking [" + service + "] via runAsync", module);
+                            dctx.getDispatcher().runAsync(service, thisContext, persist);
+                            break;
+
+                        case MODE_SYNC:
+                            Debug.log(msgPrefix + "Invoking [" + service + "] via runSyncIgnore", module);
+                            dctx.getDispatcher().runSyncIgnore(service, thisContext);
+                            break;
+                    }
+                } catch (Throwable t) {
+                    Debug.logError(t, "Problem calling " + msgPrefix + "service : " + service + " / " + context, module);
+                    try {
+                        TransactionUtil.rollback(beganTx, t.getMessage(), t);
+                    } catch (GenericTransactionException e) {
+                        Debug.logError(e, module);
+                    }
+
+                    // async calls are assumed to not effect this TX
+                    if (mode != MODE_ASYNC) {
+                        throw new XAException(XAException.XA_RBOTHER);
+                    }
+                } finally {
+                    // commit the transaction
+                    try {
+                        TransactionUtil.commit(beganTx);
+                    } catch (GenericTransactionException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, module);
+            } finally {
+                // resume the transaction
+                if (parentTx != null) {
+                    try {
+                        TransactionUtil.resume(parentTx);
+                    } catch (Exception e) {
+                        Debug.logError(e, module);
+                    }
+                }
+            }
+        } else {
+            Debug.log("No " + msgPrefix + "service defined; nothing to do", module);
+        }
+
+        this.xid = null;
+        this.active = false;
     }
 }
