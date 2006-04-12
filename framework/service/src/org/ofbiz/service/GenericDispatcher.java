@@ -32,16 +32,16 @@ import org.ofbiz.base.util.Debug;
 /**
  * Generic Services Local Dispatcher
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
  * @since      2.0
  */
 public class GenericDispatcher extends GenericAbstractDispatcher {
 
     public static final String module = GenericDispatcher.class.getName();
-  
+
     public GenericDispatcher() {}
-    
+
     public GenericDispatcher(String name, GenericDelegator delegator) {
         this(name, delegator, null);
     }
@@ -61,30 +61,30 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     public GenericDispatcher(DispatchContext ctx, GenericDelegator delegator) {
         init(ctx.getName(), delegator, ctx);
     }
-    
-    public GenericDispatcher(DispatchContext ctx, ServiceDispatcher dispatcher) {       
+
+    public GenericDispatcher(DispatchContext ctx, ServiceDispatcher dispatcher) {
         this.dispatcher = dispatcher;
         this.ctx = ctx;
         this.name = ctx.getName();
-                
+
         ctx.setDispatcher(this);
         ctx.loadReaders();
         dispatcher.register(name, ctx);
     }
-    
+
     protected void init(String name, GenericDelegator delegator, DispatchContext ctx) {
         if (name == null || name.length() == 0)
             throw new IllegalArgumentException("The name of a LocalDispatcher cannot be a null or empty String");
-            
+
         this.name = name;
         this.ctx = ctx;
         this.dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
-        
+
         ctx.setDispatcher(this);
         ctx.loadReaders();
         if (Debug.infoOn()) Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name, module);
     }
-    
+
     public static LocalDispatcher getLocalDispatcher(String name, GenericDelegator delegator) throws GenericServiceException {
         ServiceDispatcher sd = ServiceDispatcher.getInstance(name, delegator);
         LocalDispatcher thisDispatcher = null;
@@ -94,14 +94,27 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
         if (thisDispatcher == null) {
             thisDispatcher = new GenericDispatcher(name, delegator);
         }
-        
+
         if (thisDispatcher != null) {
             return thisDispatcher;
         } else {
             throw new GenericServiceException("Unable to load dispatcher for name : " + name + " with delegator : " + delegator.getDelegatorName());
         }
-    }    
-   
+    }
+
+    // special method to obtain a new 'unique' reference
+    public static LocalDispatcher newInstance(String name, GenericDelegator delegator, boolean enableJM, boolean enableJMS, boolean enableSvcs) throws GenericServiceException {
+        ServiceDispatcher sd = new ServiceDispatcher(delegator, enableJM, enableJMS, enableSvcs);
+        ClassLoader loader = null;
+        try {
+            loader = Thread.currentThread().getContextClassLoader();
+        } catch (SecurityException e) {
+            loader = GenericDispatcher.class.getClassLoader();
+        }
+        DispatchContext dc = new DispatchContext(name, null, loader, null);
+        return new GenericDispatcher(dc, sd);        
+    }
+
     /**
      * @see org.ofbiz.service.LocalDispatcher#runSync(java.lang.String, java.util.Map)
      */

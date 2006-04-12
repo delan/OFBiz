@@ -28,13 +28,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.transaction.Transaction;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
-
 import org.apache.commons.collections.map.LRUMap;
+import org.w3c.dom.Element;
+
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -58,7 +58,6 @@ import org.ofbiz.service.group.ServiceGroupReader;
 import org.ofbiz.service.jms.JmsListenerFactory;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
-import org.w3c.dom.Element;
 
 /**
  * Global Service Dispatcher
@@ -86,7 +85,7 @@ public class ServiceDispatcher {
     protected JobManager jm = null;
     protected JmsListenerFactory jlf = null;
 
-    public ServiceDispatcher(GenericDelegator delegator) {
+    public ServiceDispatcher(GenericDelegator delegator, boolean enableJM, boolean enableJMS, boolean enableSvcs) {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
         factory = new GenericEngineFactory(this);
         ServiceGroupReader.readConfig();
@@ -116,6 +115,10 @@ public class ServiceDispatcher {
         if (enableSvcs) {
             this.runStartupServices();
         }
+    }
+
+    public ServiceDispatcher(GenericDelegator delegator) {
+        this(delegator, enableJM, enableJMS, enableSvcs);
     }
 
     /**
