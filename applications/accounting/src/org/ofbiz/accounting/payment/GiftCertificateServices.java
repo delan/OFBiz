@@ -468,6 +468,7 @@ public class GiftCertificateServices {
                 }
             } else {
                 Debug.logError("Attempted to authorize [" + amount + "] against a balance of only [" + availableBalance + "]", module);
+                refNum = "N/A";      // a refNum is always required from authorization
                 processResult = Boolean.FALSE;
             }
             
@@ -475,7 +476,6 @@ public class GiftCertificateServices {
             result.put("authResult", processResult);
             result.put("processAmount", amount);
             result.put("authFlag", "2");
-            result.put("authResult", processResult);
             result.put("authCode", "A");
             result.put("captureCode", "C");
             result.put("authRefNum", refNum);
