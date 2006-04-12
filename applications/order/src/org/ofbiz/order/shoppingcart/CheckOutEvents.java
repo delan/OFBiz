@@ -294,7 +294,7 @@ public class CheckOutEvents {
                         return null;
                     }
                 }
-                if (amount != null) selectedPaymentMethods.put(paymentMethods[i], amount);
+                selectedPaymentMethods.put(paymentMethods[i], amount);
             }
         }
         Debug.logInfo("Selected Payment Methods : " + selectedPaymentMethods, module);
