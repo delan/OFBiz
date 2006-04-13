@@ -32,7 +32,7 @@
                 <!-- <set field="leftbarScreenLocation" value=""/> -->
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ORDERMGR, _VIEW permission -->
@@ -67,7 +67,7 @@
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.OrderRequirements}</label>

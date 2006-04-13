@@ -33,7 +33,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -58,7 +58,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>

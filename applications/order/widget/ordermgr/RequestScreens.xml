@@ -30,7 +30,7 @@
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!--
@@ -67,7 +67,7 @@
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.OrderRequestList}</label>
@@ -82,7 +82,6 @@
             </widgets>
          </section>
     </screen>
-    <screen name="ViewRequest">
         <section>
             <actions>
                 <set field="MainColumnStyle" value="rightonly"/>
