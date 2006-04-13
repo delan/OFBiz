@@ -237,10 +237,31 @@ public class CheckOutEvents {
                 curPage = "confirm";
             }
         } else {
-            curPage = "shippingaddress";
+            curPage = determineInitialCheckOutPage(cart);
         }
 
         return curPage;
+    }
+
+    private static final String DEFAULT_INIT_CHECKOUT_PAGE = "shippingaddress";
+
+    /**
+     * Method to determine the initial checkout page based on requirements. This will also set
+     * any cart variables necessary to satisfy the requirements, such as setting the
+     * shipment method according to the type of items in the cart.
+     */
+    public static String determineInitialCheckOutPage(ShoppingCart cart) {
+        String page = DEFAULT_INIT_CHECKOUT_PAGE;
+        if (cart == null) return page;
+
+        // if no shipping applies, set the no shipment method and skip to payment
+        if (!cart.shippingApplies()) {
+            cart.setShipmentMethodTypeId("NO_SHIPPING");
+            cart.setCarrierPartyId("_NA_");
+            page = "payment";
+        }
+
+        return page;
     }
 
     public static String setCheckOutError(HttpServletRequest request, HttpServletResponse response) {
