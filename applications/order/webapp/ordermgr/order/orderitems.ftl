@@ -169,7 +169,7 @@
                           <div class="tabletext">${uiLabelMap.OrderQtyShipped}:&nbsp;${shippedQuantity}&nbsp;&nbsp;</div>
                           <div class="tabletext">${uiLabelMap.OrderOutstanding}:&nbsp;
                           <#-- Make sure digital goods without shipments don't always remainn "outstanding": if item is completed, it must have no outstanding quantity.  -->
-                          <#if (orderItem.statusId != null) && (orderItem.statusId == "ITEM_COMPLETED")>0<#else>${orderItem.quantity?default(0) - shippedQuantity}</#if>&nbsp;&nbsp;</div>
+                          <#if (orderItem.statusId != null) && (orderItem.statusId == "ITEM_COMPLETED")>0<#else>${orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0) - shippedQuantity}</#if>&nbsp;&nbsp;</div>
                           <div class="tabletext">${uiLabelMap.OrderInvoiced}:&nbsp;${orderReadHelper.getOrderItemInvoicedQuantity(orderItem)}&nbsp;&nbsp;</div>
                           <div class="tabletext">${uiLabelMap.OrderReturned}:&nbsp;${returnQuantityMap.get(orderItem.orderItemSeqId)?default(0)}&nbsp;&nbsp;</div>
                         </td>
