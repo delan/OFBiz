@@ -34,7 +34,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -60,7 +60,7 @@
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1" text="${uiLabelMap.OrderQuickFinalizeOrder}"/>
@@ -236,7 +236,7 @@
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderstatus.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                 <!--<decorator-screen name="CommonOrderCheckoutDecorator">-->
                     <decorator-section name="body">
                       <platform-specific>
