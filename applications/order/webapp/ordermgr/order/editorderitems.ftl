@@ -32,7 +32,7 @@
         <div style="float: right;">
             <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                 <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-                    <div class="tabletext"><a href="<@ofbizUrl>changeOrderItemStatus?statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderViewOrder}</a></div>
+                    <div class="tabletext"><a href="<@ofbizUrl>cancelOrderItem?${paramString}</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCancelAllItems}</a><a href="<@ofbizUrl>orderview?${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderViewOrder}</a></div>
                 </#if>
             </#if>
         </div>
