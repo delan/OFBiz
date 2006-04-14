@@ -28,7 +28,7 @@
     <div class="screenlet-header">
         <div style="float: right;">
             <div class="tabletext">
-              ${screens.render("component://ecommerce/widget/OrderScreens.xml#anonymoustrail")}
+              ${screens.render(anonymoustrailScreen)}
             </div>
         </div>
         <div class="boxhead">&nbsp;${uiLabelMap.PartyBasicInformation}</div>

@@ -154,7 +154,7 @@ function toggleBillingAccount(box) {
                 <#-- Party Tax Info -->
                 <#-- commented out by default because the TaxAuthority drop-down is just too wide...
                 <hr class="sepbar"/>
-                <div class="tableheadtext">&nbsp;Tax IDs &amp; Exemptions</div>
+                <div class="tableheadtext">&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
                 ${screens.render("component://ecommerce/widget/CustomerScreens.xml#customertaxinfo")}
                 -->
             </div>
