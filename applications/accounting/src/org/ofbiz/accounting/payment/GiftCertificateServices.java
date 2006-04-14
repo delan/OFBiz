@@ -532,15 +532,21 @@ public class GiftCertificateServices {
             Map input = UtilMisc.toMap("userLogin", userLogin, "finAccountAuthId", authTransaction.get("referenceNum"));
             Map serviceResults = dispatcher.runSync("expireFinAccountAuth", input);
 
+            Map result = ServiceUtil.returnSuccess();
+            result.put("releaseRefNum", authTransaction.getString("referenceNum"));
+            result.put("releaseAmount", authTransaction.getDouble("amount"));
+            result.put("releaseResult", new Boolean(true));
+
             // if there's an error, don't release
             if (ServiceUtil.isError(serviceResults)) {
                 return ServiceUtil.returnError(err + ServiceUtil.getErrorMessage(serviceResults));
             }
+
+            return result;
         } catch (GenericServiceException e) {
             Debug.logError(e, e.getMessage(), module);
             return ServiceUtil.returnError(err + e.getMessage());
         }
-        return ServiceUtil.returnSuccess();
     }
 
     private static Map giftCertificateRestore(DispatchContext dctx, GenericValue userLogin, GenericValue paymentPref, Double amount, String currency, String resultPrefix) {
