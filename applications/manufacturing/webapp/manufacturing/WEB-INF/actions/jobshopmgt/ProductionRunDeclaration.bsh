@@ -144,7 +144,11 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             // Get the list of deliverable products, i.e. the WorkEffortGoodStandard entries
             // with workEffortGoodStdTypeId = "PRUNT_PROD_DELIV":
             // first of all we get the template task (the routing task)
-            GenericValue templateTask = EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", routingTask.getString("workEffortId"), "workEffortAssocTypeId", "WORK_EFF_TEMPLATE"))));
+            GenericValue templateTaskAssoc = EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", routingTask.getString("workEffortId"), "workEffortAssocTypeId", "WORK_EFF_TEMPLATE"))));
+            GenericValue templateTask = null;
+            if (templateTaskAssoc != null) {
+                templateTask = templateTaskAssoc.getRelatedOne("FromWorkEffort");
+            }
             List delivProducts = null;
             if (templateTask != null) {
                 delivProducts = EntityUtil.filterByDate(templateTask.getRelatedByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortGoodStdTypeId", "PRUNT_PROD_DELIV")));

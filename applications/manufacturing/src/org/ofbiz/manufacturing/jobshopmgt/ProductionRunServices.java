@@ -33,12 +33,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.math.BigDecimal;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -56,6 +58,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
 /**
  * Services for Production Run maintenance
  *
@@ -66,6 +69,18 @@ public class ProductionRunServices {
     public static final String module = ProductionRunServices.class.getName();
     public static final String resource = "ManufacturingUiLabels";
     
+    private static BigDecimal ZERO = new BigDecimal("0");
+    private static BigDecimal ONE = new BigDecimal("1");
+    private static int decimals = -1;
+    private static int rounding = -1;
+    static {
+        decimals = UtilNumber.getBigDecimalScale("order.decimals");
+        rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+        // set zero to the proper scale
+        ZERO.setScale(decimals);
+        ONE.setScale(decimals);
+    }
+
     /**
      * Cancels a ProductionRun.
      * @param ctx The DispatchContext that this service is operating in.
@@ -315,6 +330,7 @@ public class ProductionRunServices {
                 // The newly created production run task is associated to the routing task
                 // to keep track of the template used to generate it.
                 serviceContext.clear();
+                serviceContext.put("userLogin", userLogin);
                 serviceContext.put("workEffortIdFrom", routingTask.getString("workEffortId"));
                 serviceContext.put("workEffortIdTo", productionRunTaskId);
                 serviceContext.put("workEffortAssocTypeId", "WORK_EFF_TEMPLATE");
@@ -592,7 +608,7 @@ public class ProductionRunServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         String productionRunId = (String) context.get("productionRunId");
-        String taskId = (String) context.get("taskId");
+        String taskId = (String) context.get("workEffortId");
         String statusId = (String) context.get("statusId");
         
         ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
@@ -698,6 +714,16 @@ public class ProductionRunServices {
                 quantityProduced = new Double(quantityProduced.doubleValue() + diffQuantity);
             }
             serviceContext.put("quantityProduced", quantityProduced);
+            if (theTask.get("actualSetupMillis") == null) {
+                serviceContext.put("actualSetupMillis", theTask.get("estimatedSetupMillis"));
+            }
+            if (theTask.get("actualMilliSeconds") == null) {
+                Double autoMillis = null;
+                if (theTask.get("estimatedMilliSeconds") != null) {
+                    autoMillis = new Double(quantityProduced.doubleValue() * theTask.getDouble("estimatedMilliSeconds").doubleValue());
+                }
+                serviceContext.put("actualMilliSeconds", autoMillis);
+            }
             serviceContext.put("userLogin", userLogin);
             Map resultService = null;
             try {
@@ -706,6 +732,7 @@ public class ProductionRunServices {
                 Debug.logError(e, "Problem calling the updateWorkEffort service", module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
             }
+            // If this is the last task, then the production run is marked as 'completed'
             if (allTaskCompleted) {
                 serviceContext.clear();
                 serviceContext.put("productionRunId", productionRunId);
@@ -725,6 +752,59 @@ public class ProductionRunServices {
         }
         result.put("newStatusId", currentStatusId);
         result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunTaskStatusChanged",UtilMisc.toMap("newStatusId", currentStatusId), locale));
+        return result;
+    }
+
+    public static Map getWorkEffortCosts(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String workEffortId = (String)context.get("workEffortId");
+        try {
+            GenericValue workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+            if (workEffort == null) {
+                return ServiceUtil.returnError("Cannot find work effort [" + workEffortId + "]");
+            }
+            // Get all the valid CostComponents entries
+            List costComponents = EntityUtil.filterByDate(delegator.findByAnd("CostComponent",
+                                                          UtilMisc.toMap("workEffortId", workEffortId)));
+            result.put("costComponents", costComponents);
+            Iterator costComponentsIt = costComponents.iterator();
+            BigDecimal totalCost = ZERO;
+            while (costComponentsIt.hasNext()) {
+                GenericValue costComponent = (GenericValue)costComponentsIt.next();
+                BigDecimal cost = costComponent.getBigDecimal("cost");
+                totalCost = totalCost.add(cost);
+            }
+            result.put("totalCost", totalCost);
+        } catch(GenericEntityException gee) {
+            return ServiceUtil.returnError("Cannot retrieve costs for work effort [" + workEffortId + "]: " + gee.getMessage());
+        }
+        return result;
+    }
+
+    public static Map getProductionRunCost(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String workEffortId = (String)context.get("workEffortId");
+        try {
+            List tasks = delegator.findByAnd("WorkEffort", UtilMisc.toMap("workEffortParentId", workEffortId), UtilMisc.toList("workEffortId"));
+            Iterator tasksIt = tasks.iterator();
+            BigDecimal totalCost = ZERO;
+            while (tasksIt.hasNext()) {
+                GenericValue task = (GenericValue)tasksIt.next();
+                Map outputMap = dispatcher.runSync("getWorkEffortCosts", UtilMisc.toMap("userLogin", userLogin, "workEffortId", task.getString("workEffortId")));
+                BigDecimal taskCost = (BigDecimal)outputMap.get("totalCost");
+                totalCost = totalCost.add(taskCost);
+            }
+            result.put("totalCost", totalCost);
+        } catch(Exception exc) {
+            return ServiceUtil.returnError("Cannot retrieve costs for production run [" + workEffortId + "]: " + exc.getMessage());
+        }
         return result;
     }
 
@@ -1166,6 +1246,17 @@ public class ProductionRunServices {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
         }
+        // calculate the inventory item unit cost
+        BigDecimal unitCost = ZERO;
+        try {
+            Map outputMap = dispatcher.runSync("getProductionRunCost", UtilMisc.toMap("userLogin", userLogin, "workEffortId", productionRunId));
+            BigDecimal totalCost = (BigDecimal)outputMap.get("totalCost");
+            // FIXME
+            unitCost = totalCost.divide(new BigDecimal(quantity.intValue()), rounding);
+        } catch (GenericServiceException e) {
+            Debug.logWarning(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
         
         if (createSerializedInventory.booleanValue()) {
             try {
@@ -1177,6 +1268,9 @@ public class ProductionRunServices {
                     serviceContext.put("facilityId", productionRun.getGenericValue().getString("facilityId"));
                     serviceContext.put("datetimeReceived", UtilDateTime.nowDate());
                     serviceContext.put("comments", "Created by production run " + productionRunId);
+                    if (unitCost.compareTo(ZERO) != 0) {
+                        serviceContext.put("unitCost", new Double(unitCost.doubleValue()));
+                    }
                     //serviceContext.put("serialNumber", productionRunId);
                     serviceContext.put("lotId", lotId);
                     serviceContext.put("userLogin", userLogin);
@@ -1208,6 +1302,9 @@ public class ProductionRunServices {
                 serviceContext.put("datetimeReceived", UtilDateTime.nowTimestamp());
                 serviceContext.put("comments", "Created by production run " + productionRunId);
                 serviceContext.put("lotId", lotId);
+                if (unitCost.compareTo(ZERO) != 0) {
+                    serviceContext.put("unitCost", new Double(unitCost.doubleValue()));
+                }
                 serviceContext.put("userLogin", userLogin);
                 Map resultService = dispatcher.runSync("createInventoryItem", serviceContext);
                 String inventoryItemId = (String)resultService.get("inventoryItemId");
@@ -1847,7 +1944,7 @@ public class ProductionRunServices {
             // Change the task status to running
             serviceContext = new HashMap();
             serviceContext.put("productionRunId", productionRunId);
-            serviceContext.put("taskId", taskId);
+            serviceContext.put("workEffortId", taskId);
             serviceContext.put("statusId", "PRUN_RUNNING");
             serviceContext.put("userLogin", userLogin);
             resultService = dispatcher.runSync("changeProductionRunTaskStatus", serviceContext);
@@ -1859,7 +1956,7 @@ public class ProductionRunServices {
             // Change the task status to completed
             serviceContext.clear();
             serviceContext.put("productionRunId", productionRunId);
-            serviceContext.put("taskId", taskId);
+            serviceContext.put("workEffortId", taskId);
             serviceContext.put("statusId", "PRUN_COMPLETED");
             serviceContext.put("userLogin", userLogin);
             resultService = dispatcher.runSync("changeProductionRunTaskStatus", serviceContext);
