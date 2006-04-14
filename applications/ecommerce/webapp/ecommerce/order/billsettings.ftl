@@ -44,7 +44,7 @@ function shipBillAddr() {
         <div style="float: right;">
             <#if requestParameters.singleUsePayment?default("N") != "Y">
               <div class="tabletext">
-                ${screens.render("component://ecommerce/widget/OrderScreens.xml#anonymoustrail")}
+                ${screens.render(anonymoustrailScreen)}
               </div>
             </#if>
         </div>

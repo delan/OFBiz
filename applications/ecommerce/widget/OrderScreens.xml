@@ -69,6 +69,7 @@
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleBillingInformation"/>
+                <set field="anonymoustrailScreen" value="component://ecommerce/widget/OrderScreens.xml#anonymoustrail"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/billsettings.bsh"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/storepaymentoptions.bsh"/>
             </actions>
@@ -88,6 +89,7 @@
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleShippingInformation"/>
+                <set field="anonymoustrailScreen" value="component://ecommerce/widget/OrderScreens.xml#anonymoustrail"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
             </actions>
             <widgets>
@@ -106,6 +108,7 @@
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleShippingInformation"/>
+                <set field="anonymoustrailScreen" value="component://ecommerce/widget/OrderScreens.xml#anonymoustrail"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
             </actions>
             <widgets>
@@ -124,6 +127,7 @@
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="title-property" value="PageTitleShippingOptions"/>
+                <set field="anonymoustrailScreen" value="component://ecommerce/widget/OrderScreens.xml#anonymoustrail"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/optionsettings.bsh"/>
             </actions>
             <widgets>
