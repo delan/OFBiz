@@ -44,7 +44,7 @@
            <fo:table-column column-width="3in"/>
             <fo:table-body>
               <fo:table-row>
-                <fo:table-cell>
+                <fo:table-cell>Importing a screen
                    ${screens.render("component://order/widget/ordermgr/OrderPrintForms.xml#CompanyLogo")}
                 </fo:table-cell>
                 <fo:table-cell>
@@ -99,8 +99,7 @@
 ${postalAddress.attnName}</#if>
 ${postalAddress.address1}<#if postalAddress.address2?has_content>
 ${postalAddress.address2}</#if>
-${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if></#if><#if postalAddress.postalCode?has_content>
-${postalAddress.postalCode}</#if>
+${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if></#if><#if postalAddress.postalCode?has_content>${postalAddress.postalCode}</#if>
 </fo:block>
                 </fo:table-cell>
                 </#if>
