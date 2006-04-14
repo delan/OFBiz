@@ -30,9 +30,14 @@ import org.ofbiz.party.contact.*;
 import java.sql.Timestamp;
 
 orderHeader = (GenericValue) parameters.get("orderHeader");
+orderId = parameters.get("orderId");
 invoice = (GenericValue) parameters.get("invoice");
 invoiceId = parameters.get("invoiceId");
 nowTimestamp = UtilDateTime.nowTimestamp();
+
+if (orderHeader == null && orderId != null) {
+    orderHeader = (GenericValue) delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+}
 
 if (invoice == null && invoiceId != null)	{
     invoice = (GenericValue) delegator.findByPrimaryKey("Invoice",UtilMisc.toMap("invoiceId",invoiceId));
@@ -43,7 +48,7 @@ logoImageUrl = null; // "http://localhost:8080/images/ofbiz_powered.gif";
 partyId = null;
 
 if (orderHeader != null) {
-    GenericValue productStore = (GenericValue) orderHeader.getRelated("ProductStore");
+    GenericValue productStore = (GenericValue) orderHeader.getRelatedOne("ProductStore");
     if (orderHeader.getString("orderTypeId").equals("SALES_ORDER") && productStore != null && productStore.get("payToPartyId") != null) {
         partyId = productStore.getString("payToPartyId");
     }
