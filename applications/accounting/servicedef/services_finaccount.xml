@@ -120,7 +120,7 @@
         <description>Add funds to a Gift Certificate</description>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
-        <attribute name="pinNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="pinNumber" type="String" mode="IN" optional="true"/>
         <attribute name="amount" type="Double" mode="INOUT" optional="false"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
