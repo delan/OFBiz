@@ -174,6 +174,12 @@
                             </tr>
                         </table>
                         ${editPrRoutingTaskWrapper.renderFormString(context)}
+                        <br/>
+                        ${createRoutingTaskDelivProductForm.renderFormString(context)}
+                        <#if prunInventoryProduced?has_content>
+                            <br/>
+                            ${prunInventoryProducedForm.renderFormString(context)}
+                        </#if>
                     </td>
                 </tr>
             </table>
