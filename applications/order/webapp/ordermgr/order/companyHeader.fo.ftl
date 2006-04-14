@@ -25,11 +25,9 @@
             <fo:table-body>
               <fo:table-row >
                 <fo:table-cell>
-					<fo:block>
-					<#if logoImageUrl?has_content><fo:external-graphic src="${logoImageUrl}" overflow="hidden" height="80px"/></#if>
-					</fo:block>
-                </fo:table-cell>
-                <fo:table-cell>
+                   <fo:block>
+	            <#if logoImageUrl?has_content><fo:external-graphic src="${logoImageUrl}" overflow="hidden" height="40px"/></#if>
+                  </fo:block>
                   <fo:block>${companyName?if_exists}</fo:block>
                   <#if postalAddress?has_content>
                     <fo:block>${postalAddress.address1?if_exists}</fo:block>
