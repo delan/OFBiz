@@ -181,9 +181,27 @@ public class GiftCertificateServices {
             currencyUom = UtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD");
         }
 
-        // validate the pin
+        String finAccountId = null;
+         // validate the pin if the store requires it and figure out the finAccountId from card number
+        try {
+            GenericValue giftCertSettings = delegator.findByPrimaryKeyCache("ProductStoreFinActSetting", UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId));
+             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
         if (!validatePin(delegator, cardNumber, pinNumber)) {
             return ServiceUtil.returnError("PIN number is not valid!");
+        }
+                 finAccountId = cardNumber;
+             } else {
+                 GenericValue finAccount = FinAccountHelper.getFinAccountFromCode(cardNumber, delegator);
+                 if (finAccount != null) {
+                     finAccountId = finAccount.getString("finAccountId");
+                 }
+             }
+        } catch (GenericEntityException ex) {
+            return ServiceUtil.returnError("Cannot get store fin account settings " + ex.getMessage());
+        }
+
+        if (finAccountId == null) {
+            return ServiceUtil.returnError("Cannot get fin account for adding to balance");
         }
 
         // get the previous balance
@@ -200,7 +218,7 @@ public class GiftCertificateServices {
         String refNum = null;
         try {
             refNum = GiftCertificateServices.createTransaction(delegator, dispatcher, userLogin, amount,
-                    productStoreId, partyId, currencyUom, deposit, cardNumber);
+                    productStoreId, partyId, currencyUom, deposit, finAccountId);
             balance = FinAccountHelper.getAvailableBalance(cardNumber, currencyUom, delegator);
         } catch (GeneralException e) {
             Debug.logError(e, module);
