@@ -1033,13 +1033,6 @@ under the License.
 
                    <order-by field-name="-maxRevisionSeqId"/>
                 </entity-condition>
-                <set from-field="assocRevisionItemViewList[0]" field="assocRevisionItemView"/>
-                <entity-one entity-name="Content" value-name="instanceContent">
-                    <field-map field-name="contentId" env-name="assocRevisionItemView.itemContentId"/>
-                </entity-one>
-                <entity-one entity-name="DataResource" value-name="instanceDataResource">
-                    <field-map field-name="dataResourceId" env-name="instanceContent.dataResourceId"/>
-                </entity-one>
             </actions>
             <widgets>
                 <!--
@@ -1052,7 +1045,42 @@ under the License.
                 <label text="instanceContentRevisionSeqId : ${instanceContentRevisionSeqId}"></label>
                 <label text="assocRevisionItemView : ${assocRevisionItemView}"></label>
                 -->
-                <include-menu name="childInstanceLine" location="component://content/widget/compdoc/CompDocMenus.xml"/>
+                <container>
+                    <label text="${contentName}" style="tableheadtext"/>
+                    <section>
+                        <condition>
+                            <if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
+                        </condition>
+                        <widgets>
+                            <link text="Add Instance" 
+                                target="AddChildCompDocInstance?rootContentId=${rootContentId}&amp;instanceOfContentId=${contentId}&amp;caSequenceNum=${maxRevisionSeqId}" 
+                                style="buttontext"/>
+                        </widgets>
+                    </section>
+                </container>
+                <iterate-section entry-name="assocRevisionItemView" list-name="assocRevisionItemViewList">
+                    <section>
+                        <actions>
+                            <entity-one entity-name="Content" value-name="instanceContent" auto-field-map="false">
+                                <field-map field-name="contentId" env-name="assocRevisionItemView.itemContentId"/>
+                            </entity-one>
+                            <entity-one entity-name="DataResource" value-name="instanceDataResource" auto-field-map="false">
+                                <field-map field-name="dataResourceId" env-name="instanceContent.dataResourceId"/>
+                            </entity-one>
+                        </actions>
+                        <widgets>
+                            <container>
+                                <label text="- ${instanceContent.contentName} [${instanceContent.contentId}] - ${instanceDataResource.objectInfo} ${instanceDataResource.relatedDetailId}" style="tableheadtext"/>
+                                <link text="Edit Instance"
+                                    target="EditChildCompDoc?contentId=${assocRevisionItemView.contentId}&amp;rootContentId=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"
+                                    style="buttontext"/>
+                                <link text="View as PDF"
+                                    target="GenContentPdf?contentId=${assocRevisionItemView.contentId}&amp;caSequenceNum=${sequenceNum}"
+                                    style="buttontext"/>
+                            </container>
+                        </widgets>
+                    </section>
+                </iterate-section>
             </widgets>
         </section>
     </screen>
