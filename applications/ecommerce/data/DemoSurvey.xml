@@ -26,7 +26,9 @@
     <SurveyQuestion surveyQuestionId="1011" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_SHORT" description="giftCardPin" question="PIN Number:" lastUpdatedStamp="2003-12-04 21:40:23.255" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
 
     <SurveyQuestion surveyQuestionId="1030" surveyQuestionCategoryId="1001" surveyQuestionTypeId="OPTION" question="How often to you shop on-line?" lastUpdatedStamp="2003-12-05 19:12:29.893" lastUpdatedTxStamp="2003-12-05 19:12:29.893"/>
-    <SurveyQuestion surveyQuestionId="1031" surveyQuestionCategoryId="1001" surveyQuestionTypeId="BOOLEAN" question="Have you shopped here before?" lastUpdatedStamp="2003-12-05 19:13:51.109" lastUpdatedTxStamp="2003-12-05 19:13:51.109"/>
+    <SurveyQuestion surveyQuestionId="1031" surveyQuestionCategoryId="1001" surveyQuestionTypeId="BOOLEAN" question="Have you shopped here?" lastUpdatedStamp="2003-12-05 19:13:51.109" lastUpdatedTxStamp="2003-12-05 19:13:51.109"/>
+    <SurveyQuestion surveyQuestionId="1031B" surveyQuestionCategoryId="1001" surveyQuestionTypeId="BOOLEAN" question="Have you shopped here in the last six months?" lastUpdatedStamp="2003-12-05 19:13:51.109" lastUpdatedTxStamp="2003-12-05 19:13:51.109"/>
+    <SurveyQuestion surveyQuestionId="1031C" surveyQuestionCategoryId="1001" surveyQuestionTypeId="BOOLEAN" question="Have you shopped here in the last year?" lastUpdatedStamp="2003-12-05 19:13:51.109" lastUpdatedTxStamp="2003-12-05 19:13:51.109"/>
     <SurveyQuestion surveyQuestionId="1032" surveyQuestionCategoryId="1001" surveyQuestionTypeId="SEPERATOR_LINE" lastUpdatedStamp="2003-12-05 19:14:08.69" lastUpdatedTxStamp="2003-12-05 19:14:08.69"/>
     <SurveyQuestion surveyQuestionId="1033" surveyQuestionCategoryId="1001" surveyQuestionTypeId="OPTION" question="How would you rate this store for products?" lastUpdatedStamp="2003-12-05 19:14:46.222" lastUpdatedTxStamp="2003-12-05 19:14:46.222"/>
     <SurveyQuestion surveyQuestionId="1034" surveyQuestionCategoryId="1001" surveyQuestionTypeId="OPTION" question="How would you rate this store for on-line functionality?" lastUpdatedStamp="2003-12-05 19:18:06.783" lastUpdatedTxStamp="2003-12-05 19:18:06.783"/>
@@ -48,8 +50,12 @@
 
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1037" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="01" sequenceNum="1" requiredField="N" lastUpdatedStamp="2003-12-05 19:20:12.398" lastUpdatedTxStamp="2003-12-05 19:20:12.398"/>
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1030" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="01" sequenceNum="2" requiredField="Y" lastUpdatedStamp="2003-12-05 19:20:18.967" lastUpdatedTxStamp="2003-12-05 19:20:18.967"/>
-    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1031" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="01" sequenceNum="3" surveyMultiRespId="01" requiredField="Y" lastUpdatedStamp="2003-12-05 19:20:42.651" lastUpdatedTxStamp="2003-12-05 19:20:42.651"/>
+    <!-- NOTE: these questions are associated with different columns to demonstrate the ability to have one question per cell MultiResp --> 
+    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1031" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="01" sequenceNum="3" surveyMultiRespId="01" surveyMultiRespColId="01" requiredField="Y" lastUpdatedStamp="2003-12-05 19:20:42.651" lastUpdatedTxStamp="2003-12-05 19:20:42.651"/>
+    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1031B" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="01" sequenceNum="3" surveyMultiRespId="01" surveyMultiRespColId="02" requiredField="Y" lastUpdatedStamp="2003-12-05 19:20:42.651" lastUpdatedTxStamp="2003-12-05 19:20:42.651"/>
+    <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1031C" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="01" sequenceNum="3" surveyMultiRespId="01" surveyMultiRespColId="03" requiredField="Y" lastUpdatedStamp="2003-12-05 19:20:42.651" lastUpdatedTxStamp="2003-12-05 19:20:42.651"/>
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1032" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="01" sequenceNum="4" requiredField="N" lastUpdatedStamp="2003-12-05 19:20:48.254" lastUpdatedTxStamp="2003-12-05 19:20:48.254"/>
+
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1033" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="02" sequenceNum="5" surveyMultiRespId="01" requiredField="N" lastUpdatedStamp="2003-12-05 19:21:18.896" lastUpdatedTxStamp="2003-12-05 19:21:18.896"/>
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1034" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="02" sequenceNum="6" surveyMultiRespId="01" requiredField="Y" lastUpdatedStamp="2003-12-05 19:21:23.89" lastUpdatedTxStamp="2003-12-05 19:21:23.89"/>
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1038" fromDate="2001-01-01 00:00:00.0" surveyPageSeqId="02" sequenceNum="7" requiredField="N" lastUpdatedStamp="2003-12-05 19:21:59.761" lastUpdatedTxStamp="2003-12-05 19:21:59.761"/>
@@ -85,5 +91,3 @@
     <ProductStoreSurveyAppl productStoreSurveyId="1003" productStoreId="9000" surveyApplTypeId="RANDOM_POLL" groupName="testSurveyGroup" surveyId="1003" fromDate="2003-12-05 19:22:40.925" surveyTemplate="/applications/ecommerce/templates/survey/minisurvey.ftl" resultTemplate="/applications/ecommerce/templates/survey/miniresult.ftl" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:22:40.925" lastUpdatedTxStamp="2003-12-05 19:22:40.925"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1004" productStoreId="9000" surveyApplTypeId="RANDOM_POLL" groupName="testSurveyGroup" surveyId="1004" fromDate="2003-12-05 19:22:40.925" surveyTemplate="/applications/ecommerce/templates/survey/minisurvey.ftl" resultTemplate="/applications/ecommerce/templates/survey/miniresult.ftl" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:22:40.925" lastUpdatedTxStamp="2003-12-05 19:22:40.925"/>
 </entity-engine-xml>
-
-

@@ -34,6 +34,7 @@
       <td><div class="tableheadtext">Question</div></td>
       <td><div class="tableheadtext">Page</div></td>
       <td><div class="tableheadtext">Multi-Resp</div></td>
+      <td><div class="tableheadtext">M-R Col</div></td>
       <td><div class="tableheadtext">Required</div></td>
       <td><div class="tableheadtext">Seq #</div></td>
       <td><div class="tableheadtext">W/Question</div></td>
@@ -48,6 +49,9 @@
       <#assign questionCat = surveyQuestionAndAppl.getRelatedOneCache("SurveyQuestionCategory")?if_exists/>
       <#assign currentSurveyPage = surveyQuestionAndAppl.getRelatedOneCache("SurveyPage")?if_exists/>
       <#assign currentSurveyMultiResp = surveyQuestionAndAppl.getRelatedOneCache("SurveyMultiResp")?if_exists/>
+      <#if currentSurveyMultiResp?has_content>
+        <#assign currentSurveyMultiRespColumns = currentSurveyMultiResp.getRelated("SurveyMultiRespColumn")/>
+      </#if>
       <form method="post" action="<@ofbizUrl>updateSurveyQuestionAppl</@ofbizUrl>">
         <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}">
         <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}">
@@ -57,7 +61,7 @@
           <td><div class="tabletext">${questionType.description}</div></td>
           <td><div class="tabletext">${(questionCat.description)?if_exists}</div></td>
           <td><div class="tabletext">${surveyQuestionAndAppl.description?if_exists}</div></td>
-          <td><input type="text" name="question" size="20" class="inputBox" value="${surveyQuestionAndAppl.question?if_exists}">
+          <td><input type="text" name="question" size="30" class="inputBox" value="${surveyQuestionAndAppl.question?if_exists?html}">
           <td>
             <select class="selectBox" name="surveyPageId">
               <#if surveyQuestionAndAppl.surveyPageSeqId?has_content>
@@ -82,6 +86,23 @@
               </#list>
             </select>
           </td>
+          <#if currentSurveyMultiRespColumns?has_content>
+          <td>
+            <select class="selectBox" name="surveyMultiRespColId">
+              <#if surveyQuestionAndAppl.surveyMultiRespColId?has_content>
+                <#assign currentSurveyMultiRespColumn = surveyQuestionAndAppl.getRelatedOne("SurveyMultiRespColumn")/>
+                <option value="${currentSurveyMultiRespColumn.surveyMultiRespColId}">${(currentSurveyMultiRespColumn.columnTitle)?if_exists} [${currentSurveyMultiRespColumn.surveyMultiRespColId}]</option>
+                <option value="${currentSurveyMultiRespColumn.surveyMultiRespColId}">----</option>
+              </#if>
+              <option value=""></option>
+              <#list currentSurveyMultiRespColumns as currentSurveyMultiRespColumn>
+                <option value="${currentSurveyMultiRespColumn.surveyMultiRespColId}">${currentSurveyMultiRespColumn.columnTitle} [${currentSurveyMultiRespColumn.surveyMultiRespColId}]</option>
+              </#list>
+            </select>
+          </td>
+          <#else/>
+            <td><input type="text" name="surveyMultiRespColId" size="4" class="inputBox" value="${surveyQuestionAndAppl.surveyMultiRespColId?if_exists}"/></td>
+          </#if>
           <td>
             <select class="selectBox" name="requiredField">
               <option>${surveyQuestionAndAppl.requiredField?default("N")}</option>
@@ -114,6 +135,7 @@
         <td><div class="tableheadtext">Question</div></td>
         <td><div class="tableheadtext">Page</div></td>
         <td><div class="tableheadtext">Multi-Resp</div></td>
+        <td><div class="tableheadtext">M-R Col</div></td>
         <td><div class="tableheadtext">Required</div></td>
         <td><div class="tableheadtext">Seq #</div></td>
         <td><div class="tableheadtext">W/Question</div></td>
@@ -148,6 +170,7 @@
               </#list>
             </select>
           </td>
+            <td><input type="text" name="surveyMultiRespColId" size="4" class="inputBox"/></td>
             <td>
               <select name="requiredField" class="selectBox">
                 <option>N</option>

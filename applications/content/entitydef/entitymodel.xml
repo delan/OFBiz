@@ -72,7 +72,6 @@
         <key-map field-name="commContentAssocTypeId"/>
       </relation>
     </entity>
-    
     <entity entity-name="CommContentAssocType"
             package-name="org.ofbiz.content.commevent"
             title="CommunicationEvent Content Association Type Entity">
@@ -1308,14 +1307,17 @@
         <key-map field-name="surveyQuestionId"/>
       </relation>
         <relation type="one-nofk" rel-entity-name="SurveyPage">
-            <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyPageSeqId to be optional.</description>
             <key-map field-name="surveyId"/>
             <key-map field-name="surveyPageSeqId"/>
         </relation>
         <relation type="one-nofk" rel-entity-name="SurveyMultiResp">
-            <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyMultiRespId to be optional.</description>
             <key-map field-name="surveyId"/>
             <key-map field-name="surveyMultiRespId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="SurveyMultiRespColumn">
+            <key-map field-name="surveyId"/>
+            <key-map field-name="surveyMultiRespId"/>
+            <key-map field-name="surveyMultiRespColId"/>
         </relation>
     </view-entity>
     <entity entity-name="SurveyQuestionAppl"
@@ -1327,6 +1329,7 @@
       <field name="thruDate" type="date-time"/>
       <field name="surveyPageSeqId" type="id-ne"/>
       <field name="surveyMultiRespId" type="id-ne"/>
+      <field name="surveyMultiRespColId" type="id"><description>Used to optionally associate this question to a specific column in the Multi-Response set; with this you can associate a single question to each cell in the question/column grid; this is useful for AcroForm round trips where the target PDF needs a question associated with each cell, or even the same question applied with different externalFieldRef values.</description></field>
       <field name="requiredField" type="indicator"/>
       <field name="sequenceNum" type="numeric"/>
       <field name="externalFieldRef" type="long-varchar"><description>External field ID/reference; for AcroForms used to track the field ID</description></field>
@@ -1354,6 +1357,11 @@
             <description>This does not have a foreign key because the surveyId will never be null, and we want the surveyMultiRespId to be optional.</description>
             <key-map field-name="surveyId"/>
             <key-map field-name="surveyMultiRespId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="SurveyMultiRespColumn">
+            <key-map field-name="surveyId"/>
+            <key-map field-name="surveyMultiRespId"/>
+            <key-map field-name="surveyMultiRespColId"/>
         </relation>
     </entity>
     <entity entity-name="SurveyQuestionCategory"
