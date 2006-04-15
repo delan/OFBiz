@@ -187,7 +187,7 @@
     <div class="head2">Create Question Category</div>
     <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">New Question</a>
     <br/><br/>
-    ${createSurveyQuestionCategoryWrapper.renderFormString()}
+    ${createSurveyQuestionCategoryWrapper.renderFormString(context)}
   <#else>
     <#if surveyQuestionId?has_content>
       <div class="head2">Edit Question:</div>
@@ -197,7 +197,7 @@
     </#if>
     <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">New Question Category</a>
     <br/><br/>
-    ${createSurveyQuestionWrapper.renderFormString()}
+    ${createSurveyQuestionWrapper.renderFormString(context)}
   </#if>
 
   <#if (surveyQuestion?has_content && surveyQuestion.surveyQuestionTypeId?default("") == "OPTION")>
