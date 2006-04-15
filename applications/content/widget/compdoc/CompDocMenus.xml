@@ -166,46 +166,6 @@
         </menu-item>
     </menu>
         
-    <menu name="childInstanceLine" default-title-style="tabButton" default-selected-style="tabButtonSelected" default-menu-item-name="content"
-        orientation="horizontal" menu-width="100%" default-tooltip-style="tabletext" default-widget-style="tabButton"
-        selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
-        <menu-item name="edit-inplace" title="${contentName}[${assocRevisionItemView.itemContentId}] - ${instanceDataResource.objectInfo} ${instanceDataResource.relatedDetailId}">
-            <condition>
-                <not><if-empty field-name="assocRevisionItemView"/></not>
-            </condition>
-            <link target="EditCompDoc?contentId=${assocRevisionItemView.contentId}&amp;rootContentId=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
-        </menu-item>
-        <menu-item name="edit-link" title="Edit">
-            <condition>
-                <not><if-empty field-name="assocRevisionItemView"/></not>
-            </condition>
-            <link target="EditChildCompDoc?contentId=${assocRevisionItemView.contentId}&amp;rootContentId=${assocRevisionItemView.contentIdTo}&amp;caContentAssocTypeId=${assocRevisionItemView.contentAssocTypeId}&amp;caFromDate=${assocRevisionItemView.fromDate}&amp;contentRevisionSeqId=${assocRevisionItemView.maxRevisionSeqId}&amp;rootContentRevisionSeqId=${rootContentRevisionSeqId}"/>
-        </menu-item>
-        
-        <menu-item name="edit-inplace-add" title="${contentName}[${assocRevisionItemView.itemContentId}]">
-            <condition>
-                <if-empty field-name="assocRevisionItemView"/>
-            </condition>
-            <link target="AddChildCompDocInstance?rootContentId=${rootContentId}&amp;instanceOfContentId=${contentId}&amp;caSequenceNum=${maxRevisionSeqId}"/>
-        </menu-item>
-        <menu-item name="edit-link-add" title="Add">
-            <condition>
-				<and>
-                	<if-empty field-name="assocRevisionItemView"/>
-					<if-compare-field field-name="mostRecentRevisionSeqId" operator="equals" to-field-name="rootContentRevisionSeqId"/>
-				</and>
-            </condition>
-            <link target="AddChildCompDocInstance?rootContentId=${rootContentId}&amp;instanceOfContentId=${contentId}&amp;caSequenceNum=${maxRevisionSeqId}"/>
-        </menu-item>
-        
-        <menu-item name="pdf" title="View as PDF">
-            <condition>
-                <not><if-empty field-name="assocRevisionItemView"/></not>
-            </condition>
-            <link target="GenContentPdf?contentId=${assocRevisionItemView.contentId}&amp;caSequenceNum=${sequenceNum}"/>
-        </menu-item>
-    </menu>
-        
     <menu name="rootInstanceLine" default-title-style="tabButton" default-selected-style="tabButtonSelected" default-menu-item-name="content"
         orientation="horizontal" menu-width="100%" default-tooltip-style="tabletext" default-widget-style="tabButton"
         selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
