@@ -4,6 +4,8 @@
     <!-- ################################# -->  
     <!-- This is an example of a fixed asset (a machine or a workcenter) with standard costing information -->
     <FixedAsset fixedAssetId="WORKCENTER_COST" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Demo Workcenter with Standard Costs information"/>
+    <!-- Deprecated: in the future cost information will be stored in the CostComponentCalc entity;
+         these entries can then be associated to a work effort thru the WorkEffortCostCalc entity. -->
     <!-- This is the standard cost per hour needed to setup the fixed asset for the task -->
     <FixedAssetStdCost fixedAssetId="WORKCENTER_COST" fixedAssetStdCostTypeId="SETUP_COST" fromDate="2005-12-31 00:01:00.0" amountUomId="USD" amount="2"/>
     <!-- This is the standard cost per hour for the usage of the fixed asset to perform a given task -->
@@ -25,10 +27,14 @@
     <ProductAssoc productId="PROD_COST" productIdTo="MAT_B_COST" productAssocTypeId="MANUF_COMPONENT" fromDate="2005-12-31 00:01:00.0" sequenceNum="20" quantity="3.0"/>
     <!-- ################################# -->
     <!-- Product Routing definition: -->
-    <!-- the routing is composed of one task -->
+    <!-- this routing is composed of one task -->
     <!-- the task is executed in the fixed asset WORKCENTER_COST; the setup time is 10 minutes (600000 milliseconds); the unit task time is 5 minutes (300000 milliseconds) -->
     <WorkEffort workEffortId="ROUTING_COST" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" workEffortName="Demo Routing for Costing" description="Demo Routing for Costing" revisionNumber="1" quantityToProduce="0"/>
     <WorkEffort workEffortId="TASK_COST" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Demo Routing Task for Costing" description="Demo Routing Task for Costing" revisionNumber="1" fixedAssetId="WORKCENTER_COST" estimatedMilliSeconds="300000" estimatedSetupMillis="600000"/>
     <WorkEffortAssoc workEffortIdFrom="ROUTING_COST" workEffortIdTo="TASK_COST" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2005-12-31 00:01:00.0"/>
     <WorkEffortGoodStandard workEffortId="ROUTING_COST" productId="PROD_COST" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2005-12-31 00:01:00.0"/>
+    <!-- Cost information for the task -->
+    <!-- This is the cost derived from fixed assets' usage; variableCost is per minute (perMilliSeconds=60000) -->
+    <CostComponentCalc costComponentCalcId="EXAMPLE_COST" currencyUomId="USD" fixedCost="1" variableCost="2" perMilliSeconds="60000"/>
+    <WorkEffortCostCalc workEffortId="TASK_COST" costComponentTypeId="ROUTE_COST" costComponentCalcId="EXAMPLE_COST" fromDate="2005-12-31 00:01:00.0"/>
 </entity-engine-xml>
