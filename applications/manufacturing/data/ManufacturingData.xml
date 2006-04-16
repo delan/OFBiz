@@ -23,6 +23,7 @@
     <WorkEffortAssoc workEffortIdFrom="DEFAULT_ROUTING" workEffortIdTo="DEFAULT_TASK" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2004-09-24 15:09:38.736"/>
 
     <!-- Formulae -->
+    <CustomMethodType customMethodTypeId="COST_FORMULA" description="Formula for calculating costs for tasks"/>
     <CustomMethodType customMethodTypeId="TASK_FORMULA" description="Formula for calculating time estimates for tasks"/>
     <CustomMethodType customMethodTypeId="BOM_FORMULA" description="Formula for calculating material estimates for boms"/>
     <!-- Task Formulae -->
