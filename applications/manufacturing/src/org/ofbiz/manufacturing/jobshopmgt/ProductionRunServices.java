@@ -773,12 +773,17 @@ public class ProductionRunServices {
             result.put("costComponents", costComponents);
             Iterator costComponentsIt = costComponents.iterator();
             BigDecimal totalCost = ZERO;
+            BigDecimal totalCostNoMaterials = ZERO;
             while (costComponentsIt.hasNext()) {
                 GenericValue costComponent = (GenericValue)costComponentsIt.next();
                 BigDecimal cost = costComponent.getBigDecimal("cost");
                 totalCost = totalCost.add(cost);
+                if (!"ACTUAL_MATERIALS".equals(costComponent.getString("costComponentTypeId"))) {
+                    totalCostNoMaterials = totalCostNoMaterials.add(cost);
+                }
             }
             result.put("totalCost", totalCost);
+            result.put("totalCostNoMaterials", totalCostNoMaterials);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Cannot retrieve costs for work effort [" + workEffortId + "]: " + gee.getMessage());
         }
