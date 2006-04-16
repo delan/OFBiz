@@ -43,7 +43,7 @@
                 </entity-options>
              </drop-down>
         </field>
-        <field name="primaryProductCategoryId">
+        <field name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ProductCategory" key-field-name="productCategoryId">
                     <entity-order-by field-name="description"/>
@@ -67,11 +67,11 @@
         <field name="productId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
-        <field name="brandName"><display/></field>
-        <field name="internalName"><display/></field>
-        <field name="productTypeId"><display/></field>
+        <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
         <field name="searchVariants" title="" widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
-            <hyperlink also-hidden="false" target-type="plain" description="Variants" target="LookupVariantProduct?productId=${productId}"/>
+            <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct?productId=${productId}"/>
         </field>
     </form>
     
@@ -79,6 +79,7 @@
         default-map-name= "inputFields" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupVirtualProduct" title="" type="single">
+        <field name="isVirtual"><hidden value="Y"/></field>
     </form>
     <form name="listLookupVirtualProduct" extends="listLookupProduct"
         default-title-style="tableheadtext"
@@ -94,9 +95,9 @@
         <field name="productId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
-        <field name="brandName"><display/></field>
-        <field name="internalName"><display/></field>
-        <field name="productTypeId"><display/></field>
+        <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
     </form>
 
     <form name="lookupProductAndPrice" target="LookupProductAndPrice" title="" type="single"
@@ -138,7 +139,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="price"><range-find/></field>
+        <field name="price" title="${uiLabelMap.ProductPrice}"><range-find/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="filterByDate"><hidden value="Y"/></field>
@@ -155,15 +156,15 @@
         <field name="productId" title="" widget-style="buttontext" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
-        <field name="productId" title="" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
-        <field name="internalName"><display/></field>
-        <field name="productTypeId"><display/></field>
-        <field name="currencyUomId"><display/></field>
-        <field name="price"><display/></field>
-        <field name="fromDate"><display/></field>
-        <field name="thruDate"><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
+        <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}"><display/></field>
+        <field name="price" title="${uiLabelMap.ProductPrice}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
         <field name="searchVariants" title="" widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
-            <hyperlink also-hidden="false" target-type="plain" description="Variants" target="LookupVariantProduct?productId=${productId}"/>
+            <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct?productId=${productId}"/>
         </field>
     </form>
 
@@ -179,7 +180,7 @@
         </field>
         
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductCategory" list-iterator-name="listIt" paginate-target="LookupProductCategory" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
@@ -220,7 +221,7 @@
         </field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductFeature" list-iterator-name="listIt" paginate-target="LookupProductFeature" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
@@ -246,7 +247,7 @@
         <field name="payToPartyId"><text-find/></field>
         
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductStore" list-iterator-name="listIt" target="" paginate-target="LookupProductStore" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">

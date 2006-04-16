@@ -51,10 +51,10 @@
             </tr>
         </#list>
         <tr>
-            <td><input type="submit" value="Search" class="smallSubmit"></td>
+            <td><input type="submit" value="${uiLabelMap.CommonSearch}" class="smallSubmit"></td>
         </form>
         <form method="post" action="<@ofbizUrl>LookupProduct</@ofbizUrl>" name="">
-            <td><input type="submit" value="Back" class="smallSubmit"></td>
+            <td><input type="submit" value="${uiLabelMap.CommonBack}" class="smallSubmit"></td>
         </form>
     </tr>
     </table>
@@ -64,8 +64,8 @@
     <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <th>&nbsp;</th>
-            <th><div class="tabletext">Brand Name</div></th>
-            <th><div class="tabletext">Internal Name</div></th>
+            <th><div class="tabletext">${uiLabelMap.ProductBrandName}</div></th>
+            <th><div class="tabletext">${uiLabelMap.ProductInternalName}</div></th>
         </tr>
         <#list variantProducts as variant>
             <tr>
