@@ -772,6 +772,8 @@ public class ProductionRunServices {
                                                           UtilMisc.toMap("workEffortId", workEffortId)));
             result.put("costComponents", costComponents);
             Iterator costComponentsIt = costComponents.iterator();
+            // TODO: before doing these totals we should convert the cost components' costs to the
+            //       base currency uom of the owner of the facility in which the task is running
             BigDecimal totalCost = ZERO;
             BigDecimal totalCostNoMaterials = ZERO;
             while (costComponentsIt.hasNext()) {
