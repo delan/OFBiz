@@ -1007,6 +1007,7 @@
       <field name="paymentId" type="id"></field>
       <field name="shipmentId" type="id"></field>
       <field name="receiptId" type="id"></field>
+      <field name="workEffortId" type="id"></field>
       <field name="theirAcctgTransId" type="id-long"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
@@ -1057,6 +1058,9 @@
       </relation>
       <relation type="one" fk-name="ACCTTX_SHIPRCPT" rel-entity-name="ShipmentReceipt">
         <key-map field-name="receiptId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTX_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
       </relation>
       <relation type="many" rel-entity-name="AcctgTransTypeAttr">
         <key-map field-name="acctgTransTypeId"/>
