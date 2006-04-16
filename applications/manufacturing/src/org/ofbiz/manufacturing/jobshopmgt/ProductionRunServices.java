@@ -778,7 +778,7 @@ public class ProductionRunServices {
                 GenericValue costComponent = (GenericValue)costComponentsIt.next();
                 BigDecimal cost = costComponent.getBigDecimal("cost");
                 totalCost = totalCost.add(cost);
-                if (!"ACTUAL_MATERIALS".equals(costComponent.getString("costComponentTypeId"))) {
+                if (!"ACTUAL_MAT_COST".equals(costComponent.getString("costComponentTypeId"))) {
                     totalCostNoMaterials = totalCostNoMaterials.add(cost);
                 }
             }
