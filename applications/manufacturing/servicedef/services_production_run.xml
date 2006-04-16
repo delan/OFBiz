@@ -249,6 +249,7 @@
         <attribute mode="IN" name="workEffortId" optional="false" type="String"/>
         <attribute mode="OUT" name="costComponents" optional="false" type="List"/>
         <attribute mode="OUT" name="totalCost" optional="false" type="BigDecimal"/>
+        <attribute mode="OUT" name="totalCostNoMaterials" optional="false" type="BigDecimal"/>
     </service>
     <service name="getProductionRunCost" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="getProductionRunCost" auth="true">
