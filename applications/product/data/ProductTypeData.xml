@@ -4,6 +4,10 @@
     <CostComponentType costComponentTypeId="EST_STD_ROUTE_COST" description="Estimated Standard Route (fixed asset usage) Cost" hasTable="N" parentTypeId=""/>
     <CostComponentType costComponentTypeId="EST_STD_LABOR_COST" description="Estimated Standard Labor Cost" hasTable="N" parentTypeId=""/>
     <CostComponentType costComponentTypeId="EST_STD_OTHER_COST" description="Estimated Standard Other Cost" hasTable="N" parentTypeId=""/>
+    <CostComponentType costComponentTypeId="ACTUAL_MAT_COST" description="Actual Materials Cost" hasTable="N" parentTypeId=""/>
+    <CostComponentType costComponentTypeId="ACTUAL_ROUTE_COST" description="Actual Route (fixed asset usage) Cost" hasTable="N" parentTypeId=""/>
+    <CostComponentType costComponentTypeId="ACTUAL_LABOR_COST" description="Actual Labor Cost" hasTable="N" parentTypeId=""/>
+    <CostComponentType costComponentTypeId="ACTUAL_OTHER_COST" description="Actual Other Cost" hasTable="N" parentTypeId=""/>
 
     <EnumerationType description="Product Price Parent Enum Type" enumTypeId="PROD_PRICE" hasTable="N" parentTypeId=""/>
     <EnumerationType description="Product Price Input Parameter" enumTypeId="PROD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PROD_PRICE"/>
