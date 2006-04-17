@@ -1167,7 +1167,7 @@ public class ProductionRunServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         // Mandatory input fields
-        String productionRunId = (String)context.get("productionRunId");
+        String productionRunId = (String)context.get("workEffortId");
         
         // Optional input fields
         Double quantity = (Double)context.get("quantity");
@@ -2059,7 +2059,7 @@ public class ProductionRunServices {
             if (statusId.equals("PRUN_CLOSED")) {
                 // Put in warehouse the products manufactured
                 serviceContext.clear();
-                serviceContext.put("productionRunId", productionRunId);
+                serviceContext.put("workEffortId", productionRunId);
                 serviceContext.put("userLogin", userLogin);
                 resultService = dispatcher.runSync("productionRunProduce", serviceContext);
                 serviceContext.clear();

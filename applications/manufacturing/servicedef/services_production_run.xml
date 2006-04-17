@@ -143,7 +143,7 @@
         <description>
             Create Inventory for product produced by a Production Run.
         </description>
-        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="INOUT" optional="true"/>
         <attribute name="createSerializedInventory" type="Boolean" mode="IN" optional="true"/>
         <attribute name="lotId" type="String" mode="IN" optional="true"/>

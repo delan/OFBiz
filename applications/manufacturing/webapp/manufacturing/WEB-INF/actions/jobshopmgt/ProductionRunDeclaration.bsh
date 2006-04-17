@@ -42,6 +42,9 @@ userLogin = request.getAttribute("userLogin");
 HashMap productionRunData= new HashMap();
 
 productionRunId = request.getParameter("productionRunId");
+if (UtilValidate.isEmpty(productionRunId)) {
+    productionRunId = request.getParameter("workEffortId");
+}
 if (!UtilValidate.isEmpty(productionRunId)) {
     ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
     if (productionRun.exist()){
@@ -98,7 +101,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         updateProductionRunWrapper.setUseRequestParameters(false);
         context.put("updateProductionRunWrapper",updateProductionRunWrapper);
 	
-        productionRunData.put("productionRunId",productionRunId);
+        productionRunData.put("workEffortId",productionRunId);
         productionRunData.put("productId", productionRun.getProductProduced().getString("productId"));
         productionRunData.put("productName",productionRun.getProductProduced().getString("internalName"));
 

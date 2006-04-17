@@ -38,6 +38,9 @@ import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
 delegator = request.getAttribute("delegator");
 
 productionRunId = request.getParameter("productionRunId");
+if (UtilValidate.isEmpty(productionRunId)) {
+    productionRunId = request.getParameter("workEffortId");
+}
 if (!UtilValidate.isEmpty(productionRunId)) {
     
     GenericValue productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
