@@ -220,7 +220,7 @@
     <form name="ShowProductionRun" type="single" 
             target="productionRunProduce" title="" default-map-name="productionRunData"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <field name="productionRunId"><hidden/></field>
+        <field name="workEffortId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <display description="[${productionRunData.productId}]/${productionRunData.productName}"/>
         </field>
