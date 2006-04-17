@@ -518,7 +518,7 @@
                         ${displayPartyNameResult.fullName?default("[Name Not Found]")}
                       </#if>
                       <#if partyId?exists>
-                        <span>&nbsp;(<a href="/partymgr/control/viewprofile?partyId=${partyId}" target="partymgr" class="buttontext">${partyId}</a>)</span>
+                        <span>&nbsp;(<a href="${customerDetailLink}${partyId}" target="partymgr" class="buttontext">${partyId}</a>)</span>
                         <span align="right">
                             &nbsp;&nbsp;(<a href="<@ofbizUrl>/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderOtherOrders}</a>)
                         </span>

@@ -433,7 +433,7 @@ document.lookuporder.orderId.focus();
               <td><div class="tabletext">${orderHeader.getString("orderDate")}</div></td>
               <td>
                 <#if partyId != "_NA_">
-                  <a href="/partymgr/control/viewprofile?partyId=${partyId}" class="buttontext">${partyId}</a>
+                  <a href="${customerDetailLink}${partyId}" class="buttontext">${partyId}</a>
                 <#else>
                   <span class='tabletext'>N/A</span>
                 </#if>
