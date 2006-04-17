@@ -471,7 +471,12 @@ public class GiftCertificateServices {
             Boolean processResult = null;
             String refNum = null;
             Map result = ServiceUtil.returnSuccess();
-            if (!(availableBalance.compareTo(new BigDecimal(amount.doubleValue())) == -1)) { // not(availableBalance < amount) in BigDecimal-ese
+
+            // turn amount into a big decimal, making sure to round and scale it to the same as availableBalance
+            BigDecimal amountBd = (new BigDecimal(amount.doubleValue())).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding);
+
+            // if availableBalance equal to or greater than amount, then auth
+            if (availableBalance.compareTo(amountBd) > -1) {
                 Timestamp thruDate = null;
                 if (giftCertSettings.getLong("authValidDays") != null) {
                     thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp(), giftCertSettings.getLong("authValidDays").intValue());
