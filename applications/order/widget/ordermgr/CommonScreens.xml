@@ -47,6 +47,9 @@
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="ordermgr" global="true"/>
                 <set field="appheaderTemplate" value="component://order/webapp/ordermgr/includes/appheader.ftl" global="true"/>
+
+                <!-- globally parametrize the link to a customer's detail information, to help with cases when such details are accessed via external application. -->
+                <set field="customerDetailLink" value="/partymgr/control/viewprofile?partyId=" global="true"/>
             </actions>
             <widgets>
                 <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
