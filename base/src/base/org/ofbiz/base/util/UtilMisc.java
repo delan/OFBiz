@@ -202,6 +202,10 @@ public class UtilMisc {
         return toSort;
     }
 
+    public static Object removeFirst(List lst) {
+        return lst.remove(0);
+    }
+    
     /**
      * Create a list from passed objX parameters
      * @return The resulting List
