@@ -451,12 +451,18 @@
             <!-- for validation get SurveyMultiResp and SurveyMultiRespColumn entries and if exist process for each surveyMultiRespColId -->
             <get-related-one value-name="surveyQuestionAndAppl" relation-name="SurveyMultiResp" to-value-name="surveyMultiResp" use-cache="true"/>
             <if-not-empty field-name="surveyMultiResp">
-                <get-related value-name="surveyMultiResp" relation-name="SurveyMultiRespColumn" list-name="surveyMultiRespColumnList" use-cache="true"/>
-                <iterate entry-name="surveyMultiRespColumn" list-name="surveyMultiRespColumnList">
-                    <set field="answerFieldName" value="answers.${surveyQuestionAndAppl.surveyQuestionId}_${surveyMultiRespColumn.surveyMultiRespColId}"/>
+                <!-- if the surveyQuestionAndAppl has a surveyMultiRespColId, then just look for one answer with that ID -->
+                <if-empty field-name="surveyQuestionAndAppl.surveyMultiRespColId">
+                    <get-related value-name="surveyMultiResp" relation-name="SurveyMultiRespColumn" list-name="surveyMultiRespColumnList" use-cache="true"/>
+                    <iterate entry-name="surveyMultiRespColumn" list-name="surveyMultiRespColumnList">
+                        <set field="answerFieldName" value="answers.${surveyQuestionAndAppl.surveyQuestionId}_${surveyMultiRespColumn.surveyMultiRespColId}"/>
+                        <call-simple-method method-name="validateSurveyResponseInline"/>
+                    </iterate>
+                <else>
+                    <set field="answerFieldName" value="answers.${surveyQuestionAndAppl.surveyQuestionId}_${surveyQuestionAndAppl.surveyMultiRespColId}"/>
                     <call-simple-method method-name="validateSurveyResponseInline"/>
-                </iterate>
-                
+                </else>
+                </if-empty>
             <else>
                 <set field="answerFieldName" value="answers.${surveyQuestionAndAppl.surveyQuestionId}"/>
                 <call-simple-method method-name="validateSurveyResponseInline"/>
@@ -512,12 +518,18 @@
             <!-- for process inputs get SurveyMultiResp and SurveyMultiRespColumn entries and if exist process for each surveyMultiRespColId -->
             <get-related-one value-name="surveyQuestionAndAppl" relation-name="SurveyMultiResp" to-value-name="surveyMultiResp" use-cache="true"/>
             <if-not-empty field-name="surveyMultiResp">
-                <get-related value-name="surveyMultiResp" relation-name="SurveyMultiRespColumn" list-name="surveyMultiRespColumnList" use-cache="true"/>
-                <iterate entry-name="surveyMultiRespColumn" list-name="surveyMultiRespColumnList">
-                    <set field="currentFieldName" value="${surveyQuestionAndAppl.surveyQuestionId}_${surveyMultiRespColumn.surveyMultiRespColId}"/>
+                <!-- if the surveyQuestionAndAppl has a surveyMultiRespColId, then just look for one answer with that ID -->
+                <if-empty field-name="surveyQuestionAndAppl.surveyMultiRespColId">
+                    <get-related value-name="surveyMultiResp" relation-name="SurveyMultiRespColumn" list-name="surveyMultiRespColumnList" use-cache="true"/>
+                    <iterate entry-name="surveyMultiRespColumn" list-name="surveyMultiRespColumnList">
+                        <set field="currentFieldName" value="${surveyQuestionAndAppl.surveyQuestionId}_${surveyMultiRespColumn.surveyMultiRespColId}"/>
+                        <call-simple-method method-name="processSurveyResponseInline"/>
+                    </iterate>
+                <else>
+                    <set field="currentFieldName" value="${surveyQuestionAndAppl.surveyQuestionId}_${surveyQuestionAndAppl.surveyMultiRespColId}"/>
                     <call-simple-method method-name="processSurveyResponseInline"/>
-                </iterate>
-                
+                </else>
+                </if-empty>
             <else>
                 <set field="currentFieldName" value="${surveyQuestionAndAppl.surveyQuestionId}"/>
                 <call-simple-method method-name="processSurveyResponseInline"/>
