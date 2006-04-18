@@ -57,7 +57,7 @@
                   <td><div class="tabletext"><b>${uiLabelMap.Party}</b>:</div></td>
                   <td>
                     <div class="tabletext">
-                      <a href="${customerDetailLink}${partyId}${externalKeyParam?if_exists}" target="partymgr" class="buttontext">${partyId}</a>
+                      <a href="${customerDetailLink}${partyId}&${externalKeyParam?if_exists}" target="partymgr" class="buttontext">${partyId}</a>
                       <#if partyMap.person?exists>
                         ${partyMap.person.firstName?if_exists}&nbsp;${partyMap.person.lastName?if_exists}
                       </#if>
