@@ -51,6 +51,8 @@
       <#assign currentSurveyMultiResp = surveyQuestionAndAppl.getRelatedOneCache("SurveyMultiResp")?if_exists/>
       <#if currentSurveyMultiResp?has_content>
         <#assign currentSurveyMultiRespColumns = currentSurveyMultiResp.getRelated("SurveyMultiRespColumn")/>
+      <#else/>
+        <#assign currentSurveyMultiRespColumns = []/>
       </#if>
       <form method="post" action="<@ofbizUrl>updateSurveyQuestionAppl</@ofbizUrl>">
         <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}">

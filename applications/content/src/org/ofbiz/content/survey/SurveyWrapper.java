@@ -35,12 +35,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -131,6 +134,22 @@ public class SurveyWrapper {
         if (responseId != null && canUpdate()) {
             currentAnswers = this.getResponseAnswers(responseId);
         }
+        
+        Map sqaaWithColIdListByMultiRespId = FastMap.newInstance();
+        Iterator surveyQuestionAndApplIter = surveyQuestionAndAppls.iterator();
+        while (surveyQuestionAndApplIter.hasNext()) {
+            GenericValue surveyQuestionAndAppl = (GenericValue) surveyQuestionAndApplIter.next();
+            String surveyMultiRespColId = surveyQuestionAndAppl.getString("surveyMultiRespColId");
+            if (UtilValidate.isNotEmpty(surveyMultiRespColId)) {
+                String surveyMultiRespId = surveyQuestionAndAppl.getString("surveyMultiRespId");
+                List surveyQuestionAndApplList = (List) sqaaWithColIdListByMultiRespId.get(surveyMultiRespId);
+                if (surveyQuestionAndApplList == null) {
+                    surveyQuestionAndApplList = FastList.newInstance();
+                    sqaaWithColIdListByMultiRespId.put(surveyMultiRespId, surveyQuestionAndApplList);
+                }
+                surveyQuestionAndApplList.add(surveyQuestionAndAppl);
+            }
+        }
 
         Map templateContext = FastMap.newInstance();
         FreeMarkerWorker.addAllOfbizTransforms(templateContext);
@@ -138,6 +157,8 @@ public class SurveyWrapper {
         templateContext.put("survey", survey);
         templateContext.put("surveyResults", results);
         templateContext.put("surveyQuestionAndAppls", surveyQuestionAndAppls);
+        templateContext.put("sqaaWithColIdListByMultiRespId", sqaaWithColIdListByMultiRespId);
+        templateContext.put("alreadyShownSqaaPkWithColId", FastSet.newInstance());
         templateContext.put("surveyAnswers", currentAnswers);
         templateContext.put("surveyResponseId", responseId);
         templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));
@@ -230,7 +251,7 @@ public class SurveyWrapper {
 
         try {
             Map fields = UtilMisc.toMap("surveyId", surveyId);
-            List order = UtilMisc.toList("sequenceNum");
+            List order = UtilMisc.toList("sequenceNum", "surveyMultiRespColId");
             questions = delegator.findByAnd("SurveyQuestionAndAppl", fields, order);
             if (questions != null) {
                 questions = EntityUtil.filterByDate(questions);

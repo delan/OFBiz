@@ -79,7 +79,7 @@
       <#assign content = answer.getRelatedOne("Content")>
       <a href="/content/control/img?imgId=${content.dataResourceId}" class="buttontext">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName?if_exists}&nbsp;&nbsp;&nbsp;
     </#if>
-    <input type="file" size="15" name="${questionFieldName}">
+    <input type="file" size="15" name="${questionFieldName}" class="inputBox"/>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION"/>
     <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", sequenceSort)?if_exists/>
     <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")/>
@@ -130,6 +130,7 @@
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <#assign lastSurveyMultiRespId = ""/>
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
+   <#if !alreadyShownSqaaPkWithColId.contains(surveyQuestionAndAppl.getPrimaryKey())>
     <#-- Get and setup MultiResp info for this question -->
     <#assign openMultiRespHeader = false/>
     <#assign closeMultiRespHeader = false/>
@@ -163,11 +164,11 @@
           <table width="100%" border="1" cellpadding="1" cellspacing="0">
             <tr>
               <td align="left">
-                <div class="tableheadtext">${surveyMultiResp.multiRespTitle?if_exists}</div>
+                <div class="tableheadtext">${surveyMultiResp.multiRespTitle?default("&nbsp;")}</div>
               </td>
               <#list surveyMultiRespColumnList as surveyMultiRespColumn>
                 <td align="center">
-                  <div class="tableheadtext">${surveyMultiRespColumn.columnTitle?if_exists}</div>
+                  <div class="tableheadtext">${surveyMultiRespColumn.columnTitle?default("&nbsp;")}</div>
                 </td>
               </#list>
               <td><div class="tableheadtext">Required?</div></td><#-- placeholder for required/optional column -->
@@ -175,13 +176,27 @@
     </#if>
   
   <#if surveyMultiResp?has_content>
+    <#assign sqaaWithColIdList = sqaaWithColIdListByMultiRespId[surveyMultiResp.surveyMultiRespId]/>
     <tr>
       <td align="left">
-          <@renderSurveyQuestionText surveyQuestionAndAppl=surveyQuestionAndAppl/>
+        <@renderSurveyQuestionText surveyQuestionAndAppl=surveyQuestionAndAppl/>
       </td>
       <#list surveyMultiRespColumnList as surveyMultiRespColumn>
         <td align="center">
-          <#assign questionFieldName = "answers_" + surveyQuestionAndAppl.surveyQuestionId + "_" + surveyMultiRespColumn.surveyMultiRespColId/>
+          <#-- 
+            if there is a surveyMultiRespColId on the surveyQuestionAndAppl use the corresponding surveyQuestionId; 
+            these should be in the same order as the surveyQuestionAndAppls List, so just see if it matches the first in the list 
+          -->
+          <#if sqaaWithColIdList?has_content><#assign nextSqaaWithColId = sqaaWithColIdList?first/><#else/><#assign nextSqaaWithColId = []></#if>
+          <#if surveyQuestionAndAppl.surveyMultiRespColId?has_content && 
+              nextSqaaWithColId?has_content && 
+              nextSqaaWithColId.surveyMultiRespColId = surveyMultiRespColumn.surveyMultiRespColId>
+            <#assign dummySqaaWithColId = Static["org.ofbiz.base.util.UtilMisc"].removeFirst(sqaaWithColIdList)/>
+            <#assign changed = alreadyShownSqaaPkWithColId.add(nextSqaaWithColId.getPrimaryKey())/>
+            <#assign questionFieldName = "answers_" + nextSqaaWithColId.surveyQuestionId + "_" + surveyMultiRespColumn.surveyMultiRespColId/>
+          <#else/>
+            <#assign questionFieldName = "answers_" + surveyQuestionAndAppl.surveyQuestionId + "_" + surveyMultiRespColumn.surveyMultiRespColId/>
+          </#if>
           <@renderSurveyQuestionInput surveyQuestionAndAppl=surveyQuestionAndAppl questionFieldName=questionFieldName/>
         </td>
       </#list>
@@ -225,9 +240,9 @@
         <td width="20%">&nbsp;</td>
       </#if>
     </#if>
-    
     </tr>
   </#if>
+   </#if>
   </#list>
   <tr>
     <td>&nbsp;</td>
