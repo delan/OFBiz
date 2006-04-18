@@ -1188,6 +1188,7 @@ public class ProductionRunServices {
             autoCreateLot = new Boolean(false);
         }
        
+        List inventoryItemIds = new ArrayList();
         // The production run is loaded
         ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         // The last task is loaded
@@ -1283,6 +1284,7 @@ public class ProductionRunServices {
                     serviceContext.put("userLogin", userLogin);
                     Map resultService = dispatcher.runSync("createInventoryItem", serviceContext);
                     String inventoryItemId = (String)resultService.get("inventoryItemId");
+                    inventoryItemIds.add(inventoryItemId);
                     GenericValue inventoryProduced = delegator.makeValue("WorkEffortInventoryProduced", UtilMisc.toMap("workEffortId", productionRunId , "inventoryItemId", inventoryItemId));
                     inventoryProduced.create();
                     serviceContext.clear();
@@ -1315,6 +1317,7 @@ public class ProductionRunServices {
                 serviceContext.put("userLogin", userLogin);
                 Map resultService = dispatcher.runSync("createInventoryItem", serviceContext);
                 String inventoryItemId = (String)resultService.get("inventoryItemId");
+                inventoryItemIds.add(inventoryItemId);
                 GenericValue inventoryProduced = delegator.makeValue("WorkEffortInventoryProduced", UtilMisc.toMap("workEffortId", productionRunId , "inventoryItemId", inventoryItemId));
                 inventoryProduced.create();
                 serviceContext.clear();
@@ -1354,6 +1357,7 @@ public class ProductionRunServices {
             }
         }
         result.put("quantity", quantity);
+        result.put("inventoryItemIds", inventoryItemIds);
         return result;
     }
 
