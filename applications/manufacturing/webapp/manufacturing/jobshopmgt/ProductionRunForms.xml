@@ -510,4 +510,20 @@
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${actualCompletionDate} " cache="true"/>
         </field>
     </form>
+    <form name="ProductionRunTaskCosts" type="list" 
+            target="" title="" list-name="taskCosts"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="CostComponent" default-field-type="display"/>
+        <field name="workEffortId"><hidden/></field>
+        <field name="productId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="geoId"><hidden/></field>
+        <field name="productFeatureId"><hidden/></field>
+        <field name="costComponentTypeId">
+            <display-entity entity-name="CostComponentType"/>
+        </field>
+        <field name="costComponentCalcId">
+            <display-entity entity-name="CostComponentCalc"/>
+        </field>
+    </form>
 </forms>

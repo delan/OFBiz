@@ -33,6 +33,7 @@
         <a href="<@ofbizUrl>EditProductionRun?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.edit?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditProductionRun}</a>
         <#else>
         <a href="<@ofbizUrl>ProductionRunDeclaration?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.declaration?default(unselectedClassName)}">${uiLabelMap.ManufacturingProductionRunDeclaration}</a>
+        <a href="<@ofbizUrl>ProductionRunCosts?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.costs?default(unselectedClassName)}">${uiLabelMap.ManufacturingActualCosts}</a>
         </#if>
         <a href="<@ofbizUrl>ProductionRunAssocs?productionRunId=${productionRunId}</@ofbizUrl>" class="${selectedClassMap.assocs?default(unselectedClassName)}">${uiLabelMap.ManufacturingProductionRunAssocs}</a>
     </#if>

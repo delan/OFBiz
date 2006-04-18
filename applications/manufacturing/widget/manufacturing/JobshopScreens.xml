@@ -159,6 +159,34 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="ProductionRunCosts">
+        <section>
+            <actions>
+                <set field="title" value="Production Run Actual Costs"/>
+                <set field="titleProperty" value="ManufacturingProductionRunCosts"/>
+                <set field="tabButtonItem" value="costs"/>
+                <set field="headerItem" value="jobshop"/>
+
+                <set field="productionRunId" from-field="parameters.productionRunId"/>
+                <entity-one entity-name="WorkEffort" value-name="productionRun">
+                    <field-map field-name="workEffortId" env-name="productionRunId"/>
+                </entity-one>
+                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/ProductionRunCosts.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonJobshopDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">${uiLabelMap.ManufacturingActualCosts}</label>
+                        </container>
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunCosts.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="FindProductionRun">
         <section>
             <actions>
