@@ -296,5 +296,17 @@
         <auto-attributes include="pk" mode="IN" optional="false"/> 
         <attribute name="ownerPartyId" type="String" mode="OUT" optional="false"/> 
     </service>
-
+    <!-- Miscellaneous Cost and Ledger-related services -->
+    <service name="createWorkEffortCostCalc" default-entity-name="WorkEffortCostCalc" engine="simple" 
+        location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createWorkEffortCostCalc" auth="true"> 
+        <description>Create a WorkEffortCostCalc entry</description> 
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="removeWorkEffortCostCalc" default-entity-name="WorkEffortCostCalc" engine="simple" 
+        location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="removeWorkEffortCostCalc" auth="true"> 
+        <description>Remove a WorkEffortCostCalc entry</description> 
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>

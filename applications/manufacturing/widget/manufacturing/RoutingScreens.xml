@@ -190,6 +190,36 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="EditRoutingTaskCosts">
+        <section>
+            <actions>
+                <set field="title" value="Edit Routing Task Costs"/>
+                <set field="titleProperty" value="PageTitleEditRoutingTaskCosts"/>
+                <set field="headerItem" value="routingTask"/>
+                <set field="tabButtonItem" value="editRoutingTaskCosts"/>
+                
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <entity-one entity-name="WorkEffort" value-name="routingTask"/>
+                <entity-and entity-name="WorkEffortCostCalc" list-name="allCosts">
+                    <field-map field-name="workEffortId" env-name="workEffortId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRoutingTaskDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head2">${uiLabelMap.ManufacturingRoutingTaskCosts}</label>
+                        </container>
+                        <include-form name="ListRoutingTaskCosts" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
+                        <container>
+                            <label style="head2">${uiLabelMap.CommonAdd}</label>
+                        </container>
+                        <include-form name="AddRoutingTaskCost" location="component://manufacturing/webapp/manufacturing/routing/RoutingTaskForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="ListRoutingTaskRoutings">
         <section>
             <actions>
