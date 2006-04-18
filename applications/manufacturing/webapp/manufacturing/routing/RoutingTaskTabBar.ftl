@@ -30,6 +30,7 @@
 <#if routingTask?exists>
 <div class='tabContainer'>
     <a href="<@ofbizUrl>EditRoutingTask?workEffortId=${routingTask.workEffortId}</@ofbizUrl>" class="${selectedClassMap.editRoutingTask?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRoutingTask}</a>
+    <a href="<@ofbizUrl>EditRoutingTaskCosts?workEffortId=${routingTask.workEffortId}</@ofbizUrl>" class="${selectedClassMap.editRoutingTaskCosts?default(unselectedClassName)}">${uiLabelMap.ManufacturingRoutingTaskCosts}</a>
     <a href="<@ofbizUrl>ListRoutingTaskRoutings?workEffortId=${routingTask.workEffortId}</@ofbizUrl>" class="${selectedClassMap.listRoutingTaskRoutings?default(unselectedClassName)}">${uiLabelMap.ManufacturingListRoutings}</a>
     <a href="<@ofbizUrl>ListRoutingTaskProducts?workEffortId=${routingTask.workEffortId}</@ofbizUrl>" class="${selectedClassMap.listRoutingTaskProducts?default(unselectedClassName)}">${uiLabelMap.ManufacturingListProducts}</a>
 </div>

@@ -156,6 +156,46 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="ListRoutingTaskCosts" type="list" title="" list-name="allCosts"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="WorkEffortCostCalc" default-field-type="display"/>
+        <field name="workEffortId"><hidden/></field>
+        <field name="costComponentTypeId">
+            <display-entity entity-name="CostComponentType"/>
+        </field>
+        <field name="costComponentCalcId">
+            <display-entity entity-name="CostComponentCalc"/>
+        </field>
+        <!--
+        <field name="costComponentCalcView" entry-name="costComponentCalcId" title="" widget-style="buttontext">
+            <hyperlink target="viewCostComponentCalc?costComponentCalcId=${costComponentCalcId}" description="${uiLabelMap.CommonViewFormula}" also-hidden="false"/>
+        </field>
+        -->
+        <field name="calcelWorkEffortCostCalc" title="" widget-style="buttontext">
+            <hyperlink target="removeRoutingTaskCost?costComponentCalcId=${costComponentCalcId}&amp;costComponentTypeId=${costComponentTypeId}&amp;fromDate=${fromDate}&amp;workEffortId=${workEffortId}" description="${uiLabelMap.CommonRemove}" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="AddRoutingTaskCost" type="single" target="addRoutingTaskCost" title="" 
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="WorkEffortCostCalc" default-field-type="edit"/>
+        <field name="workEffortId"><hidden/></field>
+        <field name="costComponentTypeId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="CostComponentType" description="${description}">
+                    <!--<entity-constraint name="parentTypeId" operator="equals" value=""/>-->
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="costComponentCalcId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="CostComponentCalc" description="${description}">
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
     <form name="ListRoutingTaskRoutings" type="list" 
             title="" list-name="allRoutings"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">

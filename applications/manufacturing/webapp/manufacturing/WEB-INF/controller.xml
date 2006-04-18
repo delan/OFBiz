@@ -243,6 +243,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditRoutingTask"/>
     </request-map>
+    <request-map uri="EditRoutingTaskCosts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRoutingTaskCosts"/>
+    </request-map>
     <request-map uri="ListRoutingTaskRoutings">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListRoutingTaskRoutings"/>
@@ -352,6 +356,18 @@
         <response name="success" type="view" value="EditRoutingTaskProduct"/>
         <response name="error" type="view" value="EditRoutingTaskProduct"/>
     </request-map>
+    <request-map uri="addRoutingTaskCost">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortCostCalc"/>
+        <response name="success" type="view" value="EditRoutingTaskCosts"/>
+        <response name="error" type="view" value="EditRoutingTaskCosts"/>
+    </request-map>
+    <request-map uri="removeRoutingTaskCost">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWorkEffortCostCalc"/>
+        <response name="success" type="view" value="EditRoutingTaskCosts"/>
+        <response name="error" type="view" value="EditRoutingTaskCosts"/>
+    </request-map>
     <!-- BOM request mappings -->
     <request-map uri="BomSimulation">
         <security https="true" auth="true"/>
@@ -459,6 +475,10 @@
     <request-map uri="ProductionRunDeclaration">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
+    <request-map uri="ProductionRunCosts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProductionRunCosts"/>
     </request-map>
     <request-map uri="ProductionRunAssocs">
         <security https="true" auth="true"/>
@@ -643,6 +663,7 @@
     
     <view-map name="FindRoutingTask" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#FindRoutingTask" type="screen"/>
     <view-map name="EditRoutingTask" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingTask" type="screen"/>
+    <view-map name="EditRoutingTaskCosts" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingTaskCosts" type="screen"/>
     <view-map name="ListRoutingTaskRoutings" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#ListRoutingTaskRoutings" type="screen"/>
     <view-map name="ListRoutingTaskProducts" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#ListRoutingTaskProducts" type="screen"/>
     <view-map name="EditRoutingTaskProduct" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingTaskProduct" type="screen"/>
@@ -677,6 +698,7 @@
     <view-map name="FindProductionRun" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#FindProductionRun" type="screen"/>
     <view-map name="EditProductionRun" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#EditProductionRun" type="screen"/>
     <view-map name="ProductionRunDeclaration" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#ProductionRunDeclaration" type="screen"/>
+    <view-map name="ProductionRunCosts" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#ProductionRunCosts" type="screen"/>
     <view-map name="ProductionRunAssocs" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#ProductionRunAssocs" type="screen"/>
     <view-map name="WorkWithShipmentPlans" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#WorkWithShipmentPlans" type="screen"/>
     
