@@ -120,6 +120,9 @@ public class UtilName {
     }
 
     protected int[] getFieldIndex(int field) {
+        if (name == null || name.length == 0) {
+            return null;
+        }
         switch(field) {
             case 1:
                 // prefix
