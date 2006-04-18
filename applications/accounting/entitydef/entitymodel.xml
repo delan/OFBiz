@@ -1690,6 +1690,7 @@
             package-name="org.ofbiz.accounting.costs"
             title="Cost Component Calculation Entity">
         <field name="costComponentCalcId" type="id-ne"></field>
+        <field name="description" type="description"></field>
         <field name="costGlAccountTypeId" type="id"></field>
         <field name="offsettingGlAccountTypeId" type="id"></field>
         <field name="fixedCost" type="currency-amount"></field>
