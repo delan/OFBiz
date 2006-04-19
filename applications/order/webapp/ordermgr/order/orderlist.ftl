@@ -26,7 +26,7 @@
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
         <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
-            <td><div class="tableheadtext">Status:</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.CommonStatus}:</div></td>
             <td>&nbsp;&nbsp;</td>
             <td nowrap>
                 <div class="tabletext">
@@ -46,7 +46,7 @@
             </td>
           </tr>
           <tr>
-            <td><div class="tableheadtext">Type:</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.CommonType}:</div></td>
             <td>&nbsp;&nbsp;</td>
             <td nowrap>
                 <div class="tabletext">
