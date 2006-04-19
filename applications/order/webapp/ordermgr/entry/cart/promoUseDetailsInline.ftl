@@ -36,7 +36,7 @@
                     <#-- TODO: when promo pretty print is done show promo short description here -->
                        ${uiLabelMap.EcommercePromotion} <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a>
                     <#if productPromoUseInfo.productPromoCodeId?has_content> - with Code [${productPromoUseInfo.productPromoCodeId}]</#if>
-                    <#if (productPromoUseInfo.totalDiscountAmount != 0)> - Total Value <@ofbizCurrency amount=(-1*productPromoUseInfo.totalDiscountAmount) isoCode=shoppingCart.getCurrency()/></#if>
+                    <#if (productPromoUseInfo.totalDiscountAmount != 0)> - ${uiLabelMap.CommonTotal} <@ofbizCurrency amount=(-1*productPromoUseInfo.totalDiscountAmount) isoCode=shoppingCart.getCurrency()/></#if>
                 </div>
                 <#if (productPromoUseInfo.quantityLeftInActions > 0)>
                     <div class="tabletext">- Could be used for ${productPromoUseInfo.quantityLeftInActions} more discounted item<#if (productPromoUseInfo.quantityLeftInActions > 1)>s</#if> if added to your cart.</div>
