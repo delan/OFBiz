@@ -32,17 +32,17 @@
         <auto-fields-service service-name="updateProductConfigItem"/>
         <field name="longDescription"><ignored/></field>
         <field name="imageUrl"><ignored/></field>
-        <field use-when="configItem!=null" name="configItemId" tooltip="This cannot be changed without re-creating the Config Item"><display/></field>
-        <field use-when="configItem==null&amp;&amp;configItemId!=null" name="configItemId" tooltip="Could not find Config Item with ID [${configItemId}]"><display description="" also-hidden="false"/></field>
-        <field use-when="configItem==null&amp;&amp;configItemId==null" name="configItemId"><ignored/></field>
-        <field name="configItemTypeId" title="${uiLabelMap.ProductConfigItemType}" widget-style="selectBox">
+        <field use-when="configItem!=null" name="configItemId" title="${uiLabelMap.ProductConfigItem}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductConfigItems}"><display/></field>
+        <field use-when="configItem==null&amp;&amp;configItemId!=null" name="configItemId" title="${uiLabelMap.ProductConfigItem}" tooltip="${uiLabelMap.ProductCouldNotFindProductConfigItemWithId} [${configItemId}]"><display description="" also-hidden="false"/></field>
+        <field use-when="configItem==null&amp;&amp;configItemId==null" name="configItemId" title="${uiLabelMap.ProductConfigItem}"><ignored/></field>
+        <field name="configItemTypeId" title="${uiLabelMap.ProductConfigItem} ${uiLabelMap.CommonType}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <option key="SINGLE" description="${uiLabelMap.ProductSingleChoice}"/>
                 <option key="MULTIPLE" description="${uiLabelMap.ProductMultiChoice}"/>
             </drop-down>
         </field>
        
-        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditConfigOption" type="list" 
         target="updateProductConfigOption" title="" list-name="configOptionList" list-entry-name="configOption"
@@ -62,8 +62,8 @@
         <field use-when="configOption!=null" name="configOptionId"><hidden/></field>
         <field name="configItemId"><hidden value="${configItemId}"/></field>
 
-        <field use-when="configOption!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="configOption!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="CreateProductConfigProduct" type="single"
         target="createProductConfigProduct" title="" default-map-name="productConfigProduct"
@@ -77,8 +77,8 @@
         <field use-when="productConfigProduct==null" name="productId">
             <lookup target-form-name="LookupProduct"/>
         </field>
-        <field use-when="productConfigProduct!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="productConfigProduct!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <!-- ProdConfItemContent -->

@@ -28,9 +28,9 @@
 <#if productId?exists && product?exists>
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>
-        <td><div class="tabletext"><b>Facility</b></div></td>
-        <td><div class="tabletext"><b>Location</b></div></td>
-        <td align="center"><div class="tabletext"><b>Minimum&nbsp;Stock&nbsp;&amp;&nbsp;Move&nbsp;Quantity</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductFacility}</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductLocation}</b></div></td>
+        <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductMinimumStockAndMoveQuantity}</b></div></td>
         <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
     <#list productFacilityLocations as productFacilityLocation>
@@ -69,9 +69,9 @@
                     <option value="${(facility.facilityId)?if_exists}">${(facility.facilityName)?if_exists}</option>
                 </#list>
             </select>
-            Location Seq ID:&nbsp;<input type="text" size="10" name="locationSeqId" class="inputBox"/>
-            Minimum&nbsp;Stock:&nbsp;<input type="text" size="10" name="minimumStock" class="inputBox"/>
-            Move&nbsp;Quantity:&nbsp;<input type="text" size="10" name="moveQuantity" class="inputBox"/>
+            ${uiLabelMap.ProductLocationSeqId}:&nbsp;<input type="text" size="10" name="locationSeqId" class="inputBox"/>
+            ${uiLabelMap.ProductMinimumStock}:&nbsp;<input type="text" size="10" name="minimumStock" class="inputBox"/>
+            ${uiLabelMap.ProductMoveQuantity}:&nbsp;<input type="text" size="10" name="moveQuantity" class="inputBox"/>
             <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;"/>
         </div>
     </form>

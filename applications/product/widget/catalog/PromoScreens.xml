@@ -49,7 +49,7 @@
                                         </platform-specific>
                     
                                         <container>
-                                            <label style="head1">${uiLabelMap.${labelTitleProperty}} for: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
+                                            <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
                                         </container>
                                         <container>
                                             <link target="EditProductPromo" text="[${uiLabelMap.ProductNewProductPromo}]" style="buttontext"/>

@@ -69,7 +69,7 @@
             ${uiLabelMap.ProductMinimumStock}:&nbsp;<input type="text" size="10" name="minimumStock" class="inputBox"/>
             ${uiLabelMap.ProductReorderQuantity}:&nbsp;<input type="text" size="10" name="reorderQuantity" class="inputBox"/>
             ${uiLabelMap.ProductDaysToShip}:&nbsp;<input type="text" size="10" name="daysToShip" class="inputBox"/>
-            <input type="submit" value="Add" style="font-size: x-small;"/>
+            <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;"/>
         </div>
     </form>
 </#if>    

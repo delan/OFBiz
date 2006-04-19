@@ -61,6 +61,6 @@
         <input type="text" class="inputBox" name="ATTRIBUTE_NAME" size="15"/>&nbsp;
         <input type="text" class="inputBox" name="ATTRIBUTE_VALUE" size="50"/>&nbsp;
         <input type="text" class="inputBox" name="ATTRIBUTE_TYPE" size="15"/>&nbsp;
-        <input type="submit" value="Add"/>
+        <input type="submit" value="${uiLabelMap.CommonAdd}"/>
     </form>
 </#if>

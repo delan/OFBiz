@@ -222,7 +222,7 @@
 	<hr class="sepbar"/>
 	<div class="head2">${uiLabelMap.ProductPhysicalInventoryVariances}</div>
 
-	${createPhysicalInventoryAndVarianceWrapper.renderFormString()}
+	${createPhysicalInventoryAndVarianceWrapper.renderFormString(context)}
 	<br/>
-	${viewPhysicalInventoryAndVarianceWrapper.renderFormString()}
+	${viewPhysicalInventoryAndVarianceWrapper.renderFormString(context)}
 </#if>

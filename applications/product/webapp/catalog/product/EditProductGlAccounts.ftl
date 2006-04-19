@@ -29,7 +29,7 @@
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>
         <td><div class="tableheadtext">${uiLabelMap.ProductAccountType}</div></td>
-        <td><div class="tableheadtext">${uiLabelMap.Organization}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductOrganization}</div></td>
         <td align="center"><div class="tableheadtext">${uiLabelMap.ProductGlAccount}</div></td>
         <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
@@ -86,7 +86,7 @@
                     <option value="${(glAccount.glAccountId)?if_exists}">${(glAccount.accountCode)?if_exists} ${(glAccount.accountName)?if_exists}</option>
                 </#list>
             </select><br/>
-            ${uiLabelMap.Organization} :
+            ${uiLabelMap.ProductOrganization} :
             <select class="selectBox" name="organizationPartyId">
                  <#list organizations as organization>
                      <option value="${organization.partyId?if_exists}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, organization.getString("partyId"), true)} [${organization.partyId}]</option>

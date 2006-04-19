@@ -22,9 +22,9 @@
  *@author     Johan Isacsson (johan@oddjob.se)
  *@author     Jacopo Cappellato (tiz@sastau.it)
 -->
-    <a href="<@ofbizUrl>EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="buttontext">[Product Config Item Content List]</a>
+    <a href="<@ofbizUrl>EditProductConfigItemContent?configItemId=${configItemId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductProduct} ${uiLabelMap.ProductConfigItem} ${uiLabelMap.ProductContent} ${uiLabelMap.CommonList}]</a>
     <#if contentId?has_content>
-        <a href="/content/control/gotoContent?contentId=${contentId}" class='buttontext' target='_blank'>[Content Page]</a>
+        <a href="/content/control/gotoContent?contentId=${contentId}" class='buttontext' target='_blank'>[${uiLabelMap.ProductContent} ${uiLabelMap.CommonPage}]</a>
     </#if>
     <br/>
 

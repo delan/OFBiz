@@ -61,12 +61,12 @@ function clickAll(e) {
     
     <br/>
     <div style="float: right;">
-        <div class="tabletext"><b>Add Variant Products:</b></div>
+        <div class="tabletext"><b>${uiLabelMap.ProductVariantAdd}:</b></div>
         <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="post" style="margin: 0;" name="addVariantsToVirtual">
             <input type="hidden" name="productId" value="${productId}"/>
-            <div><span class="tabletext">Variant Product IDs:</span></div>
+            <div><span class="tabletext">${uiLabelMap.ProductVariantProductIds}:</span></div>
             <div><textarea name="variantProductIdsBag" rows="6" cols="20"></textarea></div>
-            <div><input type="submit" class="smallSubmit" value="Add Variant Products"/></div>
+            <div><input type="submit" class="smallSubmit" value="${uiLabelMap.ProductVariantAdd}"/></div>
         </form>
     </div>
     

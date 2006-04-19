@@ -23,31 +23,31 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-	<form name="CreatePhysicalInventoryAndVariance" type="single" 
-		target="createPhysicalInventoryAndVariance" title=""
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="createPhysicalInventoryAndVariance"/>
-		<field name="physicalInventoryId"><ignored/></field>
-		<field name="physicalInventoryDate"><ignored/></field>
-		<field name="partyId"><ignored/></field>
-		<field name="generalComments"><ignored/></field>
-		<field name="inventoryItemId" map-name="inventoryItem"><hidden/></field>
-		<field name="varianceReasonId" title="Reason" widget-style="selectBox">
-			<drop-down>
-				<entity-options entity-name="VarianceReason" description="${description}">
-					<entity-order-by field-name="description"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		<field name="comments" title="Item Comments"/>
-		<field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
-	</form>
-	<form name="ViewPhysicalInventoryAndVariance" type="list"
-		target="" title="" list-name="physicalInventoryAndVarianceDatas"
-		default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-		<auto-fields-entity entity-name="PhysicalInventoryAndVariance" map-name="physicalInventoryAndVariance" default-field-type="display"/>
-		<field name="inventoryItemId"><hidden/></field>
-		<field name="partyId"><display description="${person.firstName} ${person.lastName} ${partyGroup.groupName} [${physicalInventoryAndVariance.partyId}]"/></field>
-		<field name="varianceReasonId"><display description="${varianceReason.description}"/></field>
-	</form>
+    <form name="CreatePhysicalInventoryAndVariance" type="single" 
+        target="createPhysicalInventoryAndVariance" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createPhysicalInventoryAndVariance"/>
+        <field name="physicalInventoryId"><ignored/></field>
+        <field name="physicalInventoryDate"><ignored/></field>
+        <field name="partyId"><ignored/></field>
+        <field name="generalComments"><ignored/></field>
+        <field name="inventoryItemId" map-name="inventoryItem"><hidden/></field>
+        <field name="varianceReasonId" title="Reason" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="VarianceReason" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="comments" title="Item Comments"/>
+        <field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ViewPhysicalInventoryAndVariance" type="list"
+        target="" title="" list-name="physicalInventoryAndVarianceDatas"
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="PhysicalInventoryAndVariance" map-name="physicalInventoryAndVariance" default-field-type="display"/>
+        <field name="inventoryItemId"><hidden/></field>
+        <field name="partyId"><display description="${person.firstName} ${person.lastName} ${partyGroup.groupName} [${physicalInventoryAndVariance.partyId}]"/></field>
+        <field name="varianceReasonId"><display description="${varianceReason.description}"/></field>
+    </form>
 </forms>

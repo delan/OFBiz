@@ -100,11 +100,11 @@
                                     </#list>
                                 </select>
                                 <input type="text" size="25" name="condValue" value="${(productPromoCond.condValue)?if_exists}" class="inputBox">
-                                Other:<input type="text" size="10" name="otherValue" value="${(productPromoCond.otherValue)?if_exists}" class="inputBox">
+                                ${uiLabelMap.CommonOther}:<input type="text" size="10" name="otherValue" value="${(productPromoCond.otherValue)?if_exists}" class="inputBox">
                                 <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </form>
                             <#-- ======================= Categories ======================== -->
-                            <div class="tableheadtext">Condition Categories:</div>
+                            <div class="tableheadtext">${uiLabelMap.ProductConditions} ${uiLabelMap.ProductCategories}:</div>
                             <#assign condProductPromoCategories = productPromoCond.getRelated("ProductPromoCategory")>
                             <#list condProductPromoCategories as condProductPromoCategory>
                                 <#assign condProductCategory = condProductPromoCategory.getRelatedOneCache("ProductCategory")>
@@ -113,7 +113,7 @@
                                     ${(condProductCategory.description)?if_exists} [${condProductPromoCategory.productCategoryId}]
                                     - ${(condApplEnumeration.description)?default(condProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${condProductPromoCategory.includeSubCategories?default("N")}
-                                    - And Group: ${condProductPromoCategory.andGroupId}
+                                    - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${condProductPromoCategory.andGroupId}
                                     <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(condProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(condProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(condProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
@@ -138,12 +138,12 @@
                                         <option value="N">N</option>
                                         <option value="Y">Y</option>
                                     </select>
-                                    And Group: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
+                                    ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
                                 </form>
                             </div>
                             <#-- ======================= Products ======================== -->
-                            <div class="tableheadtext">Condition Products:</div>
+                            <div class="tableheadtext">${uiLabelMap.ProductConditions} ${uiLabelMap.ProductProducts}:</div>
                             <#assign condProductPromoProducts = productPromoCond.getRelated("ProductPromoProduct")>
                             <#list condProductPromoProducts as condProductPromoProduct>
                                 <#assign condProduct = condProductPromoProduct.getRelatedOneCache("Product")?if_exists>
@@ -161,7 +161,7 @@
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="_NA_">
                                     <input type="hidden" name="productPromoCondSeqId" value="${productPromoCond.productPromoCondSeqId}">
-                                    Product ID: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>
+                                    ${uiLabelMap.ProductProductId}: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>
                                     <select name="productPromoApplEnumId" class="selectBox">
                                         <#list productPromoApplEnums as productPromoApplEnum>
                                             <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
@@ -195,7 +195,7 @@
                                 </#list>
                             </select>
                             <input type="text" size="25" name="condValue" class="inputBox">
-                            Other:<input type="text" size="10" name="otherValue" class="inputBox">
+                            ${uiLabelMap.CommonOther}:<input type="text" size="10" name="otherValue" class="inputBox">
                             <input type="submit" value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </form>
                     </td>
@@ -249,15 +249,15 @@
                                     <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.description)?if_exists}</option>
                                     </#list>
                                 </select> -->
-                                Quantity:&nbsp;<input type="text" size="5" name="quantity" value="${(productPromoAction.quantity)?if_exists}" class="inputBox">
-                                Amount:&nbsp;<input type="text" size="5" name="amount" value="${(productPromoAction.amount)?if_exists}" class="inputBox">
-                                Item:&nbsp;<input type="text" size="15" name="productId" value="${(productPromoAction.productId)?if_exists}" class="inputBox">
-                                Party:&nbsp;<input type="text" size="10" name="partyId" value="${(productPromoAction.partyId)?if_exists}" class="inputBox">
+                                ${uiLabelMap.ProductQuantity}:&nbsp;<input type="text" size="5" name="quantity" value="${(productPromoAction.quantity)?if_exists}" class="inputBox">
+                                ${uiLabelMap.ProductAmount}:&nbsp;<input type="text" size="5" name="amount" value="${(productPromoAction.amount)?if_exists}" class="inputBox">
+                                ${uiLabelMap.ProductItem}:&nbsp;<input type="text" size="15" name="productId" value="${(productPromoAction.productId)?if_exists}" class="inputBox">
+                                ${uiLabelMap.PartyParty}:&nbsp;<input type="text" size="10" name="partyId" value="${(productPromoAction.partyId)?if_exists}" class="inputBox">
                                 <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </form>
                             </div>
                             <#-- ======================= Categories ======================== -->
-                            <div class="tableheadtext">Action Categories:</div>
+                            <div class="tableheadtext">${uiLabelMap.ProductActions} ${uiLabelMap.ProductCategories}:</div>
                             <#assign actionProductPromoCategories = productPromoAction.getRelated("ProductPromoCategory")>
                             <#list actionProductPromoCategories as actionProductPromoCategory>
                                 <#assign actionProductCategory = actionProductPromoCategory.getRelatedOneCache("ProductCategory")>
@@ -266,7 +266,7 @@
                                     ${(actionProductCategory.description)?if_exists} [${actionProductPromoCategory.productCategoryId}]
                                     - ${(actionApplEnumeration.description)?default(actionProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${actionProductPromoCategory.includeSubCategories?default("N")}
-                                    - And Group: ${actionProductPromoCategory.andGroupId}
+                                    - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${actionProductPromoCategory.andGroupId}
                                     <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoCategory.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(actionProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
@@ -291,12 +291,12 @@
                                         <option value="N">N</option>
                                         <option value="Y">Y</option>
                                     </select>
-                                    And Group: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
+                                    ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
                                 </form>
                             </div>
                             <#-- ======================= Products ======================== -->
-                            <div class="tableheadtext">Action Products:</div>
+                            <div class="tableheadtext">${uiLabelMap.ProductActions} ${uiLabelMap.ProductProducts}:</div>
                             <#assign actionProductPromoProducts = productPromoAction.getRelated("ProductPromoProduct")>
                             <#list actionProductPromoProducts as actionProductPromoProduct>
                                 <#assign actionProduct = actionProductPromoProduct.getRelatedOneCache("Product")?if_exists>
@@ -314,7 +314,7 @@
                                     <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}">
                                     <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}">
                                     <input type="hidden" name="productPromoCondSeqId" value="_NA_">
-                                    Product ID: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>
+                                    ${uiLabelMap.ProductProductId}: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>
                                     <select name="productPromoApplEnumId" class="selectBox">
                                         <#list productPromoApplEnums as productPromoApplEnum>
                                             <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
@@ -348,11 +348,11 @@
                                 <#list orderAdjustmentTypes as orderAdjustmentType>
                                 <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.description)?if_exists}</option>
                                 </#list>
-                            </select> -->
-                            Quantity:&nbsp;<input type="text" size="5" name="quantity" class="inputBox">
-                            Amount:&nbsp;<input type="text" size="5" name="amount" class="inputBox">
-                            Item:&nbsp;<input type="text" size="15" name="productId" class="inputBox">
-                            Party:&nbsp;<input type="text" size="10" name="partyId" class="inputBox">
+                            </select> -->                                              
+                            ${uiLabelMap.ProductQuantity}:&nbsp;<input type="text" size="5" name="quantity" class="inputBox">
+                            ${uiLabelMap.ProductAmount}:&nbsp;<input type="text" size="5" name="amount" class="inputBox">
+                            ${uiLabelMap.ProductItem}:&nbsp;<input type="text" size="15" name="productId" class="inputBox">
+                            ${uiLabelMap.PartyParty}:&nbsp;<input type="text" size="10" name="partyId" class="inputBox">
                             <input type="submit" value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </form>
                         </div>
@@ -380,7 +380,7 @@
         <br/>
 
         <#-- ======================= Categories ======================== -->
-        <div class="head3">Promotion Categories:</div>
+        <div class="head3">${uiLabelMap.ProductPromotion} ${uiLabelMap.ProductCategories}:</div>
         <#list promoProductPromoCategories as promoProductPromoCategory>
             <#assign promoProductCategory = promoProductPromoCategory.getRelatedOneCache("ProductCategory")>
             <#assign promoApplEnumeration = promoProductPromoCategory.getRelatedOneCache("ApplEnumeration")>
@@ -388,7 +388,7 @@
                 ${(promoProductCategory.description)?if_exists} [${promoProductPromoCategory.productCategoryId}]
                 - ${(promoApplEnumeration.description)?default(promoProductPromoCategory.productPromoApplEnumId)}
                 - SubCats? ${promoProductPromoCategory.includeSubCategories?default("N")}
-                - And Group: ${promoProductPromoCategory.andGroupId}
+                - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${promoProductPromoCategory.andGroupId}
                 <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(promoProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(promoProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(promoProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
             </div>
@@ -413,7 +413,7 @@
                     <option value="N">N</option>
                     <option value="Y">Y</option>
                 </select>
-                And Group: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
+                ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                 <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
             </form>
         </div>
@@ -436,7 +436,7 @@
                 <input type="hidden" name="productPromoRuleId" value="_NA_">
                 <input type="hidden" name="productPromoActionSeqId" value="_NA_">
                 <input type="hidden" name="productPromoCondSeqId" value="_NA_">
-                Product ID: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>*<a href="javascript:call_fieldlookup2(document.createpromoproductform.productId,'LookupProduct');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a>
+                ${uiLabelMap.ProductProductId}: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>*<a href="javascript:call_fieldlookup2(document.createpromoproductform.productId,'LookupProduct');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a>
                 <select name="productPromoApplEnumId" class="selectBox">
                     <#list productPromoApplEnums as productPromoApplEnum>
                         <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>

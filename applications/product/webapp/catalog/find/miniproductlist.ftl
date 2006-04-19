@@ -44,7 +44,7 @@
                 <#assign product = productCategoryMember.getRelatedOneCache("Product")>
                   <div>
                     <a href='<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>' class='buttontext'>
-                      ${product.internalName?default("No Internal Name")}
+                      ${product.internalName?default("${uiLabelMap.CommonNo} ${uiLabelMap.ProductInternalName}")}
                     </a>
                     <div class='tabletext'>
                       <b>${product.productId}</b>

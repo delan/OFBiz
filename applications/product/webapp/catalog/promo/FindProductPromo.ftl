@@ -29,14 +29,14 @@
 <div class="tabletext">
     <a href="<@ofbizUrl>EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewProductPromo}]</a>
     <#if manualOnly?if_exists == "Y">
-        <a href="<@ofbizUrl>FindProductPromo?manualOnly=N</@ofbizUrl>" class="buttontext">[View Manual and Imported]</a>
+        <a href="<@ofbizUrl>FindProductPromo?manualOnly=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductPromotionManualImported}]</a>
     <#else>
-        <a href="<@ofbizUrl>FindProductPromo?manualOnly=Y</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
+        <a href="<@ofbizUrl>FindProductPromo?manualOnly=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductPromotionManual}]</a>
     </#if>
 </div>
 <div class="tabletext">
     <form method="post" action="<@ofbizUrl>EditProductPromoCode</@ofbizUrl>" style="margin: 0;">
-        Promotion Code: <input type="text" size="10" name="productPromoCodeId" class="inputBox">
+        ${uiLabelMap.ProductPromotionCode}: <input type="text" size="10" name="productPromoCodeId" class="inputBox">
         <input type="submit" value="${uiLabelMap.CommonEdit}">
     </form>
 </div>
@@ -45,8 +45,8 @@
     <tr>
         <td><div class="tabletext"><b>${uiLabelMap.ProductPromoNameId}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.ProductPromoText}</b></div></td>
-        <td><div class="tabletext"><b>Req. Code?</b></div></td>
-        <td><div class="tabletext"><b>Created</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductPromotionReqCode}?</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.CommonCreated}</b></div></td>
         <td><div class="tabletext">&nbsp;</div></td>
     </tr>
     <#list productPromos as productPromo>

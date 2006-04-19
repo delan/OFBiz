@@ -49,7 +49,7 @@
     <td><div class='tabletext'>&nbsp;${facility.squareFootage?if_exists}</div></td>
     <td><div class='tabletext'>&nbsp;${facility.description?if_exists}</div></td>
     <td>
-      <a href='<@ofbizUrl>EditFacility?facilityId=${facility.facilityId?if_exists}</@ofbizUrl>' class="buttontext">Edit</a>
+      <a href='<@ofbizUrl>EditFacility?facilityId=${facility.facilityId?if_exists}</@ofbizUrl>' class="buttontext">${uiLabelMap.CommonEdit}</a>
     </td>
   </tr>
 </#list>
