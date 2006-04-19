@@ -76,22 +76,22 @@ if (lookupFlag != null) {
     
     eventDate = request.getParameter("eventDate");
     if (eventDate != null && eventDate.length() > 8) {            
-	eventDate = eventDate.trim();
-	if (eventDate.length() < 14) eventDate = eventDate + " " + "00:00:00.000";
-	paramList = paramList + "&eventDate=" + eventDate;
+    eventDate = eventDate.trim();
+    if (eventDate.length() < 14) eventDate = eventDate + " " + "00:00:00.000";
+    paramList = paramList + "&eventDate=" + eventDate;
         andExprs.add(new EntityExpr("eventDate", EntityOperator.GREATER_THAN, eventDate));
     }
     
     if (productId != null && productId.length() > 0) {
             paramList = paramList + "&productId=" + productId;
-	    if ( productId.length() > 0)
-		andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+        if ( productId.length() > 0)
+        andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
     } 
 
     mainCond = new EntityConditionList(andExprs, EntityOperator.AND); 
     
     if ( mainCond != null) {
-	// do the lookup
+    // do the lookup
         inventoryList = delegator.findByCondition(entityName, mainCond, null, UtilMisc.toList("productId", "eventDate"));
     }
     
@@ -137,12 +137,12 @@ if (inventoryList != null && !inventoryList.isEmpty() ){
     String productTmp = new String("");
     GenericValue inventoryTmp;
     for( Iterator iter = inventoryList.iterator(); iter.hasNext(); ){
-	inventoryTmp = iter.next();
-	productId = inventoryTmp.getString("productId");
-	if( ! productId.equals( productTmp ) ){
-	    qohProduct.add( MrpServices.findProductMrpQoh(inventoryTmp.getRelatedOneCache("Product"), dispatcher) );
-	    productTmp = productId;
-	}
+    inventoryTmp = iter.next();
+    productId = inventoryTmp.getString("productId");
+    if( ! productId.equals( productTmp ) ){
+        qohProduct.add( MrpServices.findProductMrpQoh(inventoryTmp.getRelatedOneCache("Product"), dispatcher) );
+        productTmp = productId;
+    }
     }
     context.put("qohProduct", qohProduct );
 }
