@@ -223,29 +223,33 @@ under the License.
     </form>
     
     <!-- List all fixed asset idents  -->
-    <form name="ListFixedAssetIdents" type="list"  list-name="fixedAssetIdents" 
-         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-
-        <field name="fixedAssetIdentTypeId" title="${uiLabelMap.AccountingFixedAssetIdentTypeId}"><display/></field>
-        <field name="idValue" title="${uiLabelMap.AccountingFixedAssetIdentIdValue}"><display/></field>
-        <field name="Edit" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditFixedAssetIdent?fixedAssetId=${fixedAssetId}&amp;fixedAssetIdentTypeId=${fixedAssetIdentTypeId}"/>
+    <form name="ListFixedAssetIdents" type="list"  list-name="fixedAssetIdents" target="updateFixedAssetIdent"
+         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="FixedAssetIdent">
+                <condition-expr field-name="fixedAssetId" env-name="fixedAssetId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateFixedAssetIdent"/>
+        <field name="fixedAssetId"><hidden/></field>
+        <field name="fixedAssetIdentTypeId" title="${uiLabelMap.AccountingFixedAssetIdentType}" widget-style="tabletext">
+            <display-entity entity-name="FixedAssetIdentType"/>
         </field>
+        <field name="idValue" title="${uiLabelMap.AccountingFixedAssetIdentIdValue}"/>
         <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="removeFixedAssetIdent?fixedAssetId=${fixedAssetId}&amp;fixedAssetIdentTypeId=${fixedAssetIdentTypeId}"
-                description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <!-- create and update a fixed asset Idents-->
-    <form name="EditFixedAssetIdent" type="single" 
-            target="updateFixedAssetIdent" title="" default-map-name="fixedAssetIdent"
+    <!-- create a fixed asset Idents-->
+    <form name="AddFixedAssetIdent" type="single" 
+            target="createFixedAssetIdent" title="" default-map-name="fixedAssetIdent"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <alt-target use-when="fixedAssetIdent==null" target="createFixedAssetIdent"/>
-        <auto-fields-service service-name="updateFixedAssetIdent" map-name="fixedAssetIdent"/> 
+        <auto-fields-service service-name="createFixedAssetIdent" /> 
         <field name="fixedAssetId"><hidden/></field>
-        <field name="fixedAssetIdentTypeId" use-when="fixedAssetIdent!=null" title="${uiLabelMap.AccountingFixedAssetStdCostTypeId}"><display-entity entity-name="FixedAssetIdentType" /></field>
-        <field name="fixedAssetIdentTypeId" use-when="fixedAssetIdent==null" title="${uiLabelMap.AccountingFixedAssetStdCostTypeId}">
+        <field name="fixedAssetIdentTypeId" title="${uiLabelMap.AccountingFixedAssetStdCostTypeId}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="FixedAssetIdentType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -253,6 +257,6 @@ under the License.
             </drop-down>
         </field>
         <field name="idValue" title="${uiLabelMap.AccountingFixedAssetIdentIdValue}"><text size="20" maxlength="20"/></field> 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

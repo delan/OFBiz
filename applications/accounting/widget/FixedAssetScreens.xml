@@ -183,33 +183,7 @@ under the License.
     </screen>
     
     <!-- Fixed Asset Idents --> 
-    <screen name="ListFixedAssetIdents">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Fixed Asset Idents"/>
-                <set field="tabButtonItem" value="ListFixedAssetIdents"/>
-                <set field="labelTitleProperty" value="Fixed Asset Idents"/>
-
-                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
-                <set field="fixedAssetIdentTypeId" from-field="parameters.fixedAssetIdentTypeId"/>                
-                <entity-one entity-name="FixedAsset" value-name="fixedAsset" auto-field-map="true"/>                
-                <entity-condition entity-name="FixedAssetIdent" list-name="fixedAssetIdents">
-                    <condition-expr field-name="fixedAssetId" env-name="fixedAssetId"/>
-                    <order-by field-name="fixedAssetId"/>
-                    <order-by field-name="fixedAssetIdentTypeId"/>
-                </entity-condition>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <container><link target="EditFixedAssetIdent?fixedAssetId=${fixedAsset.fixedAssetId}" text="${uiLabelMap.AccountingNewFixedAssetIdents}" style="buttontext"/></container>
-                        <include-form name="ListFixedAssetIdents" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="EditFixedAssetIdent">
+    <screen name="EditFixedAssetIdents">
         <section>
             <actions>
                 <set field="titleProperty" value="Edit Fixed Asset Idents"/>
@@ -223,8 +197,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><link target="EditFixedAssetIdent?fixedAssetId=${fixedAsset.fixedAssetId}" text="${uiLabelMap.AccountingNewFixedAssetIdents}" style="buttontext"/></container>
-                        <include-form name="EditFixedAssetIdent" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="ListFixedAssetIdents" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="AddFixedAssetIdent" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
