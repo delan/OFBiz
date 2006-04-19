@@ -26,20 +26,20 @@
  *@since      2.2
 -->
   <#if activeOnly>
-    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&userEntered=${userEntered?string}&activeOnly=false</@ofbizUrl>" class="buttontext">[Active and Inactive]</a>
+    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&userEntered=${userEntered?string}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonActiveInactive}]</a>
   <#else>
-    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&userEntered=${userEntered?string}</@ofbizUrl>" class="buttontext">[Active Only]</a>
+    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&userEntered=${userEntered?string}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonActiveOnly}]</a>
   </#if>
   <#if userEntered>
-    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}&userEntered=false</@ofbizUrl>" class="buttontext">[User and Auto Entered]</a>
+    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}&userEntered=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonUserAutoEntered}]</a>
   <#else>
-    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}</@ofbizUrl>" class="buttontext">[User Entered Only]</a>
+    <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonUserEnteredOnly}]</a>
   </#if>
   <br/>
-  <div class="head3">Showing 
-    <#if activeOnly>Active Only<#else>Active/Inactive</#if>
-    and
-    <#if userEntered>User Entered Only<#else>User/Auto Entered</#if>
+  <div class="head3">${uiLabelMap.CommonShowing}
+    <#if activeOnly>${uiLabelMap.CommonActiveOnly}<#else>${uiLabelMap.CommonActiveInactive}</#if>
+    ${uiLabelMap.CommonAnd}
+    <#if userEntered>${uiLabelMap.CommonUserEnteredOnly}<#else>${uiLabelMap.CommonUserAutoEntered}</#if>
   </div>
 
     <#if productStoreId?exists && productStore?exists>
@@ -52,7 +52,7 @@
                     <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
-                        <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+                        <span class="tabletext">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
                     </#if>
                     <#if (listSize > highIndex)>
                     | <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
@@ -65,7 +65,7 @@
         
         <table border="1" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>${uiLabelMap.ProductPromoNameId}]</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductPromoNameId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
             <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -109,7 +109,7 @@
                     <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
-                        <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+                        <span class="tabletext">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
                     </#if>
                     <#if (listSize > highIndex)>
                     | <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}&userEntered=${userEntered.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
@@ -131,7 +131,7 @@
         <#list productPromos as productPromo>
             <option value="${productPromo.productPromoId?if_exists}">${productPromo.promoName?if_exists} [${productPromo.productPromoId?if_exists}]</option>
         </#list>
-        </select> <span class="tabletext">NOTE: Only user entered promos included in drop-down</span> 
+        </select> <span class="tabletext">${uiLabelMap.ProductNoteUserPromotionEntered}</span> 
         <br/>
         <input type="text" size="25" name="fromDate" class="inputBox"/>
         <a href="javascript:call_cal(document.addNewForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>

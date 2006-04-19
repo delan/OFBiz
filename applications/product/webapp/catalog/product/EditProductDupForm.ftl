@@ -32,7 +32,7 @@
             <input type="hidden" name="oldProductId" value="${productId}"/>
             <div>
                 <span class="tabletext">${uiLabelMap.ProductDuplicateRemoveSelectedWithNewId}:</span>
-                <input type="text" class="inputBox" size="20" maxlength="20" name="productId"/>&nbsp;<input type="submit" class="smallSubmit" value="Go!"/>
+                <input type="text" class="inputBox" size="20" maxlength="20" name="productId"/>&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonDuplicate}!"/>
             </div>
             <div class="tabletext">
                 <b>${uiLabelMap.CommonDuplicate}:</b>

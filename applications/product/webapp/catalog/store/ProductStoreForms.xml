@@ -31,12 +31,12 @@
 
         <auto-fields-service service-name="updateProductStore" map-name=""/>
 
-        <field use-when="productStore!=null" name="productStoreId" tooltip="This cannot be changed without re-creating the Product Store"><display/></field>
+        <field use-when="productStore!=null" name="productStoreId" title="${uiLabelMap.ProductNotModificationRecreatingProductStore}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductStore}"><display/></field>
         <field name="productStoreId"><ignored/></field>
 
-        <field name="storeName"><text size="30" maxlength="60"/></field>
-        <field name="title"><text size="30" maxlength="60"/></field>
-        <field name="subtitle"><text size="60" maxlength="250"/></field>
+        <field name="storeName" title="${uiLabelMap.ProductStoreName}"><text size="30" maxlength="60"/></field>
+        <field name="title" title="${uiLabelMap.ProductTitle}"><text size="30" maxlength="60"/></field>
+        <field name="subtitle" title="${uiLabelMap.ProductSubTitle}"><text size="60" maxlength="250"/></field>
 
         <field name="inventoryFacilityId" widget-style="selectBox">
             <drop-down allow-empty="true">

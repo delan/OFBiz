@@ -30,7 +30,7 @@
     <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacilityLocation}]</a>
     <#if facilityId?exists && locationSeqId?exists>
-        <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&locationSeqId=${locationSeqId}</@ofbizUrl>" class="buttontext">[[${uiLabelMap.ProductNewInventoryItem}]</a>
+        <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&locationSeqId=${locationSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewInventoryItem}]</a>
     </#if>
     
     <#if facilityId?exists && !(facilityLocation?exists)> 
@@ -104,7 +104,7 @@
         </tr>    
         <tr>
             <td colspan="2">&nbsp;</td>
-            <td colspan="1" align="left"><input type="submit" value="Update"></td>
+            <td colspan="1" align="left"><input type="submit" value="${uiLabelMap.CommonUpdate}"></td>
         </tr>
     </table>
     </form>
@@ -130,7 +130,7 @@
 	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)?if_exists}">
 	                    <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox">
 	                    <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox">
-	                    <INPUT type="submit" value="Update" style="font-size: x-small;">
+	                    <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
 	                </FORM>
 	            </td>
 	            <td align="center">
@@ -150,7 +150,7 @@
                 ${uiLabelMap.ProductProductId}:&nbsp;<input type="text" size="10" name="productId" class="inputBox">
                 ${uiLabelMap.ProductMinimumStock}:&nbsp;<input type="text" size="10" name="minimumStock" class="inputBox">
                 ${uiLabelMap.ProductMoveQuantity}:&nbsp;<input type="text" size="10" name="moveQuantity" class="inputBox">
-                <input type="submit" value="Add" style="font-size: x-small;">
+                <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
             </div>
         </form>
     </#if>

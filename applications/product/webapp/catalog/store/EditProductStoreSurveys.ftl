@@ -25,13 +25,13 @@
 -->
 <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
-      <td><span class="tableheadtext">Type</span></td>
-      <td><span class="tableheadtext">Name</span></td>
-      <td><span class="tableheadtext">Survey</span></td>
-      <td><span class="tableheadtext">Product</span></td>
-      <td><span class="tableheadtext">Category</span></td>
-      <td><span class="tableheadtext">FromDate</span></td>
-      <td><span class="tableheadtext">Seq #</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.CommonType}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.CommonName}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.CommonSurveys}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.ProductProduct}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.ProductCategory}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.CommonFromDate}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.CommonSequenceNum}</span></td>
       <td>&nbsp;</td>
     </tr>
 
@@ -56,7 +56,7 @@
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <table cellspacing="2" cellpadding="2">
       <tr>
-        <td><span class="tableheadtext">Type</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.CommonType}</span></td>
         <td>
           <select class="selectBox" name="surveyApplTypeId">
             <#list surveyApplTypes as type>
@@ -82,13 +82,13 @@
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Product ID</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductProductId}</span></td>
         <td>
           <input type="text" class="inputBox" size="20" name="productId">
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Category ID</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductCategoryId}</span></td>
         <td>
           <select class="selectBox" name="productCategoryId">
             <option></option>
@@ -99,14 +99,14 @@
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">FromDate</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.CommonFromDate}</span></td>
         <td>
           <input type="text" class="inputBox" size="25" name="fromDate">
           <a href="javascript:call_cal(document.addSurvey.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">ThruDate</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.CommonThruDate}</span></td>
         <td>
           <input type="text" class="inputBox" size="25" name="thruDate">
           <a href="javascript:call_cal(document.addSurvey.thruDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
@@ -125,7 +125,7 @@
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Sequence</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.CommonSequenceNum}</span></td>
         <td>
           <input type="text" class="inputBox" size="5" name="sequenceNum">
         </td>

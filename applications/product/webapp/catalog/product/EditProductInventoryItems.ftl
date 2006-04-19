@@ -27,9 +27,9 @@
 -->
 <#assign externalKeyParam = "&externalLoginKey=" + requestAttributes.externalLoginKey?if_exists>
 <#if parameters.showAllFacilities?exists>
-<a href="EditProductInventoryItems?productId=${productId}" class="buttontext">${uiLabelMap.showProductFacilities}</a>
+<a href="EditProductInventoryItems?productId=${productId}" class="buttontext">${uiLabelMap.ProductShowProductFacilities}</a>
 <#else>
-<a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="buttontext">${uiLabelMap.showAllFacilities}</a>
+<a href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" class="buttontext">${uiLabelMap.ProductShowAllFacilities}</a>
 </#if>
 <table border="1" cellpadding="2" cellspacing="0">
     <tr>

@@ -65,11 +65,11 @@
         <field name="productId" title="${uiLabelMap.CommonDescription}">
             <display-entity entity-name="Product" description="${internalName}"/>
         </field>
-        <field name="minimumStock"><display/></field>
-        <field name="reorderQuantity"><display/></field>
-        <field name="daysToShip"><display/></field>
-        <field name="totalAvailableToPromise"><display/></field>
-        <field name="totalQuantityOnHand"><display/></field>
+        <field name="minimumStock" title="${uiLabelMap.ProductMinimumStock}"><display/></field>
+        <field name="reorderQuantity" title="${uiLabelMap.ProductReorderQuantity}"><display/></field>
+        <field name="daysToShip" title="${uiLabelMap.ProductDaysToShip}"><display/></field>
+        <field name="totalAvailableToPromise" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductAtp}"><display/></field>
+        <field name="totalQuantityOnHand" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductQoh}"><display/></field>
         <field name="offsetQtyAvailable" title="${uiLabelMap.ProductQtyOffset}"><display/></field>
     </form>
 

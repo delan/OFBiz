@@ -26,7 +26,7 @@
 
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">Categories With No Parent Categories</div>
+        <div class="boxhead">${uiLabelMap.ProductCategoryWithNoParent}</div>
     </div>
     <div class="screenlet-body">
         <#list noParentCategories as category>

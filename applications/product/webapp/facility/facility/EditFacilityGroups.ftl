@@ -112,7 +112,7 @@
                     <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
-                    ${lowIndex+1} - ${highIndex} of ${listSize}
+                    ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                     </#if>
                     <#if (listSize > highIndex)>
                     | <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
@@ -131,15 +131,15 @@
         
         <div class="head2">${uiLabelMap.ProductAddFacilityGroupMember}:</div>
         <div class="tabletext">
-            Facility Group ID: 
+            ${uiLabelMap.ProductFacilityGroup} ${uiLabelMap.CommonId}: 
             <select name="facilityGroupId" size="1" class="selectBox">
                 <#list facilityGroups as facilityGroup>
                     <option value="${(facilityGroup.facilityGroupId)?if_exists}">${(facilityGroup.facilityGroupName)?if_exists}</option>
                 </#list>
             </select>
-            From Date: <input type="text" size="25" class="inputBox" name="fromDate">
+            ${uiLabelMap.CommonFromDate}: <input type="text" size="25" class="inputBox" name="fromDate">
             <a href="javascript:call_cal(document.addFacilityGroupMemberForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-            <input type="submit" value="Add">
+            <input type="submit" value="${uiLabelMap.CommonAdd}">
         </div>
         </form>
         

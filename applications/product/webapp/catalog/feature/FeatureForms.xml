@@ -133,8 +133,8 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="productFeatureType==null" target="createProductFeatureType"/>
         <auto-fields-entity entity-name="ProductFeatureType"/>
-        <field use-when="productFeatureType!=null" name="productFeatureTypeId" title=""><display/></field>
-        <field use-when="productFeatureType==null&amp;&amp;productFeatureTypeId!=null" name="productFeatureTypeId" tooltip="Could not find ProductFeatureType with ID [${productFeatureTypeId}]"><text size="20" maxlength="20"/></field>
+        <field use-when="productFeatureType!=null" name="productFeatureTypeId" title="${uiLabelMap.ProductFeatureType}"><display/></field>
+        <field use-when="productFeatureType==null&amp;&amp;productFeatureTypeId!=null" name="productFeatureTypeId" title="${uiLabelMap.ProductFeatureType}" tooltip="${uiLabelMap.ProductCouldNotFindProductFeatureType} [${productFeatureTypeId}]"><text size="20" maxlength="20"/></field>
         <field name="parentTypeId" title="${uiLabelMap.ProductParentType}" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductFeatureType" key-field-name="productFeatureTypeId" description="${description}">

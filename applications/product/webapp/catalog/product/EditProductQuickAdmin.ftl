@@ -88,7 +88,7 @@ function doPublish() {
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <tr>
                 <td colspan="2"><span class="head2">${uiLabelMap.SelectableFeatures}</span></td>
-                <td colspan="2">Type
+                <td colspan="2">${uiLabelMap.CommonType}
                   <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeatureTypeSelector">
                     <input type="hidden" name="productId" value="${product.productId?if_exists}">
                     <select name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
@@ -106,7 +106,7 @@ function doPublish() {
                 </td>
             </tr>
             <tr>
-                <td>Product ID</td>
+                <td>${uiLabelMap.ProductProductId}</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>

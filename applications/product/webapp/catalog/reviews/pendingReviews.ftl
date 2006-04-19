@@ -24,11 +24,11 @@
  *@since      3.1
 -->
 
-<div class="head1">Pending Product Reviews</div>
+<div class="head1">${uiLabelMap.ProductReviewsPendingApproval}</div>
 <br/>
 
 <#if !pendingReviews?has_content>
-  <div class="head3">No Reviews Pending Approval</div>
+  <div class="head3">${uiLabelMap.CommonNo} ${uiLabelMap.ProductReviewsPendingApproval}</div>
 </#if>
 
 <#list pendingReviews as review>
@@ -41,21 +41,21 @@
         <td colspan="2"><hr class="sepbar"></td>
       </tr>
       <tr>
-        <td><div class="tableheadtext">Posted Date:</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonPostedDate}:</div></td>
         <td><div class="tabletext">${review.postedDateTime?if_exists}</div></td>
       </tr>
       <tr>
-        <td><div class="tableheadtext">Posted By:</div>
+        <td><div class="tableheadtext">${uiLabelMap.CommonPostedBy}:</div>
         <td><div class="tabletext">${postedPerson.firstName} ${postedPerson.lastName}</div></td>
       </tr>
       <tr>
-        <td><div class="tableheadtext">Rating:</div>
+        <td><div class="tableheadtext">${uiLabelMap.ProductRating}:</div>
         <td>
           <input type="text" name="productRating" class="textBox" size="5" value="${review.productRating?if_exists?string}">
         </td>
       </tr>
       <tr>
-        <td><div class="tableheadtext">Is Anonymous:</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonIsAnonymous}:</div></td>
         <td>
           <div class="tabletext">
             <select name="postedAnonymous" class="selectBox">
@@ -68,7 +68,7 @@
         </td>
       </tr>
       <tr>
-        <td><div class="tableheadtext">Status:</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonStatus}:</div></td>
         <td>
           <div class="tabletext">
             <select name="statusId" class="selectBox">
@@ -80,14 +80,14 @@
         </td>
       </tr>
       <tr>
-        <td><div class="tableheadtext">Review:</div>
+        <td><div class="tableheadtext">${uiLabelMap.ProductReviews}:</div>
         <td>
           <textarea class="textAreaBox" name="productReview" rows="5" cols="40" wrap="hard">${review.productReview?if_exists}</textarea>
         </td>
       </tr>
       <tr>
         <td>&nbsp;</td>
-        <td><input type="submit" value="Save">
+        <td><input type="submit" value="${uiLabelMap.CommonSave}">
       </tr>
     </table>
   </form>
