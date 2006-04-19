@@ -182,7 +182,7 @@
         <field name="costComponentTypeId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="CostComponentType" description="${description}">
-                    <!--<entity-constraint name="parentTypeId" operator="equals" value=""/>-->
+                    <entity-constraint name="parentTypeId" operator="equals" env-name="null"/>
                 </entity-options>
             </drop-down>
         </field>
