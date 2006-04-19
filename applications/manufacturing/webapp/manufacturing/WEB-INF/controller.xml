@@ -368,6 +368,29 @@
         <response name="success" type="view" value="EditRoutingTaskCosts"/>
         <response name="error" type="view" value="EditRoutingTaskCosts"/>
     </request-map>
+    <!-- CostCalc mappings -->
+    <request-map uri="EditCostCalcs">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCostCalcs"/>
+    </request-map>
+    <request-map uri="createCostComponentCalc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCostComponentCalc"/>
+        <response name="success" type="view" value="EditCostCalcs"/>
+        <response name="error" type="view" value="EditCostCalcs"/>
+    </request-map>
+    <request-map uri="updateCostComponentCalc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCostComponentCalc"/>
+        <response name="success" type="view" value="EditCostCalcs"/>
+        <response name="error" type="view" value="EditCostCalcs"/>
+    </request-map>
+    <request-map uri="removeCostComponentCalc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCostComponentCalc"/>
+        <response name="success" type="view" value="EditCostCalcs"/>
+        <response name="error" type="view" value="EditCostCalcs"/>
+    </request-map>
     <!-- BOM request mappings -->
     <request-map uri="BomSimulation">
         <security https="true" auth="true"/>
@@ -684,7 +707,10 @@
     <view-map name="EditProductBom" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductBom" type="screen"/>
     <view-map name="EditProductManufacturingRules" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductManufacturingRules" type="screen"/>
     <view-map name="BomSimulation" page="component://manufacturing/widget/manufacturing/BomScreens.xml#BomSimulation" type="screen"/>
-    
+
+    <!-- Costs view mappings -->
+    <view-map name="EditCostCalcs" page="component://manufacturing/widget/manufacturing/CostScreens.xml#EditCostCalcs" type="screen"/>
+
     <!-- MRP view mappings -->
     <view-map name="ApproveRequirements" page="component://manufacturing/widget/manufacturing/RequirementScreens.xml#ApproveRequirements" type="screen"/>
     
