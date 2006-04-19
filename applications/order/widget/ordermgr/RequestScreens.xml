@@ -82,6 +82,7 @@
             </widgets>
          </section>
     </screen>
+    <screen name="ViewRequest">
         <section>
             <actions>
                 <set field="MainColumnStyle" value="rightonly"/>
@@ -98,7 +99,6 @@
                 <set field="orderBy[]" value="sequenceNum"/>
                 <get-related value-name="custRequest" relation-name="CustRequestRole" list-name="requestRoles"/>
                 <get-related value-name="custRequest" relation-name="CustRequestItem" list-name="requestItems" order-by-list-name="orderBy"/>
-
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
