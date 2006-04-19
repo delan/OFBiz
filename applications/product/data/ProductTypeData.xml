@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    <CostComponentType costComponentTypeId="MAT_COST" description="Standard Materials Cost" hasTable="N" parentTypeId=""/>
-    <CostComponentType costComponentTypeId="ROUTE_COST" description="Standard Route (fixed asset usage) Cost" hasTable="N" parentTypeId=""/>
-    <CostComponentType costComponentTypeId="LABOR_COST" description="Standard Labor Cost" hasTable="N" parentTypeId=""/>
-    <CostComponentType costComponentTypeId="OTHER_COST" description="Standard Other Cost" hasTable="N" parentTypeId=""/>
+    <CostComponentType costComponentTypeId="MAT_COST" description="Materials Cost" hasTable="N" parentTypeId=""/>
+    <CostComponentType costComponentTypeId="ROUTE_COST" description="Route (fixed asset usage) Cost" hasTable="N" parentTypeId=""/>
+    <CostComponentType costComponentTypeId="LABOR_COST" description="Labor Cost" hasTable="N" parentTypeId=""/>
+    <CostComponentType costComponentTypeId="OTHER_COST" description="Other Cost" hasTable="N" parentTypeId=""/>
     <CostComponentType costComponentTypeId="EST_STD_MAT_COST" description="Estimated Standard Materials Cost" hasTable="N" parentTypeId="MAT_COST"/>
     <CostComponentType costComponentTypeId="EST_STD_ROUTE_COST" description="Estimated Standard Route (fixed asset usage) Cost" hasTable="N" parentTypeId="ROUTE_COST"/>
     <CostComponentType costComponentTypeId="EST_STD_LABOR_COST" description="Estimated Standard Labor Cost" hasTable="N" parentTypeId="LABOR_COST"/>
