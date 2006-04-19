@@ -81,6 +81,15 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>    
+    <simple-method method-name="removeBillingAccountRole" short-description="Remove Billing Account Role">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-property resource="AccountingUiLabels" property="AccountingRemoveBillingAccountRolePermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="lookupPKMap" entity-name="BillingAccountRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="BillingAccountRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
     <simple-method method-name="createBillingAccountTerm" short-description="Create Billing Account Term">
         <check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountTermPermissionError"/></check-permission>
         <check-errors/>
