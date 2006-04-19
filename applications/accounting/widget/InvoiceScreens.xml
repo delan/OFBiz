@@ -48,6 +48,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditInvoice"/>
                 <set field="tabButtonItem" value="editInvoice"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD" />
                 <entity-one entity-name="Invoice" value-name="invoice"/>
             </actions>
             <widgets>
@@ -196,6 +197,7 @@ under the License.
                 <set field="tabButtonItem" value="listInvoiceItems"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <set field="invoiceItemSeqd" from-field="parameters.invoiceItemSeqId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD" />
                 <entity-one entity-name="Invoice" value-name="invoice"/>
                 <entity-one entity-name="InvoiceItem" value-name="invoiceItem"/>
                 <entity-and entity-name="InvoiceItem" list-name="invoiceItems">

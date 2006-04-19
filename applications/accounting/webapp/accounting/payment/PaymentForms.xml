@@ -114,7 +114,7 @@
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="amount" position="1"><text/></field>
         <field position="2" name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="true" no-current-selected-key="${defaultCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${abbreviation} - ${description}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                     <entity-order-by field-name="description"/>
