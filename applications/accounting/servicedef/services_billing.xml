@@ -70,6 +70,11 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+    <service name="removeBillingAccountRole" engine="simple" default-entity-name="BillingAccountRole"
+            location="org/ofbiz/accounting/payment/BillingServices.xml" invoke="removeBillingAccountRole">
+        <description>Remove a Billing Account Role</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     <service name="createBillingAccountTerm" engine="simple"
             location="org/ofbiz/accounting/payment/BillingServices.xml" invoke="createBillingAccountTerm">
         <description>Create a Billing Account Term</description>

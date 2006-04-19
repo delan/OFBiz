@@ -137,6 +137,12 @@
         <response name="success" type="view" value="EditBillingAccountRoles"/>
         <response name="error" type="view" value="EditBillingAccountRoles"/>
     </request-map>  
+    <request-map uri="deleteBillingAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeBillingAccountRole"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+        <response name="error" type="view" value="EditBillingAccountRoles"/>
+    </request-map>  
     
     <request-map uri="EditBillingAccountTerms">
         <security https="true" auth="true"/>
