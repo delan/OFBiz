@@ -989,35 +989,28 @@
     </request-map>
     
     <!-- FixedAssetIdent -->
-    <request-map uri="ListFixedAssetIdents">
+    <request-map uri="EditFixedAssetIdents">
     	<security https="true" auth="true"/>
-		<response name="success" type="view" value="ListFixedAssetIdents"/>
-		<response name="error" type="view" value="ListFixedAssetIdents"/>		
+    	<response name="success" type="view" value="EditFixedAssetIdents"/>
+    	<response name="error" type="view" value="EditFixedAssetIdents"/>
     </request-map>
-    
-    <request-map uri="EditFixedAssetIdent">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditFixedAssetIdent"/>
-    	<response name="error" type="view" value="EditFixedAssetIdent"/>
-    </request-map>
-
     <request-map uri="createFixedAssetIdent">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFixedAssetIdent"/>
-        <response name="success" type="view" value="ListFixedAssetIdents"/>
-        <response name="error" type="view" value="ListFixedAssetIdents"/>
+        <response name="success" type="view" value="EditFixedAssetIdents"/>
+        <response name="error" type="view" value="EditFixedAssetIdents"/>
     </request-map>
     <request-map uri="updateFixedAssetIdent">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFixedAssetIdent"/>
-        <response name="success" type="view" value="ListFixedAssetIdents"/>
-        <response name="error" type="view" value="ListFixedAssetIdents"/>
+        <response name="success" type="view" value="EditFixedAssetIdents"/>
+        <response name="error" type="view" value="EditFixedAssetIdents"/>
     </request-map>
     <request-map uri="removeFixedAssetIdent">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeFixedAssetIdent"/>
-        <response name="success" type="view" value="ListFixedAssetIdents"/>
-        <response name="error" type="view" value="ListFixedAssetIdents"/>
+        <response name="success" type="view" value="EditFixedAssetIdents"/>
+        <response name="error" type="view" value="EditFixedAssetIdents"/>
     </request-map>
     
     <!-- end of request mappings -->
@@ -1145,8 +1138,7 @@
     <view-map name="PrintCheckPDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#PrintCheckPDF" content-type="application/pdf" encoding="none"/>
     
     <!-- Fixed Asset Idents -->
-    <view-map name="ListFixedAssetIdents" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetIdents"/> 
-    <view-map name="EditFixedAssetIdent" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetIdent"/>
+    <view-map name="EditFixedAssetIdents" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetIdents"/>
     	
     <!-- end of view mappings -->
 </site-conf>
