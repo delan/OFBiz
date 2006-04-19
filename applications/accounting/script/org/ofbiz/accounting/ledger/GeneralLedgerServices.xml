@@ -410,22 +410,4 @@
         <get-related-one  relation-name="Facility" value-name="item" to-value-name="facility"/>
         <field-to-result field-name="facility.ownerPartyId" result-name="ownerPartyId"/>
    </simple-method>
-    <!-- ========= Miscellaneous Cost and Ledger-related methods ========= -->
-    <simple-method method-name="createWorkEffortCostCalc" short-description="Create a WorkEffortCostCalc entry">
-        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createWorkEffortCostCalc you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-        <make-value entity-name="WorkEffortCostCalc" value-name="newEntity"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <if-empty field-name="newEntity.fromDate">
-            <now-timestamp-to-env env-name="newEntity.fromDate"/>
-        </if-empty>
-        <create-value value-name="newEntity"/>
-    </simple-method>
-    <simple-method method-name="removeWorkEffortCostCalc" short-description="Remove a WorkEffortCostCalc entry">
-        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run removeWorkEffortCostCalc you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
-        <check-errors/>
-        <entity-one entity-name="WorkEffortCostCalc" value-name="workEffortCostCalc"/>
-        <remove-value value-name="workEffortCostCalc"/>
-    </simple-method>
 </simple-methods>
