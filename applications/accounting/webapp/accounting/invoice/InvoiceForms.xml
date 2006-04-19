@@ -116,7 +116,7 @@ under the License.
         <field position="2" name="dueDate" title="${uiLabelMap.AccountingDueDate}"><display/></field>
         <field position="1" name="paidDate" title="${uiLabelMap.AccountingPaidDate}"><display/></field>
         <field position="1" name="invoiceAmount" ><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(delegator,invoiceId)}" type="currency" currency="${invoice.currencyUomId}" also-hidden="false"/></field>
-        <field position="2" name="currencyUomId" title="${uiLabelMap.CommonCurrencyUom}"><display/></field>
+        <field position="2" name="currencyUomId" title="${uiLabelMap.CommonCurrency}"><display/></field>
     </form>
 
     <form name="invoiceItems" default-title-style="tableheadtext"
@@ -208,8 +208,8 @@ under the License.
             </drop-down>
         </field>
         <field position="2" name="billingAccountId" title="${uiLabelMap.AccountingBillingAccount}"><lookup target-form-name="LookupBillingAccount"/></field>
-        <field position="1" name="currencyUomId" title="${uiLabelMap.CommonCurrencyUom}">
-            <drop-down allow-empty="true">
+        <field position="1" name="currencyUomId" title="${uiLabelMap.CommonCurrency} default ${defaultCurrencyUomId}">
+            <drop-down allow-empty="true" no-current-selected-key="${defaultCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${abbreviation} - ${description}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
                     <entity-order-by field-name="abbreviation"/>
