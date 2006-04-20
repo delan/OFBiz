@@ -259,7 +259,7 @@
                 <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
                     <entity-constraint name="uomTypeId" operator="not-equals" value="CURRENCY_MEASURE"/>
                     <entity-order-by field-name="typeDescription"/>
-                    <entity-order-by field-name="description"/>
+                    <entity-order-by field-name="uomId"/>
                 </entity-options>
             </drop-down>
         </field>
