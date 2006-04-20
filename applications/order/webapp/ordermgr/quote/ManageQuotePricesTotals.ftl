@@ -24,9 +24,9 @@
 -->
 
 <br/>
-<div class="tableheadtext">${uiLabelMap.totCost}:</div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalCost}:</div>
 <div class="tabletext">${totalCost}</div>
-<div class="tableheadtext">${uiLabelMap.totPrice}:</div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalPrice}:</div>
 <div class="tabletext">${totalPrice}</div>
-<div class="tableheadtext">${uiLabelMap.totCostMult}:</div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalCostMult}:</div>
 <div class="tabletext">${totalCostMult}</div>

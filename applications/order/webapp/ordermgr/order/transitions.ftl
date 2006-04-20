@@ -31,7 +31,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Processing Status</div>
+              <div class="boxhead">&nbsp;${uiLabelMap.OrderProcessingStatus}</div>
             </td>         
           </tr>
         </table>
@@ -49,11 +49,11 @@
                   <table width="100%">
                     <tr>
                       <td>
-                        <div class="tabletext">This order is currently in a 'Hold' state. The activity has been suspended.</div>
-                        <div class="tabletext">&nbsp;** Note: If this state is a result of an automated activity, releasing may not have an effect until all conditions are met.</div>                     
+                        <div class="tabletext">${uiLabelMap.OrderProcessingInHold}</div>
+                        <div class="tabletext">&nbsp;${uiLabelMap.OrderProcessingInHoldNote}</div>                     
                       </td>
                       <td align="right" valign="center">                                        
-                        <a href="javascript:document.activityForm.submit()" class="buttontext">Release Hold</a>
+                        <a href="javascript:document.activityForm.submit()" class="buttontext">${uiLabelMap.OrderRelease}</a>
                       </td>
                     </tr>
                   </table>
@@ -66,10 +66,10 @@
                   <table width="100%">
                     <tr>
                       <td>
-                        <div class="tabletext">This order is currently in a 'Active' state.</div>                    
+                        <div class="tabletext">${uiLabelMap.OrderProcessingInActive}</div>                    
                       </td>
                       <td align="right" valign="center">                                        
-                        <a href="javascript:document.activityForm.submit()" class="buttontext">Hold Order</a>
+                        <a href="javascript:document.activityForm.submit()" class="buttontext">${uiLabelMap.OrderHold}</a>
                       </td>
                     </tr>
                   </table>
@@ -90,7 +90,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Processing Transitions</div>
+              <div class="boxhead">&nbsp;${uiLabelMap.OrderProcessingTransitions}</div>
             </td>         
           </tr>
         </table>
@@ -121,7 +121,7 @@
                       </select> 
                     </td>
                     <td valign="center">                                        
-                      <a href="javascript:document.transitionForm.submit()" class="buttontext">Continue</a>
+                      <a href="javascript:document.transitionForm.submit()" class="buttontext">${uiLabelMap.CommonContinue}</a>
                     </td>
                   </tr>
                 </table>

@@ -239,16 +239,16 @@ function runAction() {
                 </td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Contains BackOrders</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderContainsBackOrders}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='hasBackOrders' class='selectBox'>
                     <#if requestParameters.hasBackOrders?has_content>
-                    <option value="Y">Backorders</option>
+                    <option value="Y">${uiLabelMap.OrderBackOrders}</option>
                     <option value="Y">---</option>
                     </#if>
-                    <option value="">Show All</option>
-                    <option value="Y">Only</option>
+                    <option value="">${uiLabelMap.CommonShowAll}</option>
+                    <option value="Y">${uiLabelMap.CommonOnly}</option>
                   </select>
                 </td>
               </tr>
@@ -317,15 +317,15 @@ document.lookuporder.orderId.focus();
             <div class="boxhead" align="right">
               <#if 0 < orderHeaderList?size>
                 <#if (viewIndex > 1)>
-                  <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                  <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                 <#else>
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
                 <#if (orderHeaderListSize > 0)>
-                  <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${orderHeaderListSize}</span>
+                  <span class="submenutextinfo">${lowIndex} - ${highIndex}${uiLabelMap.CommonOf} ${orderHeaderListSize}</span>
                 </#if>
                 <#if (orderHeaderListSize > highIndex)>
-                  <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                  <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
                 <#else>
                   <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
@@ -341,10 +341,10 @@ document.lookuporder.orderId.focus();
         <input type="hidden" name="orderIdList" value=""/>
         <select name="serviceName" class="selectBox" onchange="javascript:setServiceName(this);">
            <option value="javascript:void();">&nbsp;</option>
-           <option value="<@ofbizUrl>massApproveOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Approve Orders</option>
-           <option value="<@ofbizUrl>massPickOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">Pick Orders</option>
+           <option value="<@ofbizUrl>massApproveOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">${uiLabelMap.OrderApproveOrder}</option>
+           <option value="<@ofbizUrl>massPickOrders?hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>">${uiLabelMap.OrderPickOrders}</option>
         </select>
-        <a href="javascript:runAction();" class="buttontext">Run Action</a>
+        <a href="javascript:runAction();" class="buttontext">${uiLabelMap.OrderRunAction}</a>
       </div>
 
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
@@ -439,7 +439,7 @@ document.lookuporder.orderId.focus();
                 </#if>
               </td>
               <td align='right'>
-                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
+                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${uiLabelMap.CommonView}</a>
               </td>
             </tr>
             <#-- toggle the row color -->

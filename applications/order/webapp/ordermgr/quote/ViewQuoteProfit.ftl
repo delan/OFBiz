@@ -27,12 +27,12 @@
     <div class="tabletext">${quoteCoefficient.coeffName}:&nbsp;${quoteCoefficient.coeffValue}</div>
 </#list>
 <br/>
-<div class="tableheadtext">${uiLabelMap.totCostMult}:&nbsp;${costMult}</div>
-<div class="tableheadtext">${uiLabelMap.costToPriceMult}:&nbsp;${costToPriceMult}</div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalCostMult}:&nbsp;${costMult}</div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalCostToPriceMult}:&nbsp;${costToPriceMult}</div>
 <br/>
-<div class="tableheadtext">${uiLabelMap.TotalCost}:&nbsp;<@ofbizCurrency amount=totalCost isoCode=quote.currencyUomId/></div>
-<div class="tableheadtext">${uiLabelMap.TotalAmount}:&nbsp;<@ofbizCurrency amount=totalPrice isoCode=quote.currencyUomId/></div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalCost}:&nbsp;<@ofbizCurrency amount=totalCost isoCode=quote.currencyUomId/></div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalAmount}:&nbsp;<@ofbizCurrency amount=totalPrice isoCode=quote.currencyUomId/></div>
 <br/>
-<div class="tableheadtext">${uiLabelMap.TotalProfit}:&nbsp;<@ofbizCurrency amount=totalProfit isoCode=quote.currencyUomId/></div>
-<div class="tableheadtext">${uiLabelMap.TotalPercProfit}:&nbsp;${totalPercProfit}%</div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalProfit}:&nbsp;<@ofbizCurrency amount=totalProfit isoCode=quote.currencyUomId/></div>
+<div class="tableheadtext">${uiLabelMap.CommonTotalPercProfit}:&nbsp;${totalPercProfit}%</div>
 <br/>

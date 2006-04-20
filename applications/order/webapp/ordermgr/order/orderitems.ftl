@@ -105,8 +105,8 @@
                               </td><td>&nbsp;</td></tr>
                               <tr><td align="left">${uiLabelMap.OrderRequiredForSO}</td>
                                 <td style="padding-left: 15px; text-align: left;">${requiredQuantity}</td></tr>
-                              <tr><td align="left">${uiLabelMap.ProductInInventory} QOH</td>
-                                <td style="padding-left: 15px; text-align: left;">${qohQuantity} (ATP: ${atpQuantity})</a></td></tr>
+                              <tr><td align="left">${uiLabelMap.ProductInInventory} ${uiLabelMap.ProductQoh}</td>
+                                <td style="padding-left: 15px; text-align: left;">${qohQuantity} (${uiLabelMap.ProductAtp}: ${atpQuantity})</a></td></tr>
                               <tr><td align="left">${uiLabelMap.OrderOnOrder}</td>
                                 <td style="padding-left: 15px; text-align: left;">${onOrderQuantity}</td></tr>
                               <tr><td align="left">${uiLabelMap.OrderInProduction}</td>
@@ -209,7 +209,7 @@
                               <b><i>Production Run</i>:</b>
                               <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>&nbsp;
                             </#if>
-                            From: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} to: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} Number of persons: ${workEffort.reservPersons?default("")}
+                            ${uiLabelMap.CommonFrom}: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonTo}: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.OrderNumberOfPersons}: ${workEffort.reservPersons?default("")}
                           </div>
                         </td>
                       </tr>
@@ -236,7 +236,7 @@
                     <td>&nbsp;</td>
                     <td colspan="9">
                       <div class="tabletext">
-                        <b><i>Linked to order item</i>:</b>
+                        <b><i>${uiLabelMap.OrderLinkedToOrderItem}</i>:</b>
                         <a href="/ordermgr/control/orderview?orderId=${linkedOrderId}" class="buttontext" style="font-size: xx-small;">${linkedOrderId}/${linkedOrderItemSeqId}</a>&nbsp;
                       </div>
                     </td>
@@ -252,7 +252,7 @@
                     <td>&nbsp;</td>
                     <td colspan="9">
                       <div class="tabletext">
-                        <b><i>Linked to requirement</i>:</b>
+                        <b><i>${uiLabelMap.OrderLinkedToRequirement}</i>:</b>
                         <a href="<@ofbizUrl>EditRequirement?requirementId=${linkedRequirement.requirementId}</@ofbizUrl>" class="buttontext" style="font-size: xx-small;">${linkedRequirement.requirementId}</a>&nbsp;
                       </div>
                     </td>
@@ -268,7 +268,7 @@
                   <td>&nbsp;</td>
                   <td colspan="9">
                     <div class="tabletext">
-                      <b><i>Linked to quote</i>:</b>
+                      <b><i>${uiLabelMap.OrderLinkedToQuote}</i>:</b>
                       <a href="<@ofbizUrl>EditQuoteItem?quoteId=${linkedQuote.quoteId}&quoteItemSeqId=${linkedQuote.quoteItemSeqId}</@ofbizUrl>" class="buttontext" style="font-size: xx-small;">${linkedQuote.quoteId}-${linkedQuote.quoteItemSeqId}</a>&nbsp;
                     </div>
                   </td>
@@ -293,12 +293,12 @@
                             <b>${uiLabelMap.OrderJurisdiction}:</b> ${primaryGeo.geoName} [${primaryGeo.abbreviation?if_exists}]
                             <#if orderItemAdjustment.secondaryGeoId?has_content>
                               <#assign secondaryGeo = orderItemAdjustment.getRelatedOneCache("SecondaryGeo")/>
-                              (<b>in:</b> ${secondaryGeo.geoName} [${secondaryGeo.abbreviation?if_exists}])
+                              (<b>${uiLabelMap.CommonIn}:</b> ${secondaryGeo.geoName} [${secondaryGeo.abbreviation?if_exists}])
                             </#if>
                           </#if>
-                          <#if orderItemAdjustment.sourcePercentage?exists><b>Rate:</b> ${orderItemAdjustment.sourcePercentage?string("0.######")}</#if>
-                          <#if orderItemAdjustment.customerReferenceId?has_content><b>Customer Tax ID:</b> ${orderItemAdjustment.customerReferenceId}</#if>
-                          <#if orderItemAdjustment.exemptAmount?exists><b>Exempt Amount:</b> ${orderItemAdjustment.exemptAmount}</#if>
+                          <#if orderItemAdjustment.sourcePercentage?exists><b>${uiLabelMap.OrderRate}:</b> ${orderItemAdjustment.sourcePercentage?string("0.######")}</#if>
+                          <#if orderItemAdjustment.customerReferenceId?has_content><b>${uiLabelMap.OrderCustomerTaxId}:</b> ${orderItemAdjustment.customerReferenceId}</#if>
+                          <#if orderItemAdjustment.exemptAmount?exists><b>${uiLabelMap.OrderExemptAmount}:</b> ${orderItemAdjustment.exemptAmount}</#if>
                         </#if>
                       </div>
                     </td>
@@ -321,7 +321,7 @@
                 <#list orderItemPriceInfos as orderItemPriceInfo>
                   <tr>
                     <td align="right" colspan="2">
-                      <div class="tabletext" style="font-size: xx-small;"><b><i>Price Rule</i>:</b> [${orderItemPriceInfo.productPriceRuleId?if_exists}:${orderItemPriceInfo.productPriceActionSeqId?if_exists}] ${orderItemPriceInfo.description?if_exists}</div>
+                      <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.ProductPriceRuleNameId}</i>:</b> [${orderItemPriceInfo.productPriceRuleId?if_exists}:${orderItemPriceInfo.productPriceActionSeqId?if_exists}] ${orderItemPriceInfo.description?if_exists}</div>
                     </td>
                     <td>&nbsp;</td>
                     <td align="right">
@@ -342,7 +342,7 @@
                   <tr>
                     <td align="right" colspan="2">
                       <div class="tabletext" style="font-size: xx-small;">
-                        <b><i>Survey</i>:</b>
+                        <b><i>${uiLabelMap.CommonSurveys}</i>:</b>
                           <a href="/content/control/ViewSurveyResponse?surveyResponseId=${survey.surveyResponseId}&surveyId=${survey.surveyId}<#if survey.partyId?exists>&partyId=${survey.partyId}</#if>&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
                       </div>
                     </td>
@@ -410,7 +410,7 @@
                     </td>
                     <td class="tabletext">
                       <#if (orderItemShipGrpInvRes.quantityNotAvailable?has_content && orderItemShipGrpInvRes.quantityNotAvailable > 0)>
-                        <span style="color: red;">[${orderItemShipGrpInvRes.quantityNotAvailable?string.number}&nbsp;Backordered]</span>
+                        <span style="color: red;">[${orderItemShipGrpInvRes.quantityNotAvailable?string.number}&nbsp;${uiLabelMap.OrderBackOrdered}]</span>
                       </#if>
                       &nbsp;
                     </td>
@@ -426,7 +426,7 @@
                 <#list orderShipments as orderShipment>
                   <tr>
                     <td align="right" colspan="2">
-                      <div class="tabletext" style="font-size: xx-small;"><b><i>Planned in Shipment</i>: </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}</div>
+                      <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.OrderPlannedInShipment}</i>: </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}</div>
                     </td>
                     <td align="center">
                       <div class="tabletext" style="font-size: xx-small;">${orderShipment.quantity?string.number}&nbsp;</div>
@@ -451,7 +451,7 @@
                           <b><i>${uiLabelMap.OrderIssuedToShipmentItem}</i>:</b>
                           <a target="facility" href="/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId?if_exists}
                         <#else>
-                          <b><i>Issued Without a Shipment (Immediate, Physical Store)</i></b>
+                          <b><i>${uiLabelMap.OrderIssuedWithoutShipment}</i></b>
                         </#if>
                       </div>
                     </td>
