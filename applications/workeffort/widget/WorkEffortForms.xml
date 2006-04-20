@@ -69,7 +69,7 @@
                 <option key="6"/><option key="7"/><option key="8"/><option key="9" description="9 (Low)"/>
             </drop-down>
         </field>
-        <field name="scopeEnumId" title="Scope" position="2">
+        <field name="scopeEnumId" position="2">
             <drop-down no-current-selected-key="WES_PRIVATE">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
                     <entity-constraint name="enumTypeId" value="WORK_EFF_SCOPE"/>
@@ -111,7 +111,7 @@
         
         <field use-when="workEffort==null" name="quickAssignPartyId"><lookup target-form-name="LookupPartyName" default-value="${userLogin.partyId}"/></field>
         <field use-when="workEffort==null" name="requirementId"><lookup target-form-name="LookupRequirement"/></field>
-        <field name="communicationEventId" title="Quick Add Comm. Event Id" map-name="context"><lookup target-form-name="LookupCommunicationEvent"/></field><!-- TODO: need to implement this -->
+        <field name="communicationEventId" map-name="context"><lookup target-form-name="LookupCommunicationEvent"/></field><!-- TODO: need to implement this -->
         
         <field name="revisionNumber" use-when="workEffort!=null" widget-style="tabletext"><display/></field>
 
@@ -383,8 +383,8 @@
             </drop-down>
         </field>
         
-        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} From"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} To"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} ${uiLabelMap.CommonFrom}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} ${uiLabelMap.CommonTo}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="statusId" use-when="communicationEvent==null" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
             <drop-down>
                 <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
@@ -475,10 +475,10 @@
         <field name="communicationEventId">
             <hyperlink description="${communicationEventId}" target="EditWorkEffortCommEvent?communicationEventId=${communicationEventId}&amp;DONE_PAGE=${donePage}" target-type="intra-app"/>
         </field>
-        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} From">
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonFrom*">
             <display-entity description="${firstName} ${lastName} ${groupName} [${partyId}]" entity-name="PartyNameView" key-field-name="partyId"/>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} To">
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonTo}">
             <display-entity description="${firstName} ${lastName} ${groupName} [${partyId}]" entity-name="PartyNameView" key-field-name="partyId"/>
         </field>
         <field name="statusId">
@@ -505,15 +505,15 @@
                 <field-map field-name="partyId"/>
             </entity-and>
         </actions>
-        <field name="contactMechId" title="Contact Mech Id" widget-style="buttontext">
+        <field name="contactMechId" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contactMechId}" target="javascript:set_value('${contactMechId}')" target-type="plain"/>
         </field>
         <field name="contactMechTypeId"><display-entity entity-name="ContactMechType"/></field>
     </form>
     <form name="LookupCommEvent"  default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="LookupCommEvent" title="" type="single">
         <field name="communicationEventId" title="${uiLabelMap.WorkEffortCommEventId}"><text-find/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} From"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} To"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} ${uiLabelMap.CommonFrom}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} ${uiLabelMap.CommonTo}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
@@ -551,10 +551,10 @@
         <field name="communicationEventId" title="${uiLabelMap.WorkEffortCommEventId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${communicationEventId}" target="javascript:set_value('${communicationEventId}')" target-type="plain"/>
         </field>
-        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} From">
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonFrom}">
             <display-entity description="${firstName} ${lastName} ${groupName} [${partyId}]" entity-name="PartyNameView" key-field-name="partyId"/>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} To">
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonTo}">
             <display-entity description="${firstName} ${lastName} ${groupName} [${partyId}]" entity-name="PartyNameView" key-field-name="partyId"/>
         </field>
         <field name="statusId">
