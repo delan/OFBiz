@@ -32,6 +32,11 @@
   <#assign shoppingCartOrderType = shoppingCart.getOrderType()>
   <#assign shoppingCartProductStore = shoppingCart.getProductStoreId()?default("NA")>
   <#assign shoppingCartChannelType = shoppingCart.getChannelType()?default("")>
+<#else>
+<#-- allow the order type to be set in parameter, so only the appropriate section (Sales or Purchase Order) shows up -->
+  <#if parameters.orderTypeId?has_content>
+    <#assign shoppingCartOrderType = parameters.orderTypeId>
+  </#if>
 </#if>
 <!-- Sales Order Entry -->
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
