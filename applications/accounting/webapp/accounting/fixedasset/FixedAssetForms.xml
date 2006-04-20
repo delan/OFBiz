@@ -249,7 +249,7 @@ under the License.
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createFixedAssetIdent" /> 
         <field name="fixedAssetId"><hidden/></field>
-        <field name="fixedAssetIdentTypeId" title="${uiLabelMap.AccountingFixedAssetStdCostTypeId}">
+        <field name="fixedAssetIdentTypeId" title="${uiLabelMap.AccountingFixedAssetIdentType}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="FixedAssetIdentType" description="${description}">
                     <entity-order-by field-name="description"/>
