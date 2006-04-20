@@ -44,7 +44,7 @@
         <tr>
           <td>
           
-            <!--<div class='head3'>Order Statistics</div>-->
+            <!--<div class='head3'>${uiLabelMap.OrderOrderStatisticsPage}</div>-->
             <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
               <TR>
                 <td>&nbsp;</td>

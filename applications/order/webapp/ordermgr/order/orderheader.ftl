@@ -349,9 +349,9 @@
                                 ${(transactionCode.description)?default("Unknown")}:
                                 ${gatewayResponse.transactionDate.toString()}
                                 <@ofbizCurrency amount=gatewayResponse.amount isoCode=currencyUomId/><br/>
-                                (<b>Ref:</b> ${gatewayResponse.referenceNum?if_exists}
-                                <b>AVS:</b> ${gatewayResponse.gatewayAvsResult?default("N/A")}
-                                <b>Score:</b> ${gatewayResponse.gatewayScoreResult?default("N/A")})
+                                (<b>${uiLabelMap.OrderReference}:</b> ${gatewayResponse.referenceNum?if_exists}
+                                <b>${uiLabelMap.OrderAvs}:</b> ${gatewayResponse.gatewayAvsResult?default("N/A")}
+                                <b>${uiLabelMap.OrderScore}:</b> ${gatewayResponse.gatewayScoreResult?default("N/A")})
                                 [<a href="/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}">${uiLabelMap.CommonDetails}</a>]
                                 <#if gatewayResponse_has_next><hr /></#if>
                               </#list>
@@ -374,8 +374,8 @@
                             <#if eftAccount?has_content>
                               ${eftAccount.nameOnAccount?if_exists}<br/>
                               <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br/></#if>
-                              Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
-                              Account#: ${eftAccount.accountNumber}
+                              ${uiLabelMap.AccountingBankName}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
+                              ${uiLabelMap.AccountingAccount}#: ${eftAccount.accountNumber}
                             <#else>
                               ${uiLabelMap.CoomonInformationNotAvailable}
                             </#if>
@@ -648,7 +648,7 @@
                   <#assign noShipment = "true">
                   <tr>
                     <td colspan="3" align="center">
-                      <div class="tableheadtext">Not Shipped</div>
+                      <div class="tableheadtext">${uiLabelMap.OrderNotShipped}</div>
                     </td>
                   </tr>
                 </#if>
@@ -671,9 +671,9 @@
                           <#if orderShipmentInfoSummary.shipGroupSeqId?if_exists == shipGroup.shipGroupSeqId?if_exists>
                             <div class="tabletext">
                               <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
-                              Code: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
-                              <#if orderShipmentInfoSummary.boxNumber?has_content> Box #${orderShipmentInfoSummary.boxNumber}</#if>
-                              <#if orderShipmentInfoSummary.carrierPartyId?has_content>(Carrier: ${orderShipmentInfoSummary.carrierPartyId})</#if>
+                              ${uiLabelMap.CommonIdCode}: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
+                              <#if orderShipmentInfoSummary.boxNumber?has_content> ${uiLabelMap.ProductBox} #${orderShipmentInfoSummary.boxNumber}</#if>
+                              <#if orderShipmentInfoSummary.carrierPartyId?has_content>((${uiLabelMap.ProductCarrier}: ${orderShipmentInfoSummary.carrierPartyId})</#if>
                             </div>
                           </#if>
                         </#list>
@@ -774,7 +774,7 @@
                     <td width="5">&nbsp;</td>
                     <td align="left" valign="top" width="80%">
                         <#list shipGroupShipments as shipment>
-                            <div class="tabletext">${uiLabelMap.OrderNbr}<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext">${shipment.shipmentId}</a>&nbsp;&nbsp;<a href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext">Packing Slip</a></div>
+                            <div class="tabletext">${uiLabelMap.OrderNbr}<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext">${shipment.shipmentId}</a>&nbsp;&nbsp;<a href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}&externalLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.ProductPackingSlip}</a></div>
                         </#list>
                     </td>
                   </tr>
@@ -793,7 +793,7 @@
                    <td align="left" valign="top" width="80%">
                      <div class="tabletext">
                        <#if orderHeader.orderTypeId == "SALES_ORDER">
-                         <a href="<@ofbizUrl>quickShipOrder?${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Entire Order</a>
+                         <a href="<@ofbizUrl>quickShipOrder?${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderQuickShipEntireOrder}</a>
                        <#else> <#-- PURCHASE_ORDER -->
                          <form action="/facility/control/quickShipPurchaseOrder" method="POST">
                            <input type="hidden" name="initialSelected" value="Y"/>
@@ -822,8 +822,8 @@
                    <td align="left" valign="top" width="80%">
 
                      <#if orderHeader.orderTypeId == "SALES_ORDER">
-                       <div class="tabletext"><a href="/facility/control/PackOrder?facilityId=${storeFacilityId?if_exists}&orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">Pack Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
-                       <div class="tabletext"><a href="/facility/control/createShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&statusId=SHIPMENT_INPUT&originFacilityId=${storeFacilityId}&externalLoginKey=${externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
+                       <div class="tabletext"><a href="/facility/control/PackOrder?facilityId=${storeFacilityId?if_exists}&orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.OrderPackShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a></div>
+                       <div class="tabletext"><a href="/facility/control/createShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&statusId=SHIPMENT_INPUT&originFacilityId=${storeFacilityId}&externalLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a></div>
                      <#else>
                        <form action="/facility/control/createShipment" method="GET">
                          <div class="tabletext">
@@ -837,7 +837,7 @@
                                <option value="${facility.facilityId}">${facility.facilityName}</option>
                              </#list>
                            </select>
-                           <input type="submit" class="smallSubmit" value="New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]">
+                           <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]">
                          </div>
                        </form>
                      </#if>
@@ -863,8 +863,8 @@
                          <div class="tabletext"><a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderViewEditDeliveryScheduleInfo}</a></div>
                        </#if>
                        <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
-                         <div><a href="<@ofbizUrl>quickRefundOrder?orderId=${orderId}&receiveReturn=true&returnHeaderTypeId=${returnHeaderTypeId}</@ofbizUrl>" class="buttontext">Quick-Refund Entire Order</a></div>
-                         <div><a href="<@ofbizUrl>quickreturn?orderId=${orderId}&party_id=${partyId?if_exists}&returnHeaderTypeId=${returnHeaderTypeId}</@ofbizUrl>" class="buttontext">Create Return</a></div>
+                         <div><a href="<@ofbizUrl>quickRefundOrder?orderId=${orderId}&receiveReturn=true&returnHeaderTypeId=${returnHeaderTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderQuickRefundEntireOrder}</a></div>
+                         <div><a href="<@ofbizUrl>quickreturn?orderId=${orderId}&party_id=${partyId?if_exists}&returnHeaderTypeId=${returnHeaderTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderCreateReturn}</a></div>
                        </#if>
                      </#if>
                    </td>

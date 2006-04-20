@@ -27,8 +27,8 @@
     <div class="tabletext">${quoteCoefficient.coeffName}:&nbsp;${quoteCoefficient.coeffValue}</div>
 </#list>
 <br/>
-<div class="tabletext">${uiLabelMap.totCostMult}:&nbsp;${costMult}</div>
-<div class="tabletext">${uiLabelMap.costToPriceMult}:&nbsp;${costToPriceMult}</div>
+<div class="tabletext">${uiLabelMap.CommonTotalCostMult}:&nbsp;${costMult}</div>
+<div class="tabletext">${uiLabelMap.CommonTotalCostToPriceMult}:&nbsp;${costToPriceMult}</div>
 <br/>
 
 <form action="" method="post" style="margin: 0;">

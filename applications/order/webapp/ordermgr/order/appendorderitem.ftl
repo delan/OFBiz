@@ -59,7 +59,7 @@
                   <td>
                     <input type="text" class="inputBox" size="6" name="basePrice" value="${requestParameters.price?if_exists}"/>
                     <input type="checkbox" name="overridePrice" value="Y"/>
-                    <span class="tabletext">&nbsp;Override Price</span>
+                    <span class="tabletext">&nbsp;${uiLabelMap.OrderOverridePrice}</span>
                   </td>
                 <tr>
                 <tr>
@@ -67,7 +67,7 @@
                   <td><input type="text" class="inputBox" size="6" name="quantity" value="${requestParameters.quantity?default("1")}"/></td>
                 </tr>
                 <tr>
-                  <td align="right"><div class="tableheadtext">Ship Group :</div></td>
+                  <td align="right"><div class="tableheadtext">${uiLabelMap.OrderShipGroup} :</div></td>
                   <td><input type="text" class="inputBox" size="6" name="shipGroupSeqId" value="00001"/></td>
                 </tr>
                 <tr>
