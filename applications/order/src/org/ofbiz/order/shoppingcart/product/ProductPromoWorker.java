@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -310,6 +311,8 @@ public class ProductPromoWorker {
             Debug.logError(e, "Number not formatted correctly in promotion rules, not completed...", module);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error looking up promotion data while doing promotions", module);
+        } catch (Exception e) {
+            Debug.logError(e, "Error running promotions, will ignore: " + e.toString(), module);
         }
     }
 
@@ -328,7 +331,7 @@ public class ProductPromoWorker {
         return hasOtCond;
     }
     
-    protected static void runProductPromos(List productPromoList, ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp, boolean isolatedTestRun) throws GenericEntityException {
+    protected static void runProductPromos(List productPromoList, ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp, boolean isolatedTestRun) throws GeneralException {
         String partyId = cart.getPartyId();
 
         // this is our safety net; we should never need to loop through the rules more than a certain number of times, this is that number and may have to be changed for insanely large promo sets...
@@ -390,8 +393,12 @@ public class ProductPromoWorker {
                                 }
                             }
                         } else {
-                            if (runProductPromoRules(cart, cartChanged, useLimit, false, null, null, maxUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp)) {
-                                cartChanged = true;
+                            try {
+                                if (runProductPromoRules(cart, cartChanged, useLimit, false, null, null, maxUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp)) {
+                                    cartChanged = true;
+                                }
+                            } catch (RuntimeException e) {
+                                throw new GeneralException("Error running promotion with ID [" + productPromoId + "]", e);
                             }
                         }
                     }
