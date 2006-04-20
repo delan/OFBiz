@@ -41,7 +41,7 @@
     <screen name="OrderHeaderView">
         <section>
             <actions>
-                <set field="title" value="View Order"/>
+                <set field="titleProperty" value="OrderViewOrder"/>
                 <set field="headerItem" value="findorders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderviewwebsecure.bsh"/>
@@ -86,7 +86,7 @@
     <screen name="OrderItemEdit">
         <section>
             <actions>
-                <set field="title" value="Edit Order Item"/>
+                <set field="titleProperty" value="OrderEditItems"/>
                 <set field="headerItem" value="orderlist"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderviewwebsecure.bsh"/>
@@ -111,7 +111,7 @@
     <screen name="OrderFindOrder">
         <section>
             <actions>
-                <set field="title" value="Find Order(s)"/>
+                <set field="titleProperty" value="OrderFindOrder"/>
                 <set field="headerItem" value="findorders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/findOrders.bsh"/>
             </actions>
@@ -129,7 +129,7 @@
     <screen name="OrderNewNote">
         <section>
             <actions>
-                <set field="title" value="Create New Note"/>
+                <set field="titleProperty" value="OrderAddNote"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/newnote.bsh"/>
             </actions>
             <widgets>
@@ -146,7 +146,7 @@
     <screen name="OrderDeliveryScheduleInfo">
         <section>
             <actions>
-                <set field="title" value="Purchase Order Schedule Information(s)"/>
+                <set field="titleProperty" value="OrderViewEditDeliveryScheduleInfo"/>
                 <set field="headerItem" value="OrderDeliveryScheduleInfo"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderDeliveryScheduleInfo.bsh"/>
             </actions>
@@ -164,7 +164,7 @@
     <screen name="OrderStats">
         <section>
             <actions>
-                <set field="title" value="Order Statistics"/>
+                <set field="titleProperty" value="OrderOrderStatisticsPage"/>
                 <set field="headerItem" value="stats"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderstats.bsh"/>
             </actions>
@@ -182,7 +182,7 @@
     <screen name="OrderReceivePayment">
         <section>
             <actions>
-                <set field="title" value="Receive Offline Payment"/>
+                <set field="titleProperty" value="OrderReceiveOfflinePayments"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/receivepayment.bsh"/>
             </actions>
             <widgets>
@@ -199,7 +199,7 @@
     <screen name="ViewImage">
         <section>
             <actions>
-                <set field="title" value="View order Image"/>
+                <set field="titleProperty" value="OrderViewImage"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/viewimage.bsh"/>
             </actions>
             <widgets>
@@ -210,7 +210,7 @@
     <screen name="SendOrderConfirmation">
         <section>
             <actions>
-                <set field="title" value="Send Order Confirmation"/>
+                <set field="titleProperty" value="OrderSendConfirmationEmail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/sendconfirmationemail.bsh"/>
             </actions>
             <widgets>

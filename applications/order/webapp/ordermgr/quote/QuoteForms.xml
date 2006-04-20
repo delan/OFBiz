@@ -157,7 +157,7 @@
             </drop-down>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListQuoteItems" list-name="quoteItems" target="" paginate-target="ListQuoteItems" title="" type="list"
             default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
@@ -282,9 +282,9 @@
         <alt-target use-when="quoteCoefficient==null" target="createQuoteCoefficient"/>
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
-        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoefficientName}" use-when="quoteCoefficient==null"><text/></field>
-        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoefficientName}" use-when="quoteCoefficient!=null"><display/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}" use-when="quoteCoefficient==null"><text/></field>
+        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}" use-when="quoteCoefficient!=null"><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ManageQuotePrices" default-title-style="tableheadtext"
@@ -359,12 +359,12 @@
         <field name="createdDate"><hidden/></field>
         <field name="createdByUserLogin"><hidden/></field>
 
-        <field name="quoteAdjustmentTypeId" title="${uiLabelMap.OrderOrderQuoteAdjustmentTypeId}">
+        <field name="quoteAdjustmentTypeId" title="${uiLabelMap.OrderOrderQuoteAdjustmentType}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="OrderAdjustmentType" key-field-name="orderAdjustmentTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ViewQuoteProfit" title="" type="list"
             list-name="quoteItemAndCostInfos" target="" paginate-target="ViewQuoteProfit"
@@ -393,6 +393,6 @@
         <field name="sendTo"><text/></field>
         <field name="sendCc"><text/></field>
         <field name="note"><textarea/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

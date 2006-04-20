@@ -61,7 +61,7 @@
     <screen name="FindRequest">
         <section>
             <actions>
-                <set field="title" value="Find Requests"/>
+                <set field="titleProperty" value="OrderFindRequests"/>
                 <set field="headerItem" value="request"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
@@ -121,7 +121,7 @@
     <screen name="EditRequest">
         <section>
             <actions>
-                <set field="title" value="Request"/>
+                <set field="titleProperty" value="OrderRequest"/>
                 <set field="tabButtonItem" value="request"/>
                 <set field="headerItem" value="request"/>
 
