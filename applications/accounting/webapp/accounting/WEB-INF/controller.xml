@@ -1019,6 +1019,30 @@
         <response name="error" type="view" value="EditFixedAssetIdents"/>
     </request-map>
     
+    <!-- FixedAssetRegistration -->
+    <request-map uri="EditFixedAssetRegistrations">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditFixedAssetRegistrations"/>
+    	<response name="error" type="view" value="EditFixedAssetRegistrations"/>
+    </request-map>
+    <request-map uri="createFixedAssetRegistration">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFixedAssetRegistration"/>
+        <response name="success" type="view" value="EditFixedAssetRegistrations"/>
+        <response name="error" type="view" value="EditFixedAssetRegistrations"/>
+    </request-map>
+    <request-map uri="updateFixedAssetRegistration">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAssetRegistration"/>
+        <response name="success" type="view" value="EditFixedAssetRegistrations"/>
+        <response name="error" type="view" value="EditFixedAssetRegistrations"/>
+    </request-map>
+    <request-map uri="deleteFixedAssetRegistration">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteFixedAssetRegistration"/>
+        <response name="success" type="view" value="EditFixedAssetRegistrations"/>
+        <response name="error" type="view" value="EditFixedAssetRegistrations"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -1145,6 +1169,8 @@
     
     <!-- Fixed Asset Idents -->
     <view-map name="EditFixedAssetIdents" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetIdents"/>
+    <!-- Fixed Asset Registrations -->
+    <view-map name="EditFixedAssetRegistrations" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetRegistrations"/>
     	
     <!-- end of view mappings -->
 </site-conf>
