@@ -89,7 +89,7 @@
     <screen name="FindQuote">
         <section>
             <actions>
-                <set field="title" value="Find Quotes"/>
+                <set field="titleProperty" value="OrderFindQuote"/>
                 <set field="headerItem" value="quote"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
@@ -113,8 +113,7 @@
     <screen name="ViewQuote">
         <section>
             <actions>
-                <set field="title" value="View Quote"/>
-                <set field="titleProperty" value="PageTitleViewQuote"/>
+                <set field="titleProperty" value="OrderViewQuote"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ViewQuote"/>
                 
@@ -139,8 +138,8 @@
                 <decorator-screen name="CommonQuoteDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="QuoteReport?quoteId=${quote.quoteId}" text="${uiLabelMap.CommonReport}" style="buttontext"/>
-                            <link target="EditQuoteReportMail?quoteId=${quote.quoteId}&amp;emailType=PRDS_QUO_CONFIRM" text="${uiLabelMap.SendReportByMail}" style="buttontext"/>
+                            <link target="QuoteReport?quoteId=${quote.quoteId}" text="${uiLabelMap.CommonReports}" style="buttontext"/>
+                            <link target="EditQuoteReportMail?quoteId=${quote.quoteId}&amp;emailType=PRDS_QUO_CONFIRM" text="${uiLabelMap.CommonSendReportByMail}" style="buttontext"/>
                         </container>
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/quote/CreateOrderQuote.ftl"/></html>
@@ -192,8 +191,7 @@
     <screen name="QuoteReport">
         <section>
             <actions>
-                <set field="title" value="Quote Report"/>
-                <set field="titleProperty" value="PageTitleQuoteReport"/>
+                <set field="titleProperty" value="OrderOrderQuoteReport"/>
 
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
@@ -229,8 +227,7 @@
     <screen name="EditQuote">
         <section>
             <actions>
-                <set field="title" value="Edit Quote"/>
-                <set field="titleProperty" value="PageTitleEditQuote"/>
+                <set field="titleProperty" value="OrderOrderQuoteEdit"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="EditQuote"/>
                 
@@ -249,8 +246,7 @@
     <screen name="ListQuoteRoles">
         <section>
             <actions>
-                <set field="title" value="List Quote Roles"/>
-                <set field="titleProperty" value="PageTitleListQuoteRoles"/>
+                <set field="titleProperty" value="OrderOrderQuoteListRoles"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteRoles"/>
     
@@ -275,8 +271,7 @@
     <screen name="EditQuoteRole">
         <section>
             <actions>
-                <set field="title" value="Edit Quote Role"/>
-                <set field="titleProperty" value="PageTitleEditQuoteRole"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditRoles"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteRoles"/>
                 
@@ -300,9 +295,8 @@
     </screen>
     <screen name="ListQuoteItems">
         <section>
-            <actions>
-                <set field="title" value="List Quote Items"/>
-                <set field="titleProperty" value="PageTitleListQuoteItems"/>
+            <actions>                
+                <set field="titleProperty" value="OrderOrderQuoteListItems"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteItems"/>
     
@@ -328,9 +322,8 @@
     </screen>
     <screen name="EditQuoteItem">
         <section>
-            <actions>
-                <set field="title" value="Edit Quote Item"/>
-                <set field="titleProperty" value="PageTitleEditQuoteItem"/>
+            <actions>                
+                <set field="titleProperty" value="OrderOrderQuoteEditItems"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteItems"/>
                 
@@ -355,8 +348,7 @@
     <screen name="ListQuoteAttributes">
         <section>
             <actions>
-                <set field="title" value="List Quote Attributes"/>
-                <set field="titleProperty" value="PageTitleListQuoteAttributes"/>
+                <set field="titleProperty" value="OrderOrderQuoteListAttributes"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteAttributes"/>
     
@@ -380,8 +372,7 @@
     <screen name="EditQuoteAttribute">
         <section>
             <actions>
-                <set field="title" value="Edit Quote Attribute"/>
-                <set field="titleProperty" value="PageTitleEditQuoteAttribute"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditAttributes"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteAttributes"/>
                 
@@ -406,8 +397,7 @@
     <screen name="ListQuoteCoefficients">
         <section>
             <actions>
-                <set field="title" value="List Quote Coefficients"/>
-                <set field="titleProperty" value="PageTitleListQuoteCoefficients"/>
+                <set field="titleProperty" value="OrderOrderQuoteListCoefficients"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteCoefficients"/>
     
@@ -431,8 +421,7 @@
     <screen name="EditQuoteCoefficient">
         <section>
             <actions>
-                <set field="title" value="Edit Quote Coefficient"/>
-                <set field="titleProperty" value="PageTitleEditQuoteCoefficient"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditCoefficients"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteCoefficients"/>
                 
@@ -457,8 +446,7 @@
     <screen name="ManageQuotePrices">
         <section>
             <actions>
-                <set field="title" value="Manage Quote Prices"/>
-                <set field="titleProperty" value="PageTitleManageQuotePrices"/>
+                <set field="titleProperty" value="OrderOrderQuotePrices"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ManageQuotePrices"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -495,8 +483,7 @@
     <screen name="ListQuoteAdjustments">
         <section>
             <actions>
-                <set field="title" value="List Quote Adjustments"/>
-                <set field="titleProperty" value="PageTitleListQuoteAdjustments"/>
+                <set field="titleProperty" value="OrderOrderQuoteListAdjustments"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteAdjustments"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -524,8 +511,7 @@
     <screen name="EditQuoteAdjustment">
         <section>
             <actions>
-                <set field="title" value="Edit Quote Adjustment"/>
-                <set field="titleProperty" value="PageTitleEditQuoteAdjustment"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditAdjustments"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ListQuoteAdjustments"/>
                 
@@ -550,8 +536,7 @@
     <screen name="ViewQuoteProfit">
         <section>
             <actions>
-                <set field="title" value="View Quote Profit"/>
-                <set field="titleProperty" value="PageTitleViewQuoteProfit"/>
+                <set field="titleProperty" value="OrderOrderQuoteViewProfit"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ViewQuoteProfit"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -585,8 +570,7 @@
     <screen name="EditQuoteReportMail">
         <section>
             <actions>
-                <set field="title" value="Edit Quote Report Mail"/>
-                <set field="titleProperty" value="PageTitleEditQuoteReportMail"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditReportMail"/>
                 <set field="headerItem" value="quote"/>
                 <set field="tabButtonItem" value="ViewQuote"/>
                 

@@ -28,7 +28,7 @@
     <screen name="AddQuoteWorkEffort">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleAddQuoteWorkEffort"/>
+                <set field="titleProperty" value="OrderCreateOrderQuoteWorkEfforts"/>
                 <set field="tabButtonItem" value="QuoteWorkEfforts"/>
                 <set field="labelTitleProperty" value="PageTitleAddQuoteWorkEffort"/>
 
@@ -50,7 +50,7 @@
     <screen name="EditQuoteWorkEffort">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditQuoteWorkEffort"/>
+                <set field="titleProperty" value="OrderOrderQuoteEditWorkEfforts"/>
                 <set field="tabButtonItem" value="QuoteWorkEfforts"/>
                 <set field="labelTitleProperty" value="PageTitleEditQuoteWorkEffort"/>
 
@@ -73,7 +73,7 @@
     <screen name="ListQuoteWorkEfforts">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListQuoteWorkEfforts"/>
+                <set field="titleProperty" value="OrderOrderQuoteWorkEfforts"/>
                 <set field="tabButtonItem" value="QuoteWorkEfforts"/>
                 <set field="labelTitleProperty" value="PageTitleListQuoteWorkEfforts"/>
 
@@ -83,7 +83,7 @@
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="component://order/widget/ordermgr/QuoteScreens.xml">
                     <decorator-section name="body">
-                        <container><link target="AddQuoteWorkEffort?quoteId=${quoteId}" text="[Create New Quote]" style="linktext"></link></container>
+                        <container><link target="AddQuoteWorkEffort?quoteId=${quoteId}" text="[${uiLabelMap.OrderCreateOrderQuote}]" style="linktext"></link></container>
                         <include-form name="ListQuoteWorkEfforts" location="component://order/widget/ordermgr/QuoteWorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
