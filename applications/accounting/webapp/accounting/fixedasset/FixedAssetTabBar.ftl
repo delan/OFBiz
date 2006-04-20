@@ -34,5 +34,6 @@
         <a href="<@ofbizUrl>ListFixedAssetProducts?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetProducts?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetProducts}</a>
         <a href="<@ofbizUrl>ListFixedAssetCalendar?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetCalendar?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetCalendar}</a>
         <a href="<@ofbizUrl>ListFixedAssetStdCosts?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetStdCosts?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetStdCosts}</a>
-        <a href="<@ofbizUrl>EditFixedAssetIdents?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.ListFixedAssetIdents?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetIdents}</a>        
+        <a href="<@ofbizUrl>EditFixedAssetIdents?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.EditFixedAssetIdents?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetIdents}</a>        
+        <a href="<@ofbizUrl>EditFixedAssetRegistrations?fixedAssetId=${fixedAsset.fixedAssetId}</@ofbizUrl>" class="${selectedClassMap.EditFixedAssetRegistrations?default(unselectedClassName)}">${uiLabelMap.AccountingFixedAssetRegistrations}</a>        
     </div>

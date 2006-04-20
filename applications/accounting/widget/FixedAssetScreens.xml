@@ -187,18 +187,38 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="Edit Fixed Asset Idents"/>
-                <set field="tabButtonItem" value="ListFixedAssetIdents"/>
+                <set field="tabButtonItem" value="EditFixedAssetIdents"/>
                 <set field="labelTitleProperty" value="Edit Fixed Asset Idents"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fixedAssetIdentTypeId" from-field="parameters.fixedAssetIdentTypeId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
-                <entity-one entity-name="FixedAssetIdent" value-name="fixedAssetIdent"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListFixedAssetIdents" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                         <include-form name="AddFixedAssetIdent" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Fixed Asset Registrations --> 
+    <screen name="EditFixedAssetRegistrations">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Fixed Asset Registrations"/>
+                <set field="tabButtonItem" value="EditFixedAssetRegistrations"/>
+                <set field="labelTitleProperty" value="Edit Fixed Asset Registrations"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <set field="fromDate" from-field="parameters.fromDate"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListFixedAssetRegistrations" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="AddFixedAssetRegistration" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -468,4 +468,37 @@ under the License.
         <entity-one entity-name="FixedAssetIdent" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+
+    <!-- FixedAsset Registration Create/Update/Delete"-->
+    <simple-method method-name="createFixedAssetRegistration" short-description="Create FixedAsset Registration">
+        <check-permission permission="ACCOUNTING" action="_CREATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createFixedAssetRegistration you must have the ACCOUNTING_CREATEUPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="FixedAssetRegistration"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateFixedAssetRegistration" short-description="Update an existing FixedAsset Registration">
+        <check-permission permission="ACCOUNTING" action="_UPDATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run updateFixedAssetRegistration you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <entity-one entity-name="FixedAssetRegistration" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteFixedAssetRegistration" short-description="Delete FixedAsset Registration">
+        <check-permission permission="ACCOUNTING" action="_DELETE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_DELETE"/>
+            <fail-message message="Security Error: to run deleteFixedAssetRegistration you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <entity-one entity-name="FixedAssetRegistration" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

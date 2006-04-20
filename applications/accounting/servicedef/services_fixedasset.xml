@@ -181,4 +181,23 @@ under the License.
         <description>Remove a FixedAssetIdent</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- Equipment Registration Create/Update/Delete-->
+    <service name="createFixedAssetRegistration" default-entity-name="FixedAssetRegistration" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="createFixedAssetRegistration" auth="true">
+        <description>Create a FixedAsset Registration</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateFixedAssetRegistration" default-entity-name="FixedAssetRegistration" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="updateFixedAssetRegistration" auth="true">
+        <description>Update a FixedAsset Registration</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFixedAssetRegistration" default-entity-name="FixedAssetRegistration" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="deleteFixedAssetRegistration" auth="true">
+        <description>Delete a FixedAsset Registration</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
 </services>
