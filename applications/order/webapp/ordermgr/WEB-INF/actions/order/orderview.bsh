@@ -252,6 +252,7 @@ if (orderHeader != null) {
     productionMap = new HashMap();
     for (iter = productIds.iterator(); iter.hasNext(); ) {
         productId = iter.next();
+        if (productId == null) continue;  // avoid order items without productIds, such as bulk order items
         contextInput = UtilMisc.toMap("productId", productId, "userLogin", userLogin);
         resultOutput = dispatcher.runSync("getProductManufacturingSummaryByFacility", contextInput);
         manufacturingInQuantitySummaryByFacility = resultOutput.get("summaryInByFacility");
