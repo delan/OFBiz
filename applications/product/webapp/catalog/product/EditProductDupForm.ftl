@@ -43,7 +43,7 @@
                 ${uiLabelMap.ProductAssocs}&nbsp;<input type="checkbox" class="checkBox" name="duplicateAssocs" value="Y" checked="checked"/>
                 ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" class="checkBox" name="duplicateAttributes" value="Y" checked="checked"/>
                 ${uiLabelMap.ProductFeatureAppls}&nbsp;<input type="checkbox" class="checkBox" name="duplicateFeatureAppls" value="Y" checked="checked"/>
-                ${uiLabelMap.ProductInventoryItems}&nbsp;<input type="checkbox" class="checkBox" name="duplicateInventoryItems" value="Y" checked="checked"/>
+                ${uiLabelMap.ProductInventoryItems}&nbsp;<input type="checkbox" class="checkBox" name="duplicateInventoryItems" value="Y"/>
             </div>
             <div class="tabletext">
                 <b>${uiLabelMap.CommonRemove}:</b>
