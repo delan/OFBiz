@@ -46,12 +46,12 @@
         <td><span class="tabletext">${storeSurvey.productCategoryId?default("N/A")}</span></td>
         <td><span class="tabletext">${storeSurvey.fromDate?string}</span></td>
         <td><span class="tabletext">${storeSurvey.sequenceNum?if_exists}</span></td>
-        <td><a href="<@ofbizUrl>deleteProductStoreSurveyAppl?productStoreId=${productStoreId}&productStoreSurveyId=${storeSurvey.productStoreSurveyId}</@ofbizUrl>" class="buttontext">[Delete]</a>
+        <td><a href="<@ofbizUrl>deleteProductStoreSurveyAppl?productStoreId=${productStoreId}&productStoreSurveyId=${storeSurvey.productStoreSurveyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
     </#list>
 </table>
 <br/>
 
-<div class="head2">Create Store Survey:</div>
+<div class="head2">${uiLabelMap.PageTitleEditProductStoreSurveys}:</div>
 <form name="addSurvey" action="<@ofbizUrl>createProductStoreSurveyAppl</@ofbizUrl>" method="post">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <table cellspacing="2" cellpadding="2">
@@ -66,13 +66,13 @@
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Group Name</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.CommonGroup} ${uiLabelMap.CommonName}</span></td>
         <td>
           <input type="text" class="inputBox" size="20" name="groupName">          
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Survey</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.CommonSurveys}</span></td>
         <td>
           <select class="selectBox" name="surveyId">
             <#list surveys as survey>
@@ -113,13 +113,13 @@
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Survey Template Path</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductStoreSurveyTemplatePath}</span></td>
         <td>
           <input type="text" class="inputBox" size="30" name="surveyTemplate">
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Result Template Path</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductStoreSurveyResultTemplatePath}</span></td>
         <td>
           <input type="text" class="inputBox" size="30" name="resultTemplate">
         </td>

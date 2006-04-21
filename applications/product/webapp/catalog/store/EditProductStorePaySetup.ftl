@@ -31,7 +31,7 @@
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductServiceType}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductServiceName}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.AccountingPaymentProps}</div></td>         
-      <td nowrap><div class="tableheadtext">All Prods?</div></td>         
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ApplyToAll}</div></td>         
       <td nowrap><div class="tabletext">&nbsp;</div></td>
     </tr>
     <#list paymentSettings as setting>
@@ -54,10 +54,10 @@
     <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
       <#if editSetting?has_content>
         <#assign requestName = "/storeUpdatePaySetting">
-        <#assign buttonText = "Update">
+        <#assign buttonText = "${uiLabelMap.CommonUpdate}">
       <#else>
         <#assign requestName = "/storeCreatePaySetting">
-        <#assign buttonText = "Create">
+        <#assign buttonText = "${uiLabelMap.CommonCreate}">
       </#if>
       <form method="get" name="addrate" action="<@ofbizUrl>${requestName}</@ofbizUrl>">
       <input type="hidden" name="productStoreId" value="${productStoreId}"/>
@@ -101,7 +101,7 @@
           <td><input type="text" size="30" name="paymentPropertiesPath" class="inputBox" value="${(editSetting.paymentPropertiesPath)?if_exists}"/></td>      
         </tr>               
         <tr>
-          <td><span class="tableheadtext">Apply to All Products?</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.ApplyToAll} ${uiLabelMap.ProductProducts}</span></td>
           <td>
               <select name="applyToAllProducts" class="smallSelect">
                   <#if (editSetting.applyToAllProducts)?has_content>

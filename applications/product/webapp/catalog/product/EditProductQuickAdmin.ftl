@@ -197,10 +197,10 @@ function doPublish() {
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <tr>
                 <td colspan=2><span class="head2">${uiLabelMap.ShippingDimensionsAndWeights}</span></td>
-                <td>Height</td>
-                <td>Width</td>
-                <td>Depth</td>
-                <td>Weight</td>
+                <td>${uiLabelMap.ProductProductHeight}</td>
+                <td>${uiLabelMap.ProductProductWidth}</td>
+                <td>${uiLabelMap.ProductProductDepth}</td>
+                <td>${uiLabelMap.ProductWeight}</td>
                 <td>Fl. Oz.</td>
                 <td>ML</td>
                 <td>Nt. Wt.</td>

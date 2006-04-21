@@ -59,9 +59,9 @@ function insertImageName(type,nameValue) {
         <td>${uiLabelMap.ProductPurchaseFrom}</td>
         <td>${uiLabelMap.ProductPurchaseThru}</td>
         <td>${uiLabelMap.ProductUseCount}</td>
-        <td>Use Time</td>
-        <td>Use Time UOM</td>
-        <td>Use Role</td>
+        <td>${uiLabelMap.ProductUseTime}</td>
+        <td>${uiLabelMap.ProductUseTimeUom}</td>
+        <td>${uiLabelMap.ProductUseRole}</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
     </tr>
@@ -143,7 +143,7 @@ function insertImageName(type,nameValue) {
             <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
             <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="buttontext">[.jpg]</a>
             <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="buttontext">[.gif]</a>
-            <a href="javascript:insertImageName('small','');" class="buttontext">[clear]</a>
+            <a href="javascript:insertImageName('small','');" class="buttontext">[${uiLabelMap.CommonClear}]</a>
             </div>
         </#if>
         </td>
@@ -163,7 +163,7 @@ function insertImageName(type,nameValue) {
             <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
             <a href="javascript:insertImageName('medium','${imageNameMedium}.jpg');" class="buttontext">[.jpg]</a>
             <a href="javascript:insertImageName('medium','${imageNameMedium}.gif');" class="buttontext">[.gif]</a>
-            <a href="javascript:insertImageName('medium','');" class="buttontext">[clear]</a>
+            <a href="javascript:insertImageName('medium','');" class="buttontext">[${uiLabelMap.CommonClear}]</a>
             </div>
         </#if>
         </td>
@@ -183,7 +183,7 @@ function insertImageName(type,nameValue) {
             <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
             <a href="javascript:insertImageName('large','${imageNameLarge}.jpg');" class="buttontext">[.jpg]</a>
             <a href="javascript:insertImageName('large','${imageNameLarge}.gif');" class="buttontext">[.gif]</a>
-            <a href="javascript:insertImageName('large','');" class="buttontext">[clear]</a>
+            <a href="javascript:insertImageName('large','');" class="buttontext">[${uiLabelMap.CommonClear}]</a>
             </div>
         </#if>
         </td>
@@ -203,7 +203,7 @@ function insertImageName(type,nameValue) {
             <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
             <a href="javascript:insertImageName('detail','${imageNameDetail}.jpg');" class="buttontext">[.jpg]</a>
             <a href="javascript:insertImageName('detail','${imageNameDetail}.gif');" class="buttontext">[.gif]</a>
-            <a href="javascript:insertImageName('detail','');" class="buttontext">[clear]</a>
+            <a href="javascript:insertImageName('detail','');" class="buttontext">[${uiLabelMap.CommonClear}]</a>
             </div>
         </#if>
         </td>

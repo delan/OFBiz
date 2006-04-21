@@ -34,12 +34,12 @@
     </#if>
 
 
-    <div class="head1">Pack Order<span class='head2'>&nbsp;in&nbsp;${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductPackOrder}<span class='head2'>&nbsp;in&nbsp;${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <#if shipmentId?has_content>
       <div class="tabletext">
-        View <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">Packing Slip</a> For Shipment #${shipmentId}
+        ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} #${shipmentId}
         &nbsp;
-        View <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">Barcode</a> For Shipment #${shipmentId}
+        ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} #${shipmentId}
       </div>
     </#if>
     <div>&nbsp;</div>
@@ -49,21 +49,21 @@
       <input type="hidden" name="facilityId" value="${facilityId?if_exists}">
       <table border='0' cellpadding='2' cellspacing='0'>
         <tr>
-          <td width="25%" align='right'><div class="tabletext">Order #</div></td>
+          <td width="25%" align='right'><div class="tabletext">${uiLabelMap.ProductOrderId} #</div></td>
           <td width="1">&nbsp;</td>
           <td width="25%">
             <input type="text" class="inputBox" name="orderId" size="20" maxlength="20" value="${orderId?if_exists}"/>
             <span class="tabletext">/</span>
             <input type="text" class="inputBox" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?if_exists}"/
           </td>
-          <td><div class="tabletext">Hide Grid:&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked</#if>></div></td>
+          <td><div class="tabletext">${uiLabelMap.ProductHideGrid}:&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked</#if>></div></td>
           <td><div class='tabletext'>&nbsp;</div></td>
         </tr>
         <tr>
           <td colspan="2">&nbsp;</td>
           <td colspan="2">
             <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.selectOrderForm.submit();">
-            <a href="javascript:document.selectOrderForm.submit();" class="buttontext">Pack Order</a>
+            <a href="javascript:document.selectOrderForm.submit();" class="buttontext">${uiLabelMap.ProductPackOrder}</a>
           </td>
         </tr>
       </table>
@@ -82,7 +82,7 @@
 
     <#if showInput != "N" && orderHeader?exists && orderHeader?has_content>
       <hr class="sepbar"/>
-      <div class='head2'>Order #${orderId} / ShipGroup #${shipGroupSeqId}</div>
+      <div class='head2'>${uiLabelMap.ProductOrderId} #${orderId} / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</div>
       <div class="tableheadtext">${packingSession.getPrimaryOrderId()?default("N/A")} / ${packingSession.getPrimaryShipGroupSeqId()?default("N/A")}</div>
       <div>&nbsp;</div>
       <#if orderItemShipGroup?has_content>
@@ -91,11 +91,11 @@
         <table border='0' cellpadding='4' cellspacing='4' width="100%">
           <tr>
             <td valign="top">
-              <div class="tableheadtext">Ship-To Address:</div>
+              <div class="tableheadtext">${uiLabelMap.ProductShipToAddress}:</div>
               <div class="tabletext">
-                <b>To: </b>${postalAddress.toName?default("")}<br>
+                <b>${uiLabelMap.CommonTo}: </b>${postalAddress.toName?default("")}<br>
                 <#if postalAddress.attnName?has_content>
-                  <b>Attn: </b>${postalAddress.attnName}<br>
+                  <b>${uiLabelMap.CommonAttn}: </b>${postalAddress.attnName}<br>
                 </#if>
                 ${postalAddress.address1}<br>
                 <#if postalAddress.address2?has_content>
@@ -107,7 +107,7 @@
             </td>
             <td>&nbsp;&nbsp;</td>
             <td valign="top">
-              <div class="tableheadtext">Carrier/Shipping Method:</div>
+              <div class="tableheadtext">${uiLabelMap.ProductCarrierShipmentMethod}:</div>
               <div class="tabletext">
                 <#if carrier == "USPS">
                   <#assign color = "red">
@@ -125,7 +125,7 @@
             </td>
             <td>&nbsp;&nbsp;</td>
             <td valign="top">
-              <div class="tableheadtext">Shipping Instructions:</div>
+              <div class="tableheadtext">${uiLabelMap.OrderShipping} ${uiLabelMap.ProductInstruction}:</div>
               <div class="tabletext">${orderItemShipGroup.shippingInstructions?default("(none)")}</div>
             </td>
           </tr>
@@ -145,7 +145,7 @@
           <input type="hidden" name="hideGrid" value="${hideGrid}"/>
           <table border='0' cellpadding='2' cellspacing='0' width="100%">
             <tr>
-              <td><div class="tabletext">Product #</div></td>
+              <td><div class="tabletext">${uiLabelMap.ProductProduct} #</div></td>
               <td width="1">&nbsp;</td>
               <td>
                 <input type="text" class="inputBox" name="productId" size="20" maxlength="20" value=""/>
@@ -155,8 +155,8 @@
               <td><div class='tabletext'>&nbsp;</div></td>
               <td align="right">
                 <div class="tabletext">
-                  Current Package Sequence: <b>${packingSession.getCurrentPackageSeq()}</b>
-                  <input type="button" value="Next Package" onclick="javascript:document.incPkgSeq.submit();">
+                  ${uiLabelMap.CommonCurrent} ${uiLabelMap.ProductPackage} ${uiLabelMap.CommonSequence}: <b>${packingSession.getCurrentPackageSeq()}</b>
+                  <input type="button" value="${uiLabelMap.CommonNext} ${uiLabelMap.ProductPackage}" onclick="javascript:document.incPkgSeq.submit();">
                 </div>
               </td>
             </tr>
@@ -164,7 +164,7 @@
               <td colspan="2">&nbsp;</td>
               <td valign="top">
                 <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.singlePackForm.submit();">
-                <a href="javascript:document.singlePackForm.submit();" class="buttontext">Pack Item</a>
+                <a href="javascript:document.singlePackForm.submit();" class="buttontext">${uiLabelMap.ProductPackItem}</a>
               </td>
               <td>&nbsp;</td>
             </tr>
@@ -187,14 +187,14 @@
           <table border='0' width="100%" cellpadding='2' cellspacing='0'>
             <tr>
               <td>&nbsp;</td>
-              <td><div class="tableheadtext">Item #</td>
-              <td><div class="tableheadtext">Sku</td>
-              <td><div class="tableheadtext">Desciption</td>
-              <td align="right"><div class="tableheadtext">Ordered Qty</td>
-              <td align="right"><div class="tableheadtext">Packed Qty</td>
+              <td><div class="tableheadtext">${uiLabelMap.ProductItem} #</td>
+              <td><div class="tableheadtext">${uiLabelMap.ProductProductId}</td>
+              <td><div class="tableheadtext">${uiLabelMap.ProductDescription}</td>
+              <td align="right"><div class="tableheadtext">${uiLabelMap.ProductOrderedQuantity}</td>
+              <td align="right"><div class="tableheadtext">${uiLabelMap.ProductPackedQty}</td>
               <td>&nbsp;</td>
-              <td align="center"><div class="tableheadtext">Pack Qty</td>
-              <td align="center"><div class="tableheadtext">Package</td>
+              <td align="center"><div class="tableheadtext">${uiLabelMap.ProductPackQty}</td>
+              <td align="center"><div class="tableheadtext">${uiLabelMap.ProductPackage}</td>
             </tr>
             <tr>
               <td colspan="9">
@@ -222,11 +222,11 @@
                 </td>
                 <td align="center">
                   <select name="pkg_${orderItem.orderItemSeqId}">
-                    <option value="1">Package 1</option>
-                    <option value="2">Package 2</option>
-                    <option value="3">Package 3</option>
-                    <option value="4">Package 4</option>
-                    <option value="5">Package 5</option>
+                    <option value="1">${uiLabelMap.ProductPackage} 1</option>
+                    <option value="2">${uiLabelMap.ProductPackage} 2</option>
+                    <option value="3">${uiLabelMap.ProductPackage} 3</option>
+                    <option value="4">${uiLabelMap.ProductPackage} 4</option>
+                    <option value="5">${uiLabelMap.ProductPackage} 5</option>
                   </select>
                 </td>
                 <input type="hidden" name="prd_${orderItem.orderItemSeqId}" value="${orderItem.productId?if_exists}">
@@ -235,9 +235,9 @@
             <tr><td colspan="9">&nbsp;</td></tr>
             <tr>
               <td colspan="9" align="right">
-                <input type="submit" value="Pack Items">
+                <input type="submit" value="${uiLabelMap.ProductPackItem}">
                 &nbsp;
-                <input type="button" value="Clear" onclick="javascript:document.clearPackForm.submit();"/>
+                <input type="button" value="${uiLabelMap.CommonClear}" onclick="javascript:document.clearPackForm.submit();"/>
               </td>
             </tr>
           </table>
@@ -258,16 +258,16 @@
           <table border='0' cellpadding='2' cellspacing='0' width="100%">
             <tr>
               <td>
-                <div class="tableheadtext">Handling Instructions:</div>
+                <div class="tableheadtext">${uiLabelMap.ProductHandlingInstructions}:</div>
                 <div>
                   <textarea name="handlingInstructions" class="inputBox" rows="2" cols="30">${packingSession.getHandlingInstructions()?if_exists}</textarea>
                 </div>
               </td>
               <td align="right">
                 <div>
-                  <#assign buttonName = "Complete">
+                  <#assign buttonName = "${uiLabelMap.ProductComplete}">
                   <#if forceComplete?default("false") == "true">
-                    <#assign buttonName = "Force Complete">
+                    <#assign buttonName = "${uiLabelMap.ProductCompleteForce}">
                   </#if>
                   <input type="button" value="${buttonName}" onclick="javascript:document.completePackForm.submit();"/>
                 </div>
@@ -285,12 +285,12 @@
         <div>&nbsp;</div>
         <table border='0' width="100%" cellpadding='2' cellspacing='0'>
           <tr>
-            <td><div class="tableheadtext">Item #</td>
-            <td><div class="tableheadtext">Sku</td>
-            <td><div class="tableheadtext">Desciption</td>
-            <td><div class="tableheadtext">Inv Item #</td>
-            <td align="right"><div class="tableheadtext">Packed Qty</td>
-            <td align="right"><div class="tableheadtext">Package #</td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductItem} #</td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductProductId}</td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductDescription}</td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductInventoryItem} #</td>
+            <td align="right"><div class="tableheadtext">${uiLabelMap.ProductPackedQty}</td>
+            <td align="right"><div class="tableheadtext">${uiLabelMap.ProductPackage} #</td>
             <td>&nbsp;</td>
           </tr>
           <tr>

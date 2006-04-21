@@ -24,12 +24,12 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<a href="<@ofbizUrl>attachProductFeaturesToCategory?productCategoryId=${productCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[Attach Features to Category from Products]</a>
+<a href="<@ofbizUrl>attachProductFeaturesToCategory?productCategoryId=${productCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductFeatureCategoryAttach}]</a>
 <#if productCategoryId?exists && productCategory?exists>    
     <#-- Feature Groups -->
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>
-        <td><div class="tabletext"><b>Feature Group</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductFeatureGroup}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
         <td align="center"><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
         <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -65,7 +65,7 @@
     <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" style="margin: 0;" name="addNewGroupForm">
     <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
     
-    <div class="head2">Apply Feature Group to Product Category:</div>
+    <div class="head2">${uiLabelMap.ProductApplyFeatureGroupFromCategory}:</div>
     <select name="productFeatureGroupId" class="selectBox">
     <#list productFeatureGroups as productFeatureGroup>
         <option value="${(productFeatureGroup.productFeatureGroupId)?if_exists}">${(productFeatureGroup.description)?if_exists} [${(productFeatureGroup.productFeatureGroupId)?if_exists}]</option>
@@ -81,7 +81,7 @@
     <#-- Feature Categories -->
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>
-        <td><div class="tabletext"><b>Feature Category</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.ProductFeatureCategory}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
         <td align="center"><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
         <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -117,7 +117,7 @@
     <form method="post" action="<@ofbizUrl>createProductFeatureCategoryAppl</@ofbizUrl>" style="margin: 0;" name="addNewCategoryForm">
     <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
     
-    <div class="head2">Apply Feature Category to Product Category:</div>
+    <div class="head2">${uiLabelMap.ProductApplyFeatureGroupToCategory}:</div>
     <select name="productFeatureCategoryId" class="selectBox">
     <#list productFeatureCategories as productFeatureCategory>
         <option value="${(productFeatureCategory.productFeatureCategoryId)?if_exists}">${(productFeatureCategory.description)?if_exists} [${(productFeatureCategory.productFeatureCategoryId)?if_exists}]</option>

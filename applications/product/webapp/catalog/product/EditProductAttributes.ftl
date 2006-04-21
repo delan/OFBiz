@@ -41,7 +41,7 @@
                     <input type="hidden" name="ATTRIBUTE_NAME" value="${productAttribute.attrName}"/>
                     <input type="text" class="inputBox" size="50" name="ATTRIBUTE_VALUE" value="${(productAttribute.attrValue)?if_exists}"/>
                     <input type="text" class="inputBox" size="15" name="ATTRIBUTE_TYPE" value="${(productAttribute.attrType)?if_exists}"/>
-                    <input type="submit" value="Update"/>
+                    <input type="submit" value="${uiLabelMap.CommonUpdate}"/>
                 </form>
             </td>
             <td>

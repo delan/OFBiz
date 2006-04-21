@@ -64,7 +64,7 @@
                 <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
-        <field name="productId" title="" widget-style="buttontext">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
@@ -92,7 +92,7 @@
                 <field-map field-name="entityName" value="Product"/>
             </service>
         </actions>
-        <field name="productId" title="" widget-style="buttontext">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>

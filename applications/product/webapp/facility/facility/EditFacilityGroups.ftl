@@ -48,7 +48,7 @@
                 <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                 </#if>
                 <#if (listSize > 0)>
-                ${lowIndex+1} - ${highIndex} of ${listSize}
+                ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                 </#if>
                 <#if (listSize > highIndex)>
                 | <a href="<@ofbizUrl>EditFacilityGroups?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>

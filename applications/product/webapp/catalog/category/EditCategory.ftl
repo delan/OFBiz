@@ -124,7 +124,7 @@ function insertImageName(type,nameValue) {
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:insertImageName('category','${imageNameCategory}.jpg');" class="buttontext">[.jpg]</a>
                 <a href="javascript:insertImageName('category','${imageNameCategory}.gif');" class="buttontext">[.gif]</a>
-                <a href="javascript:insertImageName('category','');" class="buttontext">[clear]</a>
+                <a href="javascript:insertImageName('category','');" class="buttontext">[${uiLabelMap.CommonClear}]</a>
                 </div>
             </#if>
             </td>
@@ -144,7 +144,7 @@ function insertImageName(type,nameValue) {
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.jpg');" class="buttontext">[.jpg]</a>
                 <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.gif');" class="buttontext">[.gif]</a>
-                <a href="javascript:insertImageName('linkOne','');" class="buttontext">[clear]</a>
+                <a href="javascript:insertImageName('linkOne','');" class="buttontext">[${uiLabelMap.CommonClear}]</a>
                 </div>
             </#if>
             </td>
@@ -164,7 +164,7 @@ function insertImageName(type,nameValue) {
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.jpg');" class="buttontext">[.jpg]</a>
                 <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.gif');" class="buttontext">[.gif]</a>
-                <a href="javascript:insertImageName('linkTwo','');" class="buttontext">[clear]</a>
+                <a href="javascript:insertImageName('linkTwo','');" class="buttontext">[${uiLabelMap.CommonClear}]</a>
                 </div>
             </#if>
             </td>
@@ -224,15 +224,15 @@ function insertImageName(type,nameValue) {
         <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}"/>
     </form>
     <hr/>
-    <div class="head2">Duplicate a Product Category</div>
+    <div class="head2">${uiLabelMap.ProductDuplicateProductCategory}</div>
     <form action="/catalog/control/DuplicateProductCategory" method="post" style="margin: 0;">
-        <span class="tabletext">Duplicate Selected with New ID:</span>
+        <span class="tabletext">${uiLabelMap.ProductDuplicateProductCategorySelected}:</span>
         <input type=hidden name="oldProductCategoryId" value="${productCategoryId}"/>
         <div>
-            <input type="text" class="inputBox" size="20" maxlength="20" name="productCategoryId"/>&nbsp;<input type=submit class="smallSubmit" value="Go!"/>
+            <input type="text" class="inputBox" size="20" maxlength="20" name="productCategoryId"/>&nbsp;<input type=submit class="smallSubmit" value="${uiLabelMap.CommonGo}"/>
         </div>
         <div class="tabletext">
-            <b>Duplicate:</b>
+            <b>${uiLabelMap.CommonDuplicate}:</b>
             ${uiLabelMap.ProductCategoryContent}&nbsp;<input type="checkbox" class="checkBox" name="duplicateContent" value="Y" checked />
             ${uiLabelMap.ProductCategoryRollupParentCategories}&nbsp;<input type="checkbox" class="checkBox" name="duplicateParentRollup" value="Y" checked />
             ${uiLabelMap.ProductCategoryRollupChildCategories}&nbsp;<input type="checkbox" class="checkBox" name="duplicateChildRollup" value="Y" />

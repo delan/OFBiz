@@ -24,20 +24,20 @@
  *@since      3.2
 -->
 
-<div class="tabletext"><b>Create Virtual Product</b></div>
+<div class="tabletext"><b>${uiLabelMap.ProductQuickCreateVirtualFromVariants}</b></div>
 <form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" style="margin: 0;" name="quickCreateVirtualWithVariants">
     <div>
-        <span class="tabletext">Variant Product IDs:</span>
+        <span class="tabletext">${uiLabelMap.ProductVariantProductIds}:</span>
         <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
     </div>
     <div>
         <span class="tabletext">Hazmat:</span>
         <select name="productFeatureIdOne" class="standardSelect">
-            <option value="">- None -</option>
+            <option value="">- ${uiLabelMap.CommonNone} -</option>
             <#list hazmatFeatures as hazmatFeature>
                 <option value="${hazmatFeature.productFeatureId}">${hazmatFeature.description}</option>
             </#list>
         </select>
-        <input type="submit" class="smallSubmit" value="Create Virtual Product"/>
+        <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductCreateVirtualProduct}"/>
     </div>
 </form>

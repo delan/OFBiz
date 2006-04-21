@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 
-<div class="head1">Product Feature Group Applications</div>
+<div class="head1">${uiLabelMap.ProductEditFeatureGroupAppls}</div>
 
 <br/>
 <table border="1" cellpadding='2' cellspacing='0'>
@@ -84,7 +84,7 @@
         </td>
       </tr>
       <tr>
-        <td colspan='2'><input type="submit" value="Continue"></td>
+        <td colspan='2'><input type="submit" value="${uiLabelMap.CommonContinue}"></td>
       </tr>
     </table>
   </form>

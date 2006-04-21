@@ -30,8 +30,8 @@
 
     <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductNewFacility}</a>
     <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewInventoryItemFacility}</a>
-    <a href="<@ofbizUrl>ViewFacilityInventoryByProduct?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">View Inventory By Product</a>
-    <a href="<@ofbizUrl>SearchInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">Search Inventory Items</a>
+    <a href="<@ofbizUrl>ViewFacilityInventoryByProduct?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView} ${uiLabelMap.ProductInventoryByProduct}</a>
+    <a href="<@ofbizUrl>SearchInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">${uiLabelMap.PageTitleSearchInventoryItems}</a>
 
     <#if facilityInventoryItems?exists && (facilityInventoryItems.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
@@ -42,7 +42,7 @@
                 <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                 </#if>
                 <#if (listSize > 0)>
-                    ${lowIndex+1} - ${highIndex} of ${listSize}
+                    ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                 </#if>
                 <#if (listSize > highIndex)>
                 | <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
@@ -98,14 +98,14 @@
                 <td>&nbsp;</td>
             </#if>
             <td>
-            <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">Edit</a>
+            <a href="<@ofbizUrl>EditInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
             </td>
             <td>
-            <a href="<@ofbizUrl>TransferInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">Transfer</a>
+            <a href="<@ofbizUrl>TransferInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductTransfer}</a>
             </td>
             <#-- <td>
             <a href="<@ofbizUrl>DeleteFacilityInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">
-            [Delete]</a>
+            [${uiLabelMap.CommonDelete}]</a>
             </td> -->
         </tr>
         </#list>
@@ -117,13 +117,13 @@
             <td align="right">
                 <b>
                 <#if (viewIndex > 0)>
-                <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                 </#if>
                 <#if (listSize > 0)>
-                ${lowIndex+1} - ${highIndex} of ${listSize}
+                ${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                 </#if>
                 <#if (listSize > highIndex)>
-                | <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+                | <a href="<@ofbizUrl>EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                 </#if>
                 </b>
             </td>

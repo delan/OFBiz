@@ -74,7 +74,7 @@
     <screen name="EditCategory">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductCategory"/>
+                <set field="titleProperty" value="PageTitleEditProductCategories"/>
                 <set field="headerItem" value="category"/>
                 <set field="tabButtonItem" value="EditCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>

@@ -30,7 +30,7 @@
 <div class="errorMessage">${invalidProductId}</div>
 </#if>
 
-<div class="head1">${uiLabelMap.ProductReceiveInventory} <span class="head2">into&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId} :${facility.facilityId?if_exists}]</span></div>
+<div class="head1">${uiLabelMap.ProductReceiveInventory} <span class="head2">${uiLabelMap.CommonInto}&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId} :${facility.facilityId?if_exists}]</span></div>
 <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 
 <script language="JavaScript">

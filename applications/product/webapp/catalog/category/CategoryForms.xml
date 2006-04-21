@@ -29,7 +29,7 @@
             default-map-name="productCategory">
         <auto-fields-service service-name="createProductCategoryAttribute" default-field-type="edit"/>
         <field name="productCategoryId"><display/></field>
-        <field name="submitForm" title="Create"><submit/></field>
+        <field name="submitForm" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="EditProductCategoryAttributes" type="list"
             target="updateProductCategoryAttribute" title=""

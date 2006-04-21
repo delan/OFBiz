@@ -30,7 +30,7 @@
 </#if>
 
 <div class="head1">
-    ${uiLabelMap.ProductCheckingForExistingProductInCategory} <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]
+    ${uiLabelMap.ProductCheckingForExistingProductInCategory} <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]
 
     <#if productFeatureAndTypeDatas?has_content>
        ${uiLabelMap.CommonWhere }

@@ -115,7 +115,7 @@
     <screen name="EditProductPromoRules">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductPromosRules"/>
+                <set field="titleProperty" value="PageTitleEditProductPromoRules"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="EditProductPromoRules"/>
                 <set field="labelTitleProperty" value="ProductRules"/>
@@ -216,7 +216,7 @@
     <screen name="FindProductPromoCode">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleFindProductPromoCode"/>
+                <set field="titleProperty" value="PageTitleFindProductPromotionCode"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="FindProductPromoCode"/>
                 <set field="labelTitleProperty" value="ProductPromotionCode"/>
@@ -250,7 +250,7 @@
     <screen name="EditProductPromoCode">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductPromoCode"/>
+                <set field="titleProperty" value="PageTitleEditProductPromotionCode"/>
                 <set field="headerItem" value="promos"/>
                 <set field="tabButtonItem" value="FindProductPromoCode"/>
                 <set field="labelTitleProperty" value="ProductPromotionCode"/>
