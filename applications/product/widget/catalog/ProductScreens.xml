@@ -484,7 +484,7 @@
                     <order-by field-name="accountCode"/>
                 </entity-condition>
                 <entity-condition entity-name="PartyRole" list-name="organizations" use-cache="true">
-                	   <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
             </actions>
             <widgets>

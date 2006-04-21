@@ -256,7 +256,7 @@
     <screen name="EditProductStoreEmails">
        <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductStoreEmailSetup"/>												  
+                <set field="titleProperty" value="PageTitleEditProductStoreEmailSetup"/>
                 <set field="headerItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStoreEmails"/>
                 <set field="labelTitleProperty" value="ProductProductStoreEmailSettings"/>
