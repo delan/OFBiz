@@ -54,8 +54,8 @@ public class ProductionRunHelper {
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters, productionRunId
      * @return Map with the result of the service, the output parameters are
-     * 	<li> the productionRun
-     * 	<li> the productionRunProduct
+     * <li> the productionRun
+     * <li> the productionRunProduct
      */
     public static Map getProductionRun(GenericDelegator delegator, String productionRunId) {
         Map result = new HashMap();
