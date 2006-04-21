@@ -59,7 +59,7 @@
     <form name="ListFacilityInventoryByProduct" type="list" 
             target="" title="" list-name="inventoryByProduct" paginate-target="ViewFacilityInventoryByProduct"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <field name="editLink" widget-style="buttontext">
+        <field name="editLink" title="${uiLabelMap.CommonUpdateLink}" widget-style="buttontext">
             <hyperlink target="/catalog/control/EditProduct?productId=${productId}" target-type="inter-app" description="${productId}" />
         </field>
         <field name="productId" title="${uiLabelMap.CommonDescription}">
@@ -96,7 +96,7 @@
     </form>
 
     <!-- multi-form for list of packages ready to be weighted and scheduled for shipment -->
-    <form name="SchedulingList" type="multi" use-row-submit="true" list-name="shipmentRouteSegments" title="" target="BatchScheduleShipmentRouteSegments"
+    <form name="SchedulingList" type="multi" use-row-submit="true" list-name="shipmentRouteSegments" title="${uiLabelMap.PageTitlePackageShipmentScheduling}" target="BatchScheduleShipmentRouteSegments"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext" separate-columns="true">
         <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}">
             <hyperlink target="ViewShipment?shipmentId=${shipmentId}" description="${shipmentId}"/>

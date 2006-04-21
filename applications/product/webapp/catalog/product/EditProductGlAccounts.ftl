@@ -57,7 +57,7 @@
                         <option value="${(glAccount.glAccountId)?if_exists}">${(glAccount.accountCode)?if_exists} ${(glAccount.accountName)?if_exists}</option>
                     </#list>
                 </select>
-                <input type="submit" value="Update" style="font-size: x-small;"/>
+                <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;"/>
             </form>
         </td>
         <td align="center">

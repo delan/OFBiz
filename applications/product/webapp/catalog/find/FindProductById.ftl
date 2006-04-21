@@ -27,22 +27,22 @@
 
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">Find Products by ID Value</div>
+        <div class="boxhead">${uiLabelMap.ProductFindProductWithIdValue}</div>
     </div>
     <div class="screenlet-body">
         <form name="idsearchform" method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>" style="margin: 0;">
-          <div class="tabletext">ID Value: <input type="text" name="idValue" size="20" maxlength="50" value="${idValue?if_exists}">&nbsp;<a href="javascript:document.idsearchform.submit()" class="buttontext">Find</a></div>
+          <div class="tabletext">${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}: <input type="text" name="idValue" size="20" maxlength="50" value="${idValue?if_exists}">&nbsp;<a href="javascript:document.idsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a></div>
         </form>
     </div>
 </div>
 
 
-<div class="head1">Search Results for Product with ID Value: [${idValue?if_exists}]</div>
+<div class="head1">${uiLabelMap.ProductSearchResultsWithIdValue}: [${idValue?if_exists}]</div>
 
 
 <#if !goodIdentifications?has_content && !idProduct?has_content>
     <br/>
-    <div class="head2">&nbsp;No results found.</div>
+    <div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
 <#else/>
   <table cellpadding="2">
     <#if idProduct?has_content>
@@ -52,7 +52,7 @@
         <td>&nbsp;&nbsp;</td>
         <td>
             <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="buttontext">${(idProduct.internalName)?if_exists}</a>
-            <span class="tabletext">(ID Value was the actual productId of this product.)</span>
+            <span class="tabletext">(${uiLabelMap.ProductSearchResultsFound})</span>
         </td>
     </#if>
     <#list goodIdentifications as goodIdentification>

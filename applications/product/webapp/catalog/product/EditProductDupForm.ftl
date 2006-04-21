@@ -63,7 +63,7 @@
         <form action="<@ofbizUrl>UpdateProductVariants?productId=${productId}</@ofbizUrl>" method="post" style="margin: 0;">
             <input type="hidden" name="virtualProductId" value="${productId}"/>
             <div class="tabletext">
-                <b>${uiLabelMap.CommonUpdateVariants}:</b>
+                <b>${uiLabelMap.ProductUpdateProductVariants}:</b>
                 ${uiLabelMap.ProductRemoveBefore}&nbsp;<input type="checkbox" class="checkBox" name="removeBefore" value="Y"/>
                 ${uiLabelMap.ProductPrices}&nbsp;<input type="checkbox" class="checkBox" name="duplicatePrices" value="Y" checked="checked"/>
                 ${uiLabelMap.CommonId}&nbsp;<input type="checkbox" class="checkBox" name="duplicateIDs" value="Y" checked="checked"/>
@@ -72,7 +72,7 @@
                 ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" class="checkBox" name="duplicateAttributes" value="Y" checked="checked"/>
                 ${uiLabelMap.ProductFacilities}&nbsp;<input type="checkbox" class="checkBox" name="duplicateFacilities" value="Y" checked="checked"/>
             </div>
-            <input type="submit" class="smallSubmit" value="Go!"/>
+            <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGo}"/>
         </form>
         </#if>
         <br/>

@@ -55,25 +55,25 @@
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
                     </form>
                     <b>created/modified by</b> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
-                    <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="buttontext">[Pick/Pack Report]</a>
+                    <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="buttontext">[${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}]</a>
                 </div>
                 <#if picklistInfo.shipmentMethodType?has_content>
                     <div class="tabletext" style="margin-left: 15px;">
-                        <b>for Shipment Method Type</b> ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}
+                        <b>${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentMethodType}</b> ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}
                     </div>
                 </#if>
 
                 <#-- PicklistRole -->
                 <#list picklistInfo.picklistRoleInfoList?if_exists as picklistRoleInfo>
                     <div class="tabletext" style="margin-left: 15px;">
-                        <b>Party</b> ${picklistRoleInfo.partyNameView.firstName?if_exists} ${picklistRoleInfo.partyNameView.middleName?if_exists} ${picklistRoleInfo.partyNameView.lastName?if_exists} ${picklistRoleInfo.partyNameView.groupName?if_exists}
-                        <b>in role</b> ${picklistRoleInfo.roleType.description}
-                        <b>from</b> ${picklistRoleInfo.picklistRole.fromDate}
+                        <b>${uiLabelMap.PartyParty}</b> ${picklistRoleInfo.partyNameView.firstName?if_exists} ${picklistRoleInfo.partyNameView.middleName?if_exists} ${picklistRoleInfo.partyNameView.lastName?if_exists} ${picklistRoleInfo.partyNameView.groupName?if_exists}
+                        <b>${uiLabelMap.PartyRole}</b> ${picklistRoleInfo.roleType.description}
+                        <b>${uiLabelMap.CommonFrom}</b> ${picklistRoleInfo.picklistRole.fromDate}
                         <#if picklistRoleInfo.picklistRole.thruDate?exists><b>thru</b> ${picklistRoleInfo.picklistRole.thruDate}</#if>
                     </div>
                 </#list>
                 <div class="tabletext" style="margin-left: 15px;">
-                    <b>Assign Picker:</b>
+                    <b>${uiLabelMap.ProductAssignPicker}:</b>
                     <form method="post" action="<@ofbizUrl>createPicklistRole</@ofbizUrl>" style="display: inline;">
                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                         <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
@@ -90,32 +90,32 @@
                 <#-- PicklistStatusHistory -->
                 <#list picklistInfo.picklistStatusHistoryInfoList?if_exists as picklistStatusHistoryInfo>
                     <div class="tabletext" style="margin-left: 15px;">
-                        <b>Status</b> change from ${picklistStatusHistoryInfo.statusItem.get("description",locale)}
-                        to ${picklistStatusHistoryInfo.statusItemTo.description}
-                        on ${picklistStatusHistoryInfo.picklistStatusHistory.changeDate}
-                        by ${picklistStatusHistoryInfo.picklistStatusHistory.changeUserLoginId}
+                        <b>${uiLabelMap.CommonStatus}</b> ${uiLabelMap.CommonChange} ${uiLabelMap.CommonFrom} ${picklistStatusHistoryInfo.statusItem.get("description",locale)}
+                        ${uiLabelMap.CommonTo} ${picklistStatusHistoryInfo.statusItemTo.description}
+                        ${uiLabelMap.CommonOn} ${picklistStatusHistoryInfo.picklistStatusHistory.changeDate}
+                        ${uiLabelMap.CommonBy} ${picklistStatusHistoryInfo.picklistStatusHistory.changeUserLoginId}
                     </div>
                 </#list>
 
                 <#-- PicklistBin -->
                 <#list picklistInfo.picklistBinInfoList?if_exists as picklistBinInfo>
                     <div class="tabletext" style="margin-left: 15px;">
-                        <b>Bin</b> ${picklistBinInfo.picklistBin.binLocationNumber}
-                        <#if picklistBinInfo.primaryOrderHeader?exists><b>Primary Order</b> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
-                        <#if picklistBinInfo.primaryOrderItemShipGroup?exists><b>Primary Ship Group</b> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
+                        <b>${uiLabelMap.ProductBinNum}</b> ${picklistBinInfo.picklistBin.binLocationNumber}
+                        <#if picklistBinInfo.primaryOrderHeader?exists><b>${uiLabelMap.ProductPrimaryOrderId}</b> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
+                        <#if picklistBinInfo.primaryOrderItemShipGroup?exists><b>${uiLabelMap.ProductPrimaryShipGroupSeqId}</b> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
                     </div>
                     <div class="tabletext" style="margin-left: 30px;">
-                        <b>Update Bin:</b>
+                        <b>${uiLabelMap.CommonUpdate} ${uiLabelMap.ProductBinNum}:</b>
 	                    <form method="post" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
 	                        <input type="hidden" name="facilityId" value="${facilityId}"/>
 	                        <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
-	                        Location#:
+	                        ${uiLabelMap.ProductLocation}#:
 	                        <input type"text" size="2" name="binLocationNumber" value="${picklistBinInfo.picklistBin.binLocationNumber}"/>
-                            Picklist:
+                            ${uiLabelMap.PageTitlePickList}:
 	                        <select name="picklistId" class="smallSelect">
 	                            <#list picklistActiveList as picklistActive>
 	                                <#assign picklistActiveStatusItem = picklistActive.getRelatedOneCache("StatusItem")>
-	                                <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected</#if>>${picklistActive.picklistId} [Date:${picklistActive.picklistDate},Status:${picklistActiveStatusItem.description}]</option>
+	                                <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.description}]</option>
 	                            </#list>
 	                        </select>
 	                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
@@ -125,19 +125,19 @@
                         <#assign picklistItem = picklistItemInfo.picklistItem>
                         <#assign inventoryItemAndLocation = picklistItemInfo.inventoryItemAndLocation>
                         <div class="tabletext" style="margin-left: 30px;">
-                            <b>Order:Group:Item</b> ${picklistItem.orderId}:${picklistItem.shipGroupSeqId}:${picklistItem.orderItemSeqId}
-                            <b>Product</b> ${picklistItemInfo.orderItem.productId}
-                            <b>Inventory Item</b> ${inventoryItemAndLocation.inventoryItemId}
-                            <b>Location</b> ${inventoryItemAndLocation.areaId?if_exists}-${inventoryItemAndLocation.aisleId?if_exists}-${inventoryItemAndLocation.sectionId?if_exists}-${inventoryItemAndLocation.levelId?if_exists}-${inventoryItemAndLocation.positionId?if_exists}
-                            <b>Quantity</b> ${picklistItem.quantity}<#-- of ${picklistItemInfo.orderItem.quantity}-->
+                            <b>${uiLabelMap.ProductOrderId}:${uiLabelMap.OrderShipGroup}:${uiLabelMap.ProductOrderItem}</b> ${picklistItem.orderId}:${picklistItem.shipGroupSeqId}:${picklistItem.orderItemSeqId}
+                            <b>${uiLabelMap.ProductProduct}</b> ${picklistItemInfo.orderItem.productId}
+                            <b>${uiLabelMap.ProductInventoryItem}</b> ${inventoryItemAndLocation.inventoryItemId}
+                            <b>${uiLabelMap.ProductLocation}</b> ${inventoryItemAndLocation.areaId?if_exists}-${inventoryItemAndLocation.aisleId?if_exists}-${inventoryItemAndLocation.sectionId?if_exists}-${inventoryItemAndLocation.levelId?if_exists}-${inventoryItemAndLocation.positionId?if_exists}
+                            <b>${uiLabelMap.ProductQuantity}</b> ${picklistItem.quantity}<#-- of ${picklistItemInfo.orderItem.quantity}-->
                         </div>
                         <#-- picklistItem.orderItemShipGrpInvRes (do we want to display any of this info?) -->
                         <#-- picklistItemInfo.itemIssuanceList -->
                         <#list picklistItemInfo.itemIssuanceList?if_exists as itemIssuance>
 	                        <div class="tabletext" style="margin-left: 40px;">
-	                            <b>Issued To Shipment Item:</b> ${itemIssuance.shipmentId}:${itemIssuance.shipmentItemSeqId}
-	                            <b>Quantity:</b> ${itemIssuance.quantity}
-	                            <b>Date: </b> ${itemIssuance.issuedDateTime}
+	                            <b>${uiLabelMap.ProductIssue} ${uiLabelMap.CommonTo} ${uiLabelMap.ProductShipmentItemSeqId}:</b> ${itemIssuance.shipmentId}:${itemIssuance.shipmentItemSeqId}
+	                            <b>${uiLabelMap.ProductQuantity}:</b> ${itemIssuance.quantity}
+	                            <b>${uiLabelMap.CommonDate}: </b> ${itemIssuance.issuedDateTime}
 	                        </div>
                         </#list>
                     </#list>

@@ -70,7 +70,7 @@
     <screen name="FindProductConfigItems">
         <section>
             <actions>
-                <set field="title" value="Find Config Items"/>
+                <set field="titleProperty" value="PageTitleFindConfigItems"/>
                 <set field="headerItem" value="configs"/>
                 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/config/FindProductConfigItems.bsh"/>
@@ -89,7 +89,7 @@
     <screen name="EditProductConfigItem">
         <section>
             <actions>
-                <set field="title" value="Edit Config Item"/>
+                <set field="titleProperty" value="PageTitleEditConfigItem"/>
                 <set field="headerItem" value="configs"/>
                 <set field="tabButtonItem" value="EditProductConfigItem"/>
                 <set field="labelTitleProperty" value="ProductConfigItem"/>
@@ -109,7 +109,7 @@
     <screen name="EditProductConfigOptions">
         <section>
             <actions>
-                <set field="title" value="Edit Config Options"/>
+                <set field="titleProperty" value="PageTitleEditConfigOptions"/>
                 <set field="headerItem" value="configs"/>
                 <set field="tabButtonItem" value="EditProductConfigOptions"/>
                 <set field="labelTitleProperty" value="ProductConfigOptions"/>
@@ -182,7 +182,7 @@
     <screen name="EditProductConfigItemContentContent">
         <section>
             <actions>
-                <set field="title" value="Edit ProductConfigItem Content Content"/>
+                <set field="titleProperty" value="PageTitleEditProductConfigItemContent"/>
                 <set field="headerItem" value="configs"/>
                 <set field="tabButtonItem" value="EditProductConfigItemContent"/>
                 <set field="labelTitleProperty" value=""/>

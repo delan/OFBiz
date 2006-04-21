@@ -26,7 +26,7 @@
 
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">Loading Catalog Caches...</div>
+        <div class="boxhead">${uiLabelMap.ProductLoadingCatalogCaches}...</div>
     </div>
     <div class="screenlet-body">
         <#list messageList as message>

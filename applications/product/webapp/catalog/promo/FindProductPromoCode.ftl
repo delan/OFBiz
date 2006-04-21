@@ -26,19 +26,19 @@
 <#if productPromoId?exists>
     <div>
         <#if manualOnly?if_exists == "Y">
-            <a href="<@ofbizUrl>FindProductPromoCode?manualOnly=N&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[View Manual and Automatic]</a>
+            <a href="<@ofbizUrl>FindProductPromoCode?manualOnly=N&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductPromotionManualImported}]</a>
         <#else>
-            <a href="<@ofbizUrl>FindProductPromoCode?manualOnly=Y&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[View Manual Only]</a>
+            <a href="<@ofbizUrl>FindProductPromoCode?manualOnly=Y&productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductPromotionManual}</a>
         </#if>
     </div>
     <br/>
     <table border="1" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Code</b></div></td>
-            <td><div class="tabletext"><b>Per Code</b></div></td>
-            <td><div class="tabletext"><b>Per Customer</b></div></td>
-            <td><div class="tabletext"><b>Req. Email or Party</b></div></td>
-            <td><div class="tabletext"><b>Created</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductPromotionCode}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductPromotionPerCode}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductPromotionPerCustomer}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductPromotionReqEmailOrParty}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonCreated}</b></div></td>
             <td><div class="tabletext">&nbsp;</div></td>
         </tr>
         <#list productPromoCodes as productPromoCode>
@@ -57,16 +57,16 @@
         </#list>
     </table>
     <br/>
-    <div class="head3">Add Set of Promotion Codes:</div>
+    <div class="head3">${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}:</div>
     <div class="tabletext">
         <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>" style="margin: 0;">
             <input type="hidden" name="userEntered" value="N"/>
             <input type="hidden" name="requireEmailOrParty" value="N"/>
             <input type="hidden" name="productPromoId" value="${productPromoId}"/>
-            Quantity: <input type="text" size="5" name="quantity" class="inputBox">
-            Use Limits:
-            Per Code<input type="text" size="5" name="useLimitPerCode" class="inputBox">
-            Per Customer<input type="text" size="5" name="useLimitPerCustomer" class="inputBox">
+            ${uiLabelMap.CommonQuantity}: <input type="text" size="5" name="quantity" class="inputBox">
+            ${uiLabelMap.ProductPromotionUseLimits}:
+            ${uiLabelMap.ProductPromotionPerCode}<input type="text" size="5" name="useLimitPerCode" class="inputBox">
+            ${uiLabelMap.ProductPromotionPerCustomer}<input type="text" size="5" name="useLimitPerCustomer" class="inputBox">
             <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>
     </div>

@@ -55,7 +55,7 @@
     <screen name="pendingReviews">
         <section>
             <actions>
-                <set field="title" value="Pennding Product Reviews"/>
+                <set field="titleProperty" value="ProductReviewsPendingApproval"/>
                 <set field="headerItem" value="reviews"/>
                 
                 <entity-condition entity-name="ProductReview" list-name="pendingReviews">

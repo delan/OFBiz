@@ -24,7 +24,7 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<div class="head1">Advanced Search in Category</div>
+<div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
 <br/>
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="VIEW_SIZE" value="25"/>
@@ -33,25 +33,25 @@
         <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}"/>
         <tr>
           <td align="right" valign="middle">
-            <div class="tabletext">Category:</div>
+            <div class="tabletext">${uiLabelMap.ProductCategory}:</div>
           </td>
           <td valign="middle">
             <div class="tabletext">
-              <b>"${(searchCategory.description)?if_exists}" [${(searchCategory.productCategoryId)?if_exists}]</b> Include sub-categories?
-              Yes<input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked/>
-              No<input type="radio" name="SEARCH_SUB_CATEGORIES" value="N"/>
+              <b>"${(searchCategory.description)?if_exists}" [${(searchCategory.productCategoryId)?if_exists}]</b> ${uiLabelMap.ProductIncludeSubCategories}?
+              ${uiLabelMap.CommonYes}<input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked/>
+              ${uiLabelMap.CommonNo}<input type="radio" name="SEARCH_SUB_CATEGORIES" value="N"/>
             </div>
           </td>
         </tr>
     <#else>
         <tr>
           <td align="right" valign="middle">
-            <div class="tabletext">Category:</div>
+            <div class="tabletext">${uiLabelMap.ProductCategory}:</div>
           </td>
           <td valign="middle">
             <div class="tabletext">
                 <select class="selectBox" name="SEARCH_CATEGORY_ID">
-                    <option value="">- Any Category -</option>
+                    <option value="">- ${uiLabelMap.ProductAnyCategory} -</option>
                     <#list productCategories as productCategory>
                         <#assign displayDesc = productCategory.description?default("No Description")>
                         <#if 18 < displayDesc?length>
@@ -60,9 +60,9 @@
                         <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
                     </#list>
                 </select>
-              Include sub-categories?
-              Yes<input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked/>
-              No<input type="radio" name="SEARCH_SUB_CATEGORIES" value="N"/>
+              ${uiLabelMap.ProductIncludeSubCategories}?
+              ${uiLabelMap.CommonYes}<input type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked/>
+              ${uiLabelMap.CommonNo}<input type="radio" name="SEARCH_SUB_CATEGORIES" value="N"/>
             </div>
           </td>
         </tr>
@@ -81,7 +81,7 @@
     </tr>
     <tr>
       <td align="right" valign="middle">
-        <div class="tabletext">Feature IDs:</div>
+        <div class="tabletext">${uiLabelMap.ProductFeatures} ${uiLabelMap.CommonIds}:</div>
       </td>
       <td valign="middle">
         <div class="tabletext">
@@ -113,7 +113,7 @@
     </#list>
     <tr>
       <td align="right" valign="middle">
-        <div class="tabletext">Supplier:</div>
+        <div class="tabletext">${uiLabelMap.ProductSupplier}:</div>
       </td>
       <td valign="middle">
         <div class="tabletext">
@@ -128,25 +128,25 @@
     </tr>
     <tr>
       <td align="right" valign="middle">
-        <div class="tabletext">Sort Order:</div>
+        <div class="tabletext">${uiLabelMap.CommonSortOrder}:</div>
       </td>
       <td valign="middle">
         <div class="tabletext">
           <select name="sortOrder" class="selectBox">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevency}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
-            <option value="SortProductField:internalName">Internal Name</option>
-            <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
-            <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
-            <option value="SortProductField:averageCustomerRating">Customer Rating</option>
-            <option value="SortProductPrice:LIST_PRICE">List Price</option>
-            <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
-            <option value="SortProductPrice:AVERAGE_COST">Average Cost</option>
-            <option value="SortProductPrice:MINIMUM_PRICE">Minimum Price</option>
-            <option value="SortProductPrice:MAXIMUM_PRICE">Maximum Price</option>
+            <option value="SortProductField:internalName">${uiLabelMap.ProductInternalName}</option>
+            <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
+            <option value="SortProductField:totalTimesViewed">${uiLabelMap.ProductPopularityByViews}</option>
+            <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
+            <option value="SortProductPrice:LIST_PRICE">${uiLabelMap.ProductListPrice}</option>
+            <option value="SortProductPrice:DEFAULT_PRICE">${uiLabelMap.ProductDefaultPrice}</option>
+            <option value="SortProductPrice:AVERAGE_COST">${uiLabelMap.ProductAverageCost}</option>
+            <option value="SortProductPrice:MINIMUM_PRICE">${uiLabelMap.ProductMinimumPrice}</option>
+            <option value="SortProductPrice:MAXIMUM_PRICE">${uiLabelMap.ProductMaximumPrice}</option>
           </select>
-          Low to High<input type="radio" name="sortAscending" value="Y" checked/>
-          High to Low<input type="radio" name="sortAscending" value="N"/>
+          ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked/>
+          ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N"/>
         </div>
       </td>
     </tr>

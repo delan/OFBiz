@@ -39,7 +39,7 @@
                     <#if (viewIndex > 1)>
                     <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
-                    ${lowIndex} - ${highIndex} of ${listSize}
+                    ${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                     <#if (listSize > highIndex)>
                     | <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
@@ -100,7 +100,7 @@
                     <#if (viewIndex > 1)>
                         <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                         </#if>
-                        ${lowIndex} - ${highIndex} of ${listSize}
+                        ${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}
                         <#if (listSize > highIndex)>
                         | <a href="<@ofbizUrl>EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>

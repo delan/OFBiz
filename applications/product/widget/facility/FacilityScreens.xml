@@ -195,7 +195,7 @@
                     <decorator-section name="body">
 
                         <container>
-                            <label style="head1">Inventory Availability By Product for:</label>
+                            <label style="head1">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}:</label>
                             <label style="head2">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
                         </container>
                         <container>
@@ -226,9 +226,8 @@
                     <decorator-section name="body">
 
                         <container>
-                            <label style="head1">Search for Inventory Items for:</label>
-                            <label style="head2">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
-                            <label style="head2">NOTE: This page is in development right now.</label>
+                            <label style="head1">${uiLabelMap.PageTitleSearchInventoryItems} ${uiLabelMap.CommonFor}:</label>
+                            <label style="head2">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>                            
                         </container>
                         <container>
                             <link target="EditFacilityInventoryItems?facilityId=${facilityId}" text="[${uiLabelMap.ProductInventoryItems}]" style="buttontext"/>
@@ -529,7 +528,7 @@
                         <section>
                             <widgets>
                                 <container>
-                                    <label style="head1" text="${title}"/>
+								    <label style="head1">${uiLabelMap.PageTitlePackageShipmentScheduling}</label>                                    
                                 </container>
                                 <platform-specific>
                                     <html><html-template location="component://product/webapp/facility/facility/FacilityScheduleTabBar.ftl"/></html>
@@ -548,7 +547,6 @@
     <screen name="ScheduleShipmentRouteSegment">
         <section>
             <actions>
-                <set field="title" value="Shipment Route Scheduling"/>
                 <set field="titleProperty" value="PageTitlePackageShipmentScheduling"/>
                 <set field="headerItem" value="facility"/>
                 <set field="tabButtonItem" value="Scheduling"/>
@@ -587,7 +585,6 @@
     <screen name="Labels">
         <section>
             <actions>
-                <set field="title" value="Label Printing"/>
                 <set field="titleProperty" value="PageTitleLabelPrinting"/>
                 <set field="headerItem" value="facility"/>
                 <set field="tabButtonItem" value="Scheduling"/>

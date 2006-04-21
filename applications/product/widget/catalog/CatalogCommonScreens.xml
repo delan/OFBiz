@@ -264,7 +264,7 @@
                 <set field="leftbarScreenLocation" value="component://product/widget/catalog/CommonScreens.xml"/>
                 <set field="MainColumnStyle" value="leftonly"/>
     
-                <set field="title" value="Fast Load Cache"/>
+                <set field="titleProperty" value="ProductFastLoadCatalogIntoCache"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/FastLoadCache.bsh"/>
             </actions>
             <widgets>

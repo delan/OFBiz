@@ -30,7 +30,7 @@
         <alt-target use-when="configItem==null" target="createProductConfigItem"/>
         
         <auto-fields-service service-name="updateProductConfigItem"/>
-        <field name="longDescription"><ignored/></field>
+        <field name="longDescription" title="${uiLabelMap.ProductLongDescription}"><ignored/></field>
         <field name="imageUrl"><ignored/></field>
         <field use-when="configItem!=null" name="configItemId" title="${uiLabelMap.ProductConfigItem}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductConfigItems}"><display/></field>
         <field use-when="configItem==null&amp;&amp;configItemId!=null" name="configItemId" title="${uiLabelMap.ProductConfigItem}" tooltip="${uiLabelMap.ProductCouldNotFindProductConfigItemWithId} [${configItemId}]"><display description="" also-hidden="false"/></field>

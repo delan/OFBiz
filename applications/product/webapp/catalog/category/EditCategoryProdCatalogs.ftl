@@ -29,7 +29,7 @@
     <table border="1" cellpadding="2" cellspacing="0">
     <tr>
         <td><div class="tabletext"><b>${uiLabelMap.ProductCatalogNameId}</b></div></td>
-        <td><div class="tabletext"><b>Type</b></div></td>
+        <td><div class="tabletext"><b>${uiLabelMap.CommonType}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
         <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
         <td><div class="tabletext"><b>&nbsp;</b></div></td>

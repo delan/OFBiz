@@ -38,14 +38,14 @@ function insertNowTimestamp(field) {
     <#else>
         <table border="1" cellpadding="2" cellspacing="0">
         <tr class="tableheadtext">
-            <td>Content</td>
-            <td>Type</td>
-            <td>From</td>
-            <td>Thru</td>
-            <td>Purchase From</td>
-            <td>Purchase Thru</td>
-            <td>Use Count</td>
-            <td>Use Days</td>
+            <td>${uiLabelMap.CommonContent}</td>
+            <td>${uiLabelMap.CommonType}</td>
+            <td>${uiLabelMap.CommonFrom}</td>
+            <td>${uiLabelMap.CommonThru}</td>
+            <td>${uiLabelMap.ProductPurchaseFrom}</td>
+            <td>${uiLabelMap.ProductPurchaseThru}</td>
+            <td>${uiLabelMap.ProductUseCount}</td>
+            <td>${uiLabelMap.ProductUseDays}</td>
             <td>&nbsp;</td>
         </tr>
       
@@ -68,19 +68,19 @@ function insertNowTimestamp(field) {
       
         </table>
     
-   <div class="head2">Create New Category Content</div>
+   <div class="head2">${uiLabelMap.ProductAddProductCategoryContentFromDate}</div>
    
-        <#if productCategoryId?has_content && productCategory?has_content>
+        <#if productCategoryId?has_content && productCategory?has_content>		
            ${prepareAddCategoryContentWrapper.renderFormString()}  
         </#if>
-        <div class="head2">Add Content to Category</div>
+        <div class="head2">${uiLabelMap.ProductAddContentCategory}</div>
         <#if productCategoryId?has_content && productCategory?has_content>
             ${addCategoryContentWrapper.renderFormString()}   
         </#if>
 
         <hr class="sepbar"/>
         
-        <div class="head2">Override Simple Fields</div>
+        <div class="head2">${uiLabelMap.ProductOverrideSimpleFields}</div>
         <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" style="margin: 0;" name="categoryForm">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">

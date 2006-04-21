@@ -254,7 +254,7 @@
     <screen name="PackOrder">
         <section>
             <actions>
-                <set field="title" value="Pack Order"/>
+                <set field="titleProperty" value="ProductPackOrder"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/PackOrder.bsh"/>
             </actions>
             <widgets>

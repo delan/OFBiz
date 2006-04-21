@@ -703,7 +703,7 @@
     <screen name="createVirtualWithVariantsForm">
         <section>
             <actions>
-                <set field="title" value="Create Virtual with Variants"/>
+                <set field="titleProperty" value="PageTitleCreateVirtualWithVariants"/>
                 <set field="labelTitleProperty" value=""/>
 
                 <set field="productId" from-field="parameters.productId"/>
