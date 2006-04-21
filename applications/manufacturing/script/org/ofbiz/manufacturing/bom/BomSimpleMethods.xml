@@ -111,10 +111,10 @@ under the License.
     </simple-method>
 
     <simple-method method-name="addProductManufacturingRule" short-description="Create Product Manufacturing Rule">
-    	<check-permission permission="MANUFACTURING" action="_CREATE">
+        <check-permission permission="MANUFACTURING" action="_CREATE">
             <fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupPermissionError"/>
         </check-permission>
-    	<check-errors/>
+        <check-errors/>
         <make-value value-name="lookupPKMap" entity-name="ProductManufacturingRule"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
         <find-by-primary-key entity-name="ProductManufacturingRule" map-name="lookupPKMap" value-name="newEntity"/>
@@ -123,7 +123,7 @@ under the License.
                 <fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupIdAlreadyExist"/>
             </add-error>
             <check-errors/>
-	<else>
+        <else>
             <make-value value-name="newEntity" entity-name="ProductManufacturingRule"/>
             <if-empty field-name="parameters.ruleId">
                 <sequenced-id-to-env sequence-name="ProductManufacturingRule" env-name="parameters.ruleId"/>
@@ -131,8 +131,8 @@ under the License.
             <set-pk-fields map-name="parameters" value-name="newEntity"/>
             <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
             <create-value value-name="newEntity"/>
-	</else>
-	</if-not-empty>
+        </else>
+        </if-not-empty>
     </simple-method>
 
     <simple-method method-name="deleteProductManufacturingRule" short-description="Remove a Product Manufacturing Rule">
