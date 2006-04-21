@@ -39,62 +39,60 @@ shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", s
 jrParameters.put("shipmentIdPar", shipment.getString("shipmentId"));
 
 if (shipment != null) {
-	shipmentPackages = delegator.findByAnd("ShipmentPackage", UtilMisc.toMap("shipmentId", shipmentId));
-        shipmentPackagesIt = shipmentPackages.iterator();
-        records = new ArrayList();
-        orderReaders = new HashMap();
-        while(shipmentPackagesIt.hasNext()) {
-            shipmentPackage = shipmentPackagesIt.next();
-            
-                shipmentPackageComponents = delegator.findByAnd("ShipmentPackageContent", UtilMisc.toMap("shipmentId", shipmentId, "shipmentPackageSeqId", shipmentPackage.getString("shipmentPackageSeqId")));
-                shipmentPackageComponentsIt = shipmentPackageComponents.iterator();
-                while(shipmentPackageComponentsIt.hasNext()) {
-                    shipmentPackageComponent = shipmentPackageComponentsIt.next();
-            
-                    shipmentItem = shipmentPackageComponent.getRelatedOne("ShipmentItem");
-                    orderShipments = shipmentItem.getRelated("OrderShipment");
-                    orderShipment = EntityUtil.getFirst(orderShipments);
-                    
-                    String orderId = null;
-                    if (orderShipment != null) orderId = orderShipment.getString("orderId");
+    shipmentPackages = delegator.findByAnd("ShipmentPackage", UtilMisc.toMap("shipmentId", shipmentId));
+    shipmentPackagesIt = shipmentPackages.iterator();
+    records = new ArrayList();
+    orderReaders = new HashMap();
+    while(shipmentPackagesIt.hasNext()) {
+        shipmentPackage = shipmentPackagesIt.next();
 
-                    record = new HashMap();
-                    if (shipmentPackageComponent.get("subProductId") != null) {
-                        record.put("productId", shipmentPackageComponent.getString("subProductId"));
-                        record.put("quantity", shipmentPackageComponent.getDouble("subQuantity"));
-                    } else {
-                        record.put("productId", shipmentItem.getString("productId"));
-                        record.put("quantity", shipmentPackageComponent.getDouble("quantity"));
-                    }
-                    record.put("shipmentPackageSeqId", shipmentPackageComponent.getString("shipmentPackageSeqId"));
-                    record.put("orderId", orderId);
-                    product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", (String)record.get("productId")));
-                    record.put("productName", product.getString("internalName"));
-                    record.put("shipDate", shipment.getString("estimatedShipDate"));
-                    // ---
-                    orderReadHelper = null;
-                    if (orderReaders.containsKey(orderId)) {
-                        orderReadHelper = (OrderReadHelper)orderReaders.get(orderId);
-                    } else {
-                        orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-                        orderReadHelper = new OrderReadHelper(orderHeader);
-                        orderReaders.put(orderId, orderReadHelper);
-                    }
-                    displayParty = orderReadHelper.getPlacingParty();
-                    shippingAddress = orderReadHelper.getShippingAddress();
-                    record.put("shippingAddressName", shippingAddress.getString("toName"));
-                    record.put("shippingAddressAddress", shippingAddress.getString("address1"));
-                    record.put("shippingAddressCity", shippingAddress.getString("city"));
-                    record.put("shippingAddressPostalCode", shippingAddress.getString("postalCode"));
-                    record.put("shippingAddressCountry", shippingAddress.getString("countryGeoId"));
-                    records.add(record);
+        shipmentPackageComponents = delegator.findByAnd("ShipmentPackageContent", UtilMisc.toMap("shipmentId", shipmentId, "shipmentPackageSeqId", shipmentPackage.getString("shipmentPackageSeqId")));
+        shipmentPackageComponentsIt = shipmentPackageComponents.iterator();
+        while(shipmentPackageComponentsIt.hasNext()) {
+            shipmentPackageComponent = shipmentPackageComponentsIt.next();
+
+            shipmentItem = shipmentPackageComponent.getRelatedOne("ShipmentItem");
+            orderShipments = shipmentItem.getRelated("OrderShipment");
+            orderShipment = EntityUtil.getFirst(orderShipments);
+
+            String orderId = null;
+            if (orderShipment != null) orderId = orderShipment.getString("orderId");
+
+            record = new HashMap();
+            if (shipmentPackageComponent.get("subProductId") != null) {
+                record.put("productId", shipmentPackageComponent.getString("subProductId"));
+                record.put("quantity", shipmentPackageComponent.getDouble("subQuantity"));
+            } else {
+                record.put("productId", shipmentItem.getString("productId"));
+                record.put("quantity", shipmentPackageComponent.getDouble("quantity"));
             }
-           
+            record.put("shipmentPackageSeqId", shipmentPackageComponent.getString("shipmentPackageSeqId"));
+            record.put("orderId", orderId);
+            product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", (String)record.get("productId")));
+            record.put("productName", product.getString("internalName"));
+            record.put("shipDate", shipment.getString("estimatedShipDate"));
+            // ---
+            orderReadHelper = null;
+            if (orderReaders.containsKey(orderId)) {
+                orderReadHelper = (OrderReadHelper)orderReaders.get(orderId);
+            } else {
+                orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                orderReadHelper = new OrderReadHelper(orderHeader);
+                orderReaders.put(orderId, orderReadHelper);
+            }
+            displayParty = orderReadHelper.getPlacingParty();
+            shippingAddress = orderReadHelper.getShippingAddress();
+            record.put("shippingAddressName", shippingAddress.getString("toName"));
+            record.put("shippingAddressAddress", shippingAddress.getString("address1"));
+            record.put("shippingAddressCity", shippingAddress.getString("city"));
+            record.put("shippingAddressPostalCode", shippingAddress.getString("postalCode"));
+            record.put("shippingAddressCountry", shippingAddress.getString("countryGeoId"));
+            records.add(record);
         }
-
-	jrDataSource = new JRMapCollectionDataSource(records);
-	request.setAttribute("jrDataSource", jrDataSource);
-        request.setAttribute("jrParameters", jrParameters);
+    }
+    jrDataSource = new JRMapCollectionDataSource(records);
+    request.setAttribute("jrDataSource", jrDataSource);
+    request.setAttribute("jrParameters", jrParameters);
 }
 
 return "success";

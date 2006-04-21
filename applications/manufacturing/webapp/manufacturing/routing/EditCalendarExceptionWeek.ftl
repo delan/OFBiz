@@ -24,23 +24,23 @@
  *@since      3.0
 -->
 
-	<div class="head1">${uiLabelMap.ManufacturingEditCalendarExceptionWeekFor}&nbsp; 
-			<span class='head2'> <#if (techDataCalendar.description)?has_content>"${(techDataCalendar.get("description",locale))}"</#if> 
-						[${uiLabelMap.CommonId}:${techDataCalendar.calendarId?if_exists}]</span>
-	</div>
-	<br/>
-	<#if techDataCalendar?has_content>
-		${listCalendarExceptionWeekWrapper.renderFormString(context)}
-		<br/>
-		<hr class="sepbar">
-		<#if calendarExceptionWeek?has_content>
-				${updateCalendarExceptionWeekWrapper.renderFormString(context)}
-				<br/>
-				<hr class="sepbar">
-		</#if>
-		${addCalendarExceptionWeekWrapper.renderFormString(context)}
-	</#if>
-	<br/>
-
-
-	
+<div class="head1">
+    ${uiLabelMap.ManufacturingEditCalendarExceptionWeekFor}&nbsp; 
+    <span class='head2'>
+        <#if (techDataCalendar.description)?has_content>"${(techDataCalendar.get("description",locale))}"</#if> 
+        [${uiLabelMap.CommonId}:${techDataCalendar.calendarId?if_exists}]
+    </span>
+</div>
+<br/>
+<#if techDataCalendar?has_content>
+    ${listCalendarExceptionWeekWrapper.renderFormString(context)}
+    <br/>
+    <hr class="sepbar">
+    <#if calendarExceptionWeek?has_content>
+        ${updateCalendarExceptionWeekWrapper.renderFormString(context)}
+        <br/>
+        <hr class="sepbar">
+    </#if>
+    ${addCalendarExceptionWeekWrapper.renderFormString(context)}
+</#if>
+<br/>

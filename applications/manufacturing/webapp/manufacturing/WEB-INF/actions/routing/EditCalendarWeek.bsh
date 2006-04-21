@@ -46,9 +46,9 @@ String calendarWeekId = request.getParameter("calendarWeekId");
 calendarWeekData = new HashMap();
 if (calendarWeekId == null)  calendarWeekId = request.getAttribute("calendarWeekId");
 if (calendarWeekId != null) {
-		calendarWeek = delegator.findByPrimaryKey("TechDataCalendarWeek", UtilMisc.toMap("calendarWeekId", calendarWeekId));
-		context.put("calendarWeek",calendarWeek);
-		calendarWeekData = calendarWeek;
+    calendarWeek = delegator.findByPrimaryKey("TechDataCalendarWeek", UtilMisc.toMap("calendarWeekId", calendarWeekId));
+    context.put("calendarWeek",calendarWeek);
+    calendarWeekData = calendarWeek;
 }
 errorMessage = request.getAttribute("_ERROR_MESSAGE_");
 if (errorMessage != null && errorMessage.length() > 0) {

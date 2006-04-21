@@ -77,17 +77,17 @@ function lookupInventory() {
                 <td width='20%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonFromDate}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
-		    <input type='text' size='25' class='inputBox' name='eventDate' value='${requestParameters.eventDate?if_exists}'/>
+                  <input type='text' size='25' class='inputBox' name='eventDate' value='${requestParameters.eventDate?if_exists}'/>
                     <a href="javascript:call_cal(document.lookupinventory.eventDate,'');">
                        <img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'/>
                      </a>
                 </td>
               </tr>        
-	       <tr>		   
-      		 <td width="25%" align="center" valign="top">
-      		 <td width="5">&nbsp;</td>
-      		 <td width="75%"> <a href="javascript:lookupInventory();" class="smallSubmit">&nbsp; ${uiLabelMap.CommonLookup} &nbsp;</a></td>
-	       </tr>
+              <tr>
+                <td width="25%" align="center" valign="top">
+                <td width="5">&nbsp;</td>
+                <td width="75%"> <a href="javascript:lookupInventory();" class="smallSubmit">&nbsp; ${uiLabelMap.CommonLookup} &nbsp;</a></td>
+              </tr>
             </table>
           </td>
         </tr>
@@ -143,47 +143,46 @@ document.lookupinventory.productId.focus();
         <tr>
           <td align="left"><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
           <td align="left"><div class="tableheadtext">${uiLabelMap.CommonEventDate}</div></td>
-	  <td align="center">&nbsp</td>
+          <td align="center">&nbsp</td>
           <td align="right"><div class="tableheadtext">${uiLabelMap.CommonQuantity}</div></td>
           <td align="right"><div class="tableheadtext">${uiLabelMap.ManufacturingTotalQuantity}</div></td>
         </tr>
         <tr>
-	  <td colspan='7'><hr class='sepbar'>
-	  </td>
-	</tr>
-	  <#assign count = lowIndex>
-	  <#assign countProd = 0>
-	  <#assign productTmp = "">
-	   <#list inventoryList[lowIndex..highIndex-1] as inven>
-	    <#assign product = inven.getRelatedOne("Product")>
-	    <#if ! product.equals( productTmp )>
-	      <tr bgcolor="lightblue">  
-	       <td colspan='4' align="left">
-	        <div class='tabletext'><b>&nbsp&nbsp&nbsp&nbsp&nbsp[${inven.productId}]&nbsp/&nbsp${product.productName?if_exists}</b></div>
-               </td>
-	       <td  colspan='3' align="right">
-	        <#assign qoh = qohProduct[countProd]>
-		<#assign countProd = countProd+1>
-		<big><b><div class='tabletext'>${qoh}</div></b><big>
-	       </td>
-              </tr>
-	    </#if>
-	    <#assign productTmp = product>
-	    <#assign inventoryEventPlannedType = inven.getRelatedOne("InventoryEventPlannedType")>
-	    <tr class="${rowClass}">
-	     <td><div class='tabletext'>${inventoryEventPlannedType.description}</div></td>
-             <td><div class='tabletext'>${inven.getString("eventDate")}</div></td>
-	     <td>&nbsp</td>
-	     <td><div class='tabletext'align="right"> ${inven.getString("eventQuantity")}</div></td>
-	     <td align="right">
-	      <#list numberProductList[count..count] as atpDate> 
-		     <div class='tabletext'>${atpDate}&nbsp&nbsp</div>
-	      </#list>
-	      <#assign count=count+1>
-	     </td>
-	    </tr>
+          <td colspan='7'><hr class='sepbar'></td>
+        </tr>
+        <#assign count = lowIndex>
+        <#assign countProd = 0>
+        <#assign productTmp = "">
+        <#list inventoryList[lowIndex..highIndex-1] as inven>
+            <#assign product = inven.getRelatedOne("Product")>
+            <#if ! product.equals( productTmp )>
+                <tr bgcolor="lightblue">  
+                  <td colspan='4' align="left">
+                    <div class='tabletext'><b>&nbsp&nbsp&nbsp&nbsp&nbsp[${inven.productId}]&nbsp/&nbsp${product.productName?if_exists}</b></div>
+                  </td>
+                  <td colspan='3' align="right">
+                    <#assign qoh = qohProduct[countProd]>
+                    <#assign countProd = countProd+1>
+                    <big><b><div class='tabletext'>${qoh}</div></b></big>
+                  </td>
+                </tr>
+            </#if>
+            <#assign productTmp = product>
+            <#assign inventoryEventPlannedType = inven.getRelatedOne("InventoryEventPlannedType")>
+            <tr class="${rowClass}">
+              <td><div class='tabletext'>${inventoryEventPlannedType.description}</div></td>
+              <td><div class='tabletext'>${inven.getString("eventDate")}</div></td>
+              <td>&nbsp</td>
+              <td><div class='tabletext'align="right"> ${inven.getString("eventQuantity")}</div></td>
+              <td align="right">
+              <#list numberProductList[count..count] as atpDate> 
+                <div class='tabletext'>${atpDate}&nbsp&nbsp</div>
+              </#list>
+              <#assign count=count+1>
+              </td>
+            </tr>
            </#list>
-	  
+  
        </table>
       <#else>
        <br/>

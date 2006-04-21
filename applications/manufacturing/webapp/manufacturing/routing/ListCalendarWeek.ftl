@@ -37,4 +37,3 @@
     ${listCalendarWeekWrapper.renderFormString(context)} 
 </#if>
 <br/>
-	

@@ -45,13 +45,13 @@
     <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
     
     <preprocessor>
-    	<!-- Events to run on every request before security (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
-    	<event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
+        <!-- Events to run on every request before security (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
-    	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <!-- Events to run on every request after all other processing (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
     <!-- Security Mappings -->
@@ -105,17 +105,17 @@
 
     <request-map uri="main">
         <security https="true" auth="true"/>
-    	<response name="success" type="view" value="main"/>
+        <response name="success" type="view" value="main"/>
     </request-map>
 
     <!-- Lookup request mappings -->
     <request-map uri="LookupRouting">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="LookupRouting"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupRouting"/>
     </request-map> 
     <request-map uri="LookupRoutingTask">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="LookupRoutingTask"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupRoutingTask"/>
     </request-map> 
     <request-map uri="LookupProduct">
         <security auth="true" https="true"/>
