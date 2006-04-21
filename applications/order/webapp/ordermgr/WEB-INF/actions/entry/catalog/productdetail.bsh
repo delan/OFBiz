@@ -179,6 +179,7 @@ if (product != null) {
             "currencyUomId", cart.getCurrency(), "autoUserLogin", autoUserLogin);
         priceContext.put("webSiteId", webSiteId);
         priceContext.put("productStoreId", productStoreId);
+        priceContext.put("checkIncludeVat", "Y");
         priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
         context.put("priceMap", priceMap);
     } else {
