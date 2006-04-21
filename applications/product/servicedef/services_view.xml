@@ -54,9 +54,9 @@
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="featureOrder" type="java.util.Collection" mode="IN"/>
         <attribute name="productStoreId" type="String" mode="IN"/>
-        <attribute name="variantTree" type="java.util.Map" mode="OUT"/>
-        <attribute name="variantSample" type="java.util.Map" mode="OUT"/>
-        <attribute name="virtualVariant" type="java.util.List" mode="OUT"/>
+        <attribute name="variantTree" type="java.util.Map" mode="OUT" optional="true"/>
+        <attribute name="variantSample" type="java.util.Map" mode="OUT" optional="true"/>
+        <attribute name="virtualVariant" type="java.util.List" mode="OUT" optional="true"/>
     </service>
     <service name="getAllProductVariants" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="prodFindAllVariants">

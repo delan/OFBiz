@@ -202,8 +202,7 @@ public class ProductServices {
         List virtualVariant = new ArrayList();
 
         if (variants == null || variants.size() == 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,"productservices.empty_list_of_products_returned", locale));
+            return ServiceUtil.returnSuccess();
         }
         List items = new ArrayList();
         Iterator i = variants.iterator();
