@@ -27,6 +27,7 @@
     <group name="createCreditCardAndAddress" send-mode="all">
         <service name="createPostalAddress" mode="sync" result-to-context="true"/>
         <service name="createCreditCard" mode="sync"/>
+        <service name="createPartyContactMech" mode="sync"/>
     </group>
     <group name="updateCreditCardAndAddress" send-mode="all">
         <service name="updatePostalAddress" mode="sync" result-to-context="true"/>
