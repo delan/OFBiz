@@ -442,7 +442,7 @@ under the License.
                 <!-- if new status is paid check if the complete invoice is applied. -->
                 <if-compare field-name="parameters.statusId" operator="equals" value="INVOICE_PAID">
                     <set field="notApplied" type="Double" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
-                    <if-compare field-name="notApplied" operator="not-equals" value="0.00">
+                    <if-compare field-name="notApplied" operator="not-equals" value="0.00" type="Double">
                         <add-error><fail-message message="Cannot change status to 'paid', invoice ${invoice.invoiceId} has an unapplied balance of [${notApplied}]"/></add-error>
                         <check-errors/>
                     </if-compare>
