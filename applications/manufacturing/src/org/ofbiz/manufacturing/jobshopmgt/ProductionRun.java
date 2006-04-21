@@ -47,7 +47,7 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
 
 /**
  * ProductionRun Object used by the Jobshop management OFBiz comonents,
- * 	this object is used to find or updated an existing ProductionRun.
+ * this object is used to find or updated an existing ProductionRun.
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
  */

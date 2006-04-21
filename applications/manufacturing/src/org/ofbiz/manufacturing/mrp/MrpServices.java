@@ -91,7 +91,7 @@ public class MrpServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
-        //Erases the old table 	for the moment and initializes it with the new orders,
+        //Erases the old table for the moment and initializes it with the new orders,
         //Does not modify the old one now.
         Debug.logInfo("initInventoryEventPlanned called", module);
         
@@ -340,7 +340,7 @@ public class MrpServices {
     
     /**
      * Find the quantity on hand of products for MRP.
-     * <li>PreConditions :	none</li>
+     * <li>PreConditions : none</li>
      * <li>Result : We get the quantity of product available in the stocks.</li>
      *
      * @param product the product for which the Quantity Available is required

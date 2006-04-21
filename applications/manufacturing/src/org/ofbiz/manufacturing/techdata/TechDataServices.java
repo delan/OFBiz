@@ -66,7 +66,6 @@ public class TechDataServices {
     public static Map lookupRoutingTask(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        /*		Security security = ctx.getSecurity();  a completer par la suite */
         Map result = new HashMap();
         
         String workEffortName = (String) context.get("workEffortName");
@@ -448,7 +447,6 @@ public class TechDataServices {
                 moveDay -=1;
                 dayEnd = (dayEnd==1) ? 7 : dayEnd - 1;
             }
-            //			   Debug.logInfo("capacity loop: " + capacity+ " moveDay=" +moveDay, module);
         }
         result.put("capacity",capacity);
         result.put("startTime",startTime);
@@ -469,7 +467,6 @@ public class TechDataServices {
             techDataCalendarWeek = techDataCalendar.getRelatedOneCache("TechDataCalendarWeek");
         } catch (GenericEntityException e) {
             Debug.logError("Pb reading Calendar Week associated with calendar"+e.getMessage(), module);
-            //			   return ServiceUtil.returnError(UtilProperties.getMessage(resource, "PbReadingTechDataCalendarWeekAssociated", locale));
             return 0;
         }
         // TODO read TechDataCalendarExcDay to manage execption day
@@ -503,7 +500,6 @@ public class TechDataServices {
             techDataCalendarWeek = techDataCalendar.getRelatedOneCache("TechDataCalendarWeek");
         } catch (GenericEntityException e) {
             Debug.logError("Pb reading Calendar Week associated with calendar"+e.getMessage(), module);
-            //				   return ServiceUtil.returnError(UtilProperties.getMessage(resource, "PbReadingTechDataCalendarWeekAssociated", locale));
             return ServiceUtil.returnError("Pb reading Calendar Week associated with calendar");
         }
         // TODO read TechDataCalendarExcDay to manage execption day
