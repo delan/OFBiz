@@ -42,12 +42,15 @@ GenericValue techDataCalendar = null;
 List calendarExceptionDays = null;
 
 String calendarId = request.getParameter("calendarId");
-if (calendarId == null)  calendarId = request.getAttribute("calendarId");
-if (calendarId != null)
-	techDataCalendar = delegator.findByPrimaryKey("TechDataCalendar", UtilMisc.toMap("calendarId", calendarId));
-if (techDataCalendar != null)
+if (calendarId == null) {
+    calendarId = request.getAttribute("calendarId");
+}
+if (calendarId != null) {
+    techDataCalendar = delegator.findByPrimaryKey("TechDataCalendar", UtilMisc.toMap("calendarId", calendarId));
+}
+if (techDataCalendar != null) {
     calendarExceptionDays = techDataCalendar.getRelated("TechDataCalendarExcDay");
-
+}
 HtmlFormWrapper listCalendarExceptionDayWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "ListCalendarExceptionDay", request, response);
 listCalendarExceptionDayWrapper.putInContext("calendarExceptionDays", calendarExceptionDays);
 
@@ -62,13 +65,11 @@ String exceptionDateStartTime = request.getParameter("exceptionDateStartTime");
 if (exceptionDateStartTime == null)
     exceptionDateStartTime = request.getAttribute("exceptionDateStartTime");
 if (exceptionDateStartTime != null) {
-	calendarExceptionDay = delegator.findByPrimaryKey("TechDataCalendarExcDay", UtilMisc.toMap("calendarId", calendarId,"exceptionDateStartTime", exceptionDateStartTime));
-	if (calendarExceptionDay != null) {
-		HtmlFormWrapper updateCalendarExceptionDayWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "UpdateCalendarExceptionDay", request, response);
-		updateCalendarExceptionDayWrapper.putInContext("calendarExceptionDay", calendarExceptionDay);
-		context.put("calendarExceptionDay", calendarExceptionDay);
-		context.put("updateCalendarExceptionDayWrapper", updateCalendarExceptionDayWrapper);
-	}
+    calendarExceptionDay = delegator.findByPrimaryKey("TechDataCalendarExcDay", UtilMisc.toMap("calendarId", calendarId,"exceptionDateStartTime", exceptionDateStartTime));
+    if (calendarExceptionDay != null) {
+        HtmlFormWrapper updateCalendarExceptionDayWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "UpdateCalendarExceptionDay", request, response);
+        updateCalendarExceptionDayWrapper.putInContext("calendarExceptionDay", calendarExceptionDay);
+        context.put("calendarExceptionDay", calendarExceptionDay);
+        context.put("updateCalendarExceptionDayWrapper", updateCalendarExceptionDayWrapper);
+    }
 }
-
-

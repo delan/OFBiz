@@ -70,7 +70,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         updateProductionRunWrapper.putInContext("actionForm", "updateProductionRun");
         updateProductionRunWrapper.setUseRequestParameters(false);
         context.put("updateProductionRunWrapper",updateProductionRunWrapper);
-	
+
         productionRunData.put("productionRunId",productionRunId);
         productionRunData.put("productId",productionRun.getProductProduced().getString("productId"));
         productionRunData.put("productName",productionRun.getProductProduced().getString("internalName"));
@@ -96,7 +96,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         } else {
             productionRunData.put("quantity", productionRun.getQuantity());
         }
-	
+
         if (estimatedStartDate != null) {
             productionRunData.put("estimatedStartDate",estimatedStartDate);
         } else {

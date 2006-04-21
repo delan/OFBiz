@@ -42,11 +42,15 @@ GenericValue techDataCalendar = null;
 List calendarExceptionWeeks = null;
 
 String calendarId = request.getParameter("calendarId");
-if (calendarId == null)  calendarId = request.getAttribute("calendarId");
-if (calendarId != null)
-	techDataCalendar = delegator.findByPrimaryKey("TechDataCalendar", UtilMisc.toMap("calendarId", calendarId));
-if (techDataCalendar != null)
+if (calendarId == null) {
+    calendarId = request.getAttribute("calendarId");
+}
+if (calendarId != null) {
+    techDataCalendar = delegator.findByPrimaryKey("TechDataCalendar", UtilMisc.toMap("calendarId", calendarId));
+}
+if (techDataCalendar != null) {
     calendarExceptionWeeks = techDataCalendar.getRelated("TechDataCalendarExcWeek");
+}
 List calendarExceptionWeeksDatas = new LinkedList();
 Iterator calendarExceptionWeeksIter = calendarExceptionWeeks.iterator();
 while (calendarExceptionWeeksIter.hasNext()) {
@@ -69,13 +73,11 @@ String exceptionDateStart = request.getParameter("exceptionDateStart");
 if (exceptionDateStart == null)
     exceptionDateStart = request.getAttribute("exceptionDateStart");
 if (exceptionDateStart != null) {
-	calendarExceptionWeek = delegator.findByPrimaryKey("TechDataCalendarExcWeek", UtilMisc.toMap("calendarId", calendarId,"exceptionDateStart", exceptionDateStart));
-	if (calendarExceptionWeek != null) {
-		HtmlFormWrapper updateCalendarExceptionWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "UpdateCalendarExceptionWeek", request, response);
-		updateCalendarExceptionWeekWrapper.putInContext("calendarExceptionWeek", calendarExceptionWeek);
-		context.put("calendarExceptionWeek", calendarExceptionWeek);
-		context.put("updateCalendarExceptionWeekWrapper", updateCalendarExceptionWeekWrapper);
-	}
+    calendarExceptionWeek = delegator.findByPrimaryKey("TechDataCalendarExcWeek", UtilMisc.toMap("calendarId", calendarId,"exceptionDateStart", exceptionDateStart));
+    if (calendarExceptionWeek != null) {
+        HtmlFormWrapper updateCalendarExceptionWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "UpdateCalendarExceptionWeek", request, response);
+        updateCalendarExceptionWeekWrapper.putInContext("calendarExceptionWeek", calendarExceptionWeek);
+        context.put("calendarExceptionWeek", calendarExceptionWeek);
+        context.put("updateCalendarExceptionWeekWrapper", updateCalendarExceptionWeekWrapper);
+    }
 }
-
-

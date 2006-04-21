@@ -243,7 +243,7 @@
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"></field>
         <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingRoutingTaskId}">
-        	<display description="${routingTask.workEffortName}"/></field>
+            <display description="${routingTask.workEffortName}"/></field>
         <field name="workEffortAssocTypeId" ><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ></field>
