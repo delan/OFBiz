@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author     Andy Zeneski (jaz@ofbiz.org)
- * @author     David E. Jones (jonesde@ofbiz.org)
- * @author     Olivier Heintz (olivier.heintz@nereide.biz)
- * @version    $Rev$
- * @since      2.0
+    $Id$
+    
+    Copyright 2001-2006 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not
+    use this file except in compliance with the License. You may obtain a copy of
+    the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -81,7 +71,9 @@
         <check-errors/>
         
         <if-compare field-name="payment.statusId" value="PMNT_NOT_PAID" operator="not-equals">
-            <add-error><fail-message message="Status does not allow an update of the payment"/></add-error>
+            <add-error>
+                <fail-property resource="AccountingUiLabels" property="AccountingPSUpdateNotAllowedBecauseOfStatus"/>
+            </add-error>
         </if-compare>
         <check-errors/>
         
@@ -123,7 +115,7 @@
             </if-not-empty>
 
             <!-- get the amount that has not been applied yet for the invoice (outstanding amount) -->
-            <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice).doubleValue()}"/>
+            <set field="notApplied" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice).doubleValue()}" type="Double"/>
 
             <!-- if the amount to apply goes over the outstanding amount, then use the notApplied amount and log a warning -->
             <if-compare-field field-name="paymentAppl.amountApplied" operator="greater" to-field-name="notApplied">
@@ -141,9 +133,9 @@
     <simple-method method-name="setPaymentStatus" short-description="Set The Payment Status">
         <check-permission permission="ACCOUNTING" action="_UPDATE">
             <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
-            <fail-message message="Security Error: To update an Payment you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+            <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>
-        
+
         <entity-one entity-name="Payment" value-name="payment"/>
         <field-to-result field-name="payment.paymentId" result-name="oldStatusId"/>
         
@@ -152,25 +144,18 @@
                 <field-map field-name="statusId" env-name="payment.statusId"/>
                 <field-map field-name="statusIdTo" env-name="parameters.statusId"/>
             </entity-one>
-            
             <if-empty field-name="statusChange">
-                <add-error><fail-message message="Status is not a valid change"/></add-error>
+                <add-error><fail-property resource="AccountingUiLabels" property="AccountingPSInvalidStatusChange"/></add-error>
                 <log level="error" message="Cannot change from ${payment.statusId} to ${parameters.statusId}"/>
                 <check-errors/>
                 <else>
                     
                     <!-- check if the payment fully applied when set to confirmed-->
                     <if-compare field-name="parameters.statusId" operator="equals" value="PMNT_CONFIRMED">
-                        <set field="applied" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment)}" type="Double"/>
-                        <calculate field-name="notYetApplied" type="BigDecimal">
-                            <calcop operator="subtract">
-                                <calcop operator="get" field-name="payment.amount"/>
-                                <calcop operator="get" field-name="applied"/>
-                            </calcop>
-                        </calculate>
-                        <if-compare field-name="notYetApplied" operator="greater" value="0.000001">
-                            <add-error><fail-message message="Status cannot be set to 'Confirmed', the payment is not fully applied!"/></add-error>
-                            <log level="error" message="Cannot change from ${payment.statusId} to ${parameters.statusId}, payment not fully applied: ${applied} versus ${payment.amount}"/>
+                        <set field="notYetApplied" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotAppliedBd(payment)}"/>
+                        <if-compare field-name="notYetApplied" operator="greater" value="0.00">
+                            <add-error><fail-property resource="AccountingUiLabels" property="AccountingPSNotConfirmedNotFullyApplied"/></add-error>
+                            <log level="error" message="Cannot change from ${payment.statusId} to ${parameters.statusId}, payment not fully applied: ${notYetapplied}"/>
                             <check-errors/>
                         </if-compare>
                     </if-compare>    
@@ -181,7 +166,7 @@
                         <remove-by-and entity-name="PaymentApplication" map-name="removePaymentApplicationMap"/>
                     </if-compare>
                     
-                    <!-- everything ok so not change the status field -->
+                    <!-- everything ok so now change the status field -->
                     <set from-field="parameters.statusId" field="payment.statusId"/>
                     <store-value value-name="payment"/>
                     
