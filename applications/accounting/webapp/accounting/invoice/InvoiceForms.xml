@@ -123,7 +123,7 @@ under the License.
         default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="invoiceItems"
         target="" paginate-target="InvoiceItems" title="" type="list" separate-columns="true">
         <row-actions>
-            <set field="total" value="${bsh:if(quantity == null) quantity = 1;if(amount==null) amount = 0;return(quantity*amount);}"/>
+            <set field="total" type="Double" value="${bsh:if(quantity == null) quantity = 1;if(amount==null) amount = 0;return(quantity*amount);}"/>
         </row-actions>
         <auto-fields-entity entity-name="InvoiceItem" default-field-type="display"/>
         <field name="invoiceId"><hidden/></field>
@@ -230,7 +230,7 @@ under the License.
         target="updateInvoiceItem" title="Edit Invoice Items" default-title-style="tableheadtext"
         default-widget-style="inputBox" default-tooltip-style="tabletext">
        <row-actions>
-           <set field="total" value="${bsh:if(quantity==null||quantity==1) quantity = 1; total=quantity*amount;}"/>
+           <set field="total" type="Double" value="${bsh:if(quantity==null||quantity==1) quantity = 1; total=quantity*amount;}"/>
        </row-actions>
        <field name="invoiceId"><hidden/></field>
        <field name="invoiceItemSeqId" title="Item No." widget-style="buttontext"><hyperlink target="listInvoiceItems?invoiceId=${invoiceId}&amp;invoiceItemSeqId=${invoiceItemSeqId}" description="${invoiceItemSeqId}"/></field>
