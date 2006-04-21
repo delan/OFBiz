@@ -123,9 +123,7 @@ public class BillingAccountWorker {
     }
         
     public static BigDecimal getBillingAccountBalance(GenericDelegator delegator, String billingAccountId) throws GenericEntityException {
-        int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-        int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
-        BigDecimal balance = new BigDecimal("0.00");
+        BigDecimal balance = ZERO;
         // first get all the pending orders (not cancelled, rejected or completed)
         List orderHeaders = null;
         List exprs1 = new LinkedList();
