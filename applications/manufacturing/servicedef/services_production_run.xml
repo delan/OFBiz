@@ -63,6 +63,7 @@
         <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/> <!-- The task id -->
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="issueAllComponents" type="Boolean" mode="IN" optional="true"/>
         <attribute name="newStatusId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="addProductionRunRoutingTask" engine="java"
