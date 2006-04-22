@@ -610,6 +610,10 @@ public class ProductionRunServices {
         String productionRunId = (String) context.get("productionRunId");
         String taskId = (String) context.get("workEffortId");
         String statusId = (String) context.get("statusId");
+        Boolean issueAllComponents = (Boolean) context.get("issueAllComponents");
+        if (issueAllComponents == null) {
+            issueAllComponents = new Boolean(false);
+        }
         
         ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
         if (!productionRun.exist()){
@@ -690,8 +694,23 @@ public class ProductionRunServices {
         // PRUN_RUNNING --> PRUN_COMPLETED
         // this should be called only when the last task is completed
         if (currentStatusId.equals("PRUN_RUNNING") && (statusId == null || statusId.equals("PRUN_COMPLETED"))) {
-            // change only the production run (header) status to PRUN_COMPLETED
             Map serviceContext = new HashMap();
+            Map resultService = null;
+            if (issueAllComponents.booleanValue()) {
+                // Issue all the components, if this task needs components and they still need to be issued
+                try {
+                    List inventoryAssigned = delegator.findByAnd("WorkEffortInventoryAssign", UtilMisc.toMap("workEffortId", taskId));
+                    if (UtilValidate.isEmpty(inventoryAssigned)) {
+                        serviceContext.clear();
+                        serviceContext.put("workEffortId", taskId);
+                        serviceContext.put("userLogin", userLogin);
+                        resultService = dispatcher.runSync("issueProductionRunTask", serviceContext);
+                    }
+                } catch (Exception e) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
+                }
+            }
+            // change only the production run (header) status to PRUN_COMPLETED
             serviceContext.clear();
             serviceContext.put("workEffortId", taskId);
             serviceContext.put("currentStatusId", "PRUN_COMPLETED");
@@ -725,7 +744,6 @@ public class ProductionRunServices {
                 serviceContext.put("actualMilliSeconds", autoMillis);
             }
             serviceContext.put("userLogin", userLogin);
-            Map resultService = null;
             try {
                 resultService = dispatcher.runSync("updateWorkEffort", serviceContext);
             } catch (GenericServiceException e) {
@@ -1950,34 +1968,32 @@ public class ProductionRunServices {
         String taskId = (String) context.get("taskId");
 
         try {
-            Map serviceContext = null;
+            Map serviceContext = new HashMap();
             Map resultService = null;
             // Change the task status to running
-            serviceContext = new HashMap();
-            serviceContext.put("productionRunId", productionRunId);
-            serviceContext.put("workEffortId", taskId);
-            serviceContext.put("statusId", "PRUN_RUNNING");
-            serviceContext.put("userLogin", userLogin);
-            resultService = dispatcher.runSync("changeProductionRunTaskStatus", serviceContext);
-            // Issue all the components (if any)
-            serviceContext.clear();
-            serviceContext.put("workEffortId", taskId);
-            serviceContext.put("userLogin", userLogin);
-            resultService = dispatcher.runSync("issueProductionRunTask", serviceContext);
-            // Change the task status to completed
-            serviceContext.clear();
-            serviceContext.put("productionRunId", productionRunId);
-            serviceContext.put("workEffortId", taskId);
-            serviceContext.put("statusId", "PRUN_COMPLETED");
-            serviceContext.put("userLogin", userLogin);
-            resultService = dispatcher.runSync("changeProductionRunTaskStatus", serviceContext);
+            String currentStatusId = "";
+            String prevStatusId = "";
+            while (!"PRUN_COMPLETED".equals(currentStatusId)) {
+                serviceContext.put("productionRunId", productionRunId);
+                serviceContext.put("workEffortId", taskId);
+                serviceContext.put("issueAllComponents", new Boolean(true));
+                serviceContext.put("userLogin", userLogin);
+                resultService = dispatcher.runSync("changeProductionRunTaskStatus", serviceContext);
+                currentStatusId = (String)resultService.get("newStatusId");
+                if (currentStatusId.equals(prevStatusId)) {
+                    return ServiceUtil.returnError("Unable to progress from status [" + prevStatusId + "] for task [" + taskId + "]");
+                } else {
+                    prevStatusId = currentStatusId;
+                }
+                serviceContext.clear();
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Problem calling the changeProductionRunTaskStatus service", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
         }
         return result;
     }
-
+    
     /**
      * Quick runs all the tasks of a ProductionRun to the completed status,
      * also issuing components if necessary.
