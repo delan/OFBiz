@@ -36,7 +36,7 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/showvisits.bsh"/>                
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
@@ -67,7 +67,7 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/visitdetail.bsh"/>                
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
