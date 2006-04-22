@@ -944,4 +944,40 @@
         </description>
 		<attribute type="String" mode="IN" name="inventoryItemId" optional="false"/>		
 	</service>
+    <service name="createProductMaint" default-entity-name="ProductMaint" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="createProductMaint" auth="true">
+        <description>Create a ProductMaint</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productMaintSeqId" mode="OUT"/> <!-- make this OUT rather than IN, we will automatically generate the next sub-sequence ID -->        
+    </service>
+    <service name="updateProductMaint" default-entity-name="ProductMaint" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="updateProductMaint" auth="true">
+        <description>Update a ProductMaint</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductMaint" default-entity-name="ProductMaint" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductMaint" auth="true">
+        <description>Delete a ProductMaint</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="createProductMeter" default-entity-name="ProductMeter" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="createProductMeter" auth="true">
+        <description>Create a ProductMeter</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductMeter" default-entity-name="ProductMeter" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="updateProductMeter" auth="true">
+        <description>Update a ProductMeter</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductMeter" default-entity-name="ProductMeter" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="removeProductMeter" auth="true">
+        <description>Remove a ProductMeter</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
 </services>
