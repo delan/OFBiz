@@ -1970,8 +1970,8 @@ public class ProductionRunServices {
         try {
             Map serviceContext = new HashMap();
             Map resultService = null;
-            // Change the task status to running
-            String currentStatusId = "";
+            GenericValue task = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", taskId));
+            String currentStatusId = task.getString("currentStatusId");
             String prevStatusId = "";
             while (!"PRUN_COMPLETED".equals(currentStatusId)) {
                 serviceContext.put("productionRunId", productionRunId);
@@ -1987,7 +1987,7 @@ public class ProductionRunServices {
                 }
                 serviceContext.clear();
             }
-        } catch (GenericServiceException e) {
+        } catch (Exception e) {
             Debug.logError(e, "Problem calling the changeProductionRunTaskStatus service", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
         }
