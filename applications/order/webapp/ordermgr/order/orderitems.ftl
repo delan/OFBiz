@@ -343,7 +343,7 @@
                     <td align="right" colspan="2">
                       <div class="tabletext" style="font-size: xx-small;">
                         <b><i>${uiLabelMap.CommonSurveys}</i>:</b>
-                          <a href="/content/control/ViewSurveyResponse?surveyResponseId=${survey.surveyResponseId}&surveyId=${survey.surveyId}<#if survey.partyId?exists>&partyId=${survey.partyId}</#if>&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
+                          <a href="/content/control/ViewSurveyResponses?surveyResponseId=${survey.surveyResponseId}&surveyId=${survey.surveyId}<#if survey.partyId?exists>&partyId=${survey.partyId}</#if>&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
                       </div>
                     </td>
                     <td>&nbsp;</td>
