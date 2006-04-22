@@ -743,4 +743,70 @@
         <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="productAssocInstance"/>
         <remove-value value-name="productAssocInstance"/>
     </simple-method>
+
+    <!-- Create/Update/Delete Product Maint Record -->
+    <simple-method method-name="createProductMaint" short-description="Create an Product Maintenance">
+        <check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createProductMaint you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="ProductMaint"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="productMaintSeqId"/> <!-- this finds the next sub-sequence ID -->
+        <field-to-result field-name="newEntity.productMaintSeqId" result-name="productMaintSeqId"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductMaint" short-description="Update an existing Product Maintenance">
+        <check-permission permission="CATALOG" action="_UPDATE">
+            <alt-permission permission="CATALOG_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run updateProductMaint you must have the CATALOG_UPDATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_UPDATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <entity-one entity-name="ProductMaint" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteProductMaint" short-description="Delete Product Maint from PRODUCT_MAINT">
+        <check-permission permission="CATALOG" action="_DELETE">
+            <alt-permission permission="CATALOG_ROLE" action="_DELETE"/>
+            <fail-message message="Security Error: to run deleteProductMaint you must have the CATALOG_DELETE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_UPDATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <entity-one entity-name="ProductMaint" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    <!-- Create/Update/Delete Product Meter Record -->
+    <simple-method method-name="createProductMeter" short-description="Create an Product Meter">
+        <check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createProductMeter you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="ProductMeter"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductMeter" short-description="Update an existing Product Meter">
+        <check-permission permission="CATALOG" action="_UPDATE">
+            <alt-permission permission="CATALOG_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run updateProductMeter you must have the CATALOG_UPDATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_UPDATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <entity-one entity-name="ProductMeter" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteProductMeter" short-description="Delete an existing Product Meter">
+        <check-permission permission="CATALOG" action="_DELETE">
+            <alt-permission permission="CATALOG_ROLE" action="_DELETE"/>
+            <fail-message message="Security Error: to run deleteProductMeter you must have the CATALOG_DELETE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_UPDATE permission"/>
+        </check-permission>        
+        <check-errors/>
+        <entity-one entity-name="ProductMeter" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>
