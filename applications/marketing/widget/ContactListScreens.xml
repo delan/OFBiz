@@ -25,42 +25,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-   <screen name="CommonContactListDecorator">
-        <section>
-            <actions>
-                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="headerItem" value="ContactList"/>
-                <set field="contactListId" from-field="parameters.contactListId"/>
-                <entity-one entity-name="ContactList" value-name="contactList"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://marketing/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field-name="contactListId"/></not></condition>
-                                    <widgets>
-                                        <include-menu name="ContactListTabBar" location="component://marketing/webapp/marketing/contact/ContactListMenus.xml"/>
-                                    </widgets>
-                                </section>
-
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
    <screen name="EditContactList">
         <section>
             <actions>
@@ -73,7 +37,7 @@
                 <entity-one entity-name="ContactList" value-name="contactList"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator">
+                <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -107,7 +71,7 @@
                 <set field="entityName" value="ContactList"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator">
+                <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
                         <container><link text="${uiLabelMap.ContactListCreate}" target="EditContactList?DONE_PAGE=${donePage}" style="buttontext"/></container>
@@ -139,7 +103,7 @@
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator">
+                <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleEditContactListParty}</label></container>
                         <container><link  text="${uiLabelMap.ContactListPartyCreate}" target="EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
@@ -169,7 +133,7 @@
                 <set field="contactListId" from-field="parameters.contactListId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator">
+                <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
                         <container><link  text="${uiLabelMap.ContactListPartyCreate}" target="EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
@@ -190,7 +154,7 @@
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/EditContactList?contactListId=${contactListId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator">
+                <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleFindContactListParty}</label></container>
                         <container><link  text="${uiLabelMap.ContactListPartyCreate}" target="EditContactListParty?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
@@ -217,7 +181,7 @@
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/getUserLoginPrimaryEmail.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator">
+                <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleEditContactList}</label></container>
                         <container><link  text="${uiLabelMap.ContactListCommEventCreate}" target="EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
@@ -238,7 +202,7 @@
                 <set field="contactListId" from-field="parameters.contactListId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator">
+                <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListContactList} for contactListId=${contactListId}</label></container>
                         <container><link  text="${uiLabelMap.ContactListCommEventCreate}" target="EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
@@ -259,7 +223,7 @@
                 <set field="contactListId" from-field="parameters.contactListId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator">
+                <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleFindContactListCommEvent}</label></container>
                         <container><link  text="${uiLabelMap.ContactListCommEventCreate}" target="EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
