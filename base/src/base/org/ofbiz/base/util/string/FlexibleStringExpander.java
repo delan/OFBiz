@@ -1,25 +1,19 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright 2001-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
 package org.ofbiz.base.util.string;
 
@@ -33,6 +27,8 @@ import java.util.Map;
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilMisc;
 
 import bsh.EvalError;
 
@@ -40,9 +36,13 @@ import bsh.EvalError;
  * Expands string values with in a Map context supporting the ${} syntax for
  * variable placeholders and the "." (dot) and "[]" (square-brace) syntax
  * elements for accessing Map entries and List elements in the context.
+ * It Also supports the execution of bsh files by using the 'bsh:' prefix.
+ * Further it is possible to control the output by specifying the suffix
+ * '?currency(XXX)' to format the output according the current locale
+ * and specified (XXX) currency
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev$
+ * @author     <a href="mailto:h.bakker@antwebsystems.com">Hans Bakker</a>  added currency=(xxx) suffix
  * @since      2.2
  */
 public class FlexibleStringExpander implements Serializable {
@@ -51,6 +51,8 @@ public class FlexibleStringExpander implements Serializable {
     
     protected String original;
     protected List stringElements = new LinkedList();
+    protected static boolean localizeCurrency = false;
+    protected static String currencyCode = null;            
     
     public FlexibleStringExpander(String original) {
         this.original = original;
@@ -91,6 +93,7 @@ public class FlexibleStringExpander implements Serializable {
      * they are dependent on the context which isn't known until expansion time.
      * 
      * @param context A context Map containing the variable values
+     * @param locale the current set locale
      * @return The original String expanded by replacing varaible place holders.
      */    
     public String expandString(Map context, Locale locale) {
@@ -103,7 +106,7 @@ public class FlexibleStringExpander implements Serializable {
         }
         
         //call back into this method with new String to take care of any/all nested expands
-        return expandString(expanded.toString(), context);
+        return expandString(expanded.toString(), context, locale);
     }
     
     /**
@@ -112,6 +115,10 @@ public class FlexibleStringExpander implements Serializable {
      * the "${}" syntax and the variable name inside the curly-braces can use
      * the "." (dot) syntax to access sub-Map entries and the "[]" square-brace
      * syntax to access List elements.
+     * It Also supports the execution of bsh files by using the 'bsh:' prefix.
+     * Further it is possible to control the output by specifying the suffix 
+     *     '?currency(XXX)' to format the output according the current locale
+     *     and specified (XXX) currency
      * 
      * @param original The original String that will be expanded
      * @param context A context Map containing the variable values
@@ -127,6 +134,10 @@ public class FlexibleStringExpander implements Serializable {
      * the "${}" syntax and the variable name inside the curly-braces can use
      * the "." (dot) syntax to access sub-Map entries and the "[]" square-brace
      * syntax to access List elements.
+     * It Also supports the execution of bsh files by using the 'bsh:' prefix.
+     * Further it is possible to control the output by specifying the suffix 
+     *     '?currency(XXX)' to format the output according the current locale
+     *     and specified (XXX) currency
      * 
      * @param original The original String that will be expanded
      * @param context A context Map containing the variable values
@@ -151,12 +162,19 @@ public class FlexibleStringExpander implements Serializable {
             }
         }
         
+        if (locale == null && context.containsKey("locale")) {
+            locale = (Locale) context.get("locale");
+        }
+        if (locale == null && context.containsKey("autoUserLogin")) {
+            locale = UtilMisc.ensureLocale(((Map) context.get("autoUserLogin")).get("lastLocale"));
+        }
+
         StringBuffer expanded = new StringBuffer();
         ParseElementHandler handler = new OnTheFlyHandler(expanded, context, locale);
         parseString(original, handler);
         
         //call back into this method with new String to take care of any/all nested expands
-        return expandString(expanded.toString(), context);
+        return expandString(expanded.toString(), context, locale);
     }
     
     public static void parseString(String original, ParseElementHandler handler) {
@@ -315,10 +333,25 @@ public class FlexibleStringExpander implements Serializable {
         public void handleVariable(String original, int start, int end) {
             //get the environment value and append it
             String envName = original.substring(start, end);
+
+            // see if ?currency(xxx) formatting is required
+            localizeCurrency = false;
+            int currencyPos = envName.indexOf("?currency(");
+            if (currencyPos != -1) {
+                int closeBracket = envName.indexOf(")", currencyPos+10);
+                currencyCode = envName.substring(currencyPos+10, closeBracket);
+                localizeCurrency = true;
+                envName = envName.substring(0, currencyPos);
+            }
+
             FlexibleMapAccessor fma = new FlexibleMapAccessor(envName);
             Object envVal = fma.get(context, locale);
             if (envVal != null) {
-                targetBuffer.append(envVal.toString());
+                if (localizeCurrency) {
+                    targetBuffer.append(UtilFormatOut.formatCurrency(new Double(envVal.toString()), currencyCode, locale));
+                } else {
+                    targetBuffer.append(envVal.toString());
+                }
             } else {
                 Debug.logWarning("Could not find value in environment for the name [" + envName + "], inserting nothing.", module);
             }
