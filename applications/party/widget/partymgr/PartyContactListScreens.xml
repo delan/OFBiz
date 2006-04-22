@@ -33,7 +33,7 @@
                  <set field="entityName" value="ContactListParty"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
@@ -41,16 +41,6 @@
                                 <if-has-permission action="_VIEW" permission="PARTYMGR"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not>
-                                            <if-empty field-name="partyId"/>
-                                        </not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
-                                    </widgets>
-                                </section>
                                 <container><label style="head1" text="${uiLabelMap.PartyContactList}"/></container>
                                 <include-form location="component://party/webapp/partymgr/contactlist/PartyContactListForms.xml" name="ListPartyContactLists"/>
                                 <container><label style="head1" text="${uiLabelMap.PartyContactListPartyCreate}"/></container>
