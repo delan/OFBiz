@@ -66,7 +66,7 @@
                           <span class="tabletext">${uiLabelMap.CommonUsername}&nbsp;</span>
                         </td>
                         <td align="left">
-                          <input type="text" class="inputBox" name="USERNAME" value="${username}" size="20">
+                          <input type="text" class="inputBox" name="USERNAME" value="${username}" size="20"/>
                         </td>
                       </tr>
                       <tr>
@@ -74,13 +74,13 @@
                           <span class="tabletext">${uiLabelMap.CommonPassword}&nbsp;</span>
                         </td>
                         <td align="left">
-                          <input type="password" class="inputBox" name="PASSWORD" value="" size="20">
+                          <input type="password" class="inputBox" name="PASSWORD" value="" size="20"/>
                         </td>
                       </tr>
                       <tr>
                         <td colspan="2" align="center">
                           <!--<a href="javascript:document.loginform.submit()" class="buttontext">[Login]</a>-->
-                          <input type="submit" value=${uiLabelMap.CommonLogin} class="loginButton">
+                          <input type="submit" value="${uiLabelMap.CommonLogin}" class="loginButton"/>
                         </td>
                       </tr>
                     </table>
