@@ -226,6 +226,7 @@ public class ServiceEventHandler implements EventHandler {
 
                 // check the request parameters
                 if (UtilValidate.isEmpty(value)) {
+                    // normal parameter data, which can either be a single value or an array of values
                     String[] paramArr = request.getParameterValues(name);
                     if (paramArr != null) {
                         if (paramArr.length > 1) {
@@ -233,6 +234,10 @@ public class ServiceEventHandler implements EventHandler {
                         } else {
                             value = paramArr[0];
                         }
+                    }
+                    // make any composite parameter data (e.g., from a set of parameters {name_c_date, name_c_hour, name_c_minutes})
+                    if (value == null) {
+                        value = UtilHttp.makeParamValueFromComposite(request, name, locale);
                     }
                 }
 
