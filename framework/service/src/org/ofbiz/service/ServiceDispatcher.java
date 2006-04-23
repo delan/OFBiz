@@ -1,26 +1,19 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
+ * Copyright 2001-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
 package org.ofbiz.service;
 
@@ -299,7 +292,7 @@ public class ServiceDispatcher {
             }
 
             try {
-                // setup global transaction ECA listeners
+                // setup global transaction ECA listeners to execute later
                 if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", ctx, context, result, false, false);
                 if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", ctx, context, result, false, false);
 
@@ -317,8 +310,8 @@ public class ServiceDispatcher {
                 if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, result, false, false);
 
                 // check for pre-validate failure/erros
-                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                isFailure = ServiceUtil.isFailure(result);
+                isError = ServiceUtil.isError(result);
 
                 // validate the context
                 if (modelService.validate && !isError && !isFailure) {
@@ -334,8 +327,8 @@ public class ServiceDispatcher {
                 if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", ctx, context, result, false, false);
 
                 // check for pre-invoke failure/erros
-                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                isFailure = ServiceUtil.isFailure(result);
+                isError = ServiceUtil.isError(result);
 
                 // ===== invoke the service =====
                 if (!isError && !isFailure) {
@@ -349,8 +342,8 @@ public class ServiceDispatcher {
                 }
 
                 // re-check the errors/failures
-                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                isFailure = ServiceUtil.isFailure(result);
+                isError = ServiceUtil.isError(result);
 
                 // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
                 ecaContext = FastMap.newInstance();
@@ -374,6 +367,10 @@ public class ServiceDispatcher {
                 // pre-commit ECA
                 if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "commit", ctx, ecaContext, result, isError, isFailure);
 
+                // check for pre-commit failure/errors
+                isFailure = ServiceUtil.isFailure(result);
+                isError = ServiceUtil.isError(result);
+                
                 // check for failure and log on info level; this is used for debugging
                 if (isFailure) {
                     Debug.logWarning("Service Failure [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result), module);
