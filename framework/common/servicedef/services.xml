@@ -255,4 +255,24 @@ under the License.
         <attribute name="conversionParameters" mode="IN" type="Map" optional="true"/>
         <attribute name="convertedValue" mode="OUT" type="Double" optional="false"/>
     </service>
+
+    <!-- ftp services -->
+    <service name="ftpInterface" engine="interface" location="" invoke="">
+        <attribute name="hostname" type="String" mode="IN" optional="false"/>
+        <attribute name="username" type="String" mode="IN" optional="false"/>
+        <attribute name="password" type="String" mode="IN" optional="false"/>
+        <attribute name="localFilename" type="String" mode="IN" optional="false"/>
+        <attribute name="remoteFilename" type="String" mode="IN" optional="false"/>
+        <attribute name="binaryTransfer" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="passiveMode" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    <service name="ftpPutFile" engine="java" use-transaction="false"
+        location="org.ofbiz.common.FtpServices" invoke="putFile">
+        <implements service="ftpInterface"/>
+        <attribute name="siteCommands" type="List" mode="IN" optional="true"/>
+    </service>
+    <service name="ftpGetFile" engine="java" use-transaction="false"
+        location="org.ofbiz.common.FtpServices" invoke="getFile">
+        <implements service="ftpInterface"/>
+    </service>
 </services>

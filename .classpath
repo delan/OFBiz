@@ -127,5 +127,6 @@
 	<classpathentry kind="lib" path="base/lib/ant-launcher.jar"/>
 	<classpathentry kind="lib" path="base/lib/ant.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-lang-2.1.jar"/>
+	<classpathentry kind="lib" path="base/lib/commons/commons-net-1.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
