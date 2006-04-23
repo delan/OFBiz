@@ -2330,6 +2330,8 @@ public class ModelFormField {
     public static class DateTimeField extends FieldInfo {
         protected String type;
         protected FlexibleStringExpander defaultValue;
+        protected String inputMethod;
+        protected String clock;
 
         protected DateTimeField() {
             super();
@@ -2347,6 +2349,8 @@ public class ModelFormField {
             super(element, modelFormField);
             this.setDefaultValue(element.getAttribute("default-value"));
             type = element.getAttribute("type");
+            inputMethod = element.getAttribute("input-method");
+            clock = element.getAttribute("clock");
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
@@ -2371,6 +2375,14 @@ public class ModelFormField {
             }
         }
 
+        public String getInputMethod() {
+            return this.inputMethod;
+        }
+
+        public String getClock() {
+            return this.clock;
+        }
+
         /**
          * @param string
          */
@@ -2383,6 +2395,14 @@ public class ModelFormField {
          */
         public void setDefaultValue(String str) {
             this.defaultValue = new FlexibleStringExpander(str);
+        }
+
+        public void setInputMethod(String str) {
+            this.inputMethod = str;
+        }
+
+        public void setClock(String str) {
+            this.clock = str;
         }
 
         /**

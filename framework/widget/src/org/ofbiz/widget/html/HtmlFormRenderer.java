@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.HashSet;
+import java.util.Calendar;
+import java.sql.Timestamp;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +73,6 @@ import org.ofbiz.widget.form.ModelFormField.TextareaField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev$
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -355,6 +356,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderDateTimeField(StringBuffer buffer, Map context, DateTimeField dateTimeField) {
         ModelFormField modelFormField = dateTimeField.getModelFormField();
+        String paramName = modelFormField.getParameterName(context);
+        String defaultDateTimeString = dateTimeField.getDefaultDateTimeString(context);
+
+        // whether the date field is short form, yyyy-mm-dd
+        boolean shortDateInput = ("date".equals(dateTimeField.getType()) || "time-dropdown".equals(dateTimeField.getInputMethod()) ? true : false);
 
         buffer.append("<input type=\"text\"");
 
@@ -371,7 +377,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append(" name=\"");
-        buffer.append(modelFormField.getParameterName(context));
+        if ("time-dropdown".equals(dateTimeField.getInputMethod())) {
+            buffer.append(UtilHttp.makeCompositeParam(paramName, "date"));
+        } else {
+            buffer.append(paramName);
+        }
         buffer.append('"');
 
         String value = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
@@ -382,7 +392,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             } else if ("time".equals(dateTimeField.getType()) && value.length()>=16) {
                 value = value.substring(0, 16);
             }
-            
+
             buffer.append(value);
             buffer.append('"');
         }
@@ -391,7 +401,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         int size = 25;
         int maxlength = 30;
 
-        if ("date".equals(dateTimeField.getType())) {
+        if (shortDateInput) {
             size = 10;
             maxlength = 10;
         } else if ("time".equals(dateTimeField.getType())) {
@@ -414,25 +424,100 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append('"');
         }
 
-
         buffer.append("/>");
 
         // add calendar pop-up button and seed data IF this is not a "time" type date-time
         if (!"time".equals(dateTimeField.getType())) {
-            if ("date".equals(dateTimeField.getType())) {
+            if (shortDateInput) {
                 buffer.append("<a href=\"javascript:call_cal_notime(document.");
             } else {
                 buffer.append("<a href=\"javascript:call_cal(document.");
             }
             buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
             buffer.append('.');
-            buffer.append(modelFormField.getParameterName(context));
+            if ("time-dropdown".equals(dateTimeField.getInputMethod()))
+                buffer.append(UtilHttp.makeCompositeParam(paramName, "date"));
+            else {
+                buffer.append(paramName);
+            }
             buffer.append(",'");
-            buffer.append(UtilHttp.encodeBlanks(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context))));
+            buffer.append(UtilHttp.encodeBlanks(modelFormField.getEntry(context, defaultDateTimeString)));
             buffer.append("');\">");
             buffer.append("<img src=\"");
             this.appendContentUrl(buffer, "/content/images/cal.gif");
             buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"/></a>");
+        }
+
+        // if we have an input method of time-dropdown, then render two dropdowns
+        if ("time-dropdown".equals(dateTimeField.getInputMethod())) {       		
+            String classString = (className != null ? " class=\"" + className + "\" " : "");
+            boolean isTwelveHour = "12".equals(dateTimeField.getClock());
+
+            // set the Calendar to the default time of the form or now()
+            Calendar cal = null;
+            try {
+                Timestamp defaultTimestamp = Timestamp.valueOf(modelFormField.getEntry(context, defaultDateTimeString));
+                cal = Calendar.getInstance();
+                cal.setTime(defaultTimestamp);
+            } catch (IllegalArgumentException e) {
+                Debug.logWarning("Form widget field [" + paramName + "] with input-method=\"time-dropdown\" was not able to understand the default time [" 
+                        + defaultDateTimeString + "]. The parsing error was: " + e.getMessage(), module);
+            }
+
+            // write the select for hours
+            buffer.append("&nbsp;<select name=\"").append(UtilHttp.makeCompositeParam(paramName, "hour")).append("\"");
+            buffer.append(classString).append(">");
+
+            // keep the two cases separate because it's hard to unerstand a combined loop
+            if (isTwelveHour) {
+                for (int i = 1; i <= 12; i++) {
+                    buffer.append("<option value=\"").append(i).append("\"");
+                    if (cal != null) { 
+                        int hour = cal.get(Calendar.HOUR_OF_DAY);
+                        if (hour == 0) hour = 12;
+                        if (hour > 12) hour -= 12;
+                        if (i == hour) buffer.append(" selected");
+                    }
+                    buffer.append(">").append(i).append("</option>");
+                }
+            } else {
+                for (int i = 0; i < 24; i++) {
+                    buffer.append("<option value=\"").append(i).append("\"");
+                    if (cal != null && i == cal.get(Calendar.HOUR_OF_DAY)) {
+                        buffer.append(" selected");
+                    }
+                    buffer.append(">").append(i).append("</option>");
+                }
+            }
+            
+            // write the select for minutes
+            buffer.append("</select>:<select name=\"");
+            buffer.append(UtilHttp.makeCompositeParam(paramName, "minutes")).append("\"");
+            buffer.append(classString).append(">");
+            for (int i = 0; i < 60; i++) {
+                buffer.append("<option value=\"").append(i).append("\"");
+                if (cal != null && i == cal.get(Calendar.MINUTE)) {
+                    buffer.append(" selected");
+                }
+                buffer.append(">").append(i).append("</option>");
+            }
+            buffer.append("</select>");
+
+            // if 12 hour clock, write the AM/PM selector
+            if (isTwelveHour) {
+                String amSelected = ((cal != null && cal.get(Calendar.AM_PM) == Calendar.AM) ? "selected" : "");
+                String pmSelected = ((cal != null && cal.get(Calendar.AM_PM) == Calendar.PM) ? "selected" : "");
+                buffer.append("<select name=\"").append(UtilHttp.makeCompositeParam(paramName, "ampm")).append("\"");
+                buffer.append(classString).append(">");
+                buffer.append("<option value=\"").append("AM").append("\" ").append(amSelected).append(">AM</option>");
+                buffer.append("<option value=\"").append("PM").append("\" ").append(pmSelected).append(">PM</option>");
+                buffer.append("</select>");
+            }
+
+            // create a hidden field for the composite type, which is a Timestamp
+            buffer.append("<input type=\"hidden\" name=\"");
+            buffer.append(UtilHttp.makeCompositeParam(paramName, "compositeType"));
+            buffer.append("\" value=\"Timestamp\">");
         }
 
         this.appendTooltip(buffer, context, modelFormField);
