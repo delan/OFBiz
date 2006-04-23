@@ -471,7 +471,7 @@ public class UtilProperties implements java.io.Serializable {
             return "";
         } else {
             if (context != null && context.size() > 0) {
-                value = FlexibleStringExpander.expandString(value, context);
+                value = FlexibleStringExpander.expandString(value, context, locale);
             }
             return value;
         }
