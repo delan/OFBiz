@@ -39,7 +39,7 @@
           <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddCode}">
           <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>
           <#if productPromoCodeIds?has_content>
-            Entered Codes:
+            ${uiLabelMap.OrderEnteredPromoCodes}:
             <#list productPromoCodeIds as productPromoCodeId>
               ${productPromoCodeId}
             </#list>

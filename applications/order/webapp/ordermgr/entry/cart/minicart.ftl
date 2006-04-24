@@ -61,7 +61,7 @@
                 <td align="right" valign="top"><div class="tabletext"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></div></td>
               </tr>
               <#if cartLine.getReservStart()?exists>
-                <tr><td>&nbsp;</td><td colspan="2"><div class="tabletext">(${cartLine.getReservStart()?string("yyyy-MM-dd")}, ${cartLine.getReservLength()} days)</div></td></tr>
+                <tr><td>&nbsp;</td><td colspan="2"><div class="tabletext">(${cartLine.getReservStart()?string("yyyy-MM-dd")}, ${cartLine.getReservLength()} ${uiLabelMap.CommonDays})</div></td></tr>
               </#if>
             </#list>
             <tr>
