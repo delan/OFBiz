@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.sql.Timestamp;
 import java.util.Locale;
+import java.lang.Number;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 
 import net.xoetrope.xui.XProjectManager;
 
@@ -68,6 +71,7 @@ public class ManagerEvents {
 
     public static final String module = ManagerEvents.class.getName();
     public static boolean mgrLoggedIn = false;
+    static DecimalFormat priceDecimalFormat = new DecimalFormat("#,##0.00");
 
     public static void modifyPrice(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
@@ -118,13 +122,14 @@ public class ManagerEvents {
         if (!trans.isOpen()) {
             if (input.isFunctionSet("OPEN")) {
                 String amountStr = input.value();
-                Double amount = null;
-                if (UtilValidate.isNotEmpty(amountStr)) {
+                if (UtilValidate.isNotEmpty(amountStr)) 
+                {
                     try {
                         double amt = Double.parseDouble(amountStr);
                         amt = amt / 100;
-                        amount = new Double(amt);
-                    } catch (NumberFormatException e) {
+                        amountStr = UtilFormatOut.formatPrice(amt);
+                    } catch (NumberFormatException e) 
+                    {
                         Debug.logError(e, module);
                     }
                 }
@@ -133,7 +138,14 @@ public class ManagerEvents {
                 state.set("openedDate", UtilDateTime.nowTimestamp());
                 state.set("openedByUserLoginId", pos.getSession().getUserId());
                 state.set("startingTxId", trans.getTransactionId());
-                state.set("startingDrawerAmount", amount);
+	            try
+	            {
+	                state.set("startingDrawerAmount", new Double(priceDecimalFormat.parse(amountStr).doubleValue()));
+	            }
+	            catch (ParseException pe)
+	            {
+	                Debug.logError(pe, module);
+	            }
                 try {
                     state.create();
                 } catch (GenericEntityException e) {
@@ -208,11 +220,23 @@ public class ManagerEvents {
                     GenericValue state = trans.getTerminalState();
                     state.set("closedDate", UtilDateTime.nowTimestamp());
                     state.set("closedByUserLoginId", pos.getSession().getUserId());
-                    state.set("actualEndingCash", new Double(closeInfo[0]));
+                    /*state.set("actualEndingCash", new Double(closeInfo[0]));
                     state.set("actualEndingCheck", new Double(closeInfo[1]));
                     state.set("actualEndingCc", new Double(closeInfo[2]));
                     state.set("actualEndingGc", new Double(closeInfo[3]));
-                    state.set("actualEndingOther", new Double(closeInfo[4]));
+                    state.set("actualEndingOther", new Double(closeInfo[4]));*/
+                    try
+                    {
+	                    state.set("actualEndingCash", new Double(priceDecimalFormat.parse(closeInfo[0]).doubleValue()));
+	                    state.set("actualEndingCheck", new Double(priceDecimalFormat.parse(closeInfo[1]).doubleValue()));
+	                    state.set("actualEndingCc", new Double(priceDecimalFormat.parse(closeInfo[2]).doubleValue()));
+	                    state.set("actualEndingGc", new Double(priceDecimalFormat.parse(closeInfo[3]).doubleValue()));
+	                    state.set("actualEndingOther", new Double(priceDecimalFormat.parse(closeInfo[4]).doubleValue()));
+                    }
+                    catch (ParseException pe)
+                    {
+	                    Debug.logError(pe, module);
+                    }
                     state.set("endingTxId", trans.getTransactionId());
                     Debug.log("Updated State - " + state, module);
                     try {
@@ -224,10 +248,11 @@ public class ManagerEvents {
                     }
 
                     // print the totals report
+                    output.print(UtilProperties.getMessage("pos","WaitingFinalSales",Locale.getDefault()));
+                    pos.showDialog("dialog/error/terminalclosed");
                     printTotals(pos, state, true);
 
                     // lock the terminal for the moment
-                    output.print(UtilProperties.getMessage("pos","WaitingFinalSales",Locale.getDefault()));
                     pos.getInput().setLock(true);
                     pos.getButtons().setLock(true);
                     pos.refresh(false);
@@ -246,9 +271,13 @@ public class ManagerEvents {
                         pos.getSession().getDispatcher().registerCallback("runEntitySync", cb);
                     } else {
                         // no sync setting; just logout
-                        pos.showDialog("dialog/error/terminalclosed");
                         SecurityEvents.logout(pos);
                     }
+                    // unlock the terminal
+                    pos.getInput().setLock(false);
+                    pos.getButtons().setLock(false);
+                    pos.refresh(true);
+                    
             }
         } else {
             trans.popDrawer();
