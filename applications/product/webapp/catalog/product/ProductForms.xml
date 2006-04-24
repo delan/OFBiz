@@ -990,28 +990,28 @@
         <field name="estimatedDeliveryDate"><display/></field>
     </form>    
 
-        <!-- create ProductMaint-->
+    <!-- create ProductMaint-->
     <form name="AddProductMaint" type="single" 
             target="createProductMaint" title="" default-title-style="tableheadtext" 
             default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createProductMaint" /> 
         <field name="productId"><hidden/></field>
         <field name="productMaintSeqId"><ignored/></field>
-        <field name="productMaintTypeId" title="${uiLabelMap.ProductMaintTypeId}" widget-style="selectBox">
+        <field name="productMaintTypeId" title="${uiLabelMap.ProductProductMaintTypeId}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductMaintType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="intervalUomId" title="${uiLabelMap.ProductIntervalUomId}" widget-style="selectBox">
+        <field name="intervalUomId" title="${uiLabelMap.ProductProductMaintIntervalUomId}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-order-by field-name="description"/>
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="intervalMeterTypeId" title="${uiLabelMap.ProductIntervalMeterTypeId}" widget-style="selectBox">
+        <field name="intervalMeterTypeId" title="${uiLabelMap.ProductProductMaintIntervalMeterTypeId}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductMeterType" description="${description}" key-field-name="productMeterTypeId">
                     <entity-order-by field-name="description"/>
@@ -1020,7 +1020,6 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
     <form name="ListProductMaints" type="list"  list-name="productMaints"  target="updateProductMaint"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
@@ -1038,8 +1037,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="maintName" title="${uiLabelMap.ProductMaintName}"><text size="20" /></field> 
-        <field name="intervalUomId" title="${uiLabelMap.ProductIntervalUomId}" widget-style="selectBox">
+        <field name="maintName" title="${uiLabelMap.ProductProductMaintName}"><text size="20" /></field> 
+        <field name="intervalUomId" title="${uiLabelMap.ProductProductMaintIntervalUomId}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-order-by field-name="description"/>
@@ -1060,6 +1059,55 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-        	
+    
+    <!-- create and update a ProductMeter -->
+    <form name="AddProductMeter" type="single" 
+            target="createProductMeter" title="" 
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createProductMeter" /> 
+        <field name="productId"><hidden/></field>
+        <field name="productMeterTypeId" title="${uiLabelMap.ProductProductMeterTypeId}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProductMeterType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="meterUomId" title="${uiLabelMap.ProductProductMeterUomId}" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="meterName" title="${uiLabelMap.ProductProductMeterName}"><text size="20" /></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListProductMeters" type="list"  list-name="productMeters"  target="updateProductMeter"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="ProductMeter">
+                <condition-expr field-name="productId" env-name="productId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateProductMeter"/>
+        <field name="productId"><hidden/></field>
+        <field name="productMeterTypeId">
+            <display-entity entity-name="ProductMeterType"/>
+        </field>
+        <field name="meterUomId" title="${uiLabelMap.ProductProductMeterUomId}" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="meterName" title="${uiLabelMap.ProductProductMeterName}"><text size="20" /></field> 
+        <field name="deleteLink" title="" widget-style="buttontext">
+            <hyperlink target="deleteProductMeter?productId=${productId}&amp;productMeterTypeId=${productMeterTypeId}"
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>
 
