@@ -975,8 +975,8 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteProductMeter" default-entity-name="ProductMeter" engine="simple"
-                location="org/ofbiz/product/product/ProductServices.xml" invoke="removeProductMeter" auth="true">
-        <description>Remove a ProductMeter</description>
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductMeter" auth="true">
+        <description>Delete a ProductMeter</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
     

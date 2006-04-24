@@ -48,6 +48,7 @@
         <a href="<@ofbizUrl>EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGlAccounts?default(unselectedClassName)}">${uiLabelMap.ProductAccounts}</a>
         <a href="<@ofbizUrl>EditProductPaymentMethodTypes?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductPaymentMethodTypes?default(unselectedClassName)}">${uiLabelMap.ProductPaymentTypes}</a>
         <a href="<@ofbizUrl>EditProductMaints?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductMaints?default(unselectedClassName)}">${uiLabelMap.ProductEditProductMaints}</a>
+        <a href="<@ofbizUrl>EditProductMeters?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductMeters?default(unselectedClassName)}">${uiLabelMap.ProductEditProductMeters}</a>
         <a href="<@ofbizUrl>EditProductQuickAdmin?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductQuickAdmin?default(unselectedClassName)}">${uiLabelMap.ProductQuickAdmin}</a>
         <#if product?exists && product.isVirtual?if_exists == "Y">
             <a href="<@ofbizUrl>QuickAddVariants?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.QuickAddVariants?default(unselectedClassName)}">${uiLabelMap.ProductVariants}</a>

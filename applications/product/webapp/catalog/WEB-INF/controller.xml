@@ -1351,6 +1351,30 @@
         <response name="error" type="view" value="EditProductMaints"/>
     </request-map>
 
+        <!-- ================ ProductMeters Requests ================= -->
+    <request-map uri="EditProductMeters">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductMeters"/>
+    </request-map>
+    <request-map uri="createProductMeter">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductMeter"/>
+        <response name="success" type="view" value="EditProductMeters"/>
+        <response name="error" type="view" value="EditProductMeters"/>
+    </request-map>
+    <request-map uri="updateProductMeter">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductMeter"/>
+        <response name="success" type="view" value="EditProductMeters"/>
+        <response name="error" type="view" value="EditProductMeters"/>
+    </request-map>
+    <request-map uri="deleteProductMeter">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductMeter"/>
+        <response name="success" type="view" value="EditProductMeters"/>
+        <response name="error" type="view" value="EditProductMeters"/>
+    </request-map>
+    
     <!-- ================ ProductPromo Rules Requests ================= -->
     <request-map uri="EditProductPromoRules">
         <security https="true" auth="true"/>
@@ -2105,6 +2129,7 @@
     <view-map name="QuickAddVariants" type="screen" page="component://product/widget/catalog/ProductScreens.xml#QuickAddVariants"/>
     <view-map name="CreateVirtualWithVariantsForm" type="screen" page="component://product/widget/catalog/ProductScreens.xml#CreateVirtualWithVariantsForm"/>
     <view-map name="EditProductMaints" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductMaints"/>
+    <view-map name="EditProductMeters" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductMeters"/>
     
     <view-map name="EditFeature" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeature"/>
     <view-map name="EditFeatureCategories" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureCategories"/>
