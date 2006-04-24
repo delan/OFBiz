@@ -38,10 +38,10 @@
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>  
 
-  <#if requestAttributes.userLogin?has_content>
+  <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>
