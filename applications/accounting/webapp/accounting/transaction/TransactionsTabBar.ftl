@@ -27,8 +27,8 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class="tabContainer">
-	<a href="<@ofbizUrl>/AuthorizeTransaction</@ofbizUrl>" class="${selectedClassMap.authorizetransactiontab?default(unselectedClassName)}">${uiLabelMap.AccountingAuthorize}</a>
-	<a href="<@ofbizUrl>/CaptureTransaction</@ofbizUrl>" class="${selectedClassMap.capturetransactiontab?default(unselectedClassName)}">${uiLabelMap.AccountingCapture}</a>
-	<a href="<@ofbizUrl>/FindGatewayResponses</@ofbizUrl>" class="${selectedClassMap.gatewayresponsestab?default(unselectedClassName)}">${uiLabelMap.AccountingGatewayResponses}</a>
-	<a href="<@ofbizUrl>/ManualTransaction</@ofbizUrl>" class="${selectedClassMap.manualtransactiontab?default(unselectedClassName)}">${uiLabelMap.AccountingManualTransaction}</a>
+    <a href="<@ofbizUrl>/AuthorizeTransaction</@ofbizUrl>" class="${selectedClassMap.authorizetransactiontab?default(unselectedClassName)}">${uiLabelMap.AccountingAuthorize}</a>
+    <a href="<@ofbizUrl>/CaptureTransaction</@ofbizUrl>" class="${selectedClassMap.capturetransactiontab?default(unselectedClassName)}">${uiLabelMap.AccountingCapture}</a>
+    <a href="<@ofbizUrl>/FindGatewayResponses</@ofbizUrl>" class="${selectedClassMap.gatewayresponsestab?default(unselectedClassName)}">${uiLabelMap.AccountingGatewayResponses}</a>
+    <a href="<@ofbizUrl>/ManualTransaction</@ofbizUrl>" class="${selectedClassMap.manualtransactiontab?default(unselectedClassName)}">${uiLabelMap.AccountingManualTransaction}</a>
 </div>

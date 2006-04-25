@@ -406,7 +406,7 @@
         <response name="success" type="view" value="EditGlJournalEntry"/>
         <response name="error" type="view" value="EditGlJournalEntry"/>
     </request-map>
-	
+
     <request-map uri="EditGlJournalEntry">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditGlJournalEntry"/>
@@ -998,9 +998,9 @@
     
     <!-- FixedAssetIdent -->
     <request-map uri="EditFixedAssetIdents">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditFixedAssetIdents"/>
-    	<response name="error" type="view" value="EditFixedAssetIdents"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAssetIdents"/>
+        <response name="error" type="view" value="EditFixedAssetIdents"/>
     </request-map>
     <request-map uri="createFixedAssetIdent">
         <security https="true" auth="true"/>
@@ -1023,9 +1023,9 @@
     
     <!-- FixedAssetRegistration -->
     <request-map uri="EditFixedAssetRegistrations">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditFixedAssetRegistrations"/>
-    	<response name="error" type="view" value="EditFixedAssetRegistrations"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAssetRegistrations"/>
+        <response name="error" type="view" value="EditFixedAssetRegistrations"/>
     </request-map>
     <request-map uri="createFixedAssetRegistration">
         <security https="true" auth="true"/>
@@ -1174,6 +1174,6 @@
     <view-map name="EditFixedAssetIdents" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetIdents"/>
     <!-- Fixed Asset Registrations -->
     <view-map name="EditFixedAssetRegistrations" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetRegistrations"/>
-    	
+    
     <!-- end of view mappings -->
 </site-conf>

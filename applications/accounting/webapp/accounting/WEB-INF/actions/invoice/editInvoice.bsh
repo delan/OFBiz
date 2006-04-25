@@ -30,7 +30,7 @@ invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invo
 context.put("invoice", invoice);
 
 if (invoice != null) {
-	invoiceItems = invoice.getRelatedOrderBy("InvoiceItem",UtilMisc.toList("invoiceItemSeqId"));
+    invoiceItems = invoice.getRelatedOrderBy("InvoiceItem",UtilMisc.toList("invoiceItemSeqId"));
 
     context.put("invoiceItems", invoiceItems);
     
@@ -46,9 +46,9 @@ if (invoice != null) {
     } else {
         billingAddress = InvoiceWorker.getBillToAddress(invoice);
     }
-    if (billingAddress != null)
-	    context.put("billingAddress", billingAddress);
-    
+    if (billingAddress != null) {
+        context.put("billingAddress", billingAddress);
+    }
     billingParty = InvoiceWorker.getBillToParty(invoice);
     context.put("billingParty", billingParty);
     sendingParty = InvoiceWorker.getSendFromParty(invoice);
