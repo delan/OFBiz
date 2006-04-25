@@ -99,7 +99,7 @@
             </display-entity>-->
         </field>
         <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
-        	<hyperlink target="EditMarketingCampaignRoles?marketingCampaignId=${marketingCampaignId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
+            <hyperlink target="EditMarketingCampaignRoles?marketingCampaignId=${marketingCampaignId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}" description="${uiLabelMap.CommonEdit}" also-hidden="false"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="deleteMarketingCampaignGeo?marketingCampaignId=${marketingCampaignId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}"

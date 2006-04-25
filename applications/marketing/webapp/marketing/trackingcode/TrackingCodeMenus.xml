@@ -32,17 +32,17 @@
         </menu-item>
         <menu-item name="TrackingCodeOrder" title="${uiLabelMap.TrackingCodeOrder}">
         <condition>
-        	<not>
-        		<if-empty field-name="trackingCodeId"/>
-        	</not>
+            <not>
+                <if-empty field-name="trackingCodeId"/>
+            </not>
         </condition>
             <link target="/FindTrackingCodeOrders?trackingCodeId=${trackingCodeId}"/>
         </menu-item>
         <menu-item name="TrackingCodeVisit" title="${uiLabelMap.TrackingCodeVisit}">
         <condition>
-        	<not>
-        		<if-empty field-name="trackingCodeId"/>
-        	</not>
+            <not>
+                <if-empty field-name="trackingCodeId"/>
+            </not>
         </condition>
             <link target="/FindTrackingCodeVisits?trackingCodeId=${trackingCodeId}"/>
         </menu-item>

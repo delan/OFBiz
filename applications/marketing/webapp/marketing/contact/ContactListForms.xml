@@ -246,7 +246,7 @@
         -->
 
         <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}">
-        	<text default-value="${thisUserPrimaryEmail.contactMechId}"/>          <!-- this default value is the logged in user's primary email and is useful for comm events which are emails -->
+            <text default-value="${thisUserPrimaryEmail.contactMechId}"/>          <!-- this default value is the logged in user's primary email and is useful for comm events which are emails -->
         </field>
         <field name="contactListId" title="${uiLabelMap.ContactListId}"><lookup size="20" target-form-name="LookupContactList"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
