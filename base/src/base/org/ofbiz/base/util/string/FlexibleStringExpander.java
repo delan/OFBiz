@@ -170,6 +170,7 @@ public class FlexibleStringExpander implements Serializable {
         }
 
         StringBuffer expanded = new StringBuffer();
+        // TODO: for performance to save object build up and tear down times we should use Javolution to make OnTheFlyHandler reusable and use a factory methods instead of constructor
         ParseElementHandler handler = new OnTheFlyHandler(expanded, context, locale);
         parseString(original, handler);
         
