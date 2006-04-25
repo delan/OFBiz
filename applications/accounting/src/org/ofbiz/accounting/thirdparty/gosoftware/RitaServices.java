@@ -148,8 +148,8 @@ public class RitaServices {
         //lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
 
-        if(authTransaction == null){
-        	authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        if (authTransaction == null){
+            authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
 
         if (authTransaction == null) {
@@ -212,8 +212,8 @@ public class RitaServices {
         //lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
 
-        if(authTransaction == null){
-        	authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        if (authTransaction == null){
+            authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
 
         if (authTransaction == null) {
@@ -274,8 +274,8 @@ public class RitaServices {
         //lets see if there is a auth transaction already in context
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
 
-        if(authTransaction == null){
-        	authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        if (authTransaction == null){
+            authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
 
         if (authTransaction == null) {

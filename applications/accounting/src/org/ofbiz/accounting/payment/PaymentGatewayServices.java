@@ -1035,7 +1035,7 @@ public class PaymentGatewayServices {
     }
 
     private static Map capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount) {
-    	return capturePayment(dctx, userLogin, orh, paymentPref, amount, null);
+        return capturePayment(dctx, userLogin, orh, paymentPref, amount, null);
     }
 
     private static Map capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount, GenericValue authTrans) {
@@ -2215,7 +2215,7 @@ public class PaymentGatewayServices {
         Debug.logInfo("Test Capture with 2 minute delay failure/re-auth process", module);
 
         if (authTransaction == null){
-        	authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+            authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
 
         if (authTransaction == null) {

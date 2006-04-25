@@ -74,7 +74,7 @@ public class PayflowPro {
         }
 
         if (authTrans == null){
-        	authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
+            authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
         }
 
         // set the orderId as comment1 so we can query in PF Manager
@@ -167,7 +167,7 @@ public class PayflowPro {
         }
 
         if (authTrans == null){
-        	authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
+            authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
         }
 
         if (authTrans == null) {
@@ -225,7 +225,7 @@ public class PayflowPro {
         }
 
         if (authTrans == null){
-        	authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
+            authTrans = PaymentGatewayServices.getAuthTransaction(paymentPref);
         }
 
         if (authTrans == null) {
