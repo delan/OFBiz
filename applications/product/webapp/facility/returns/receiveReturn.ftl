@@ -247,8 +247,8 @@
   <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveReturn</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
     <input type="hidden" name="initialSelected" value="Y">
-	<table border='0' cellpadding='2' cellspacing='0'>
-	  <tr><td colspan="4"><div class="head3">${uiLabelMap.ProductReceiveReturn}</div></td></tr>
+    <table border='0' cellpadding='2' cellspacing='0'>
+      <tr><td colspan="4"><div class="head3">${uiLabelMap.ProductReceiveReturn}</div></td></tr>
       <tr>        
         <td width="15%" align='right'><div class="tabletext">${uiLabelMap.ProductReturnNumber}</div></td>
         <td>&nbsp;</td>

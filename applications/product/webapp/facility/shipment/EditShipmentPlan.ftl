@@ -47,7 +47,7 @@
 </script>
 <form><input type="submit" class="smallSubmit" onClick="submitRows('${rowCount?if_exists}');return false;" name="submitButton" value="${uiLabelMap.CommonAdd}"/></form>
     <hr class="sepbar"/>
-	<br/>
+    <br/>
     </#if>
     ${listShipmentPlanForm.renderFormString(context)}
     <div class="head2">Total weight: ${totWeight}</div>

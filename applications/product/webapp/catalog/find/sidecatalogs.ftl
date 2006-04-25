@@ -47,7 +47,7 @@
             <#assign prodCatalogCategories = prodCatalog.getRelatedOrderByCache("ProdCatalogCategory", sortList)>
             <div class='browsecategorytext'>-&nbsp;<a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${prodCatalog.prodCatalogId}</@ofbizUrl>" class='browsecategorybutton'>${prodCatalog.catalogName?if_exists}</a></div>
               <div style='margin-left: 10px;'>
-              	<#list prodCatalogCategories as prodCatalogCategory>
+                <#list prodCatalogCategories as prodCatalogCategory>
                   <#assign productCategory = prodCatalogCategory.getRelatedOneCache("ProductCategory")>
                   <div class='browsecategorytext'>-&nbsp;<a href='<@ofbizUrl>EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&amp;productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>' class="browsecategorybutton">${(productCategory.description)?if_exists}</a></div>
                 </#list>

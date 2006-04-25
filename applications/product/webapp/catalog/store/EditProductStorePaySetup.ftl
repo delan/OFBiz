@@ -78,7 +78,7 @@
           </td>
         </tr>
         <tr>
-          <td><span class="tableheadtext">${uiLabelMap.ProductServiceType}</span></td>          	
+          <td><span class="tableheadtext">${uiLabelMap.ProductServiceType}</span></td>
           <td>
             <select name="paymentServiceTypeEnumId" class="selectBox"> 
               <#if editSetting?has_content>

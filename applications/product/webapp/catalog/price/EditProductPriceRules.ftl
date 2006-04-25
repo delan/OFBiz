@@ -124,12 +124,12 @@
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
                     <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="inputParamEnumId" size="1" class="selectBox">
-                    	<#list inputParamEnums as inputParamEnum>
+                        <#list inputParamEnums as inputParamEnum>
                           <option value="${inputParamEnum.enumId}">${inputParamEnum.description}<#--[${inputParamEnum.enumId}]--></option>
                         </#list>
                     </select>
                     <select name="operatorEnumId" size="1" class="selectBox">
-                    	<#list condOperEnums as condOperEnum>
+                        <#list condOperEnums as condOperEnum>
                           <option value="${condOperEnum.enumId}">${condOperEnum.description}<#--[${condOperEnum.enumId}]--></option>
                         </#list>
                     </select>
@@ -189,7 +189,7 @@
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
                     <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="productPriceActionTypeId" size="1" class="selectBox">
-                    	<#list productPriceActionTypes as productPriceActionType>
+                        <#list productPriceActionTypes as productPriceActionType>
                           <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.description}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                         </#list>
                     </select>

@@ -28,7 +28,7 @@
 <div class="head1">${uiLabelMap.ProductEditInventoryItemWithId} [${inventoryItemId?if_exists}]</div>
 <a href="<@ofbizUrl>EditInventoryItem<#if facilityId?exists>?facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewInventoryItem}]</a>
 <#if inventoryItemId?exists>
-	<a href="<@ofbizUrl>TransferInventoryItem?inventoryItemId=${inventoryItemId}<#if facilityId?exists>&facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductTransferItem}]</a>
+    <a href="<@ofbizUrl>TransferInventoryItem?inventoryItemId=${inventoryItemId}<#if facilityId?exists>&facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductTransferItem}]</a>
 </#if>
 
 <#if inventoryItem?exists>
@@ -83,39 +83,39 @@
         <td><input type="text" name="partyId" value="${inventoryItemData.partyId?if_exists}" size="20" maxlength="20" class="inputBox"></td>
       </tr>
       <#if "SERIALIZED_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
-	      <tr>
-	        <td align="right"><div class="tabletext">${uiLabelMap.ProductStatus}</div></td>
-	        <td>&nbsp;</td>
-	        <td>
-	          <select name="statusId" class="selectBox">
-	              <#if (inventoryItem.statusId)?has_content>
-		              <option value="${inventoryItem.statusId}">${(curStatusItem.description)?default("[" + inventoryItem.statusId + "]")}</option>
-		              <option value="${inventoryItem.statusId}">----</option>
-		          </#if>
-		          <#if !tryEntity && requestParameters.statusId?has_content>
-		              <#assign selectedStatusId = requestParameters.statusId>
-		          </#if>
-	              <#list statusItems as statusItem>
-	                  <option value="${statusItem.statusId}"<#if selectedStatusId?if_exists == statusItem.statusId>${uiLabelMap.ProductSelected}</#if>>${statusItem.get("description",locale)}</option>
-	              </#list>
-	          </select>
-	        </td>
-	      </tr>
+          <tr>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductStatus}</div></td>
+            <td>&nbsp;</td>
+            <td>
+              <select name="statusId" class="selectBox">
+                  <#if (inventoryItem.statusId)?has_content>
+                      <option value="${inventoryItem.statusId}">${(curStatusItem.description)?default("[" + inventoryItem.statusId + "]")}</option>
+                      <option value="${inventoryItem.statusId}">----</option>
+                  </#if>
+                  <#if !tryEntity && requestParameters.statusId?has_content>
+                      <#assign selectedStatusId = requestParameters.statusId>
+                  </#if>
+                  <#list statusItems as statusItem>
+                      <option value="${statusItem.statusId}"<#if selectedStatusId?if_exists == statusItem.statusId>${uiLabelMap.ProductSelected}</#if>>${statusItem.get("description",locale)}</option>
+                  </#list>
+              </select>
+            </td>
+          </tr>
       </#if>
       <tr>
         <td align="right"><div class="tabletext">${uiLabelMap.ProductDateReceived}</div></td>
         <td>&nbsp;</td>
         <td>
-        	<input type="text" size="25" name="datetimeReceived" value="${(inventoryItemData.datetimeReceived.toString())?if_exists}" class="inputBox">
-			<a href="javascript:call_cal(document.inventoryItemForm.datetimeReceived, '${(inventoryItemData.datetimeReceived.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+            <input type="text" size="25" name="datetimeReceived" value="${(inventoryItemData.datetimeReceived.toString())?if_exists}" class="inputBox">
+            <a href="javascript:call_cal(document.inventoryItemForm.datetimeReceived, '${(inventoryItemData.datetimeReceived.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         </td>
       </tr>
       <tr>
         <td align="right"><div class="tabletext">${uiLabelMap.ProductExpireDate}</div></td>
         <td>&nbsp;</td>
         <td>
-        	<input type="text" size="25" name="expireDate" value="${(inventoryItemData.expireDate.toString())?if_exists}" class="inputBox">
-			<a href="javascript:call_cal(document.inventoryItemForm.expireDate, '${(inventoryItemData.expireDate.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+            <input type="text" size="25" name="expireDate" value="${(inventoryItemData.expireDate.toString())?if_exists}" class="inputBox">
+            <a href="javascript:call_cal(document.inventoryItemForm.expireDate, '${(inventoryItemData.expireDate.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         </td>
       </tr>
       <tr>
@@ -125,12 +125,12 @@
             <span class="tabletext">${uiLabelMap.ProductSelectFacility} : </span>
             <select name="facilityId" class="selectBox">
               <#if inventoryItem?exists>
-	              <option value="${inventoryItem.facilityId}">${(facility.facilityName)?if_exists} [${inventoryItem.facilityId}]</option>
-	              <option value="${inventoryItem.facilityId}">----</option>
-	          </#if>
-	          <#if !tryEntity && requestParameters.facilityId?has_content>
-	              <#assign selectedFacilityId = requestParameters.facilityId>
-	          </#if>
+                  <option value="${inventoryItem.facilityId}">${(facility.facilityName)?if_exists} [${inventoryItem.facilityId}]</option>
+                  <option value="${inventoryItem.facilityId}">----</option>
+              </#if>
+              <#if !tryEntity && requestParameters.facilityId?has_content>
+                  <#assign selectedFacilityId = requestParameters.facilityId>
+              </#if>
               <#list facilities as nextFacility>
                 <option value="${nextFacility.facilityId}"<#if selectedFacilityId?if_exists == nextFacility.facilityId> ${uiLabelMap.ProductSelected}</#if>>${nextFacility.facilityName?if_exists} [${nextFacility.facilityId}]</option>
               </#list>
@@ -194,8 +194,8 @@
         <td align="right"><div class="tabletext">${uiLabelMap.ProductAvailablePromiseQuantityHand}</div></td>
         <td>&nbsp;</td>
         <td>
-        	<div class="tabletext">${inventoryItemData.availableToPromiseTotal?if_exists} / ${inventoryItemData.quantityOnHandTotal?if_exists}</div>
-        	<div class="tabletext">${uiLabelMap.ProductPhysicalInventoryVariance}</div>
+            <div class="tabletext">${inventoryItemData.availableToPromiseTotal?if_exists} / ${inventoryItemData.quantityOnHandTotal?if_exists}</div>
+            <div class="tabletext">${uiLabelMap.ProductPhysicalInventoryVariance}</div>
         </td>
       </tr>
     <#elseif "SERIALIZED_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
@@ -219,10 +219,10 @@
 </form>
 
 <#if "NON_SERIAL_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
-	<hr class="sepbar"/>
-	<div class="head2">${uiLabelMap.ProductPhysicalInventoryVariances}</div>
+    <hr class="sepbar"/>
+    <div class="head2">${uiLabelMap.ProductPhysicalInventoryVariances}</div>
 
-	${createPhysicalInventoryAndVarianceWrapper.renderFormString(context)}
-	<br/>
-	${viewPhysicalInventoryAndVarianceWrapper.renderFormString(context)}
+    ${createPhysicalInventoryAndVarianceWrapper.renderFormString(context)}
+    <br/>
+    ${viewPhysicalInventoryAndVarianceWrapper.renderFormString(context)}
 </#if>

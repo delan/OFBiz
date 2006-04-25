@@ -71,33 +71,33 @@
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#if (listSize > 0)>
-	        <#assign line = 0>
-	        <#list productStorePromoAndAppls[lowIndex..highIndex-1] as productStorePromoAndAppl>
-	        <#assign line = line+1>
-	        <tr valign="middle">
-	            <td><a href="<@ofbizUrl>EditProductPromo?productPromoId=${(productStorePromoAndAppl.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext">${(productStorePromoAndAppl.promoName)?if_exists} [${(productStorePromoAndAppl.productPromoId)?if_exists}]</a></td>
-	            <#assign hasntStarted = false>
-	            <#if productStorePromoAndAppl.getTimestamp("fromDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productStorePromoAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
-	            <td><div class="tabletext" <#if hasntStarted> style="color: red;"</#if> >${productStorePromoAndAppl.getTimestamp("fromDate").toString()}</div></td>
-	            <td align="center">
-	                <#assign hasExpired = false>
-	                <#if productStorePromoAndAppl.getTimestamp("thruDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productStorePromoAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-	                <FORM method="post" action="<@ofbizUrl>updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
-	                    <input type="hidden" name="productStoreId" value="${(productStorePromoAndAppl.productStoreId)?if_exists}">
-	                    <input type="hidden" name="productPromoId" value="${(productStorePromoAndAppl.productPromoId)?if_exists}">
-	                    <input type="hidden" name="fromDate" value="${(productStorePromoAndAppl.fromDate)?if_exists}">
-	                    <input type="text" size="25" name="thruDate" value="${(productStorePromoAndAppl.thruDate)?if_exists}" class="inputBox" style="<#if (hasExpired) >color: red;</#if>">
-	                    <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productStorePromoAndAppl.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-	                    <input type="text" size="5" name="sequenceNum" value="${(productStorePromoAndAppl.sequenceNum)?if_exists}" class="inputBox">
-	                    <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
-	                </FORM>
-	            </td>
-	            <td align="center">
-	            <a href="<@ofbizUrl>deleteProductStorePromoAppl?productStoreId=${(productStorePromoAndAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAndAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAndAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
-	            [${uiLabelMap.CommonDelete}]</a>
-	            </td>
-	        </tr>
-	        </#list>
+            <#assign line = 0>
+            <#list productStorePromoAndAppls[lowIndex..highIndex-1] as productStorePromoAndAppl>
+                <#assign line = line+1>
+                <tr valign="middle">
+                <td><a href="<@ofbizUrl>EditProductPromo?productPromoId=${(productStorePromoAndAppl.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext">${(productStorePromoAndAppl.promoName)?if_exists} [${(productStorePromoAndAppl.productPromoId)?if_exists}]</a></td>
+                <#assign hasntStarted = false>
+                <#if productStorePromoAndAppl.getTimestamp("fromDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productStorePromoAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
+                <td><div class="tabletext" <#if hasntStarted> style="color: red;"</#if> >${productStorePromoAndAppl.getTimestamp("fromDate").toString()}</div></td>
+                <td align="center">
+                    <#assign hasExpired = false>
+                    <#if productStorePromoAndAppl.getTimestamp("thruDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productStorePromoAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
+                    <form method="post" action="<@ofbizUrl>updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
+                        <input type="hidden" name="productStoreId" value="${(productStorePromoAndAppl.productStoreId)?if_exists}">
+                        <input type="hidden" name="productPromoId" value="${(productStorePromoAndAppl.productPromoId)?if_exists}">
+                        <input type="hidden" name="fromDate" value="${(productStorePromoAndAppl.fromDate)?if_exists}">
+                        <input type="text" size="25" name="thruDate" value="${(productStorePromoAndAppl.thruDate)?if_exists}" class="inputBox" style="<#if (hasExpired) >color: red;</#if>">
+                        <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productStorePromoAndAppl.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+                        <input type="text" size="5" name="sequenceNum" value="${(productStorePromoAndAppl.sequenceNum)?if_exists}" class="inputBox">
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+                    </form>
+                </td>
+                <td align="center">
+                    <a href="<@ofbizUrl>deleteProductStorePromoAppl?productStoreId=${(productStorePromoAndAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAndAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAndAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+                    [${uiLabelMap.CommonDelete}]</a>
+                </td>
+                </tr>
+            </#list>
         </#if>
         </table>
         <#if (listSize > 0)>

@@ -19,7 +19,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author	  Arukala  (arukala@gmx.de)
+ *@author     Arukala  (arukala@gmx.de)
  *@version    $Rev$
  *@since      3.0
 -->

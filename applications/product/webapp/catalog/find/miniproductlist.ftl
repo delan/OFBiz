@@ -38,7 +38,7 @@
     </div>
 <#if isOpen>
     <div class="screenlet-body">
-      	<#if productCategory?exists>
+        <#if productCategory?exists>
           <#if productCategoryMembers?has_content>
               <#list productCategoryMembers as productCategoryMember>
                 <#assign product = productCategoryMember.getRelatedOneCache("Product")>

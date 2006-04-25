@@ -27,8 +27,8 @@
 <#if shipment?exists>
 
 <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
-	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
-	<div class="tabletext">
+    <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+    <div class="tabletext">
         ${uiLabelMap.ProductOrderId} : <input type="text" class='inputBox' size="20" name="orderId" value="${orderId?if_exists}"/>
         <span class='tabletext'>
             <a href="javascript:call_fieldlookup2(document.additemsfromorder.orderId,'LookupOrderHeaderAndShipInfo');">
@@ -42,7 +42,7 @@
 
 <div class="head2">${uiLabelMap.ProductAddItemsShipment}: [${shipmentId?if_exists}]; ${uiLabelMap.OrderFromOrder}: [${orderId?if_exists}], ${uiLabelMap.OrderShipGroup}: [${shipGroupSeqId?if_exists}]</div>
 <#if orderId?has_content && !orderHeader?exists>
-	<div class="head3" style="color: red;"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</div>
+    <div class="head3" style="color: red;"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</div>
 </#if>
 <#if orderHeader?exists>
     <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId?if_exists != "SALES_SHIPMENT">
@@ -53,9 +53,9 @@
         <div class="head3">${uiLabelMap.ProductNoteOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
     </#if>
     <#if shipment.shipmentTypeId?if_exists == "SALES_SHIPMENT">
-		<div class="head3">${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
+        <div class="head3">${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
     <#elseif shipment.shipmentTypeId?if_exists == "PURCHASE_SHIPMENT">
-		<div class="head3">${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
+        <div class="head3">${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
     </#if>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
         <div class="head3">${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>

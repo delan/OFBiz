@@ -29,8 +29,8 @@
 <div class="head1">${uiLabelMap.ProductFacility} <span class='head2'>${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
 <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 <#if facilityId?has_content>
-	<a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonViewCalendar}]</a>
-	<a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewContactMech}]</a>
+    <a href="/workeffort/control/month?facilityId=${facilityId}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonViewCalendar}]</a>
+    <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewContactMech}]</a>
 </#if>
 
 <br/><br/>
