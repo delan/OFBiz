@@ -423,7 +423,7 @@
         <override name="contactListTypeId" optional="false"/>
         <override name="contactListName" optional="false"/>
     </service>
-    <service name="updatePaymentApplication" default-entity-name="PaymentApplication" engine="simple"
+    <!--service name="updatePaymentApplication" default-entity-name="PaymentApplication" engine="simple"
         location="org/ofbiz/opentravelsystem/InvoiceServices.xml" invoke="updatePaymentApplication">
         <description>
             Apply a payment to a Invoice, create/update paymentApplication records, modified version, will apply
@@ -431,7 +431,7 @@
         </description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/> <!-- a "Y" will activate this option -->
+        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/>
         <override name="paymentId" optional="false"/>        
     </service>
     <service name="updatePaymentApplicationOfbiz" default-entity-name="PaymentApplication" engine="java"
@@ -441,8 +441,8 @@
         </description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/> <!-- a "Y" will activate this option -->
+        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/>
         <override name="paymentId" optional="false"/>        
-    </service>
+    </service-->
     
 </services>
