@@ -37,7 +37,7 @@
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
-	<td width="100%" class="monthheadertext">${start?date?string("MMMM yyyy")?cap_first}</td>
+    <td width="100%" class="monthheadertext">${start?date?string("MMMM yyyy")?cap_first}</td>
     <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>month?start=${prev.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortPreviousMonth}</a> | <a href='<@ofbizUrl>month?start=${next.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortNextMonth}</a> | <a href='<@ofbizUrl>month?start=${now.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortThisMonth}</a></td>
   </tr>
 </table>
@@ -50,44 +50,44 @@
     <td width="14%" class="monthdayheader">${day.start?date?string("EEEE")?cap_first}<br/>
       <img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1" width="1"></td>
     <#if (day_index > 5)><#break></#if>
-  	</#list>
+    </#list>
   </tr>
   <#list periods as period>
   <#assign indexMod7 = period_index % 7>
   <#if indexMod7 = 0>
   <tr class="bg">
     <td valign="top" height="60" nowrap class="monthweekheader"><a href='<@ofbizUrl>week?start=${period.start.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>' class="monthweeknumber">${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a></td>
-  </#if>			  
+  </#if>
     <td valign="top">
-      <table width="100%" cellspacing="0" cellpadding="0" border="0">			
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td nowrap class="monthdaynumber"><a href='<@ofbizUrl>day?start=${period.start.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>' class="monthdaynumber">${period.start?date?string("d")?cap_first}</a></td>
           <td align="right"><a href='<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&currentStatusId=CAL_TENTATIVE&estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>' class="add">${uiLabelMap.CommonAddNew}</a>&nbsp;&nbsp;</td>
-        </tr>			
+        </tr>
       </table>
       <#list period.calendarEntries as calEntry>
-      <table width="100%" cellspacing="0" cellpadding="0" border="0">			
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr width="100%">
           <td class='monthcalendarentry' width="100%" valign='top'>
-		    <#if (calEntry.workEffort.estimatedStartDate.compareTo(period.start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(period.end) >= 0)>
-		    ${uiLabelMap.CommonAllDay}
-		    <#elseif calEntry.workEffort.estimatedStartDate.before(period.start)>
-		    ${uiLabelMap.CommonUntil} ${calEntry.workEffort.estimatedCompletionDate?time?string.short}
-			<#elseif calEntry.workEffort.estimatedCompletionDate.after(period.end)>
-		     ${uiLabelMap.CommonFrom} ${calEntry.workEffort.estimatedStartDate?time?string.short}
-		    <#else>
-		    ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
-		    </#if>
-		    <br/>
-		    <a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;
+            <#if (calEntry.workEffort.estimatedStartDate.compareTo(period.start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(period.end) >= 0)>
+              ${uiLabelMap.CommonAllDay}
+            <#elseif calEntry.workEffort.estimatedStartDate.before(period.start)>
+              ${uiLabelMap.CommonUntil} ${calEntry.workEffort.estimatedCompletionDate?time?string.short}
+            <#elseif calEntry.workEffort.estimatedCompletionDate.after(period.end)>
+              ${uiLabelMap.CommonFrom} ${calEntry.workEffort.estimatedStartDate?time?string.short}
+            <#else>
+              ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
+            </#if>
+            <br/>
+            <a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;
           </td>
-        </tr>			
+        </tr>
       </table>
-      </#list>	  
+      </#list>
     </td>
-    <#if !period_has_next && indexMod7 != 6>			  
+    <#if !period_has_next && indexMod7 != 6>
     <td colspan='${6 - (indexMod7)}'>&nbsp;</td>
-    </#if>			
+    </#if>
   <#if indexMod7 = 6 || !period_has_next>
   </tr>
   </#if>

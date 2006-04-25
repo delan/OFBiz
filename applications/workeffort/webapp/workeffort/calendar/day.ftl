@@ -38,7 +38,7 @@
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
-	<td width="100%" class="monthheadertext">${start?date?string("EEEE")?cap_first} ${start?date?string.long}</td>
+    <td width="100%" class="monthheadertext">${start?date?string("EEEE")?cap_first} ${start?date?string.long}</td>
     <td nowrap class="previousnextmiddle"><a href="<@ofbizUrl>day?start=${prev.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortPreviousDay}</a> | <a href="<@ofbizUrl>day?start=${next.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.WorkEffortNextDay}</a> | <a href="<@ofbizUrl>day?start=${now.time?string("#")}<#if eventsParam?has_content>&${eventsParam}</#if></@ofbizUrl>" class="previousnext">${uiLabelMap.CommonToday}</a></td>
   </tr>
 </table>
@@ -63,27 +63,27 @@
     <td valign="top" nowrap width="1%" class="monthweekheader" height="36"><span class="monthweeknumber">${period.start?time?string.short}</span><br/>
       <a href="<@ofbizUrl>EditWorkEffort?workEffortTypeId=EVENT&currentStatusId=CAL_TENTATIVE&estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>">${uiLabelMap.CommonAddNew}</a></td>
     <#list period.calendarEntries as calEntry>
-    <#if calEntry.startOfPeriod>			  
+    <#if calEntry.startOfPeriod>
     <td class="calendarentry" rowspan="${calEntry.periodSpan}" colspan="1" width="${entryWidth?string("#")}%" valign="top">
-	<#if (calEntry.workEffort.estimatedStartDate.compareTo(start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(next) >= 0)>
-     ${uiLabelMap.CommonAllDay}
+    <#if (calEntry.workEffort.estimatedStartDate.compareTo(start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(next) >= 0)>
+      ${uiLabelMap.CommonAllDay}
     <#elseif calEntry.workEffort.estimatedStartDate.before(start)>
-	  ${uiLabelMap.CommonUntil}${calEntry.workEffort.estimatedCompletionDate?time?string.short}
+      ${uiLabelMap.CommonUntil}${calEntry.workEffort.estimatedCompletionDate?time?string.short}
     <#elseif calEntry.workEffort.estimatedCompletionDate.after(next)>
       ${uiLabelMap.CommonFrom} ${calEntry.workEffort.estimatedStartDate?time?string.short}
     <#else>
-	  ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
+      ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
     </#if>
-	  <br/><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;</td>
+    <br/><a href="<@ofbizUrl>WorkEffortSummary?workEffortId=${calEntry.workEffort.workEffortId}</@ofbizUrl>" class="event">${calEntry.workEffort.workEffortName?default("Undefined")}</a>&nbsp;</td>
     </#if>
-    </#list>	
+    </#list>
     <#if period.calendarEntries?size < maxConcurrentEntries>
-    <#assign emptySlots = (maxConcurrentEntries - period.calendarEntries?size)>			  	
-	<#list 1..emptySlots as num>
-	<td width="${entryWidth?string("#")}%"  class="calendarempty"><br/></td>
-	</#list>
+    <#assign emptySlots = (maxConcurrentEntries - period.calendarEntries?size)>
+    <#list 1..emptySlots as num>
+      <td width="${entryWidth?string("#")}%"  class="calendarempty"><br/></td>
+    </#list>
     </#if>
-    <#if maxConcurrentEntries < 2>			  
+    <#if maxConcurrentEntries < 2>
     <td width="${entryWidth?string("#")}" class="calendarempty">&nbsp;</td>
     </#if>
   </tr>

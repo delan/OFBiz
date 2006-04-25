@@ -183,7 +183,7 @@
             location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortAssoc">
         <description>
             Create a WorkEffort Assoc, for linking task to describe a project or
-	    for linking routing with its routingTasks
+            for linking routing with its routingTasks
         </description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
