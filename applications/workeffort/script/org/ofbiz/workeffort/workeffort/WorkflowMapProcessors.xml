@@ -72,12 +72,12 @@
     <process field="quickAssignPartyId"><copy/></process>
   </simple-map-processor>
   <simple-map-processor name="workEffortContactMech">
-  	<process field="workEffortId"><copy/><not-empty><fail-message message="WorkEffort Id is missing."/></not-empty></process>
-  	<process field="contactMechId"><copy/></process> 
-  	<process field="comments"><copy/></process> 
+    <process field="workEffortId"><copy/><not-empty><fail-message message="WorkEffort Id is missing."/></not-empty></process>
+    <process field="contactMechId"><copy/></process> 
+    <process field="comments"><copy/></process> 
   </simple-map-processor>
   <simple-map-processor name="emailAddress">
-  	<process field="contactMechId"><copy set-if-null="false"/></process>
+    <process field="contactMechId"><copy set-if-null="false"/></process>
     <process field="workEffortId"><copy/></process>
     <process field="emailAddress">
         <copy to-field="infoString"/>
