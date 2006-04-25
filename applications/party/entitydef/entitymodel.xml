@@ -1759,10 +1759,17 @@
       <field name="passportExpireDate" type="date"></field>
       <field name="totalYearsWorkExperience" type="floating-point"></field>
       <field name="comments" type="comment"></field>
+      <field name="employmentStatusEnumId" type="id"></field>
+      <field name="occupation" type="name"></field>
+      <field name="yearsWithEmployer" type="numeric"></field>
+      <field name="monthsWithEmployer" type="numeric"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+        <relation type="one" fk-name="PERSON_EMPS_ENUM" title="EmploymentStatus" rel-entity-name="Enumeration">
+            <key-map field-name="employmentStatusEnumId" rel-field-name="enumId"/>
+        </relation>
       <index name="FIRST_NAME_IDX">
         <index-field name="firstName"/>
       </index>
