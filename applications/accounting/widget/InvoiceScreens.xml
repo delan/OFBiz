@@ -32,9 +32,9 @@ under the License.
             <widgets>
                 <decorator-screen name="mainAccountingDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1">Find Invoices</label></container>
-                        <include-form name="FindInvoices" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                         <container><link target="editInvoice" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingInvoice}" style="buttontext"/></container>
+                        <container><label style="head1" text="${uiLabelMap.AccountingFindInvoices}"/></container>
+                        <include-form name="FindInvoices" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                         <include-form name="ListInvoices"  location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -56,7 +56,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <label style="head1">Invoice Header</label>
+                                <label style="head1" text="${uiLabelMap.AccountingInvoiceHeaderDetailedInformation}"/>
                                 <include-form name="EditInvoice" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                             </widgets>
                         </section>
@@ -84,45 +84,43 @@ under the License.
                 <entity-and entity-name="InvoiceItem" list-name="invoiceItems">
                     <field-map field-name="invoiceId" value="${parameters.invoiceId}"/>
                 </entity-and>
-                <!--script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/createItemList.bsh"/-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1">Header Detailed Information</label></container>
+                        <container><label style="head1" text="${uiLabelMap.AccountingInvoiceHeader}"/></container>
                         <section>
                             <condition>
                                 <if-compare field-name="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
                             </condition>
                             <widgets>
                                 <container><link target="editInvoice?invoiceId=${invoiceId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/></container>
-
                                 <include-form name="invoiceHeader" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Roles</label></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingInvoiceRoles}"/></container>
                                 <container><link target="invoiceRoles?invoiceId=${invoiceId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/></container>
                                 <include-form name="invoiceRoles" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Status</label></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingInvoiceStatus}"/></container>
                                 <include-form name="ListInvoiceStatus" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Payments applied: ${appliedAmount}, open: ${notAppliedAmount} ${invoice.currencyUomId}</label></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingAppliedPayments}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
                                 <container><link target="editInvoiceApplications?invoiceId=${invoiceId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/></container>
                                 <include-form name="ListInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Items</label></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingInvoiceItems}"/></container>
                                 <container><link target="listInvoiceItems?invoiceId=${invoiceId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/></container>
                                 <include-form name="invoiceItems" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <label style="head1">Accounting Transactions</label>
+                                <container><label style="head1" text="${uiLabelMap.AccountingTransactions}"/></container>
                                 <include-form name="AcctgTransAndEntries" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <include-form name="invoiceHeader" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Roles</label></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingInvoiceRoles}"/></container>
                                 <include-form name="invoiceRoles" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Status</label></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingInvoiceStatus}"/></container>
                                 <include-form name="ListInvoiceStatus" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Payments applied: ${appliedAmount}, open: ${notAppliedAmount} ${invoice.currencyUomId}</label></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingAppliedPayments}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
                                 <include-form name="ListInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Items</label></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingInvoiceItems}"/></container>
                                 <include-form name="invoiceItems" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <label style="head1">Accounting Transactions</label>
+                                <container><label style="head1" text="${uiLabelMap.AccountingTransactions}"/></container>
                                 <include-form name="AcctgTransAndEntries" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                             </fail-widgets>
                         </section>
@@ -147,7 +145,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="head1">Status History</label>
+                        <label style="head1" text="${uiLabelMap.AccountingInvoiceStatusHistory}"/>
                         <include-form name="ListInvoiceStatus" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -163,6 +161,7 @@ under the License.
                 
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/createApplicationList.bsh"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/listNotAppliedPayments.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
@@ -172,15 +171,22 @@ under the License.
                                 <if-compare field-name="notAppliedAmount" operator="greater" value="0"/>
                             </condition>
                             <widgets>
-                                <container><label style="head1">Payments applied: ${appliedAmount}, open: ${notAppliedAmount} ${invoice.currencyUomId}</label></container>
+                                <label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/>
                                 <include-form name="EditInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Payments not yet Applied To: [${invoice.partyIdFrom}], sent from: [${invoice.partyId}]</label></container>
-                                <include-form name="ListPaymentsNotApplied" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1">Assign Payment to This Invoice</label></container>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field-name="payments"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <container><label style="head1" text="${uiLabelMap.AccountingListPaymentsNotYetApplied}: [${invoice.partyIdFrom}], sent from: [${invoice.partyId}]"/></container>
+                                        <include-form name="ListPaymentsNotApplied" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
+                                    </widgets>
+                                </section>
+                                <container><label style="head1" text="${uiLabelMap.AccountingAssignPaymentToInvoice}"/></container>
                                 <include-form name="AddPayment" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="head1">Payments applied: ${appliedAmount}, open: ${notAppliedAmount} ${invoice.currencyUomId}</label>
+                                <label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/>
                                 <include-form name="EditInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                             </fail-widgets>
                         </section>
@@ -207,10 +213,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1">Invoice Items</label></container>
+                        <label style="head1" text="${uiLabelMap.AccountingInvoiceItems}"/>
                         <include-form name="EditInvoiceItems" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                        <container><label style="head1">Add a new Invoice Item</label></container>
-                        <container><link target="listInvoiceItems?invoiceId=${invoiceId}&amp;invoiceItemSeqId=" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingInvoice}" style="buttontext"/></container>
+                        <container><label style="head1" text="${uiLabelMap.AccountingInvoiceItemAdd}"/></container>
                         <include-form name="EditInvoiceItem" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -233,9 +238,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1">Party Role list</label></container>
+                        <label style="head1" text="${uiLabelMap.AccountingPartyRoleList}"/>
                         <include-form name="ListInvoiceRoles" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                        <container><label style="head1">Add a New Role:</label></container>
+                        <container><label style="head1" text="${uiLabelMap.AccountingPartyRoleAdd}"/></container>
                         <include-form name="EditInvoiceRole" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -253,7 +258,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1">Send invoice per email</label></container>
+                        <label style="head1" text="${uiLabelMap.CommonSendPerEmail}"/>
                         <include-form name="SendPerEmail" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

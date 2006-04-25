@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
     $Id$
     
@@ -16,9 +16,8 @@
     License for the specific language governing permissions and limitations
     under the License.
 -->
-
-<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="../../../../../../../framework/minilang/dtd/simple-methods.xsd">
     
     <simple-method method-name="createPayment" short-description="Create a Payment">        
         <if>
