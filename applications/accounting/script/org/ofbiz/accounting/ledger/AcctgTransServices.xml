@@ -47,7 +47,7 @@ under the License.
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="updateAcctgTransLastModified" short-description="Update AcctgTrans LastModified Info">
-    	<!-- this is just a little method that is meant to be called as an inline call-simple-method target with the context already setup -->
+        <!-- this is just a little method that is meant to be called as an inline call-simple-method target with the context already setup -->
         <entity-one entity-name="AcctgTrans" value-name="lookedUpACTX"/>
         <set from-field="userLogin.userLoginId" field="lookedUpACTX.lastModifiedByUserLogin"/>
         <store-value value-name="lookedUpACTX"/>
@@ -63,33 +63,33 @@ under the License.
 
         <!-- if not explicitly provided in the parameters, set the currency of the entry from PartyAcctgPreference -->
         <if-empty field-name="parameters.currencyUomId">
-        	<entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" use-cache="true">
-        		<field-map env-name="parameters.organizationPartyId" field-name="partyId"/>
-        	</entity-one>
-        	<set from-field="partyAcctgPreference.baseCurrencyUomId" field="newEntity.currencyUomId"/>
+            <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" use-cache="true">
+                <field-map env-name="parameters.organizationPartyId" field-name="partyId"/>
+            </entity-one>
+            <set from-field="partyAcctgPreference.baseCurrencyUomId" field="newEntity.currencyUomId"/>
         </if-empty>
 
         <!-- by default, set the reconciled status of this new entry to not reconciled -->
         <set value="AES_NOT_RECONCILED" field="newEntity.reconcileStatusId"/>
         <create-value value-name="newEntity"/>
 
-		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
-		<!-- call-simple-method method-name="updateAcctgTransLastModified"/ -->
+        <!-- when changing entries, also update the last modified info for the AcctgTrans -->
+        <!-- call-simple-method method-name="updateAcctgTransLastModified"/ -->
     </simple-method>
     <simple-method method-name="updateAcctgTransEntry" short-description="Update Entry To AcctgTrans">
         <entity-one entity-name="AcctgTransEntry" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
 
-		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
-		<call-simple-method method-name="updateAcctgTransLastModified"/>
+        <!-- when changing entries, also update the last modified info for the AcctgTrans -->
+        <call-simple-method method-name="updateAcctgTransLastModified"/>
     </simple-method>
     <simple-method method-name="deleteAcctgTransEntry" short-description="Remove Entry From AcctgTrans">
         <entity-one entity-name="AcctgTransEntry" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
 
-		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
-		<call-simple-method method-name="updateAcctgTransLastModified"/>
+        <!-- when changing entries, also update the last modified info for the AcctgTrans -->
+        <call-simple-method method-name="updateAcctgTransLastModified"/>
     </simple-method>
 
     <!-- AcctgTrans Trial Balance and Post routines -->

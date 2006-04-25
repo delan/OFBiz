@@ -183,16 +183,16 @@
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTrans" auth="true">
         <description>Create a AcctgTrans record.  isPosted is forced to "N"</description>
         <required-permissions join-type="OR">
-        	    <check-permission permission="ACCOUNTING" action="_ATX_CREATE"/>
+            <check-permission permission="ACCOUNTING" action="_ATX_CREATE"/>
         </required-permissions>
-        	<implements service="interfaceAcctgTrans"/>
+        <implements service="interfaceAcctgTrans"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
     <service name="updateAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTrans" auth="true">
         <description>Update a AcctgTrans record</description>
         <required-permissions join-type="OR">
-        	    <check-permission permission="ACCOUNTING" action="_ATX_UPDATE"/>
+            <check-permission permission="ACCOUNTING" action="_ATX_UPDATE"/>
         </required-permissions>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -201,7 +201,7 @@
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="deleteAcctgTrans" auth="true">
         <description>Delete a AcctgTrans record</description>
         <required-permissions join-type="OR">
-        	    <check-permission permission="ACCOUNTING" action="_ATX_DELETE"/>
+            <check-permission permission="ACCOUNTING" action="_ATX_DELETE"/>
         </required-permissions>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
@@ -220,9 +220,9 @@
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTransEntry" auth="true">
         <description>Add an Entry to a AcctgTrans.  Will use baseCurrencyUomId in PartyAcctgPreference if no currencyUomId is in parameters.</description>
         <required-permissions join-type="OR">
-        	    <check-permission permission="ACCOUNTING" action="_ATX_CREATE"/>
+            <check-permission permission="ACCOUNTING" action="_ATX_CREATE"/>
         </required-permissions>
-        	<implements service="interfaceAcctgTransEntry"/>
+        <implements service="interfaceAcctgTransEntry"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <override name="acctgTransEntrySeqId" mode="OUT"/>
     </service>
@@ -230,7 +230,7 @@
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTransEntry" auth="true">
         <description>Update an Entry to a AcctgTrans record</description>
         <required-permissions join-type="OR">
-        	    <check-permission permission="ACCOUNTING" action="_ATX_UPDATE"/>
+            <check-permission permission="ACCOUNTING" action="_ATX_UPDATE"/>
         </required-permissions>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -239,7 +239,7 @@
             location="org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="deleteAcctgTransEntry" auth="true">
         <description>Remove an Entry from a AcctgTrans</description>
         <required-permissions join-type="OR">
-        	    <check-permission permission="ACCOUNTING" action="_ATX_DELETE"/>
+            <check-permission permission="ACCOUNTING" action="_ATX_DELETE"/>
         </required-permissions>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
@@ -254,9 +254,9 @@
             to be created before they are actually posted, and a later posting service will actually check that the transaction is balanced.
         </description>
         <required-permissions join-type="OR">
-        	    <check-permission permission="ACCOUNTING" action="_ATX_CREATE"/>
+            <check-permission permission="ACCOUNTING" action="_ATX_CREATE"/>
         </required-permissions>
-        	<auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="acctgTransEntries" type="java.util.List" mode="IN" optional="false"/>
         <attribute name="acctgTransId" type="String" mode="OUT"/>
@@ -276,9 +276,9 @@
          the sum of the debits and credits are equal. 
         </description>
         <required-permissions join-type="OR">
-        	    <check-permission permission="ACCOUNTING" action="_ATX_POST"/>
+            <check-permission permission="ACCOUNTING" action="_ATX_POST"/>
         </required-permissions>
-        	<auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Miscellaneous Ledger-related services -->
