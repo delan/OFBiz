@@ -39,7 +39,7 @@
   <tr bgcolor="#FFFFFF">
     <td><div class="appbarleft"></div></td>
     <td height="15" width="100%">
-	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <#list displayApps as display>
             <#assign thisApp = display.getContextRoot()>
@@ -71,7 +71,7 @@
               </td>
             </#if>
           </#list>
-		  <td><div class="appbarright"></div></td>
+          <td><div class="appbarright"></div></td>
           <td width="100%" class="appbarresize">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
