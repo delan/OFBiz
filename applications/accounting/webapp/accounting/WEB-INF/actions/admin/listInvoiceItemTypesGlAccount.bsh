@@ -28,38 +28,36 @@ organizationPartyId = parameters.get("organizationPartyId");
 List invoiceItemTypes = delegator.findByLike("InvoiceItemType",UtilMisc.toMap("invoiceItemTypeId","INV_%"));
 List allTypes = new LinkedList();
 i = invoiceItemTypes.iterator();
-while(i.hasNext())	{
-	GenericValue invoiceItemType = i.next();
-   	String activeGlDescription = "";
-   	String remove = " ";
-   	List glAccounts = null;
-   	GenericValue glAccount = null;
+while(i.hasNext()) {
+    GenericValue invoiceItemType = i.next();
+    String activeGlDescription = "";
+    String remove = " ";
+    List glAccounts = null;
+    GenericValue glAccount = null;
     List invoiceItemTypeOrgs = invoiceItemType.getRelatedByAnd("InvoiceItemTypeGlAccount",UtilMisc.toMap("organizationPartyId", organizationPartyId));
-   	String overrideGlAccountId = " ";
-    if (invoiceItemTypeOrgs != null && invoiceItemTypeOrgs.size() > 0)	{ 
-	    invoiceItemTypeOrg = invoiceItemTypeOrgs.get(0);
-    	overrideGlAccountId = invoiceItemTypeOrg.getString("glAccountId");
+    String overrideGlAccountId = " ";
+    if (invoiceItemTypeOrgs != null && invoiceItemTypeOrgs.size() > 0) { 
+        invoiceItemTypeOrg = invoiceItemTypeOrgs.get(0);
+        overrideGlAccountId = invoiceItemTypeOrg.getString("glAccountId");
 
-    	glAccounts = invoiceItemTypeOrg.getRelated("GlAccount");
-       	if (glAccounts != null && glAccounts.size() > 0)
-       		glAccount = glAccounts.get(0);
+        glAccounts = invoiceItemTypeOrg.getRelated("GlAccount");
+        if (glAccounts != null && glAccounts.size() > 0) {
+            glAccount = glAccounts.get(0);
+        }
+    } else {
+        glAccount = invoiceItemType.getRelatedOne("DefaultGlAccount");
     }
- 	else	{
 
-    	glAccount = invoiceItemType.getRelatedOne("DefaultGlAccount");
+    if (glAccount != null) {
+        activeGlDescription = glAccount.getString("accountName");
+        remove = "Remove";
     }
-
-   	if (glAccount != null)	{
-   		activeGlDescription = glAccount.getString("accountName");
-   		remove = "Remove";
-   	}
 
     allTypes.add(UtilMisc.toMap("invoiceItemTypeId",invoiceItemType.getString("invoiceItemTypeId"),
-    							"description",invoiceItemType.getString("description"),
-    							"defaultGlAccountId",invoiceItemType.getString("defaultGlAccountId"),
-    							"overrideGlAccountId",overrideGlAccountId,
-    							"remove",remove,
-    							"activeGlDescription",activeGlDescription));
-    							
+                                "description",invoiceItemType.getString("description"),
+                                "defaultGlAccountId",invoiceItemType.getString("defaultGlAccountId"),
+                                "overrideGlAccountId",overrideGlAccountId,
+                                "remove",remove,
+                                "activeGlDescription",activeGlDescription));
 }
 context.put("invoiceItemTypes",allTypes);

@@ -46,18 +46,16 @@ if ((invoiceId != null) && (invoice != null)) {
         Iterator i = invoiceItemsDb.iterator();
         while (i.hasNext())    {
             item = i.next();
-            if (item.get("quantity") == null || item.getDouble("quantity").doubleValue() == 0.00)    {
+            if (item.get("quantity") == null || item.getDouble("quantity").doubleValue() == 0.00) {
                quantity = new BigDecimal("1.00");    
+            } else {
+                quantity = item.getBigDecimal("quantity");
             }
-    		else {
-        	   quantity = item.getBigDecimal("quantity");	
-        	}
-        	if (item.get("amount")!= null) {
-            	total = item.getBigDecimal("amount").multiply(quantity).setScale(decimals,rounding);
-        	}
-			else {
-    			total = new BigDecimal("0.00");
-    		}
+            if (item.get("amount")!= null) {
+                total = item.getBigDecimal("amount").multiply(quantity).setScale(decimals,rounding);
+            } else {
+                total = new BigDecimal("0.00");
+            }
             invoiceAmount = invoiceAmount.add(total);
             Map itemmap = new HashMap();
             itemmap.putAll(item);
@@ -65,6 +63,6 @@ if ((invoiceId != null) && (invoice != null)) {
             invoiceItems.add(itemmap);
         }
     }
-	context.put("invoiceItems",invoiceItems);
-	context.put("invoiceAmount",invoiceAmount);
+    context.put("invoiceItems",invoiceItems);
+    context.put("invoiceAmount",invoiceAmount);
 }

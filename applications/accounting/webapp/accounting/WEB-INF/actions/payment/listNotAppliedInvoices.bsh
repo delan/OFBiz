@@ -50,8 +50,8 @@ if (invoices != null && invoices.size() > 0)    {
         BigDecimal invoiceAmount = InvoiceWorker.getInvoiceTotalBd(invoice).setScale(decimals,rounding);
         BigDecimal invoiceApplied = InvoiceWorker.getInvoiceAppliedBd(invoice).setScale(decimals,rounding);
         if (!invoiceAmount.equals(invoiceApplied) && 
-        	!invoice.getString("statusId").equals("INVOICE_CANCELLED") &&
-        	!invoice.getString("statusId").equals("INVOICE_IN_PROCESS")) {
+                !invoice.getString("statusId").equals("INVOICE_CANCELLED") &&
+                !invoice.getString("statusId").equals("INVOICE_IN_PROCESS")) {
             // put in the map
             BigDecimal invoiceToApply = invoiceAmount.subtract(invoiceApplied); 
             Map invoiceMap = new HashMap();
