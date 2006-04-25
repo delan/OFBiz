@@ -807,6 +807,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="sequenceNum" type="numeric"></field>
       <field name="amount" type="currency-amount"></field>
+      <field name="recurringAmount" type="currency-amount"></field>
       <prim-key field="productId"/>
       <prim-key field="productFeatureId"/>
       <prim-key field="fromDate"/>
@@ -1767,6 +1768,7 @@
       <field name="productName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="longDescription" type="very-long"></field>
+      <field name="priceDetailText" type="description"></field>
       <field name="smallImageUrl" type="url"></field>
       <field name="mediumImageUrl" type="url"></field>
       <field name="largeImageUrl" type="url"></field>
