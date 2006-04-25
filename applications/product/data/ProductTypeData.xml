@@ -165,6 +165,7 @@
     <ProductContentType description="Product Name" hasTable="N" parentTypeId="" productContentTypeId="PRODUCT_NAME"/>
     <ProductContentType description="Description" hasTable="N" parentTypeId="" productContentTypeId="DESCRIPTION"/>
     <ProductContentType description="Description - Long" hasTable="N" parentTypeId="" productContentTypeId="LONG_DESCRIPTION"/>
+    <ProductContentType description="Price Detail Text" hasTable="N" parentTypeId="" productContentTypeId="PRICE_DETAIL_TEXT"/>
     <ProductContentType description="Ingredients" hasTable="N" parentTypeId="" productContentTypeId="INGREDIENTS"/>
     <ProductContentType description="Unique Ingredients" hasTable="N" parentTypeId="" productContentTypeId="UNIQUE_INGREDIENTS"/>
     <ProductContentType description="Special Instructions" hasTable="N" parentTypeId="" productContentTypeId="SPECIALINSTRUCTIONS"/>
