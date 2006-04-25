@@ -85,7 +85,7 @@
          
      </simple-method>
 
-     <simple-method method-name="updatePaymentApplication" short-description="-- add a payment application with maximum value when not provided--">
+     <!--simple-method method-name="updatePaymentApplication" short-description="-- add a payment application with maximum value when not provided--">
          <if-empty field-name="parameters.amountApplied">
              <if-not-empty field-name="parameters.paymentId">
                 <entity-one entity-name="Payment" value-name="payment"/>
@@ -113,6 +113,6 @@
          
          <set-service-fields service-name="updatePaymentApplicationOfbiz" map-name="parameters" to-map-name="updatePaymentApplicationParam"/>
          <call-service service-name="updatePaymentApplicationOfbiz" in-map-name="updatePaymentApplicationParam"/>
-     </simple-method>
+     </simple-method-->
 
  </simple-methods>
