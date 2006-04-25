@@ -28,7 +28,7 @@
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
-	<!-- Facility Services -->
+    <!-- Facility Services -->
     <simple-method method-name="createFacility" short-description="Create a Facility">
         <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createFacility you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -61,7 +61,7 @@
         <remove-value value-name="facility"/>
     </simple-method>
 
-	<!-- Facility ContactMech Services -->
+    <!-- Facility ContactMech Services -->
     <simple-method method-name="addContactMechToFacility" short-description="Add ContactMech To Facility">
         <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run addContactMechToFacility you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -92,24 +92,24 @@
         <string-to-field string="${parameters.areaId}${parameters.aisleId}${parameters.sectionId}${parameters.levelId}${parameters.positionId}" field-name="locationSeqId"/>
         <!-- check to see if it exists already, if so try a simple suffix, then give up and use a sequenced id -->
         <if-not-empty field-name="locationSeqId">
-        	<env-to-field env-name="locationSeqId" map-name="checkLocationSeqIdMap"/>
-        	<field-to-field field-name="facilityId" map-name="parameters" to-map-name="checkLocationSeqIdMap"/>
-        	<find-by-primary-key entity-name="FacilityLocation" map-name="checkLocationSeqIdMap" value-name="checkLocationSeqIdValue"/>
-        	<if-not-empty field-name="checkLocationSeqIdValue">
-        		<string-to-field string="${locationSeqId}_2" field-name="locationSeqId"/>
-				<env-to-field env-name="locationSeqId" map-name="checkLocationSeqIdMap"/>
-				<field-to-field field-name="facilityId" map-name="parameters" to-map-name="checkLocationSeqIdMap"/>
-				<find-by-primary-key entity-name="FacilityLocation" map-name="checkLocationSeqIdMap" value-name="checkLocationSeqIdValue"/>
-				<if-not-empty field-name="checkLocationSeqIdValue">
-					<string-to-field string="" field-name="locationSeqId"/>
-				</if-not-empty>
-        	</if-not-empty>
+            <env-to-field env-name="locationSeqId" map-name="checkLocationSeqIdMap"/>
+            <field-to-field field-name="facilityId" map-name="parameters" to-map-name="checkLocationSeqIdMap"/>
+            <find-by-primary-key entity-name="FacilityLocation" map-name="checkLocationSeqIdMap" value-name="checkLocationSeqIdValue"/>
+            <if-not-empty field-name="checkLocationSeqIdValue">
+                <string-to-field string="${locationSeqId}_2" field-name="locationSeqId"/>
+                <env-to-field env-name="locationSeqId" map-name="checkLocationSeqIdMap"/>
+                <field-to-field field-name="facilityId" map-name="parameters" to-map-name="checkLocationSeqIdMap"/>
+                <find-by-primary-key entity-name="FacilityLocation" map-name="checkLocationSeqIdMap" value-name="checkLocationSeqIdValue"/>
+                <if-not-empty field-name="checkLocationSeqIdValue">
+                    <string-to-field string="" field-name="locationSeqId"/>
+                </if-not-empty>
+            </if-not-empty>
         </if-not-empty>
 
         <if-empty field-name="locationSeqId">
-			<sequenced-id-to-env sequence-name="FacilityLocation" env-name="locationSeqId"/>
-			<to-string field-name="locationSeqId"/>
-		</if-empty>
+            <sequenced-id-to-env sequence-name="FacilityLocation" env-name="locationSeqId"/>
+            <to-string field-name="locationSeqId"/>
+        </if-empty>
         
         <env-to-field env-name="locationSeqId" map-name="newEntity"/>
         <field-to-result field-name="locationSeqId" result-name="locationSeqId"/>

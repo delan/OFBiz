@@ -2285,53 +2285,53 @@ Rates & Service Request/Response
       <CustomerContext>Bare Bones Rate Request</CustomerContext>
       <XpciVersion>1.0</XpciVersion>
     </TransactionReference>
-	<RequestAction>Rate</RequestAction>
-	<RequestOption>Rate</RequestOption>
+    <RequestAction>Rate</RequestAction>
+    <RequestOption>Rate</RequestOption>
   </Request>
   <PickupType>
-  	<Code>01</Code>
+    <Code>01</Code>
   </PickupType>
   <Shipment>
     <Shipper>
-      	<Address>
-        	<PostalCode>44129</PostalCode>
-        	<CountryCode>US</CountryCode>
-      	</Address>
+        <Address>
+            <PostalCode>44129</PostalCode>
+            <CountryCode>US</CountryCode>
+        </Address>
     </Shipper>
     <ShipTo>
-      	<Address>
-        	<PostalCode>44129</PostalCode>
-        	<CountryCode>US</CountryCode>
-      	</Address>
-   	</ShipTo>
-   	<ShipFrom>
-      	<Address>
-        	<PostalCode>32779</PostalCode>
-        	<CountryCode>US</CountryCode>
-      	</Address>
-  	</ShipFrom>
-  	<Service>
-    		<Code>01</Code>
-  	</Service>
-  	<Package>
-      	<PackagingType>
-	        <Code>02</Code>
-      	</PackagingType>
-			<Dimensions>
-      			<UnitOfMeasurement>
-      			  <Code>IN</Code>
-      			</UnitOfMeasurement>
-	        	<Length>20</Length>
-	        	<Width>20</Width>
-	        	<Height>20</Height>
-			</Dimensions>
-      	<PackageWeight>
-      		<UnitOfMeasurement>
-      			 <Code>LBS</Code>
-      		</UnitOfMeasurement>
-	        <Weight>23</Weight>
-      	</PackageWeight>
-   	</Package>
+        <Address>
+            <PostalCode>44129</PostalCode>
+            <CountryCode>US</CountryCode>
+        </Address>
+    </ShipTo>
+    <ShipFrom>
+        <Address>
+            <PostalCode>32779</PostalCode>
+            <CountryCode>US</CountryCode>
+        </Address>
+    </ShipFrom>
+    <Service>
+        <Code>01</Code>
+    </Service>
+    <Package>
+        <PackagingType>
+            <Code>02</Code>
+        </PackagingType>
+        <Dimensions>
+            <UnitOfMeasurement>
+                <Code>IN</Code>
+            </UnitOfMeasurement>
+            <Length>20</Length>
+            <Width>20</Width>
+            <Height>20</Height>
+        </Dimensions>
+        <PackageWeight>
+            <UnitOfMeasurement>
+                <Code>LBS</Code>
+            </UnitOfMeasurement>
+            <Weight>23</Weight>
+        </PackageWeight>
+    </Package>
   </Shipment>
 </RatingServiceSelectionRequest>
 

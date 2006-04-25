@@ -43,9 +43,9 @@
   </service>
   <!-- DHL Lable API Services for testing-->
   <service name="dhlShipmentConfirm" engine="java"
-  	location="org.ofbiz.shipment.thirdparty.dhl.DhlServices" invoke="dhlShipmentConfirm" auth="true">
-  	<description>DHL Shipment Confirm</description>
-  	<auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
+        location="org.ofbiz.shipment.thirdparty.dhl.DhlServices" invoke="dhlShipmentConfirm" auth="true">
+    <description>DHL Shipment Confirm</description>
+    <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
   </service>
   <!-- TODO: void and track shipment services
     -->

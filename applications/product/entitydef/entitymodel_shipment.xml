@@ -218,7 +218,7 @@
         <key-map field-name="inventoryItemId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItemShipGrpInvRes">
-      	<!-- This is a nofk so that the OrderItemShipGrpInvRes can be removed -->
+        <!-- This is a nofk so that the OrderItemShipGrpInvRes can be removed -->
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
         <key-map field-name="shipGroupSeqId"/>

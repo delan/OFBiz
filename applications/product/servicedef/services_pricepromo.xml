@@ -237,7 +237,7 @@
 
     <service name="createProductPromoCodeSet" default-entity-name="ProductPromoCode" engine="java"
             location="org.ofbiz.product.promo.PromoServices" invoke="createProductPromoCodeSet" auth="true">
-    	<description>Create a Product Promo Code Set</description>
+        <description>Create a Product Promo Code Set</description>
         <auto-attributes include="nonpk" mode="IN" optional="true">
             <exclude field-name="createdDate"/>
             <exclude field-name="createdByUserLogin"/>

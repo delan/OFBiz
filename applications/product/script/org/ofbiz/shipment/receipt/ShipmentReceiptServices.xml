@@ -27,8 +27,8 @@
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
-	<simple-method method-name="createShipmentReceipt" short-description="Create a ShipmentReceipt">
-		<check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createShipmentReceipt you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+    <simple-method method-name="createShipmentReceipt" short-description="Create a ShipmentReceipt">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createShipmentReceipt you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ShipmentReceipt"/>
@@ -58,7 +58,7 @@
     </simple-method>
     
     <simple-method method-name="createShipmentReceiptRole" short-description="Create a ShipmentReceipt Role">
-		<check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createShipmentReceiptRole you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createShipmentReceiptRole you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ShipmentReceiptRole"/>
@@ -79,14 +79,14 @@
     </simple-method>   
     
     <simple-method method-name="prepareInventoryReceipt" short-description="Prepare Inventory Receipt">
-		<check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run prepareInventoryReceipt you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run prepareInventoryReceipt you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
         
         <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="parameters">
-        	<field-to-result field-name="quantityAccepted" map-name="parameters" result-name="quantityOnHandDiff"/>
-        	<field-to-result field-name="quantityAccepted" map-name="parameters" result-name="availableToPromiseDiff"/>
+            <field-to-result field-name="quantityAccepted" map-name="parameters" result-name="quantityOnHandDiff"/>
+            <field-to-result field-name="quantityAccepted" map-name="parameters" result-name="availableToPromiseDiff"/>
         </if-compare>
-	</simple-method>
+    </simple-method>
     
     <simple-method method-name="quickReceiveReturn" short-description="Quick Receive Entire Return">
         <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run quickReceiveReturn you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>

@@ -70,7 +70,7 @@
   </simple-map-processor>
 
   <simple-map-processor name="emailAddress">
-  	<process field="contactMechId"><copy set-if-null="false"/></process>
+    <process field="contactMechId"><copy set-if-null="false"/></process>
     <process field="facilityId"><copy/></process>
     <process field="emailAddress">
         <copy to-field="infoString"/>

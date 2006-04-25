@@ -100,7 +100,7 @@
     <!-- ============================== -->
     <service name="purgeOldStoreAutoPromos" engine="java"
             location="org.ofbiz.product.promo.PromoServices" invoke="purgeOldStoreAutoPromos" auth="true">
-    	<description>Purge Expired ProductStorePromoAppl Records, by store or global if productStoreId is null</description>
+        <description>Purge Expired ProductStorePromoAppl Records, by store or global if productStoreId is null</description>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
     </service>
 
