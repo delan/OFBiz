@@ -103,7 +103,7 @@ public class IcsPaymentServices {
         GenericValue authTransaction = (GenericValue) context.get("authTrans");
 
         if (authTransaction == null){
-        	authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+            authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
         }
 
         if (authTransaction == null) {

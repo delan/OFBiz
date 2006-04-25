@@ -303,10 +303,10 @@ public class InvoiceWorker {
      * @return the invoice total as double
      */
     public static BigDecimal getInvoiceNotApplied(GenericDelegator delegator, String invoiceId) {
-    	return InvoiceWorker.getInvoiceTotalBd(delegator, invoiceId).subtract(getInvoiceAppliedBd(delegator, invoiceId));
+        return InvoiceWorker.getInvoiceTotalBd(delegator, invoiceId).subtract(getInvoiceAppliedBd(delegator, invoiceId));
     }
     public static BigDecimal getInvoiceNotApplied(GenericValue invoice) {
-    	return InvoiceWorker.getInvoiceTotalBd(invoice).subtract(getInvoiceAppliedBd(invoice));
+        return InvoiceWorker.getInvoiceTotalBd(invoice).subtract(getInvoiceAppliedBd(invoice));
     }
     /**
      * Returns amount not applied (ie, still outstanding) of an invoice at an asOfDate, based on Payment.effectiveDate <= asOfDateTime
@@ -316,7 +316,7 @@ public class InvoiceWorker {
      * @return
      */
     public static BigDecimal getInvoiceNotApplied(GenericValue invoice, Timestamp asOfDateTime) {
-    	return InvoiceWorker.getInvoiceTotalBd(invoice).subtract(getInvoiceAppliedBd(invoice, asOfDateTime));
+        return InvoiceWorker.getInvoiceTotalBd(invoice).subtract(getInvoiceAppliedBd(invoice, asOfDateTime));
     }
 
     
@@ -326,9 +326,9 @@ public class InvoiceWorker {
      * @return the invoice total as double
      */
     public static double getInvoiceApplied(GenericDelegator delegator, String invoiceId) {
-    	return getInvoiceAppliedBd(delegator, invoiceId).doubleValue();
+        return getInvoiceAppliedBd(delegator, invoiceId).doubleValue();
     }
-    	
+
     public static BigDecimal getInvoiceAppliedBd(GenericDelegator delegator, String invoiceId) {
         return getInvoiceAppliedBd(delegator, invoiceId, UtilDateTime.nowTimestamp());
     }
@@ -359,7 +359,7 @@ public class InvoiceWorker {
                 EntityOperator.AND); 
 
         try {
-        	paymentApplications = delegator.findByCondition("PaymentAndApplication", conditions, null, UtilMisc.toList("effectiveDate"));
+            paymentApplications = delegator.findByCondition("PaymentAndApplication", conditions, null, UtilMisc.toList("effectiveDate"));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting paymentApplicationlist", module);            
         }
@@ -378,7 +378,7 @@ public class InvoiceWorker {
      * @return the applied total as double
      */
     public static double getInvoiceApplied(GenericValue invoice) {
-    	return getInvoiceAppliedBd(invoice).doubleValue();
+        return getInvoiceAppliedBd(invoice).doubleValue();
     }
     /**
      * Big decimal version of getInvoiceApplied
@@ -401,7 +401,7 @@ public class InvoiceWorker {
      * @return the invoice total as double
      */
     public static double getInvoiceItemApplied(GenericDelegator delegator, String invoiceId, String invoiceItemSeqId) {
-    	return getInvoiceItemAppliedBd(delegator, invoiceId, invoiceItemSeqId).doubleValue();
+        return getInvoiceItemAppliedBd(delegator, invoiceId, invoiceItemSeqId).doubleValue();
     }
     
     /**
@@ -437,13 +437,13 @@ public class InvoiceWorker {
      * @return the applied total as double
      */
     public static double getInvoiceItemApplied(GenericValue invoiceItem) {
-    	return getInvoiceItemAppliedBd(invoiceItem).doubleValue();
+        return getInvoiceItemAppliedBd(invoiceItem).doubleValue();
     }
     public static BigDecimal getInvoiceItemAppliedBd(GenericValue invoiceItem) {
         BigDecimal invoiceItemApplied = new BigDecimal("0");
         List paymentApplications = null;
         try {
-        	paymentApplications = invoiceItem.getRelated("PaymentApplication");
+            paymentApplications = invoiceItem.getRelated("PaymentApplication");
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting paymentApplicationlist", module);            
         }
