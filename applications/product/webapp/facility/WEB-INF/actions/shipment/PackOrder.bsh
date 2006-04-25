@@ -75,7 +75,7 @@ context.put("shipGroupSeqId", shipGroupSeqId);
 if (UtilValidate.isNotEmpty(orderId)) {
     orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
     if (orderHeader != null) {
-	    OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
         context.put("orderId", orderId);
         context.put("orderHeader", orderHeader);
         context.put("orderReadHelper", orh);

@@ -97,29 +97,29 @@ facilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
 
 //get physicalInventoryAndVarianceDatas if this is a NON_SERIAL_INV_ITEM
 if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
-	physicalInventoryAndVariances = delegator.findByAnd("PhysicalInventoryAndVariance", UtilMisc.toMap("inventoryItemId", inventoryItemId), UtilMisc.toList("-physicalInventoryDate", "-physicalInventoryId"));
-	physicalInventoryAndVarianceDatas = new ArrayList(physicalInventoryAndVariances.size());
-	physicalInventoryAndVarianceIter = physicalInventoryAndVariances.iterator();
-	while (physicalInventoryAndVarianceIter.hasNext()) {
-		physicalInventoryAndVariance = physicalInventoryAndVarianceIter.next();
-		physicalInventoryAndVarianceData = new HashMap();
-		physicalInventoryAndVarianceDatas.add(physicalInventoryAndVarianceData);
-	
-		physicalInventoryAndVarianceData.put("physicalInventoryAndVariance", physicalInventoryAndVariance);
-		physicalInventoryAndVarianceData.put("varianceReason", physicalInventoryAndVariance.getRelatedOneCache("VarianceReason"));
-		physicalInventoryAndVarianceData.put("person", physicalInventoryAndVariance.getRelatedOne("Person"));
-		physicalInventoryAndVarianceData.put("partyGroup", physicalInventoryAndVariance.getRelatedOne("PartyGroup"));
-	}
+    physicalInventoryAndVariances = delegator.findByAnd("PhysicalInventoryAndVariance", UtilMisc.toMap("inventoryItemId", inventoryItemId), UtilMisc.toList("-physicalInventoryDate", "-physicalInventoryId"));
+    physicalInventoryAndVarianceDatas = new ArrayList(physicalInventoryAndVariances.size());
+    physicalInventoryAndVarianceIter = physicalInventoryAndVariances.iterator();
+    while (physicalInventoryAndVarianceIter.hasNext()) {
+        physicalInventoryAndVariance = physicalInventoryAndVarianceIter.next();
+        physicalInventoryAndVarianceData = new HashMap();
+        physicalInventoryAndVarianceDatas.add(physicalInventoryAndVarianceData);
 
-	HtmlFormWrapper viewPhysicalInventoryAndVarianceWrapper = new HtmlFormWrapper("/inventory/InventoryForms.xml", "ViewPhysicalInventoryAndVariance", request, response);
-	viewPhysicalInventoryAndVarianceWrapper.putInContext("physicalInventoryAndVarianceDatas", physicalInventoryAndVarianceDatas);
-	
-	HtmlFormWrapper createPhysicalInventoryAndVarianceWrapper = new HtmlFormWrapper("/inventory/InventoryForms.xml", "CreatePhysicalInventoryAndVariance", request, response);
-	createPhysicalInventoryAndVarianceWrapper.putInContext("inventoryItem", inventoryItem);
+        physicalInventoryAndVarianceData.put("physicalInventoryAndVariance", physicalInventoryAndVariance);
+        physicalInventoryAndVarianceData.put("varianceReason", physicalInventoryAndVariance.getRelatedOneCache("VarianceReason"));
+        physicalInventoryAndVarianceData.put("person", physicalInventoryAndVariance.getRelatedOne("Person"));
+        physicalInventoryAndVarianceData.put("partyGroup", physicalInventoryAndVariance.getRelatedOne("PartyGroup"));
+    }
 
-	context.put("physicalInventoryAndVarianceDatas", physicalInventoryAndVarianceDatas);
-	context.put("viewPhysicalInventoryAndVarianceWrapper", viewPhysicalInventoryAndVarianceWrapper);
-	context.put("createPhysicalInventoryAndVarianceWrapper", createPhysicalInventoryAndVarianceWrapper);
+    HtmlFormWrapper viewPhysicalInventoryAndVarianceWrapper = new HtmlFormWrapper("/inventory/InventoryForms.xml", "ViewPhysicalInventoryAndVariance", request, response);
+    viewPhysicalInventoryAndVarianceWrapper.putInContext("physicalInventoryAndVarianceDatas", physicalInventoryAndVarianceDatas);
+
+    HtmlFormWrapper createPhysicalInventoryAndVarianceWrapper = new HtmlFormWrapper("/inventory/InventoryForms.xml", "CreatePhysicalInventoryAndVariance", request, response);
+    createPhysicalInventoryAndVarianceWrapper.putInContext("inventoryItem", inventoryItem);
+
+    context.put("physicalInventoryAndVarianceDatas", physicalInventoryAndVarianceDatas);
+    context.put("viewPhysicalInventoryAndVarianceWrapper", viewPhysicalInventoryAndVarianceWrapper);
+    context.put("createPhysicalInventoryAndVarianceWrapper", createPhysicalInventoryAndVarianceWrapper);
 }
 
 nowTimestampString = UtilDateTime.nowTimestamp().toString();
@@ -137,7 +137,7 @@ context.put("facilities", facilities);
 context.put("nowTimestampString", nowTimestampString);
 context.put("tryEntity", tryEntity);
 if (tryEntity) {
-	context.put("inventoryItemData", inventoryItem);
+    context.put("inventoryItemData", inventoryItem);
 } else {
-	context.put("inventoryItemData", parameterMap);
+    context.put("inventoryItemData", parameterMap);
 }

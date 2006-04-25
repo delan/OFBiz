@@ -44,20 +44,20 @@ context.put("isOpen", isOpen);
 
 // Get a list of all products in the current category
 if (isOpen) {
-	paramInMap = new HashMap();
-	paramInMap.put("productCategoryId", UtilFormatOut.checkNull(request.getParameter("productCategoryId")));
-	paramInMap.put("defaultViewSize", 30);
-	paramInMap.put("limitView", true);
-	paramInMap.put("useCacheForMembers", false);
-	paramInMap.put("checkViewAllow", false);
-	
+    paramInMap = new HashMap();
+    paramInMap.put("productCategoryId", UtilFormatOut.checkNull(request.getParameter("productCategoryId")));
+    paramInMap.put("defaultViewSize", 30);
+    paramInMap.put("limitView", true);
+    paramInMap.put("useCacheForMembers", false);
+    paramInMap.put("checkViewAllow", false);
+
     // Returns: viewIndex, viewSize, lowIndex, highIndex, listSize, productCategory, productCategoryMembers
-	outMap = dispatcher.runSync("getProductCategoryAndLimitedMembers", paramInMap);
-	context.put("viewIndex", outMap.get("viewIndex"));
-	context.put("viewSize", outMap.get("viewSize"));
-	context.put("lowIndex", outMap.get("lowIndex"));
-	context.put("highIndex", outMap.get("highIndex"));
-	context.put("listSize", outMap.get("listSize"));
-	context.put("productCategory", outMap.get("productCategory"));
-	context.put("productCategoryMembers", outMap.get("productCategoryMembers"));
+    outMap = dispatcher.runSync("getProductCategoryAndLimitedMembers", paramInMap);
+    context.put("viewIndex", outMap.get("viewIndex"));
+    context.put("viewSize", outMap.get("viewSize"));
+    context.put("lowIndex", outMap.get("lowIndex"));
+    context.put("highIndex", outMap.get("highIndex"));
+    context.put("listSize", outMap.get("listSize"));
+    context.put("productCategory", outMap.get("productCategory"));
+    context.put("productCategoryMembers", outMap.get("productCategoryMembers"));
 }

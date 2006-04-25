@@ -94,7 +94,7 @@ context.put("facilities", facilities);
 
 // status items
 if (inventoryTransfer != null && UtilValidate.isNotEmpty(inventoryTransfer.getString("statusId"))) {
-    List statusChange = delegator.findByAnd("StatusValidChange", UtilMisc.toMap("statusId", inventoryTransfer.getString("statusId")));	
+    List statusChange = delegator.findByAnd("StatusValidChange", UtilMisc.toMap("statusId", inventoryTransfer.getString("statusId")));
     if (statusChange != null) {
         List statusItems = new ArrayList();
         Iterator statusChangeIter = statusChange.iterator();
@@ -109,4 +109,4 @@ if (inventoryTransfer != null && UtilValidate.isNotEmpty(inventoryTransfer.getSt
 } else {
     List statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "INVENTORY_XFER_STTS"), UtilMisc.toList("sequenceId"));
     if (statusItems != null) context.put("statusItems", statusItems);
-}	
+}
