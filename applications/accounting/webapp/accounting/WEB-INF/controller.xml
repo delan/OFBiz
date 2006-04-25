@@ -233,10 +233,11 @@
     <request-map uri="editInvoiceApplications">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editInvoiceApplications"/>
+        <response name="error" type="view" value="editInvoiceApplications"/>
     </request-map>
     <request-map uri="updateInvoiceApplication">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updatePaymentApplication"/>
+        <event type="service" invoke="updatePaymentApplicationDef"/>
         <response name="success" type="view" value="editInvoiceApplications"/>
         <response name="error" type="view" value="editInvoiceApplications"/>
     </request-map>
@@ -320,7 +321,7 @@
     </request-map>
     <request-map uri="updatePaymentApplication">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updatePaymentApplication"/>
+        <event type="service" invoke="updatePaymentApplicationDef"/>
         <response name="success" type="view" value="editPaymentApplications"/>
     </request-map>
     <request-map uri="removePaymentApplication">
@@ -822,7 +823,8 @@
     <request-map uri="LookupInvoice"><security auth="true" https="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
     <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
     <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
-
+    <request-map uri="LookupBillingAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupBillingAccount"/></request-map>
+    
     <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
 
     <!-- ================ PDF generation requests ================== -->
@@ -1160,6 +1162,7 @@
 
     <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
+    <view-map name="LookupBillingAccount" page="component://accounting/widget/LookupScreens.xml#LookupBillingAccount" type="screen"/>
     <view-map name="LookupPayment" page="component://accounting/widget/LookupScreens.xml#LookupPayment" type="screen"/>
     <view-map name="LookupInvoice" page="component://accounting/widget/LookupScreens.xml#LookupInvoice" type="screen"/>
     

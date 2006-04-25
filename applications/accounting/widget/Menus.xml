@@ -307,7 +307,7 @@ under the License.
                     </or>                
                 </and>
             </condition>
-            <link target="editPaymentApplications?paymentId=${payment.paymentId}"/>
+            <link target="setPaymentStatus?paymentId=${payment.paymentId}&amp;statusId=PMNT_CONFIRMED"/>
         </menu-item>
         <menu-item name="printAsCheck" title="${uiLabelMap.AccountingPrintAsCheck}">
             <condition>

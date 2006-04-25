@@ -298,6 +298,27 @@ public class PaymentWorker {
     }
 
     public static BigDecimal getPaymentNotAppliedBd(GenericValue payment) {
-        return payment.getBigDecimal("amount").subtract(getPaymentAppliedBd(payment));        
+        return payment.getBigDecimal("amount").subtract(getPaymentAppliedBd(payment)).setScale(decimals,rounding);
+    }
+    public static double getPaymentNotApplied(GenericDelegator delegator, String paymentId) {
+        return getPaymentNotAppliedBd(delegator,paymentId).doubleValue();
+    }
+
+    public static BigDecimal getPaymentNotAppliedBd(GenericDelegator delegator, String paymentId) {
+        if (delegator == null) {
+            throw new IllegalArgumentException("Null delegator is not allowed in this method");
+        }
+        
+        GenericValue payment = null;
+        try {
+            payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));    
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting Payment", module);
+        }
+        
+        if (payment == null) {
+            throw new IllegalArgumentException("The paymentId passed does not match an existing payment");
+        }
+        return payment.getBigDecimal("amount").subtract(getPaymentAppliedBd(delegator,paymentId)).setScale(decimals,rounding);
     }
 }

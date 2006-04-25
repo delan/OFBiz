@@ -26,6 +26,8 @@ import org.ofbiz.accounting.invoice.*;
 import org.ofbiz.accounting.payment.*;
 import org.ofbiz.accounting.util.UtilAccounting;
 import java.math.*;
+import java.text.NumberFormat;
+
 
 paymentId = parameters.get("paymentId");
 payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
@@ -54,14 +56,17 @@ if (invoices != null && invoices.size() > 0)    {
             BigDecimal invoiceToApply = invoiceAmount.subtract(invoiceApplied); 
             Map invoiceMap = new HashMap();
             invoiceMap.put("invoiceId",invoice.getString("invoiceId"));
+            invoiceMap.put("currencyUomId",invoice.getString("currencyUomId"));
             invoiceMap.put("amount",invoiceAmount); 
+            invoiceMap.put("description",invoice.getString("description")); 
             invoiceMap.put("invoiceDate", invoice.getString("invoiceDate").substring(0,10)); // display only YYYY-MM-DD
-            invoiceMap.put("amountAlreadyApplied", invoiceApplied);
+            invoiceMap.put("amountApplied", invoiceApplied);
+            locale = parameters.get("autoUserLogin").get("lastLocale"); 
             if (paymentToApply.compareTo(invoiceToApply) < 0 ) {
-                invoiceMap.put("amountToApply",paymentToApply);
+                invoiceMap.put("amountToApply",NumberFormat.getNumberInstance(UtilMisc.ensureLocale(locale)).format(paymentToApply));
             }
             else {
-                invoiceMap.put("amountToApply", invoiceToApply);
+                invoiceMap.put("amountToApply",NumberFormat.getNumberInstance(UtilMisc.ensureLocale(locale)).format(invoiceToApply));
             }
             invoicesList.add(invoiceMap);
         } 

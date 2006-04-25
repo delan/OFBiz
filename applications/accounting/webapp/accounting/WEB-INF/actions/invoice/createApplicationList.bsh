@@ -21,15 +21,18 @@
  */
  
 import java.util.*;
+import java.math.BigDecimal;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.collections.*;
 import org.ofbiz.accounting.invoice.*;
+import org.ofbiz.accounting.payment.*;
 import java.text.DateFormat;
 import java.text.*;
  
 delegator = request.getAttribute("delegator");
 invoiceId = request.getParameter("invoiceId");
+locale = context.get("locale");
 if (invoiceId == null)  invoiceId = context.get("invoiceId");
 if (invoiceId == null)  invoiceId = "null_in_createApplList.bsh";
 invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));
@@ -51,12 +54,14 @@ if (invoice != null) {
         invoiceAppl = q.next();
         Map itemmap = new HashMap();
         itemmap.put("invoiceId",invoiceId);
+        itemmap.put("uomId",invoice.getString("currencyUomId"));
         itemmap.put("invoiceItemSeqId",invoiceAppl.getString("invoiceItemSeqId"));
-        itemmap.put("total",InvoiceWorker.getInvoiceTotal(invoice));
+        itemmap.put("total",InvoiceWorker.getInvoiceTotalBd(invoice).doubleValue());
         itemmap.put("paymentApplicationId",invoiceAppl.getString("paymentApplicationId"));
         itemmap.put("paymentId",invoiceAppl.getString("paymentId"));
         itemmap.put("billingAccountId",invoiceAppl.getString("billingAccountId"));
         itemmap.put("taxAuthGeoId",invoiceAppl.getString("taxAuthGeoId"));
+        itemmap.put("amountToApply",invoiceAppl.getDouble("amountApplied").doubleValue());
         itemmap.put("amountApplied",invoiceAppl.getDouble("amountApplied").doubleValue());
         invoiceItems.add(itemmap);
         appliedAmount += invoiceAppl.getDouble("amountApplied").doubleValue();
@@ -101,7 +106,7 @@ if (invoice != null) {
               }
               appliedAmount += applied;
           }
-
+/*
           // create an extra line for input when not completely applied but not in the overview 
           if (tabButtonItem.equals("invoiceOverview") != true && 
                       (paymentApplications == null || paymentApplications.size() == 0 
@@ -111,12 +116,12 @@ if (invoice != null) {
                   itemmap.put("total",itemTotal);
                   itemmap.put("paymentApplicationId","");
                   itemmap.put("paymentId","");
-                  itemmap.put("amountApplied", NumberFormat.getInstance().format(itemTotal - applied));
+                  itemmap.put("amountToApply", NumberFormat.getNumberInstance(locale).format(itemTotal - applied));
                   itemmap.put("billingAccountId","");
                   itemmap.put("taxAuthGeoId","");
                   invoiceItems.add(itemmap);
           }
-          notAppliedAmount += itemTotal - applied; // subtract itemrelated applications
+*/          notAppliedAmount += itemTotal - applied; // subtract itemrelated applications
     }
     notAppliedAmount = invoiceAmount - appliedAmount; // subtract invoice related applications.
 }

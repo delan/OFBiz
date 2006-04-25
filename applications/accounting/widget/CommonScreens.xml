@@ -98,7 +98,7 @@ under the License.
                             <widgets>
                                 <include-menu name="InvoiceTabBar" location="component://accounting/widget/Menus.xml"/>
                                 <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/Menus.xml"/>
-                                <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
+                                <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -127,11 +127,11 @@ under the License.
                             <widgets>
                                 <include-menu name="PaymentTabBar" location="component://accounting/widget/Menus.xml"/>
                                 <include-menu name="PaymentSubTabBar" location="component://accounting/widget/Menus.xml"/>
-                                <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonId}:${paymentId}  ${${extraFunctionName}}</label>
+                                <label style="head1" text="${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
+                                <label style="head3" text="${uiLabelMap.AcccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>                    
                     </decorator-section>
@@ -160,12 +160,12 @@ under the License.
                                         <platform-specific>
                                             <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
                                         </platform-specific>
-                                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]  ${${extraFunctionName}}</label>
+                                        <label style="head1" text="${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]  ${${extraFunctionName}}"/>
                                     </widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
+                                <label style="head3" text="${uiLabelMap.AcccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>                    
                         <decorator-section-include name="body"/>
@@ -206,7 +206,7 @@ under the License.
                                     <widgets>
                                         <include-menu name="TaxAuthorityTabBar" location="component://accounting/widget/TaxAuthorityMenus.xml"/>
                                         <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="buttontext"/></container>
-                                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: Tax Authority Party &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], Geo &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}</label>
+                                        <label style="head1" text="${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: Tax Authority Party &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], Geo &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}"/>
                                     </widgets>
                                 </section>
                             </widgets>

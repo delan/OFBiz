@@ -27,6 +27,12 @@ import org.ofbiz.accounting.payment.*;
 import org.ofbiz.accounting.util.UtilAccounting;
 import java.text.DateFormat;
 import java.math.*;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.*;
+import java.text.NumberFormat;
+
 
 basePaymentId = parameters.get("paymentId");
 basePayment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", basePaymentId));
@@ -41,9 +47,26 @@ ArrayList paymentsMapList = new ArrayList();  // to pass back to the screeen lis
 // retrieve payments for the related parties which have not been (fully) applied yet
 List payments = null;
 GenericValue payment = null;
-payments = delegator.findByAnd("Payment",
-    UtilMisc.toMap("partyIdTo", basePayment.getString("partyIdFrom"), "partyIdFrom", basePayment.getString("partyIdTo")),
-    UtilMisc.toList("effectiveDate"));
+exprList = new ArrayList();
+expr = new EntityExpr("partyIdTo", EntityOperator.EQUALS, basePayment.getString("partyIdFrom"));
+exprList.add(expr); 
+expr = new EntityExpr("partyIdFrom", EntityOperator.EQUALS, basePayment.getString("partyIdTo"));
+exprList.add(expr); 
+expr = new EntityExpr("paymentId", EntityOperator.NOT_EQUAL, basePayment.getString("paymentId"));
+exprList.add(expr); 
+
+// only payments with received and sent
+exprListStatus = new ArrayList();
+expr = new EntityExpr("statusId", EntityOperator.EQUALS, "PMNT_RECEIVED");
+exprListStatus.add(expr); 
+expr = new EntityExpr("statusId", EntityOperator.EQUALS, "PMNT_SENT");
+exprListStatus.add(expr);
+orCond = new EntityConditionList(exprListStatus, EntityOperator.OR);
+exprList.add(orCond); 
+
+topCond = new EntityConditionList(exprList, EntityOperator.AND);
+
+payments = delegator.findByCondition("Payment", topCond, null, UtilMisc.toList("effectiveDate"));
     
 if (payments != null && payments.size() > 0)    {
     BigDecimal basePaymentApplied = PaymentWorker.getPaymentAppliedBd(basePayment);
@@ -52,21 +75,22 @@ if (payments != null && payments.size() > 0)    {
     Iterator p = payments.iterator();
     while(p.hasNext())    {
         payment = p.next();
-        BigDecimal paymentApplied = PaymentWorker.getPaymentAppliedBd(payment).setScale(decimals,rounding);
-        if (!(payment.getBigDecimal("amount").setScale(decimals,rounding).equals(paymentApplied)))    {
-           // put in the map
+        if (PaymentWorker.getPaymentNotAppliedBd(payment).signum() == 1) {  // positiv not applied amount?
+           // yes, put in the map
            Map paymentMap = new HashMap();
            paymentMap.put("paymentId", basePaymentId);
            paymentMap.put("toPaymentId", payment.getString("paymentId"));
+           paymentMap.put("currencyUomId", payment.getString("currencyUomId"));
            paymentMap.put("effectiveDate", payment.getString("effectiveDate").substring(0,10)); // list as YYYY-MM-DD
-           paymentMap.put("amount", payment.getBigDecimal("amount").setScale(decimals,rounding).toString());
-           paymentMap.put("paymentApplied", paymentApplied.toString());
-           BigDecimal paymentToApply = payment.getBigDecimal("amount").setScale(decimals,rounding).subtract(paymentApplied);
+           paymentMap.put("amount", payment.getBigDecimal("amount").setScale(decimals,rounding));
+           paymentMap.put("amountApplied", PaymentWorker.getPaymentAppliedBd(payment));
+           BigDecimal paymentToApply = PaymentWorker.getPaymentNotAppliedBd(payment);
+           locale = parameters.get("autoUserLogin").get("lastLocale"); 
            if (paymentToApply.compareTo(basePaymentToApply) < 0 ) {
-                paymentMap.put("amountToApply",paymentToApply.toString());
+                paymentMap.put("amountToApply",NumberFormat.getNumberInstance(UtilMisc.ensureLocale(locale)).format(paymentToApply));
            }
            else {
-                paymentMap.put("amountToApply", basePaymentToApply.toString());
+                paymentMap.put("amountToApply",NumberFormat.getNumberInstance(UtilMisc.ensureLocale(locale)).format(basePaymentToApply));
            }
            paymentsMapList.add(paymentMap);
         }
