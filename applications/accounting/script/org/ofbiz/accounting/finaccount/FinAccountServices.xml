@@ -110,7 +110,7 @@
     </simple-method>
     
     <simple-method method-name="createFinAccountAuth" short-description="Create a Financial Account Authorization">
-        	<make-value value-name="newEntity" entity-name="FinAccountAuth"/>
+        <make-value value-name="newEntity" entity-name="FinAccountAuth"/>
         <set-nonpk-fields value-name="newEntity" map-name="parameters"/>
 
         <sequenced-id-to-env sequence-name="FinAccountAuth" env-name="finAccountAuthId"/>
@@ -122,7 +122,7 @@
             <env-to-field env-name="nowTimestamp" field-name="authorizationDate" map-name="newEntity"/>
         </if-empty>
         <if-empty field-name="fromDate" map-name="newEntity">
-        	    <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
         </if-empty>
         <create-value value-name="newEntity"/>
         <field-to-result field-name="finAccountAuthId" result-name="finAccountAuthId"/>
@@ -133,13 +133,13 @@
         <find-by-primary-key map-name="pkLookupMap" value-name="finAccountAuth"/>
 
         <if-empty field-name="parameters.expireDateTime">
-        	        <now-timestamp-to-env env-name="nowTimestamp"/>
-        	        <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="finAccountAuth"/>
-        	    	<else>
-        	    		<field-to-field field-name="parameters.expireDatetime" to-field-name="finAccountAuth.thruDate"/>
-        	    </else>
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="finAccountAuth"/>
+        <else>
+            <field-to-field field-name="parameters.expireDatetime" to-field-name="finAccountAuth.thruDate"/>
+        </else>
         </if-empty>
-        <store-value value-name="finAccountAuth"/>	
+        <store-value value-name="finAccountAuth"/>
     </simple-method>
 
 </simple-methods>

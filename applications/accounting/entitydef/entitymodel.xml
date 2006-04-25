@@ -1956,10 +1956,10 @@
       <field name="finAccountName" type="name"></field>
       <field name="finAccountCode" type="long-varchar" encrypt="true"></field>
       <field name="fromDate" type="date-time">
-      	<description>Describes when account will be valid.  If null, valid immediately.</description>
+        <description>Describes when account will be valid.  If null, valid immediately.</description>
       </field>
       <field name="thruDate" type="date-time">
-      	<description>Expiration date of the account.  If null, will never expire.</description>
+        <description>Expiration date of the account.  If null, will never expire.</description>
       </field>
       <prim-key field="finAccountId"/>
       <relation type="one" fk-name="FINACCT_TYPE" rel-entity-name="FinAccountType">
@@ -2038,8 +2038,8 @@
       </relation>
     </entity>
     <entity entity-name="FinAccountAuth"
-    	        package-name="org.ofbiz.accounting.finaccount"
-    	        title="Financial Account Authorizations record">
+                package-name="org.ofbiz.accounting.finaccount"
+                title="Financial Account Authorizations record">
       <field name="finAccountAuthId" type="id-ne"/>
       <field name="finAccountId" type="id-ne"/>
       <field name="amount" type="currency-amount"/>
@@ -2049,12 +2049,12 @@
       <field name="thruDate" type="date-time"/>
       <prim-key field="finAccountAuthId"/>
       <relation type="one" fk-name="FINACT_AUTH_FINACT" rel-entity-name="FinAccount">
-      	<key-map field-name="finAccountId"/>
-      </relation>	
-      <relation type="one" fk-name="FINACT_AUTH_CURNCY" title="Currency" rel-entity-name="Uom">
-      	<key-map field-name="currencyUomId" rel-field-name="uomId"/>
+        <key-map field-name="finAccountId"/>
       </relation>
-    	</entity>
+      <relation type="one" fk-name="FINACT_AUTH_CURNCY" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+    </entity>
     <entity entity-name="FinAccountTransAttribute"
             package-name="org.ofbiz.accounting.finaccount"
             title="Financial Account Transaction Attribute Entity">
@@ -2129,33 +2129,33 @@
       </relation>
     </entity>
     <view-entity entity-name="FinAccountTransSum"
-    	       package-name="org.ofbiz.accounting.finaccount"
-    	       title="View entity to help calculate total of financial account transactions by doing a query for the sum of all amounts 
-    	       on a range of transactionDates for a given finAccountId, finAccountTransTypeId">
-    	   <member-entity entity-alias="FAT" entity-name="FinAccountTrans"/>
-    	   <member-entity entity-alias="P" entity-name="Payment"/>
-    	   <alias entity-alias="FAT" name="finAccountId" group-by="true"/>
-    	   <alias entity-alias="FAT" name="finAccountTransTypeId" group-by="false"/> <!-- must not group-by this, or aggregating DEPOSIT and ADJUSTMENT won't work -->
-    	   <alias entity-alias="FAT" name="transactionDate" group-by="false"/>
+               package-name="org.ofbiz.accounting.finaccount"
+               title="View entity to help calculate total of financial account transactions by doing a query for the sum of all amounts 
+               on a range of transactionDates for a given finAccountId, finAccountTransTypeId">
+       <member-entity entity-alias="FAT" entity-name="FinAccountTrans"/>
+       <member-entity entity-alias="P" entity-name="Payment"/>
+       <alias entity-alias="FAT" name="finAccountId" group-by="true"/>
+       <alias entity-alias="FAT" name="finAccountTransTypeId" group-by="false"/> <!-- must not group-by this, or aggregating DEPOSIT and ADJUSTMENT won't work -->
+       <alias entity-alias="FAT" name="transactionDate" group-by="false"/>
        <alias entity-alias="P" name="amount" function="sum"/>
        <alias entity-alias="P" name="currencyUomId" group-by="true"/>
-    	   <view-link entity-alias="FAT" rel-entity-alias="P">
-    	   	   <key-map field-name="paymentId"/>
-    	   </view-link>       
-    	</view-entity>
+       <view-link entity-alias="FAT" rel-entity-alias="P">
+         <key-map field-name="paymentId"/>
+       </view-link>       
+    </view-entity>
     <view-entity entity-name="FinAccountAuthSum"
-           package-name="org.ofbiz.accounting.finaccount"
-    	       title="View entity to help calculate total of financial account authorizations by doing a query for the sum of all amounts 
-    	       on a range of transactionDates for a given finAccountId.  Note there is no auth type to consider here, but authorizations do
-    	       have from and thru dates">
-    	   <member-entity entity-alias="FAA" entity-name="FinAccountAuth"/>
-    	   <alias entity-alias="FAA" name="finAccountId" group-by="true"/>
-    	   <alias entity-alias="FAA" name="authorizationDate" group-by="false"/>
-    	   <alias entity-alias="FAA" name="fromDate" group-by="false"/>
-    	   <alias entity-alias="FAA" name="thruDate" group-by="false"/>
-       <alias entity-alias="FAA" name="amount" function="sum"/>
-       <alias entity-alias="FAA" name="currencyUomId" group-by="true"/>
-    	</view-entity>
+          package-name="org.ofbiz.accounting.finaccount"
+          title="View entity to help calculate total of financial account authorizations by doing a query for the sum of all amounts 
+          on a range of transactionDates for a given finAccountId.  Note there is no auth type to consider here, but authorizations do
+          have from and thru dates">
+      <member-entity entity-alias="FAA" entity-name="FinAccountAuth"/>
+      <alias entity-alias="FAA" name="finAccountId" group-by="true"/>
+      <alias entity-alias="FAA" name="authorizationDate" group-by="false"/>
+      <alias entity-alias="FAA" name="fromDate" group-by="false"/>
+      <alias entity-alias="FAA" name="thruDate" group-by="false"/>
+      <alias entity-alias="FAA" name="amount" function="sum"/>
+      <alias entity-alias="FAA" name="currencyUomId" group-by="true"/>
+    </view-entity>
     
     <entity entity-name="GiftCard"
             package-name="org.ofbiz.accounting.payment"
@@ -2212,7 +2212,7 @@
       </relation>
     </entity>
     
-    	<entity entity-name="Payment"
+    <entity entity-name="Payment"
             package-name="org.ofbiz.accounting.payment"
             title="Payment Entity">
       <field name="paymentId" type="id-ne"></field>
