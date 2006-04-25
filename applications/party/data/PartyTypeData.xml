@@ -48,6 +48,7 @@
     <ContactMechPurposeType contactMechPurposeTypeId="PHONE_MOBILE" description="Main Mobile Phone Number"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PHONE_ASSISTANT" description="Assistant's Phone Number"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PRIMARY_PHONE" description="Primary Phone Number"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PHONE_QUICK" description="Quick Calls Phone Number"/>
     <ContactMechPurposeType contactMechPurposeTypeId="PRIMARY_EMAIL" description="Primary Email Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="OTHER_EMAIL" description="Other Email Address"/>
     <ContactMechPurposeType contactMechPurposeTypeId="ORDER_EMAIL" description="Order Notification Email Address"/>
@@ -82,11 +83,21 @@
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_BILLING" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_PAYMENT" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_PHONE" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_QUICK" contactMechTypeId="TELECOM_NUMBER"/>
     <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_WEB_URL" contactMechTypeId="WEB_ADDRESS"/>
     
     <EnumerationType description="Party Content Purpose" enumTypeId="PTYCNT_PRP" hasTable="N" parentTypeId=""/>
     <Enumeration description="Logo Image URL" enumCode="LGOIMGURL" enumId="PCPRP_LGOIMGURL" sequenceId="01" enumTypeId="PTYCNT_PRP"/>
 
+    <EnumerationType description="Employment Status" enumTypeId="EMPLOY_STTS" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Full-time Employed" enumCode="FULLTIME" enumId="EMPS_FULLTIME" sequenceId="01" enumTypeId="EMPLOY_STTS"/>
+    <Enumeration description="Part-time Employed" enumCode="PARTTIME" enumId="EMPS_PARTTIME" sequenceId="02" enumTypeId="EMPLOY_STTS"/>
+    <Enumeration description="Self Employed" enumCode="SELF" enumId="EMPS_SELF" sequenceId="03" enumTypeId="EMPLOY_STTS"/>
+    <Enumeration description="House-Person" enumCode="HOUSE" enumId="EMPS_HOUSE" sequenceId="04" enumTypeId="EMPLOY_STTS"/>
+    <Enumeration description="Retired" enumCode="RETIRED" enumId="EMPS_RETIRED" sequenceId="05" enumTypeId="EMPLOY_STTS"/>
+    <Enumeration description="Student" enumCode="STUDENT" enumId="EMPS_STUDENT" sequenceId="06" enumTypeId="EMPLOY_STTS"/>
+    <Enumeration description="Unemployed" enumCode="UNEMP" enumId="EMPS_UNEMP" sequenceId="07" enumTypeId="EMPLOY_STTS"/>
+    
     <!-- top level role types -->
     <RoleType description="Administrator" hasTable="N" parentTypeId="" roleTypeId="ADMIN"/>
     <RoleType description="Agent" hasTable="N" parentTypeId="" roleTypeId="AGENT"/>
