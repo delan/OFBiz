@@ -42,7 +42,7 @@ returnItems = null;
 if (returnId != null) {
     returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));    
     if (returnHeader != null) {
-    	if (returnHeader.getString("statusId").equals("RETURN_ACCEPTED")) {
+        if (returnHeader.getString("statusId").equals("RETURN_ACCEPTED")) {
             returnItems = returnHeader.getRelated("ReturnItem");
         } else {
             request.setAttribute("_ERROR_MESSAGE_", "<li>This return is not yet accepted or already received.");

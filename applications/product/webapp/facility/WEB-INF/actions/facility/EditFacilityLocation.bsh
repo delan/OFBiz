@@ -57,7 +57,7 @@ locationTypeEnums = delegator.findByAnd("Enumeration", UtilMisc.toMap("enumTypeI
 // ProductFacilityLocation stuff
 productFacilityLocations = null;
 if (facilityLocation != null) {
-	productFacilityLocations = facilityLocation.getRelated("ProductFacilityLocation", null, UtilMisc.toList("productId"));
+    productFacilityLocations = facilityLocation.getRelated("ProductFacilityLocation", null, UtilMisc.toList("productId"));
 }
 
 context.put("facilityId", facilityId);

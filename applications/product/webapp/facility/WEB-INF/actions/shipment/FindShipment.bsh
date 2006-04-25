@@ -109,21 +109,21 @@ if (maxDate != null && maxDate.length() > 8) {
 }
 
 if ("Y".equals(lookupFlag)) {
-	context.put("paramList", paramListBuffer.toString());
-	
-	if (findShipmentExprs.size() > 0) {
-	    EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
-	    mainCond = new EntityConditionList(findShipmentExprs, EntityOperator.AND);
-	    List orderBy = UtilMisc.toList("-estimatedShipDate");
+    context.put("paramList", paramListBuffer.toString());
 
-	    boolean beganTransaction = false;
+    if (findShipmentExprs.size() > 0) {
+        EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+        mainCond = new EntityConditionList(findShipmentExprs, EntityOperator.AND);
+        List orderBy = UtilMisc.toList("-estimatedShipDate");
+
+        boolean beganTransaction = false;
         try {
             beganTransaction = TransactionUtil.begin();
 
             // using list iterator
             EntityListIterator orli = delegator.findListIteratorByCondition("Shipment", mainCond, null, null, orderBy, findOpts);
 
-	        // get the indexes for the partial list
+            // get the indexes for the partial list
             lowIndex = (((viewIndex - 1) * viewSize) + 1);
             highIndex = viewIndex * viewSize;
 

@@ -52,7 +52,7 @@ if (UtilValidate.isEmpty(shipGroupSeqId) && shipment != null) {
 
 if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
     orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-	context.put("orderHeader", orderHeader);
+    context.put("orderHeader", orderHeader);
     
     if (orderHeader != null) {
         context.put("orderHeaderStatus", orderHeader.getRelatedOne("StatusItem"));

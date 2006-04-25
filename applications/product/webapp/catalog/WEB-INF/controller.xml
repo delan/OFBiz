@@ -446,7 +446,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductAssetUsage"/>
     </request-map>
-	
+
     <request-map uri="updateProductAssetUsage">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProduct"/>
@@ -1599,9 +1599,9 @@
         <response name="error" type="view" value="EditProductPromoCode"/>
     </request-map>
     <request-map uri="createProductPromoCodeSet">
-    	<security https="true" auth="true"/>
-    	<event type="service" path="" invoke="createProductPromoCodeSet"/>
-    	<response name="success" type="view" value="FindProductPromoCode"/>
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPromoCodeSet"/>
+        <response name="success" type="view" value="FindProductPromoCode"/>
         <response name="error" type="view" value="FindProductPromoCode"/>
     </request-map>
 
@@ -1844,7 +1844,7 @@
     <!-- ================ Product Store Keyword Override ============= -->
     <request-map uri="editProductStoreKeywordOvrd"><security https="true" auth="true"/><response name="success" type="view" value="EditProductStoreKeywordOvrd"/></request-map>
     <request-map uri="createProductStoreKeywordOvrd">
-    	<security https="true" auth="true"/>
+        <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductStoreKeywordOvrd"/>
         <response name="success" type="view" value="EditProductStoreKeywordOvrd"/>
         <response name="error" type="view" value="EditProductStoreKeywordOvrd"/>

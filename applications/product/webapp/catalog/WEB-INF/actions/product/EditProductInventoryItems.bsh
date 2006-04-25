@@ -85,23 +85,23 @@ findIncomingShipmentsStatusCondition = new EntityConditionList(findIncomingShipm
 incomingShipmentAndItems = delegator.findByCondition("ShipmentAndItem", findIncomingShipmentsStatusCondition, null, UtilMisc.toList("-estimatedArrivalDate"));
 incomingShipmentAndItemIter = incomingShipmentAndItems.iterator();
 while (incomingShipmentAndItemIter.hasNext()) {
-	incomingShipmentAndItem = incomingShipmentAndItemIter.next();
-	facilityId = incomingShipmentAndItem.getString("destinationFacilityId");
+    incomingShipmentAndItem = incomingShipmentAndItemIter.next();
+    facilityId = incomingShipmentAndItem.getString("destinationFacilityId");
 
-	quantitySummary = quantitySummaryByFacility.get(facilityId);
-	if (quantitySummary == null) {
-		quantitySummary = new HashMap();
-		quantitySummary.put("facilityId", facilityId);
-		quantitySummaryByFacility.put(facilityId, quantitySummary);
-	}
-	
-	incomingShipmentAndItemList = quantitySummary.get("incomingShipmentAndItemList");
-	if (incomingShipmentAndItemList == null) {
-		incomingShipmentAndItemList = new LinkedList();
-		quantitySummary.put("incomingShipmentAndItemList", incomingShipmentAndItemList);
-	}
-	
-	incomingShipmentAndItemList.add(incomingShipmentAndItem);
+    quantitySummary = quantitySummaryByFacility.get(facilityId);
+    if (quantitySummary == null) {
+        quantitySummary = new HashMap();
+        quantitySummary.put("facilityId", facilityId);
+        quantitySummaryByFacility.put(facilityId, quantitySummary);
+    }
+
+    incomingShipmentAndItemList = quantitySummary.get("incomingShipmentAndItemList");
+    if (incomingShipmentAndItemList == null) {
+        incomingShipmentAndItemList = new LinkedList();
+        quantitySummary.put("incomingShipmentAndItemList", incomingShipmentAndItemList);
+    }
+
+    incomingShipmentAndItemList.add(incomingShipmentAndItem);
 }
 
 // --------------------

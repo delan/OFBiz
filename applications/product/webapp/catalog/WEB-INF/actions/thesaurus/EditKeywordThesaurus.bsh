@@ -48,28 +48,26 @@ newKeywordThesaurus=new LinkedList();
 specialCharKeywordThesaurus=new LinkedList();
 currentLetter=firstLetter;
 if (keywordThesaurusIter.hasNext()) {
-  while (keywordThesaurusIter.hasNext()) {
-	keywordThesaurus =  keywordThesaurusIter.next();
-	if (keywordThesaurus.get("enteredKeyword").charAt(0)<'a' ||
-		keywordThesaurus.get("enteredKeyword").charAt(0)>'z'){
-		specialCharKeywordThesaurus.add(keywordThesaurus);
-	}
-	else if (keywordThesaurus.get("enteredKeyword").charAt(0)>=firstLetter) {
-	  if (keywordThesaurus.get("enteredKeyword").charAt(0)==currentLetter ||
-	      newKeywordThesaurus.size()<20){
-	    newKeywordThesaurus.add(keywordThesaurus);
-	    currentLetter=keywordThesaurus.get("enteredKeyword").charAt(0);
-	  }
-	}
-  }
+    while (keywordThesaurusIter.hasNext()) {
+        keywordThesaurus =  keywordThesaurusIter.next();
+        if (keywordThesaurus.get("enteredKeyword").charAt(0)<'a' ||
+                keywordThesaurus.get("enteredKeyword").charAt(0)>'z') {
+            specialCharKeywordThesaurus.add(keywordThesaurus);
+        } else if (keywordThesaurus.get("enteredKeyword").charAt(0)>=firstLetter) {
+            if (keywordThesaurus.get("enteredKeyword").charAt(0)==currentLetter ||
+                    newKeywordThesaurus.size()<20){
+                newKeywordThesaurus.add(keywordThesaurus);
+                currentLetter=keywordThesaurus.get("enteredKeyword").charAt(0);
+            }
+        }
+    }
 }
-if ((specialCharKeywordThesaurus.size() > 0 && newKeywordThesaurus.size()<20) || firstLetter=='z')
-{
-  specialCharKeywordThesaurusIter = specialCharKeywordThesaurus.iterator();
-  while (specialCharKeywordThesaurusIter.hasNext()) {
-    keywordThesaurus =  specialCharKeywordThesaurusIter.next();
-    newKeywordThesaurus.add(keywordThesaurus);
-  }
+if ((specialCharKeywordThesaurus.size() > 0 && newKeywordThesaurus.size()<20) || firstLetter=='z') {
+    specialCharKeywordThesaurusIter = specialCharKeywordThesaurus.iterator();
+    while (specialCharKeywordThesaurusIter.hasNext()) {
+        keywordThesaurus = specialCharKeywordThesaurusIter.next();
+        newKeywordThesaurus.add(keywordThesaurus);
+    }
 }
 
 //create list for a-z
