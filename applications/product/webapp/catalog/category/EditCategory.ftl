@@ -188,7 +188,7 @@ function insertImageName(type,nameValue) {
         <#if (productCategory.primaryParentCategoryId)?exists>
           <option value="${productCategory.primaryParentCategoryId}">${(primaryParentCategory.description)?if_exists} [${productCategory. primaryParentCategoryId}]</option>
         </#if>
-		</#if>
+        </#if>
         <option value="">&nbsp;</option>
         <#list categoryList as curProductCategory>
           <option value="${curProductCategory.productCategoryId}">${curProductCategory.description?if_exists} [${curProductCategory.productCategoryId}]</option>

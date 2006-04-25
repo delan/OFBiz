@@ -484,8 +484,8 @@
   <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}"/>
     <input type="hidden" name="initialSelected" value="Y"/>
-	<table border="0" cellpadding="2" cellspacing="0">
-	  <tr><td colspan="4"><div class="head3">${uiLabelMap.ProductReceiveItem}</div></td></tr>
+    <table border="0" cellpadding="2" cellspacing="0">
+      <tr><td colspan="4"><div class="head3">${uiLabelMap.ProductReceiveItem}</div></td></tr>
       <tr>
         <td width="25%" align="right"><div class="tabletext">${uiLabelMap.ProductPurchaseOrderNumber}</div></td>
         <td>&nbsp;</td>

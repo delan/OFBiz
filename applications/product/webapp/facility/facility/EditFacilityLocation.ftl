@@ -111,7 +111,7 @@
     
     <hr class="sepbar"/>
     
-		<#-- ProductFacilityLocation stuff -->
+        <#-- ProductFacilityLocation stuff -->
         <div class="head2">${uiLabelMap.ProductLocationProduct}:</div>
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
@@ -120,24 +120,24 @@
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#list productFacilityLocations?if_exists as productFacilityLocation>
-	        <#assign product = productFacilityLocation.getRelatedOne("Product")?if_exists>
-	        <tr valign="middle">
-	            <td><div class="tabletext"><#if product?exists>${(product.internalName)?if_exists}</#if>[${productFacilityLocation.productId}]</div></td>
-	            <td align="center">
-	                <FORM method="post" action="<@ofbizUrl>updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
-	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
-	                    <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
-	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)?if_exists}">
-	                    <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox">
-	                    <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox">
-	                    <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
-	                </FORM>
-	            </td>
-	            <td align="center">
-	            <a href="<@ofbizUrl>deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}&locationSeqId=${(productFacilityLocation.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
-	            [${uiLabelMap.CommonDelete}]</a>
-	            </td>
-	        </tr>
+            <#assign product = productFacilityLocation.getRelatedOne("Product")?if_exists>
+            <tr valign="middle">
+                <td><div class="tabletext"><#if product?exists>${(product.internalName)?if_exists}</#if>[${productFacilityLocation.productId}]</div></td>
+                <td align="center">
+                    <form method="post" action="<@ofbizUrl>updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
+                        <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}"/>
+                        <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}"/>
+                        <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)?if_exists}"/>
+                        <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox"/>
+                        <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox"/>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;"/>
+                    </form>
+                </td>
+                <td align="center">
+                    <a href="<@ofbizUrl>deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}&locationSeqId=${(productFacilityLocation.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
+                    [${uiLabelMap.CommonDelete}]</a>
+                </td>
+            </tr>
         </#list>
         </table>
         <br/>

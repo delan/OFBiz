@@ -21,7 +21,7 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
- *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@author         thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
  *@version        $Rev$
  *@since            2.2
 -->

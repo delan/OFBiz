@@ -20,7 +20,7 @@
  *    THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
- *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@author         thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
  *@version        $Rev$
  *@since          3.0
 -->

@@ -43,12 +43,12 @@
             <div class="tableheadtext">${uiLabelMap.ProductActualStartArrive}</div>
         </td>
         <td>
-        	<div class="tableheadtext">${uiLabelMap.ProductBillingWeightUom}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductCurrencyUom}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductActualTransport}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductActualServices}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductActualOther}</div>
-        	<div class="tableheadtext">${uiLabelMap.ProductActualTotal}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductBillingWeightUom}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductCurrencyUom}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualTransport}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualServices}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualOther}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualTotal}</div>
         </td>
     </tr>
 <#list shipmentRouteSegmentDatas as shipmentRouteSegmentData>
@@ -101,12 +101,12 @@
             <div class="tabletext">[${(shipmentRouteSegment.actualStartDate.toString())?if_exists} - ${(shipmentRouteSegment.actualArrivalDate.toString())?if_exists}]</span>
         </td>
         <td>
-        	<div class="tabletext">${shipmentRouteSegment.billingWeight?if_exists} ${(billingWeightUom.description)?if_exists} [${(billingWeightUom.abbreviation)?if_exists}]</div>
-        	<div class="tabletext">${(currencyUom.description)?default("&nbsp;")}</div>
-        	<div class="tabletext">${(shipmentRouteSegment.actualTransportCost)?default("&nbsp;")}</div>
-        	<div class="tabletext">${(shipmentRouteSegment.actualServiceCost)?default("&nbsp;")}</div>
-        	<div class="tabletext">${(shipmentRouteSegment.actualOtherCost)?default("&nbsp;")}</div>
-        	<div class="tabletext">${(shipmentRouteSegment.actualCost)?default("&nbsp;")}</div>
+            <div class="tabletext">${shipmentRouteSegment.billingWeight?if_exists} ${(billingWeightUom.description)?if_exists} [${(billingWeightUom.abbreviation)?if_exists}]</div>
+            <div class="tabletext">${(currencyUom.description)?default("&nbsp;")}</div>
+            <div class="tabletext">${(shipmentRouteSegment.actualTransportCost)?default("&nbsp;")}</div>
+            <div class="tabletext">${(shipmentRouteSegment.actualServiceCost)?default("&nbsp;")}</div>
+            <div class="tabletext">${(shipmentRouteSegment.actualOtherCost)?default("&nbsp;")}</div>
+            <div class="tabletext">${(shipmentRouteSegment.actualCost)?default("&nbsp;")}</div>
         </td>
     </tr>
     <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>

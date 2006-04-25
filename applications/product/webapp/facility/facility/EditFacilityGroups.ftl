@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
  *@version    $Rev$
  *@since      2.2
 -->

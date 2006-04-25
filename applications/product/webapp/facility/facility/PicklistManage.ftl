@@ -106,20 +106,20 @@
                     </div>
                     <div class="tabletext" style="margin-left: 30px;">
                         <b>${uiLabelMap.CommonUpdate} ${uiLabelMap.ProductBinNum}:</b>
-	                    <form method="post" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
-	                        <input type="hidden" name="facilityId" value="${facilityId}"/>
-	                        <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
-	                        ${uiLabelMap.ProductLocation}#:
-	                        <input type"text" size="2" name="binLocationNumber" value="${picklistBinInfo.picklistBin.binLocationNumber}"/>
+                        <form method="post" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
+                            <input type="hidden" name="facilityId" value="${facilityId}"/>
+                            <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
+                            ${uiLabelMap.ProductLocation}#:
+                            <input type"text" size="2" name="binLocationNumber" value="${picklistBinInfo.picklistBin.binLocationNumber}"/>
                             ${uiLabelMap.PageTitlePickList}:
-	                        <select name="picklistId" class="smallSelect">
-	                            <#list picklistActiveList as picklistActive>
-	                                <#assign picklistActiveStatusItem = picklistActive.getRelatedOneCache("StatusItem")>
-	                                <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.description}]</option>
-	                            </#list>
-	                        </select>
-	                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
-	                    </form>
+                            <select name="picklistId" class="smallSelect">
+                                <#list picklistActiveList as picklistActive>
+                                    <#assign picklistActiveStatusItem = picklistActive.getRelatedOneCache("StatusItem")>
+                                    <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.description}]</option>
+                                </#list>
+                            </select>
+                            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
+                        </form>
                     </div>
                     <#list picklistBinInfo.picklistItemInfoList?if_exists as picklistItemInfo>
                         <#assign picklistItem = picklistItemInfo.picklistItem>
@@ -134,11 +134,11 @@
                         <#-- picklistItem.orderItemShipGrpInvRes (do we want to display any of this info?) -->
                         <#-- picklistItemInfo.itemIssuanceList -->
                         <#list picklistItemInfo.itemIssuanceList?if_exists as itemIssuance>
-	                        <div class="tabletext" style="margin-left: 40px;">
-	                            <b>${uiLabelMap.ProductIssue} ${uiLabelMap.CommonTo} ${uiLabelMap.ProductShipmentItemSeqId}:</b> ${itemIssuance.shipmentId}:${itemIssuance.shipmentItemSeqId}
-	                            <b>${uiLabelMap.ProductQuantity}:</b> ${itemIssuance.quantity}
-	                            <b>${uiLabelMap.CommonDate}: </b> ${itemIssuance.issuedDateTime}
-	                        </div>
+                            <div class="tabletext" style="margin-left: 40px;">
+                                <b>${uiLabelMap.ProductIssue} ${uiLabelMap.CommonTo} ${uiLabelMap.ProductShipmentItemSeqId}:</b> ${itemIssuance.shipmentId}:${itemIssuance.shipmentItemSeqId}
+                                <b>${uiLabelMap.ProductQuantity}:</b> ${itemIssuance.quantity}
+                                <b>${uiLabelMap.CommonDate}: </b> ${itemIssuance.issuedDateTime}
+                            </div>
                         </#list>
                     </#list>
                 </#list>

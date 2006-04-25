@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@author	  Arukala  (arukala@gmx.de)
+ *@author     Arukala  (arukala@gmx.de)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
  *@version    $Rev$
  *@since      2.2
@@ -70,7 +70,7 @@ function insertNowTimestamp(field) {
     
    <div class="head2">${uiLabelMap.ProductAddProductCategoryContentFromDate}</div>
    
-        <#if productCategoryId?has_content && productCategory?has_content>		
+        <#if productCategoryId?has_content && productCategory?has_content>
            ${prepareAddCategoryContentWrapper.renderFormString()}  
         </#if>
         <div class="head2">${uiLabelMap.ProductAddContentCategory}</div>

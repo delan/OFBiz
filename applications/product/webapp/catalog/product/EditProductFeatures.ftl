@@ -46,7 +46,7 @@
             <#assign curProductFeatureType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureType")>
             <#assign curProductFeatureApplType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureApplType")>
             <#assign curProductFeatureCategory = (productFeatureAndAppl.getRelatedOneCache("ProductFeatureCategory")?if_exists)>
-<!--            <#if curProductFeatureCategory?exists> pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory)</#if>	-->
+<!--            <#if curProductFeatureCategory?exists> pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory)</#if> -->
             <tr valign="middle">
                 <input type="hidden" name="productId_o_${rowCount}" value="${(productFeatureAndAppl.productId)?if_exists}">
                 <input type="hidden" name="productFeatureId_o_${rowCount}" value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
