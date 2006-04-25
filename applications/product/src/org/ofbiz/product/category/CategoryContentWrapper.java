@@ -64,7 +64,6 @@ public class CategoryContentWrapper {
 
     
     public static CategoryContentWrapper makeCategoryContentWrapper(GenericValue productCategory, HttpServletRequest request) {
-	    System.out.println("hallo I am here in makeCategoryContentWrapper(GenericValue productCategory, HttpServletRequest request)");
         return new CategoryContentWrapper(productCategory, request);
     }
     
@@ -75,7 +74,6 @@ public class CategoryContentWrapper {
     }
     
     public CategoryContentWrapper(GenericValue productCategory, HttpServletRequest request) {
-	      System.out.println("hallo I am here in CategoryContentWrapper(GenericValue productCategory, HttpServletRequest request)");
         this.productCategory = productCategory;
         this.locale = UtilHttp.getLocale(request);
         this.mimeTypeId = "text/html";

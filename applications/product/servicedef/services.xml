@@ -166,7 +166,7 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-	<!-- Product Association Services -->
+    <!-- Product Association Services -->
 
     <service name="createProductAssoc" default-entity-name="ProductAssoc" engine="simple"
             location="org/ofbiz/product/product/ProductServices.xml"
@@ -220,7 +220,7 @@
         <attribute name="oldPrice" type="Double" mode="OUT" optional="false"/>
     </service>
 
-	<!-- called by ECAs on ProductPrice service call events -->
+    <!-- called by ECAs on ProductPrice service call events -->
     <service name="saveProductPriceChange" default-entity-name="ProductPrice" engine="simple"
             location="org/ofbiz/product/price/PriceServices.xml" invoke="saveProductPriceChange" auth="true">
         <description>Save History of a ProductPrice Change</description>
@@ -721,11 +721,11 @@
     </service>
     <service name="getSupplierProductFeatures" engine="simple"
             location="org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="getSupplierProductFeatures">
-       <description>Finds a list of SupplierProductFeature entities based on the productFeatureId.
-       	If a partyId is given, only product feature information for that supplier party is returned.</description>
-       	<attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
-       	<attribute name="partyId" type="String" mode="IN" optional="true"/>
-       	<attribute name="supplierProductFeatures" type="java.util.List" mode="OUT" optional="false"/>
+        <description>Finds a list of SupplierProductFeature entities based on the productFeatureId.
+        If a partyId is given, only product feature information for that supplier party is returned.</description>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="supplierProductFeatures" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     
     <!-- Customer driven (customers are suppliers) digital download product services -->
@@ -891,7 +891,7 @@
         <attribute name="text" type="String" mode="IN" optional="true"/>
     </service>
     <service name="getProductFeaturesByType" engine="java"
-            location="org.ofbiz.product.feature.ProductFeatureServices"	invoke="getProductFeaturesByType">
+            location="org.ofbiz.product.feature.ProductFeatureServices" invoke="getProductFeaturesByType">
         <description>
             Returns a map of productFeatureTypeId -> List of ProductFeatures.  If supplied with a productFeatureCategoryId,
             the returned result is that of all product features in that category.  Otherwise, if supplied with a productFeatureGroupId,
@@ -906,28 +906,28 @@
         <attribute type="List" mode="OUT" name="productFeatureTypes" optional="false"/>
         <attribute type="Map" mode="OUT" name="productFeaturesByType" optional="false"/>
     </service>
-	<service name="getAllExistingVariants" engine="java"
-		location="org.ofbiz.product.feature.ProductFeatureServices"	invoke="getAllExistingVariants">
-		<description>
-			Takes a productId and a List of ProductFeatureAndAppl entities and returns a List of productIds which are
-			existing varaints with those features applied.
-		</description>
-		<attribute type="String" mode="IN" name="productId" optional="false"/>
-		<attribute type="List" mode="IN" name="productFeatureAppls" optional="false"/>
-		<attribute type="List" mode="OUT" name="variantProductIds" optional="false"/>
-	</service>
-	<service name="getVariantCombinations" engine="java"
-		location="org.ofbiz.product.feature.ProductFeatureServices"	invoke="getVariantCombinations">
-		<description>
-			For a product, returns a List of all possible product feature combinations, based on all SELECTABLE features which
-			are applied to the product.  featureCombinations is a List of Maps with the following fields:
-				defaultVariantProductId -> default productId for the variant, based on idCodes of the features
-				curProductFeatureAndAppls -> List of product features to be applied to this variant
-				existingVariantProductIds -> List of productIds of variants which already have these features
-		</description>
-		<attribute type="String" mode="IN" name="productId" optional="false"/>
-		<attribute type="List" mode="OUT" name="featureCombinations" optional="false"/>
-	</service>
+    <service name="getAllExistingVariants" engine="java"
+        location="org.ofbiz.product.feature.ProductFeatureServices" invoke="getAllExistingVariants">
+        <description>
+            Takes a productId and a List of ProductFeatureAndAppl entities and returns a List of productIds which are
+            existing varaints with those features applied.
+        </description>
+        <attribute type="String" mode="IN" name="productId" optional="false"/>
+        <attribute type="List" mode="IN" name="productFeatureAppls" optional="false"/>
+        <attribute type="List" mode="OUT" name="variantProductIds" optional="false"/>
+    </service>
+    <service name="getVariantCombinations" engine="java"
+        location="org.ofbiz.product.feature.ProductFeatureServices" invoke="getVariantCombinations">
+        <description>
+            For a product, returns a List of all possible product feature combinations, based on all SELECTABLE features which
+            are applied to the product.  featureCombinations is a List of Maps with the following fields:
+                defaultVariantProductId -> default productId for the variant, based on idCodes of the features
+                curProductFeatureAndAppls -> List of product features to be applied to this variant
+                existingVariantProductIds -> List of productIds of variants which already have these features
+        </description>
+        <attribute type="String" mode="IN" name="productId" optional="false"/>
+        <attribute type="List" mode="OUT" name="featureCombinations" optional="false"/>
+    </service>
      <service name="getCategoryVariantProducts" engine="java" auth="false"
          location="org.ofbiz.product.feature.ProductFeatureServices" invoke="getCategoryVariantProducts">
          <description>Takes a productCategoryId and a list of product features and resolves all the product category's
@@ -937,13 +937,13 @@
          <attribute type="java.util.List" mode="OUT" name="products"/>
      </service>
     <service name="updateProductIfAvailableFromShipment" engine="java"
-		    location="org.ofbiz.product.product.ProductServices"	invoke="updateProductIfAvailableFromShipment">
-		<description>
-			If property is set (catalog.properties) this will re-activate (null discountinue date) on the product
+            location="org.ofbiz.product.product.ProductServices" invoke="updateProductIfAvailableFromShipment">
+        <description>
+            If property is set (catalog.properties) this will re-activate (null discountinue date) on the product
             if inventory is available. Triggered via ECA by shipment receipt services
         </description>
-		<attribute type="String" mode="IN" name="inventoryItemId" optional="false"/>		
-	</service>
+        <attribute type="String" mode="IN" name="inventoryItemId" optional="false"/>
+    </service>
     <service name="createProductMaint" default-entity-name="ProductMaint" engine="simple"
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="createProductMaint" auth="true">
         <description>Create a ProductMaint</description>

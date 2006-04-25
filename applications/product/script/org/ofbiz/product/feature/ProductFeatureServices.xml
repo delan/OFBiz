@@ -89,7 +89,7 @@
     <simple-method method-name="applyFeatureToProduct" short-description="Apply Feature to Product">
         <string-to-field string="applyFeatureToProduct" field-name="callingMethodName"/>
         <string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
         
         <if-empty field-name="fromDate" map-name="parameters">
@@ -123,7 +123,7 @@
     <simple-method method-name="updateFeatureToProductApplication" short-description="Update Feature to Product Application">
         <string-to-field string="updateFeatureToProductApplication" field-name="callingMethodName"/>
         <string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
         
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
@@ -155,7 +155,7 @@
     <simple-method method-name="removeFeatureFromProduct" short-description="Remove Feature from Product">
         <string-to-field string="removeFeatureFromProduct" field-name="callingMethodName"/>
         <string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
         
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
@@ -195,7 +195,7 @@
     <simple-method method-name="applyFeatureToProductFromTypeAndCode" short-description="Apply Feature to Product using Feature Type and ID Code">
         <string-to-field string="applyFeatureToProductFromTypeAndCode" field-name="callingMethodName"/>
         <string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <!-- find the ProductFeatures by type and id code -->

@@ -208,10 +208,10 @@ public class ProductSearch {
             ArrayList productIds = this.makeProductIdList(eli);
             if (eli != null) {
                 try {
-					eli.close();
-				} catch (GenericEntityException e) {
-					Debug.logError(e, "Error closing ProductSearch EntityListIterator");
-				}
+                    eli.close();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Error closing ProductSearch EntityListIterator");
+                }
             }
             
             long endMillis = System.currentTimeMillis();

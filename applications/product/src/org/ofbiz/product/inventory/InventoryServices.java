@@ -637,7 +637,7 @@ public class InventoryServices {
         Double quantityOnHandTotal = new Double(0);
         
         if (productAssocList != null && productAssocList.size() > 0) {
-        	// minimum QOH and ATP encountered
+           // minimum QOH and ATP encountered
            double minQuantityOnHandTotal = Double.MAX_VALUE;
            double minAvailableToPromiseTotal = Double.MAX_VALUE;
            
@@ -678,7 +678,7 @@ public class InventoryServices {
              
                if (Debug.verboseOn()) {
                    Debug.logVerbose("productIdTo = " + productIdTo + " assocQuantity = " + assocQuantity + "current QOH " + currentQuantityOnHandTotal + 
-                		"currentATP = " + currentAvailableToPromiseTotal + " minQOH = " + minQuantityOnHandTotal + " minATP = " + minAvailableToPromiseTotal, module);	
+                        "currentATP = " + currentAvailableToPromiseTotal + " minQOH = " + minQuantityOnHandTotal + " minATP = " + minAvailableToPromiseTotal, module);
                }
            }
           // the final QOH and ATP quantities are the minimum of all the products 
@@ -699,50 +699,50 @@ public class InventoryServices {
     public static Map getProductInventorySummaryForItems(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-    	List orderItems = (List) context.get("orderItems");
-    	Map atpMap = new HashMap();
-    	Map qohMap = new HashMap();
-    	Map results = ServiceUtil.returnSuccess();
-    	results.put("availableToPromiseMap", atpMap);
-    	results.put("quantityOnHandMap", qohMap);
-    	
-    	List facilities = null;
-    	try {
-    	    facilities = delegator.findAll("Facility");
-    	} catch (GenericEntityException e) {
-    		Debug.logError(e, "Couldn't get list of facilities.", module);
-    		return ServiceUtil.returnError("Unable to locate facilities.");
-    	}
-    	    	
-    	Iterator iter = orderItems.iterator();
-    	while (iter.hasNext()) {
-    		GenericValue orderItem = (GenericValue) iter.next();
-    		String productId = orderItem.getString("productId");
-    		
-    		if ((productId == null) || productId.equals("")) continue;
-    		
-    		double atp = 0.0;
-    		double qoh = 0.0;
-    		Iterator facilityIter = facilities.iterator();
-    		while (facilityIter.hasNext()) {
-    			GenericValue facility = (GenericValue) facilityIter.next();
-    			Map params = UtilMisc.toMap("productId", productId, "facilityId", facility.getString("facilityId"));
-    			Map invResult = null;
-    			try {
-    				invResult = dispatcher.runSync("getInventoryAvailableByFacility", params);
-    			} catch (GenericServiceException e) {
-    				String msg = "Could not find inventory for facility [" + facility.getString("facilityId") + "]";
-    				Debug.logError(e, msg, module);
-    				return ServiceUtil.returnError(msg);
-    			}
-    			Double fatp = (Double) invResult.get("availableToPromiseTotal");
-    			Double fqoh = (Double) invResult.get("quantityOnHandTotal");
-    			if (fatp != null) atp += fatp.doubleValue();
-    			if (fqoh != null) qoh += fqoh.doubleValue();
-    		}
-    		atpMap.put(productId, new Double(atp));
-    		qohMap.put(productId, new Double(qoh));
-    	}
-    	return results;
+        List orderItems = (List) context.get("orderItems");
+        Map atpMap = new HashMap();
+        Map qohMap = new HashMap();
+        Map results = ServiceUtil.returnSuccess();
+        results.put("availableToPromiseMap", atpMap);
+        results.put("quantityOnHandMap", qohMap);
+
+        List facilities = null;
+        try {
+            facilities = delegator.findAll("Facility");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Couldn't get list of facilities.", module);
+            return ServiceUtil.returnError("Unable to locate facilities.");
+        }
+
+        Iterator iter = orderItems.iterator();
+        while (iter.hasNext()) {
+            GenericValue orderItem = (GenericValue) iter.next();
+            String productId = orderItem.getString("productId");
+
+            if ((productId == null) || productId.equals("")) continue;
+
+            double atp = 0.0;
+            double qoh = 0.0;
+            Iterator facilityIter = facilities.iterator();
+            while (facilityIter.hasNext()) {
+                GenericValue facility = (GenericValue) facilityIter.next();
+                Map params = UtilMisc.toMap("productId", productId, "facilityId", facility.getString("facilityId"));
+                Map invResult = null;
+                try {
+                    invResult = dispatcher.runSync("getInventoryAvailableByFacility", params);
+                } catch (GenericServiceException e) {
+                    String msg = "Could not find inventory for facility [" + facility.getString("facilityId") + "]";
+                    Debug.logError(e, msg, module);
+                    return ServiceUtil.returnError(msg);
+                }
+                Double fatp = (Double) invResult.get("availableToPromiseTotal");
+                Double fqoh = (Double) invResult.get("quantityOnHandTotal");
+                if (fatp != null) atp += fatp.doubleValue();
+                if (fqoh != null) qoh += fqoh.doubleValue();
+            }
+            atpMap.put(productId, new Double(atp));
+            qohMap.put(productId, new Double(qoh));
+        }
+        return results;
     }
 }

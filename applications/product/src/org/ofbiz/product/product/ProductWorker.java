@@ -130,9 +130,8 @@ public class ProductWorker {
 
     public static String getVariantVirtualId(GenericValue variantProduct) throws GenericEntityException {
         List productAssocs = getVariantVirtualAssocs(variantProduct);
-        if (productAssocs == null)
-        {
-        	return null;
+        if (productAssocs == null) {
+            return null;
         }
         GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
         if (productAssoc != null) {
@@ -607,8 +606,8 @@ public class ProductWorker {
     
     //get parent product
     public static GenericValue getParentProduct(String productId, GenericDelegator delegator) {
-  	  GenericValue _parentProduct = null;
-  	  if (productId == null) {
+        GenericValue _parentProduct = null;
+        if (productId == null) {
             Debug.logWarning("Bad product id", module);
         }
 

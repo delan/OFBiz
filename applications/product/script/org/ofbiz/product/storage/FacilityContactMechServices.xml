@@ -29,27 +29,26 @@
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
-	<simple-method method-name="createFacilityContactMech" short-description="Create a FacilityContactMech">
-		<check-permission permission="FACILITY" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-		<check-errors/>
-		
-		<make-value value-name="newValue" entity-name="FacilityContactMech"/>
-		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>        
+    <simple-method method-name="createFacilityContactMech" short-description="Create a FacilityContactMech">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+        <make-value value-name="newValue" entity-name="FacilityContactMech"/>
+        <make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>        
         <log level="info" message="contactMechId is ${parameters.contactMechId}"/>
         
-		<if-empty map-name="parameters" field-name="contactMechId">
+        <if-empty map-name="parameters" field-name="contactMechId">
             <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
             <call-service service-name="createContactMech" in-map-name="context">
                 <default-message>Contact Mechanism successfully created.</default-message>
                 <result-to-field result-name="contactMechId" map-name="newValue"/>
-            </call-service>	
-            <log level="info" message="ContactMech created"/>	
+            </call-service>
+            <log level="info" message="ContactMech created"/>
             <else>
-            	<field-to-field field-name="contactMechId" map-name="parameters" to-map-name="newValue"/>
-            </else>	
-		</if-empty>
-		  
+                <field-to-field field-name="contactMechId" map-name="parameters" to-map-name="newValue"/>
+            </else>
+        </if-empty>
+
         <log level="info" message="Creating a FacilityContactMech"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="newValue"/>
         <field-to-result field-name="contactMechId" map-name="newValue"/>
@@ -61,10 +60,10 @@
     </simple-method>
     
     <simple-method method-name="updateFacilityContactMech" short-description="Update a FacilityContactMech">
-    	<check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-    	<check-errors/>
-    	
-		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>    	       
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
         
         <!-- Find old value -->
         <make-value entity-name="FacilityContactMech" value-name="facilityContactMechMap"/>
@@ -82,22 +81,22 @@
         
         <!-- If we already have a new contactMechId don't update ContactMech -->
         <if-empty map-name="parameters" field-name="newContactMechId">                
-        	<log level="info" message="Calling map procs"/>
-        	<call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
+            <log level="info" message="Calling map procs"/>
+            <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="updateContactMech" in-map-name="parameters" out-map-name="context"/>
-        	<to-string field-name="contactMechId" map-name="context"/>
-        	<log level="info" message="Calling generic updateContactMech method"/>
-        	<call-service service-name="updateContactMech" in-map-name="context">
-            	<default-message>Contact Mechanism successfully updated.</default-message>
-            	<result-to-field result-name="contactMechId" map-name="newFacilityContactMech"/>
-        	</call-service>
-        	<else>
-        		<field-to-field map-name="parameters" to-map-name="newFacilityContactMech" field-name="newContactMechId" to-field-name="contactMechId"/>
-				<log level="info" message="Using supplied new contact mech id: ${newFacilityContactMech.contactMechId}"/>
-        	</else>	
+            <to-string field-name="contactMechId" map-name="context"/>
+            <log level="info" message="Calling generic updateContactMech method"/>
+            <call-service service-name="updateContactMech" in-map-name="context">
+                <default-message>Contact Mechanism successfully updated.</default-message>
+                <result-to-field result-name="contactMechId" map-name="newFacilityContactMech"/>
+            </call-service>
+            <else>
+                <field-to-field map-name="parameters" to-map-name="newFacilityContactMech" field-name="newContactMechId" to-field-name="contactMechId"/>
+                <log level="info" message="Using supplied new contact mech id: ${newFacilityContactMech.contactMechId}"/>
+            </else>
         </if-empty> 
-               	
-		<set-nonpk-fields value-name="newFacilityContactMech" map-name="parameters" set-if-null="false"/>
+
+        <set-nonpk-fields value-name="newFacilityContactMech" map-name="parameters" set-if-null="false"/>
         <now-timestamp-to-env env-name="now"/>
         <env-to-field env-name="now" field-name="fromDate" map-name="newFacilityContactMech"/>
         <env-to-field env-name="now" field-name="thruDate" map-name="facilityContactMech"/>
@@ -107,21 +106,21 @@
             <get-related value-name="facilityContactMech" relation-name="FacilityContactMechPurpose" list-name="facilityContactMechPurposes"/>   
             <iterate entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes">
                 <field-to-field field-name="contactMechId" map-name="newFacilityContactMech" to-map-name="facilityContactMechPurpose"/>
-                <field-to-list field-name="facilityContactMechPurpose" list-name="storeList"/>	
+                <field-to-list field-name="facilityContactMechPurpose" list-name="storeList"/>
             </iterate>
         </if-compare-field>
         
         <store-list list-name="storeList"/>
         <log level="info" message="Setting id to result: ${newFacilityContactMech.contactMechId}"/>
         <field-to-result field-name="contactMechId" map-name="newFacilityContactMech"/>
-        <field-to-request field-name="contactMechId" map-name="newFacilityContactMech"/>  	
-    </simple-method>	
+        <field-to-request field-name="contactMechId" map-name="newFacilityContactMech"/>
+    </simple-method>
     
     <simple-method method-name="deleteFacilityContactMech" short-description="Delete a FacilityContactMech">
-    	<check-permission permission="FACILITY" action="_DELETE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-    	<check-errors/>
-    	
-		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>    	        
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
         <make-value entity-name="FacilityContactMech" value-name="facilityContactMechMap"/>
         <set-pk-fields value-name="facilityContactMechMap" map-name="parameters"/>
         <find-by-and entity-name="FacilityContactMech" list-name="facilityContactMechs" map-name="facilityContactMechMap"/>
@@ -133,17 +132,17 @@
         </if-empty>
         <now-timestamp-to-env env-name="now"/>
         <env-to-field env-name="now" field-name="thruDate" map-name="facilityContactMech"/>
-        <store-value value-name="facilityContactMech"/> 	
+        <store-value value-name="facilityContactMech"/>
     </simple-method>
     
     <simple-method method-name="createFacilityPostalAddress" short-description="Create a PostalAddress for facility">
-    	<check-permission permission="FACILITY" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-		<check-errors/>
-		
-    	<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
         <log level="info" message="Creating postal address"/>
         <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
-                processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>   		
+                processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>
         <call-service in-map-name="context" service-name="createPostalAddress">
             <default-message>Postal Address successfully created</default-message>
             <result-to-field result-name="contactMechId" map-name="newFacilityContactMech"/>             
@@ -152,7 +151,7 @@
         <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="facilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
         <field-to-field field-name="contactMechId" map-name="newFacilityContactMech" to-map-name="context2"/> 
-        <log level="info" message="Copied id to context2: ${context2.contactMechId}"/> 		
+        <log level="info" message="Copied id to context2: ${context2.contactMechId}"/>
         <call-service in-map-name="context2" break-on-error="true" service-name="createFacilityContactMech">
             <default-message>Facility Contact Mechanism successfully created</default-message>       
         </call-service>
@@ -161,38 +160,38 @@
     </simple-method>
     
     <simple-method method-name="updateFacilityPostalAddress" short-description="Update a PostalAddress for facility">
-    	<check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-    	<check-errors/>
-    	
-		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
-		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>    	
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
+        <make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
         
         <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
-                processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>   		
+                processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>
         <call-service in-map-name="context" service-name="updatePostalAddress">
             <default-message>Postal Address successfully updated</default-message>
             <result-to-field result-name="newContactMechId" map-name="newFacilityContactMech" field-name="contactMechId" />             
         </call-service>
         <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="updateFacilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
-        <field-to-field map-name="newFacilityContactMech" field-name="contactMechId"  to-map-name="context2" to-field-name="newContactMechId"/> 	
+        <field-to-field map-name="newFacilityContactMech" field-name="contactMechId"  to-map-name="context2" to-field-name="newContactMechId"/>
         <string-to-field map-name="context2" field-name="contactMechTypeId" string="POSTAL_ADDRESS"/>
         <log level="info" message="Copied id to context2: ${context2.newContactMechId}"/>
         <call-service in-map-name="context2" service-name="updateFacilityContactMech">
             <default-message>Facility Contact Mechanism successfully updated</default-message>       
         </call-service>
         <field-to-request field-name="contactMechId" map-name="newFacilityContactMech"/>
-        <field-to-result field-name="contactMechId" map-name="newFacilityContactMech"/>                  	
+        <field-to-result field-name="contactMechId" map-name="newFacilityContactMech"/>
     </simple-method>
 
     <simple-method method-name="createFacilityTelecomNumber" short-description="Create a TelecomNumber for facility">
-    	<check-permission permission="FACILITY" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-		<check-errors/>
-		
-    	<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
         <log level="info" message="Creating telecom number"/>
         <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
-                processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>   		
+                processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>
         <call-service in-map-name="context" service-name="createTelecomNumber">
             <default-message>Telecom number successfully created</default-message>
             <result-to-field result-name="contactMechId" map-name="newFacilityContactMech"/>             
@@ -200,7 +199,7 @@
         <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="facilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
         <field-to-field field-name="contactMechId" map-name="newFacilityContactMech" to-map-name="context2"/> 
-        <log level="info" message="Copied id to context2: ${context2.contactMechId}"/> 		
+        <log level="info" message="Copied id to context2: ${context2.contactMechId}"/>
         <call-service in-map-name="context2" break-on-error="true" service-name="createFacilityContactMech">
             <default-message>Facility Contact Mechanism successfully created</default-message>       
         </call-service>
@@ -209,12 +208,12 @@
     </simple-method>
     
     <simple-method method-name="updateFacilityTelecomNumber" short-description="Update a TelecomNumber for facility">
-    	<check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-    	<check-errors/>
-    	
-		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>        
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>        
         <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
-                processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>  		
+                processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>
         <call-service in-map-name="context" service-name="updateTelecomNumber">
             <default-message>Telecom Number successfully updated</default-message>
             <result-to-field result-name="newContactMechId" map-name="newFacilityContactMech" field-name="contactMechId" />             
@@ -222,7 +221,7 @@
         
         <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="updateFacilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
-        <field-to-field map-name="newFacilityContactMech" field-name="contactMechId"  to-map-name="context2" to-field-name="newContactMechId"/> 	
+        <field-to-field map-name="newFacilityContactMech" field-name="contactMechId"  to-map-name="context2" to-field-name="newContactMechId"/>
         <string-to-field map-name="context2" field-name="contactMechTypeId" string="TELECOM_NUMBER"/>
         <log level="info" message="Copied id to context2: ${context2.newContactMechId}"/>
         <call-service in-map-name="context2" service-name="updateFacilityContactMech">
@@ -230,13 +229,13 @@
         </call-service>
         <log level="info" message="Setting result id: ${newFacilityContactMech.contactMechId}"/>
         <field-to-request field-name="contactMechId" map-name="newFacilityContactMech"/>
-        <field-to-result field-name="contactMechId" map-name="newFacilityContactMech"/>                  	
+        <field-to-result field-name="contactMechId" map-name="newFacilityContactMech"/>
     </simple-method>  
     
     <simple-method method-name="createFacilityEmailAddress" short-description="Create an email address for facility">
-    	<check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-    	<check-errors/>
-    	
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
         <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
             processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
@@ -245,13 +244,13 @@
             <default-message>Facility Contact Mechanism successfully created.</default-message>
             <result-to-result result-name="contactMechId"/>
             <result-to-request result-name="contactMechId"/>
-        </call-service>        	
+        </call-service>
     </simple-method>
     
     <simple-method method-name="updateFacilityEmailAddress" short-description="Update an email address for facility">
-    	<check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-    	<check-errors/>
-    	
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
         <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
             processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
@@ -260,14 +259,14 @@
             <default-message>Facility Contact Mechanism successfully updated.</default-message>
             <result-to-result result-name="contactMechId"/>
             <result-to-request result-name="contactMechId"/>
-        </call-service>        	
+        </call-service>
     </simple-method>
     
     <simple-method method-name="createFacilityContactMechPurpose" short-description="Create a facility/contact mech purpose">
-    	<check-permission permission="FACILITY" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-    	<check-errors/>
-    	
-    	<make-value value-name="lookUpMap" entity-name="FacilityContactMechPurpose"/>
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookUpMap" entity-name="FacilityContactMechPurpose"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookUpMap"/>
         <field-to-field field-name="contactMechId" map-name="parameters" to-map-name="lookUpMap"/>
         <field-to-field field-name="contactMechPurposeTypeId" map-name="parameters" to-map-name="lookUpMap"/>
@@ -275,8 +274,8 @@
         <filter-list-by-date list-name="purposeList"/>
         
         <if-not-empty field-name="purposeList">
-        	<add-error><fail-message message="Could not create new purpose, a purpose with that type already exists"/></add-error>
-        	<check-errors/>
+            <add-error><fail-message message="Could not create new purpose, a purpose with that type already exists"/></add-error>
+            <check-errors/>
         </if-not-empty>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>
@@ -291,16 +290,16 @@
     </simple-method>
     
     <simple-method method-name="deleteFacilityContactMechPurpose" short-description="Delete a facility/contact mech purpose">
-    	<check-permission permission="FACILITY" action="_DELETE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
-    	<check-errors/>
-    	
-    	<make-value value-name="lookUpMap" entity-name="FacilityContactMechPurpose"/>
-    	<set-pk-fields map-name="parameters" value-name="lookUpMap"/>
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookUpMap" entity-name="FacilityContactMechPurpose"/>
+        <set-pk-fields map-name="parameters" value-name="lookUpMap"/>
         <find-by-primary-key value-name="purposeEntity" entity-name="FacilityContactMechPurpose" map-name="lookUpMap"/>        
         
         <if-empty field-name="purposeEntity">
-        	<add-error><fail-message message="Unable to locate purpose; cannot delete"/></add-error>
-        	<check-errors/>
+            <add-error><fail-message message="Unable to locate purpose; cannot delete"/></add-error>
+            <check-errors/>
         </if-empty>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>

@@ -139,8 +139,10 @@
     </service>
     <service name="getProductInventoryAvailablefromAssocProducts" engine="java"
                 location="org.ofbiz.product.inventory.InventoryServices" invoke="getProductInventoryAvailablefromAssocProducts" auth="false">
-        <description>Get Inventory Availability for a product based on List of associated products, usually marketing
-        	package components.</description>
+        <description>
+            Get Inventory Availability for a product based on List of associated products,
+            usually marketing package components.
+        </description>
         <attribute name="assocProducts" type="List" mode="IN" optional="false"/>
         <attribute name="quantityOnHandTotal" type="Double" mode="OUT" optional="false"/>
         <attribute name="availableToPromiseTotal" type="Double" mode="OUT" optional="false"/>
@@ -255,48 +257,48 @@
     </service>
 
     <service name="interfaceInventoryTransfer" engine="interface" location="" invoke="">
-    	<description>Inventory Transfer Interface</description>
-    	<attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
-    	<attribute name="statusId" type="String" mode="IN" optional="false"/>
-    	<attribute name="facilityId" type="String" mode="IN" optional="true"/>
-    	<attribute name="locationSeqId" type="String" mode="IN" optional="true"/>
-    	<attribute name="containerId" type="String" mode="IN" optional="true"/>
-    	<attribute name="facilityIdTo" type="String" mode="IN" optional="true"/>
-    	<attribute name="locationSeqIdTo" type="String" mode="IN" optional="true"/>
-    	<attribute name="containerIdTo" type="String" mode="IN" optional="true"/>
-    	<attribute name="itemIssuanceId" type="String" mode="IN" optional="true"/>
-    	<attribute name="sendDate" type="Timestamp" mode="IN" optional="true"/>
-    	<attribute name="receiveDate" type="Timestamp" mode="IN" optional="true"/>
-    	<attribute name="comments" type="String" mode="IN" optional="true"/>
+        <description>Inventory Transfer Interface</description>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="locationSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="containerId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="locationSeqIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="containerIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="itemIssuanceId" type="String" mode="IN" optional="true"/>
+        <attribute name="sendDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="receiveDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createInventoryTransfer" engine="simple"
-    		location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryTransfer" auth="true">
-    	<description>Create an inventory transfer</description>
-    	<implements service="interfaceInventoryTransfer"/>
-    	<attribute name="xferQty" type="Double" mode="IN" optional="false"/>
-    	<attribute name="inventoryTransferId" type="String" mode="OUT" optional="false"/>
+            location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryTransfer" auth="true">
+        <description>Create an inventory transfer</description>
+        <implements service="interfaceInventoryTransfer"/>
+        <attribute name="xferQty" type="Double" mode="IN" optional="false"/>
+        <attribute name="inventoryTransferId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateInventoryTransfer" engine="simple"
             location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryTransfer" auth="true">
-    	<description>Update an inventory transfer record</description>
-    	<implements service="interfaceInventoryTransfer"/>
-    	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
+        <description>Update an inventory transfer record</description>
+        <implements service="interfaceInventoryTransfer"/>
+        <attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="prepareInventoryTransfer" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="prepareInventoryTransfer">
-    	<description>Prepares inventory item for transfer</description>
-    	<attribute name="inventoryItemId" type="String" mode="INOUT" optional="false"/>
-    	<attribute name="xferQty" type="Double" mode="IN" optional="false"/>
+        <description>Prepares inventory item for transfer</description>
+        <attribute name="inventoryItemId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="xferQty" type="Double" mode="IN" optional="false"/>
     </service>
     <service name="completeInventoryTransfer" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="completeInventoryTransfer">
-    	<description>Completes the inventory transfer</description>
-    	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
+        <description>Completes the inventory transfer</description>
+        <attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="cancelInventoryTransfer" engine="java"
             location="org.ofbiz.product.inventory.InventoryServices" invoke="cancelInventoryTransfer">
-    	<description>Cancel the inventory transfer</description>
-    	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
+        <description>Cancel the inventory transfer</description>
+        <attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="issueImmediatelyFulfilledOrder" engine="simple"
