@@ -1625,6 +1625,8 @@ public class ModelFormField {
             }
             
             try {
+                Locale locale = UtilMisc.ensureLocale(context.get("locale"));
+                
                 List values = null;
                 if (this.cache) {
                     values = delegator.findByConditionCache(this.entityName, findCondition, null, this.orderByList);
@@ -1647,16 +1649,13 @@ public class ModelFormField {
                 while (valueIter.hasNext()) {
                     GenericValue value = (GenericValue) valueIter.next();
                     // add key and description with string expansion, ie expanding ${} stuff, passing locale explicitly to expand value string because it won't be found in the Entity
-                    //create a context that is a MapStack with the value at the bottom to override everything, but still allow for common things like uiLabelMap and such
-                    MapStack localContext = null;
-                    if (context instanceof MapStack) {
-                        localContext = ((MapStack) context).standAloneStack();
-                        localContext.push(value);
-                    } else {
-                        localContext = MapStack.create(context);
-                        localContext.push(value);
+
+                    // expand with the value first, which is a LocalizedMap, and may have the value and if nothing found, use the incoming context
+                    String optionDesc = this.description.expandString(value, locale);
+                    if (UtilValidate.isEmpty(optionDesc)) {
+                        optionDesc = this.description.expandString(context, locale);
                     }
-                    String optionDesc = this.description.expandString(localContext, UtilMisc.ensureLocale(context.get("locale")));
+                    
                     Object keyFieldObject = value.get(this.getKeyFieldName());
                     if (keyFieldObject == null) {
                         throw new IllegalArgumentException("The value found for key-name [" + this.getKeyFieldName() + "], may not be a valid key field name.");
