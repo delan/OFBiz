@@ -180,17 +180,17 @@ public class LoginServices {
                                 GenericValue userLoginSession = null;
                                 Map userLoginSessionMap = null;
                                 try {
-                                	userLoginSession = userLogin.getRelatedOne("UserLoginSession");
-                                	if (userLoginSession != null) {
-                                		Object deserObj = XmlSerializer.deserialize(userLoginSession.getString("sessionData"), delegator);
-                                		//don't check, just cast, if it fails it will get caught and reported below; if (deserObj instanceof Map)
+                                    userLoginSession = userLogin.getRelatedOne("UserLoginSession");
+                                    if (userLoginSession != null) {
+                                        Object deserObj = XmlSerializer.deserialize(userLoginSession.getString("sessionData"), delegator);
+                                        //don't check, just cast, if it fails it will get caught and reported below; if (deserObj instanceof Map)
                                         userLoginSessionMap = (Map) deserObj;
-                                	}
+                                    }
                                 } catch (GenericEntityException ge) {
-                                	Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " +
-                                			userLogin.getString("userLoginId"), module);
+                                    Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " +
+                                            userLogin.getString("userLoginId"), module);
                                 } catch (Exception e) {
-                                	Debug.logWarning(e, "Problems deserializing UserLoginSession", module);
+                                    Debug.logWarning(e, "Problems deserializing UserLoginSession", module);
                                 }
 
                                 // return the UserLoginSession Map
