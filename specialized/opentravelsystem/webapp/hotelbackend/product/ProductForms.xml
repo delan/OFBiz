@@ -271,7 +271,7 @@
         <field name="comments" ><ignored/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="UpdateProductCategoryMemeber" type="list"
+    <form name="UpdateProductCategoryMember" type="list"
             target="updateProductToCategory" title="" list-name="productCategoryMembers"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProductToCategory"/>

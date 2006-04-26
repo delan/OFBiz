@@ -1,54 +1,57 @@
-<#--
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included 
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev: 5462 $
- *@since      2.1
--->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
 <#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
 <#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
 
-<#assign unselectedLeftClassName = "headerButtonLeft">
-<#assign unselectedRightClassName = "headerButtonRight">
-<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
-<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+
+
+	<#assign displayApps = [
+ 		{"title":"${uiLabelMap.opentravelsystemMain}",		"tabname":"main",		"url":"mainCatalog"}
+		,{"title":"${uiLabelMap.opentravelsystemCategories}","tabname":"categories",	"url":"EditProdCatalogCategories"}
+		,{"title":"${uiLabelMap.opentravelsystemProducts}",		"tabname":"products",	"url":"EditProducts"}
+		,{"title":"${uiLabelMap.opentravelsystemFixedAssets}","tabname":"fixedassets",			"url":"EditFixedAssets"}
+		,{"title":"${uiLabelMap.opentravelsystemStore}", 	"tabname":"store",		"url":"EditProductStore"}
+		,{"title":"Produkt&nbsp;Upload", 	"tabname":"importProduct",		"url":"importProduct"}
+		]>
+
+<#assign unselectedClass = {"appheader_col" : "appheader_tabdownblock", "appheader_center" : "appheader_tabdowncenter", "appheader_link" : "appheader_tablink"}>
+<#assign selectedClass = {"appheader_col" : "appheader_mainblock", "appheader_center" : "appheader_tabupcenter", "appheader_link" : "appheader_tablinkselected"}>
+<#if !appTabButtonItem?has_content><#assign appTabButtonItem = page.appTabButtonItem?default("void")></#if>
+<#assign thisAppOpt = page.headerItem?default("void")>
+
 <#if requestAttributes.userLogin?has_content>
 <div class="apptitle">&nbsp;${uiLabelMap.opentravelsystemCatalog}</div>
-<div class="row">
-  <div class="col"><a href="<@ofbizUrl>mainCatalog</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemMain}</a></div>  
-  <div class="col"><a href="<@ofbizUrl>EditProdCatalogCategories</@ofbizUrl>" class="${selectedLeftClassMap.categories?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemCategories}</a></div>  
-  <div class="col"><a href="<@ofbizUrl>EditProducts</@ofbizUrl>" class="${selectedLeftClassMap.products?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemProducts}</a></div>  
-  <div class="col"><a href="<@ofbizUrl>EditFixedAssets</@ofbizUrl>" class="${selectedLeftClassMap.fixedassets?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemFixedAssets}</a></div>
-  <div class="col"><a href="<@ofbizUrl>EditProductStore</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}">${uiLabelMap.opentravelsystemStore}</a></div>  
-  <!--div class="col"><a href="<@ofbizUrl>selectStore</@ofbizUrl>" class="${selectedLeftClassMap.selectStore?default(unselectedLeftClassName)}">${uiLabelMap.selectStore}</a></div-->  
-  <div class="col"><a href="<@ofbizUrl>importProduct</@ofbizUrl>" class="${selectedLeftClassMap.importProduct?default(unselectedLeftClassName)}">importProduct</a></div>  
-
-  <#if userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
-  <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
-  </#if>
-  <div class="col-fill">&nbsp;</div>
-</div>
+<table class="appheader_appbar" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="#f9f4a2">    
+    <td width="5px" class="appheader_appbarleft">&nbsp;</td>  
+    <td height="19px" width="100%">
+	  <table width="100%" border="0" cellspacing="0" cellpadding="0">                      
+        <tr>
+          <#list displayApps as display>
+	          <#if thisAppOpt == display.tabname>
+	            <#assign class = selectedClass>
+	          <#else>
+	            <#assign class = unselectedClass>
+	          </#if>
+	          <td valign="bottom" height="19px" class="${class.appheader_col}">
+	            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	              <tr>
+	                <td class="${class.appheader_center}"><a href=<#if display.title == "Website">"${display.url}" target="newwindow"<#else>"<@ofbizUrl>${display.url}</@ofbizUrl>"</#if> title="" class="${class.appheader_link}">${display.title}</a></td>
+	                <td class="appheader_betweenstabs" width="1px">&nbsp;</td>					
+					</tr>
+	            </table>
+	          </td>
+          </#list>
+      	   <td width="100%">	
+      		<table width="100% border="0" cellspacing="0" cellpadding="0">  
+          		<tr>             
+         			<td width="100%" class="appheader_appbarright" height="21px">&nbsp;</td>
+         		</tr>
+     		</table>
+     		</td>           
+        </tr>        
+      </table>
+    </td>
+  </tr>
+</table>
 </#if>

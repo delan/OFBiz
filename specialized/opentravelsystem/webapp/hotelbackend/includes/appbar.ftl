@@ -35,11 +35,11 @@
 
 <#if requestAttributes.userLogin?has_content>
 	<#assign displayApps = [
- 		{"title":"Product",				"url":"mainCatalog"}
-		,{"title":"OrdersReservations",	"url":"findorders"}
-		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
-		,{"title":"Accounting",			"url":"mainAccounting"}
-		,{"title":"Website", 			"url":"findElectronicTexts"}
+ 		{"title":"ProductManagement",				"url":"mainCatalog"}
+		,{"title":"OrdersReservationsManagement",	"url":"findorders"}
+		,{"title":"PartiesManagement",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
+		,{"title":"AccountingManagement",			"url":"mainAccounting"}
+		,{"title":"WebsiteManagement", 			"url":"findElectronicTexts"}
 		,{"title":"Logout", 			"url":"logout"}
 		]>
 <#else>
@@ -47,41 +47,62 @@
 		{"title":"Login",				"url":"checkLogin/main"}
 		]>
 </#if>
-<#assign unselectedClass = {"col" : "tabdownblock", "left" : "tabdownleft", "center" : "tabdowncenter", "right" : "tabdownright", "link" : "tablink"}>
-<#assign selectedClass = {"col" : "mainblock", "left" : "tabupleft", "center" : "tabupcenter", "right" : "tabupright", "link" : "tablinkselected"}>
+
+<script language="JavaScript">
+function ChangeClass(tab,toclass) {
+document.getElementById(tab).className = toclass;
+}
+function ReturnClass(tab,toclass) {
+document.getElementById(tab).className= toclass;
+}
+</script>
+
+<#assign unselectedClass = { 
+"tab" : "tabdowncenter", 
+"link" : "tablink"}>
+
+<#assign selectedClass = { 
+"tab" : "tabupcenter",
+"link" : "tablinkselected"}>
+
 <#if !appTabButtonItem?has_content><#assign appTabButtonItem = page.appTabButtonItem?default("void")></#if>
 <#assign thisAppOpt = page.appTabButtonItem?default("void")>
-<table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#FFFFFF">    
-    <td><div class="appbarleft"></div></td>
-    <td height="15" width="100%">
+
+<table class="appbar" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="#FFFFFF"> 
+   <td width="5px" class="appbarleft">&nbsp;</td>   
+    <td height="21px" width="100%">
 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">                      
         <tr>
           <#list displayApps as display>
-	          <#if thisAppOpt == display.title>
-	            <#assign class = selectedClass>
-	          <#else>
-	            <#assign class = unselectedClass>
-	          </#if>
-	          <td height="15" class="${class.col}">
-	            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-	              <tr>
-	                <td class="${class.left}"><a href="<@ofbizUrl>${display.url}</@ofbizUrl>" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
-	                <td nowrap="nowrap" class="${class.center}"><a href="<@ofbizUrl>${display.url}</@ofbizUrl>" title="" class="${class.link}">${"uiLabelMap.opentravelsystem${display.title}"?eval}</a></td>
-	                <td class="${class.right}"><a href="<@ofbizUrl>${display.url}</@ofbizUrl>" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>"alt="" width="10" height="15" border="0"></a></td></tr>
-				  <#if thisAppOpt != display.title>
-	                <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
-	                <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
-	              </#if>
-	            </table>
-	          </td>
-          </#list>
-		  <td><div class="appbarright"></div></td>            
-          <td width="100%" class="appbarresize">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">                
-              <tr><td class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>               
+          <#if thisAppOpt == display.title>
+            <#assign class = selectedClass>
+          <#else>
+            <#assign class = unselectedClass>
+          </#if>
+            <#--DEZE SYNTAX MOET BETER KUNNEN< LIJKT ME--> 
+        	<#if requestAttributes.userLogin?has_content>
+        	
+        	<#else>
+        		<#assign class = selectedClass>
+        	</#if>
+          <td width="107px">
+            <table height="21px" width="107px" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                 <td width="107px" height="21px" class="${class.tab}" id="${"uiLabelMap.opentravelsystem${display.title}"?eval}" onMouseOver="ChangeClass('${"uiLabelMap.opentravelsystem${display.title}"?eval}', '${class.tab}');" onMouseOut="ChangeClass('${"uiLabelMap.opentravelsystem${display.title}"?eval}', '${class.tab}');"><a href=<#if display.title == "Website">"${display.url}" target="newwindow"<#else>"<@ofbizUrl>${display.url}</@ofbizUrl>"</#if> title="" class="${class.link}">${"uiLabelMap.opentravelsystem${display.title}"?eval}</a></td>
+              	 <td height="1px" class="betweenstabs">&nbsp;</td>  
+              </tr>
+                            
             </table>
-          </td>           
+          </td>
+     	  </#list> 
+      	   <td width="100%">	
+      		<table width="100% border="0" cellspacing="0" cellpadding="0">  
+          		<tr>             
+         			<td width="100%" class="appbarright" height="21px">&nbsp;</td>
+         		</tr>
+     		</table>
+     		</td>		
         </tr>        
       </table>
     </td>

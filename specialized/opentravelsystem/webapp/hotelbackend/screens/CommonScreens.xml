@@ -59,7 +59,7 @@
             </actions>
             <widgets>
                 <!-- render header -->
-                <platform-specific><html><html-template location="component://common/webcommon/includes/header.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/header.ftl"/></html></platform-specific>
                 <section>
                     <condition>
                         <if-empty field-name="parameters.popup"/>
