@@ -28,6 +28,7 @@ import org.ofbiz.accounting.util.UtilAccounting;
 import java.math.*;
 import java.text.NumberFormat;
 
+Locale locale = context.get("locale");
 
 paymentId = parameters.get("paymentId");
 payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
@@ -61,7 +62,6 @@ if (invoices != null && invoices.size() > 0)    {
             invoiceMap.put("description",invoice.getString("description")); 
             invoiceMap.put("invoiceDate", invoice.getString("invoiceDate").substring(0,10)); // display only YYYY-MM-DD
             invoiceMap.put("amountApplied", invoiceApplied);
-            locale = parameters.get("autoUserLogin").get("lastLocale"); 
             if (paymentToApply.compareTo(invoiceToApply) < 0 ) {
                 invoiceMap.put("amountToApply",paymentToApply);
             }
