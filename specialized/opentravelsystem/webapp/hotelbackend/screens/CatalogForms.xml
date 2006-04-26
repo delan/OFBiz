@@ -64,9 +64,11 @@
         </actions>
         <field name="productId" widget-style="buttontext"><hyperlink target="EditProduct?productId=${productId}" description="${productId}"/></field>
         <field name="internalName"><display/></field>
+        <!--
         <field name="reservMaxPersons"><display/></field>
         <field name="reserv2ndPPPerc"><display/></field>
         <field name="reservNthPPPerc"><display/></field>
+        -->
         <field name="lastModifiedDate"><display/></field>
     </form>
     
@@ -264,7 +266,8 @@
             <hyperlink target="EditCategory?productCategoryId=${productCategoryId}" description="${productCategoryId}"/>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
-        <field name="comments"><hidden/></field>
+       <!-- Show comment field to manage coordinates for bowling store --> 
+        <field name="comments"><!--<hidden/>--></field>
         <field name="quantity"><hidden/></field>
         <field name="sequenceNum"><hidden/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>

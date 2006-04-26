@@ -1,64 +1,19 @@
 
-/* ===== eCommerce specific styles ===== */
-BODY.ecbody {
-background: #FFFFFF;
-margin-top: 10px;
-margin-right: 10px;
-margin-bottom: 10px;
-margin-left: 10px;
-}
+/* This CSS file is used for all OFBiz applications EXCEPT ecommerce. */
+/* See the "ecommain.css" file for ecommerce. */
 
-DIV.ecom-mainarea {
-background: #FFFFFF;
-width: auto;
-}
-
-DIV.ecom-column-left {
-float: left;
-margin-right: 10px;
-width: 150px;
-}
-DIV.ecom-column-main {
-margin-left: 10;
-margin-right: 1;
-width: 55%;
-text-align: left;
-valign: top;
-}
-DIV.ecom-column-right {
-float: right;
-margin-left: 10px;
-width: 200px;
-}
-
-DIV.endcolumns {
-  clear: both;
-}  
-
-DIV.ecom-screenlet {
-background: #FFFFFF;
-border: 1px solid #999999;
-margin-bottom: 10px;
-}
-DIV.ecom-screenlet-header {
-background: #000099;
-padding-top: 1px;
-padding-bottom: 1px;
-padding-right: 4px;
-padding-left: 4px;
-}
-DIV.ecom-screenlet-body {
-background: #FFFFFF;
-padding: 4px;
+/* ===== Toegevoegde styles ===== */
+.logo {
+padding-bottom: 20px;
 }
 
 /* ===== General Styles ===== */
 BODY {
-background: #D4D0C8;
+background: #FFFFFF;
 margin-top: 0px;
-margin-right: 0px;
+margin-right: 10px;
 margin-bottom: 0px;
-margin-left: 0px;
+margin-left: 10px;
 }
 
 FORM {
@@ -66,16 +21,24 @@ margin: 0px;
 }
 
 UL {
-margin-top: 0; 
+margin-top: 0;
 margin-bottom: 0;
+}
+
+
+.endcolumns {
+clear: both;
+height: 0px;
+visibility: hidden;
 }
 
 .head1 {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-margin: 0px; 
-font-size: 12pt;
+margin: 0px;
+padding: 2px;
+font-size: 11pt;
 font-weight: bold;
-color: #000099;
+color: #a91930;
 }
 
 .head2 {
@@ -109,9 +72,9 @@ font-weight: bold;
 background: #CCCCCC;
 border: 1px solid #000000;
 text-align: center;
-margin: 2 auto;
+margin: 2px auto;
 width: auto;
-padding: 4;
+padding: 4px;
 }
 
 DIV.tabletexthidden {
@@ -123,14 +86,10 @@ visibility: hidden;
 A.tabletext, DIV.tabletext, SPAN.tabletext, P.tabletext, .tabletext {
 font-size: 10px;
 text-decoration: none;
+font-weight:bold;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
-A.tabletext:hover {
-font-size: 10px;
-text-decoration: underline;
-font-family: Verdana, Arial, Helvetica, sans-serif;
-}
 
 .tablebuttontext {
 font-size: 10px;
@@ -150,7 +109,7 @@ padding: 0;
 
 .headerboxtop {
 background: #FFFFFF;
-padding: 4;
+padding: 4px;
 border-color: #FFFFFF;
 border-style: solid;
 border-width: 1px 1px 0px 1px;
@@ -167,6 +126,46 @@ border-width: 0px 1px 1px 1px;
 .boxhead {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 margin: 0px;
+font-size: 9pt;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+DIV.boxtop {
+margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
+padding: 0; text-align: center;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+background: #000099;
+padding-top: 1px;
+padding-bottom: 1px;
+padding-right: 4px;
+padding-left: 4px;
+border-color: #999999;
+border-style: solid;
+border-width: 0px 0px 0px 0px;
+}
+
+DIV.boxhead-left {
+border: none; float: left; margin: 0; padding: 0; width: auto;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 8pt;
+font-weight: bold;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+DIV.boxhead-fill {
+margin: 0; padding: 0; border: none; text-align: center; width: 0;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 8pt;
+font-weight: bold;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+DIV.boxhead-right {
+border: none; float: right; margin: 0; padding: 0; width: auto;
+font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 8pt;
 font-weight: bold;
 text-decoration: none;
@@ -224,6 +223,7 @@ background: #dddddd;
 padding-right: 5px; padding-left: 5px;
 }
 
+/* ===== Tab/Button Bar Styles ===== */
 .tabContainer {
 background: #FFFFFF;
 padding-top: 4px;
@@ -271,10 +271,11 @@ border: solid #000099 1px;
 
 .tableheadtext {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10px;
 font-weight: bold;
+text-align: left;
+font-size: 10px;
 text-decoration: none;
-color: black;
+color: #070872;
 }
 
 A.tableheadbutton {
@@ -323,7 +324,26 @@ text-decoration: none;
 color: #333333;
 }
 
+A.buttontext, .buttontextdisabled {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px;
+text-decoration: underline;
+background: white;
+margin-right:4px;
+margin-top:4px;
+margin-bottom:4px;
+}
+
 A.buttontext {
+color: #070872;
+}
+
+A.buttontext:hover {
+color: #a91930;
+text-decoration: underline;
+}
+
+A.linktext {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
@@ -331,9 +351,13 @@ text-decoration: none;
 color: #000099;
 }
 
-A.buttontext:hover {
-color: #000099;
+A.linktext:hover {
+color: red;
 text-decoration: underline;
+}
+
+.buttontextdisabled {
+color: #333333;
 }
 
 A.headerbuttontext {
@@ -350,32 +374,24 @@ color: black;
 text-decoration: underline;
 }
 
-.buttontextdisabled {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10px;
-font-weight: bold;
-text-decoration: none;
-color: #333333;
-}
-
 .submenutextinfo {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: white;
-padding-left: 6px;
+padding-left: 5px;
 padding-right: 5px;
 border-right: 1px solid #5886C6
 }
 
-.submenutext, A.submenutext, A.submenutext:visited, A.submenutext:checked {
+.submenutext, A.submenutext, A.submenutext:visited {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: gold;
-padding-left: 6px;
+color: yellow;
+padding-left: 2px;
 padding-right: 5px;
 border-right: 1px solid #5886C6
 }
@@ -391,7 +407,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #CCCCCC;
-padding-left: 6px;
+padding-left: 2px;
 padding-right: 5px;
 border-right: 1px solid #5886C6
 }
@@ -410,7 +426,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: white;
-padding-left: 6px;
+padding-left: 2px;
 }
 
 .submenutextright, A.submenutextright {
@@ -418,8 +434,8 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: gold;
-padding-left: 6px;
+color: yellow;
+padding-left: 2px;
 }
 
 A.submenutextright:hover {
@@ -433,7 +449,7 @@ font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: #CCCCCC;
-padding-left: 6px;
+padding-left: 2px;
 }
 
 A.submenutextrightdisabled:hover {
@@ -446,7 +462,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: gold;
+color: yellow;
 border: none;
 }
 
@@ -460,7 +476,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 8px;
 font-weight: bold;
 text-decoration: none;
-color: gold;
+color: yellow;
 border: none;
 }
 
@@ -477,24 +493,25 @@ text-decoration: none;
 color: #CCCCCC;
 }
 
-A.buttontextbig {
+A.buttontextbig, .buttontextbigdisabled {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10pt;
+font-size: 15px;
 font-weight: bold;
 text-decoration: none;
+background: white;
+border: #999999 solid 1px;
+margin: 2px 2px 2px 2px;
+padding: 1px 4px 1px 4px;
+}
+A.buttontextbig {
 color: #000099;
 }
-
+.buttontextbigdisabled {
+color: #CCCCCC;
+}
 A.buttontextbig:hover {
 color: red;
-}
-
-.buttontextbigdisabled {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10pt;
-font-weight: bold;
-text-decoration: none;
-color: CCCCCC;
+text-decoration: underline;
 }
 
 A IMG.imageborder {
@@ -621,10 +638,12 @@ white-space: nowrap;
 }
 
 .insideHeaderText {
+margin-bottom: 10px;
+margin-right:20px;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-weight: bold;
-color: black;
+color: #a91930;
 }
 
 A.insideHeaderLink {
@@ -649,16 +668,16 @@ color: #666666;
 }
 
 .headersmalltext {
-font-size: 8pt; 
-font-family: Verdana, Arial, Helvetica, sans-serif; 
-font: bold; 
+font-size: 8pt;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-weight: bold;
 color: black;
 }
 a.headersmalllink {
-font-size: 8pt; 
+font-size: 8pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
-font: bold; 
-color: #000099; 
+font-weight: bold;
+color: #000099;
 text-decoration: none;
 }
 a.headersmalllink:hover {
@@ -780,24 +799,36 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 background: #FFFFFF;
 font-size: 8pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
+background: white;
+border: #999999 solid 1px;
+margin: 2px;
 }
 
 .inputBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 background: #FFFFFF;
-font-size: 8pt;
+font-size: 10pt;
+background: white;
+border: #999999 solid 1px;
+margin: 2px;
 }
 
 .selectBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 background: #FFFFFF;
 font-size: 8pt;
+background: white;
+border: #999999 solid 1px;
+margin: 2px;
 }
 
 .textAreaBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 background: #FFFFFF;
-font-size: 8pt;
+font-size: 10pt;
+background: white;
+border: #999999 solid 1px;
+margin: 2px;
 }
 
 .radioButton {
@@ -814,12 +845,13 @@ font-size: 8pt;
 
 .smallSubmit {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 8pt;
+font-size: 9pt;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #a91930;
 background: white;
 border: #999999 solid 1px;
+margin: 2px;
 }
 
 .mediumSubmit,.largeSubmit,.loginButton {
@@ -827,13 +859,15 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10pt;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: black;
 background: white;
 border: #999999 solid 1px;
+margin: 2px;
 }
 
 .smallSubmit:hover,.mediumSubmit:hover,.largeSubmit:hover,.loginButton:hover {
-color: red;
+color: #070872;
+text-decoration: underline;
 }
 
 .smallAltSubmit,.mediumAltSubmit,.largeAltSubmit {
@@ -857,4 +891,117 @@ color: green;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 color: red;
+}
+
+/* Form layout styles to simulate a table-style layout */
+.form-row {
+clear: both;
+padding-top: 2px;
+}
+.form-label {
+font-size: 10px;
+float: left;
+width: 180px;
+text-align: left;
+
+}
+.form-field {
+float: left;
+margin-left: 10px;
+text-align: left;
+}
+
+/* ===== Product Summary Styles ===== */
+.product-prevnext {
+text-align: right;
+}
+
+.productsummary-container {
+margin-top: 5px;
+margin-bottom: 5px;
+border-top: #999 solid 1px;
+}
+
+.productsummary {
+position: relative;
+padding: 5px;
+border-bottom: #999 solid 1px;
+/* using min-height as an alternative to clear: both; because that, in some browsers, will clear the top-level columns and not just in this div (Mozilla based, namely) */
+min-height: 60px;
+overflow: visible;
+}
+
+.productsummary .smallimage {
+float: left;
+/* position: absolute; top: 5px; left: 5px; */
+margin: 0px 5px 5px 0px;
+}
+.productsummary .smallimage img {
+border: #CCC solid 1px;
+height: 50px;
+}
+
+.productsummary .productbuy {
+float: right;
+width: 130px;
+margin: 5px;
+text-align: right;
+}
+
+.productsummary .productinfo {
+/* margin-left: 60px; */
+text-align: left;
+}
+
+/* ===== Product Detail Styles ===== */
+#productdetail #long-description {
+margin-top: 10px;
+padding-top: 5px;
+border-top: #999 solid 1px;
+}
+
+#productdetail #reviews {
+margin-top: 10px;
+padding-top: 5px;
+border-top: #999 solid 1px;
+}
+
+#productdetail #associated-products {
+margin-top: 10px;
+padding-top: 5px;
+border-top: #999 solid 1px;
+}
+
+.treeWrapper { 
+color:black; 
+background:#ffffff; 
+font-size:12pt; 
+font-weight:medium;
+font-family:verdana, arial, sans-serif;
+text-align:left;
+text-decoration:none;
+margin-left:12px;
+margin-top:2px;
+border-top:1px solid black;
+border-left:1px solid black;
+}
+
+
+/* ecom-mainarea wraps what is below the header including the divs for left, main, right columns as applicable */
+#product-mainarea {
+position: relative;
+background: #FFFFFF;
+width: 100%;
+padding-top:15px;
+}
+
+#product-mainarea .left {
+/* alt: position: absolute; left: 0px; top: 0px; */
+float: left;
+height: 100%;
+width: 100px;
+background: #FFFFFF;
+padding-right:20px;
+padding-top:5px;
+/* border:1px solid #000; */
 }
