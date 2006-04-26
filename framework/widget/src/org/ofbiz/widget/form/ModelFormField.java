@@ -1800,6 +1800,8 @@ public class ModelFormField {
          * @return
          */
         public String getDescription(Map context) {
+            Locale locale = UtilMisc.ensureLocale(context.get("locale"));
+            
             // rather than using the context to expand the string, lookup the given entity and use it to expand the string
             GenericValue value = null;
             String fieldKey = this.keyFieldName;
@@ -1822,7 +1824,7 @@ public class ModelFormField {
             
             String retVal = null;
             if (value != null) {
-                retVal = this.description.expandString(value);
+                retVal = this.description.expandString(value, locale);
             }
             // try to get the entry for the field if description doesn't expand to anything
             if (retVal == null || retVal.length() == 0) {
