@@ -1,0 +1,359 @@
+.treewrapper {
+margin-left: 10px;
+}
+
+.treeitem {
+color: blue;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 10pt;
+font-weight: bold;
+border: #888888 solid 1px;
+}
+
+DIV.centerarea {
+width:95%;
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+border-bottom: 1px solid #070872;
+padding:10px;
+background-color: #f9f4a2;
+
+}
+/* APPBAR */
+.mainblock {
+background-color: #D4D0C8;
+}
+
+.tabdownblock {
+background-color: #f9f4a2;
+}
+.left{
+background-color: #D4D0C8;
+}
+
+.tabdowncenter {
+height: 21px;
+padding-left:10px;
+padding-right:10px;
+font-family: Arial, Helvetica, sans-serif;
+background-color: #B4B0AA;
+font-size: 15pt;
+text-align: center;
+vertical-align: middle;
+border: 1px solid #070872;
+}
+
+.tabupcenter {
+height: 21px;
+padding-left:10px;
+padding-right:10px;
+font-family: Arial, Helvetica, sans-serif;
+background-color: #f9f4a2;	
+font-size: 15pt;
+text-align: center;
+vertical-align: middle;
+border-top: 1px solid #070872;
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+}
+
+.betweenstabs{
+height: 21px;
+background-color: #FFFFFF;
+border-bottom: 1px solid #070872;
+}
+
+.appbar {
+width:97.2%;
+}
+
+.appbarleft {
+border-bottom: 1px solid #070872;
+margin-left:5px;
+}
+
+.appbarright {
+border-bottom: 1px solid #070872;
+margin-right:40px;
+}
+
+A.tablink,
+A.tablink:hover,
+A.tablinkselected,
+A.tablinkselected:hover {	
+
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 9pt;
+font-weight: bold;
+text-align: center;
+text-decoration: none;
+color: #070872;
+}
+
+A.tablink:hover,
+A.tablink:active {
+color: #f9f4a2;
+}
+A.tablinkselected {
+color: #a91930;
+}
+/* APPBAR END */
+
+/* APPBAR_HEADER */
+
+.appheader_mainblock {
+background-color: #f9f4a2;
+}
+
+.appheader_tabdownblock {
+background-color: #f9f4a2;
+}
+
+.appheader_tabdowncenter {
+height: 19px;
+padding-left:10px;
+padding-right:10px;
+font-family: Arial, Helvetica, sans-serif;
+background-color: #B4B0AA;
+font-size: 15pt;
+text-align: center;
+vertical-align: middle;
+border: 1px solid #070872;
+}
+
+.appheader_tabupcenter {
+height: 19px;
+padding-left:10px;
+padding-right:10px;
+font-family: Arial, Helvetica, sans-serif;
+background-color: #FFFFFF;	
+font-size: 15pt;
+text-align: center;
+vertical-align: middle;
+border-top: 1px solid #070872;
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+}
+
+.appheader_betweenstabs{
+height: 19px;
+background-color: #f9f4a2;
+border-bottom: 1px solid #070872;
+}
+
+.appheader_appbar {
+width:100%;
+}
+
+.appheader_appbarleft {
+border-bottom: 1px solid #070872;
+margin-left:5px;
+}
+
+
+.appheader_appbarright {
+border-bottom: 1px solid #070872;
+margin-right:40px;
+}
+
+A.appheader_tablink,
+A.appheader_tablink:hover,
+A.appheader_tablinkselected,
+A.appheader_tablinkselected:hover {	
+
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 9pt;
+font-weight: bold;
+text-align: center;
+text-decoration: none;
+color: #070872;
+}
+
+A.appheader_tablink:hover,
+A.appheader_tablink:active {
+color: #FFFFFF;
+}
+A.appheader_tablinkselected {
+color: #a91930;
+}
+/* APPBAR HEADER END */
+
+/* LOWEST LEFT MENU */
+
+.lowest_leftmenu_mainblock {
+background-color: #FFFFFF;
+}
+
+.lowest_leftmenu_tabdownblock {
+background-color: #FFFFFF;
+}
+
+.lowest_leftmenu_tabdowncenter {
+height: 19px;
+padding-left:10px;
+padding-right:10px;
+font-family: Arial, Helvetica, sans-serif;
+background-color: #FFFFFF;
+font-size: 10pt;
+text-align: center;
+vertical-align: middle;
+border: 1px solid #070872;
+}
+
+.lowest_leftmenu_tabupcenter {
+height: 19px;
+padding-left:10px;
+padding-right:10px;
+font-family: Arial, Helvetica, sans-serif;
+background-color: #a91930;	
+font-size: 10pt;
+text-align: center;
+vertical-align: middle;
+border: 1px solid #070872;
+}
+
+A.lowest_leftmenu_tablink,
+A.lowest_leftmenu_tablink:hover,
+A.lowest_leftmenu_tablinkselected,
+A.lowest_leftmenu_tablinkselected:hover {	
+
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 9pt;
+font-weight: bold;
+text-align: center;
+text-decoration: none;
+color: #070872;
+}
+
+A.lowest_leftmenu_tablink:hover,
+A.lowest_leftmenu_tablink:active {
+color: #a91930;
+}
+A.lowest_leftmenu_tablinkselected {
+color: #FFFFFF;
+}
+/* LOWEST LEFT MENU END */
+
+.apptitle {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+letter-spacing:2px;
+background-color: #f9f4a2;	
+font-size: 10pt;
+font-weight: bold;
+color: #a91930;	
+display: block;
+width: 100%;
+margin-bottom: 2px;
+text-align: right;
+}
+
+DIV.row {  
+background-color: #B4B0AA;
+margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
+padding: 0; text-align: center;
+}
+
+DIV.col {
+border: none; float: left; margin: 0; padding: 0; width: auto;
+}
+
+DIV.col-fill {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px; 
+font-weight: bold; 
+text-decoration: none;
+background-color: #B4B0AA; 
+color: #000099;
+margin: 0; 
+padding: 0; 
+border: none; 
+text-align: center; 
+width: 0;
+}
+
+DIV.col-right {
+border: none; 
+float: right; 
+margin: 0; 
+padding: 0; 
+width: auto;
+}
+
+DIV.contentarea {
+background-color: #FFFFFF;
+border-left: solid #070872 1px;
+border-right: solid #070872 1px;
+border-bottom: solid #070872 1px;
+padding: 10px;
+}
+
+DIV.endcolumns {
+  clear: both;
+}  
+
+DIV.simple-right-small {
+float: right;
+width: 20px;
+text-align: right;
+}
+
+DIV.simple-right-half {
+float: right;
+width: 50%;
+text-align: right;
+}
+
+DIV.screenlet {
+background-color: #FFFFFF;
+border: 1px solid #999999;
+margin-bottom: 10px;
+}
+
+DIV.screenlet-body {
+background-color: #FFFFFF;
+padding: 4px;
+}
+
+#column-container {
+position: relative;
+background-color: #FFFFFF;
+margin: auto;
+width: 100%;
+}
+
+#column-container .left {
+float: left; margin-right: 10px;
+/* alt: position: absolute; top: 0px; left: 0px; */
+width: 220px;
+}
+#column-container .right {
+float: right; margin-left: 10px;
+width: 220px;
+}
+
+#column-container .leftonly {
+margin-left: 230px;
+width: auto;
+}
+#column-container .rightonly {
+margin-right: 230px;
+width: auto;
+}
+#column-container .center {
+margin-left: 230px;
+margin-right: 230px;
+width: auto;
+}
+#column-container .nocolumns {
+width: auto;
+}
+
+DIV.column-left-wide {
+float: left;
+width: 300px;
+background-color: #CCCCCC;
+border: black solid 2px;
+overflow: auto;
+}
+
+
