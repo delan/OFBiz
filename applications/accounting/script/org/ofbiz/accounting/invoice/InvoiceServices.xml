@@ -379,7 +379,7 @@ under the License.
         <!-- invoice item -->
         <if-not-empty field-name="paymentApplication.invoiceItemSeqId">
             <field-to-result field-name="paymentApplication.invoiceItemSeqId" result-name="invoiceItemSeqId"/>
-            <string-append field-name="successMessage" string=" and itemID [${paymentApplication.invoiceItemSeqId}] "/>
+            <property-to-field resource="AccountingUiLabels" property="AccountingApplicationToInvoiceItem" field-name="toMessage"/>
         </if-not-empty>
         <!-- toPayment -->
         <if-not-empty field-name="paymentApplication.toPaymentId">
