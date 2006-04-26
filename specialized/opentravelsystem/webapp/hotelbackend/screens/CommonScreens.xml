@@ -464,9 +464,8 @@
                                 <section>
                                     <condition><not><if-empty field-name="paymentId"/></not></condition>
                                     <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/accounting/payment/PaymentTabBar.ftl"/></html>
-                                        </platform-specific>
+                                        <include-menu name="PaymentTabBar" location="component://accounting/widget/Menus.xml"/>
+                                        <include-menu name="PaymentSubTabBar" location="component://accounting/widget/Menus.xml"/>
                                         <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${uiLabelMap.CommonId}:${paymentId}  ${${extraFunctionName}}</label>
                                     </widgets>
                                 </section>
