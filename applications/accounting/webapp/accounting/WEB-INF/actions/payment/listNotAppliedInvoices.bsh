@@ -63,10 +63,10 @@ if (invoices != null && invoices.size() > 0)    {
             invoiceMap.put("amountApplied", invoiceApplied);
             locale = parameters.get("autoUserLogin").get("lastLocale"); 
             if (paymentToApply.compareTo(invoiceToApply) < 0 ) {
-                invoiceMap.put("amountToApply",NumberFormat.getNumberInstance(UtilMisc.ensureLocale(locale)).format(paymentToApply));
+                invoiceMap.put("amountToApply",paymentToApply);
             }
             else {
-                invoiceMap.put("amountToApply",NumberFormat.getNumberInstance(UtilMisc.ensureLocale(locale)).format(invoiceToApply));
+                invoiceMap.put("amountToApply",invoiceToApply);
             }
             invoicesList.add(invoiceMap);
         } 

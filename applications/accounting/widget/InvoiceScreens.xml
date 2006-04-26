@@ -84,6 +84,10 @@ under the License.
                 <entity-and entity-name="InvoiceItem" list-name="invoiceItems">
                     <field-map field-name="invoiceId" value="${parameters.invoiceId}"/>
                 </entity-and>
+                <set field="invoiceAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(invoice)}"/>
+                <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
+                <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceAppliedBd(invoice)}"/>
+                
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
@@ -162,6 +166,9 @@ under the License.
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/createApplicationList.bsh"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/listNotAppliedPayments.bsh"/>
+                <set field="invoiceAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(invoice)}"/>
+                <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
+                <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceAppliedBd(invoice)}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
@@ -173,6 +180,14 @@ under the License.
                             <widgets>
                                 <container><label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
                                 <include-form name="EditInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
+                                <section>
+                                    <condition>
+                                        <if-empty field-name="invoiceApplications"/>
+                                    </condition>
+                                    <widgets>
+                                        <container><label style="head3" text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
+                                    </widgets>
+                                </section>
                                 <section>
                                     <condition>
                                         <not><if-empty field-name="payments"/></not>
@@ -188,6 +203,14 @@ under the License.
                             <fail-widgets>
                                 <label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/>
                                 <include-form name="EditInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
+                                <section>
+                                    <condition>
+                                        <if-empty field-name="invoiceApplications"/>
+                                    </condition>
+                                    <widgets>
+                                        <container><label style="head3" text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
+                                    </widgets>
+                                </section>
                             </fail-widgets>
                         </section>
                     </decorator-section>

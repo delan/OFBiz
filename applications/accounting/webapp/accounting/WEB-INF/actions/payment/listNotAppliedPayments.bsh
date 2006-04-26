@@ -39,8 +39,7 @@ basePayment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", 
 
 int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
 int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
-
-// get the party to look for
+Locale locale = parameters.get("locale");
 
 ArrayList paymentsMapList = new ArrayList();  // to pass back to the screeen list of unapplied payments
 
@@ -82,15 +81,14 @@ if (payments != null && payments.size() > 0)    {
            paymentMap.put("toPaymentId", payment.getString("paymentId"));
            paymentMap.put("currencyUomId", payment.getString("currencyUomId"));
            paymentMap.put("effectiveDate", payment.getString("effectiveDate").substring(0,10)); // list as YYYY-MM-DD
-           paymentMap.put("amount", payment.getBigDecimal("amount").setScale(decimals,rounding));
+           paymentMap.put("amount", payment.getString("amount"));
            paymentMap.put("amountApplied", PaymentWorker.getPaymentAppliedBd(payment));
            BigDecimal paymentToApply = PaymentWorker.getPaymentNotAppliedBd(payment);
-           locale = parameters.get("autoUserLogin").get("lastLocale"); 
            if (paymentToApply.compareTo(basePaymentToApply) < 0 ) {
-                paymentMap.put("amountToApply",NumberFormat.getNumberInstance(UtilMisc.ensureLocale(locale)).format(paymentToApply));
+                paymentMap.put("amountToApply",paymentToApply);
            }
            else {
-                paymentMap.put("amountToApply",NumberFormat.getNumberInstance(UtilMisc.ensureLocale(locale)).format(basePaymentToApply));
+                paymentMap.put("amountToApply",basePaymentToApply);
            }
            paymentsMapList.add(paymentMap);
         }

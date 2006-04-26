@@ -130,11 +130,13 @@ under the License.
                                 <if-empty field-name="paymentApplications"/>
                             </condition>
                             <widgets>
-                                <label style="head1" text="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingApplications}, ${uiLabelMap.CommonAmount} ${uiLabelMap.CommonTotal}:${payment.amount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingAmountNotApplied}: ${notAppliedAmount?currency(${payment.currencyUomId})}"/>
+                                <label style="head1" text="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingApplications}"/>
+                                <container><label style="head1" text="${uiLabelMap.CommonAmount} ${uiLabelMap.CommonTotal}:${payment.amount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingAmountNotApplied}: ${notAppliedAmount?currency(${payment.currencyUomId})}"/></container>
                                 <container><label style="head3" text="${uiLabelMap.AccountingNoPaymentsApplicationsfound}"></label></container>
                             </widgets>
                             <fail-widgets>
-                                <label style="head1" text="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingApplications}, ${uiLabelMap.CommonAmount} ${uiLabelMap.CommonTotal}:${payment.amount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingAmountNotApplied}: ${notAppliedAmount?currency(${payment.currencyUomId})}"/>
+                                <label style="head1" text="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingApplications}"/>
+                                <container><label style="head1" text="${uiLabelMap.CommonAmount} ${uiLabelMap.CommonTotal}:${payment.amount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingAmountNotApplied}: ${notAppliedAmount?currency(${payment.currencyUomId})}"/></container>
                                 <section>
                                     <condition>
                                         <not><if-empty field-name="paymentApplicationsInv"/></not>
