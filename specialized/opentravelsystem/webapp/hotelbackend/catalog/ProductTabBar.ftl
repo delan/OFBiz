@@ -1,58 +1,56 @@
-<#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included 
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author     David E. Jones (jonesde@ofbiz.org)
- *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev$
- *@since      2.2
--->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#assign unselectedClassName = "tabButton">
-<#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
+<#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
+<#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
+<#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
+
 
 <#if product?has_content>
-    <div class="tabContainer">
-        <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProduct?default(unselectedClassName)}">${uiLabelMap.ProductProduct}</a>
-        <a href="<@ofbizUrl>EditProductPrices?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductPrices?default(unselectedClassName)}">${uiLabelMap.ProductPrices}</a>
-        <a href="<@ofbizUrl>EditProductContent?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductContent?default(unselectedClassName)}">${uiLabelMap.ProductContent}</a>
-        <#--a href="<@ofbizUrl>EditProductGoodIdentifications?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGoodIdentifications?default(unselectedClassName)}">${uiLabelMap.CommonIds}</a-->
-        <a href="<@ofbizUrl>EditProductCategories?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductCategories?default(unselectedClassName)}">${uiLabelMap.ProductCategories}</a>
-        <#--a href="<@ofbizUrl>EditProductKeyword?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductKeyword?default(unselectedClassName)}">${uiLabelMap.ProductKeywords}</a>
-        <a href="<@ofbizUrl>EditProductAssoc?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAssoc?default(unselectedClassName)}">${uiLabelMap.ProductAssociations}</a>
-        <a href="<@ofbizUrl>EditProductAttributes?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAttributes?default(unselectedClassName)}">${uiLabelMap.ProductAttributes}</a>
-        <a href="<@ofbizUrl>EditProductFeatures?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFeatures?default(unselectedClassName)}">${uiLabelMap.ProductFeatures}</a>
-        <a href="<@ofbizUrl>EditProductFacilities?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilities?default(unselectedClassName)}">${uiLabelMap.ProductFacilities}</a>
-        <a href="<@ofbizUrl>EditProductFacilityLocations?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilityLocations?default(unselectedClassName)}">${uiLabelMap.ProductLocations}</a>
-        <a href="<@ofbizUrl>EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventory}</a>
-        <a href="<@ofbizUrl>EditProductSuppliers?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditSupplierProduct?default(unselectedClassName)}">${uiLabelMap.ProductSuppliers}</a>
-        <a href="<@ofbizUrl>EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGlAccounts?default(unselectedClassName)}">${uiLabelMap.ProductAccounts}</a>
-        <a href="<@ofbizUrl>EditProductQuickAdmin?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductQuickAdmin?default(unselectedClassName)}">${uiLabelMap.ProductQuickAdmin}</a-->
-        <if product?exists && product.isVirtual?if_exists == "Y">
-            <a href="<@ofbizUrl>QuickAddVariants?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.QuickAddVariants?default(unselectedClassName)}">${uiLabelMap.ProductVariants}</a>
-        </if>
-        <#--if product?exists && product.productTypeId?if_exists == "AGGREGATED">
-            <a href="<@ofbizUrl>EditProductConfigs?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigs?default(unselectedClassName)}">${uiLabelMap.ProductConfigs}</a>
-        </#if-->
-        <#if product?exists && product.productTypeId?if_exists == "ASSET_USAGE">
-            <a href="<@ofbizUrl>EditProductAssetUsage?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAssetUsage?default(unselectedClassName)}">${uiLabelMap.ProductAssetUsage}</a>
-        </#if>
-    </div>
+	<#assign displayApps = [
+ 		{"title":"${uiLabelMap.ProductProduct}",		"menuname":"EditProduct",		"url":"EditProduct?productId=${productId}"}
+		,{"title":"${uiLabelMap.ProductPrices}","menuname":"EditProductPrices",	"url":"EditProductPrices?productId=${productId}"}
+		,{"title":"${uiLabelMap.ProductContent}",		"menuname":"EditProductContent",	"url":"EditProductContent?productId=${productId}"}
+		,{"title":"${uiLabelMap.ProductCategories}","menuname":"EditProductCategories",			"url":"EditProductCategories?productId=${productId}"}
+		,{"title":"${uiLabelMap.ProductVariants}", 	"menuname":"QuickAddVariants",		"url":"QuickAddVariants?productId=${productId}"}
+
+		]>
+
+<#assign unselectedClass = {"lowest_leftmenu_col" : "lowest_leftmenu_tabdownblock", "lowest_leftmenu_center" : "lowest_leftmenu_tabdowncenter", "lowest_leftmenu_link" : "lowest_leftmenu_tablink"}>
+<#assign selectedClass = {"lowest_leftmenu_col" : "lowest_leftmenu_mainblock", "lowest_leftmenu_center" : "lowest_leftmenu_tabupcenter", "lowest_leftmenu_link" : "lowest_leftmenu_tablinkselected"}>
+<#if !appTabButtonItem?has_content><#assign appTabButtonItem = page.appTabButtonItem?default("void")></#if>
+<#assign thisAppOpt = page.tabButtonItem?default("void")>
+
+<#if requestAttributes.userLogin?has_content>
+<table  width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="#FFFFFF">      
+    <td height="19px" width="100%">
+	  <table width="100%" border="0" cellspacing="0" cellpadding="0">                      
+       <tr>
+          <#list displayApps as display>
+	          <#if thisAppOpt == display.menuname>
+	            <#assign class = selectedClass>
+	          <#else>
+	            <#assign class = unselectedClass>
+	          </#if>
+
+	          <td valign="bottom" height="19px" class="${class.lowest_leftmenu_col}">
+	            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	              <tr>
+	                <td class="${class.lowest_leftmenu_center}"><a href=<#if display.title == "Website">"${display.url}" target="newwindow"<#else>"<@ofbizUrl>${display.url}</@ofbizUrl>"</#if> title="" class="${class.lowest_leftmenu_link}">${display.title}</a></td>
+					<td height="1px">&nbsp;</td>
+					</tr>					
+	            </table>
+	          </td>
+          </#list> 
+          <#-- KAN DIT?? -->
+          <#if product?exists && product.productTypeId?if_exists == "ASSET_USAGE">
+          	<tr>
+          		<td><a href="<@ofbizUrl>EditProductAssetUsage?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAssetUsage?default(unselectedClassName)}">${uiLabelMap.ProductAssetUsage}</a><br/></td>
+          	</tr>	
+       	</#if>         
+        </tr>        
+      </table>
+    </td>
+  </tr>
+</table>
+</#if>
 </#if>

@@ -1,0 +1,33 @@
+/* calendar table styles */
+.calendarTable    {
+	font-family: Verdana;
+	font-size: 11px;
+	color: #000000;
+	padding: 0px;
+	background: #d4d0c8;	
+	border: 1px solid #000000;
+	vertical-align: top;
+	margin-top:10px;
+}
+
+.calendarHeader {
+	background: #1E3C66;	
+    	outline-color: #1E3C66;
+    	border: 0;	
+}
+
+.calendarDayNumber {
+	color: #000000;
+	background: #FFFFFF;	
+    }
+
+.calendarWeek {
+	padding: 4px;
+	background: #AFC8D4;
+	}
+	
+.calendarContent    {
+	color: #5886C6;
+	font-weight: normal;
+	text-decoration: none;
+	}
