@@ -1,26 +1,19 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
- *
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
+ * Copyright 2001-2006 The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
  */
 package org.ofbiz.entityext.permission;
 
@@ -60,12 +53,10 @@ import org.w3c.dom.Element;
 
 /**
  * EntityPermissionChecker Class
+ * Services for granting operation permissions on Content entities in a data-driven manner.
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev$
  * @since      3.1
- * 
- * Services for granting operation permissions on Content entities in a data-driven manner.
  */
 public class EntityPermissionChecker {
 
@@ -159,10 +150,7 @@ public class EntityPermissionChecker {
 
     public static Map checkPermission(GenericValue content, String statusId, GenericValue userLogin, List passedPurposes, List targetOperations, List passedRoles, GenericDelegator delegator , Security security, String entityAction) {
          String privilegeEnumId = null;
-         return checkPermission( content, statusId,
-                                  userLogin, passedPurposes,
-                                  targetOperations, passedRoles,
-                                  delegator, security, entityAction, privilegeEnumId, null);
+         return checkPermission(content, statusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator, security, entityAction, privilegeEnumId, null);
     }
 
     public static Map checkPermission(GenericValue content, String statusId,
@@ -175,10 +163,7 @@ public class EntityPermissionChecker {
          if (statusId != null) {
              statusList = StringUtil.split(statusId, "|");
          }
-         return checkPermission( content, statusList,
-                                  userLogin, passedPurposes,
-                                  targetOperations, passedRoles,
-                                  delegator, security, entityAction, privilegeEnumId, quickCheckContentId);
+         return checkPermission(content, statusList, userLogin, passedPurposes, targetOperations, passedRoles, delegator, security, entityAction, privilegeEnumId, quickCheckContentId);
     }
 
     public static Map checkPermission(GenericValue content, List statusList,
@@ -187,10 +172,7 @@ public class EntityPermissionChecker {
                                   GenericDelegator delegator ,
                                   Security security, String entityAction,
                                   String privilegeEnumId) {
-         return checkPermission( content, statusList,
-                                  userLogin, passedPurposes,
-                                  targetOperations, passedRoles,
-                                  delegator, security, entityAction, privilegeEnumId, null);
+         return checkPermission(content, statusList, userLogin, passedPurposes, targetOperations, passedRoles, delegator, security, entityAction, privilegeEnumId, null);
     }
  
     public static Map checkPermission(GenericValue content, List statusList,
@@ -201,15 +183,12 @@ public class EntityPermissionChecker {
                                   String privilegeEnumId, String quickCheckContentId) {
 
         String contentId = null;
-        if (content != null)
-            contentId = content.getString("contentId");
+        if (content != null) contentId = content.getString("contentId");
         List entityIds = new ArrayList();
-        if (content != null)
-            entityIds.add(content);
+        if (content != null) entityIds.add(content);
         if (UtilValidate.isNotEmpty(quickCheckContentId)) {
             List quickList = StringUtil.split(quickCheckContentId, "|"); 
-           if (UtilValidate.isNotEmpty(quickList))
-                   entityIds.addAll(quickList);
+            if (UtilValidate.isNotEmpty(quickList)) entityIds.addAll(quickList);
         }
         Map results  = new HashMap();
         boolean passed = false;
@@ -222,10 +201,11 @@ public class EntityPermissionChecker {
         }
         try {
             boolean check  = checkPermissionMethod( delegator, userLogin, targetOperations, "Content", entityIds, passedPurposes, null, privilegeEnumId);
-            if (check)
+            if (check) {
                 results.put("permissionStatus", "granted");
-            else
+            } else {
                 results.put("permissionStatus", "rejected");
+            }
         } catch (GenericEntityException e) {
             ServiceUtil.returnError(e.getMessage());   
         }
@@ -234,7 +214,6 @@ public class EntityPermissionChecker {
     
     
     public static boolean checkPermissionMethod(GenericDelegator delegator, GenericValue userLogin, List targetOperationList, String entityName, List entityIdList, List purposeList, List roleList, String privilegeEnumId) throws GenericEntityException {
-    
         boolean passed = false;
     
         String lcEntityName = entityName.toLowerCase();
@@ -399,11 +378,9 @@ public class EntityPermissionChecker {
             }
         }
         
-        if (passed)
-            return true;
+        if (passed) return true;
         
-        if (userLogin == null)
-            return false;
+        if (userLogin == null) return false;
     
         // Check with roles.
         iter = entityIdList.iterator();
@@ -645,15 +622,12 @@ public class EntityPermissionChecker {
     
     
     public static GenericValue getNextEntity(GenericDelegator delegator, String entityName, String pkFieldName, Object obj, Map entities) throws GenericEntityException {
-           
         GenericValue entity = null;
         if (obj instanceof String) {
             String entityId  = (String)obj; 
-            if (entities != null)
-               entity = (GenericValue)entities.get(entityId);
+            if (entities != null) entity = (GenericValue)entities.get(entityId);
             
-            if (entity == null)
-                entity = delegator.findByPrimaryKeyCache(entityName,UtilMisc.toMap(pkFieldName, entityId));
+            if (entity == null) entity = delegator.findByPrimaryKeyCache(entityName,UtilMisc.toMap(pkFieldName, entityId));
         } else if (obj instanceof GenericValue) {
             entity = (GenericValue)obj;
         }
@@ -661,20 +635,16 @@ public class EntityPermissionChecker {
     }
     
     public static boolean checkHasRoleOperations(String partyId,  PermissionConditionGetter permissionConditionGetter , GenericDelegator delegator) {
-    
         List targetOperations = permissionConditionGetter.getOperationList();
         return checkHasRoleOperations(partyId, targetOperations, delegator);
     }
     
     public static boolean checkHasRoleOperations(String partyId,  List targetOperations, GenericDelegator delegator) {
-    
         //if (Debug.infoOn()) Debug.logInfo("targetOperations:" + targetOperations, module);
         //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId, module);
-        if (targetOperations == null)
-            return false;
+        if (targetOperations == null) return false;
     
-        if (partyId != null && targetOperations.contains("HAS_USER_ROLE"))
-            return true;
+        if (partyId != null && targetOperations.contains("HAS_USER_ROLE")) return true;
     
         boolean hasRoleOperation = false;
         Iterator targOpIter = targetOperations.iterator();
