@@ -6,9 +6,9 @@
     <UserLogin partyId="AcctBuyer" userLoginId="AcctBuyer"/>
     <UserLoginSecurityGroup userLoginId="AcctBuyer" groupId="ORDERPURCH" fromDate="2001-05-13 00:00:00"/>
 
-    <Party partyId="AcctBigSupplier" partyTypeId="PARTY_GROUP" supplierProductName="" supplierProductId=""/>
-    <PartyGroup partyId="AcctBigSupplier" groupName="Big Supplier" supplierProductName="" supplierProductId=""/>
-    <PartyRole partyId="AcctBigSupplier" roleTypeId="SUPPLIER" supplierProductName="" supplierProductId=""/>
+    <Party partyId="AcctBigSupplier" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="AcctBigSupplier" groupName="Big Supplier"/>
+    <PartyRole partyId="AcctBigSupplier" roleTypeId="SUPPLIER"/>
 
     <Payment paymentId="10000" paymentTypeId="CUSTOMER_PAYMENT" paymentMethodTypeId="EFT_ACCOUNT" partyIdFrom="AcctBuyer" partyIdTo="TESTING" statusId="PMNT_NOT_PAID" effectiveDate="2006-04-25 12:56:54.292" amount="190.97" currencyUomId="USD" lastUpdatedStamp="2006-04-25 13:13:27.746" lastUpdatedTxStamp="2006-04-25 13:13:27.711" createdStamp="2006-04-25 12:56:54.292" createdTxStamp="2006-04-25 12:56:54.292"/>
     <Payment paymentId="10010" paymentTypeId="CUSTOMER_REFUND" paymentMethodTypeId="EXT_BILLACT" partyIdFrom="TESTING" partyIdTo="AcctBuyer" statusId="PMNT_SENT" effectiveDate="2006-04-25 13:11:05.94" amount="20.0" currencyUomId="USD" lastUpdatedStamp="2006-04-25 13:12:57.445" lastUpdatedTxStamp="2006-04-25 13:12:57.33" createdStamp="2006-04-25 13:11:05.941" createdTxStamp="2006-04-25 13:11:05.941"/>
