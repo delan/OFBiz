@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -34,9 +34,7 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.feature.*;
 import org.ofbiz.product.product.*;
 
-delegator = request.getAttribute("delegator");
-
-searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");
+searchCategoryId = parameters.get("SEARCH_CATEGORY_ID");
 if (searchCategoryId == null || searchCategoryId.length() == 0) {
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
     searchCategoryId = CatalogWorker.getCatalogSearchCategoryId(request, currentCatalogId);
@@ -46,7 +44,7 @@ searchCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("p
 productFeaturesByTypeMap = ParametricSearch.makeCategoryFeatureLists(searchCategoryId, delegator);
 productFeatureTypeIdsOrdered = new ArrayList(new TreeSet(productFeaturesByTypeMap.keySet()));
 
-searchOperator = request.getParameter("SEARCH_OPERATOR");
+searchOperator = parameters.get("SEARCH_OPERATOR");
 if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
   searchOperator = "OR";
 }
