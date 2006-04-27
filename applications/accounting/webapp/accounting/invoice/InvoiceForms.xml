@@ -81,10 +81,10 @@ under the License.
         <field name="invoiceDate"><display/></field>
         <field name="statusId" widget-style="tabletext"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="description"><display/></field>
-        <field name="partyIdFrom"><display description="${partyNameResultFrom.fullName} [${partyIdFrom}]"/></field>
-        <field name="partyIdTo" parameter-name="partyId"><display description="${partyNameResultTo.fullName} [${partyId}]"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}"><display description="${partyNameResultFrom.fullName} [${partyIdFrom}]"/></field>
+        <field name="partyIdTo" title="${uiLabelMap.AccountingPartyIdTo}" parameter-name="partyId"><display description="${partyNameResultTo.fullName} [${partyId}]"/></field>
         <field name="invoiceDate"><display/></field>
-        <field name="total" widget-area-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="total" title="${uiLabelMap.CommonTotal}" widget-area-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" widget-area-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
 
@@ -117,7 +117,7 @@ under the License.
         <field position="2" name="billingAccountId"><display/></field>
         <field position="1" name="invoiceDate"><display description="${bsh:if(invoice.get(&quot;invoiceDate&quot;)!=null)return(invoice.getString(&quot;invoiceDate&quot;).substring(0,10));}"/></field>
         <field position="2" name="dueDate"><display description="${bsh:if(invoice.get(&quot;dueDate&quot;)!=null)return(invoice.getString(&quot;dueDate&quot;).substring(0,10));}"/></field>
-        <field position="1" name="total" entry-name="description"><display description="${total}" type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field position="1" name="total" title="${uiLabelMap.CommonTotal}" entry-name="description"><display description="${total}" type="currency" currency="${invoice.currencyUomId}"/></field>
         <field position="2" name="paidDate"><display description="${bsh:if(invoice.get(&quot;paidDate&quot;)!=null)return(invoice.getString(&quot;paidDate&quot;).substring(0,10));}"/></field>
         <field name="currencyUomId"><hidden/></field>
     </form>
@@ -140,8 +140,8 @@ under the License.
         <field name="quantity" widget-area-style="tabletextright"><display/></field>
         <field name="amount" widget-area-style="tabletextright" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field>
         <field name="amount" widget-area-style="tabletextright" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>
-        <field name="total" widget-style="tabletext" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
-        <field name="total" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
+        <field name="total" title="${uiLabelMap.CommonTotal}" widget-style="tabletext" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
+        <field name="total" title="${uiLabelMap.CommonTotal}" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
         <field name="productId" widget-style="linktext"><hyperlink target="EditProduct?productId=${productId}" description="${productId}"/></field>
         <field name="overrideGlAccountId" widget-area-style="tabletextright"><hyperlink target="GlAccountNavigate?glAccountId=${overrideGlAccountId}" description="${overrideGlAccountId}"/></field>
         <field name="overrideGlAccountId"><hidden/></field>
@@ -153,7 +153,7 @@ under the License.
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
         <field name="invoiceId"><hidden/></field>
-        <field name="partyId" widget-style="buttontext">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="buttontext">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile?partyId=${partyId}"/>
         </field>
         <field name="name" entry-name="partyId">
@@ -172,7 +172,7 @@ under the License.
         <field name="invoiceItemSeqId"><display/></field>
         <field name="productId"><display/></field>
         <field name="description"><display/></field>
-        <field name="total" widget-area-style="tabletextright"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="total" title="${uiLabelMap.CommonTotal}" widget-area-style="tabletextright"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId" widget-style="linktext"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
         <field name="billingAccountId"><hidden/></field>
@@ -229,10 +229,10 @@ under the License.
         </field>
         <field position="1" name="invoiceMessage"><text size="100"/></field>
         <!--field position="2" name="invoiceAmount" use-when="invoiceId!=null"><display/></field-->
-        <field position="1" use-when="invoice==null" name="createButton" widget-style="smallSubmit">
+        <field position="1" use-when="invoice==null" name="createButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field position="1" use-when="invoice!=null" name="updateButton" widget-style="smallSubmit">
+        <field position="1" use-when="invoice!=null" name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -269,11 +269,11 @@ under the License.
        </field>
        <!--field name="overrideGlAccountId"><text size="10"/></field-->
        <field name="amount"><text size="7"/></field>
-       <field name="total" widget-area-style="tabletextright" widget-style="tabletext" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
-       <field name="total" widget-area-style="tabletextright" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
+       <field name="total" title="${uiLabelMap.CommonTotal}" widget-area-style="tabletextright" widget-style="tabletext" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
+       <field name="total" title="${uiLabelMap.CommonTotal}" widget-area-style="tabletextright" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
        <field name="uomId"><hidden/></field>
        <field name="taxableFlag"><hidden/></field>
-       <field name="updateButton" widget-style="buttontext" ><submit button-type="text-link"/></field>
+       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
        <field name="removeButton" title="" widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem?invoiceId=${invoiceId}&amp;invoiceItemSeqId=${invoiceItemSeqId}"/>
        </field>
@@ -325,10 +325,10 @@ under the License.
             <option key="N" description="No"/>
         </drop-down>
         </field>
-        <field name="addButton" widget-style="smallSubmit" use-when="invoiceItem==null">
+        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem==null">
             <submit button-type="button"/>
         </field>
-        <field name="updateButton" widget-style="smallSubmit" use-when="invoiceItem!=null">
+        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" use-when="invoiceItem!=null">
             <submit button-type="button"/>
         </field>
     </form>
@@ -349,13 +349,13 @@ under the License.
         <field name="invoiceItemSeqId"><display/></field>
         <field name="productId"><display/></field>
         <field name="description"><display/></field>
-        <field name="total" widget-style="tabletext" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field> 
-        <field name="total" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="total" title="${uiLabelMap.CommonTotal}" widget-style="tabletext" use-when="uomId!=null"><display type="currency" currency="${uomId}"/></field> 
+        <field name="total" title="${uiLabelMap.CommonTotal}" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId" widget-style="inputBox"><lookup target-form-name="LookupPayment"/></field>
         <field name="billingAccountId"><hidden/></field>
         <field name="amountToApply" widget-style="inputBox"><text size="10" disabled="true"/></field>
-        <field name="updateButton" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field name="removeButton" title="" widget-style="buttontext" use-when="paymentApplicationId!=null">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceApplication?paymentApplicationId=${paymentApplicationId}&amp;invoiceId=${invoiceId}"/>
         </field>
@@ -403,7 +403,7 @@ under the License.
         </field>
         <field name="percentage"><display/></field>
         <field name="datetimePerformed"><display/></field>
-        <field name="removeButton" widget-style="buttontext">
+        <field name="removeButton" title="${uiLabelMap.CommonRemove}" widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceRole?invoiceId=${invoiceId}&amp;partyId=${partyId}&amp;roleTypeId=${roleTypeId}"/>
         </field>
     </form>
@@ -419,7 +419,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="SendPerEmail" type="single" target="executeSendPerEmail" title="" 
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -439,6 +439,6 @@ under the License.
         <field name="emailAddressCc" entry-name="ccEmailAddress" parameter-name="sendCc"><text/></field>
         <field name="subject"><text default-value="Please find attached invoice."/></field>
         <field name="bodyText"><textarea/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

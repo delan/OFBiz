@@ -145,7 +145,7 @@
                 <entity-options description="${description}" entity-name="AgreementItemType" key-field-name="agreementItemTypeId"/>
             </drop-down>
         </field>
-        <field name="currencyUomId">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
             <drop-down allow-empty="true">
                 <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>

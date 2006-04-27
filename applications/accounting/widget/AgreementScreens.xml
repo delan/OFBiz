@@ -59,7 +59,7 @@
     <screen name="FindAgreement">
         <section>
             <actions>
-                <set field="title" value="Find Agreements"/>
+                <set field="titleProperty" value="PageTitleFindAgreement"/>
                 <set field="headerItem" value="agreement"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
