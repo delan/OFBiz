@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Id: $
+    
+    Copyright 2001-2006 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not
+    use this file except in compliance with the License. You may obtain a copy of
+    the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
+-->
 <entity-engine-xml>
     <Party partyId="shop" partyTypeId="PARTY_GROUP" createdDate="2005-03-05 08:19:57.649" createdByUserLogin="admin" lastModifiedDate="2005-03-05 08:19:57.649" lastModifiedByUserLogin="admin" lastUpdatedStamp="2005-05-30 19:57:03.04" lastUpdatedTxStamp="2005-05-30 19:57:02.835" createdStamp="2005-03-05 08:19:57.751" createdTxStamp="2005-03-05 08:19:57.751"/>
     <PartyRole partyId="shop" roleTypeId="_NA_" />
     <UserLogin userLoginId="shop" partyId="shop" currentPassword="c2f3b14cfaa64ebc4784a6fb83d2399851722a04" passwordHint="shop5" enabled="Y" hasLoggedOut="N" successiveFailedLogins="0" lastUpdatedStamp="2005-06-02 20:28:40.007" lastUpdatedTxStamp="2005-06-02 20:28:40.005" createdStamp="2005-03-05 08:58:00.791" createdTxStamp="2005-03-05 08:58:00.791"/>
-    <PartyRelationship partyIdFrom="shop" partyIdTo="shop" roleTypeIdFrom="_NA_" roleTypeIdTo="_NA_" fromDate="2005-10-19 08:10:14.431" statusId="PARTYREL-ACTIVE"/>
     <UserLoginSecurityGroup userLoginId="shop" groupId="FULLADMIN" fromDate="2005-06-04 12:19:00.499" lastUpdatedStamp="2005-06-04 12:19:14.305" lastUpdatedTxStamp="2005-06-04 12:19:14.305" createdStamp="2005-06-04 12:19:14.305" createdTxStamp="2005-06-04 12:19:14.305"/>
-    <UserLoginSecurityGroup userLoginId="shop" groupId="StoreAdmin" fromDate="2005-03-05 09:00:14.913" lastUpdatedStamp="2005-05-30 19:57:03.331" lastUpdatedTxStamp="2005-05-30 19:57:02.835" createdStamp="2005-03-05 09:00:38.857" createdTxStamp="2005-03-05 09:00:38.857"/>
+    <UserLogin userLoginId="demoshop" partyId="hds" currentPassword="47ca69ebb4bdc9ae0adec130880165d2cc05db1a" passwordHint=""/>
+    <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="demohds" fromDate="2001-01-01 12:00:00.0"/>
+    <PartyRelationship partyIdFrom="shop" partyIdTo="shop" roleTypeIdFrom="_NA_" roleTypeIdTo="_NA_" fromDate="2005-10-19 08:10:14.431" statusId="PARTYREL-ACTIVE"/>
     <PartyGroup partyId="shop" groupName="The shop demo party group" lastUpdatedStamp="2005-05-30 19:57:03.049" lastUpdatedTxStamp="2005-05-30 19:57:02.835" createdStamp="2005-05-26 14:57:17.045" createdTxStamp="2005-05-26 14:57:16.637"/>
     <ProductStore productStoreId="shop" storeName="shop Store" companyName="shopping services" title="Ready for your reservation" subtitle="Part of the Open For Business Family of Open Source Software" payToPartyId="shop" daysToCancelNonPay="30" manualAuthIsCapture="N" prorateShipping="Y" viewCartOnAdd="N" autoSaveCart="N" autoApproveReviews="Y" isDemoStore="Y" isImmediatelyFulfilled="Y" oneInventoryFacility="N" checkInventory="N" reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N" orderNumberPrefix="shop" defaultLocaleString="en_US" defaultCurrencyUomId="GBP" allowPassword="Y" explodeOrderItems="N" checkGcBalance="N" retryFailedAuths="Y" headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED" itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service." authFraudMessage="Your order has been rejected and your account has been disabled due to fraud." authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email." headerLogo="/images/opentravelsystem_logo.jpg" usePrimaryEmailUsername="N"/>
     <WebSite webSiteId="shop" siteName="shop Website" productStoreId="shop" lastUpdatedStamp="2005-05-30 19:57:03.418" lastUpdatedTxStamp="2005-05-30 19:57:02.835" createdStamp="2005-01-02 20:45:55.369" createdTxStamp="2005-01-02 20:45:55.369"/>
