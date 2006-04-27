@@ -24,7 +24,7 @@
 -->
 
 <#if shipment?exists>
-  <div class="head1">Shipment Plan: ${shipment.shipmentId}</div>
+  <div class="head1">${uiLabelMap.ManufacturingWorkWithShipmentPlans}: ${shipment.shipmentId}</div>
   ${listShipmentPlanForm.renderFormString(context)}
   <#if workInProgress>
     <br/>
@@ -47,7 +47,7 @@
   <div><a href="<@ofbizUrl>PRunsInfoAndOrder.pdf?shipmentId=${shipmentId}&taskNamePar=O-PREL_L&productFeatureTypeIdPar=&productCategoryIdPar=HARDWARE</@ofbizUrl>" class="buttontext" target="_report">${uiLabelMap.ManufacturingPRunsInfoAndOrder}</a></div>
   -->
 <#else>
-<div class="head1">Shipment Plans</div>
+<div class="head1">${uiLabelMap.ManufacturingWorkWithShipmentPlans}</div>
 <#if listShipmentPlansForm?has_content>
   ${listShipmentPlansForm.renderFormString(context)}
 </#if>

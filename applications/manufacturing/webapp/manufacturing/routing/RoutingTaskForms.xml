@@ -69,7 +69,7 @@
         <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}"><text/></field>
         <field name="description"><text/></field>
         <field name="quantityToProduce"><text/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -152,7 +152,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -192,7 +192,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
