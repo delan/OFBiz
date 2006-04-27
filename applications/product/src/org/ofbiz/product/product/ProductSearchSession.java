@@ -261,7 +261,7 @@ public class ProductSearchSession {
         HttpSession session = request.getSession();
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Map requestParams = UtilHttp.getParameterMap(request);
-        ProductSearchSession.processSearchParameters(requestParams, session);
+        ProductSearchSession.processSearchParameters(requestParams, request);
 
         // get the current productStoreId
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
@@ -408,7 +408,14 @@ public class ProductSearchSession {
         }
     }
 
-    public static void processSearchParameters(Map parameters, HttpSession session) {
+    public static void processSearchParameters(Map parameters, HttpServletRequest request) {
+        Boolean alreadyRun = (Boolean) request.getAttribute("processSearchParametersAlreadyRun"); 
+        if (Boolean.TRUE.equals(alreadyRun)) {
+            return;
+        } else {
+            request.setAttribute("processSearchParametersAlreadyRun", Boolean.TRUE);
+        }
+        HttpSession session = request.getSession();
         boolean constraintsChanged = false;
         
         // clear search? by default yes, but if the clearSearch parameter is N then don't

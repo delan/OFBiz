@@ -130,15 +130,15 @@
     <div class="head2">${uiLabelMap.EcommerceLastSearches}...</div>
   
     <div class="tabletext">
-      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceClearSearchHistory}]</a>
+      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceClearSearchHistory}</a>
 	${uiLabelMap.EcommerceClearSearchHistoryNote}
     </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div class="tabletext">
           <b>${uiLabelMap.EcommerceSearchNumber}${searchOptions_index + 1}</b>
-          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonSearch}]</a>
-          <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRefine}]</a>
+          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonSearch}</a>
+          <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRefine}</a>
         </div>
         <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator)>
         <#list constraintStrings as constraintString>
