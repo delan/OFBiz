@@ -52,8 +52,8 @@
       <td><div class="tabletext">${term.termValue?if_exists}</div></td>
       <td><div class="tabletext"><#if uom?has_content>${uom.description?if_exists}<#else>&nbsp;</#if></div></td>
       <td align="right">  
-        <a href="<@ofbizUrl>EditBillingAccountTerms?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[Edit]</a>&nbsp;
-        <a href="<@ofbizUrl>removeBillingAccountTerm?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[Remove]</a> 
+        <a href="<@ofbizUrl>EditBillingAccountTerms?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>&nbsp;
+        <a href="<@ofbizUrl>removeBillingAccountTerm?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a> 
       </td>
     </tr>
     </#list>

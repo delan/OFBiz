@@ -105,7 +105,7 @@ under the License.
                                 <include-form name="invoiceRoles" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                                 <container><label style="head1" text="${uiLabelMap.AccountingInvoiceStatus}"/></container>
                                 <include-form name="ListInvoiceStatus" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1" text="${uiLabelMap.AccountingAppliedPayments}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingAppliedPayments}: ${appliedAmount?currency(${invoice.currencyUomId})}, ${uiLabelMap.AccountingOpenPayments}: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
                                 <container><link target="editInvoiceApplications?invoiceId=${invoiceId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/></container>
                                 <include-form name="ListInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                                 <container><label style="head1" text="${uiLabelMap.AccountingInvoiceItems}"/></container>
@@ -120,7 +120,7 @@ under the License.
                                 <include-form name="invoiceRoles" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                                 <container><label style="head1" text="${uiLabelMap.AccountingInvoiceStatus}"/></container>
                                 <include-form name="ListInvoiceStatus" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                                <container><label style="head1" text="${uiLabelMap.AccountingAppliedPayments}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingAppliedPayments}: ${appliedAmount?currency(${invoice.currencyUomId})}, ${uiLabelMap.AccountingOpenPayments}: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
                                 <include-form name="ListInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                                 <container><label style="head1" text="${uiLabelMap.AccountingInvoiceItems}"/></container>
                                 <include-form name="invoiceItems" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
@@ -178,7 +178,7 @@ under the License.
                                 <if-compare field-name="notAppliedAmount" operator="greater" value="0"/>
                             </condition>
                             <widgets>
-                                <container><label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
+                                <container><label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${invoice.currencyUomId})}, ${uiLabelMap.AccountingOpenPayments}: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/></container>
                                 <include-form name="EditInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                                 <section>
                                     <condition>
@@ -193,7 +193,7 @@ under the License.
                                         <not><if-empty field-name="payments"/></not>
                                     </condition>
                                     <widgets>
-                                        <container><label style="head1" text="${uiLabelMap.AccountingListPaymentsNotYetApplied}: [${invoice.partyIdFrom}], sent from: [${invoice.partyId}]"/></container>
+                                        <container><label style="head1" text="${uiLabelMap.AccountingListPaymentsNotYetApplied}: [${invoice.partyIdFrom}], ${uiLabelMap.AccountingPaymentSentForm}: [${invoice.partyId}]"/></container>
                                         <include-form name="ListPaymentsNotApplied" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                                     </widgets>
                                 </section>
@@ -201,7 +201,7 @@ under the License.
                                 <include-form name="AddPayment" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${invoice.currencyUomId})}, open: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/>
+                                <label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${invoice.currencyUomId})},  ${uiLabelMap.AccountingOpenPayments}: ${notAppliedAmount?currency(${invoice.currencyUomId})}"/>
                                 <include-form name="EditInvoiceApplications" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                                 <section>
                                     <condition>
@@ -273,7 +273,7 @@ under the License.
     <screen name="SendPerEmail">
         <section>
             <actions>
-                <set field="title" value="Send Invoice per email"/>
+                <set field="titleProperty" value="PageTitleSendInvoicePerEmail"/>
                 <set field="invoiceId" from-field="parameters.invoiceId"/>
                 <entity-one entity-name="Invoice" value-name="invoice"/>
                 <set field="tabButtonItem" value="sendPerEmail"/>

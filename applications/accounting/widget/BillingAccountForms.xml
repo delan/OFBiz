@@ -41,7 +41,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="contactMechId" tooltip="Billing Address; Add Party/Role first, then select from drop-down">
+        <field name="contactMechId" tooltip="${uiLabelMap.AccountingBillingContactMechIdMessage}">
             <drop-down>
                 <entity-options entity-name="BillingAccountRoleAndAddress" description="[${partyId}][${contactMechId}] ${toName}, ${attnName}, ${address1}, ${stateProvinceGeoId} ${postalCode}" key-field-name="contactMechId" filter-by-date="true">
                     <entity-constraint name="billingAccountId" env-name="billingAccountId"/>
@@ -87,14 +87,14 @@
         
         <auto-fields-service service-name="createBillingAccountRole"/>
         <field name="billingAccountId"><hidden/></field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
             <drop-down allow-empty="false" no-current-selected-key="BILL_TO_CUSTOMER">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
