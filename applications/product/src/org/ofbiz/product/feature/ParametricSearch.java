@@ -33,6 +33,9 @@ import java.util.Set;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -46,7 +49,6 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev$
  * @since      2.1
  */
 public class ParametricSearch {
@@ -55,7 +57,7 @@ public class ParametricSearch {
     
     public static final int DEFAULT_PER_TYPE_MAX_SIZE = 1000;
     
-    // caches expire after 10 minutes, a reasonable value hopefully...
+    // DEJ20060427 not used right now, could be removed if that circumstance persists
     //public static UtilCache featureAllCache = new UtilCache("custom.FeaturePerTypeAll", 0, 600000, true);
     //public static UtilCache featureByCategoryCache = new UtilCache("custom.FeaturePerTypeByCategory", 0, 600000, true);
     
@@ -68,7 +70,7 @@ public class ParametricSearch {
     }
     
     public static Map makeCategoryFeatureLists(String productCategoryId, GenericDelegator delegator, int perTypeMaxSize) {
-        Map productFeaturesByTypeMap = new HashMap();
+        Map productFeaturesByTypeMap = FastMap.newInstance();
         try {
             List productFeatureCategoryAppls = delegator.findByAndCache("ProductFeatureCategoryAppl", UtilMisc.toMap("productCategoryId", productCategoryId));
             productFeatureCategoryAppls = EntityUtil.filterByDate(productFeatureCategoryAppls, true);
@@ -83,7 +85,7 @@ public class ParametricSearch {
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                         Map featuresByType = (Map) productFeaturesByTypeMap.get(productFeatureTypeId);
                         if (featuresByType == null) {
-                            featuresByType = new HashMap();
+                            featuresByType = FastMap.newInstance();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
                         if (featuresByType.size() < perTypeMaxSize) {
@@ -112,7 +114,7 @@ public class ParametricSearch {
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                         Map featuresByType = (Map) productFeaturesByTypeMap.get(productFeatureTypeId);
                         if (featuresByType == null) {
-                            featuresByType = new HashMap();
+                            featuresByType = FastMap.newInstance();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
                         if (featuresByType.size() < perTypeMaxSize) {
@@ -140,7 +142,7 @@ public class ParametricSearch {
         return getAllFeaturesByType(delegator, DEFAULT_PER_TYPE_MAX_SIZE);
     }
     public static Map getAllFeaturesByType(GenericDelegator delegator, int perTypeMaxSize) {
-        Map productFeaturesByTypeMap = new HashMap();
+        Map productFeaturesByTypeMap = FastMap.newInstance();
         try {
             Set typesWithOverflowMessages = new HashSet();
             EntityListIterator productFeatureEli = delegator.findListIteratorByCondition("ProductFeature", null, null, UtilMisc.toList("description"));
@@ -149,7 +151,7 @@ public class ParametricSearch {
                 String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                 List featuresByType = (List) productFeaturesByTypeMap.get(productFeatureTypeId);
                 if (featuresByType == null) {
-                    featuresByType = new LinkedList();
+                    featuresByType = FastList.newInstance();
                     productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                 }
                 if (featuresByType.size() > perTypeMaxSize) {
@@ -173,8 +175,9 @@ public class ParametricSearch {
         return makeFeatureIdByTypeMap(parameters);
     }
     
+    /** Handles parameters coming in prefixed with "pft_" where the text in the key following the prefix is a productFeatureTypeId and the value is a productFeatureId; meant to be used with drop-downs and such */
     public static Map makeFeatureIdByTypeMap(Map parameters) {
-        Map featureIdByType = new HashMap();
+        Map featureIdByType = FastMap.newInstance();
         if (parameters == null) return featureIdByType;
         
         Iterator parameterNameIter = parameters.keySet().iterator();
@@ -190,6 +193,25 @@ public class ParametricSearch {
         }
         
         return featureIdByType;
+    }
+    
+    /** Handles parameters coming in prefixed with "SEARCH_FEAT" where the parameter value is a productFeatureId; meant to be used with text entry boxes or check-boxes and such */
+    public static List makeFeatureIdListFromPrefixed(Map parameters) {
+        List featureIdList = FastList.newInstance();
+        if (parameters == null) return featureIdList;
+        
+        Iterator parameterNameIter = parameters.keySet().iterator();
+        while (parameterNameIter.hasNext()) {
+            String parameterName = (String) parameterNameIter.next();
+            if (parameterName.startsWith("SEARCH_FEAT")) {
+                String productFeatureId = (String) parameters.get(parameterName);
+                if (productFeatureId != null && productFeatureId.length() > 0) {
+                    featureIdList.add(productFeatureId);
+                }
+            }
+        }
+        
+        return featureIdList;
     }
     
     public static String makeFeatureIdByTypeString(Map featureIdByType) {
@@ -213,47 +235,4 @@ public class ParametricSearch {
         
         return outSb.toString();
     }
-    
-    /* TODO: DEJ 20031025 delete this if not used in the near future
-    public static void filterProductIdListByFeatures(List productIds, Map featureIdByType, GenericDelegator delegator) {
-        if (productIds == null || productIds.size() == 0) return;
-        //filter search results by features
-        
-        // the fun part: go through each product and make sure it has all specified features
-        Iterator productIdsIter = productIds.iterator();
-        while (productIdsIter.hasNext()) {
-            String productId = (String) productIdsIter.next();
-            
-            boolean doRemove = false;
-            Iterator requiredFeaturesIter = featureIdByType.values().iterator();
-            while (!doRemove && requiredFeaturesIter.hasNext()) {
-                String productFeatureId = (String) requiredFeaturesIter.next();
-                List productFeatureAppl = null;
-                try {
-                    // for now only constraining by productId and productFeatureId, so any appl type will be included...
-                    productFeatureAppl = delegator.findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", productFeatureId));
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Error getting feature appls associated with the productId: [" + productId + "] and the productFeatureId [" + productFeatureId + "], removing product from search match list.", module);
-                    doRemove = true;
-                    continue;
-                }
-            
-                productFeatureAppl = EntityUtil.filterByDate(productFeatureAppl, true);
-                if (productFeatureAppl == null || productFeatureAppl.size() == 0) {
-                    doRemove = true;
-                }
-            }
-            
-            if (doRemove) {
-                productIdsIter.remove();
-            } 
-        }
-    }
-    
-    public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
-        ArrayList productIds = KeywordSearch.productsByKeywords(keywordsString, delegator, categoryId, visitId, anyPrefix, anySuffix, isAnd);
-        filterProductIdListByFeatures(productIds, featureIdByType, delegator);
-        return productIds;
-    }
-     */
 }
