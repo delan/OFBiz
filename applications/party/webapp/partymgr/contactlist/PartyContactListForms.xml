@@ -56,7 +56,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="optInVerifyCode" title="Opt-in Code" widget-style="inputBox"><text size="10"/></field>
+        <field name="optInVerifyCode" widget-style="inputBox"><text size="10"/></field>
         <field name="preferredContactMechId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PartyAndContactMech" key-field-name="contactMechId" description="[${contactMechId}] [${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress2}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]">

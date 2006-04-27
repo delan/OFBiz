@@ -144,8 +144,8 @@
     </form>
     <form name="ViewCommEvent" default-map-name="communicationEvent" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
-        <field name="partyIdFrom" title="Party From"><display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/></field>
-        <field name="partyIdTo" title="Party To"><display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}"><display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/></field>
+        <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}"><display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/></field>
         <field name="statusId"><display-entity description="${description}" entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="contactMechTypeId"><display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/></field>
 
@@ -178,8 +178,8 @@
     </form>
     <form name="findCommEvents" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" paginate="true" target="ListLookupCommEvents" title="" type="single">
         <field name="communicationEventId" use-when="communicationEvent != null"><text-find/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} From"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} To"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} ${uiLabelMap.CommonFrom}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} ${uiLabelMap.CommonTo}"><lookup target-form-name="LookupPartyName"/></field>
 		<field name="communicationEventTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="CommunicationEventType" key-field-name="communicationEventTypeId"/>
@@ -214,10 +214,10 @@
         <field name="communicationEventId" widget-style="buttontext">
             <hyperlink description="${communicationEventId}" target="EditCommunicationEvent?communicationEventId=${communicationEventId}" target-type="intra-app"/>
         </field>
-        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} From">
+        <field name="partyIdFrom" title="${uiLabelMap.CommonPartyID} ${uiLabelMap.CommonFrom}">
             <display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} To">
+        <field name="partyIdTo" title="${uiLabelMap.CommonPartyID} ${uiLabelMap.CommonTo}">
             <display-entity description="${firstName} ${lastName} [${partyId}]" entity-name="Person" key-field-name="partyId"/>
         </field>
         <field name="communicationEventTypeId"><display-entity description="${description}" entity-name="CommunicationEventType" key-field-name="communicationEventTypeId"/></field>
@@ -332,7 +332,7 @@
                 <field-map field-name="communicationEventId"/>
             </entity-and>
         </actions>
-        <field name="partyId" widget-style="tabletext">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="tabletext">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
                 <sub-hyperlink target="viewprofile?partyId=${partyId}" link-style="buttontext" description="${partyId}"/>
             </display-entity>
@@ -344,7 +344,7 @@
     </form>
     <form name="AddEventRole" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" target="createCommunicationEventRole" title="" type="single">
         <field name="communicationEventId"><hidden/></field>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="roleTypeId" widget-style="selectBox">
             <drop-down>
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
@@ -368,10 +368,10 @@
         <field name="viewContent" title="">
             <hyperlink also-hidden="false" description="View" target="ViewSimpleContent?contentId=${contentId}&amp;dataResourceId=${dataResourceId}&amp;communicationEventId=${communicationEventId}&amp;fromDate=${fromDate}"/> 
         </field>
-        <field name="contentName" title="Name" ><display/></field>
-        <field name="contentId" title="Content Id" ><display/></field>
-        <field name="fromDate" title="From Date" ><display/></field>
-        <field name="dataResourceId" title="Data Resource Id" ><display/></field>
+        <field name="contentName"><display/></field>
+        <field name="contentId"><display/></field>
+        <field name="fromDate"><display/></field>
+        <field name="dataResourceId"><display/></field>
     </form>
 
     <form name="addCommContent" default-map-name="" type="single" target="createCommContentDataResource"
@@ -385,7 +385,7 @@
         <field name="thruDate"><date-time/></field>
         <field name="sequenceNum"><text/></field>
         
-        <field name="drMimeTypeId" title="Document Type" widget-style="smallSelect">
+        <field name="drMimeTypeId" widget-style="smallSelect">
             <drop-down allow-empty="false">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>
@@ -399,7 +399,7 @@
                 <option key="application/octet-stream" description="Other"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 	
     <form name="editCommContent" default-map-name="commEventContentDataResource" type="single" target="updateCommContentDataResource"
@@ -413,7 +413,7 @@
         <field name="thruDate" title="Thru Date"><date-time/></field>
         <field name="sequenceNum" title="Sequence Num"><text/></field>
         
-        <field name="drMimeTypeId" title="Document Type" widget-style="tabletext">
+        <field name="drMimeTypeId" widget-style="tabletext">
             <drop-down allow-empty="false">
                 <option key="application/msword" description="MS Word"/>
                 <option key="application/pdf" description="PDF File"/>

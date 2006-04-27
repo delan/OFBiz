@@ -38,7 +38,7 @@
         <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find/></field>
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyName" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" paginate-target="LookupPartyName" title="" type="list">
@@ -53,7 +53,7 @@
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"  widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
         </field>
-        <field name="partyTypeId" title="${uiLabelMap.PartyPartyTypeId}"> 
+        <field name="partyTypeId" title="${uiLabelMap.PartyTypeId}"> 
             <display-entity also-hidden="false" entity-name="PartyType" description="${description}"/>
         </field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}"><display/></field>
@@ -70,7 +70,7 @@
         <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find/></field>
         <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
@@ -105,7 +105,7 @@
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find/></field>
         <field name="createdDate" title="${uiLabelMap.PartyCreatedDate}"><date-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
@@ -132,7 +132,7 @@
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyGroup" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext"
         list-iterator-name="listIt" paginate-target="LookupPartyGroup" title="" type="list">
@@ -162,7 +162,7 @@
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupPartyClassificationGroup" list-iterator-name="listIt" target="" paginate-target="" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display">
@@ -214,7 +214,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="custRequestId" title="{uiLabelMap.ServicemgntCustRequestId}"><lookup size="20" target-form-name="LookupCustRequest"/></field>
+        <field name="custRequestId" title="${uiLabelMap.PartyServicemgntCustRequestId}"><lookup size="20" target-form-name="LookupCustRequest"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-find/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><date-find/></field>
         <field map-name="subjectMap" name="subject" title="${uiLabelMap.PartyCommEventSubject}"><text-find/></field>
@@ -242,7 +242,7 @@
         <field name="contactMechTypeId" title="${uiLabelMap.ContactListContactMechTypeId}"><display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/></field>
         <field name="roleTypeIdFrom" title="${uiLabelMap.PartyRoleTypeIdFrom}"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="roleTypeIdTo" title="${uiLabelMap.PartyRoleTypeIdTo}"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
-        <field name="custRequestId" position="1" title="{uiLabelMap.ServicemgntCustRequestId}"><text size="20"/></field>
+        <field name="custRequestId" position="1" title="${uiLabelMap.PartyServicemgntCustRequestId}"><text size="20"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><display/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><display/></field>
     </form>

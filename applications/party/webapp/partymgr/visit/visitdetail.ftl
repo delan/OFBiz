@@ -37,7 +37,7 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Visitor ID</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyVisitorId}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">
@@ -150,7 +150,7 @@
               <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
-              <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+              <span class="tabletext">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
               | <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
@@ -211,7 +211,7 @@
               <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
-              <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+              <span class="tabletext">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
               | <a href="<@ofbizUrl>visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>

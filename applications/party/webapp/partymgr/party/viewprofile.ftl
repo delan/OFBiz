@@ -119,12 +119,12 @@
 </#if>
     <#if partyNameHistoryList?has_content>
         <div><hr class="sepbar"/></div>
-        <div class="tableheadtext">Name History</div>
+        <div class="tableheadtext">${uiLabelMap.PartyHistoryName}</div>
         <#list partyNameHistoryList as partyNameHistory>
             <#if lookupPerson?has_content>
-                <div class="tabletext">Was: ${partyNameHistory.personalTitle?if_exists} ${partyNameHistory.firstName?if_exists} ${partyNameHistory.middleName?if_exists} ${partyNameHistory.lastName?if_exists} ${partyNameHistory.suffix?if_exists} (Changed: ${partyNameHistory.changeDate})</div>
+                <div class="tabletext">${uiLabelMap.PartyHistoryWas}: ${partyNameHistory.personalTitle?if_exists} ${partyNameHistory.firstName?if_exists} ${partyNameHistory.middleName?if_exists} ${partyNameHistory.lastName?if_exists} ${partyNameHistory.suffix?if_exists} (${uiLabelMap.PartyHistoryChanged}: ${partyNameHistory.changeDate})</div>
             <#elseif lookupGroup?has_content>
-                <div class="tabletext">Was: ${partyNameHistory.groupName?if_exists} (Changed: ${partyNameHistory.changeDate})</div>
+                <div class="tabletext">${uiLabelMap.PartyHistoryWas}: ${partyNameHistory.groupName?if_exists} (${uiLabelMap.PartyHistoryChanged}: ${partyNameHistory.changeDate})</div>
             </#if>
         </#list>
     </#if>
@@ -135,10 +135,10 @@
 <#if monthsToInclude?exists && totalSubRemainingAmount?exists && totalOrders?exists>
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">&nbsp;Loyalty Points</div>
+        <div class="boxhead">&nbsp;${uiLabelMap.PartyLoyaltyPoints}</div>
     </div>
     <div class="screenlet-body">
-        <div class="tabletext">You have ${totalSubRemainingAmount} points from ${totalOrders} order(s) in the last ${monthsToInclude} months.</div>
+        <div class="tabletext">${uiLabelMap.PartyYouHave} ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}.</div>
     </div>
 </div>
 </#if>

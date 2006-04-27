@@ -33,8 +33,8 @@
         <#if partyRelationships?has_content>
         <table width="100%" border="1" cellpadding="1" cellspacing="0">
           <tr>
-            <td><div class="tabletext"><b>&nbsp;Description</b></div></td>
-            <td><div class="tabletext"><b>&nbsp;From Date</b></div></td>
+            <td><div class="tabletext"><b>&nbsp;${uiLabelMap.CommonDescription}</b></div></td>
+            <td><div class="tabletext"><b>&nbsp;${uiLabelMap.CommonFromDate}</b></div></td>
             <#if security.hasEntityPermission("PARTYMGR", "_REL_DELETE", session)>
             <td>&nbsp;</td>
             </#if>
@@ -45,14 +45,14 @@
               <#assign roleTypeFrom = partyRelationship.getRelatedOneCache("FromRoleType")>
               <tr>
                 <td><div class="tabletext">
-                    Party <b>${partyRelationship.partyIdTo}</b>
+                    ${uiLabelMap.PartyParty} <b>${partyRelationship.partyIdTo}</b>
                     <#if "_NA_" != partyRelationship.roleTypeIdTo>
-                        in role <b>${roleTypeTo.description}</b>
+                        ${uiLabelMap.PartyRole} <b>${roleTypeTo.description}</b>
                     </#if>
-                    is a <b>${(partyRelationshipType.partyRelationshipName)?default("NA")}</b>
-                    of party <b>${partyRelationship.partyIdFrom}</b>
+                    ${uiLabelMap.CommonIsA} <b>${(partyRelationshipType.partyRelationshipName)?default("NA")}</b>
+                    ${uiLabelMap.CommonOf} ${uiLabelMap.PartyParty} <b>${partyRelationship.partyIdFrom}</b>
                     <#if "_NA_" != partyRelationship.roleTypeIdFrom>
-                        in role <b>${roleTypeFrom.description}</b>
+                        ${uiLabelMap.PartyRole} <b>${roleTypeFrom.description}</b>
                     </#if>
                     <#if partyRelationship.securityGroupId?exists>
                     ${uiLabelMap.CommonAnd} ${uiLabelMap.PartyRelationSecurity} <b>${partyRelationship.getRelatedOne("SecurityGroup").get("description")}</b>
@@ -75,10 +75,10 @@
                         <input type="hidden" name="partyIdTo" value="${partyRelationship.partyIdTo}"/>
                         <input type="hidden" name="roleTypeIdTo" value="${partyRelationship.roleTypeIdTo}"/>
                         <input type="hidden" name="fromDate" value="${partyRelationship.fromDate}"/>
-                        <span class="tabletext"><b>Thru Date: </b></span><input type="text" size="24" class="inputBox" name="thruDate" value="${partyRelationship.thruDate?if_exists}"/>
+                        <span class="tabletext"><b>${uiLabelMap.CommonThru}: </b></span><input type="text" size="24" class="inputBox" name="thruDate" value="${partyRelationship.thruDate?if_exists}"/>
                         <a href="javascript:call_cal(document.updatePartyRel${partyRelationship_index}.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
                         <#-- ${partyRelationship.statusId}-->
-                        <span class="tabletext"><b>Comments: </b></span><input type="text" size="50" class="inputBox" name="comments" value="${partyRelationship.comments?if_exists}"/>
+                        <span class="tabletext"><b>${uiLabelMap.CommonComments}: </b></span><input type="text" size="50" class="inputBox" name="comments" value="${partyRelationship.comments?if_exists}"/>
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;"/>
                     </form>
                 </td>
@@ -87,7 +87,7 @@
           </#list>
         </table>
         <#else/>
-          <div class="tabletext">No relationships found.</div>
+          <div class="tabletext">${uiLabelMap.PartyNoPartyRelationshipsFound}</div>
         </#if>
     </div>
 
@@ -98,22 +98,22 @@
           <input type="hidden" name="partyId" value="${partyId}"/>
           <input type="hidden" name="partyIdFrom" value="${partyId}"/>
           <div class="tabletext" style="font-weight: bold;">
-            The party with ID 
+            ${uiLabelMap.PartyPartyWithId}
             <input type="text" size="20" name="partyIdTo" class="inputBox"/>
             <a href="javascript:call_fieldlookup2(document.addPartyRelationshipTo.partyIdTo,'LookupPartyName');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a>
-            in the role of 
+            ${uiLabelMap.PartyPartyInTheRoleOf}
             <select name="roleTypeIdTo" class="selectBox">
               <#list roleTypes as roleType>
                 <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
               </#list>
             </select>
-            is a 
+            ${uiLabelMap.CommonIsA}
             <select name="partyRelationshipTypeId" class="selectBox">
               <#list relateTypes as relateType>
                 <option value="${relateType.partyRelationshipTypeId}">${relateType.partyRelationshipName}<#-- [${relateType.partyRelationshipTypeId}]--></option>
               </#list>
             </select>
-            of the current party in the role of
+            ${uiLabelMap.PartyPartyOfTheRoleParty}
             <select name="roleTypeIdFrom" class="selectBox">
               <#list roleTypes as roleType>
                 <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
@@ -126,10 +126,10 @@
                 <option value="${securityGroup.groupId}">${securityGroup.description}</option>
               </#list>
             </select><br/>
-            from <input type="text" size="24" name="fromDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipTo.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
-            thru <input type="text" size="24" name="thruDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipTo.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
+            ${uiLabelMap.CommonFrom} <input type="text" size="24" name="fromDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipTo.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
+            ${uiLabelMap.CommonThru} <input type="text" size="24" name="thruDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipTo.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
           </div>
-          <div><span class="tabletext">Comments:&nbsp;&nbsp;</span><input type="text" size="60" name="comments" class="inputBox"/></div>
+          <div><span class="tabletext">${uiLabelMap.CommonComments}:&nbsp;&nbsp;</span><input type="text" size="60" name="comments" class="inputBox"/></div>
           <div><a href="javascript:document.addPartyRelationshipTo.submit()" class="buttontext">[${uiLabelMap.CommonAdd}]</a></div>
         </form>
     </div>
@@ -139,22 +139,22 @@
           <input type="hidden" name="partyId" value="${partyId}"/>
           <input type="hidden" name="partyIdTo" value="${partyId}"/>
           <div class="tabletext" style="font-weight: bold;">
-              The current party in the role of
+              ${uiLabelMap.PartyPartyCurrentInTheRoleOf}
             <select name="roleTypeIdTo" class="selectBox">
               <#list roleTypes as roleType>
                 <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
               </#list>
             </select>
-            is a 
+            ${uiLabelMap.CommonIsA}
             <select name="partyRelationshipTypeId" class="selectBox">
               <#list relateTypes as relateType>
                 <option value="${relateType.partyRelationshipTypeId}">${relateType.partyRelationshipName}<#-- [${relateType.partyRelationshipTypeId}]--></option>
               </#list>
             </select>
-            of the party with ID
+            ${uiLabelMap.PartyPartyWithId}
             <input type="text" size="20" name="partyIdFrom" class="inputBox"/>
             <a href="javascript:call_fieldlookup2(document.addPartyRelationshipFrom.partyIdFrom,'LookupPartyName');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a>
-            in the role of 
+            ${uiLabelMap.PartyPartyInTheRoleOf}
             <select name="roleTypeIdFrom" class="selectBox">
               <#list roleTypes as roleType>
                 <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
@@ -166,10 +166,10 @@
                 <option value="${securityGroup.groupId}">${securityGroup.description}</option>
               </#list>
             </select><br/>
-            from <input type="text" size="24" name="fromDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipFrom.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
-            thru <input type="text" size="24" name="thruDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipFrom.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
+            ${uiLabelMap.CommonFrom} <input type="text" size="24" name="fromDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipFrom.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
+            ${uiLabelMap.CommonThru} <input type="text" size="24" name="thruDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipFrom.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
           </div>
-          <div><span class="tabletext">Comments:&nbsp;&nbsp;</span><input type="text" size="60" name="comments" class="inputBox"/></div>
+          <div><span class="tabletext">${uiLabelMap.CommonComments}:&nbsp;&nbsp;</span><input type="text" size="60" name="comments" class="inputBox"/></div>
           <div><a href="javascript:document.addPartyRelationshipFrom.submit()" class="buttontext">[${uiLabelMap.CommonAdd}]</a></div>
         </form>
     </div>

@@ -183,7 +183,7 @@
                 <div class="tabletext">
                   <b>${curContactMechPurposeType.description?if_exists}</b>
                   <#if curPartyContactMechPurpose.thruDate?exists>
-                    (Expire:${curPartyContactMechPurpose.thruDate.toString()})
+                    (${uiLabelMap.CommonExpire}:${curPartyContactMechPurpose.thruDate.toString()})
                   </#if>
                 </div>
               </#list>

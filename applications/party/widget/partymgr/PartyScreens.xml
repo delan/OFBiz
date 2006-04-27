@@ -148,7 +148,7 @@
                             <widgets>
                                 <container style="screenlet">
                                     <container style="screenlet-header">
-                                        <label style="boxhead" text="New Relationship Type"/>
+                                        <label style="boxhead" text="${uiLabelMap.PartyNewRelationshipType}"/>
                                     </container>
                                     <container style="screenlet-body">
                                         <include-form name="AddPartyRelationshipType" location="component://party/webapp/partymgr/party/PartyForms.xml"/>

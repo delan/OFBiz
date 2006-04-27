@@ -46,15 +46,15 @@
         <div align='right'>
           <#if (eventListSize > 0)>
             <#if (viewIndex > 1)>
-              <a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">Previous</a>
+              <a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a>
             <#else>
               &nbsp;
             </#if>
             <#if (eventListSize > 0)>
-              <span class="tableheadtext">${lowIndex} - ${highIndex} of ${eventListSize}</span>
+              <span class="tableheadtext">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${eventListSize}</span>
             </#if>
             <#if (eventListSize > highIndex)>
-              <a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">Next</a>
+              <a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
             <#else>
               &nbsp;
             </#if>

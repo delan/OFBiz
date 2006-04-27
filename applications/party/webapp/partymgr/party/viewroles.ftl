@@ -50,7 +50,7 @@
             <table width="100%" border="0" cellpadding="1">
               <#list partyRoles as userRole>
               <tr>
-                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>Role</b></div></td>
+                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>${uiLabelMap.PartyRole}</b></div></td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="70%"><div class="tabletext">${userRole.description} [${userRole.roleTypeId}]</div></td>
                 <#if hasDeletePermission>
