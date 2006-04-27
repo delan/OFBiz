@@ -80,6 +80,7 @@
                 </or>
             </condition>
             <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleLookupProductVariant}"/>
                 <set field="entityName" value="Product"/>
                 <set field="queryString" from-field="result.queryString"/>

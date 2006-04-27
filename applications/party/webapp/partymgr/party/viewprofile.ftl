@@ -483,19 +483,19 @@
               <#list attributes as attr>
                 <tr>
                   <td nowrap align="left" valign="top" width="1%">
-                    <div class="tabletext">&nbsp;<b>Name: </b>${attr.attrName}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonName}: </b>${attr.attrName}</div>
                   </td>
                   <td align="left" valign="top" width="98%">
-                    <div class="tabletext">&nbsp;<b>Value: </b>${attr.attrValue}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonValue}: </b>${attr.attrValue}</div>
                   </td>
                   <td align="right" valign="top" width="1%">
-                    <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId}&attrName=${attr.attrName}</@ofbizUrl>" class="buttontext">Edit</a>
+                    <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId}&attrName=${attr.attrName}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
                   </td>
                 </tr>
               </#list>
             </table>
         <#else>
-            <div class="tabletext">No party attributes found.</div>
+            <div class="tabletext">${uiLabelMap.PartyNoPartyAttributesFound}</div>
         </#if>
     </div>
 </div>
