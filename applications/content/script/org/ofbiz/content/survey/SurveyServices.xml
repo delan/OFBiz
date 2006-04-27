@@ -549,7 +549,7 @@
     </simple-method>
     
     <!-- =============== Inline method used by createSurveyResponse ============== -->
-    <simple-method method-name="validateSurveyResponseInline" short-description="validateSurveyResponseInline">
+    <simple-method method-name="validateSurveyResponseInline" short-description="validateSurveyResponseInline" login-required="false">
         <!-- Is required? -->
         <if-compare field-name="requiredField" map-name="surveyQuestionAndAppl" operator="equals" value="Y">
             <if-empty field-name="${answerFieldName}">
