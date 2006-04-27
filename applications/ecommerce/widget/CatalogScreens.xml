@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2005-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -396,7 +396,6 @@
 
                 <set field="title-property" value="PageTitleAdvancedSearch"/>
                 <set field="headerItem" value="Advanced Search"/>
-                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/advancedsearchoptions.bsh"/>-->
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/advancedsearchoptions.bsh"/>
             </actions>
             <widgets>

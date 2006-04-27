@@ -29,7 +29,7 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.feature.*;
 import org.ofbiz.product.product.*;
 
-searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");
+searchCategoryId = parameters.get("SEARCH_CATEGORY_ID");
 if (searchCategoryId == null || searchCategoryId.length() == 0) {
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
     searchCategoryId = CatalogWorker.getCatalogSearchCategoryId(request, currentCatalogId);
@@ -43,7 +43,7 @@ if (UtilValidate.isNotEmpty(searchCategoryId)) {
 }
 productFeatureTypeIdsOrdered = new ArrayList(new TreeSet(productFeaturesByTypeMap.keySet()));
 
-searchOperator = request.getParameter("SEARCH_OPERATOR");
+searchOperator = parameters.get("SEARCH_OPERATOR");
 if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
   searchOperator = "OR";
 }
