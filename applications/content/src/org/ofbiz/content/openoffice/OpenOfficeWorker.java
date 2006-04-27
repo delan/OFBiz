@@ -17,13 +17,12 @@
  */
 package org.ofbiz.content.openoffice;
 
-import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +42,7 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
+import com.sun.star.uri.ExternalUriReferenceTranslator;
 
 /**
  * OpenOfficeWorker Class
@@ -162,7 +162,7 @@ public class OpenOfficeWorker{
         return filterNameList;
     }
     
-    public static void convertOODocToFile(XMultiComponentFactory xmulticomponentfactory, String stringUrl, String stringConvertedFile, String outputMimeType) throws FileNotFoundException, IOException, Exception {
+    public static void convertOODocToFile(XMultiComponentFactory xmulticomponentfactory, String fileInPath, String fileOutPath, String outputMimeType) throws FileNotFoundException, IOException, MalformedURLException, Exception {
         // Converting the document to the favoured type
         // Query for the XPropertySet interface.
         XPropertySet xpropertysetMultiComponentFactory = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xmulticomponentfactory);
@@ -188,16 +188,18 @@ public class OpenOfficeWorker{
         // Setting the flag for hidding the open document
         propertyvalue[ 0 ] = new PropertyValue();
         propertyvalue[ 0 ].Name = "Hidden";
-        propertyvalue[ 0 ].Value = new Boolean(true);
+        propertyvalue[ 0 ].Value = new Boolean(false);
 
         propertyvalue[ 1 ] = new PropertyValue();
         propertyvalue[ 1 ].Name = "UpdateDocMode";
         propertyvalue[ 1 ].Value = "1";
 
         // Loading the wanted document
+        String stringUrl = convertToUrl(fileInPath, xcomponentcontext);
+        Debug.logInfo("stringUrl:" + stringUrl, module);
         Object objectDocumentToStore = xcomponentloader.loadComponentFromURL(stringUrl, "_blank", 0, propertyvalue);
         
-        // Getting an object that will offer a simple way to store a document to a URL.
+        // Getting an object that will offer a simple way to store a document to a URL. 
         XStorable xstorable = (XStorable) UnoRuntime.queryInterface(XStorable.class, objectDocumentToStore);
         
         // Preparing properties for converting the document
@@ -218,11 +220,12 @@ public class OpenOfficeWorker{
         propertyvalue[2].Name = "CompressionMode";
         propertyvalue[2].Value = "1";
         
-        Debug.logInfo("stringConvertedFile: "+stringConvertedFile, module);
         // Storing and converting the document
         //File newFile = new File(stringConvertedFile);
         //newFile.createNewFile();
         
+        String stringConvertedFile = convertToUrl(fileOutPath, xcomponentcontext);
+        Debug.logInfo("stringConvertedFile: "+stringConvertedFile, module);
         xstorable.storeToURL(stringConvertedFile, propertyvalue);
         
         // Getting the method dispose() for closing the document
@@ -343,4 +346,14 @@ public class OpenOfficeWorker{
         return extension;
 
     }
+    public static String convertToUrl(String filePath, XComponentContext xComponentContext ) throws MalformedURLException {
+
+    	String returnUrl = null;
+    	File f = new File(filePath);
+    	URL u = f.toURL();
+        returnUrl =  ExternalUriReferenceTranslator.create(xComponentContext).translateToInternal(u.toExternalForm());
+
+    	return returnUrl;
+    }
+    
 }

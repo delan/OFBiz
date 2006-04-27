@@ -27,6 +27,8 @@ import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.Random;
 import java.sql.Timestamp;
+import java.lang.Math;
+import java.net.MalformedURLException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -69,7 +71,7 @@ public class OpenOfficeServices {
         //String uniqueSeqNum = delegator.getNextSeqId("OOTempDir");
         Timestamp ts = UtilDateTime.nowTimestamp();
         Random random = new Random(ts.getTime());
-        String uniqueSeqNum = Long.toString(random.nextLong());
+        String uniqueSeqNum = Integer.toString(Math.abs(random.nextInt()));
         String fileInName = "OOIN_" + uniqueSeqNum;
         String fileOutName = "OOOUT_" + uniqueSeqNum;
         File fileIn = null;
@@ -100,7 +102,8 @@ public class OpenOfficeServices {
             FileOutputStream fos = new FileOutputStream(fileIn);
             fos.write(inByteArray);
             fos.close();
-            OpenOfficeWorker.convertOODocToFile(xmulticomponentfactory, "file://" + tempDir + fileInName, "file://" + tempDir + fileOutName, outputMimeType);
+		Debug.logInfo("fileIn:" + tempDir + fileInName, module);
+            OpenOfficeWorker.convertOODocToFile(xmulticomponentfactory, tempDir + fileInName, tempDir + fileOutName, outputMimeType);
             fileOut = new File(tempDir + fileOutName);
             FileInputStream fis = new FileInputStream(fileOut);
             int c;
@@ -113,6 +116,9 @@ public class OpenOfficeServices {
             results.put("outByteWrapper", new ByteWrapper(baos.toByteArray()));
             baos.close();
 
+        } catch (MalformedURLException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.toString());
         } catch (FileNotFoundException e) {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
             return ServiceUtil.returnError(e.toString());
@@ -123,8 +129,8 @@ public class OpenOfficeServices {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
             return ServiceUtil.returnError(e.toString());
         } finally {
-            if (fileIn != null) fileIn.delete();
-            if (fileOut != null)  fileOut.delete();
+            //if (fileIn != null) fileIn.delete();
+            //if (fileOut != null)  fileOut.delete();
         }
         return results;
     }
