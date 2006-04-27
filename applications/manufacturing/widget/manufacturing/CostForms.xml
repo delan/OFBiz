@@ -30,7 +30,7 @@ under the License.
         <field name="offsettingGlAccountTypeId">
             <display-entity entity-name="GlAccountType" key-field-name="glAccountTypeId"/>
         </field>
-        <field name="currencyUomId">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
             <display-entity entity-name="Uom" key-field-name="uomId"/>
         </field>
         <field name="costCustomMethodId">
@@ -70,7 +70,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

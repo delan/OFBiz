@@ -58,20 +58,20 @@
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
         </actions>
-        <field name="requirementId" widget-style="buttontext">
+        <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}" widget-style="buttontext">
             <hyperlink target-type="inter-app" also-hidden="true" description="${requirementId}" target="/ordermgr/control/EditRequirement?requirementId=${requirementId}"/>
         </field>
-        <field name="requirementTypeId">
+        <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
             <display-entity entity-name="RequirementType" also-hidden="true"/>
         </field>
-        <field name="productId">
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
-        <field name="requirementStartDate"><display/></field>
-        <field name="requiredByDate"><display/></field>
+        <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><display/></field>
+        <field name="requiredByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitButton" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
           <submit/>
         </field>
     </form>
