@@ -27,7 +27,7 @@
             target="updateAvsOverride" title="" default-map-name="avsOverride"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="partyId"><hidden/></field>
-        <field name="avsDeclineString" title="AVS String"><text size="60" maxlength="250"/></field>
+        <field name="avsDeclineString" title="${uiLabelMap.PartyAvsString}"><text size="60" maxlength="250"/></field>
         <field name="submitButton" title="[${uiLabelMap.CommonSave}]" widget-style="buttontext"><submit button-type="text-link"/></field>
         <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}?partyId=${partyId}" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>

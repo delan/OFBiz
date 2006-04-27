@@ -223,7 +223,7 @@ function refreshInfo() {
                       <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                     </#if>
                     <#if (partyListSize > 0)>
-                      <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${partyListSize}</span>
+                      <span class="submenutextinfo">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${partyListSize}</span>
                     </#if>
                     <#if (partyListSize > highIndex)>
                       <a href="<@ofbizUrl>findparty?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${parameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
@@ -327,7 +327,7 @@ function refreshInfo() {
               <tr>
                 <td colspan="5">
                   <span class="head3">${uiLabelMap.PartyNoPartiesFound}</span>
-                  &nbsp;&nbsp;<a href="<@ofbizUrl>createnew</@ofbizUrl>" class="buttontext">Create New</a>
+                  &nbsp;&nbsp;<a href="<@ofbizUrl>createnew</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonCreateNew}</a>
                 </td>
               </tr>
             </#if>

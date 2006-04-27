@@ -141,7 +141,7 @@
                                 <container><label style="head1" text="${uiLabelMap.PartyFoundCommunicationEvents}"/></container>
                                 <container>
                                     <link style="buttontext" target="EditCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}"/>
-                                    <link style="buttontext" target="FindCommunicationEvents" text="New Find"/>
+                                    <link style="buttontext" target="FindCommunicationEvents" text="${uiLabelMap.PartyNewFind}"/>
                                 </container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListLookupCommEvents"/>
                             </widgets>
@@ -405,14 +405,14 @@
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <container><label style="head1" text="Communication Event Roles"/></container>
+                                <container><label style="head1" text="${uiLabelMap.PartyCommEventRoles}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListCommRoles"/>
                                 <section>
                                     <condition>
                                         <if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/>
                                     </condition>
                                     <widgets>
-                                        <container><label style="head1" text="Add Communication Event Role"/></container>
+                                        <container><label style="head1" text="${uiLabelMap.PartyNewCommRole}"/></container>
                                         <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="AddEventRole"/>
                                     </widgets>
                                 </section>
@@ -445,14 +445,14 @@
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <container><label style="head1" text="Communication Event Purposes"/></container>
+                                <container><label style="head1" text="${uiLabelMap.PartyCommEventPurposes}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListCommPurposes"/>
                                 <section>
                                     <condition>
                                         <if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/>
                                     </condition>
                                     <widgets>
-                                        <container><label style="head1" text="Add Communication Event Purpose"/></container>
+                                        <container><label style="head1" text="${uiLabelMap.PartyNewCommPurpose}"/></container>
                                         <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="AddEventPurpose"/>
                                     </widgets>
                                 </section>
@@ -602,7 +602,7 @@
                                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
-                                <container><label style="head1" text="${uiLabelMap.AddCommContent}"/></container>
+                                <container><label style="head1" text="${uiLabelMap.PartyNewCommContent}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="addCommContent"/>
                             </widgets>
                             <fail-widgets>

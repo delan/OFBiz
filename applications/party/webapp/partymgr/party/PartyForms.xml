@@ -34,17 +34,17 @@
 
         <field name="gender">
             <drop-down allow-empty="true">
-                <option key="M" description="Male"/>
-                <option key="F" description="Female"/>
+                <option key="M" description="${uiLabelMap.CommonMale}"/>
+                <option key="F" description="${uiLabelMap.CommonFemale}"/>
             </drop-down>
         </field>
         <field name="maritalStatus">
             <drop-down allow-empty="true">
-                <option key="S" description="Single"/>
-                <option key="M" description="Married"/>
-                <option key="P" description="Separated"/>
-                <option key="D" description="Divorced"/>
-                <option key="W" description="Widowed"/>
+                <option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}"/>
+                <option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}"/>
+                <option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}"/>
+                <option key="D" description="${uiLabelMap.PartyMaritalStatusDivorced}"/>
+                <option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}"/>
             </drop-down>
         </field>
 
@@ -124,21 +124,21 @@
         <auto-fields-service service-name="createPartyRelationshipType"/>
         <field name="partyId"><hidden/></field>
         <field name="hasTable"><hidden/></field>
-        <field name="parentTypeId" title="Parent Type">
+        <field name="parentTypeId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PartyRelationshipType" key-field-name="partyRelationshipTypeId" description="${partyRelationshipName}">
                     <entity-order-by field-name="partyRelationshipName"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="roleTypeIdValidFrom" title="Valid From RoleType">
+        <field name="roleTypeIdValidFrom" title="${uiLabelMap.PartyRelationshipValidFromRoleType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="roleTypeIdValidTo" title="Valid To RoleType">
+        <field name="roleTypeIdValidTo" title="${uiLabelMap.PartyRelationshipValidToRoleType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -153,7 +153,7 @@
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createPartyTaxAuthInfo"/>
         <field name="partyId"><hidden/></field>
-        <field name="taxAuthGeoId" title="Tax Authority Geo">
+        <field name="taxAuthGeoId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonCountry}: [${geoId}] ${geoName}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>
@@ -181,15 +181,15 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="taxAuthPartyId" title="Tax Authority Party"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="taxAuthPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdatePartyTaxAuthInfo" type="list" target="updatePartyTaxAuthInfo" title="" list-name="partyTaxInfos"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updatePartyTaxAuthInfo"/>
         <field name="partyId"><hidden/></field>
-        <field name="taxAuthGeoId" title="Tax Authority Geo" widget-style="tabletext"><display-entity entity-name="Geo" key-field-name="geoId" description="[${geoId}] ${geoName}" also-hidden="true"/></field>
-        <field name="taxAuthPartyId" title="Tax Authority Party" widget-style="tabletext">
+        <field name="taxAuthGeoId" widget-style="tabletext"><display-entity entity-name="Geo" key-field-name="geoId" description="[${geoId}] ${geoName}" also-hidden="true"/></field>
+        <field name="taxAuthPartyId" widget-style="tabletext">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}" also-hidden="true">
                 <sub-hyperlink target="viewprofile?partyId=${taxAuthPartyId}" description="${taxAuthPartyId}" link-style="buttontext"/>
             </display-entity>
@@ -254,17 +254,17 @@
     <form name="NewUser" type="single"
             target="${target}${previousParams}" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        <field name="USER_TITLE" title="Title"><text size="10" maxlength="30"/></field>
-        <field name="USER_FIRST_NAME" title="First Name" tooltip="*"><text size="30" maxlength="60"/></field>
-        <field name="USER_MIDDLE_NAME" title="Middle Initial"><text size="4" maxlength="4"/></field>
-        <field name="USER_LAST_NAME" title="Last Name" tooltip="*"><text size="30" maxlength="60"/></field>
-        <field name="USER_SUFFIX" title="Suffix"><text size="10" maxlength="30"/></field>
+        <field name="USER_TITLE" title="${uiLabelMap.CommonTitle}"><text size="10" maxlength="30"/></field>
+        <field name="USER_FIRST_NAME" title="${uiLabelMap.PartyFirstName}" tooltip="*"><text size="30" maxlength="60"/></field>
+        <field name="USER_MIDDLE_NAME" title="${uiLabelMap.PartyMiddleInitial}"><text size="4" maxlength="4"/></field>
+        <field name="USER_LAST_NAME" title="${uiLabelMap.PartyLastName}" tooltip="*"><text size="30" maxlength="60"/></field>
+        <field name="USER_SUFFIX" title="${uiLabelMap.PartySuffix}"><text size="10" maxlength="30"/></field>
 
-        <field name="ShippingAddressTitle" title="Mailing/Shipping Address"><display description=" " also-hidden="false"/></field>
-        <field name="USER_ADDRESS1" title="Address Line 1" tooltip="*" title-style="tabletext"><text size="30" maxlength="60"/></field>
-        <field name="USER_ADDRESS2" title="Address Line 2" title-style="tabletext"><text size="30" maxlength="60"/></field>
-        <field name="USER_CITY" title="City" tooltip="*" title-style="tabletext"><text size="30" maxlength="60"/></field>
-        <field name="USER_STATE" title="State" tooltip="*" title-style="tabletext">
+        <field name="ShippingAddressTitle" title="${uiLabelMap.PartyAddressMailingShipping}"><display description=" " also-hidden="false"/></field>
+        <field name="USER_ADDRESS1" title="${uiLabelMap.CommonAddress1}" tooltip="*" title-style="tabletext"><text size="30" maxlength="60"/></field>
+        <field name="USER_ADDRESS2" title="${uiLabelMap.CommonAddress2}" title-style="tabletext"><text size="30" maxlength="60"/></field>
+        <field name="USER_CITY" title="${uiLabelMap.CommonCity}" tooltip="*" title-style="tabletext"><text size="30" maxlength="60"/></field>
+        <field name="USER_STATE" title="${uiLabelMap.CommonState}" tooltip="*" title-style="tabletext">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${uiLabelMap.CommonState}: [${geoId}] ${geoName}">
                     <entity-constraint name="geoTypeId" value="STATE"/>
@@ -276,8 +276,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="USER_POSTAL_CODE" title="Zip/Postal Code" tooltip="*" title-style="tabletext"><text size="10" maxlength="30"/></field>
-        <field name="USER_COUNTRY" title="Country" tooltip="*" title-style="tabletext">
+        <field name="USER_POSTAL_CODE" title="${uiLabelMap.CommonZipPostalCode}" tooltip="*" title-style="tabletext"><text size="10" maxlength="30"/></field>
+        <field name="USER_COUNTRY" title="${uiLabelMap.CommonCountry}" tooltip="*" title-style="tabletext">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoId}: ${geoName}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>
@@ -285,50 +285,50 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="USER_ADDRESS_ALLOW_SOL" title="Allow Address Solicitation?" title-style="tabletext">
+        <field name="USER_ADDRESS_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowAddressSolicitation}?" title-style="tabletext">
             <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
         </field>
 
-        <field name="HomePhoneTitle" title="Home Phone Number"><display description=" " also-hidden="false"/></field>
-        <field name="USER_HOME_COUNTRY" title="Country Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
-        <field name="USER_HOME_AREA" title="Area Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
-        <field name="USER_HOME_CONTACT" title="Phone Number" title-style="tabletext"><text size="15" maxlength="15"/></field>
-        <field name="USER_HOME_EXT" title="Extension" title-style="tabletext"><text size="6" maxlength="10"/></field>
-        <field name="USER_HOME_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="HomePhoneTitle" title="${uiLabelMap.PartyHomePhone}"><display description=" " also-hidden="false"/></field>
+        <field name="USER_HOME_COUNTRY" title="${uiLabelMap.PartyCountryCode}" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="USER_HOME_AREA" title="${uiLabelMap.PartyAreaCode}" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="USER_HOME_CONTACT" title="${uiLabelMap.PartyPhoneNumber}" title-style="tabletext"><text size="15" maxlength="15"/></field>
+        <field name="USER_HOME_EXT" title="${uiLabelMap.PartyContactExt}" title-style="tabletext"><text size="6" maxlength="10"/></field>
+        <field name="USER_HOME_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
 
-        <field name="WorkPhoneTitle" title="Work Phone Number"><display description=" " also-hidden="false"/></field>
-        <field name="USER_WORK_COUNTRY" title="Country Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
-        <field name="USER_WORK_AREA" title="Area Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
-        <field name="USER_WORK_CONTACT" title="Phone Number" title-style="tabletext"><text size="15" maxlength="15"/></field>
-        <field name="USER_WORK_EXT" title="Extension" title-style="tabletext"><text size="6" maxlength="10"/></field>
-        <field name="USER_WORK_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="WorkPhoneTitle" title="${uiLabelMap.PartyContactWorkPhoneNumber}"><display description=" " also-hidden="false"/></field>
+        <field name="USER_WORK_COUNTRY" title="${uiLabelMap.PartyCountryCode}" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="USER_WORK_AREA" title="${uiLabelMap.PartyAreaCode}" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="USER_WORK_CONTACT" title="${uiLabelMap.PartyPhoneNumber}" title-style="tabletext"><text size="15" maxlength="15"/></field>
+        <field name="USER_WORK_EXT" title="${uiLabelMap.PartyContactExt}" title-style="tabletext"><text size="6" maxlength="10"/></field>
+        <field name="USER_WORK_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
 
-        <field name="FaxPhoneTitle" title="Fax Number"><display description=" " also-hidden="false"/></field>
-        <field name="USER_FAX_COUNTRY" title="Country Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
-        <field name="USER_FAX_AREA" title="Area Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
-        <field name="USER_FAX_CONTACT" title="Phone Number" title-style="tabletext"><text size="15" maxlength="15"/></field>
-        <field name="USER_FAX_EXT" title="Extension" title-style="tabletext"><text size="6" maxlength="10"/></field>
-        <field name="USER_FAX_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="FaxPhoneTitle" title="${uiLabelMap.PartyContactFaxPhoneNumber}"><display description=" " also-hidden="false"/></field>
+        <field name="USER_FAX_COUNTRY" title="${uiLabelMap.PartyCountryCode}" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="USER_FAX_AREA" title="${uiLabelMap.PartyAreaCode}" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="USER_FAX_CONTACT" title="${uiLabelMap.PartyPhoneNumber}" title-style="tabletext"><text size="15" maxlength="15"/></field>
+        <field name="USER_FAX_EXT" title="${uiLabelMap.PartyContactExt}" title-style="tabletext"><text size="6" maxlength="10"/></field>
+        <field name="USER_FAX_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
 
-        <field name="MobilePhoneTitle" title="Mobile Phone Number"><display description=" " also-hidden="false"/></field>
-        <field name="USER_MOBILE_COUNTRY" title="Country Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
-        <field name="USER_MOBILE_AREA" title="Area Code" title-style="tabletext"><text size="4" maxlength="10"/></field>
-        <field name="USER_MOBILE_CONTACT" title="Phone Number" title-style="tabletext"><text size="15" maxlength="15"/></field>
-        <field name="USER_MOBILE_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="MobilePhoneTitle" title="${uiLabelMap.PartyContactMobilePhoneNumber}"><display description=" " also-hidden="false"/></field>
+        <field name="USER_MOBILE_COUNTRY" title="${uiLabelMap.PartyCountryCode}" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="USER_MOBILE_AREA" title="${uiLabelMap.PartyAreaCode}" title-style="tabletext"><text size="4" maxlength="10"/></field>
+        <field name="USER_MOBILE_CONTACT" title="${uiLabelMap.PartyPhoneNumber}" title-style="tabletext"><text size="15" maxlength="15"/></field>
+        <field name="USER_MOBILE_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
 
-        <field name="EmailAddressTitle" title="Email Address"><display description=" " also-hidden="false"/></field>
-        <field name="USER_EMAIL" title="Email" title-style="tabletext" tooltip="*"><text size="60" maxlength="250"/></field>
-        <field name="USER_EMAIL_ALLOW_SOL" title="Allow Solicitation?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
+        <field name="EmailAddressTitle" title="${uiLabelMap.PartyEmailAddress}"><display description=" " also-hidden="false"/></field>
+        <field name="USER_EMAIL" title="${uiLabelMap.CommonEmail}" title-style="tabletext" tooltip="*"><text size="60" maxlength="250"/></field>
+        <field name="USER_EMAIL_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?" title-style="tabletext"><drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down></field>
         <!-- <field name="USER_ORDER_EMAIL" title="Order Emails (comma separated)" title-style="tabletext"><text size="60" maxlength="250"/></field> -->
 
 
-        <field use-when="displayPassword!=null" name="USERNAME" title="Username" tooltip="*"><text size="30" maxlength="250"/></field>
-        <field use-when="displayPassword!=null" name="PASSWORD" title="Password" tooltip="*"><password size="15" maxlength="250"/></field>
-        <field use-when="displayPassword!=null" name="CONFIRM_PASSWORD" title="Password" tooltip="* Confirm"><password size="15" maxlength="250"/></field>
+        <field use-when="displayPassword!=null" name="USERNAME" title="${uiLabelMap.CommonUsername}" tooltip="*"><text size="30" maxlength="250"/></field>
+        <field use-when="displayPassword!=null" name="PASSWORD" title="${uiLabelMap.CommonPassword}" tooltip="*"><password size="15" maxlength="250"/></field>
+        <field use-when="displayPassword!=null" name="CONFIRM_PASSWORD" title="${uiLabelMap.CommonPassword}" tooltip="* ${uiLabelMap.CommonConfirm}"><password size="15" maxlength="250"/></field>
 
-        <field name="USERNAME" title="Username" tooltip="* Customer will receive a temporary password by email."><text size="30" maxlength="250"/></field>
+        <field name="USERNAME" title="${uiLabelMap.CommonUsername}" tooltip="* ${uiLabelMap.PartyCustomerTemporaryPassword}"><text size="30" maxlength="250"/></field>
 
-        <field name="RequiredNote" title=""><display description="Fields marked with (*) are required." also-hidden="false"/></field>
+        <field name="RequiredNote" title=""><display description="${uiLabelMap.PartyRequiredNote}" also-hidden="false"/></field>
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>

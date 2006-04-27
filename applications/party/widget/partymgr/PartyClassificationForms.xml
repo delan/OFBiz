@@ -31,7 +31,7 @@
             <field-map field-name="partyId"/>
         </entity-and>
         </actions>
-        <field name="partyId" title="${uiLabelMap.PartyId}"><display/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><display/></field>
         <field name="partyClassificationGroupId" title="${uiLabelMap.Description} [${uiLabelMap.PartyClassificationGroupId}]">
             <display-entity entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}&amp;nbsp;[${partyClassificationGroupId}]"/>
         </field>
@@ -53,7 +53,7 @@
             <hyperlink target="EditPartyClassificationGroup?partyClassificationGroupId=${partyClassificationGroupId}"
                 description="${partyClassificationGroupId}" also-hidden="false"/>
         </field>
-        <field name="partyClassificationTypeId" title="${uiLabelMap.PartyClassificationTypeId}">
+        <field name="partyClassificationTypeId">
             <display-entity entity-name="PartyClassificationType" key-field-name="partyClassificationTypeId" description="${description}"/>
         </field>
         <field name="parentGroupId" title="${uiLabelMap.ParentGroupId}"><display/></field>
@@ -73,7 +73,7 @@
         <field use-when="partyClassificationGroup==null&amp;&amp;partyClassificationGroupId==null" name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}"><ignored/></field>
         <field use-when="partyClassificationGroup==null&amp;&amp;partyClassificationGroupId!=null" name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyClassificationGroupId}]"><display/></field>
 
-        <field name="partyClassificationTypeId" title="${uiLabelMap.PartyClassificationTypeId}">
+        <field name="partyClassificationTypeId">
             <drop-down>
                 <entity-options description="${description}" entity-name="PartyClassificationType" key-field-name="partyClassificationTypeId">
                     <entity-order-by field-name="description"/>
