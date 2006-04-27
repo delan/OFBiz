@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -33,14 +33,11 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 
 module = "keywordsearch.bsh";
-delegator = request.getAttribute("delegator");
 
-requestParams = UtilHttp.getParameterMap(request);
+// note: this can be run multiple times in the same request without causing problems, will check to see on its own if it has run again
+ProductSearchSession.processSearchParameters(parameters, request);
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
-ProductSearchSession.processSearchParameters(requestParams, session);
-//Debug.set(Debug.VERBOSE, true);
 Map result = ProductSearchSession.getProductSearchResult(session, delegator, prodCatalogId);
-//Debug.set(Debug.VERBOSE, false);
 
 applicationTypes = delegator.findAll("ProductFeatureApplType", UtilMisc.toList("description"));
 
@@ -62,4 +59,3 @@ context.put("highIndex", result.get("highIndex"));
 context.put("searchCategory", result.get("searchCategory"));
 context.put("searchConstraintStrings", result.get("searchConstraintStrings"));
 context.put("searchSortOrderString", result.get("searchSortOrderString"));
-

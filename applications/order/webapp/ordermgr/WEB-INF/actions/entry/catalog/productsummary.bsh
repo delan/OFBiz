@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -19,6 +19,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones
  *@author     Andy Zeneski
  *@version    $Rev$
  *@since      2.1
@@ -81,7 +82,7 @@ if (product != null) {
 categoryId = null;
 reviews = null;
 if (product != null) {
-    categoryId = request.getParameter("category_id");
+    categoryId = parameters.get("category_id");
     if (categoryId == null) {
         categoryId = request.getAttribute("productCategoryId");
     }
