@@ -474,20 +474,13 @@ public class ProductSearchSession {
             constraintsChanged = true;
         }
 
-        // get independently defined features, ie not with a type parameter
-        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_FEAT"))) {
-            searchAddConstraint(new ProductSearch.FeatureConstraint((String) parameters.get("SEARCH_FEAT")), session);
+        // if features were specified by ID add a constraint for each
+        List featureIdList = ParametricSearch.makeFeatureIdListFromPrefixed(parameters);
+        if (featureIdList.size() > 0) {
             constraintsChanged = true;
+            searchAddFeatureIdConstraints(featureIdList, session);
         }
-        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_FEAT2"))) {
-            searchAddConstraint(new ProductSearch.FeatureConstraint((String) parameters.get("SEARCH_FEAT2")), session);
-            constraintsChanged = true;
-        }
-        if (UtilValidate.isNotEmpty((String) parameters.get("SEARCH_FEAT3"))) {
-            searchAddConstraint(new ProductSearch.FeatureConstraint((String) parameters.get("SEARCH_FEAT3")), session);
-            constraintsChanged = true;
-        }
-        
+
         // if features were selected add a constraint for each
         Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(parameters);
         if (featureIdByType.size() > 0) {
