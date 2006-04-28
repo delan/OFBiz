@@ -234,13 +234,13 @@
                             This number can be negative so we'll have to check for it later-->
                         <find-by-and entity-name="RequirementByProductFacility" map-name="lookupParams" list-name="existingRequirementQuantities"/>
                         <first-from-list list-name="existingRequirementQuantities" entry-name="existingRequirementQuantity"/>
-                            <calculate field-name="quantity" map-name="inputMap">
-                                <calcop field-name="minimumStock" map-name="productFacility" operator="subtract">
-                                    <calcop field-name="newQuantityOnHand" operator="add">
-                                        <calcop operator="get" field-name="quantity" map-name="existingRequirementQuantity"/>
-                                    </calcop>
+                        <calculate field-name="quantity" map-name="inputMap">
+                            <calcop field-name="minimumStock" map-name="productFacility" operator="subtract">
+                                <calcop field-name="newQuantityOnHand" operator="add">
+                                    <calcop operator="get" field-name="quantity" map-name="existingRequirementQuantity"/>
                                 </calcop>
-                            </calculate>
+                            </calcop>
+                        </calculate>
                     <else>
                         <!-- if not, then we may have to create a requirement with a quantity equal to the facility's minimum quanity -->
                         <if-not-empty field-name="productFacility.reorderQuantity">
