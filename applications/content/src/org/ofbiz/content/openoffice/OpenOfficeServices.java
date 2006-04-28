@@ -54,7 +54,6 @@ import com.sun.star.uno.XComponentContext;
 
 /**
  * OpenOfficeServices Class
- * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  */
 public class OpenOfficeServices {
@@ -62,6 +61,9 @@ public class OpenOfficeServices {
 
     /**
      * Use OpenOffice to convert documents between types
+     * This service requires that the "content.temp.dir" directory be set in the content.properties file.
+     * This value should be operating system dependent with "\\" separators for Windows
+     * and "/" for Linux/Unix.
      */
     public static Map convertDocumentByteWrapper(DispatchContext dctx, Map context) {
         
@@ -102,7 +104,7 @@ public class OpenOfficeServices {
             FileOutputStream fos = new FileOutputStream(fileIn);
             fos.write(inByteArray);
             fos.close();
-		Debug.logInfo("fileIn:" + tempDir + fileInName, module);
+            Debug.logInfo("fileIn:" + tempDir + fileInName, module);
             OpenOfficeWorker.convertOODocToFile(xmulticomponentfactory, tempDir + fileInName, tempDir + fileOutName, outputMimeType);
             fileOut = new File(tempDir + fileOutName);
             FileInputStream fis = new FileInputStream(fileOut);
@@ -129,8 +131,8 @@ public class OpenOfficeServices {
             Debug.logError(e, "Error in OpenOffice operation: ", module);
             return ServiceUtil.returnError(e.toString());
         } finally {
-            //if (fileIn != null) fileIn.delete();
-            //if (fileOut != null)  fileOut.delete();
+            if (fileIn != null) fileIn.delete();
+            if (fileOut != null)  fileOut.delete();
         }
         return results;
     }
