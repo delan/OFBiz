@@ -709,7 +709,7 @@ public class GiftCertificateServices {
             return ServiceUtil.returnError("Unable to get survey response information; cannot fulfill gift card");
         }
         if (surveyResponse == null) {
-            return ServiceUtil.returnError("Survey response came back null from the database!");
+            return ServiceUtil.returnError("Survey response came back null from the database for order item: " + orderItem);
         }
 
         // get the response answers
