@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 
-<div class="head1">Manual Electronic Transaction</div>
+<div class="head1">${uiLabelMap.AccountingManualTransaction}</div>
 <br/>
 
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
@@ -36,7 +36,7 @@
 
     <table border='0' cellpadding='2' cellspacing='0'>
       <tr>
-        <td width="26%" align="right" valign=middle><div class="tableheadtext">Payment Method Type</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">${uiLabelMap.AccountingPaymentMethodType}</div></td>
         <td width="5">&nbsp;</td>
         <td width='74%'>
           <#if paymentMethodType?has_content>
@@ -44,13 +44,13 @@
             <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}">
           <#else>
             <select name="paymentMethodTypeId" class="selectBox">
-              <option value="CREDIT_CARD">Credit Card</option>
+              <option value="CREDIT_CARD">${uiLabelMap.AccountingCreditCard}</option>
             </select>
           </#if>
         </td>
       </tr>
       <tr>
-        <td width="26%" align="right" valign=middle><div class="tableheadtext">Product Store</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">${uiLabelMap.ProductProductStore}</div></td>
         <td width="5">&nbsp;</td>
         <td width='74%'>
           <#if currentStore?has_content>
@@ -66,7 +66,7 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align="right" valign=middle><div class="tableheadtext">Transaction Type</div></td>
+        <td width="26%" align="right" valign=middle><div class="tableheadtext">${uiLabelMap.AccountingTransactionType}</div></td>
         <td width="5">&nbsp;</td>
         <td width='74%'>
           <#if currentTx?has_content>
@@ -95,7 +95,7 @@
         <#-- amount field -->
         <#if txType != "PRDS_PAY_RELEASE">
           <tr>
-            <td width="26%" align="right" valign=middle><div class="tableheadtext">Amount</div></td>
+            <td width="26%" align="right" valign=middle><div class="tableheadtext">${uiLabelMap.CommonAmount}</div></td>
             <td width="5">&nbsp;</td>
             <td width="74%">
               <input type="text" class="inputBox" size="20" maxlength="30" name="amount">
@@ -108,14 +108,14 @@
           <td width="26%" align="right" valign=middle>&nbsp;</td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <input type="submit" value="Submit">
+            <input type="submit" value="${uiLabelMap.CommonSubmit}">
           </td>
         </tr>
       <#elseif txType?has_content>
         <tr>
           <td colspan="3" align="center">
             <br/>
-            <div class="head2">This transaction type is not yet supported</div>
+            <div class="head2">${uiLabelMap.AccountingTransactionTypeNotYetSupported}</div>
             <br/>
           </td>
         </tr>
@@ -123,5 +123,5 @@
     </table>
   </form>
 <#else>
-  <h3>You do not have permission for this function.</h3>
+  <h3>${uiLabelMap.AccountingPermissionError}</h3>
 </#if>

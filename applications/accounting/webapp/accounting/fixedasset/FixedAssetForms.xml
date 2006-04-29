@@ -29,8 +29,8 @@ under the License.
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}">
             <display/>
         </field>
-        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedTypeId}"><display-entity entity-name="FixedAssetType"/></field>
-        <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParentId}">
+        <field name="fixedAssetTypeId"><display-entity entity-name="FixedAssetType"/></field>
+        <field name="parentFixedAssetId">
             <display-entity entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}">
                 <sub-hyperlink target="EditFixedAsset?fixedAssetId=${parentFixedAssetId}" description="${parentFixedAssetId}" link-style="buttontext"/>
             </display-entity>
@@ -56,7 +56,7 @@ under the License.
             </drop-down>
         </field>
         <field name="instanceOfProductId" title=""><lookup target-form-name="LookupProduct"/></field>        
-        <field name="classEnumId" title="Class Enum Id" widget-style="selectBox">
+        <field name="classEnumId" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="FXAST_CLASS"/>                
@@ -80,7 +80,7 @@ under the License.
             </drop-down>
         </field>
         <!--<field name="calendarId"><hidden/></field>-->  <!-- not show, can better be maintained by the system -->
-        <field name="calendarId" title="${uiLabelMap.CommonCalendar}" widget-style="selectBox">
+        <field name="calendarId" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="TechDataCalendar" description="[${calendarId}] ${description}">
                     <entity-order-by field-name="calendarId"/>
@@ -123,7 +123,7 @@ under the License.
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="quantityUomId" title="${uiLabelMap.CommonQuantityUom}" widget-style="selectBox">
+        <field name="quantityUomId" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomAndType" key-field-name="uomId" description="[${typeDescription}] ${description}">
                     <entity-order-by field-name="uomTypeId"/>

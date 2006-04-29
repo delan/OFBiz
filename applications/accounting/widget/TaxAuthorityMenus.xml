@@ -41,7 +41,7 @@
         <menu-item name="EditTaxAuthorityGlAccounts" title="${uiLabelMap.AccountingGlAccs}">
             <link target="EditTaxAuthorityGlAccounts?taxAuthPartyId=${taxAuthPartyId}&amp;taxAuthGeoId=${taxAuthGeoId}"/>
         </menu-item>
-        <menu-item name="EditTaxAuthorityRateProducts" title="Product Rates">
+        <menu-item name="EditTaxAuthorityRateProducts" title="${uiLabelMap.AccountingProductRates}">
             <link target="EditTaxAuthorityRateProducts?taxAuthPartyId=${taxAuthPartyId}&amp;taxAuthGeoId=${taxAuthGeoId}"/>
         </menu-item>
         <menu-item name="ListTaxAuthorityParties" title="${uiLabelMap.PartyParties}">
