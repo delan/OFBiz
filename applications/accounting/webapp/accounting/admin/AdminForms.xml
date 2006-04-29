@@ -22,7 +22,7 @@
         
     <form name="ListCompanies" type="list" title="Internal Organizations" default-widget-style="linktext"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" list-name="parties">
-        <field name="partyId" title="${uiLabelMap.Companies}" widget-style="tabletext"><display-entity entity-name="PartyGroup" description="${groupName}"/></field>
+        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" widget-style="tabletext"><display-entity entity-name="PartyGroup" description="${groupName}"/></field>
         <field name="admin" title="Admin"><hyperlink target="AdminMain?organizationPartyId=${partyId}" description="Admin"/></field>
         <field name="accounts" title="Accounts"><hyperlink target="ListGlAccountOrganization?organizationPartyId=${partyId}" description="Accounts"/></field>
     </form>

@@ -28,7 +28,7 @@
   <tr>
      <td colspan="3">  
 <ul>
-<li><a href="<@ofbizUrl>FindAgreement</@ofbizUrl>">List Available Agreements</a></li>
+<li><a href="<@ofbizUrl>FindAgreement</@ofbizUrl>">${uiLabelMap.AccountingAgreementAvailable}</a></li>
 </ul>
 <br/>
      </td>
@@ -40,7 +40,7 @@
   <tr>
      <td colspan="3">  
 <ul>
-<li><a href="<@ofbizUrl>FindBillingAccount</@ofbizUrl>">Show Customer Billing Accounts</a></li>
+<li><a href="<@ofbizUrl>FindBillingAccount</@ofbizUrl>">${uiLabelMap.CommonShow} ${uiLabelMap.AccountingCustomer} ${uiLabelMap.AccountingBillingAccount}</a></li>
 </ul>
 <br/>
      </td>
@@ -53,7 +53,7 @@
   <tr>
      <td colspan="3">  
 <ul>
-<li><a href="<@ofbizUrl>ListFixedAssets</@ofbizUrl>">Show all Fixed Assets</a></li>
+<li><a href="<@ofbizUrl>ListFixedAssets</@ofbizUrl>">${uiLabelMap.CommonShowAll} ${uiLabelMap.AccountingFixedAssets}</a></li>
 </ul>
 <br/>
      </td>
@@ -66,21 +66,21 @@
   <tr valign="top">
 <td>
 <ul>
-<li><a href="<@ofbizUrl>findInvoices?noConditionFind=Y&lookupFlag=Y</@ofbizUrl>">Show All Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?noConditionFind=Y&lookupFlag=Y</@ofbizUrl>">${uiLabelMap.CommonShowAll} ${uiLabelMap.AccountingInvoices}</a></li>
 </ul>
 </td>
 
 <td>
 <ul>
 <#list invoiceTypes as invoiceType>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">Show ${invoiceType.description} Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${invoiceType.description} ${uiLabelMap.AccountingInvoices}</a></li>
 </#list>
 </ul>
 </td>
 <td>
 <ul>
 <#list invoiceStatus as status>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Invoices</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${status.description} ${uiLabelMap.AccountingInvoices}</a></li>
 </#list>
 </ul>
 </td>
@@ -93,14 +93,14 @@
 <tr valign="top">
 <td>
 <ul>
-<li><a href="<@ofbizUrl>findPayments?noConditionFind=Y&lookupFlag=Y</@ofbizUrl>">Show all Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?noConditionFind=Y&lookupFlag=Y</@ofbizUrl>">${uiLabelMap.CommonShowAll} ${uiLabelMap.AccountingPayments}</a></li>
 </ul>
 </td>
 <td>
 
 <ul>
 <#list paymentTypes as paymentType>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&paymentTypeId=${paymentType.paymentTypeId}</@ofbizUrl>">Show ${paymentType.get("description",locale)} Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&paymentTypeId=${paymentType.paymentTypeId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${paymentType.get("description",locale)} ${uiLabelMap.AccountingPayments}</a></li>
 </#list>
 </ul>
 </td>
@@ -109,7 +109,7 @@
 <td>
 <ul>
 <#list paymentMethodTypes as paymentMethodType>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">Show ${paymentMethodType.get("description",locale)} Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${paymentMethodType.get("description",locale)} ${uiLabelMap.AccountingPayments}</a></li>
 </#list>
 </ul>
 </td>
@@ -117,14 +117,14 @@
 <td>
 <ul>
 <#list paymentStatus as status>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">Show ${status.description} Payments</a></li>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${status.description} ${uiLabelMap.AccountingPayments}</a></li>
 </#list>
 </ul>
 </td>
 </tr>
 </table>
 
-<p><b>NOTE</b><br/>
-A full accounting and financials component for OFBiz is available.  
-<a href="http://www.opensourcestrategies.com/ofbiz/accounting.php">Click here</a> for complete details.</p>
+<p><b>${uiLabelMap.AccountingMainPageNote1}</b><br/>
+${uiLabelMap.AccountingMainPageNote2} 
+<a href="http://www.opensourcestrategies.com/ofbiz/accounting.php">${uiLabelMap.AccountingMainPageNote3}</a> ${uiLabelMap.AccountingMainPageNote4}</p>
 </div>

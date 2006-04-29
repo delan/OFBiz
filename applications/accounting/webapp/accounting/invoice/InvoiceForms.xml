@@ -23,6 +23,7 @@ under the License.
     <form name="FindInvoices" type="single" 
             target="findInvoices" title="Find and list invoices"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="invoiceId"><text-find default-option="contains" ignore-case="true"/></field>
         <field name="description"><text-find default-option="contains" ignore-case="true"/></field>
@@ -40,7 +41,6 @@ under the License.
         </field>
         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
         
@@ -439,6 +439,6 @@ under the License.
         <field name="emailAddressCc" entry-name="ccEmailAddress" parameter-name="sendCc"><text/></field>
         <field name="subject"><text default-value="Please find attached invoice."/></field>
         <field name="bodyText"><textarea/></field>
-        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

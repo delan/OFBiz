@@ -24,7 +24,7 @@ under the License.
     <screen name="ListFixedAssets">
         <section>
             <actions>
-                <set field="title" value="List Fixed Assets"/>
+                <set field="titleProperty" value="PageTitleListFixedAssets"/>
                 <set field="tabButtonItem" value="ListFixedAssets"/>
                 <entity-condition entity-name="FixedAsset" list-name="fixedAssets">
                     <!-- <condition-list>
@@ -52,7 +52,7 @@ under the License.
     <screen name="EditFixedAsset">
         <section>
             <actions>
-                <set field="title" value="Edit Fixed Asset"/>
+                <set field="titleProperty" value="PageTitleEditFixedAsset"/>
                 <set field="tabButtonItem" value="EditFixedAsset"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
@@ -75,7 +75,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
                 <set field="tabButtonItem" value="ListFixedAssetProducts"/>
-                <set field="labelTitleProperty" value="Products"/>
+                <set field="labelTitleProperty" value="AccountingFixedAssetProducts"/>
 
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset">
@@ -107,7 +107,7 @@ under the License.
                 <set field="layoutSettings.extraHead" value="&lt;link rel='stylesheet' href='/images/calendarTable.css' type='text/css'&gt;" global="true"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
                 <set field="tabButtonItem" value="ListFixedAssetCalendar"/>
-                <set field="labelTitleProperty" value="Calendar"/>
+                <set field="labelTitleProperty" value="AccountingFixedAssetCalendar"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
                 <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
@@ -141,7 +141,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleListFixedAssetStdCosts"/>
                 <set field="tabButtonItem" value="ListFixedAssetStdCosts"/>
-                <set field="labelTitleProperty" value="Standard costs"/>
+                <set field="labelTitleProperty" value="AccountingFixedAssetStdCosts"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset" auto-field-map="true"/>
                 <entity-and entity-name="FixedAssetStdCost" list-name="fixedAssetStdCosts">
@@ -186,9 +186,9 @@ under the License.
     <screen name="EditFixedAssetIdents">
         <section>
             <actions>
-                <set field="titleProperty" value="Edit Fixed Asset Idents"/>
+                <set field="titleProperty" value="PageTitleEditFixedAssetIdents"/>
                 <set field="tabButtonItem" value="EditFixedAssetIdents"/>
-                <set field="labelTitleProperty" value="Edit Fixed Asset Idents"/>
+                <set field="labelTitleProperty" value="PageTitleEditFixedAssetIdents"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fixedAssetIdentTypeId" from-field="parameters.fixedAssetIdentTypeId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
@@ -207,9 +207,9 @@ under the License.
     <screen name="EditFixedAssetRegistrations">
         <section>
             <actions>
-                <set field="titleProperty" value="Edit Fixed Asset Registrations"/>
+                <set field="titleProperty" value="PageTitleEditFixedAssetRegistrations"/>
                 <set field="tabButtonItem" value="EditFixedAssetRegistrations"/>
-                <set field="labelTitleProperty" value="Edit Fixed Asset Registrations"/>
+                <set field="labelTitleProperty" value="PageTitleEditFixedAssetRegistrations"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>

@@ -102,10 +102,9 @@
     <screen name="EditGlJournalEntry">
         <section>
             <actions>
-                <set field="title" value="Edit GlJournal Entry"/>
-                <set field="titleProperty" value="Edit Gl Journal Entry"/>
+                <set field="titleProperty" value="AcctgEditGlJournalEntry"/>
                 <set field="tabButtonItem" value="EditGlJournalEntry"/>
-                <set field="labelTitleProperty" value="ListGlAccountOrganization"/>
+                <set field="labelTitleProperty" value="AcctgEditGlJournalEntry"/>
                 <!-- entity-condition entity-name="GlAccountOrganization" list-name="entityList" use-cache="true" >
                     <condition-expr field-name="glAccountId" operator="greater" value="0" />
                 </entity-condition -->
@@ -126,10 +125,9 @@
     <screen name="ListGlAccountOrganization">
         <section>
             <actions>
-                <set field="title" value="List GlAccountOrganization"/>
-                <set field="titleProperty" value="List GlAccountOrganization"/>
+                <set field="titleProperty" value="AcctgListGlAcctOrg"/>
                 <set field="tabButtonItem" value="EditProduct"/>
-                <set field="labelTitleProperty" value="ListGlAccountOrganization"/>
+                <set field="labelTitleProperty" value="AcctgListGlAcctOrg"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
             </actions>
@@ -147,10 +145,10 @@
     <screen name="AssignGlAccount">
         <section>
             <actions>
-                <set field="title" value="Assign GlAccount"/>
+                <set field="titleProperty" value="AcctgAssignGlAccount"/>
                 <!-- <set field="titleProperty" value=""/> -->
                 <set field="headerItem" value="chartofaccounts"/>
-                <set field="labelTitleProperty" value="Assign Account"/>
+                <set field="labelTitleProperty" value="AcctgAssignGlAccount"/>
     
                 <!-- <set field="accountId" from-field="parameters.accountId"/> -->
             </actions>
@@ -167,10 +165,10 @@
     <screen name="GlAccountNavigate">
         <section>
             <actions>
-                <set field="title" value="Navigate Gl Accounts"/>
+                <set field="titleProperty" value="AcctgNavigateAccts"/>
                 <!-- <set field="titleProperty" value=""/> -->
                 <set field="headerItem" value="chartofaccounts"/>
-                <set field="labelTitleProperty" value="ListAccounts"/>
+                <set field="labelTitleProperty" value="AcctgNavigateAccts"/>
                 <!-- parameters includes requestAttributes and parameter map -->
                 <!-- requestParameters is just the parameter map -->
                 <set field="glAccountId" from-field="requestParameters.glAccountId"/>
@@ -270,11 +268,10 @@
 
     <screen name="ListGlAccounts">
         <section>
-            <actions>
-                <set field="title" value="List Accounts"/>
-                <set field="titleProperty" value="List Accounts"/>
+            <actions>                
+                <set field="titleProperty" value="PageTitleListAccounts"/>
                 <set field="tabButtonItem" value=""/>
-                <set field="labelTitleProperty" value="ListAccounts"/>
+                <set field="labelTitleProperty" value="PageTitleListAccounts"/>
                 <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list-name="entityList" use-cache="true" >
                     <limit-range start="0" size="20" />
                 </entity-and -->
