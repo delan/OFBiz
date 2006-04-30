@@ -43,11 +43,11 @@
         </field>
     </form>
     <form name="ListRoutings" type="list" 
-            title="" list-iterator-name="listIt" paginate-target="FindRouting"
+            title="" list-name="listIt" paginate-target="FindRouting"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <set field="entityName" value="WorkEffort"/>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
@@ -97,11 +97,11 @@
         </field>
     </form>
     <form name="ListRoutingTasks" type="list"
-            title="" list-iterator-name="listIt" paginate-target="FindRoutingTask"
+            title="" list-name="listIt" paginate-target="FindRoutingTask"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <set field="entityName" value="WorkEffort"/>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>

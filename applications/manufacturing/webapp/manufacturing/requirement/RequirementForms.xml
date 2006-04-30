@@ -48,12 +48,12 @@
         </field>
     </form>
     <form name="ApproveRequirements" type="multi" use-row-submit="true" 
-            target="approveRequirements" title="" list-iterator-name="listIt" paginate-target="ApproveRequirements"
+            target="approveRequirements" title="" list-name="listIt" paginate-target="ApproveRequirements"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <set field="entityName" value="Requirement"/>
             <set field="requestParameters.statusId" value="REQ_CREATED"/>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
