@@ -150,6 +150,9 @@ public class PartyServices {
         } else {
             // create a party if one doesn't already exist with an initial status from the input
             String statusId = (String) context.get("statusId");
+            if (statusId == null) {
+                statusId = "PARTY_ENABLED";
+            }
             Map newPartyMap = UtilMisc.toMap("partyId", partyId, "partyTypeId", "PERSON", "createdDate", now, "lastModifiedDate", now, "statusId", statusId);
             if (userLogin != null) {
                 newPartyMap.put("createdByUserLogin", userLogin.get("userLoginId"));
@@ -157,6 +160,11 @@ public class PartyServices {
             }
             party = delegator.makeValue("Party", newPartyMap);
             toBeStored.add(party);
+
+            // create the status history
+            GenericValue statusRec = delegator.makeValue("PartyStatus",
+                    UtilMisc.toMap("partyId", partyId, "statusId", statusId, "statusDate", now));
+            toBeStored.add(statusRec);
         }
 
         GenericValue person = null;
@@ -356,9 +364,21 @@ public class PartyServices {
                     newPartyMap.put("createdByUserLogin", userLogin.get("userLoginId"));
                     newPartyMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
                 }
+
+                String statusId = (String) context.get("statusId");
                 party = delegator.makeValue("Party", newPartyMap);
                 party.setNonPKFields(context);
+
+                if (statusId == null) {
+                    statusId = "PARTY_ENABLED";
+                }
+                party.set("statusId", statusId);
                 party.create();
+
+                // create the status history
+                GenericValue partyStat = delegator.makeValue("PartyStatus",
+                        UtilMisc.toMap("partyId", partyId, "statusId", statusId, "statusDate", now));
+                partyStat.create();
             }
 
             GenericValue partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
@@ -977,6 +997,7 @@ public class PartyServices {
             // default view settings
             dynamicView.addMemberEntity("PT", "Party");
             dynamicView.addAlias("PT", "partyId");
+            dynamicView.addAlias("PT", "statusId");
             dynamicView.addAlias("PT", "partyTypeId");
             dynamicView.addRelation("one-nofk", "", "PartyType", ModelKeyMap.makeKeyMapList("partyTypeId"));
             dynamicView.addRelation("many", "", "UserLogin", ModelKeyMap.makeKeyMapList("partyId"));
@@ -989,10 +1010,12 @@ public class PartyServices {
             List fieldsToSelect = FastList.newInstance();
             // fields we need to select; will be used to set distinct
             fieldsToSelect.add("partyId");
+            fieldsToSelect.add("statusId");
             fieldsToSelect.add("partyTypeId");
 
             // get the params
             String partyId = (String) context.get("partyId");
+            String statusId = (String) context.get("statusId");
             String userLoginId = (String) context.get("userLoginId");
             String firstName = (String) context.get("firstName");
             String lastName = (String) context.get("lastName");
@@ -1003,6 +1026,16 @@ public class PartyServices {
                 if (partyId != null && partyId.length() > 0) {
                     paramList = paramList + "&partyId=" + partyId;
                     andExprs.add(new EntityExpr("partyId", true, EntityOperator.LIKE, "%"+partyId+"%", true));
+                }
+
+                // now the statusId - send ANY for all statuses; leave null for just enabled; or pass a specific status
+                if (statusId != null) {
+                    paramList = paramList + "&statusId=" + statusId;
+                    if (!"ANY".equalsIgnoreCase(statusId)) {
+                        andExprs.add(new EntityExpr("statusId", EntityOperator.EQUALS, statusId));
+                    }
+                } else {
+                    andExprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PARTY_DISABLED"));
                 }
 
                 // ----
