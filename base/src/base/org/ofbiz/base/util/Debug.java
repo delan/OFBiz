@@ -379,9 +379,9 @@ public final class Debug {
 
         Appender foundAppender = logger.getAppender(name);
         if (foundAppender == null) {
-            Enumeration enum = Logger.getRootLogger().getLoggerRepository().getCurrentLoggers();
-            while (enum.hasMoreElements() && foundAppender == null) {
-                Logger log = (Logger) enum.nextElement();
+            Enumeration currentLoggerEnum = Logger.getRootLogger().getLoggerRepository().getCurrentLoggers();
+            while (currentLoggerEnum.hasMoreElements() && foundAppender == null) {
+                Logger log = (Logger) currentLoggerEnum.nextElement();
                 foundAppender = log.getAppender(name);
             }
         } else {
