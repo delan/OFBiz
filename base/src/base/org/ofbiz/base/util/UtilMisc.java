@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import org.ofbiz.base.util.UtilProperties;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -401,9 +402,24 @@ public class UtilMisc {
             synchronized(UtilMisc.class) {
                 if (availableLocaleList == null) {
                     TreeMap localeMap = new TreeMap();
-                    Locale[] locales = Locale.getAvailableLocales();
-                    for (int i = 0; i < locales.length; i++) {
-                        localeMap.put(locales[i].getDisplayName(), locales[i]);
+                    String localesString = UtilProperties.getPropertyValue("general", "locales.available");
+                    if (localesString != null && localesString.length() > 0) { // check if available locales need to be limited according general.properties file
+                        int end = -1;
+                        int start = 0;
+                        for (int i=0; start < localesString.length(); i++) {
+                            end = localesString.indexOf(",", start);
+                            if (end == -1) {
+                                end = localesString.length();
+                            }
+                            Locale curLocale = new Locale(localesString.substring(start, end));
+                            localeMap.put(curLocale.getDisplayName(), curLocale);
+                            start = end + 1;
+                        }
+                    } else {
+                        Locale[] locales = Locale.getAvailableLocales();
+                        for (int i = 0; i < locales.length && locales[i] != null; i++) {
+                            localeMap.put(locales[i].getDisplayName(), locales[i]);
+                        }
                     }
                     availableLocaleList = new LinkedList(localeMap.values());
                 }
