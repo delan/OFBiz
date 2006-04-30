@@ -17,7 +17,7 @@ rm -f $OFBIZ_LOG
 ADMIN="-Dofbiz.admin.port=$ADMIN_PORT -Dofbiz.admin.key=$ADMIN_KEY"
 #DEBUG="-Dsun.rmi.server.exceptionTrace=true"
 #RMIIF="-Djava.rmi.server.hostname=<set your IP address here>"
-MEMIF="-Xms128M -Xmx128M"
+MEMIF="-Xms128M -Xmx256M"
 VMARGS="$MEMIF $DEBUG $RMIIF $ADMIN"
 
 # Worldpay Config
@@ -31,7 +31,7 @@ else
 fi
 
 # start ofbiz
-$JAVA $VMARGS -jar ofbiz.jar $* >>$OFBIZ_LOG 2>>$OFBIZ_LOG&
-#$JAVA $VMARGS -jar ofbiz.jar
+#$JAVA $VMARGS -jar ofbiz.jar $* >>$OFBIZ_LOG 2>>$OFBIZ_LOG&
+$JAVA $VMARGS -jar ofbiz.jar $*
 exit 0
 
