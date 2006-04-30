@@ -94,7 +94,6 @@ public class ModelForm {
     protected String paginatePreviousStyle;
     protected String paginateNextStyle;
     protected boolean separateColumns = false;
-    protected String listIteratorName;
     protected boolean paginate = true;
     protected boolean cssStyling = false;
     protected boolean useRowSubmit = false;
@@ -262,76 +261,110 @@ public class ModelForm {
         }
 
         this.name = formElement.getAttribute("name");
-        if (this.type == null || formElement.hasAttribute("type"))
+        if (this.type == null || formElement.hasAttribute("type")) {
             this.type = formElement.getAttribute("type");
-        if (this.target == null || formElement.hasAttribute("target"))
+        }
+        if (this.target == null || formElement.hasAttribute("target")) {
             setTarget( formElement.getAttribute("target") );
-        if (this.targetWindowExdr == null || formElement.hasAttribute("target-window"))
+        }
+        if (this.targetWindowExdr == null || formElement.hasAttribute("target-window")) {
             setTargetWindow(formElement.getAttribute("target-window"));
-        if (this.title == null || formElement.hasAttribute("title"))
+        }
+        if (this.title == null || formElement.hasAttribute("title")) {
             this.title = formElement.getAttribute("title");
-        if (this.tooltip == null || formElement.hasAttribute("tooltip"))
+        }
+        if (this.tooltip == null || formElement.hasAttribute("tooltip")) {
             this.tooltip = formElement.getAttribute("tooltip");
-        if (this.listName == null || formElement.hasAttribute("list-name"))
+        }
+        if (this.listName == null || formElement.hasAttribute("list-name")) {
             this.listName = formElement.getAttribute("list-name");
-        if (this.listEntryName == null || formElement.hasAttribute("list-entry-name"))
+        }
+        // if no list-name then look in the list-iterator-name; this is deprecated but we'll look at it anyway
+        if (UtilValidate.isEmpty(this.listName) && formElement.hasAttribute("list-iterator-name")) {
+            this.listName = formElement.getAttribute("list-iterator-name");
+        }
+        if (this.listEntryName == null || formElement.hasAttribute("list-entry-name")) {
             this.listEntryName = formElement.getAttribute("list-entry-name");
-        if (this.listIteratorName == null || formElement.hasAttribute("list-iterator-name"))
-            this.listIteratorName = formElement.getAttribute("list-iterator-name");
-        if (this.defaultMapName == null || formElement.hasAttribute("default-map-name"))
+        }
+        if (this.defaultMapName == null || formElement.hasAttribute("default-map-name")) {
             this.setDefaultMapName(formElement.getAttribute("default-map-name"));
-        if (this.defaultServiceName == null || formElement.hasAttribute("default-service-name"))
+        }
+        if (this.defaultServiceName == null || formElement.hasAttribute("default-service-name")) {
             this.defaultServiceName = formElement.getAttribute("default-service-name");
-        if (this.defaultEntityName == null || formElement.hasAttribute("default-entity-name"))
+        }
+        if (this.defaultEntityName == null || formElement.hasAttribute("default-entity-name")) {
             this.defaultEntityName = formElement.getAttribute("default-entity-name");
+        }
 
-        if (this.formTitleAreaStyle == null || formElement.hasAttribute("form-title-area-style"))
+        if (this.formTitleAreaStyle == null || formElement.hasAttribute("form-title-area-style")) {
             this.formTitleAreaStyle = formElement.getAttribute("form-title-area-style");
-        if (this.formWidgetAreaStyle == null || formElement.hasAttribute("form-widget-area-style"))
+        }
+        if (this.formWidgetAreaStyle == null || formElement.hasAttribute("form-widget-area-style")) {
             this.formWidgetAreaStyle = formElement.getAttribute("form-widget-area-style");
+        }
 
-        if (this.defaultTitleAreaStyle == null || formElement.hasAttribute("default-title-area-style"))
+        if (this.defaultTitleAreaStyle == null || formElement.hasAttribute("default-title-area-style")) {
             this.defaultTitleAreaStyle = formElement.getAttribute("default-title-area-style");
-        if (this.defaultWidgetAreaStyle == null || formElement.hasAttribute("default-widget-area-style"))
+        }
+        if (this.defaultWidgetAreaStyle == null || formElement.hasAttribute("default-widget-area-style")) {
             this.defaultWidgetAreaStyle = formElement.getAttribute("default-widget-area-style");
-        if (this.oddRowStyle == null || formElement.hasAttribute("odd-row-style"))
+        }
+        if (this.oddRowStyle == null || formElement.hasAttribute("odd-row-style")) {
             this.oddRowStyle = formElement.getAttribute("odd-row-style");
-        if (this.evenRowStyle == null || formElement.hasAttribute("even-row-style"))
+        }
+        if (this.evenRowStyle == null || formElement.hasAttribute("even-row-style")) {
             this.evenRowStyle = formElement.getAttribute("even-row-style");
-        if (this.defaultTableStyle == null || formElement.hasAttribute("default-table-style"))
+        }
+        if (this.defaultTableStyle == null || formElement.hasAttribute("default-table-style")) {
             this.defaultTableStyle = formElement.getAttribute("default-table-style");
-        if (this.headerRowStyle == null || formElement.hasAttribute("header-row-style"))
+        }
+        if (this.headerRowStyle == null || formElement.hasAttribute("header-row-style")) {
             this.headerRowStyle = formElement.getAttribute("header-row-style");
-        if (this.defaultTitleStyle == null || formElement.hasAttribute("header-row-style"))
+        }
+        if (this.defaultTitleStyle == null || formElement.hasAttribute("header-row-style")) {
             this.defaultTitleStyle = formElement.getAttribute("default-title-style");
-        if (this.defaultWidgetStyle == null || formElement.hasAttribute("default-widget-style"))
+        }
+        if (this.defaultWidgetStyle == null || formElement.hasAttribute("default-widget-style")) {
             this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
-        if (this.defaultTooltipStyle == null || formElement.hasAttribute("default-tooltip-style"))
+        }
+        if (this.defaultTooltipStyle == null || formElement.hasAttribute("default-tooltip-style")) {
             this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
-        if (this.itemIndexSeparator == null || formElement.hasAttribute("item-index-separator"))
+        }
+        if (this.itemIndexSeparator == null || formElement.hasAttribute("item-index-separator")) {
             this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
-        if (this.targetType == null || formElement.hasAttribute("target-type"))
+        }
+        if (this.targetType == null || formElement.hasAttribute("target-type")) {
             this.targetType = formElement.getAttribute("target-type");
-        if (this.defaultRequiredFieldStyle == null || formElement.hasAttribute("default-required-field-style"))
+        }
+        if (this.defaultRequiredFieldStyle == null || formElement.hasAttribute("default-required-field-style")) {
             this.defaultRequiredFieldStyle = formElement.getAttribute("default-required-field-style");
+        }
 
         // pagination settings
-        if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
+        if (this.paginateTarget == null || formElement.hasAttribute("paginate-target")) {
             setPaginateTarget(formElement.getAttribute("paginate-target"));
-        if (this.paginateTargetAnchor == null || formElement.hasAttribute("paginate-target-anchor"))
+        }
+        if (this.paginateTargetAnchor == null || formElement.hasAttribute("paginate-target-anchor")) {
             this.paginateTargetAnchor = formElement.getAttribute("paginate-target-anchor");
-        if (this.paginateIndexField == null || formElement.hasAttribute("paginate-index-field"))
+        }
+        if (this.paginateIndexField == null || formElement.hasAttribute("paginate-index-field")) {
             setPaginateIndexField(formElement.getAttribute("paginate-index-field"));
-        if (this.paginateSizeField == null || formElement.hasAttribute("paginate-size-field"))
+        }
+        if (this.paginateSizeField == null || formElement.hasAttribute("paginate-size-field")) {
             setPaginateSizeField(formElement.getAttribute("paginate-size-field"));
-        if (this.paginatePreviousLabel == null || formElement.hasAttribute("paginate-previous-label"))
+        }
+        if (this.paginatePreviousLabel == null || formElement.hasAttribute("paginate-previous-label")) {
             this.paginatePreviousLabel = new FlexibleStringExpander(formElement.getAttribute("paginate-previous-label"));
-        if (this.paginateNextLabel == null || formElement.hasAttribute("paginate-next-label"))
+        }
+        if (this.paginateNextLabel == null || formElement.hasAttribute("paginate-next-label")) {
             this.paginateNextLabel = new FlexibleStringExpander(formElement.getAttribute("paginate-next-label"));
-        if (this.paginatePreviousStyle == null || formElement.hasAttribute("paginate-previous-style"))
+        }
+        if (this.paginatePreviousStyle == null || formElement.hasAttribute("paginate-previous-style")) {
             setPaginatePreviousStyle(formElement.getAttribute("paginate-previous-style"));
-        if (this.paginateNextStyle == null || formElement.hasAttribute("paginate-next-style"))
+        }
+        if (this.paginateNextStyle == null || formElement.hasAttribute("paginate-next-style")) {
             setPaginateNextStyle(formElement.getAttribute("paginate-next-style"));
+        }
         
         this.paginate = "true".equals(formElement.getAttribute("paginate"));
         this.cssStyling = "true".equals(formElement.getAttribute("css-styling"));
@@ -1060,17 +1093,14 @@ public class ModelForm {
     
     public void renderItemRows(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, boolean formPerItem) {
         this.rowCount = 0;
-        String lookupName = getListIteratorName();
-        if (UtilValidate.isEmpty(lookupName)) {
-            lookupName = getListName();   
-        }
+        String lookupName = this.getListName();
         if (UtilValidate.isEmpty(lookupName)) {
             Debug.logError("No value for list or iterator name found.", module);
             return;
         }
         Object obj = context.get(lookupName);
         if (obj == null) {
-            Debug.logError("No object for list or iterator name:" + lookupName + " found.", module);
+            Debug.logInfo("No object for list or iterator name:" + lookupName + " found.", module);
             return;
         }
         // if list is empty, do not render rows
@@ -1459,32 +1489,6 @@ public class ModelForm {
         return lstNm;
     }
 
-    /**
-     * @param string
-     */
-    public void setListIteratorName(String string) {
-        this.listIteratorName = string;
-    }
-    
-   /**
-     * @return
-     */
-    public String getListIteratorName() {
-        String listIterName =  this.listIteratorName;
-        if (UtilValidate.isEmpty(listIterName)) {
-            listIterName = this.getListName();   
-        }
-        return listIterName;
-    }
-
-    public ListIterator getListIterator(Map context) {
-        String name = getListIteratorName();
-        ListIterator iter = null;
-        if (UtilValidate.isNotEmpty(name)) {
-            iter = (ListIterator)context.get(name);
-        }
-        return iter;
-     }
     /**
      * @return
      */

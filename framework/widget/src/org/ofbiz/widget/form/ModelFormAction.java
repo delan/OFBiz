@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.PatternSyntaxException;
@@ -278,7 +279,6 @@ public abstract class ModelFormAction {
         protected FlexibleStringExpander serviceNameExdr;
         protected FlexibleMapAccessor resultMapNameAcsr;
         protected FlexibleStringExpander autoFieldMapExdr;
-        protected FlexibleStringExpander resultMapListIteratorNameExdr;
         protected FlexibleStringExpander resultMapListNameExdr;
         protected Map fieldMap;
         
@@ -288,24 +288,20 @@ public abstract class ModelFormAction {
             this.resultMapNameAcsr = UtilValidate.isNotEmpty(serviceElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(serviceElement.getAttribute("result-map-name")) : null;
             this.autoFieldMapExdr = new FlexibleStringExpander(serviceElement.getAttribute("auto-field-map"));
             if (UtilValidate.isEmpty(serviceElement.getAttribute("result-map-list-name"))) {
-                String lstNm = modelForm.getListName();
-                if (UtilValidate.isEmpty(lstNm)) {
-                    lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
+                if (UtilValidate.isEmpty(serviceElement.getAttribute("result-map-list-iterator-name"))) {
+                    String lstNm = modelForm.getListName();
+                    if (UtilValidate.isEmpty(lstNm)) {
+                        lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
+                    }
+                    this.resultMapListNameExdr = new FlexibleStringExpander(lstNm);
+                } else {
+                    // this is deprecated, but support it for now anyway
+                    this.resultMapListNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-iterator-name"));
                 }
-                this.resultMapListNameExdr = new FlexibleStringExpander(lstNm);
             } else {
                 this.resultMapListNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-name"));
             }
             
-            if (UtilValidate.isEmpty(serviceElement.getAttribute("result-map-list-iterator-name"))) {
-                String lstNm = modelForm.getListIteratorName();
-                if (UtilValidate.isEmpty(lstNm)) {
-                    lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
-                }
-                this.resultMapListIteratorNameExdr = new FlexibleStringExpander(lstNm);
-            } else {
-                this.resultMapListIteratorNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-iterator-name"));
-            }
             this.fieldMap = EntityFinderUtil.makeFieldMap(serviceElement);
         }
         
@@ -348,22 +344,14 @@ public abstract class ModelFormAction {
                 } else {
                     context.putAll(result);
                 }
-                String resultMapListIteratorName = resultMapListIteratorNameExdr.expandString(context);
-                Object obj = result.get(resultMapListIteratorName);
-                String formListIteratorName = modelForm.getListIteratorName();
-                if (obj != null && obj instanceof EntityListIterator) {
-                    context.put("listIteratorName", formListIteratorName);
-                    context.put(formListIteratorName, obj);
-                }
                 String listName = resultMapListNameExdr.expandString(context);
                 Object listObj = result.get(listName);
                 if (listObj != null) {
-                    if (!(listObj instanceof List)) {
-                        throw new IllegalArgumentException("Error in form [" + this.modelForm.getName() + "] calling service with name [" + serviceNameExpanded + "]: the result that is supposed to be a list is not a List. You may need to use list-iterator-name isntead of list-name, or something like that.");
+                    if (!(listObj instanceof List) && !(listObj instanceof ListIterator)) {
+                        throw new IllegalArgumentException("Error in form [" + this.modelForm.getName() + "] calling service with name [" + serviceNameExpanded + "]: the result that is supposed to be a List or ListIterator and is not.");
                     }
-                    List lst = (List) listObj; 
                     context.put("listName", listName);
-                    context.put(listName, lst);
+                    context.put(listName, listObj);
                 }
             } catch (GenericServiceException e) {
                 String errMsg = "Error in form [" + this.modelForm.getName() + "] calling service with name [" + serviceNameExpanded + "]: " + e.toString();
@@ -408,9 +396,6 @@ public abstract class ModelFormAction {
             if (UtilValidate.isEmpty(entityAndElement.getAttribute("list-name"))) {
                 String lstNm = modelForm.getListName();
                 if (UtilValidate.isEmpty(lstNm)) {
-                    lstNm = modelForm.getListIteratorName();
-                }
-                if (UtilValidate.isEmpty(lstNm)) {
                     lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
                 }
                 entityAndElement.setAttribute("list-name", lstNm);
@@ -424,11 +409,7 @@ public abstract class ModelFormAction {
                 // don't want to do this: context.put("defaultFormResultList", null);
                 finder.runFind(context, this.modelForm.getDelegator(context));
                 Object obj = context.get(this.actualListName);
-
-                if (obj != null && (obj instanceof EntityListIterator)) {
-                    String modelFormIteratorName = modelForm.getListIteratorName();
-                    context.put(modelFormIteratorName, obj);
-                } else if (obj != null && obj instanceof List) {
+                if (obj != null && ((obj instanceof List) || (obj instanceof EntityListIterator))) {
                     String modelFormListName = modelForm.getListName();
                     context.put(modelFormListName, obj);
                 }
@@ -457,9 +438,6 @@ public abstract class ModelFormAction {
             if (UtilValidate.isEmpty(entityConditionElement.getAttribute("list-name"))) {
                 String lstNm = modelForm.getListName();
                 if (UtilValidate.isEmpty(lstNm)) {
-                    lstNm = modelForm.getListIteratorName();
-                }
-                if (UtilValidate.isEmpty(lstNm)) {
                     lstNm = ModelForm.DEFAULT_FORM_RESULT_LIST_NAME;
                 }
                 entityConditionElement.setAttribute("list-name", lstNm);
@@ -473,10 +451,7 @@ public abstract class ModelFormAction {
                 // don't want to do this: context.put("defaultFormResultList", null);
                 finder.runFind(context, this.modelForm.getDelegator(context));
                 Object obj = context.get(this.actualListName);
-                if (obj != null && (obj instanceof EntityListIterator)) {
-                    String modelFormIteratorName = modelForm.getListIteratorName();
-                    context.put(modelFormIteratorName, obj);
-                } else if (obj != null && obj instanceof List) {
+                if (obj != null && ((obj instanceof List) || (obj instanceof EntityListIterator))) {
                     String modelFormListName = modelForm.getListName();
                     context.put(modelFormListName, obj);
                 }

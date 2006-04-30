@@ -69,6 +69,7 @@ under the License.
         <xs:attribute type="xs:string" name="list-entry-name">
             <xs:annotation><xs:documentation>if specified each list entry will be put in the context with this name; otherwise the list entry must be a Map and the entries in the Map will be put into the context by name</xs:documentation></xs:annotation>
         </xs:attribute>
+        <!-- this is now deprecated, never made sense to separate anyway; use list-name instead <xs:attribute type="xs:string" name="list-iterator-name"/> -->
         <xs:attribute type="xs:string" name="default-map-name"/>
         <xs:attribute type="xs:string" name="default-entity-name"/>
         <xs:attribute type="xs:string" name="default-service-name"/>
@@ -119,7 +120,6 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="list-iterator-name"/>
         <xs:attribute type="xs:string" name="view-size"/>
         <xs:attribute name="paginate" default="true">
             <xs:simpleType>
@@ -1029,7 +1029,7 @@ under the License.
         <xs:attribute type="xs:string" name="auto-field-map" default="true">
             <xs:annotation><xs:documentation>This can be "true", "false" or the name of a Map in the context to use as the source Map for the service context.</xs:documentation></xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="result-map-list-iterator-name"/>
+        <!-- this is deprecated and should not be used; use result-map-list-name instead: <xs:attribute type="xs:string" name="result-map-list-iterator-name"/> -->
         <xs:attribute type="xs:string" name="result-map-list-name"/>
     </xs:attributeGroup>
     <xs:element name="set" substitutionGroup="AllActions">
