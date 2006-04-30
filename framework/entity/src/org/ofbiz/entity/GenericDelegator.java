@@ -1666,7 +1666,7 @@ public class GenericDelegator implements DelegatorInterface {
             Iterator fieldEntries = fields.entrySet().iterator();
             while (fieldEntries.hasNext()) {
                 Map.Entry fieldEntry = (Map.Entry) fieldEntries.next();
-                likeExpressions.add(new EntityExpr(fieldEntry.getKey(), EntityOperator.LIKE, fieldEntry.getValue()));
+                likeExpressions.add(new EntityExpr((String) fieldEntry.getKey(), EntityOperator.LIKE, fieldEntry.getValue()));
             }
         }
         EntityConditionList ecl = new EntityConditionList(likeExpressions, EntityOperator.AND);
