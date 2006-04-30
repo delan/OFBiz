@@ -39,7 +39,7 @@
     <form name="listLookupRouting" list-name="entityList" paginate-target="LookupRouting" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
@@ -72,7 +72,7 @@
     <form name="listLookupRoutingTask" list-name="entityList" paginate-target="LookupRoutingTask" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
