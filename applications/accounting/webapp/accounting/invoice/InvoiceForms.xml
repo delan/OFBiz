@@ -45,11 +45,11 @@ under the License.
     </form>
         
     <form name="ListInvoices" type="list" separate-columns="true" 
-        title="Invoice List"  default-title-style="tableheadtext" list-name="newInvoices" target=""
+        title="Invoice List"  default-title-style="tableheadtext" list-name="listIt" target=""
         default-widget-style="tabletext" default-tooltip-style="tabletext"
-        paginate-target="findInvoices" list-iterator-name="listIt" default-entity-name="Invoice">
+        paginate-target="findInvoices" default-entity-name="Invoice">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Invoice"/>
                 <field-map field-name="orderBy" value="invoiceDate"/>
