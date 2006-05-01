@@ -22,8 +22,8 @@
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-
+    xsi:noNamespaceSchemaLocation="../../../../../framework/widget/dtd/widget-form.xsd">
+    
     <form name="EditGlJournalEntry" type="single"
             target="createGlJournalEntry" title="" default-map-name="journal"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -141,12 +141,21 @@
                 <field-map field-name="entityName" env-name="entityName"/>
                 <field-map field-name="noConditionFind" value="Y"/> 
             </service>
+            <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD" />
         </actions>
         
-        <auto-fields-entity entity-name="GlAccount" default-field-type="display"/>
+        <!--auto-fields-entity entity-name="GlAccount" default-field-type="display"/-->
         <field name="glAccountId" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountNavigate?glAccountId=${glAccountId}"/>
         </field>
+        <field name="accountName"><display/></field>
+        <field name="glAccountTypeId"><display-entity entity-name="GlAccountType"/></field>
+        <field name="glAccountClassId"><display-entity entity-name="GlAccountClass"/></field>
+        <field name="glResourceTypeId"><display-entity entity-name="GlResourceType"></display-entity></field>
+        <field name="glXbrlClassId"><display-entity entity-name="GlXbrlClass"></display-entity></field>
+        <field name="parentGlAccountId"><display-entity entity-name="GlAccount" description="${accountName}[${glAccountId}]" key-field-name="glAccountId"></display-entity></field>
+        <field name="accountCode"><hidden/></field>
+        <field name="postedBalance"><display type="currency" currency="${defaultCurrencyUomId}"/></field>
     </form>
 
     <form name="EditGlAccount" type="single" target="updateGlAccount" title="" default-map-name="glAccount"
