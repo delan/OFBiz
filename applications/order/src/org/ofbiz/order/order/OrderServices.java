@@ -29,6 +29,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
@@ -202,10 +203,10 @@ public class OrderServices {
         }
 
         // check inventory and other things for each item
-        List errorMessages = new LinkedList();
-        Map normalizedItemQuantities = new HashMap();
-        Map normalizedItemNames = new HashMap();
-        Map itemValuesBySeqId = new HashMap();
+        List errorMessages = FastList.newInstance();
+        Map normalizedItemQuantities = FastMap.newInstance();
+        Map normalizedItemNames = FastMap.newInstance();
+        Map itemValuesBySeqId = FastMap.newInstance();
         Iterator itemIter = orderItems.iterator();
         java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
@@ -493,6 +494,17 @@ public class OrderServices {
         orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
         toBeStored.add(orderStatus);
 
+        // before processing orderItems process orderItemGroups so that they'll be in place for the foreign keys and what not
+        List orderItemGroups = (List) context.get("orderItemGroups");
+        if (orderItemGroups != null && orderItemGroups.size() > 0) {
+            Iterator orderItemGroupIter = orderItemGroups.iterator();
+            while (orderItemGroupIter.hasNext()) {
+                GenericValue orderItemGroup = (GenericValue) orderItemGroupIter.next();
+                orderItemGroup.set("orderId", orderId);
+                toBeStored.add(orderItemGroup);
+            }
+        }
+        
         // set the order items
         Iterator oi = orderItems.iterator();
         while (oi.hasNext()) {

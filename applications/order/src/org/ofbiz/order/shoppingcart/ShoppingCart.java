@@ -38,6 +38,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
 import org.apache.commons.collections.map.LinkedMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -105,6 +108,8 @@ public class ShoppingCart implements Serializable {
     private List orderTerms = new LinkedList();
 
     private List cartLines = new LinkedList();
+    private Map itemGroupByNumberMap = FastMap.newInstance();
+    protected long nextGroupNumber = 1;
     private List paymentInfo = new LinkedList();
     private List shipInfo = new LinkedList();
     private Map contactMechIdsMap = new HashMap();
@@ -118,413 +123,6 @@ public class ShoppingCart implements Serializable {
     private Timestamp defaultShipAfterDate = null;
     private Timestamp defaultShipBeforeDate = null;
     
-    public static class ProductPromoUseInfo implements Serializable {
-        public String productPromoId = null;
-        public String productPromoCodeId = null;
-        public double totalDiscountAmount = 0;
-        public double quantityLeftInActions = 0;
-
-        public ProductPromoUseInfo(String productPromoId, String productPromoCodeId, double totalDiscountAmount, double quantityLeftInActions) {
-            this.productPromoId = productPromoId;
-            this.productPromoCodeId = productPromoCodeId;
-            this.totalDiscountAmount = totalDiscountAmount;
-            this.quantityLeftInActions = quantityLeftInActions;
-        }
-
-        public String getProductPromoId() { return this.productPromoId; }
-        public String getProductPromoCodeId() { return this.productPromoCodeId; }
-        public double getTotalDiscountAmount() { return this.totalDiscountAmount; }
-        public double getQuantityLeftInActions() { return this.quantityLeftInActions; }
-    }
-
-    public static class CartShipInfo implements Serializable {
-        public LinkedMap shipItemInfo = new LinkedMap();
-        public List shipTaxAdj = new LinkedList();
-        public String contactMechId = null;
-        public String shipmentMethodTypeId = null;
-        public String carrierRoleTypeId = null;
-        public String carrierPartyId = null;
-        public String giftMessage = null;
-        public String shippingInstructions = null;
-        public String maySplit = "N";
-        public String isGift = "N";
-        public double shipEstimate = 0.00;
-        public Timestamp shipBeforeDate = null;
-        public Timestamp shipAfterDate = null;
-
-        public List makeItemShipGroupAndAssoc(GenericDelegator delegator, ShoppingCart cart, long groupIndex) {
-            String shipGroupSeqId = UtilFormatOut.formatPaddedNumber(groupIndex, 5);
-            List values = new LinkedList();
-            
-            // create order contact mech for shipping address
-            if (contactMechId != null) {
-                GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
-                orderCm.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
-                orderCm.set("contactMechId", contactMechId);
-                values.add(orderCm);
-            }
-
-            // create the ship group
-            GenericValue shipGroup = delegator.makeValue("OrderItemShipGroup", null);
-            shipGroup.set("shipmentMethodTypeId", shipmentMethodTypeId);
-            shipGroup.set("carrierRoleTypeId", carrierRoleTypeId);
-            shipGroup.set("carrierPartyId", carrierPartyId);
-            shipGroup.set("shippingInstructions", shippingInstructions);
-            shipGroup.set("giftMessage", giftMessage);
-            shipGroup.set("contactMechId", contactMechId);
-            shipGroup.set("maySplit", maySplit);
-            shipGroup.set("isGift", isGift);
-            shipGroup.set("shipGroupSeqId", shipGroupSeqId);
-            
-            // use the cart's default ship before and after dates here
-            if ((shipBeforeDate == null) && (cart.getDefaultShipBeforeDate() != null)) {
-                shipGroup.set("shipByDate", cart.getDefaultShipBeforeDate());
-            } else {
-                shipGroup.set("shipByDate", shipBeforeDate);
-            }
-            if ((shipAfterDate == null) && (cart.getDefaultShipAfterDate() != null)) {
-                shipGroup.set("shipAfterDate", cart.getDefaultShipAfterDate());
-            } else {
-                shipGroup.set("shipAfterDate", shipAfterDate);
-            }
-            
-            values.add(shipGroup);
-
-            // create the shipping estimate adjustments
-            if (shipEstimate != 0) {
-                GenericValue shipAdj = delegator.makeValue("OrderAdjustment", null);
-                shipAdj.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
-                shipAdj.set("amount", new Double(shipEstimate));
-                shipAdj.set("shipGroupSeqId", shipGroupSeqId);
-                values.add(shipAdj);
-            }
-
-            // create the top level tax adjustments
-            Iterator ti = shipTaxAdj.iterator();
-            while (ti.hasNext()) {
-                GenericValue taxAdj = (GenericValue) ti.next();
-                taxAdj.set("shipGroupSeqId", shipGroupSeqId);
-                values.add(taxAdj);
-            }
-
-            // create the ship group item associations
-            Iterator i = shipItemInfo.keySet().iterator();
-            while (i.hasNext()) {
-                ShoppingCartItem item = (ShoppingCartItem) i.next();
-                CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
-
-                GenericValue assoc = delegator.makeValue("OrderItemShipGroupAssoc", null);
-                assoc.set("orderItemSeqId", item.getOrderItemSeqId());
-                assoc.set("shipGroupSeqId", shipGroupSeqId);
-                assoc.set("quantity", new Double(itemInfo.quantity));
-                values.add(assoc);
-
-                // create the item tax adjustment
-                Iterator iti = itemInfo.itemTaxAdj.iterator();
-                while (iti.hasNext()) {
-                    GenericValue taxAdj = (GenericValue) iti.next();
-                    taxAdj.set("orderItemSeqId", item.getOrderItemSeqId());
-                    taxAdj.set("shipGroupSeqId", shipGroupSeqId);
-                    values.add(taxAdj);
-                }
-            }
-
-            return values;
-        }
-
-        public CartShipItemInfo setItemInfo(ShoppingCartItem item, double quantity, List taxAdj) {
-            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
-            if (itemInfo == null) {
-                itemInfo = new CartShipItemInfo();
-                itemInfo.item = item;
-                shipItemInfo.put(item, itemInfo);
-            }
-            itemInfo.quantity = quantity;
-            itemInfo.itemTaxAdj.clear();
-            if (taxAdj == null) {
-                taxAdj = new LinkedList();
-            }
-            itemInfo.itemTaxAdj.addAll(taxAdj);
-            return itemInfo;
-        }
-
-        public CartShipItemInfo setItemInfo(ShoppingCartItem item, List taxAdj) {
-            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
-            if (itemInfo == null) {
-                itemInfo = new CartShipItemInfo();
-                itemInfo.item = item;
-                shipItemInfo.put(item, itemInfo);
-            }
-            itemInfo.itemTaxAdj.clear();
-            if (taxAdj == null) {
-                taxAdj = new LinkedList();
-            }
-            itemInfo.itemTaxAdj.addAll(taxAdj);
-            return itemInfo;
-        }
-
-        public CartShipItemInfo setItemInfo(ShoppingCartItem item, double quantity) {
-            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
-            if (itemInfo == null) {
-                itemInfo = new CartShipItemInfo();
-                itemInfo.item = item;
-                shipItemInfo.put(item, itemInfo);
-            }
-            itemInfo.quantity = quantity;
-            return itemInfo;
-        }
-
-        public CartShipItemInfo getShipItemInfo(ShoppingCartItem item) {
-            return (CartShipItemInfo) shipItemInfo.get(item);
-        }
-
-        public Set getShipItems() {
-            return shipItemInfo.keySet();
-        }
-
-        /**
-         * Reset the ship group's shipBeforeDate if it is after the parameter 
-         * @param newShipBeforeDate
-         */
-        public void resetShipBeforeDateIfAfter(Timestamp newShipBeforeDate) {
-        	if (newShipBeforeDate != null) {
-                if ((this.shipBeforeDate == null) || (!this.shipBeforeDate.before(newShipBeforeDate))) {
-                    this.shipBeforeDate = newShipBeforeDate;
-                }
-            }
-        }
-        
-        /**
-         * Reset the ship group's shipAfterDate if it is before the parameter 
-         * @param newShipBeforeDate
-         */
-        public void resetShipAfterDateIfBefore(Timestamp newShipAfterDate) {
-            if (newShipAfterDate != null) {
-                if ((this.shipAfterDate == null) || (!this.shipAfterDate.after(newShipAfterDate))) {
-                    this.shipAfterDate = newShipAfterDate;
-                }
-            }
-        }
-        
-        public double getTotalTax(ShoppingCart cart) {
-            double taxTotal = 0.00;
-            for (int i = 0; i < shipTaxAdj.size(); i++) {
-                GenericValue v = (GenericValue) shipTaxAdj.get(i);
-                taxTotal += OrderReadHelper.calcOrderAdjustment(v, cart.getSubTotal());
-            }
-
-            Iterator iter = shipItemInfo.values().iterator();
-            while (iter.hasNext()) {
-                CartShipItemInfo info = (CartShipItemInfo) iter.next();
-                taxTotal += info.getItemTax(cart);
-            }
-
-            return taxTotal;
-        }
-
-        public static class CartShipItemInfo implements Serializable {
-            public List itemTaxAdj = new LinkedList();
-            public ShoppingCartItem item = null;
-            public double quantity = 0;
-
-            public double getItemTax(ShoppingCart cart) {
-                double itemTax = 0.00;
-
-                for (int i = 0; i < itemTaxAdj.size(); i++) {
-                    GenericValue v = (GenericValue) itemTaxAdj.get(i);
-                    itemTax += OrderReadHelper.calcItemAdjustment(v, new Double(quantity), new Double(item.getBasePrice()));
-                }
-
-                return itemTax;
-            }
-
-            public double getItemQuantity() {
-                return this.quantity;
-            }
-        }
-    }
-
-    public static class CartPaymentInfo implements Serializable, Comparable {
-        public String paymentMethodTypeId = null;
-        public String paymentMethodId = null;
-        public String securityCode = null;
-        public String postalCode = null;
-        public String[] refNum = new String[2];
-        public Double amount = null;
-        public boolean singleUse = false;
-        public boolean isPresent = false;
-        public boolean overflow = false;
-
-        public GenericValue getValueObject(GenericDelegator delegator) {
-            String entityName = null;
-            Map lookupFields = null;
-            if (paymentMethodId != null) {
-                lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
-                entityName = "PaymentMethod";
-            } else if (paymentMethodTypeId != null) {
-                lookupFields = UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId);
-                entityName = "PaymentMethodType";
-            } else {
-                throw new IllegalArgumentException("Could not create value object because paymentMethodId and paymentMethodTypeId are null");
-            }
-
-            try {
-                return delegator.findByPrimaryKeyCache(entityName, lookupFields);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-            }
-
-            return null;
-        }
-
-        public GenericValue getBillingAddress(GenericDelegator delegator) {
-            GenericValue valueObj = this.getValueObject(delegator);
-            GenericValue postalAddress = null;
-
-            if ("PaymentMethod".equals(valueObj.getEntityName())) {
-                String paymentMethodTypeId = valueObj.getString("paymentMethodTypeId");
-                String paymentMethodId = valueObj.getString("paymentMethodId");
-                Map lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
-
-                // billing account, credit card, gift card, eft account all have postal address
-                try {
-                    GenericValue pmObj = null;
-                    if ("CREDIT_CARD".equals(paymentMethodTypeId)) {
-                        pmObj = delegator.findByPrimaryKey("CreditCard", lookupFields);
-                    } else if ("GIFT_CARD".equals(paymentMethodTypeId)) {
-                        pmObj = delegator.findByPrimaryKey("GiftCard", lookupFields);
-                    } else if ("EFT_ACCOUNT".equals(paymentMethodTypeId)) {
-                        pmObj = delegator.findByPrimaryKey("EftAccount", lookupFields);
-                    } else if ("EXT_BILLACT".equals(paymentMethodTypeId)) {
-                        pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
-                    }
-                    if (pmObj != null) {
-                        postalAddress = pmObj.getRelatedOne("PostalAddress");
-                    } else {
-                        Debug.logInfo("No PaymentMethod Object Found - " + paymentMethodId, module);
-                    }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                }
-            }
-
-            return postalAddress;
-        }
-
-        public List makeOrderPaymentInfos(GenericDelegator delegator) {
-            GenericValue valueObj = this.getValueObject(delegator);
-            List values = new LinkedList();
-            if (valueObj != null) {
-                // first create a BILLING_LOCATION for the payment method address if there is one
-                if ("PaymentMethod".equals(valueObj.getEntityName())) {
-                    String paymentMethodTypeId = valueObj.getString("paymentMethodTypeId");
-                    String paymentMethodId = valueObj.getString("paymentMethodId");
-                    Map lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
-                    String billingAddressId = null;
-
-                    GenericValue billingAddress = this.getBillingAddress(delegator);
-                    if (billingAddress != null) {
-                        billingAddressId = billingAddress.getString("contactMechId");
-                    }
-
-                    if (UtilValidate.isNotEmpty(billingAddressId)) {
-                        GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
-                        orderCm.set("contactMechPurposeTypeId", "BILLING_LOCATION");
-                        orderCm.set("contactMechId", billingAddressId);
-                        values.add(orderCm);
-                    }
-                }
-
-                // create the OrderPaymentPreference record
-                GenericValue opp = delegator.makeValue("OrderPaymentPreference", new HashMap());
-                opp.set("paymentMethodTypeId", valueObj.getString("paymentMethodTypeId"));
-                opp.set("presentFlag", isPresent ? "Y" : "N");
-                opp.set("overflowFlag", overflow ? "Y" : "N");
-                opp.set("paymentMethodId", paymentMethodId);
-                opp.set("billingPostalCode", postalCode);
-                opp.set("maxAmount", amount);
-                if (refNum != null) {
-                    opp.set("manualRefNum", refNum[0]);
-                    opp.set("manualAuthCode", refNum[1]);
-                }
-                if (securityCode != null) {
-                    opp.set("securityCode", securityCode);
-                }
-                if (paymentMethodId != null) {
-                    opp.set("statusId", "PAYMENT_NOT_AUTH");
-                } else if (paymentMethodTypeId != null) {
-                    // external payment method types require notification when received
-                    // internal payment method types are assumed to be in-hand
-                    if (paymentMethodTypeId.startsWith("EXT_")) {
-                        opp.set("statusId", "PAYMENT_NOT_RECEIVED");
-                    } else {
-                        opp.set("statusId", "PAYMENT_RECEIVED");
-                    }
-                }
-                Debug.log("Creating OrderPaymentPreference - " + opp, module);
-                values.add(opp);
-            }
-
-            return values;
-        }
-
-        public int compareTo(Object o) {
-            CartPaymentInfo that = (CartPaymentInfo) o;
-            Debug.logInfo("Compare [" + this.toString() + "] to [" + that.toString() + "]", module);
-            if (this.paymentMethodId != null) {
-                if (that.paymentMethodId == null) {
-                    return 1;
-                } else {
-                    int pmCmp = this.paymentMethodId.compareTo(that.paymentMethodId);
-                    if (pmCmp == 0) {
-                        if (this.refNum != null && this.refNum[0] != null) {
-                            if (that.refNum != null && that.refNum[0] != null) {
-                                return this.refNum[0].compareTo(that.refNum[0]);
-                            } else {
-                                return 1;
-                            }
-                        } else {
-                            if (that.refNum != null && that.refNum[0] != null) {
-                                return -1;
-                            } else {
-                                return 0;
-                            }
-                        }
-                    } else {
-                        return pmCmp;
-                    }
-                }
-            } else {
-                if (that.paymentMethodId != null) {
-                    return -1;
-                } else {
-                    int pmtCmp = this.paymentMethodTypeId.compareTo(that.paymentMethodTypeId);
-                    if (pmtCmp == 0) {
-                        if (this.refNum != null && this.refNum[0] != null) {
-                            if (that.refNum != null && that.refNum[0] != null) {
-                                return this.refNum[0].compareTo(that.refNum[0]);
-                            } else {
-                                return 1;
-                            }
-                        } else {
-                            if (that.refNum != null && that.refNum[0] != null) {
-                                return -1;
-                            } else {
-                                return 0;
-                            }
-                        }
-                    } else {
-                        return pmtCmp;
-                    }
-                }
-            }
-        }
-
-        public String toString() {
-            return "Pm: " + paymentMethodId + " / PmType: " + paymentMethodTypeId + " / Amt: " + amount + " / Ref: " + refNum[0] + "!" + refNum[1];
-        }
-    }
-
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
     private List productPromoUseInfoList = new LinkedList();
     /** Contains the promo codes entered */
@@ -600,6 +198,17 @@ public class ShoppingCart implements Serializable {
         while (it.hasNext()) {
             Map.Entry me = (Map.Entry) it.next();
             this.additionalPartyRole.put(me.getKey(), new LinkedList((Collection) me.getValue()));
+        }
+
+        // clone the groups
+        Iterator groupIt = cart.itemGroupByNumberMap.values().iterator();
+        while (groupIt.hasNext()) {
+            ShoppingCartItemGroup itemGroup = (ShoppingCartItemGroup) groupIt.next();
+            // get the new parent group by number from the existing set; as before the parent must come before all children to work...
+            ShoppingCartItemGroup parentGroup = null;
+            if (itemGroup.getParentGroup() != null) parentGroup = this.getItemGroupByNumber(itemGroup.getParentGroup().getGroupNumber());
+            ShoppingCartItemGroup newGroup = new ShoppingCartItemGroup(itemGroup, parentGroup);
+            itemGroupByNumberMap.put(newGroup.getGroupNumber(), newGroup);
         }
 
         // clone the items
@@ -814,17 +423,18 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         if (isReadOnlyCart()) {
            throw new CartItemModifyException("Cart items cannot be changed");
         }
         
+        ShoppingCart.ShoppingCartItemGroup itemGroup = this.getItemGroupByNumber(itemGroupNumber);
         GenericValue supplierProduct = null;
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
 
-            if (sci.equals(productId, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, selectedAmount)) {
+            if (sci.equals(productId, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, itemGroup, selectedAmount)) {
                 double newQuantity = sci.getQuantity() + quantity;
 
                 if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity, module);
@@ -847,7 +457,7 @@ public class ShoppingCart implements Serializable {
             //GenericValue productSupplier = null;
             supplierProduct = getSupplierProduct(productId, quantity, dispatcher);
             if (supplierProduct != null || "_NA_".equals(this.getPartyId())) {
-                 return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this, supplierProduct, shipBeforeDate, shipAfterDate));
+                 return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, itemGroup, dispatcher, this, supplierProduct, shipBeforeDate, shipAfterDate));
             } else {
                 throw new CartItemModifyException("SupplierProduct not found");
             }
@@ -855,14 +465,14 @@ public class ShoppingCart implements Serializable {
             return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
         }
     }
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, null, null, features, attributes, prodCatalogId, null, dispatcher);
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, null, null, features, attributes, prodCatalogId, null, itemGroupNumber, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, null, null, features, attributes, prodCatalogId, null, dispatcher);
+        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, null, null, features, attributes, prodCatalogId, null, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, reservStart, reservLength, reservPersons,  null, null, features, attributes, prodCatalogId, null, dispatcher);
+        return addOrIncreaseItem(productId, 0.00, quantity, reservStart, reservLength, reservPersons, null, null, features, attributes, prodCatalogId, null, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addOrIncreaseItem(productId, quantity, null, null, null, dispatcher);
@@ -872,8 +482,9 @@ public class ShoppingCart implements Serializable {
      * @return the new item index
      * @throws CartItemModifyException
      */
-    public int addNonProductItem(String itemType, String description, String categoryId, double price, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), itemType, description, categoryId, price, 0.00, quantity, attributes, prodCatalogId, dispatcher, this, true));
+    public int addNonProductItem(String itemType, String description, String categoryId, double price, double quantity, Map attributes, String prodCatalogId, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException {
+        ShoppingCart.ShoppingCartItemGroup itemGroup = this.getItemGroupByNumber(itemGroupNumber);
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), itemType, description, categoryId, price, 0.00, quantity, attributes, prodCatalogId, itemGroup, dispatcher, this, true));
     }
 
     /** Add an item to the shopping cart. */
@@ -895,12 +506,12 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItemToEnd(String productId, double amount, double quantity,  double unitPrice, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, boolean triggerExternalOps, boolean triggerPriceRules) throws CartItemModifyException, ItemNotFoundException {
-        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, unitPrice, null, 0.00, 0.00, null, null, features, attributes, prodCatalogId, null, dispatcher, this, triggerExternalOps, triggerPriceRules));
+    public int addItemToEnd(String productId, double amount, double quantity, double unitPrice, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, boolean triggerExternalOps, boolean triggerPriceRules) throws CartItemModifyException, ItemNotFoundException {
+        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, unitPrice, null, 0.00, 0.00, null, null, features, attributes, prodCatalogId, null, null, dispatcher, this, triggerExternalOps, triggerPriceRules));
     }
 
     /** Add an item to the shopping cart. */
-    public int addItemToEnd(String productId, double amount, double quantity,  HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+    public int addItemToEnd(String productId, double amount, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
 
@@ -1048,6 +659,76 @@ public class ShoppingCart implements Serializable {
     public Iterator iterator() {
         return cartLines.iterator();
     }
+    
+    public ShoppingCart.ShoppingCartItemGroup getItemGroupByNumber(String groupNumber) {
+        if (UtilValidate.isEmpty(groupNumber)) return null;
+        return (ShoppingCart.ShoppingCartItemGroup) this.itemGroupByNumberMap.get(groupNumber);
+    }
+
+    /** Creates a new Item Group and returns the groupNumber that represents it */
+    public String addItemGroup(String groupName, String parentGroupNumber) {
+        ShoppingCart.ShoppingCartItemGroup parentGroup = this.getItemGroupByNumber(parentGroupNumber);
+        ShoppingCart.ShoppingCartItemGroup newGroup = new ShoppingCart.ShoppingCartItemGroup(this.nextGroupNumber, groupName, parentGroup);
+        this.nextGroupNumber++;
+        this.itemGroupByNumberMap.put(newGroup.getGroupNumber(), newGroup);
+        return newGroup.getGroupNumber();
+    }
+    
+    public List getCartItemsInNoGroup() {
+        List cartItemList = FastList.newInstance();
+        Iterator cartLineIter = this.cartLines.iterator();
+        while (cartLineIter.hasNext()) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartLineIter.next();
+            if (cartItem.getItemGroup() == null) {
+                cartItemList.add(cartItem);
+            }
+        }
+        return cartItemList;
+    }
+    
+    public List getCartItemsInGroup(String groupNumber) {
+        List cartItemList = FastList.newInstance();
+        ShoppingCart.ShoppingCartItemGroup itemGroup = this.getItemGroupByNumber(groupNumber);
+        if (itemGroup != null) {
+            Iterator cartLineIter = this.cartLines.iterator();
+            while (cartLineIter.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) cartLineIter.next();
+                if (itemGroup.equals(cartItem.getItemGroup())) {
+                    cartItemList.add(cartItem);
+                }
+            }
+        }
+        return cartItemList;
+    }
+    
+    public void deleteItemGroup(String groupNumber) {
+        ShoppingCartItemGroup itemGroup = this.getItemGroupByNumber(groupNumber);
+        if (itemGroup != null) {
+            // go through all cart items and remove from group if they are in it
+            List cartItemList = this.getCartItemsInGroup(groupNumber);
+            Iterator cartItemIter = cartItemList.iterator();
+            while (cartItemIter.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
+                cartItem.setItemGroup(null);
+            }
+            
+            // if this is a parent of any set them to this group's parent (or null)
+            Iterator itemGroupIter = this.itemGroupByNumberMap.values().iterator();
+            while (itemGroupIter.hasNext()) {
+                ShoppingCartItemGroup otherItemGroup = (ShoppingCartItemGroup) itemGroupIter.next();
+                if (itemGroup.equals(otherItemGroup.getParentGroup())) {
+                    otherItemGroup.inheritParentsParent();
+                }
+            }
+            
+            // finally, remove the itemGroup...
+            this.itemGroupByNumberMap.remove(groupNumber);
+        }
+    }
+    
+    //=======================================================
+    // Other General Info Maintenance Methods
+    //=======================================================
 
     /** Gets the userLogin associated with the cart; may be null */
     public GenericValue getUserLogin() {
@@ -1388,6 +1069,7 @@ public class ShoppingCart implements Serializable {
 
         this.expireSingleUsePayments();
         this.cartLines.clear();
+        this.itemGroupByNumberMap.clear();
         this.clearPayments();
         this.shipInfo.clear();
         this.contactMechIdsMap.clear();
@@ -3007,6 +2689,16 @@ public class ShoppingCart implements Serializable {
     // =======================================================================
     // Methods used for order creation
     // =======================================================================
+    
+    public List makeOrderItemGroups() {
+        List result = FastList.newInstance();
+        Iterator groupValueIter = this.itemGroupByNumberMap.values().iterator();
+        while (groupValueIter.hasNext()) {
+            ShoppingCart.ShoppingCartItemGroup itemGroup = (ShoppingCart.ShoppingCartItemGroup) groupValueIter.next();
+            result.add(itemGroup.makeOrderItemGroup(this.getDelegator()));
+        }
+        return result;
+    }
 
     private void explodeItems(LocalDispatcher dispatcher) {
         synchronized (cartLines) {
@@ -3034,15 +2726,15 @@ public class ShoppingCart implements Serializable {
 
     public List makeOrderItems(boolean explodeItems, LocalDispatcher dispatcher) {
         // do the explosion
-        if (explodeItems && dispatcher != null)
+        if (explodeItems && dispatcher != null) {
             explodeItems(dispatcher);
+        }
 
         // now build the lines
         synchronized (cartLines) {
-            List result = new LinkedList();
+            List result = FastList.newInstance();
 
             Iterator itemIter = cartLines.iterator();
-
             while (itemIter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
 
@@ -3071,6 +2763,7 @@ public class ShoppingCart implements Serializable {
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
                 orderItem.set("orderItemSeqId", item.getOrderItemSeqId());
                 orderItem.set("orderItemTypeId", item.getItemType());
+                if (item.getItemGroup() != null) orderItem.set("orderItemGroupSeqId", item.getItemGroup().getGroupNumber());
                 orderItem.set("productId", item.getProductId());
                 orderItem.set("prodCatalogId", item.getProdCatalogId());
                 orderItem.set("productCategoryId", item.getProductCategoryId());
@@ -3480,6 +3173,7 @@ public class ShoppingCart implements Serializable {
         result.put("externalId", this.getExternalId());
         result.put("internalCode", this.getInternalCode());
         result.put("salesChannelEnumId", this.getChannelType());
+        result.put("orderItemGroups", this.makeOrderItemGroups());
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
         result.put("workEfforts", this.makeWorkEfforts());
         result.put("orderAdjustments", this.makeAllAdjustments());
@@ -3525,7 +3219,6 @@ public class ShoppingCart implements Serializable {
     }
 
     static class BasePriceOrderComparator implements Comparator, Serializable {
-
         private boolean ascending = false;
 
         BasePriceOrderComparator(boolean ascending) {
@@ -3553,6 +3246,479 @@ public class ShoppingCart implements Serializable {
         }
     }
 
+    public static class ShoppingCartItemGroup implements Serializable {
+        private long groupNumber;
+        private String groupName;
+        private ShoppingCartItemGroup parentGroup;
+
+        // don't allow empty constructor
+        private ShoppingCartItemGroup() {}
+
+        protected ShoppingCartItemGroup(long groupNumber, String groupName) {
+            this(groupNumber, groupName, null);
+        }
+        
+        /** Note that to avoid foreign key issues when the groups are created a parentGroup should have a lower number than the child group. */
+        protected ShoppingCartItemGroup(long groupNumber, String groupName, ShoppingCartItemGroup parentGroup) {
+            this.groupNumber = groupNumber;
+            this.groupName = groupName;
+            this.parentGroup = parentGroup;
+        }
+        
+        protected ShoppingCartItemGroup(ShoppingCartItemGroup itemGroup, ShoppingCartItemGroup parentGroup) {
+            this.groupNumber = itemGroup.groupNumber;
+            this.groupName = itemGroup.groupName;
+            this.parentGroup = parentGroup;
+        }
+        
+        public String getGroupNumber() {
+            return UtilFormatOut.formatPaddedNumber(this.groupNumber, 2);
+        }
+        
+        public String getGroupName() {
+            return this.groupName;
+        }
+        
+        public void setGroupName(String str) {
+            this.groupName = str;
+        }
+        
+        public ShoppingCartItemGroup getParentGroup () {
+            return this.parentGroup;
+        }
+        
+        protected GenericValue makeOrderItemGroup(GenericDelegator delegator) {
+            GenericValue orderItemGroup = delegator.makeValue("OrderItemGroup", null);
+            orderItemGroup.set("orderItemGroupSeqId", this.getGroupNumber());
+            orderItemGroup.set("groupName", this.getGroupName());
+            if (this.parentGroup != null) {
+                orderItemGroup.set("parentGroupSeqId", this.parentGroup.getGroupNumber());
+            }
+            return orderItemGroup;
+        }
+        
+        public void inheritParentsParent() {
+            if (this.parentGroup != null) {
+                this.parentGroup = this.parentGroup.getParentGroup(); 
+            }
+        }
+        
+        public boolean equals(Object obj) {
+            ShoppingCartItemGroup that = (ShoppingCartItemGroup) obj;
+            if (that.groupNumber == this.groupNumber) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public static class ProductPromoUseInfo implements Serializable {
+        public String productPromoId = null;
+        public String productPromoCodeId = null;
+        public double totalDiscountAmount = 0;
+        public double quantityLeftInActions = 0;
+
+        public ProductPromoUseInfo(String productPromoId, String productPromoCodeId, double totalDiscountAmount, double quantityLeftInActions) {
+            this.productPromoId = productPromoId;
+            this.productPromoCodeId = productPromoCodeId;
+            this.totalDiscountAmount = totalDiscountAmount;
+            this.quantityLeftInActions = quantityLeftInActions;
+        }
+
+        public String getProductPromoId() { return this.productPromoId; }
+        public String getProductPromoCodeId() { return this.productPromoCodeId; }
+        public double getTotalDiscountAmount() { return this.totalDiscountAmount; }
+        public double getQuantityLeftInActions() { return this.quantityLeftInActions; }
+    }
+
+    public static class CartShipInfo implements Serializable {
+        public LinkedMap shipItemInfo = new LinkedMap();
+        public List shipTaxAdj = new LinkedList();
+        public String contactMechId = null;
+        public String shipmentMethodTypeId = null;
+        public String carrierRoleTypeId = null;
+        public String carrierPartyId = null;
+        public String giftMessage = null;
+        public String shippingInstructions = null;
+        public String maySplit = "N";
+        public String isGift = "N";
+        public double shipEstimate = 0.00;
+        public Timestamp shipBeforeDate = null;
+        public Timestamp shipAfterDate = null;
+
+        public List makeItemShipGroupAndAssoc(GenericDelegator delegator, ShoppingCart cart, long groupIndex) {
+            String shipGroupSeqId = UtilFormatOut.formatPaddedNumber(groupIndex, 5);
+            List values = new LinkedList();
+            
+            // create order contact mech for shipping address
+            if (contactMechId != null) {
+                GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
+                orderCm.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
+                orderCm.set("contactMechId", contactMechId);
+                values.add(orderCm);
+            }
+
+            // create the ship group
+            GenericValue shipGroup = delegator.makeValue("OrderItemShipGroup", null);
+            shipGroup.set("shipmentMethodTypeId", shipmentMethodTypeId);
+            shipGroup.set("carrierRoleTypeId", carrierRoleTypeId);
+            shipGroup.set("carrierPartyId", carrierPartyId);
+            shipGroup.set("shippingInstructions", shippingInstructions);
+            shipGroup.set("giftMessage", giftMessage);
+            shipGroup.set("contactMechId", contactMechId);
+            shipGroup.set("maySplit", maySplit);
+            shipGroup.set("isGift", isGift);
+            shipGroup.set("shipGroupSeqId", shipGroupSeqId);
+            
+            // use the cart's default ship before and after dates here
+            if ((shipBeforeDate == null) && (cart.getDefaultShipBeforeDate() != null)) {
+                shipGroup.set("shipByDate", cart.getDefaultShipBeforeDate());
+            } else {
+                shipGroup.set("shipByDate", shipBeforeDate);
+            }
+            if ((shipAfterDate == null) && (cart.getDefaultShipAfterDate() != null)) {
+                shipGroup.set("shipAfterDate", cart.getDefaultShipAfterDate());
+            } else {
+                shipGroup.set("shipAfterDate", shipAfterDate);
+            }
+            
+            values.add(shipGroup);
+
+            // create the shipping estimate adjustments
+            if (shipEstimate != 0) {
+                GenericValue shipAdj = delegator.makeValue("OrderAdjustment", null);
+                shipAdj.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
+                shipAdj.set("amount", new Double(shipEstimate));
+                shipAdj.set("shipGroupSeqId", shipGroupSeqId);
+                values.add(shipAdj);
+            }
+
+            // create the top level tax adjustments
+            Iterator ti = shipTaxAdj.iterator();
+            while (ti.hasNext()) {
+                GenericValue taxAdj = (GenericValue) ti.next();
+                taxAdj.set("shipGroupSeqId", shipGroupSeqId);
+                values.add(taxAdj);
+            }
+
+            // create the ship group item associations
+            Iterator i = shipItemInfo.keySet().iterator();
+            while (i.hasNext()) {
+                ShoppingCartItem item = (ShoppingCartItem) i.next();
+                CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
+
+                GenericValue assoc = delegator.makeValue("OrderItemShipGroupAssoc", null);
+                assoc.set("orderItemSeqId", item.getOrderItemSeqId());
+                assoc.set("shipGroupSeqId", shipGroupSeqId);
+                assoc.set("quantity", new Double(itemInfo.quantity));
+                values.add(assoc);
+
+                // create the item tax adjustment
+                Iterator iti = itemInfo.itemTaxAdj.iterator();
+                while (iti.hasNext()) {
+                    GenericValue taxAdj = (GenericValue) iti.next();
+                    taxAdj.set("orderItemSeqId", item.getOrderItemSeqId());
+                    taxAdj.set("shipGroupSeqId", shipGroupSeqId);
+                    values.add(taxAdj);
+                }
+            }
+
+            return values;
+        }
+
+        public CartShipItemInfo setItemInfo(ShoppingCartItem item, double quantity, List taxAdj) {
+            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
+            if (itemInfo == null) {
+                itemInfo = new CartShipItemInfo();
+                itemInfo.item = item;
+                shipItemInfo.put(item, itemInfo);
+            }
+            itemInfo.quantity = quantity;
+            itemInfo.itemTaxAdj.clear();
+            if (taxAdj == null) {
+                taxAdj = new LinkedList();
+            }
+            itemInfo.itemTaxAdj.addAll(taxAdj);
+            return itemInfo;
+        }
+
+        public CartShipItemInfo setItemInfo(ShoppingCartItem item, List taxAdj) {
+            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
+            if (itemInfo == null) {
+                itemInfo = new CartShipItemInfo();
+                itemInfo.item = item;
+                shipItemInfo.put(item, itemInfo);
+            }
+            itemInfo.itemTaxAdj.clear();
+            if (taxAdj == null) {
+                taxAdj = new LinkedList();
+            }
+            itemInfo.itemTaxAdj.addAll(taxAdj);
+            return itemInfo;
+        }
+
+        public CartShipItemInfo setItemInfo(ShoppingCartItem item, double quantity) {
+            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
+            if (itemInfo == null) {
+                itemInfo = new CartShipItemInfo();
+                itemInfo.item = item;
+                shipItemInfo.put(item, itemInfo);
+            }
+            itemInfo.quantity = quantity;
+            return itemInfo;
+        }
+
+        public CartShipItemInfo getShipItemInfo(ShoppingCartItem item) {
+            return (CartShipItemInfo) shipItemInfo.get(item);
+        }
+
+        public Set getShipItems() {
+            return shipItemInfo.keySet();
+        }
+
+        /**
+         * Reset the ship group's shipBeforeDate if it is after the parameter 
+         * @param newShipBeforeDate
+         */
+        public void resetShipBeforeDateIfAfter(Timestamp newShipBeforeDate) {
+                if (newShipBeforeDate != null) {
+                if ((this.shipBeforeDate == null) || (!this.shipBeforeDate.before(newShipBeforeDate))) {
+                    this.shipBeforeDate = newShipBeforeDate;
+                }
+            }
+        }
+        
+        /**
+         * Reset the ship group's shipAfterDate if it is before the parameter 
+         * @param newShipBeforeDate
+         */
+        public void resetShipAfterDateIfBefore(Timestamp newShipAfterDate) {
+            if (newShipAfterDate != null) {
+                if ((this.shipAfterDate == null) || (!this.shipAfterDate.after(newShipAfterDate))) {
+                    this.shipAfterDate = newShipAfterDate;
+                }
+            }
+        }
+        
+        public double getTotalTax(ShoppingCart cart) {
+            double taxTotal = 0.00;
+            for (int i = 0; i < shipTaxAdj.size(); i++) {
+                GenericValue v = (GenericValue) shipTaxAdj.get(i);
+                taxTotal += OrderReadHelper.calcOrderAdjustment(v, cart.getSubTotal());
+            }
+
+            Iterator iter = shipItemInfo.values().iterator();
+            while (iter.hasNext()) {
+                CartShipItemInfo info = (CartShipItemInfo) iter.next();
+                taxTotal += info.getItemTax(cart);
+            }
+
+            return taxTotal;
+        }
+
+        public static class CartShipItemInfo implements Serializable {
+            public List itemTaxAdj = new LinkedList();
+            public ShoppingCartItem item = null;
+            public double quantity = 0;
+
+            public double getItemTax(ShoppingCart cart) {
+                double itemTax = 0.00;
+
+                for (int i = 0; i < itemTaxAdj.size(); i++) {
+                    GenericValue v = (GenericValue) itemTaxAdj.get(i);
+                    itemTax += OrderReadHelper.calcItemAdjustment(v, new Double(quantity), new Double(item.getBasePrice()));
+                }
+
+                return itemTax;
+            }
+
+            public double getItemQuantity() {
+                return this.quantity;
+            }
+        }
+    }
+
+    public static class CartPaymentInfo implements Serializable, Comparable {
+        public String paymentMethodTypeId = null;
+        public String paymentMethodId = null;
+        public String securityCode = null;
+        public String postalCode = null;
+        public String[] refNum = new String[2];
+        public Double amount = null;
+        public boolean singleUse = false;
+        public boolean isPresent = false;
+        public boolean overflow = false;
+
+        public GenericValue getValueObject(GenericDelegator delegator) {
+            String entityName = null;
+            Map lookupFields = null;
+            if (paymentMethodId != null) {
+                lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
+                entityName = "PaymentMethod";
+            } else if (paymentMethodTypeId != null) {
+                lookupFields = UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId);
+                entityName = "PaymentMethodType";
+            } else {
+                throw new IllegalArgumentException("Could not create value object because paymentMethodId and paymentMethodTypeId are null");
+            }
+
+            try {
+                return delegator.findByPrimaryKeyCache(entityName, lookupFields);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+
+            return null;
+        }
+
+        public GenericValue getBillingAddress(GenericDelegator delegator) {
+            GenericValue valueObj = this.getValueObject(delegator);
+            GenericValue postalAddress = null;
+
+            if ("PaymentMethod".equals(valueObj.getEntityName())) {
+                String paymentMethodTypeId = valueObj.getString("paymentMethodTypeId");
+                String paymentMethodId = valueObj.getString("paymentMethodId");
+                Map lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
+
+                // billing account, credit card, gift card, eft account all have postal address
+                try {
+                    GenericValue pmObj = null;
+                    if ("CREDIT_CARD".equals(paymentMethodTypeId)) {
+                        pmObj = delegator.findByPrimaryKey("CreditCard", lookupFields);
+                    } else if ("GIFT_CARD".equals(paymentMethodTypeId)) {
+                        pmObj = delegator.findByPrimaryKey("GiftCard", lookupFields);
+                    } else if ("EFT_ACCOUNT".equals(paymentMethodTypeId)) {
+                        pmObj = delegator.findByPrimaryKey("EftAccount", lookupFields);
+                    } else if ("EXT_BILLACT".equals(paymentMethodTypeId)) {
+                        pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
+                    }
+                    if (pmObj != null) {
+                        postalAddress = pmObj.getRelatedOne("PostalAddress");
+                    } else {
+                        Debug.logInfo("No PaymentMethod Object Found - " + paymentMethodId, module);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+            }
+
+            return postalAddress;
+        }
+
+        public List makeOrderPaymentInfos(GenericDelegator delegator) {
+            GenericValue valueObj = this.getValueObject(delegator);
+            List values = new LinkedList();
+            if (valueObj != null) {
+                // first create a BILLING_LOCATION for the payment method address if there is one
+                if ("PaymentMethod".equals(valueObj.getEntityName())) {
+                    //String paymentMethodTypeId = valueObj.getString("paymentMethodTypeId");
+                    //String paymentMethodId = valueObj.getString("paymentMethodId");
+                    //Map lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
+                    String billingAddressId = null;
+
+                    GenericValue billingAddress = this.getBillingAddress(delegator);
+                    if (billingAddress != null) {
+                        billingAddressId = billingAddress.getString("contactMechId");
+                    }
+
+                    if (UtilValidate.isNotEmpty(billingAddressId)) {
+                        GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
+                        orderCm.set("contactMechPurposeTypeId", "BILLING_LOCATION");
+                        orderCm.set("contactMechId", billingAddressId);
+                        values.add(orderCm);
+                    }
+                }
+
+                // create the OrderPaymentPreference record
+                GenericValue opp = delegator.makeValue("OrderPaymentPreference", new HashMap());
+                opp.set("paymentMethodTypeId", valueObj.getString("paymentMethodTypeId"));
+                opp.set("presentFlag", isPresent ? "Y" : "N");
+                opp.set("overflowFlag", overflow ? "Y" : "N");
+                opp.set("paymentMethodId", paymentMethodId);
+                opp.set("billingPostalCode", postalCode);
+                opp.set("maxAmount", amount);
+                if (refNum != null) {
+                    opp.set("manualRefNum", refNum[0]);
+                    opp.set("manualAuthCode", refNum[1]);
+                }
+                if (securityCode != null) {
+                    opp.set("securityCode", securityCode);
+                }
+                if (paymentMethodId != null) {
+                    opp.set("statusId", "PAYMENT_NOT_AUTH");
+                } else if (paymentMethodTypeId != null) {
+                    // external payment method types require notification when received
+                    // internal payment method types are assumed to be in-hand
+                    if (paymentMethodTypeId.startsWith("EXT_")) {
+                        opp.set("statusId", "PAYMENT_NOT_RECEIVED");
+                    } else {
+                        opp.set("statusId", "PAYMENT_RECEIVED");
+                    }
+                }
+                Debug.log("Creating OrderPaymentPreference - " + opp, module);
+                values.add(opp);
+            }
+
+            return values;
+        }
+
+        public int compareTo(Object o) {
+            CartPaymentInfo that = (CartPaymentInfo) o;
+            Debug.logInfo("Compare [" + this.toString() + "] to [" + that.toString() + "]", module);
+            if (this.paymentMethodId != null) {
+                if (that.paymentMethodId == null) {
+                    return 1;
+                } else {
+                    int pmCmp = this.paymentMethodId.compareTo(that.paymentMethodId);
+                    if (pmCmp == 0) {
+                        if (this.refNum != null && this.refNum[0] != null) {
+                            if (that.refNum != null && that.refNum[0] != null) {
+                                return this.refNum[0].compareTo(that.refNum[0]);
+                            } else {
+                                return 1;
+                            }
+                        } else {
+                            if (that.refNum != null && that.refNum[0] != null) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    } else {
+                        return pmCmp;
+                    }
+                }
+            } else {
+                if (that.paymentMethodId != null) {
+                    return -1;
+                } else {
+                    int pmtCmp = this.paymentMethodTypeId.compareTo(that.paymentMethodTypeId);
+                    if (pmtCmp == 0) {
+                        if (this.refNum != null && this.refNum[0] != null) {
+                            if (that.refNum != null && that.refNum[0] != null) {
+                                return this.refNum[0].compareTo(that.refNum[0]);
+                            } else {
+                                return 1;
+                            }
+                        } else {
+                            if (that.refNum != null && that.refNum[0] != null) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    } else {
+                        return pmtCmp;
+                    }
+                }
+            }
+        }
+
+        public String toString() {
+            return "Pm: " + paymentMethodId + " / PmType: " + paymentMethodTypeId + " / Amt: " + amount + " / Ref: " + refNum[0] + "!" + refNum[1];
+        }
+    }
+    
     protected void finalize() throws Throwable {
         // DEJ20050518 we should not call clear because it kills the auto-save shopping list and is unnecessary given that when this object is GC'ed it will cause everything it points to that isn't referenced anywhere else to be GC'ed too: this.clear();
         super.finalize();

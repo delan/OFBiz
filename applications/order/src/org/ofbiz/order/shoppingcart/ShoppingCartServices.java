@@ -285,7 +285,8 @@ public class ShoppingCartServices {
                     String itemType = item.getString("orderItemTypeId");
                     String desc = item.getString("itemDescription");
                     try {
-                        itemIndex = cart.addNonProductItem(itemType, desc, null, 0.00, quantity.doubleValue(), null, null, dispatcher);
+                        // TODO: passing in null now for itemGroupNumber, but should reproduce from OrderItemGroup records
+                        itemIndex = cart.addNonProductItem(itemType, desc, null, 0.00, quantity.doubleValue(), null, null, null, dispatcher);
                     } catch (CartItemModifyException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
@@ -538,7 +539,8 @@ public class ShoppingCartServices {
                     // non-product item
                     String desc = item.getString("comments");
                     try {
-                        itemIndex = cart.addNonProductItem(null, desc, null, 0.00, quantity.doubleValue(), null, null, dispatcher);
+                        // note that passing in null for itemGroupNumber as there is no real grouping concept in the quotes right now
+                        itemIndex = cart.addNonProductItem(null, desc, null, 0.00, quantity.doubleValue(), null, null, null, dispatcher);
                     } catch (CartItemModifyException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());

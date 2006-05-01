@@ -129,9 +129,11 @@ public class ShoppingCartEvents {
         // Get the parameters as a MAP, remove the productId and quantity params.
         Map paramMap = UtilHttp.getParameterMap(request);
 
+        String itemGroupNumber = (String) paramMap.get("itemGroupNumber");
+
         // Get shoppingList info if passed
-        String shoppingListId = request.getParameter("shoppingListId");
-        String shoppingListItemSeqId = request.getParameter("shoppingListItemSeqId");
+        String shoppingListId = (String) paramMap.get("shoppingListId");
+        String shoppingListItemSeqId = (String) paramMap.get("shoppingListItemSeqId");
         if (paramMap.containsKey("ADD_PRODUCT_ID")) {
             productId = (String) paramMap.remove("ADD_PRODUCT_ID");
         } else if (paramMap.containsKey("add_product_id")) {
@@ -376,7 +378,7 @@ public class ShoppingCartEvents {
 
         // Translate the parameters and add to the cart
         result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-                itemType, itemDescription, price, amount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, configWrapper, paramMap);
+                itemType, itemDescription, price, amount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, configWrapper, itemGroupNumber, paramMap);
             controlDirective = processResult(result, request);
 
         // Determine where to send the browser
@@ -393,6 +395,7 @@ public class ShoppingCartEvents {
 
     public static String addToCartFromOrder(HttpServletRequest request, HttpServletResponse response) {
         String orderId = request.getParameter("orderId");
+        String itemGroupNumber = request.getParameter("itemGroupNumber");
         String[] itemIds = request.getParameterValues("item_id");
         // not used yet: Locale locale = UtilHttp.getLocale(request);
 
@@ -405,7 +408,7 @@ public class ShoppingCartEvents {
         String controlDirective;
 
         boolean addAll = ("true".equals(request.getParameter("add_all")));
-        result = cartHelper.addToCartFromOrder(catalogId, orderId, itemIds, addAll);
+        result = cartHelper.addToCartFromOrder(catalogId, orderId, itemIds, addAll, itemGroupNumber);
         controlDirective = processResult(result, request);
 
         //Determine where to send the browser
@@ -474,6 +477,7 @@ public class ShoppingCartEvents {
      * quantity is 0, do not add
      */
     public static String addCategoryDefaults(HttpServletRequest request, HttpServletResponse response) {
+        String itemGroupNumber = request.getParameter("itemGroupNumber");
         String categoryId = request.getParameter("category_id");
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         ShoppingCart cart = getCartObject(request);
@@ -485,7 +489,7 @@ public class ShoppingCartEvents {
         Double totalQuantity;
         Locale locale = UtilHttp.getLocale(request);
 
-        result = cartHelper.addCategoryDefaults(catalogId, categoryId);
+        result = cartHelper.addCategoryDefaults(catalogId, categoryId, itemGroupNumber);
         controlDirective = processResult(result, request);
 
         //Determine where to send the browser
@@ -1230,6 +1234,8 @@ public class ShoppingCartEvents {
         // Get the parameters as a MAP, remove the productId and quantity params.
         Map paramMap = UtilHttp.getParameterMap(request);
 
+        String itemGroupNumber = request.getParameter("itemGroupNumber");
+
         // Get shoppingList info if passed.  I think there can only be one shoppingList per request
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListItemSeqId = request.getParameter("shoppingListItemSeqId");
@@ -1300,7 +1306,7 @@ public class ShoppingCartEvents {
                     Debug.logInfo("Attempting to add to cart with productId = " + productId + ", categoryId = " + productCategoryId +
                             " and quantity = " + quantity, module);
                     result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-                            "", "", 0.00, amount, quantity, null, 0.00, 0.00, null, null, null, itemAttributes);
+                            "", "", 0.00, amount, quantity, null, 0.00, 0.00, null, null, null, itemGroupNumber, itemAttributes);
                     // no values for itemType, itemDescription, price, and paramMap (a context for adding attributes)
                     controlDirective = processResult(result, request);
                     if (controlDirective.equals(ERROR)){    // if the add to cart failed, then get out of this loop right away
