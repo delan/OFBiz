@@ -81,10 +81,10 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="SearchInventoryItemsResults" type="list" list-iterator-name="listIt"
+    <form name="SearchInventoryItemsResults" type="list" list-name="listIt"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-           <service service-name="performFind" result-map-name="results" result-map-list-iterator-name="listIt">
+           <service service-name="performFind" result-map-name="results" result-map-list-name="listIt">
                <field-map field-name="inputFields" env-name="parameters"/>
                <field-map field-name="entityName" value="ProductInventoryItem"/>
            </service>

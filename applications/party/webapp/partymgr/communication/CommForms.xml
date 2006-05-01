@@ -260,9 +260,9 @@
         </actions>
     </form>
     <form name="ListLookupCommEvents" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" 
-        extends="ListCommEvents" list-iterator-name="listIt" paginate-target="listLookupCommunications" target="updateCommunicationEvent" title="" type="list">
+        extends="ListCommEvents" list-name="listIt" paginate-target="listLookupCommunications" target="updateCommunicationEvent" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="parameters" field-name="inputFields"/>
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>

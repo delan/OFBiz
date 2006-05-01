@@ -53,7 +53,7 @@
 
    <form name="ListMarketingCampaign" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="" target="" paginate-target="listMarketingCampaign" title="" type="list">
+        list-name="" target="" paginate-target="listMarketingCampaign" title="" type="list">
         <actions>
             <entity-condition entity-name="MarketingCampaign"/>
         </actions>
@@ -72,7 +72,7 @@
 
    <form name="ListMarketingCampaignRoles" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="" target="" paginate-target="listMarketingCampaignGeo" title="" type="list">
+        list-name="" target="" paginate-target="listMarketingCampaignGeo" title="" type="list">
         <actions>
         <entity-and entity-name="MarketingCampaignRole">
             <field-map env-name="marketingCampaignId" />

@@ -47,7 +47,7 @@
     <form name="listFindDataResource" list-name="entityList" paginate-target="FindDataResource" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display">
         <actions>
-          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+          <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
             <field-map field-name="inputFields" env-name="parameters"/>
             <field-map field-name="entityName" env-name="entityName" value="DataResource"/>
           </service>
@@ -65,7 +65,7 @@
     <form name="listLookupDataResource" paginate-target="LookupDataResource" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display">
         <actions>
-            <service service-name="performFind" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
@@ -86,7 +86,7 @@
     <form name="EditDataResource" target="UpdateDataResource" title="" type="single" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox" extends="DataResourceMaster">
         <actions>
-            <service service-name="performFind" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName" value="DataResource"/>
             </service>
@@ -236,7 +236,7 @@
         list-name="contentList" 
         target="updateDataResourceAttribute" title="" type="list">
         <actions>
-            <service service-name="performFind" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName" value="DataResourceAttribute"/>
             </service>
@@ -267,7 +267,7 @@
     <form name="ListDataResourceRole" list-name="contentList" target="updateDataResourceRole" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <actions>
-            <service service-name="performFind" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName" value="DataResourceAttribute"/>
             </service>
@@ -291,7 +291,7 @@
     <form name="ListDataResourceProductFeature" list-name="contentList" target="" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <actions>
-            <service service-name="performFind" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName" value="ProductFeature"/>
             </service>
