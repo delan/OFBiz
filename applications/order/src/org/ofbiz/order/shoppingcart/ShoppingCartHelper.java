@@ -108,7 +108,7 @@ public class ShoppingCartHelper {
             double price, double amount, double quantity, 
             java.sql.Timestamp reservStart, double reservLength, double reservPersons, 
             java.sql.Timestamp shipBeforeDate, java.sql.Timestamp shipAfterDate,
-            ProductConfigWrapper configWrapper, Map context) {
+            ProductConfigWrapper configWrapper, String itemGroupNumber, Map context) {
         Map result = null;
         Map attributes = null;
         // price sanity check
@@ -191,9 +191,9 @@ public class ShoppingCartHelper {
             int itemId = -1;
             if (productId != null) {
                 itemId = cart.addOrIncreaseItem(productId, amount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate,
-                        null, attributes, catalogId, configWrapper, dispatcher);
+                        null, attributes, catalogId, configWrapper, itemGroupNumber, dispatcher);
             } else {
-                itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
+                itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, itemGroupNumber, dispatcher);
             }
 
             // set the shopping list info
@@ -220,7 +220,7 @@ public class ShoppingCartHelper {
         return result;
     }
 
-    public Map addToCartFromOrder(String catalogId, String orderId, String[] itemIds, boolean addAll) {
+    public Map addToCartFromOrder(String catalogId, String orderId, String[] itemIds, boolean addAll, String itemGroupNumber) {
         ArrayList errorMsgs = new ArrayList();
         Map result;
         String errMsg = null;
@@ -255,7 +255,7 @@ public class ShoppingCartHelper {
                         try {
                             this.cart.addOrIncreaseItem(orderItem.getString("productId"),
                                     amount, orderItem.getDouble("quantity").doubleValue(),
-                                    null, null, catalogId, dispatcher);
+                                    null, null, catalogId, itemGroupNumber, dispatcher);
                             noItems = false;
                         } catch (CartItemModifyException e) {
                             errorMsgs.add(e.getMessage());
@@ -295,7 +295,7 @@ public class ShoppingCartHelper {
                             }
                             try {
                                 this.cart.addOrIncreaseItem(orderItem.getString("productId"), amount,
-                                        orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, dispatcher);
+                                        orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, itemGroupNumber, dispatcher);
                                 noItems = false;
                             } catch (CartItemModifyException e) {
                                 errorMsgs.add(e.getMessage());
@@ -329,6 +329,7 @@ public class ShoppingCartHelper {
      * quantity is 0, do not add
      */
     public Map addToCartBulk(String catalogId, String categoryId, Map context) {
+        String itemGroupNumber = (String) context.get("itemGroupNumber");
         String keyPrefix = "quantity_";
         
         // iterate through the context and find all keys that start with "quantity_"
@@ -360,7 +361,7 @@ public class ShoppingCartHelper {
                 if (quantity > 0.0) {
                     try {
                         if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "]", module);
-                        this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, dispatcher);
+                        this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, itemGroupNumber, dispatcher);
                     } catch (CartItemModifyException e) {
                         return ServiceUtil.returnError(e.getMessage());
                     } catch (ItemNotFoundException e) {
@@ -378,6 +379,7 @@ public class ShoppingCartHelper {
      * Adds a set of requirements to the cart.
      */
     public Map addToCartBulkRequirements(String catalogId, Map context) {
+        String itemGroupNumber = (String) context.get("itemGroupNumber");
         // check if we are using per row submit
         boolean useRowSubmit = (!context.containsKey("_useRowSubmit"))? false : 
                 "Y".equalsIgnoreCase((String)context.get("_useRowSubmit"));
@@ -437,7 +439,7 @@ public class ShoppingCartHelper {
                         }
                         try {
                             if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart requirement [" + quantity + "] of [" + productId + "]", module);
-                            int index = this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, dispatcher);
+                            int index = this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, itemGroupNumber, dispatcher);
                             ShoppingCartItem sci = (ShoppingCartItem)this.cart.items().get(index);
                             sci.setRequirementId(requirementId);
                         } catch (CartItemModifyException e) {
@@ -458,7 +460,7 @@ public class ShoppingCartHelper {
      * for each; if no default for a certain product in the category, or if
      * quantity is 0, do not add
      */
-    public Map addCategoryDefaults(String catalogId, String categoryId) {
+    public Map addCategoryDefaults(String catalogId, String categoryId, String itemGroupNumber) {
         ArrayList errorMsgs = new ArrayList();
         Map result = null;
         String errMsg = null;
@@ -500,7 +502,7 @@ public class ShoppingCartHelper {
             if (quantity != null && quantity.doubleValue() > 0.0) {
                 try {
                     this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), 
-                            0.00, quantity.doubleValue(), null, null, catalogId, dispatcher);
+                            0.00, quantity.doubleValue(), null, null, catalogId, itemGroupNumber, dispatcher);
                     totalQuantity += quantity.doubleValue();
                 } catch (CartItemModifyException e) {
                     errorMsgs.add(e.getMessage());
@@ -845,7 +847,6 @@ public class ShoppingCartHelper {
      * @param agreementId
      */
     public Map selectAgreement(String agreementId) {
-        ArrayList errorMsgs = new ArrayList();
         Map result = null;
         GenericValue agreement = null;
 
