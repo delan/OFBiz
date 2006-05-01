@@ -311,7 +311,9 @@
                         </and>
                     </condition>
                     <then>
-                        <log level="error" message="Illegal returnItemType for ${parameters}"/>
+                        <set from-field="parameters.orderId" field="orderId"/>
+                        <set from-field="parameters.orderItemSeqId" field="orderItemSeqId"/>
+                        <log level="error" message="Illegal returnItemType: either order ${orderId} item ${orderItemSeqId} has been returned in full, or a return item other than Manual Adjustment or Shipping was being added to the return"/>
                         <add-error><fail-property resource="OrderErrorUiLabels" property="OrderIllegalReturnItemTypePassed"/></add-error>
                     <check-errors/>
 
