@@ -41,10 +41,10 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="listLookupGeo" list-iterator-name="listIt" target="" paginate-target="LookupGeo" title="" type="list"
+    <form name="listLookupGeo" list-name="listIt" target="" paginate-target="LookupGeo" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Geo"/>
                 <field-map field-name="orderBy" value="geoName"/>
