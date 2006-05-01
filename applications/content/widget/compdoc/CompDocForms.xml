@@ -39,10 +39,10 @@ under the License.
         <field name="submitButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListCompDoc" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
-        default-widget-style="tabletext" type="list" list-iterator-name="listIt"
+        default-widget-style="tabletext" type="list" list-name="listIt"
         target="" paginate-target="FindCompDoc">
         <actions>
-            <service service-name="performFind" result-map-name="results" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="results" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Content"/>
             </service>

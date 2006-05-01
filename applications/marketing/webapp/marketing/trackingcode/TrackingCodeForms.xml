@@ -136,10 +136,10 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTrackingCodeOrders" type="list" 
-            title="" list-iterator-name="listIt"
+            title="" list-name="listIt"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="orderBy" value="orderId"/>
                 <field-map field-name="entityName" value="TrackingCodeOrder"/>
@@ -181,9 +181,9 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListTrackingCodeVisits" list-iterator-name="listIt" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
+    <form name="ListTrackingCodeVisits" list-name="listIt" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="requestParameters" field-name="inputFields"/>
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>
@@ -225,7 +225,7 @@
     </form>
     <form name="ListLookupTrackingCode" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="parameters" field-name="inputFields"/>
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>
@@ -248,7 +248,7 @@
     </form>
     <form name="ListLookupVisit" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="parameters" field-name="inputFields"/>
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>
@@ -310,7 +310,7 @@
     </form>
     <form name="ListLookupTrackingCodeType" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="parameters" field-name="inputFields"/>
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>

@@ -27,7 +27,7 @@
     <form name="lookupOrderHeader" target="LookupOrderHeader" title="" type="single" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="OrderHeader" default-field-type="find"/>
-        <field name="orderHeaderId" title="${uiLabelMap.OrderOrderHeaderId}"><text-find/></field>
+        <field name="orderHeaderId"><text-find/></field>
         <field name="orderTypeId" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
@@ -66,7 +66,7 @@
     <form name="listLookupOrderHeader" paginate-target="LookupOrderHeader" title="" type="list" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="OrderHeader"/>
             </service>
@@ -121,7 +121,7 @@
     <form name="listLookupOrderHeaderAndShipInfo" list-name="entityList" paginate-target="LookupOrderHeaderAndShipInfo" title="" type="list" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="OrderHeaderAndShipGroups"/>
             </service>
@@ -196,7 +196,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
+        <field name="roleTypeId">
             <drop-down allow-empty="true">
                 <option key="REQ_REQUESTER" description="${uiLabelMap.WorkEffortRequestingParty}"/>
                 <option key="AGENT" description="${uiLabelMap.OrderAgent}"/>
@@ -213,7 +213,7 @@
             </drop-down>
         </field>
         -->
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="custRequestCategoryId"><hidden/></field>
         <field name="priority"><hidden/></field>
         <field name="description"><hidden/></field>
@@ -228,7 +228,7 @@
     <form name="listLookupCustRequest" list-name="entityList" paginate-target="LookupCustRequest" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="CustRequest"/>
             </service>
@@ -240,9 +240,9 @@
         <field name="custRequestName"><display/></field>
         <field name="priority"><display/></field>
         <field name="responseRequiredDate"><display/></field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><display/></field>
-        <field name="statusId"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}"><display-entity also-hidden="false" entity-name="RoleType"/></field>
+        <field name="partyId"><display/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
+        <field name="roleTypeId"><display-entity also-hidden="false" entity-name="RoleType"/></field>
     </form>
     
     <form name="lookupCustRequestItem" target="LookupCustRequestItem" title="" type="single"
@@ -268,10 +268,10 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="listLookupCustRequestItem" list-iterator-name="listIt" paginate-target="LookupCustRequestItem" title="" type="list"
+    <form name="listLookupCustRequestItem" list-name="listIt" paginate-target="LookupCustRequestItem" title="" type="list"
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="CustRequestItem"/>
             </service>
@@ -296,7 +296,7 @@
                 <entity-options description="${description}" entity-name="QuoteType" key-field-name="quoteTypeId"/>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" widget-style="selectBox">
             <drop-down allow-empty="false">
@@ -306,7 +306,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreId" title="${uiLabelMap.ProductProductStore}">
+        <field name="productStoreId">
             <drop-down allow-empty="true">
                 <entity-options description="${storeName}" entity-name="ProductStore" key-field-name="productStoreId"/>
             </drop-down>
@@ -329,7 +329,7 @@
     <form name="listLookupQuote" list-name="entityList" paginate-target="LookupQuote" title="" type="list"
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Quote"/>
             </service>
@@ -340,7 +340,7 @@
         </field>
         <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}"><display-entity entity-name="QuoteType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity also-hidden="false" entity-name="StatusItem"/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"></field>
+        <field name="partyId"></field>
         <field name="quoteName" title="${uiLabelMap.OrderOrderQuoteName}"></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"></field>
         <field name="issueDate" title="${uiLabelMap.OrderOrderQuoteIssueDate}"></field>
@@ -356,8 +356,8 @@
         <field name="quoteId"><hidden/></field>
         <field name="isPromo"><hidden/></field>
         <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}"><display/></field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="productFeatureId" title="${uiLabelMap.ProductFeatures}"><lookup target-form-name="LookupProductFeature"/></field>
+        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
+        <field name="productFeatureId"><lookup target-form-name="LookupProductFeature"/></field>
         <field name="deliverableTypeId" title="${uiLabelMap.OrderOrderQuoteDeliverableTypeId}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="DeliverableType" key-field-name="deliverableTypeId"/>
@@ -394,7 +394,7 @@
     <form name="listLookupQuoteItem" list-name="entityList" paginate-target="LookupQuoteItem" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="QuoteItem"/>
             </service>
@@ -412,7 +412,7 @@
             <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem?quoteId=${quoteId}&amp;quoteItemSeqId=${quoteItemSeqId}"/>
         </field>
         <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" use-when="${bsh:isPromo!=null&amp;&amp;isPromo.equals(&quot;Y&quot;)}"><display/></field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}">
+        <field name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
         <field name="workEffortId" title="${uiLabelMap.OrderOrderQuoteWorkEffortId}"></field>
@@ -435,8 +435,8 @@
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupRequirement" title="" type="single">
         <auto-fields-entity entity-name="Requirement" default-field-type="find"/>
-        <field name="requirementId" title="${uiLabelMap.OrderRequirementId}"><text-find/></field>
-        <field name="requirementTypeId" title="${uiLabelMap.OrderRequirementTypeId}">
+        <field name="requirementId"><text-find/></field>
+        <field name="requirementTypeId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RequirementType" description="${description}"/>
             </drop-down>
@@ -449,7 +449,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}">
+        <field name="productId">
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
@@ -462,7 +462,7 @@
     <form name="listLookupRequirement" list-name="entityList" paginate-target="LookupRequirement" title="" type="list" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Requirement"/>
             </service>
@@ -477,16 +477,16 @@
         <field name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
-        <field name="requirementStartDate"><display/></field>
-        <field name="requiredByDate"><display/></field>
+        <field name="requirementStartDate" title="${uiLabelMap.OrderRequirementStartDate}"><display/></field>
+        <field name="requiredByDate" title="${uiLabelMap.OrderRequirementByDate}"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
     </form>
 
     <form name="lookupShoppingList" target="LookupShoppingList" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="ShoppingList" default-field-type="find"/>
-        <field name="shoppingListId" title="${uiLabelMap.OrderShoppingListId}"><text-find/></field>
-        <field name="shoppingListTypeId" title="${uiLabelMap.OrderShoppingListTypeId}">
+        <field name="shoppingListId"><text-find/></field>
+        <field name="shoppingListTypeId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ShoppingListType" description="${description}"/>
             </drop-down>
@@ -498,7 +498,7 @@
     <form name="listLookupShoppingList" list-name="entityList" paginate-target="LookupShoppingList" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="ShoppingList"/>
             </service>

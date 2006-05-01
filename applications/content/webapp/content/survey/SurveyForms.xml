@@ -37,7 +37,7 @@ under the License.
     <form name="ListFindSurvey" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" 
         target="" title="" type="list" paginate-target="FindSurvey" paginate="true">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Survey"/>
             </service>
@@ -263,10 +263,10 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListFindSurveyResponse" list-iterator-name="listIt" paginate-target="FindSurveyResponse" title="" type="list"
+    <form name="ListFindSurveyResponse" list-name="listIt" paginate-target="FindSurveyResponse" title="" type="list"
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="SurveyResponse"/>
             </service>
@@ -288,10 +288,10 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="listLookupSurvey" list-iterator-name="listIt" paginate-target="LookupSurvey" title="" type="list"
+    <form name="listLookupSurvey" list-name="listIt" paginate-target="LookupSurvey" title="" type="list"
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Survey"/>
             </service>
@@ -309,10 +309,10 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="listLookupSurveyResponse" list-iterator-name="listIt" paginate-target="LookupSurveyResponse" title="" type="list"
+    <form name="listLookupSurveyResponse" list-name="listIt" paginate-target="LookupSurveyResponse" title="" type="list"
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="SurveyResponse"/>
             </service>

@@ -56,10 +56,10 @@
         </field>
     </form>
     <form name="ListRequirements" type="list" use-row-submit="true" 
-            target="approveRequirements" title="" list-iterator-name="listIt" paginate-target="FindRequirements"
+            target="approveRequirements" title="" list-name="listIt" paginate-target="FindRequirements"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" value="Requirement"/>
                 <field-map field-name="orderBy" value="statusId"/>

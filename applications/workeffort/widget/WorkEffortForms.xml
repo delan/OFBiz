@@ -213,7 +213,7 @@
     </form>
     <form name="ListLookupWorkEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="WorkEffort"/>
             </service>
@@ -285,9 +285,9 @@
         </sort-order>
     </form>
   
-    <form name="ListWorkEfforts" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="ListWorkEfforts" title="" type="list" list-iterator-name="listIt">
+    <form name="ListWorkEfforts" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="ListWorkEfforts" title="" type="list" list-name="listIt">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="WorkEffort"/>
             </service>
@@ -310,7 +310,7 @@
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeWorkEffort?workEffortId=${workEffortId}"/>
         </field>
     </form>
-    <form name="WorkEffortTreeLine"  hide-header="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="ListWorkEfforts" title="" type="list" list-iterator-name="listIt">
+    <form name="WorkEffortTreeLine"  hide-header="true" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="ListWorkEfforts" title="" type="list" list-name="listIt">
         <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="EditWorkEffort?workEffortId=${workEffortId}"/>
         </field>
@@ -355,9 +355,9 @@
         <field name="preferredContactMechId"><lookup target-form-name="LookupPreferredContactMech" target-parameter="partyId"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-    <form  name="ListWorkEffortParties" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" list-iterator-name="listIt" title="" type="list">
+    <form  name="ListWorkEffortParties" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" list-name="listIt" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="parameters" field-name="inputFields"/>
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>
@@ -467,7 +467,7 @@
     </form>
     <form name="ListWorkEffortCommEvents" default-map-name="workEffortCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="requestParameters" field-name="inputFields"/>
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>
@@ -543,7 +543,7 @@
     </form>
     <form name="ListLookupCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="parameters" field-name="inputFields"/>
                 <field-map env-name="entityName" field-name="entityName"/>
             </service>

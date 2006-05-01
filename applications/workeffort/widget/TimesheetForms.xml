@@ -74,7 +74,7 @@ under the License.
     <form name="ListFindTimesheet" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" 
         target="" title="" type="list" paginate-target="FindTimesheet" paginate="true">
         <actions>
-            <service result-map-list-iterator-name="listIt" result-map-name="result" service-name="performFind">
+            <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Timesheet"/>
             </service>

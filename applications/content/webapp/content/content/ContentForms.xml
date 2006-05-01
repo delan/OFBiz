@@ -57,9 +57,9 @@
     </form>
     <form name="listFindContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-iterator-name="listIt" target="" paginate-target="/FindContent" title="" type="list">
+        list-name="listIt" target="" paginate-target="/FindContent" title="" type="list">
       	<actions>
-          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+          <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
             <field-map field-name="inputFields" env-name="requestParameters"/>
             <field-map field-name="entityName" env-name="entityName"/>
           </service>
@@ -180,10 +180,10 @@
     </form>
     <form name="listLookupContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-iterator-name="listIt" target="" paginate-target="/LookupContent" 
+        list-name="listIt" target="" paginate-target="/LookupContent" 
         title="" type="list">
       	<actions>
-          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+          <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
             <field-map field-name="inputFields" env-name="requestParameters"/>
             <field-map field-name="entityName" env-name="entityName"/>
           </service>

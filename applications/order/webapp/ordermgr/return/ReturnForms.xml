@@ -92,10 +92,10 @@
     </form>
 
     <form name="ListReturns" type="list"  target="findreturn" title=""
-                list-iterator-name="listIt" paginate-target="findreturn"
+                list-name="listIt" paginate-target="findreturn"
                 default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
-            <service service-name="performFind"  result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind"  result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" value="ReturnHeader"/>
             </service>

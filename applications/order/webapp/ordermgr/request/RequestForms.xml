@@ -72,7 +72,7 @@
       	<actions>
           <!--<set field="entityName" value="CustRequestAndRole"/>-->
           <set field="entityName" value="CustRequest"/>
-          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+          <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
             <field-map field-name="inputFields" env-name="requestParameters"/>
             <field-map field-name="entityName" env-name="entityName"/>
           </service>

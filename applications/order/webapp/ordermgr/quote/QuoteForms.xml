@@ -68,10 +68,10 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="ListQuotes" list-iterator-name="listIt" target="" paginate-target="FindQuote" title="" type="list" 
+    <form name="ListQuotes" list-name="listIt" target="" paginate-target="FindQuote" title="" type="list" 
             default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
       	<actions>
-      	    <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+      	    <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
       	        <field-map field-name="inputFields" env-name="parameters"/>
       	        <field-map field-name="entityName" value="Quote"/>
       	    </service>

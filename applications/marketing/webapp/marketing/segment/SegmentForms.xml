@@ -26,9 +26,9 @@
 
     <form name="FindSegmentGroup" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="FindSegmentGroup" title="" type="list">
+        list-name="listIt" target="" paginate-target="FindSegmentGroup" title="" type="list">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="SegmentGroup"/>
                 <field-map field-name="noConditionFind" value="Y"/>
@@ -147,9 +147,9 @@
     </form>
     <form name="listSegmentGroupRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="listSegmentGroupRole" title="" type="list">
+        list-name="listIt" target="" paginate-target="listSegmentGroupRole" title="" type="list">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="SegmentGroupRole"/>
                 <field-map field-name="noConditionFind" value="Y"/>
