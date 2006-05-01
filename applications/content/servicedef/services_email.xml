@@ -40,6 +40,8 @@
         <attribute name="sendVia" type="String" mode="IN" optional="true"/>
         <attribute name="sendType" type="String" mode="IN" optional="true"/>
         <attribute name="contentType" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="sendMail" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="sendMail">
@@ -47,10 +49,9 @@
             but are passed down to storeEmailAsCommunication during the SECA chain.  See sednMailInterface for more comments.</description>
         <implements service="sendMailInterface"/>
         <attribute name="body" type="String" mode="INOUT" optional="false"/>
-        <attribute name="subject" type="String" mode="INOUT" optional="false"/>
-        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="communicationEventId" type="String" mode="INOUT" optional="true"/>
         <override name="contentType" mode="INOUT"/>
+        <override name="subject" mode="INOUT" optional="false"/>
     </service>
     <service name="sendMailMultiPart" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="sendMail">
