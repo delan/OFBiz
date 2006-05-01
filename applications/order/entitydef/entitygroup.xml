@@ -62,6 +62,7 @@
     <entity-group group="org.ofbiz" entity="OrderItemAttribute" />
     <entity-group group="org.ofbiz" entity="OrderItemBilling" />
     <entity-group group="org.ofbiz" entity="OrderItemContactMech" />
+    <entity-group group="org.ofbiz" entity="OrderItemGroup" />
     <entity-group group="org.ofbiz" entity="OrderItemShipGrpInvRes" />
     <entity-group group="org.ofbiz" entity="OrderItemShipGrpInvResAndItem" />
     <entity-group group="org.ofbiz" entity="OrderItemShipGrpInvResAndItemLocation" />
