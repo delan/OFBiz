@@ -38,7 +38,7 @@ under the License.
     <form name="listLookupFixedAsset" list-name="entityList" paginate-target="LookupFixedAsset" title="" type="list" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="FixedAsset"/>
             </service>
@@ -62,7 +62,7 @@ under the License.
     <form name="listBillingAccount" list-name="entityList" paginate-target="LookupBillingAccount" title="" type="list"
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="BillingAccount"/>
                 <field-map field-name="orderBy" value="billingAccountId"/>
@@ -100,7 +100,7 @@ under the License.
     <form name="listLookupGlAccount" list-name="entityList" paginate-target="LookupGlAccount" title="" type="list" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="GlAccount"/>
             </service>
@@ -116,9 +116,9 @@ under the License.
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupPayment" title="" type="single">
         <auto-fields-entity entity-name="Payment" default-field-type="hidden" />
-        <field name="paymentId" title="${uiLabelMap.AccountingPaymentId}"><text-find/></field>
-        <field name="partyIdFrom" title="Party ID from"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" title="Party ID to"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentId" title="${uiLabelMap.AccountingPaymentID}"><text-find/></field>
+        <field name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
         <field name="amountApplied"><text-find default-value=""></text-find> </field>
         
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
@@ -127,7 +127,7 @@ under the License.
     <form name="listPayment" list-name="entityList" paginate-target="LookupPayment" title="" type="list" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Payment"/>
             </service>
@@ -138,8 +138,8 @@ under the License.
         <field name="partyIdFrom"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="partyIdTo"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="effectiveDate"><display/></field>
-        <field name="amount" title="Payment Amount"><display/></field>
-        <field name="currencyUomId" title="Curr."><display/></field>
+        <field name="amount"><display/></field>
+        <field name="currencyUomId"><display/></field>
     </form>
     
     <form name="lookupInvoice" target="LookupInvoice" title="" type="single" 
@@ -159,9 +159,9 @@ under the License.
             </drop-down>
         </field>
         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="2" name="partyId" title="Party Id To"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="1" name="Datefrom"><date-time/></field>
-        <field position="2" name="DateThru"><date-time/></field>
+        <field position="2" name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="1" name="Datefrom" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+        <field position="2" name="DateThru" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
         
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -169,18 +169,18 @@ under the License.
     <form name="listInvoice" list-name="entityList" paginate-target="LookupInvoice" title="" type="list" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="tabletext">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Invoice"/>
             </service>
         </actions>
-        <field name="invoiceId" title="${uiLabelMap.AccountingInvoiceId}" widget-style="buttontext">
+        <field name="invoiceId" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${invoiceId}" target="javascript:set_value('${invoiceId}')"/>
         </field>
         <field name="invoiceTypeId"><display-entity entity-name="InvoiceType"/></field>
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="description"><display/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
+        <field name="partyIdFrom"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="amount"><display/></field>
         <field name="currencyUomId"><display/></field>
