@@ -410,7 +410,9 @@ public class ModelTree {
                 } else {
                     id = (String) context.get(pkName);
                 }
-                modelTree.currentNodeTrail.add(id);
+                if (id != null) { 
+                    modelTree.currentNodeTrail.add(id);
+                }
                 context.put("currentNodeTrail", modelTree.currentNodeTrail);
                 String currentNodeTrailPiped = StringUtil.join(modelTree.currentNodeTrail, "|");
                 context.put("currentNodeTrailPiped", currentNodeTrailPiped);
