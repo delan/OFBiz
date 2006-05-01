@@ -123,24 +123,17 @@ under the License.
         </section>
     </screen>
 
-    <!-- Global decorators for screenlet, etc -->
+    <!-- Global decorator for screenlet -->
     <screen name="screenlet">
         <section>
             <widgets>
                 <container style="screenlet">
-                    <decorator-section-include name="screenlet-header"/>
+                    <container style="screenlet-header">
+                        <decorator-section-include name="screenlet-header"/>
+                    </container>
                     <container style="screenlet-body">
                         <decorator-section-include name="screenlet-body"/>
                     </container>
-                </container>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="boxhead">
-        <section>
-            <widgets>
-                <container style="screenlet-body">
-                    <label text="${boxhead}" style="boxhead"/>
                 </container>
             </widgets>
         </section>
