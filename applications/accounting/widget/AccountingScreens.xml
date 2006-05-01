@@ -29,6 +29,7 @@
     <screen name="GenericDecorator">
         <section>
             <actions>
+                <set field="headerItem" value="chartofaccounts"/>
                 <!--set field="leftbarScreenName" value="leftbar"/ -->
             </actions>
             <widgets>
@@ -126,7 +127,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="AcctgListGlAcctOrg"/>
-                <set field="tabButtonItem" value="EditProduct"/>
+                <set field="tabButtonItem" value="ListGlAccountOrganization"/>
                 <set field="labelTitleProperty" value="AcctgListGlAcctOrg"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
@@ -147,6 +148,7 @@
             <actions>
                 <set field="titleProperty" value="AcctgAssignGlAccount"/>
                 <!-- <set field="titleProperty" value=""/> -->
+                <set field="tabButtonItem" value="AssignGlAccount"/>
                 <set field="headerItem" value="chartofaccounts"/>
                 <set field="labelTitleProperty" value="AcctgAssignGlAccount"/>
     
@@ -167,6 +169,7 @@
             <actions>
                 <set field="titleProperty" value="AcctgNavigateAccts"/>
                 <!-- <set field="titleProperty" value=""/> -->
+                <set field="tabButtonItem" value="GlAccountNavigate"/>
                 <set field="headerItem" value="chartofaccounts"/>
                 <set field="labelTitleProperty" value="AcctgNavigateAccts"/>
                 <!-- parameters includes requestAttributes and parameter map -->
@@ -179,12 +182,12 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <container style="column-left-wide">
-                            <include-tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml" /> 
-                        </container>
                         <platform-specific>
                             <html><html-template location="component://accounting/webapp/accounting/chartofaccounts/GlAccountTabBar.ftl"/></html>
                         </platform-specific>
+                        <container style="column-left-wide">
+                            <include-tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml" /> 
+                        </container>
                         <include-form name="EditGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
                         <!-- include-form name="AssignGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/ -->
                      </decorator-section>
@@ -270,7 +273,7 @@
         <section>
             <actions>                
                 <set field="titleProperty" value="PageTitleListAccounts"/>
-                <set field="tabButtonItem" value=""/>
+                <set field="tabButtonItem" value="FindGlobalGlAccount"/>
                 <set field="labelTitleProperty" value="PageTitleListAccounts"/>
                 <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list-name="entityList" use-cache="true" >
                     <limit-range start="0" size="20" />

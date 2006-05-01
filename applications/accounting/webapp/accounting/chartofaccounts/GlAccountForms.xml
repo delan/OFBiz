@@ -86,12 +86,13 @@
     </form>
 
     <form name="ListGlAccountOrganization" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-iterator-name="list" target="" paginate-target="/ListGlAccountOrganization" title="" type="list">
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
+        list-iterator-name="listIt" target="" paginate-target="/ListGlAccountOrganization" title="" type="list">
         <actions>
             <set field="entityName" value="GlAccountOrganization"/>
+            <set field="noConditionFind" value="Y"/> 
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
         </actions>
@@ -130,16 +131,18 @@
     </form>
 
     <form name="ListGlAccount" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
+        default-tooltip-style="tabletext" default-widget-style="tabletext" default-entity-name="GlAccount"
         list-iterator-name="listIt" target="" paginate-target="/FindGlobalGlAccount" title="" type="list">
         <actions>
             <set field="entityName" value="GlAccount"/>
+            <set field="noConditionFind" value="Y"/> 
             <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
+                <field-map field-name="noConditionFind" value="Y"/> 
             </service>
         </actions>
-
+        
         <auto-fields-entity entity-name="GlAccount" default-field-type="display"/>
         <field name="glAccountId" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountNavigate?glAccountId=${glAccountId}"/>

@@ -28,7 +28,7 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class="tabContainer">
-    <a href="<@ofbizUrl>FindGlobalGlAccount</@ofbizUrl>" class="${selectedClassMap.AssignGlAccount?default(unselectedClassName)}">${uiLabelMap.AcctgChartOfAcctsTabMenu}</a>
+    <a href="<@ofbizUrl>FindGlobalGlAccount</@ofbizUrl>" class="${selectedClassMap.FindGlobalGlAccount?default(unselectedClassName)}">${uiLabelMap.AcctgChartOfAcctsTabMenu}</a>
     <a href="<@ofbizUrl>GlAccountNavigate</@ofbizUrl>" class="${selectedClassMap.GlAccountNavigate?default(unselectedClassName)}">${uiLabelMap.AcctgNavigateAccts}</a>
     <a href="<@ofbizUrl>AssignGlAccount</@ofbizUrl>" class="${selectedClassMap.AssignGlAccount?default(unselectedClassName)}">${uiLabelMap.AcctgAssignGlAccount}</a>
     <a href="<@ofbizUrl>EditGlJournalEntry</@ofbizUrl>" class="${selectedClassMap.EditGlJournalEntry?default(unselectedClassName)}">${uiLabelMap.AcctgEditGlJournalEntry}</a>
