@@ -408,6 +408,8 @@
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="orderItemTypeId" type="id-ne"></field>
+      <field name="orderItemGroupSeqId" type="id-ne"></field>
+      <field name="isItemGroupPrimary" type="indicator"></field>
       <field name="budgetId" type="id"></field>
       <field name="budgetItemSeqId" type="id"></field>
       <field name="productId" type="id"></field>
@@ -450,6 +452,10 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_ORTYP" rel-entity-name="OrderItemType">
         <key-map field-name="orderItemTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITEM_ITGRP" rel-entity-name="OrderItemGroup">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemGroupSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderItemTypeAttr">
         <key-map field-name="orderItemTypeId"/>
@@ -576,7 +582,7 @@
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <prim-key field="contactMechPurposeTypeId"/>
-      <relation type="one" fk-name="ORDER_ITCM_OHDR" rel-entity-name="OrderHeader">
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITCM_OITM" rel-entity-name="OrderItem">
@@ -589,6 +595,21 @@
       <relation type="one" fk-name="ORDER_ITCM_CMPT" rel-entity-name="ContactMechPurposeType">
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
+    </entity>
+    <entity entity-name="OrderItemGroup" package-name="org.ofbiz.order.order" title="Order Item Group Entity">
+        <field name="orderId" type="id-ne"></field>
+        <field name="orderItemGroupSeqId" type="id-ne"></field>
+        <field name="parentGroupSeqId" type="id"></field>
+        <field name="groupName" type="name"></field>
+        <prim-key field="orderId"/>
+        <prim-key field="orderItemGroupSeqId"/>
+        <relation type="one" fk-name="ORDERITMGRP_HDR" rel-entity-name="OrderHeader">
+            <key-map field-name="orderId"/>
+        </relation>
+        <relation type="one" fk-name="ORDERITMGRP_PGRP" title="Parent" rel-entity-name="OrderItemGroup">
+            <key-map field-name="orderId"/>
+            <key-map field-name="parentGroupSeqId" rel-field-name="orderItemGroupSeqId"/>
+        </relation>
     </entity>
     <entity entity-name="OrderItemPriceInfo"
             package-name="org.ofbiz.order.order"
