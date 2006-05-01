@@ -52,7 +52,6 @@
             <fileset dir="../jotm/build/lib" includes="*.jar"/>
             <fileset dir="../minerva/lib" includes="*.jar"/>
             <fileset dir="../minerva/build/lib" includes="*.jar"/>
-            <fileset dir="../geronimo/lib" includes="*.jar"/>
         </path>
     </target>
 

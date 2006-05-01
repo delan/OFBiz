@@ -15,20 +15,30 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package org.ofbiz.entity.transaction;
+package org.ofbiz.geronimo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
+import javax.transaction.xa.XAException;
 
+import org.apache.geronimo.transaction.ExtendedTransactionManager;
+import org.apache.geronimo.transaction.context.GeronimoTransactionManager;
 import org.apache.geronimo.transaction.context.TransactionContextManager;
+import org.apache.geronimo.transaction.log.UnrecoverableLog;
+import org.apache.geronimo.transaction.manager.TransactionLog;
+import org.apache.geronimo.transaction.manager.TransactionManagerImpl;
+import org.apache.geronimo.transaction.manager.XidImporter;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
+import org.ofbiz.entity.transaction.MinervaConnectionFactory;
+import org.ofbiz.entity.transaction.TransactionFactoryInterface;
 
 /**
  * GeronimoTransactionFactory
@@ -40,39 +50,38 @@ public class GeronimoTransactionFactory implements TransactionFactoryInterface {
 
     public static final String module = GeronimoTransactionFactory.class.getName();        
     
-    protected static TransactionContextManager geronimoTcm = null;
+    // just use the transactionManager for this private static XidImporter xidImporter;
+    private static ExtendedTransactionManager transactionManager;
+    private static TransactionContextManager transactionContextManager;
+    private static int defaultTransactionTimeoutSeconds = 60;
+    private static TransactionLog transactionLog;
+    private static Collection resourceManagers = null;
+    private static GeronimoTransactionManager geronimoTransactionManager;
 
     static {    
-        // creates an instance of Geronimo with a local transaction factory which is not bound to a registry            
-        geronimoTcm = new TransactionContextManager();
+        // creates an instance of Geronimo transaction context, etc with a local transaction factory which is not bound to a registry
+        try {
+            transactionLog = new UnrecoverableLog();
+            transactionManager = new TransactionManagerImpl(defaultTransactionTimeoutSeconds, transactionLog, resourceManagers);
+            transactionContextManager = new TransactionContextManager(transactionManager, (XidImporter) transactionManager);
+            geronimoTransactionManager = new GeronimoTransactionManager(transactionContextManager);
+        } catch (XAException e) {
+            Debug.logError(e, "Error initializing Geronimo transaction manager: " + e.toString(), module);
+        }
     }
 
     /*
      * @see org.ofbiz.entity.transaction.TransactionFactoryInterface#getTransactionManager()
      */
-    public TransactionManager getTransactionManager() {  
-        if (geronimoTcm != null) {
-            // TODO: this is not working; not sure how to initialize or use the Geronimo API properly, have not found any valid examples
-            Debug.logError("Got TransactionManager from geronimoTcm: " + geronimoTcm.getTransactionManager(), module);
-            
-            return geronimoTcm.getTransactionManager();
-        } else {
-            Debug.logError("Cannot get TransactionManager, geronimoTcm object is null", module);
-            return null;
-        }
+    public TransactionManager getTransactionManager() {
+        return geronimoTransactionManager;
     }
 
     /*
      * @see org.ofbiz.entity.transaction.TransactionFactoryInterface#getUserTransaction()
      */
     public UserTransaction getUserTransaction() {  
-        if (geronimoTcm != null) {           
-            // TODO: any way to get a UserTransaction or will this do?
-            return (UserTransaction) geronimoTcm.getTransactionManager();
-        } else {
-            Debug.logError("Cannot get UserTransaction, geronimoTcm object is null", module);
-            return null;
-        }
+        return geronimoTransactionManager;
     }                
     
     public String getTxMgrName() {
@@ -100,9 +109,9 @@ public class GeronimoTransactionFactory implements TransactionFactoryInterface {
     
     public void shutdown() {
         MinervaConnectionFactory.closeAll();
-        if (geronimoTcm != null) {
+        if (transactionContextManager != null) {
             // TODO: need to do anything for this?
-            geronimoTcm = null;
+            transactionContextManager = null;
         }           
     }
 }
