@@ -31,8 +31,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces -->
 
-    <!-- Use this one for Geronimo, note does not work yet... -->
-    <!-- <transaction-factory class="org.ofbiz.entity.transaction.GeronimoTransactionFactory"/> -->
+    <!-- Use this one for Geronimo, this is being tested now, seems to be working -->
+    <!-- <transaction-factory class="org.ofbiz.geronimo.GeronimoTransactionFactory"/> -->
 
     <!-- Use this one for JNDI -->
     <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->
@@ -45,8 +45,6 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         Common UserTransaction locations:
             java:comp/UserTransaction (most servers: Resin, Orion, OC4J, etc)
             UserTransaction (RexIP)
-    -->
-    <!--
         JBoss uses two different objects for the UserTransaction and TransactionManager interfaces;
         they are located in JNDI at: "java:comp/UserTransaction" and "java:/TransactionManager" respectively
     -->
