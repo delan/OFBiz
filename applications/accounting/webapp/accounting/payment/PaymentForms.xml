@@ -47,11 +47,11 @@
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment"
-        title="Payment List"  default-title-style="tableheadtext" list-name="newPayments"
+        title="Payment List"  default-title-style="tableheadtext" list-name="listIt"
         default-widget-style="tabletext" default-tooltip-style="tabletext"
-        paginate-target="/findPayments"  list-iterator-name="listIt" paginate="true">
+        paginate-target="/findPayments" paginate="true">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="Payment"/>
                 <field-map field-name="orderBy" value="effectiveDate"/>

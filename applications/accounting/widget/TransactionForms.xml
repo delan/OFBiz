@@ -43,12 +43,12 @@
 
     <!-- Brings up a list of gateway responses. TODO: should cut down data displayd -->
     <form name="ListGatewayResponses" type="list" use-row-submit="true" 
-            target="" title="" list-iterator-name="listIt" paginate-target="FindRequirements"
+            target="" title="" list-name="listIt" paginate-target="FindRequirements"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <set field="entityName" value="PaymentGatewayResponse"/>
             <set field="orderBy" value="transactionDate DESC"/>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="requestParameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
                 <field-map field-name="orderBy" env-name="orderBy"/>

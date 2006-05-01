@@ -55,10 +55,10 @@
 
     <form name="ListAgreements" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="tabletext"
-            list-iterator-name="listIt" target="" paginate-target="FindAgreement" title="" type="list">
+            list-name="listIt" target="" paginate-target="FindAgreement" title="" type="list">
         <actions>
           <set field="entityName" value="Agreement"/>
-          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+          <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
             <field-map field-name="inputFields" env-name="requestParameters"/>
             <field-map field-name="entityName" env-name="entityName"/>
           </service>

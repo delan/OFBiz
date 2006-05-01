@@ -87,11 +87,11 @@
 
     <form name="ListGlAccountOrganization" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-iterator-name="listIt" target="" paginate-target="/ListGlAccountOrganization" title="" type="list">
+        list-name="listIt" target="" paginate-target="/ListGlAccountOrganization" title="" type="list">
         <actions>
             <set field="entityName" value="GlAccountOrganization"/>
             <set field="noConditionFind" value="Y"/> 
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
@@ -132,11 +132,11 @@
 
     <form name="ListGlAccount" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext" default-entity-name="GlAccount"
-        list-iterator-name="listIt" target="" paginate-target="/FindGlobalGlAccount" title="" type="list">
+        list-name="listIt" target="" paginate-target="/FindGlobalGlAccount" title="" type="list">
         <actions>
             <set field="entityName" value="GlAccount"/>
             <set field="noConditionFind" value="Y"/> 
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" env-name="entityName"/>
                 <field-map field-name="noConditionFind" value="Y"/> 
