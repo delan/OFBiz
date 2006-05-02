@@ -150,6 +150,7 @@ public class RequestHandler implements Serializable {
             HttpSession session = request.getSession();
 
             if (session.getAttribute("visit") == null) {
+                Debug.logInfo("This is the first request in this visit.", module);
                 // This isn't an event because it is required to run. We do not want to make it optional.
                 VisitHandler.setInitialVisit(request, response);
                 Collection events = requestManager.getFirstVisitEvents();
