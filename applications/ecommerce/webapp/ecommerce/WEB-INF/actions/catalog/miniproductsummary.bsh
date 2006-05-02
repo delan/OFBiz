@@ -49,7 +49,7 @@ if (miniProduct != null && productStoreId != null && prodCatalogId != null) {
     // calculate the "your" price
     priceParams = UtilMisc.toMap("product", miniProduct, 
         "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, 
-        "currencyUomId", UtilHttp.getCurrencyUom(session),
+        "currencyUomId", UtilHttp.getCurrencyUom(session, null),
         "autoUserLogin", session.getAttribute("autoUserLogin"));
     priceParams.put("productStoreId", productStoreId);
     if (userLogin != null) priceParams.put("partyId", userLogin.get("partyId"));
