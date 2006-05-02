@@ -75,7 +75,8 @@
         <!-- these two will be assembled into a expireDate by buildCcExpireDate on an ECA if needed -->
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
         <attribute name="expYear" type="String" mode="IN" optional="true"/>
-        <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="OUT" optional="false"/> <!-- This is the id of the new cc -->
+        <attribute name="oldPaymentMethodId" type="String" mode="OUT" optional="false"/> <!-- This is the id of the old cc -->
     </service>
     <service name="buildCcExpireDate" engine="java"
                 location="org.ofbiz.accounting.payment.PaymentMethodServices" invoke="makeExpireDate">

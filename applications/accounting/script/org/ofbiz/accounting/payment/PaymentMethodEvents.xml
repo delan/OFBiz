@@ -65,7 +65,7 @@
         <check-errors/>
         <call-service service-name="updateCreditCard" in-map-name="context">
             <default-message>Credit Card Info successfully updated.</default-message>
-            <result-to-request result-name="newPaymentMethodId" request-name="paymentMethodId"/>
+            <result-to-request result-name="paymentMethodId" request-name="paymentMethodId"/>
         </call-service>
         <if-compare map-name="parameters" field-name="contactMechId" operator="equals" value="_NEW_">
             <string-to-field string="address" field-name="_response_code_"/>
