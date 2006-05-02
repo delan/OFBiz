@@ -589,12 +589,6 @@ public class ShoppingCartEvents {
         }
 
         if (cart == null) {
-            if (locale == null) {
-                locale = UtilHttp.getLocale(request);
-            }
-            if (currencyUom == null) {
-                currencyUom = UtilHttp.getCurrencyUom(request);
-            }
             cart = new WebShoppingCart(request, locale, currencyUom);
             session.setAttribute("shoppingCart", cart);
         } else {

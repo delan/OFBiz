@@ -328,7 +328,7 @@ public class UtilHttp {
         return requestUrl;
     }
 
-    private static Locale getLocale(HttpServletRequest request, HttpSession session) {
+    public static Locale getLocale(HttpServletRequest request, HttpSession session, Object appDefaultLocale) {
         // check session first, should override all if anything set there 
         Object localeObject = localeObject = session != null ? session.getAttribute("locale") : null;
 
@@ -342,6 +342,11 @@ public class UtilHttp {
             if (userLogin != null) {
                 localeObject = userLogin.get("lastLocale");
             }
+        }
+        
+        // no user locale? before global default try appDefaultLocale if specified
+        if (localeObject == null && !UtilValidate.isEmpty(appDefaultLocale)) {
+            localeObject = appDefaultLocale;
         }
 
         // finally request (w/ a fall back to default)
@@ -359,7 +364,7 @@ public class UtilHttp {
      */
     public static Locale getLocale(HttpServletRequest request) {
         if (request == null) return Locale.getDefault();
-        return UtilHttp.getLocale(request, request.getSession());
+        return UtilHttp.getLocale(request, request.getSession(), null);
     }
 
     /**
@@ -370,7 +375,7 @@ public class UtilHttp {
      */
     public static Locale getLocale(HttpSession session) {
         if (session == null) return Locale.getDefault();
-        return UtilHttp.getLocale(null, session);
+        return UtilHttp.getLocale(null, session, null);
     }
 
     public static void setLocale(HttpServletRequest request, String localeString) {
@@ -392,7 +397,7 @@ public class UtilHttp {
      * @param session HttpSession object to use for lookup
      * @return String The ISO currency code
      */
-    public static String getCurrencyUom(HttpSession session) {
+    public static String getCurrencyUom(HttpSession session, String appDefaultCurrencyUom) {
         // session, should override all if set there
         String iso = (String) session.getAttribute("currencyUom");
 
@@ -406,6 +411,11 @@ public class UtilHttp {
             if (userLogin != null) {
                 iso = (String) userLogin.get("lastCurrencyUom");
             }
+        }
+
+        // no user currency? before global default try appDefaultCurrencyUom if specified
+        if (iso == null && !UtilValidate.isEmpty(appDefaultCurrencyUom)) {
+            iso = appDefaultCurrencyUom;
         }
 
         // if none is set we will use the configured default
@@ -433,7 +443,7 @@ public class UtilHttp {
      * @return String The ISO currency code
      */
     public static String getCurrencyUom(HttpServletRequest request) {
-        return getCurrencyUom(request.getSession());
+        return getCurrencyUom(request.getSession(), null);
     }
 
     /** Simple event to set the users per-session currency uom value */

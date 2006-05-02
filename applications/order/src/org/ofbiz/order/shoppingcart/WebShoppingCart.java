@@ -48,14 +48,13 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {
-
     public WebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
         // for purchase orders, bill to customer partyId must be set - otherwise, no way to know who we're purchasing for.  supplierPartyId is furnished 
         // by order manager for PO entry.
         // TODO: refactor constructor and the getCartObject method which calls them to multiple constructors for different types of orders
         super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request),
-                WebSiteWorker.getWebSiteId(request), (locale != null ? locale : UtilHttp.getLocale(request)), 
-                (currencyUom != null ? currencyUom : UtilHttp.getCurrencyUom(request)), 
+                WebSiteWorker.getWebSiteId(request), (locale != null ? locale : ProductStoreWorker.getStoreLocale(request)), 
+                (currencyUom != null ? currencyUom : ProductStoreWorker.getStoreCurrencyUomId(request)), 
                 request.getParameter("billToCustomerPartyId"),
                 (request.getParameter("supplierPartyId") != null ? request.getParameter("supplierPartyId") : request.getParameter("billFromVendorPartyId")));
 

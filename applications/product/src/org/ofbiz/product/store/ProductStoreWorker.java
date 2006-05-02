@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import javax.servlet.ServletRequest;
@@ -96,6 +97,16 @@ public class ProductStoreWorker {
             }
         }
         return null;
+    }
+    
+    public static String getStoreCurrencyUomId(HttpServletRequest request) {
+        GenericValue productStore = getProductStore(request);
+        return UtilHttp.getCurrencyUom(request.getSession(), productStore.getString("defaultCurrencyUomId"));
+    }
+
+    public static Locale getStoreLocale(HttpServletRequest request) {
+        GenericValue productStore = getProductStore(request);
+        return UtilHttp.getLocale(request, request.getSession(), productStore.getString("defaultLocaleString"));
     }
 
     public static String determineSingleFacilityForStore(GenericDelegator delegator, String productStoreId) {
