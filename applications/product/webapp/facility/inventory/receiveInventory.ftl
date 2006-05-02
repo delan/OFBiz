@@ -138,14 +138,6 @@
       </tr>
       <tr>
         <td width="14%">&nbsp;</td>
-        <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductInventoryItem} <br/>(${uiLabelMap.ProductOptionalCreateNew})</div></td>
-        <td width="6%">&nbsp;</td>
-        <td width="74%">
-          <input type="text" name="inventoryItemId_o_0" size="20" maxlength="20" class="inputBox"/>
-        </td>
-      </tr>
-      <tr>
-        <td width="14%">&nbsp;</td>
         <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductInventoryItemType} </div></td>
         <td width="6%">&nbsp;</td>
         <td width="74%">
