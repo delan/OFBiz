@@ -29,23 +29,21 @@
 <#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
 <#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
 
-<#assign unselectedLeftClassName = "headerButtonLeft">
-<#assign unselectedRightClassName = "headerButtonRight">
-<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
-<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+<#assign unselectedTabClassName = "appButton">
+<#assign selectedTabClassMap = {page.headerItem?default("void") : "appButtonSelected"}>
+
 <#if requestAttributes.userLogin?has_content>
 <div class="apptitle">&nbsp;Reservations</div>
-<div class="row">
-  <div class="col"><a href="<@ofbizUrl>findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">List Reservations</a></div>  
-  <div class="col"><a href="<@ofbizUrl>downloadorder</@ofbizUrl>" class="${selectedLeftClassMap.downloadorder?default(unselectedLeftClassName)}">Download Reservations</a></div>  
-  <!--div class="col"><a href="<@ofbizUrl>statistics</@ofbizUrl>" class="${selectedLeftClassMap.statistics?default(unselectedLeftClassName)}">Statistics</a></div-->  
-  <!--div class="col"><a href="<@ofbizUrl>reports</@ofbizUrl>" class="${selectedLeftClassMap.reports?default(unselectedLeftClassName)}">Reports</a></div-->  
+<div class="appContainer">
+  <a href="<@ofbizUrl>findorders</@ofbizUrl>" class="${selectedTabClassMap.findorders?default(unselectedTabClassName)}">List Reservations</a>
+  <a href="<@ofbizUrl>downloadorder</@ofbizUrl>" class="${selectedTabClassMap.downloadorder?default(unselectedTabClassName)}">Download Reservations</a>
+  <!--div class="col"><a href="<@ofbizUrl>statistics</@ofbizUrl>" class="${selectedTabClassMap.statistics?default(unselectedTabClassName)}">Statistics</a></div-->  
+  <!--div class="col"><a href="<@ofbizUrl>reports</@ofbizUrl>" class="${selectedTabClassMap.reports?default(unselectedTabClassName)}">Reports</a></div-->  
 
   <#if userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
+    <a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedTabClassMap.logout?default(unselectedTabClassName)}">${uiLabelMap.CommonLogout}</a>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
+    <a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedTabClassMap.login?default(unselectedTabClassName)}'>${uiLabelMap.CommonLogin}</a>
   </#if>
-  <div class="col-fill">&nbsp;</div>
 </div>
 </#if>

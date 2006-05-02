@@ -1,4 +1,3 @@
-
 /* This CSS file is used for all OFBiz applications EXCEPT ecommerce. */
 /* See the "ecommain.css" file for ecommerce. */
 
@@ -14,6 +13,12 @@ margin-top: 0px;
 margin-right: 10px;
 margin-bottom: 0px;
 margin-left: 10px;
+}
+
+h1 {
+font-size:10px;
+font-weight:normal;
+display: inline;
 }
 
 FORM {
@@ -34,9 +39,8 @@ visibility: hidden;
 
 .head1 {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-margin: 0px;
-padding: 2px;
-font-size: 11pt;
+padding-top: 10px;
+font-size: 12pt;
 font-weight: bold;
 color: #a91930;
 }
@@ -86,7 +90,6 @@ visibility: hidden;
 A.tabletext, DIV.tabletext, SPAN.tabletext, P.tabletext, .tabletext {
 font-size: 10px;
 text-decoration: none;
-font-weight:bold;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
@@ -126,16 +129,17 @@ border-width: 0px 1px 1px 1px;
 .boxhead {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 margin: 0px;
-font-size: 9pt;
+font-size: 8pt;
 text-decoration: none;
 color: #FFFFFF;
+font-weight: bold;
 }
 
 DIV.boxtop {
 margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
 padding: 0; text-align: center;
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background: #000099;
+background: #070872;
 padding-top: 1px;
 padding-bottom: 1px;
 padding-right: 4px;
@@ -199,7 +203,7 @@ border-width: 1px 1px 1px 1px;
 }
 
 .boxtop {
-background: #000099;
+background: #070872;
 padding-top: 1px;
 padding-bottom: 1px;
 padding-right: 4px;
@@ -223,59 +227,19 @@ background: #dddddd;
 padding-right: 5px; padding-left: 5px;
 }
 
-/* ===== Tab/Button Bar Styles ===== */
-.tabContainer {
-background: #FFFFFF;
-padding-top: 4px;
-margin-bottom: 10px;
-}
-
-A.tabButton {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10px;
-font-weight: bold;
-text-decoration: none;
-color: #000099;
-background: #D4D0C8;
-padding-right: 5px;
-padding-left: 5px;
-padding-top: 1px;
-padding-bottom: 1px;
-border: solid #000099 1px;
-}
-
-A.tabButton:hover {
-color: #FFFFFF;
-background: #000099;
-border: solid #000099 1px;
-}
-
-A.tabButtonSelected {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10px;
-font-weight: bold;
-text-decoration: none;
-color: #FFFFFF;
-background: #000099;
-padding-right: 5px;
-padding-left: 5px;
-padding-top: 1px;
-padding-bottom: 1px;
-border: solid #000099 1px;
-}
-
-A.tabButtonSelected:hover {
-color: #FFFFFF;
-border: solid #000099 1px;
-}
-
 .tableheadtext {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-font-weight: bold;
-text-align: left;
 font-size: 10px;
 text-decoration: none;
-color: #070872;
+font-weight: bold;
+color: #000000;
+}
+
+.tabletext {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px;
+text-decoration: none;
+color: #000000;
 }
 
 A.tableheadbutton {
@@ -299,7 +263,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 text-indent: -10px;
 }
 
@@ -308,11 +272,11 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 }
 
 A.browsecategorybutton:hover {
-color: #000099;
+color: #070872;
 text-decoration: underline;
 }
 
@@ -327,16 +291,11 @@ color: #333333;
 A.buttontext, .buttontextdisabled {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
+font-weight: bold;
 text-decoration: underline;
-background: white;
-margin-right:4px;
-margin-top:4px;
-margin-bottom:4px;
-}
-
-A.buttontext {
 color: #070872;
 }
+
 
 A.buttontext:hover {
 color: #a91930;
@@ -348,7 +307,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 }
 
 A.linktext:hover {
@@ -365,7 +324,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 }
 
 
@@ -504,7 +463,7 @@ margin: 2px 2px 2px 2px;
 padding: 1px 4px 1px 4px;
 }
 A.buttontextbig {
-color: #000099;
+color: #070872;
 }
 .buttontextbigdisabled {
 color: #CCCCCC;
@@ -525,7 +484,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 background: #B4B0AA;
 border-right: solid white 1px;
 padding-right: 10px;
@@ -543,7 +502,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 background: #D4D0C8;
 border-right: solid white 1px;
 padding-right: 10px;
@@ -555,7 +514,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 background: #B4B0AA;
 border-left: solid white 1px;
 padding-right: 10px;
@@ -574,7 +533,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 background: #D4D0C8;
 border-left: solid white 1px;
 padding-right: 10px;
@@ -597,7 +556,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 background: #D4D0C8;
 padding-right: 10px;
 padding-left: 10px;
@@ -625,7 +584,7 @@ margin: 0px;
 font-size: 12pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-weight: bold;
-color: #000099;
+color: #070872;
 white-space: nowrap;
 }
 
@@ -638,7 +597,6 @@ white-space: nowrap;
 }
 
 .insideHeaderText {
-margin-bottom: 10px;
 margin-right:20px;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -651,7 +609,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
-color: #000099;
+color: #070872;
 }
 
 A.insideHeaderLink:hover {
@@ -677,7 +635,7 @@ a.headersmalllink {
 font-size: 8pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-weight: bold;
-color: #000099;
+color: #070872;
 text-decoration: none;
 }
 a.headersmalllink:hover {
@@ -705,7 +663,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 margin: 0px;
 font-size: 8pt;
 font-weight: bold;
-color: #000099;
+color: #070872;
 }
 
 .ontab {
@@ -736,7 +694,7 @@ border-width: 3px;
 a.offlnk {
 font-size: 10px;
 font-weight: bold;
-color: #000099;
+color: #070872;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 text-decoration: none;
 padding: 2px;
@@ -813,6 +771,7 @@ border: #999999 solid 1px;
 margin: 2px;
 }
 
+
 .selectBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 background: #FFFFFF;
@@ -848,9 +807,9 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 9pt;
 font-weight: bold;
 text-decoration: none;
-color: #a91930;
-background: white;
-border: #999999 solid 1px;
+color: #070872;
+background: #f9f4a2;
+border: #CCCCCC solid 1px;
 margin: 2px;
 }
 
@@ -866,8 +825,9 @@ margin: 2px;
 }
 
 .smallSubmit:hover,.mediumSubmit:hover,.largeSubmit:hover,.loginButton:hover {
-color: #070872;
-text-decoration: underline;
+color: #a91930;
+text-decoration: none;
+border: #CCCCCC solid 1px;
 }
 
 .smallAltSubmit,.mediumAltSubmit,.largeAltSubmit {
@@ -894,16 +854,19 @@ color: red;
 }
 
 /* Form layout styles to simulate a table-style layout */
+
 .form-row {
-clear: both;
+vertical-align: top;
+/*clear: both;*/
 padding-top: 2px;
 }
-.form-label {
-font-size: 10px;
-float: left;
-width: 180px;
-text-align: left;
 
+#ecom-mainarea .form-label {
+float: left;
+width: 100px;
+font-size:9pt;
+color: #070872;
+padding-top:2px;
 }
 .form-field {
 float: left;
@@ -976,7 +939,7 @@ border-top: #999 solid 1px;
 color:black; 
 background:#ffffff; 
 font-size:12pt; 
-font-weight:medium;
+font-weight:normal;
 font-family:verdana, arial, sans-serif;
 text-align:left;
 text-decoration:none;
@@ -986,22 +949,3 @@ border-top:1px solid black;
 border-left:1px solid black;
 }
 
-
-/* ecom-mainarea wraps what is below the header including the divs for left, main, right columns as applicable */
-#product-mainarea {
-position: relative;
-background: #FFFFFF;
-width: 100%;
-padding-top:15px;
-}
-
-#product-mainarea .left {
-/* alt: position: absolute; left: 0px; top: 0px; */
-float: left;
-height: 100%;
-width: 100px;
-background: #FFFFFF;
-padding-right:20px;
-padding-top:5px;
-/* border:1px solid #000; */
-}

@@ -88,10 +88,20 @@
                     <decorator-section name="body">
                         
                         <container style="centerarea">
-                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/appheaderCatalog.ftl"/></html></platform-specific>
+                            <label style="apptitle" text="${uiLabelMap.opentravelsystemCatalog}"/>
+                            <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="ProductAppBar"/>  
+                            <!--<platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/appheaderCatalog.ftl"/></html></platform-specific>-->
                             <container style="contentarea">
                                 <container style="${MainColumnStyle}">
                                     <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field-name="productId"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="ProductTabBar"/>
+                                        </widgets>
+                                    </section>                                   
                                     <decorator-section-include name="body"/>
                                 </container>
                                 <container style="endcolumns"><label text="&amp;nbsp;"/></container>
@@ -260,7 +270,7 @@
             </condition>
             <actions>
                 <set field="appTabButtonItem" value="Parties"/>
-                <set field="headerItem" value="ContactLists"/>
+                <set field="headerItem" value="contactlists"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
@@ -311,7 +321,7 @@
     <screen name="SecurityGroupDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Security"/>
+                <set field="page.headerItem" value="security"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator">
@@ -410,9 +420,9 @@
                                 <section>
                                     <condition><not><if-empty field-name="productId"/></not></condition>
                                     <widgets>
-                                        <platform-specific>
+                                        <!--<platform-specific>
                                             <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
-                                        </platform-specific>
+                                        </platform-specific>-->
                                         <container>
                                             <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
                                         </container>
@@ -482,7 +492,7 @@
     <screen name="FixedAssetDecorator">
         <section>
             <actions>
-                <set field="page.headerItem" value="FixedAssets"/>
+                <set field="page.headerItem" value="fixedassets"/>
             </actions>
             <widgets>
                 <decorator-screen name="CatalogDecorator">
@@ -509,7 +519,7 @@
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="payments"/>
+                <set field="page.headerItem" value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator">
@@ -542,7 +552,7 @@
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="invoices"/>
+                <set field="page.headerItem" value="invoices"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator">
@@ -575,7 +585,7 @@
     <screen name="CommonAccountingDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Accounting"/>
+                <set field="page.headerItem" value="Accounting"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainAccountingDecorator">
@@ -609,7 +619,7 @@
     <screen name="CommonAdminDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="companies"/>
+                <set field="page.headerItem" value="companies"/>
                 <set field="title" value="GL Account defaults"/>
                 <set field="requestParameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
             </actions>

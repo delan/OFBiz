@@ -43,7 +43,7 @@
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/tabstyles.css</@ofbizContentUrl>' type='text/css'>       
-	    <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/calendarTable.css</@ofbizContentUrl>' type='text/css'>       
+
 	${layoutSettings.extraHead?if_exists}
     <#if htmlEdit?exists> 
 		<script language="Javascript" type="text/javascript" src="/${activeApp}/html/whizzywig.js"></script>

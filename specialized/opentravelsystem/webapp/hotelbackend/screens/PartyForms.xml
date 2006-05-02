@@ -36,9 +36,9 @@
     <form name="ListParties" type="list" separate-columns="true" 
         title="Party List"  default-title-style="tableheadtext"
         default-widget-style="tabletext" default-tooltip-style="tabletext"
-        paginate-target="findParties" list-iterator-name="listIt" default-entity-name="PartyNameView">
+        paginate-target="findParties" list-name="listIt" default-entity-name="PartyNameView">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="PartyRelationshipAndPartyDetail"/>
                 <field-map field-name="orderBy" value="partyId"/>

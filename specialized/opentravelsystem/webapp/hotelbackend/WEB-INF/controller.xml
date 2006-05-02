@@ -453,6 +453,11 @@
         <response name="success" type="view" value="findParties"/>
     </request-map>
 
+    <request-map uri="findDisabledParties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findDisabledParties"/>
+    </request-map>
+        
     <request-map uri="partyFinancialHistory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="partyFinancialHistory"/>
@@ -3145,6 +3150,7 @@
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     <!-- parties -->
     <view-map name="findParties" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findParties"/>
+    <view-map name="findDisabledParties" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findDisabledParties"/>    
     <view-map name="editParty" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#editParty"/>
     <view-map name="editCompany" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#editCompany"/>
     <view-map name="partyFinancialHistory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#partyFinancialHistory"/>

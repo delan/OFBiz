@@ -29,27 +29,24 @@
 <#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
 <#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
 
-<#assign unselectedLeftClassName = "headerButtonLeft">
-<#assign unselectedRightClassName = "headerButtonRight">
-<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
-<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+<#assign unselectedTabClassName = "appButton">
+<#assign selectedTabClassMap = {page.headerItem?default("void") : "appButtonSelected"}>
+
 <#if requestAttributes.userLogin?has_content>
 <div class="apptitle">&nbsp;Accounting</div>
-<div class="row">
-  <div class="col"><a href="<@ofbizUrl>mainAccounting</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>  
-  <div class="col"><a href="<@ofbizUrl>findInvoices</@ofbizUrl>" class="${selectedLeftClassMap.invoices?default(unselectedLeftClassName)}">${uiLabelMap.AccountingInvoicesMenu}</a></div>
-  <div class="col"><a href="<@ofbizUrl>findPayments</@ofbizUrl>" class="${selectedLeftClassMap.payments?default(unselectedLeftClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a></div>
-  <!--div class="col"><a href="<@ofbizUrl>ListGlAccountOrganization</@ofbizUrl>" class="${selectedLeftClassMap.Ledger?default(unselectedLeftClassName)}">Gen.Ledger</a></div-->
-  <div class="col"><a href="<@ofbizUrl>AccountingReports</@ofbizUrl>" class="${selectedLeftClassMap.Reports?default(unselectedLeftClassName)}">Reports</a></div>
-  <!--div class="col"><a href="<@ofbizUrl>DataExchange</@ofbizUrl>" class="${selectedLeftClassMap.DataExchange?default(unselectedLeftClassName)}">Bank Upload</a></div-->
-  <div class="col"><a href="<@ofbizUrl>Utilities</@ofbizUrl>" class="${selectedLeftClassMap.Utilities?default(unselectedLeftClassName)}">Utilities</a></div>
-  <!--div class="col"><a href="<@ofbizUrl>AdminMain</@ofbizUrl>" class="${selectedLeftClassMap.Setup?default(unselectedLeftClassName)}">Setup</a></div-->
-
+<div class="appContainer">
+  <a href="<@ofbizUrl>mainAccounting</@ofbizUrl>" class="${selectedTabClassMap.main?default(unselectedTabClassName)}">${uiLabelMap.CommonMain}</a>
+  <a href="<@ofbizUrl>findInvoices</@ofbizUrl>" class="${selectedTabClassMap.invoices?default(unselectedTabClassName)}">${uiLabelMap.AccountingInvoicesMenu}</a> 
+  <a href="<@ofbizUrl>findPayments</@ofbizUrl>" class="${selectedTabClassMap.payments?default(unselectedTabClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a> 
+  <!--div class="col"><a href="<@ofbizUrl>ListGlAccountOrganization</@ofbizUrl>" class="${selectedTabClassMap.Ledger?default(unselectedTabClassName)}">Gen.Ledger</a>-->
+  <a href="<@ofbizUrl>AccountingReports</@ofbizUrl>" class="${selectedTabClassMap.Reports?default(unselectedTabClassName)}">Reports</a>
+  <!--div class="col"><a href="<@ofbizUrl>DataExchange</@ofbizUrl>" class="${selectedTabClassMap.DataExchange?default(unselectedTabClassName)}">Bank Upload</a>-->
+  <a href="<@ofbizUrl>Utilities</@ofbizUrl>" class="${selectedTabClassMap.Utilities?default(unselectedTabClassName)}">Utilities</a>
+  <!--div class="col"><a href="<@ofbizUrl>AdminMain</@ofbizUrl>" class="${selectedTabClassMap.Setup?default(unselectedTabClassName)}">Setup</a>-->
   <#if userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
+    <a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedTabClassMap.logout?default(unselectedTabClassName)}">${uiLabelMap.CommonLogout}</a>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
+    <a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedTabClassMap.login?default(unselectedTabClassName)}'>${uiLabelMap.CommonLogin}</a>
   </#if>
-  <div class="col-fill">&nbsp;</div>
 </div>
 </#if>

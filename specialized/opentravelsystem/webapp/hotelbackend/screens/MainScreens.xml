@@ -99,7 +99,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSecurityGroupUserLogins"/>
-                <set field="tabButtonItem" value="Security"/>
+                <set field="headerItem" value="Security"/>
                 <set field="labelTitleProperty" value="PartyUserLoginsForSecurityGroup"/>
                 
                 <set field="groupId" from-field="parameters.organizationPartyId"/>

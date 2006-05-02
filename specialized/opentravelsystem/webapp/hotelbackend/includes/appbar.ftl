@@ -35,18 +35,18 @@
 
 <#if requestAttributes.userLogin?has_content>
 	<#assign displayApps = [
- 		{"title":"ProductManagement",				"url":"mainCatalog"}
-		,{"title":"OrdersReservationsManagement",	"url":"findorders"}
-		,{"title":"PartiesManagement",				"url":"findParties?statusId=PARTYREL-ACTIVE"}
-		,{"title":"AccountingManagement",			"url":"mainAccounting"}
-		,{"title":"WebsiteManagement", 				"url":"findElectronicTexts"}
-		,{"title":"SysAdmin", 						"url":"sysAdminMain"}
-		,{"title":"Logout", 						"url":"logout"}
+ 		{"title":"Product",				"url":"mainCatalog"}
+		,{"title":"Reservations",	"url":"findorders"}
+		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
+		,{"title":"Accounting",			"url":"mainAccounting"}
+		,{"title":"Website", 			"url":"findElectronicTexts"}
+		,{"title":"SysAdmin", 			"url":"sysAdminMain"}
+		,{"title":"Logout", 			"url":"logout"}
 		]>
-<#else>
+<#--<#else>
 	<#assign displayApps = [
 		{"title":"Login",				"url":"checkLogin/main"}
-		]>
+		]>-->
 </#if>
 
 <script language="JavaScript">
@@ -56,14 +56,17 @@ document.getElementById(tab).className = toclass;
 function ReturnClass(tab,toclass) {
 document.getElementById(tab).className= toclass;
 }
+
 </script>
 
 <#assign unselectedClass = { 
-"tab" : "tabdowncenter", 
+"tab" : "tabdown", 
+"tab_mouseover" : "tabdown_mouseover",
 "link" : "tablink"}>
 
 <#assign selectedClass = { 
-"tab" : "tabupcenter",
+"tab" : "tabup",
+"tab_mouseover" : "tabup_mouseover", 
 "link" : "tablinkselected"}>
 
 <#if !appTabButtonItem?has_content><#assign appTabButtonItem = page.appTabButtonItem?default("void")></#if>
@@ -71,32 +74,26 @@ document.getElementById(tab).className= toclass;
 
 <table class="appbar" width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#FFFFFF"> 
-   <td width="5px" class="appbarleft">&nbsp;</td>   
+   <td class="appbarleft">&nbsp;</td>   
     <td height="21px" width="100%">
 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">                      
         <tr>
+          <#if displayApps?has_content>	
           <#list displayApps as display>
           <#if thisAppOpt == display.title>
             <#assign class = selectedClass>
           <#else>
             <#assign class = unselectedClass>
-          </#if>
-            <#--DEZE SYNTAX MOET BETER KUNNEN< LIJKT ME--> 
-        	<#if requestAttributes.userLogin?has_content>
-        	
-        	<#else>
-        		<#assign class = selectedClass>
-        	</#if>
-          <td width="107px">
-            <table height="21px" width="107px" border="0" cellspacing="0" cellpadding="0">
+          </#if>  
+          <td>
+            <table height="21px" width="120px" border="0" cellspacing="0" cellpadding="0">
               <tr> 
-                 <td width="107px" height="21px" class="${class.tab}" id="${"uiLabelMap.opentravelsystem${display.title}"?eval}" onMouseOver="ChangeClass('${"uiLabelMap.opentravelsystem${display.title}"?eval}', '${class.tab}');" onMouseOut="ChangeClass('${"uiLabelMap.opentravelsystem${display.title}"?eval}', '${class.tab}');"><a href=<#if display.title == "Website">"${display.url}" target="newwindow"<#else>"<@ofbizUrl>${display.url}</@ofbizUrl>"</#if> title="" class="${class.link}">${"uiLabelMap.opentravelsystem${display.title}"?eval}</a></td>
-              	 <td height="1px" class="betweenstabs">&nbsp;</td>  
-              </tr>
-                            
+                 <td height="21px" onclick="window.location='${display.url}'"  style="cursor:pointer; cursor:hand" class="${class.tab}" id="${"uiLabelMap.${display.title}"?eval}" onMouseOver="ChangeClass('${"uiLabelMap.${display.title}"?eval}', '${class.tab_mouseover}');" onMouseOut="ChangeClass('${"uiLabelMap.${display.title}"?eval}', '${class.tab}');">${"uiLabelMap.${display.title}"?eval}</td>              
+              </tr>                          
             </table>
           </td>
      	  </#list> 
+     	  </#if>
       	   <td width="100%">	
       		<table width="100% border="0" cellspacing="0" cellpadding="0">  
           		<tr>             
