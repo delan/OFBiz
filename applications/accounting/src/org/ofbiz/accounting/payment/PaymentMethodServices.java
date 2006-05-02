@@ -324,7 +324,10 @@ public class PaymentMethodServices {
 
         newPm.set("partyId", partyId);
         newPm.set("fromDate", context.get("fromDate"), false);
-        newPm.set("thruDate", context.get("thruDate"));
+        // The following check is needed to avoid to reactivate an expired pm
+        if (newPm.get("thruDate") == null) {
+            newPm.set("thruDate", context.get("thruDate"));
+        }
         newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
         newCc.set("titleOnCard", context.get("titleOnCard"));
         newCc.set("firstNameOnCard", context.get("firstNameOnCard"));
@@ -391,7 +394,8 @@ public class PaymentMethodServices {
                 return ServiceUtil.returnError("ERROR: Could not update credit card (write failure): " + e.getMessage());
             }
         } else {
-            result.put("newPaymentMethodId", paymentMethodId);
+            result.put("paymentMethodId", paymentMethodId);
+            result.put("oldPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             if (contactMechId == null || !contactMechId.equals("_NEW_")) {
                 result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating credit card");
@@ -400,7 +404,8 @@ public class PaymentMethodServices {
             return result;
         }
 
-        result.put("newPaymentMethodId", newCc.getString("paymentMethodId"));
+        result.put("oldPaymentMethodId", paymentMethodId);
+        result.put("paymentMethodId", newCc.getString("paymentMethodId"));
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
@@ -642,7 +647,7 @@ public class PaymentMethodServices {
             if (tempVal == null) {
                 // no value found, create a new one
                 newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", 
-                		UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
+                    UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
             }
         }
 
@@ -747,7 +752,7 @@ public class PaymentMethodServices {
 
             try {
                 List allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
-                    		UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId",contactMechPurposeTypeId), null), true);
+                            UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId",contactMechPurposeTypeId), null), true);
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage(), module);
