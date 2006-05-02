@@ -93,4 +93,16 @@
             <link target="CreateEmailToContactList?contactListId=${contactListId}"/>
         </menu-item>
     </menu>
+
+    <menu name="SysAdminAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" selected-menuitem-context-field-name="headerItem"
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
+        default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
+        <menu-item name="Intro"><link target="intro"/></menu-item>
+        <menu-item name="Download"><link target="download"/></menu-item>
+        <menu-item name="UpLoad"><link target="upload"/></menu-item>
+    </menu>
+    <menu name="dataExchangeTabBar" default-menu-item-name="ContactList" default-selected-style="tabButtonSelected" 
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
+        orientation="horizontal" type="simple">
+    </menu>
 </menus>

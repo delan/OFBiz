@@ -37,10 +37,11 @@
 	<#assign displayApps = [
  		{"title":"ProductManagement",				"url":"mainCatalog"}
 		,{"title":"OrdersReservationsManagement",	"url":"findorders"}
-		,{"title":"PartiesManagement",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
+		,{"title":"PartiesManagement",				"url":"findParties?statusId=PARTYREL-ACTIVE"}
 		,{"title":"AccountingManagement",			"url":"mainAccounting"}
-		,{"title":"WebsiteManagement", 			"url":"findElectronicTexts"}
-		,{"title":"Logout", 			"url":"logout"}
+		,{"title":"WebsiteManagement", 				"url":"findElectronicTexts"}
+		,{"title":"SysAdmin", 						"url":"sysAdminMain"}
+		,{"title":"Logout", 						"url":"logout"}
 		]>
 <#else>
 	<#assign displayApps = [

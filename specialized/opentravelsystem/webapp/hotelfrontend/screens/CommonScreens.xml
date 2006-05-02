@@ -80,11 +80,7 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://opentravelsystem/webapp/hotelfrontend/currentsite/main.ftl"/>
-                            </html>
-                        </platform-specific>
+                        <content content-id="hds-home"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -185,7 +185,66 @@
             <fail-widgets>
                 <container style="contentarea">
                     <label text="Security Error: you need at least readaccess to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
-                <link text="click here to to to the main screen" target="main"/>
+                    <link text="click here to to to the main screen" target="main"/>
+                </container>
+            </fail-widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonSysAdminDecorator">
+        <section>
+            <condition>
+                <or>
+                    <if-has-permission permission="OPENTRAVELSYSTEM" action="_R"/>
+                    <if-has-permission permission="${parameters.organizationPartyId}" action="_R"/>                    
+                </or>
+            </condition>
+            <actions>
+                <set field="appTabButtonItem" value="SysAdmin"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <container style="centerarea">
+                            <section>
+                                <condition>
+                                    <if-empty field-name="parameters.popup"/>
+                                </condition>
+                                <widgets>
+                                    <label style="apptitle" text="System Admin"/>
+                                    <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="SysAdminAppBar"/>
+                                </widgets>
+                                <fail-widgets>
+                                    <container>
+                                        <label style="head1" text="Party Information for: ${person.firstName} ${person.lastName}${partyGroup.groupName} [${partyId}]"></label>
+                                    </container>
+                                </fail-widgets>
+                            </section>
+                            <container style="contentarea">
+                                <container style="${MainColumnStyle}">
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
+                                    <section>
+                                        <condition>
+                                            <if-compare field-name="partyId" operator="not-equals" value=""/>
+                                        </condition>
+                                        <widgets>
+                                            <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="SysAdminTabBar"/>
+                                        </widgets>
+                                    </section>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                                <container style="endcolumns"><label text="&amp;nbsp;"/></container>
+                                <!--/container-->
+                            </container>
+                        </container>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+                <container style="contentarea">
+                    <label text="Security Error: you need at least readaccess to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+                    <link text="click here to to to the main screen" target="main"/>
                 </container>
             </fail-widgets>
         </section>
@@ -570,6 +629,5 @@
             </widgets>
         </section>
     </screen>
-
     
  </screens>

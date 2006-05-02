@@ -79,6 +79,7 @@
     <ProductCategoryMember productCategoryId="hs" productId="hs10021" fromDate="2005-05-31 21:17:25.601" lastUpdatedStamp="2005-06-01 21:17:49.502" lastUpdatedTxStamp="2005-06-01 21:17:49.502" createdStamp="2005-06-01 21:17:49.502" createdTxStamp="2005-06-01 21:17:49.502"/>
     <!-- default accounting preference settings -->
     <PartyAcctgPreference partyId="hs" taxFormId="US_IRS_1120" cogsMethodId="COGS_AVG_COST" baseCurrencyUomId="EUR" fiscalYearStartMonth="1" fiscalYearStartDay="1" invoiceIdPrefix="hs"/>
+    <PartyRole partyId="hs" roleTypeId="INTERNAL_ORGANIZATIO" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>
     
     <!-- security -->
     <SecurityGroup groupId="hs" description="full access to hs information"/><!-- same as the organizationPartyId -->
