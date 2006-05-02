@@ -90,7 +90,27 @@ public class ShoppingCartEvents {
         }
         return "success";
     }
-
+    
+    public static String addItemGroup(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        Map parameters = UtilHttp.getParameterMap(request);
+        String groupName = (String) parameters.get("groupName");
+        String parentGroupNumber = (String) parameters.get("parentGroupNumber");
+        cart.addItemGroup(groupName, parentGroupNumber);
+        return "success";
+    }
+    
+    public static String addCartItemToGroup(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        Map parameters = UtilHttp.getParameterMap(request);
+        String groupNumber = (String) parameters.get("groupNumber");
+        String indexStr = (String) parameters.get("lineIndex");
+        int index = Integer.parseInt(indexStr);
+        ShoppingCartItem cartItem = cart.findCartItem(index);
+        cartItem.setItemGroup(groupNumber, cart);
+        return "success";
+    }
+    
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
