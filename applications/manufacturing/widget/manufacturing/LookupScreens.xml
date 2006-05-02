@@ -26,7 +26,8 @@ under the License.
                 </or>
             </condition>
             <actions>
-                <set field="title" value="Lookup Routing"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupRouting}"/>
                 <set field="entityName" value="WorkEffort"/>
                 <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="ROUTING"/>
                 <set field="requestParameters.fixedAssetId" to-scope="screen" default-value=""/>
@@ -52,7 +53,8 @@ under the License.
                 </or>
             </condition>
             <actions>
-                <set field="title" value="Lookup Routing Task"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupRoutingTask}"/>
                 <set field="entityName" value="WorkEffort"/>
                 <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="ROU_TASK"/>
                 <set field="requestParameters.fixedAssetId" to-scope="screen" default-value=""/>
