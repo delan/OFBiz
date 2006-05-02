@@ -201,7 +201,7 @@ public class ShoppingCartEvents {
             priceStr = (String) paramMap.remove("price");
         }
         if (priceStr == null) {
-            priceStr = "0.00";  // default price is 0.00
+            priceStr = "0";  // default price is 0
         }
 
         // get the renting data
