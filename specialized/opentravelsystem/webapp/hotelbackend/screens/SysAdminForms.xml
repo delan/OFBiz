@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+
+
+    <form name="SysAdminMain" type="single" target="unLoad">
+
+    <field name="dummy" title=""><display description="press submit to download all information"/></field>
+    <field name="submitButton"><submit/></field>
+    </form>
+
+
+</forms>

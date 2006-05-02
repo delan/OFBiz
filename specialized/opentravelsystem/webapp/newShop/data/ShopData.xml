@@ -161,6 +161,7 @@
     
     <!-- default accounting preference settings -->
     <PartyAcctgPreference partyId="shop" taxFormId="US_IRS_1120" cogsMethodId="COGS_AVG_COST" baseCurrencyUomId="GBP" fiscalYearStartMonth="1" fiscalYearStartDay="1" invoiceIdPrefix="shop"/>
+    <PartyRole partyId="shop" roleTypeId="INTERNAL_ORGANIZATIO" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>
     
     <!-- define timeperiods -->
     <CustomTimePeriod customTimePeriodId="shop2004" organizationPartyId="shop" periodTypeId="FISCAL_YEAR" fromDate="2004-01-01" thruDate="2005-01-01" isClosed="N" periodNum="2004" periodName="Fiscal Year 2004"/>
