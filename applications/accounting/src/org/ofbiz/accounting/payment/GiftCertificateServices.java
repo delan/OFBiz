@@ -770,7 +770,10 @@ public class GiftCertificateServices {
                 createGcResult = dispatcher.runSync("createGiftCertificate", createGcCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError("Unable to create gift certificate!");
+                return ServiceUtil.returnError("Unable to create gift certificate: " + e.getMessage());
+            }
+            if (ServiceUtil.isError(createGcResult)) {
+                return ServiceUtil.returnError("Create Gift Certificate Failed: " + ServiceUtil.getErrorMessage(createGcResult));
             }
 
             // create the fulfillment record
@@ -790,11 +793,7 @@ public class GiftCertificateServices {
                 dispatcher.runAsync("createGcFulFillmentRecord", gcFulFill, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError("Unable to store fulfillment info");
-            }
-
-            if (ServiceUtil.isError(createGcResult)) {
-                return ServiceUtil.returnError("Create Gift Certificate Failed!");
+                return ServiceUtil.returnError("Unable to store fulfillment info: " + e.getMessage());
             }
 
             // add some information to the answerMap for the email
