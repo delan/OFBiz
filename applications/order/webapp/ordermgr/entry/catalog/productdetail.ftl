@@ -516,6 +516,7 @@ ${virtualJavaScript?if_exists}
   <#-- Long description of product -->
   <div id="long-description">
       <div class="tabletext">${productContentWrapper.get("LONG_DESCRIPTION")?if_exists}</div>
+      <div class="tabletext">${productContentWrapper.get("WARNINGS")?if_exists}</div>
   </div>
 
   <#-- Any attributes/etc may go here -->
