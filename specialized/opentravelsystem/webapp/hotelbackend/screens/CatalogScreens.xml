@@ -53,7 +53,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductCategory"/>
-                <set field="headerItem" value="category"/>
+                <set field="page.headerItem" value="categories"/>
                 <set field="tabButtonItem" value="EditCategory"/>
                 <set field="labelTitleProperty" value="ProductCategory"/>
                 
@@ -94,6 +94,7 @@
                 <if-has-permission permission="CATALOG" action="_VIEW"/>
             </condition-->
             <actions>
+                <set field="tabButtonItem" value="Categories"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
                 <set field="productStoreId" from-field="parameters.userLogin.partyId"/>
@@ -146,6 +147,7 @@
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="tabButtonItem" value="Products"/>
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="categories"/>
@@ -214,6 +216,7 @@
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="tabButtonItem" value="FixedAssets"/>              
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="fixedassets"/>
@@ -309,7 +312,7 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="products"/>
-                <set field="page.tabButtonItem" value="EditProduct"/>
+                <set field="tabButtonItem" value="Product"/>
                 <set field="title" value="Edit Product"/>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="labelTitleProperty" value="ProductProduct"/>
@@ -322,9 +325,9 @@
                 <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <container>
-                       <platform-specific>
+                       <!--<platform-specific>
                            <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
-                       </platform-specific>
+                       </platform-specific>-->
                             <label style="head1">${uiLabelMap.ProductEditProduct}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
                      </container>
                      <include-form name="EditProduct" location="component://opentravelsystem/webapp/hotelbackend/screens/CatalogForms.xml"/>
@@ -345,7 +348,7 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="products"/>
-                <set field="page.tabButtonItem" value="EditProductCategories"/>
+                <set field="tabButtonItem" value="Categories"/>
                 <set field="title" value="Edit Product Categories"/>
                 <set field="titleProperty" value="PageTitleEditProductCategories"/>
                 <set field="labelTitleProperty" value="ProductCategories"/>
@@ -383,7 +386,7 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="products"/>
-                <set field="page.tabButtonItem" value="EditProductPrices"/>
+                <set field="tabButtonItem" value="Prices"/>
                 <set field="title" value="Edit Product Prices"/>
                 <set field="titleProperty" value="PageTitleEditProductPrices"/>
                 <set field="labelTitleProperty" value="ProductPrices"/>
@@ -403,9 +406,9 @@
                 <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <container>
-                       <platform-specific>
+                       <!--<platform-specific>
                            <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
-                       </platform-specific>
+                       </platform-specific>-->
                             <label style="head1">${uiLabelMap.PageTitleEditProductPrices}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
                      </container>
                         <include-form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -422,7 +425,7 @@
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="page.headerItem" value="products"/>
-                <set field="page.tabButtonItem" value="EditProductContent"/>
+                <set field="tabButtonItem" value="Content"/>
                 <set field="title" value="Edit Product Content"/>
                 <set field="titleProperty" value="PageTitleEditProductPrices"/>
                 <set field="labelTitleProperty" value="ProductPrices"/>
@@ -434,9 +437,9 @@
                 <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <platform-specific>
+                            <!--<platform-specific>
                                 <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
-                            </platform-specific>
+                            </platform-specific>-->
                             <label style="head1">${uiLabelMap.PageTitleEditProductContent}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
                         </container>
                         <platform-specific>
@@ -455,7 +458,7 @@
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="title" value="Edit Product for Asset Usage attributes"/>
                 <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
-                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="tabButtonItem" value="AssetUsage"/>
                 <set field="labelTitleProperty" value="ProductAssetUsage"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
@@ -467,9 +470,9 @@
                 <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <container>
-                       <platform-specific>
+                       <!--<platform-specific>
                            <html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductTabBar.ftl"/></html>
-                       </platform-specific>
+                       </platform-specific>-->
                             <label style="head1">${uiLabelMap.ProductEditProduct}: ${product.productName} [${uiLabelMap.CommonId}:${productId}]</label>
                      </container>
                         <include-form name="EditProductAssetUsage" location="component://product/webapp/catalog/product/ProductForms.xml"/>
@@ -494,7 +497,7 @@
                 <set field="page.appTabButtonItem" value="Product"/>
                 <set field="title" value="Edit Product for Asset Usage attributes"/>
                 <set field="titleProperty" value="PageTitleEditProductAssetUsage"/>
-                <set field="tabButtonItem" value="EditProductAssetUsage"/>
+                <set field="tabButtonItem" value="AssetUsage"/>
                 <set field="labelTitleProperty" value="ProductAssetUsage"/>
                 <set field="extraFunctionName" value="uiLabelMap.AccountingFixedAssetProductUpd"/>
                 <entity-one entity-name="FixedAssetProduct" value-name="fixedAssetProduct"/>
@@ -573,7 +576,7 @@
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="page.tabButtonItem" value="EditFixedAsset"/>
+                <set field="tabButtonItem" value="EditFixedAsset"/>
                 <set field="title" value="Edit Fixed Asset"/>
                 <set field="productStoreId" from-scope="user" from-field="productStoreId"/>
                 <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
@@ -672,7 +675,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditCategoryRollup"/>
-                <set field="headerItem" value="category"/>
+                <set field="page.headerItem" value="categories"/>
                 <set field="tabButtonItem" value="EditCategoryRollup"/>
                 <set field="labelTitleProperty" value="ProductRollup"/>
 
@@ -756,7 +759,7 @@
         <section>            
             <actions>
                 <set field="title" value="Import product data"/>
-                <set field="headerItem" value="importProduct"/>
+                <set field="page.headerItem" value="importproduct"/>
             </actions>
             <widgets>
                 <decorator-screen name="CatalogDecorator" location="${parameters.mainDecoratorLocation}">
@@ -777,10 +780,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStore"/>
-                <set field="headerItem" value="store"/>
+                <set field="page.headerItem" value="store"/>
                 <set field="tabButtonItem" value="EditProductStore"/>
-                <set field="labelTitleProperty" value="ProductStore"/>
-                
+                <set field="labelTitleProperty" value="ProductStore"/>               
                 <set field="productStoreId" from-field="parameters.userLogin.partyId"/>
                 <entity-one entity-name="ProductStore" value-name="productStore" auto-field-map="true"/>
             </actions>

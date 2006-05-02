@@ -29,27 +29,27 @@
         default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
     </menu>
 
-    <menu name="PartyAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" selected-menuitem-context-field-name="headerItem"
-        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
-        default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
-        <menu-item name="Find" title="Find"><link target="findParties?statusId=PARTYREL-ACTIVE"/></menu-item>
-        <menu-item name="Disabled" title="Disabled Parties"><link target="findParties?statusId=PARTYREL-DELETED"/></menu-item>
-        <menu-item name="Security" title="Security"><link target="security"/></menu-item>
-        <menu-item name="ContactLists" title="ContactLists"><link target="ListContactLists"/></menu-item>
-        <menu-item name="CompanyInfo" title="CompanyInfo"><link target="editCompany?organizationPartyId=${organizationPartyId}"/></menu-item>
-        <menu-item name="Help" title="Help" align-style="col-right"><link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/></menu-item>
+    <menu name="PartyAppBar" selected-menuitem-context-field-name="page.headerItem" default-menu-item-name="main" default-selected-style="appButtonSelected" 
+        default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
+        menu-container-style="appContainer" orientation="horizontal" type="simple">
+        <menu-item name="find" title="Find"><link target="findParties?statusId=PARTYREL-ACTIVE"/></menu-item>
+        <menu-item name="disabled" title="Disabled Parties"><link target="findDisabledParties?statusId=PARTYREL-DELETED"/></menu-item>
+        <menu-item name="security" title="Security"><link target="security"/></menu-item>
+        <menu-item name="contactlist" title="ContactLists"><link target="ListContactLists"/></menu-item>
+        <menu-item name="companies" title="CompanyInfo"><link target="editCompany?organizationPartyId=${organizationPartyId}"/></menu-item>
+        <menu-item name="help" title="Help"><link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/></menu-item>
     </menu>
     
     <menu name="PartyTabBar" default-menu-item-name="EditParty" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
-        orientation="horizontal" title="simple">
+        menu-container-style="tabContainer" orientation="horizontal" title="simple">
         <menu-item name="EditParty" title="Edit Party">
             <link target="editParty?partyId=${partyId}"/>
         </menu-item>
         <menu-item name="FinHistory" title="Fin.History">
             <link target="partyFinancialHistory?partyId=${partyId}"/>
         </menu-item>
-        <menu-item name="Visits" title="Visits">
+        <menu-item name="showvisits" title="Visits">
             <link target="showvisits?partyId=${partyId}"/>
         </menu-item>
         <!--menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
@@ -80,6 +80,7 @@
             <link target="ListPartyContactLists?partyId=${partyId}"/>
         </menu-item>
     </menu>
+    
     <menu name="ContactListTabBar" default-menu-item-name="ContactList" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
         orientation="horizontal" type="simple">
@@ -104,5 +105,46 @@
     <menu name="dataExchangeTabBar" default-menu-item-name="ContactList" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
         orientation="horizontal" type="simple">
+    </menu>
+    
+    <menu name="ProductAppBar" selected-menuitem-context-field-name="page.headerItem" default-menu-item-name="main" default-selected-style="appButtonSelected" 
+        default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
+        menu-container-style="appContainer" orientation="horizontal" type="simple">
+        <menu-item name="main" title="${uiLabelMap.opentravelsystemMain}"><link target="mainCatalog"/></menu-item>
+        <menu-item name="categories" title="${uiLabelMap.opentravelsystemCategories}"><link target="EditProdCatalogCategories"/></menu-item>
+        <menu-item name="products" title="${uiLabelMap.opentravelsystemProducts}"><link target="EditProducts"/></menu-item>
+        <menu-item name="fixedassets" title="${uiLabelMap.opentravelsystemFixedAssets}"><link target="EditFixedAssets"/></menu-item>
+        <menu-item name="store" title="${uiLabelMap.opentravelsystemStore}"><link target="EditProductStore"/></menu-item>  
+        <!--<menu-item name="${uiLabelMap.selectStore}" title="${uiLabelMap.selectStore}"><link target="selectStore"/></menu-item>-->
+        <menu-item name="importproduct" title="${uiLabelMap.opentravelsystemImportProduct}"><link target="importProduct"/></menu-item>      
+    </menu>  
+    
+    <menu name="ProductTabBar" default-menu-item-name="EditProduct" default-selected-style="tabButtonSelected" 
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
+        menu-container-style="tabContainer" orientation="horizontal" title="simple">
+        <menu-item name="Product" title="${uiLabelMap.ProductProduct}"><link target="EditProduct?productId=${productId}"/></menu-item>
+        <menu-item name="Prices" title="${uiLabelMap.ProductPrices}"><link target="EditProductPrices?productId=${productId}"/></menu-item>
+        <menu-item name="Content" title="${uiLabelMap.ProductContent}"><link target="EditProductContent?productId=${productId}"/></menu-item>
+        <menu-item name="Categories" title="${uiLabelMap.ProductCategories}"><link target="EditProductCategories?productId=${productId}"/></menu-item>
+        <menu-item name="QuickAddVariants" title="${uiLabelMap.ProductVariants}">
+            <condition>
+                <and>
+                    <not><if-empty field-name="product"/></not>
+                    <not><if-empty field-name="product.isVirtual"/></not>
+                    <if-compare field-name="product.isVirtual" operator="equals" value="Y"/>
+                </and>
+            </condition>
+            <link target="QuickAddVariants?productId=${productId}"/>
+        </menu-item>
+        <menu-item name="AssetUsage" title="${uiLabelMap.ProductAssetUsage}">
+            <condition>
+                <and>
+                    <not><if-empty field-name="product"/></not>
+                    <not><if-empty field-name="product.productTypeId"/></not>
+                    <if-compare field-name="product.productTypeId" operator="equals" value="ASSET_USAGE"/>
+                </and>
+            </condition>
+            <link target="EditProductAssetUsage?productId=${productId}"/>
+        </menu-item>       
     </menu>
 </menus>

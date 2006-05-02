@@ -28,10 +28,32 @@
         <section>
             <actions>
                 <set field="title" value="Find a Party"/>
-                <set field="headerItem" value="Find"/>
+                <set field="page.headerItem" value="find"/>
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container><link target="editParty" text="${uiLabelMap.CommonCreateNew} Party" style="buttontext"/></container>
+                        <container><label style="head1" text="Find Parties"/></container>
+                        <include-form name="FindParties" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <include-form name="ListParties" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="findDisabledParties">
+        <section>
+            <actions>
+                <set field="title" value="Find a Party"/>
+                <set field="headerItem" value="disabled"/>
+                <set field="titleProperty" value="PageTitleFindInvoice"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>                
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
