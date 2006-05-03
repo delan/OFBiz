@@ -391,7 +391,7 @@ public class CategoryWorker {
                 UtilMisc.toMap("productCategoryId", productCategoryId, "productId", productId)), true);
         if (productCategoryMembers == null || productCategoryMembers.size() == 0) {
             //before giving up see if this is a variant product, and if so look up the virtual product and check it...
-            GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
             List productAssocs = ProductWorker.getVariantVirtualAssocs(product);
             //this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
             if (productAssocs != null && productAssocs.size() > 0) {
