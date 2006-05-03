@@ -164,9 +164,9 @@
     </service>
     <service name="updatePaymentMethodAddress" engine="simple"
             location="org/ofbiz/accounting/payment/PaymentMethodServices.xml" invoke="updatePaymentMethodAddress" auth="true" use-transaction="false">
-        <description>Finds CreditCards and EftAccounts that use the contactMechId and updates to the newContactMechId</description>
+        <description>Finds CreditCards and EftAccounts that use the oldContactMechId and updates to the contactMechId</description>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
-        <attribute name="newContactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="oldContactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
 

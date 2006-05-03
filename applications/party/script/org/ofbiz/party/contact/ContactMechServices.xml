@@ -147,9 +147,9 @@
                 </if-compare-field>            
             </else>        
         </if-compare-field>    
-        <field-to-result map-name="newValue" field-name="contactMechId" result-name="newContactMechId"/>
-        <field-to-request map-name="newValue" field-name="contactMechId" request-name="newContactMechId"/>
-        <field-to-result map-name="parameters" field-name="contactMechId"/>                      
+        <field-to-request map-name="newValue" field-name="contactMechId" request-name="contactMechId"/>
+        <field-to-result map-name="parameters" field-name="contactMechId" result-name="oldContactMechId"/>
+        <field-to-result map-name="newValue" field-name="contactMechId" result-name="contactMechId"/>
     </simple-method>
     
     <simple-method method-name="createTelecomNumber" short-description="Create Contact Mechanism with Telecom Number">
@@ -200,9 +200,8 @@
                 </if-compare-field>            
             </else>        
         </if-compare-field>    
-        <field-to-result map-name="newValue" field-name="contactMechId" result-name="newContactMechId"/>
-        <field-to-request map-name="newValue" field-name="contactMechId" request-name="newContactMechId"/>
-        <field-to-result map-name="parameters" field-name="contactMechId"/>                      
+        <field-to-result map-name="newValue" field-name="contactMechId" result-name="contactMechId"/>
+        <field-to-result map-name="parameters" field-name="contactMechId" result-name="oldContactMechId"/>
     </simple-method>
     
     <simple-method method-name="createEmailAddress" short-description="Create an email address contact mechanism">

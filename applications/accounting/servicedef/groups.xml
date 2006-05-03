@@ -31,6 +31,7 @@
     </group>
     <group name="updateCreditCardAndAddress" send-mode="all">
         <service name="updatePostalAddress" mode="sync" result-to-context="true"/>
+        <service name="createPartyContactMech" mode="sync"/>
         <service name="updateCreditCard" mode="sync"/>
     </group>
     
