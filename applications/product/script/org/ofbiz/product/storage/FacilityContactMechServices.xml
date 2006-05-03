@@ -170,7 +170,7 @@
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>
         <call-service in-map-name="context" service-name="updatePostalAddress">
             <default-message>Postal Address successfully updated</default-message>
-            <result-to-field result-name="newContactMechId" map-name="newFacilityContactMech" field-name="contactMechId" />             
+            <result-to-field result-name="contactMechId" map-name="newFacilityContactMech" field-name="contactMechId" />             
         </call-service>
         <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="updateFacilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
@@ -216,7 +216,7 @@
                 processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>
         <call-service in-map-name="context" service-name="updateTelecomNumber">
             <default-message>Telecom Number successfully updated</default-message>
-            <result-to-field result-name="newContactMechId" map-name="newFacilityContactMech" field-name="contactMechId" />             
+            <result-to-field result-name="contactMechId" map-name="newFacilityContactMech" field-name="contactMechId" />             
         </call-service>
         
         <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"

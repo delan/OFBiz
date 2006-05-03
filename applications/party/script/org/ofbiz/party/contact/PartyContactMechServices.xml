@@ -215,7 +215,7 @@
         <field-to-field field-name="partyId" map-name="parameters" to-field-name="partyId" to-map-name="context"/>
         <call-service in-map-name="context" service-name="updatePostalAddress">
             <default-message>Postal Address successfully updated</default-message>
-            <result-to-field result-name="newContactMechId" map-name="newPartyContactMech" field-name="contactMechId" />             
+            <result-to-field result-name="contactMechId" map-name="newPartyContactMech" field-name="contactMechId" />             
         </call-service>
         <call-map-processor xml-resource="org/ofbiz/party/contact/PartyContactMechMapProcs.xml"
                 processor-name="updatePartyContactMech" in-map-name="parameters" out-map-name="context2"/>
@@ -276,7 +276,7 @@
                 processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>          
         <call-service in-map-name="context" service-name="updateTelecomNumber">
             <default-message>Telecom Number successfully updated</default-message>
-            <result-to-field result-name="newContactMechId" map-name="newPartyContactMech" field-name="contactMechId" />             
+            <result-to-field result-name="contactMechId" map-name="newPartyContactMech" field-name="contactMechId" />             
         </call-service>
         
         <call-map-processor xml-resource="org/ofbiz/party/contact/PartyContactMechMapProcs.xml"

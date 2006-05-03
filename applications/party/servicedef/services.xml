@@ -330,9 +330,9 @@
             location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="updatePostalAddress" auth="true">
         <description>Update a Postal Address</description>
         <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/> <!-- the out paramater is the id of the new address -->
         <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
-        <attribute name="newContactMechId" type="String" mode="OUT" optional="false"/>
+        <attribute name="oldContactMechId" type="String" mode="OUT" optional="false"/> <!-- this is the id of the old address -->
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <override name="address1" optional="false"/>
         <override name="city" optional="false"/>
@@ -368,7 +368,7 @@
         <description>Update a Telecommunications Number</description>
         <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="newContactMechId" type="String" mode="OUT" optional="false"/>
+        <attribute name="oldContactMechId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updatePartyTelecomNumber" engine="simple"
             location="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePartyTelecomNumber" auth="true">
