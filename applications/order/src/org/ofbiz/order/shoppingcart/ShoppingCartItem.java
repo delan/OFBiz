@@ -252,7 +252,11 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, double unitPrice, Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean triggerProductPrice) throws CartItemModifyException, ItemNotFoundException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, double unitPrice, 
+            Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, 
+            Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, 
+            ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean triggerProductPrice) 
+            throws CartItemModifyException, ItemNotFoundException {
         GenericDelegator delegator = cart.getDelegator();
         GenericValue product = null;
     
@@ -1279,6 +1283,12 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the item group. */
     public ShoppingCart.ShoppingCartItemGroup getItemGroup() {
         return this.itemGroup;
+    }
+    
+    public boolean isInItemGroup(String groupNumber) {
+        if (this.itemGroup == null) return false;
+        if (this.itemGroup.getGroupNumber().equals(groupNumber)) return true;
+        return false;
     }
 
     /** Returns the item type description. */

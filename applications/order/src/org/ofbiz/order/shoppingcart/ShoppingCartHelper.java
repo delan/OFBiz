@@ -360,7 +360,7 @@ public class ShoppingCartHelper {
                 }
                 if (quantity > 0.0) {
                     try {
-                        if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "]", module);
+                        if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "] in Item Group [" + itemGroupNumber + "]", module);
                         this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, itemGroupNumber, dispatcher);
                     } catch (CartItemModifyException e) {
                         return ServiceUtil.returnError(e.getMessage());

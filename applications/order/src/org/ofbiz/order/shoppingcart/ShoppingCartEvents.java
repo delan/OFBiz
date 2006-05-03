@@ -96,18 +96,19 @@ public class ShoppingCartEvents {
         Map parameters = UtilHttp.getParameterMap(request);
         String groupName = (String) parameters.get("groupName");
         String parentGroupNumber = (String) parameters.get("parentGroupNumber");
-        cart.addItemGroup(groupName, parentGroupNumber);
+        String groupNumber = cart.addItemGroup(groupName, parentGroupNumber);
+        request.setAttribute("itemGroupNumber", groupNumber);
         return "success";
     }
     
     public static String addCartItemToGroup(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
         Map parameters = UtilHttp.getParameterMap(request);
-        String groupNumber = (String) parameters.get("groupNumber");
+        String itemGroupNumber = (String) parameters.get("itemGroupNumber");
         String indexStr = (String) parameters.get("lineIndex");
         int index = Integer.parseInt(indexStr);
         ShoppingCartItem cartItem = cart.findCartItem(index);
-        cartItem.setItemGroup(groupNumber, cart);
+        cartItem.setItemGroup(itemGroupNumber, cart);
         return "success";
     }
     
