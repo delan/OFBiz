@@ -424,7 +424,9 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, 
+            Timestamp shipBeforeDate, Timestamp shipAfterDate, Map features, Map attributes, String prodCatalogId, 
+            ProductConfigWrapper configWrapper, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         if (isReadOnlyCart()) {
            throw new CartItemModifyException("Cart items cannot be changed");
         }
@@ -463,7 +465,9 @@ public class ShoppingCart implements Serializable {
                 throw new CartItemModifyException("SupplierProduct not found");
             }
         } else {
-            return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
+            return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, 0.0, 
+                    reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, 
+                    features, attributes, prodCatalogId, configWrapper, itemGroup, dispatcher, this, true, true));
         }
     }
     public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
@@ -558,24 +562,33 @@ public class ShoppingCart implements Serializable {
         return itemsToReturn;
     }
 
-    /** Get all ShoppingCartItems from the cart object with the given productCategoryId */
-    public List findAllCartItemsInCategory(String productCategoryId) {
+    /** Get all ShoppingCartItems from the cart object with the given productCategoryId and optional groupNumber to limit it to a specific group */
+    public List findAllCartItemsInCategory(String productCategoryId, String groupNumber) {
         if (productCategoryId == null) return this.items();
 
         GenericDelegator delegator = this.getDelegator();
         List itemsToReturn = FastList.newInstance();
         try {
-            // Check for existing cart item.
+            // Check for existing cart item
             Iterator cartItemIter = this.cartLines.iterator();
             while (cartItemIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
+                //Debug.logInfo("Checking cartItem with product [" + cartItem.getProductId() + "] becuase that is in group [" + (cartItem.getItemGroup()==null ? "no group" : cartItem.getItemGroup().getGroupNumber()) + "]", module);
+                
+                if (UtilValidate.isNotEmpty(groupNumber) && !cartItem.isInItemGroup(groupNumber)) {
+                    //Debug.logInfo("Not using cartItem with product [" + cartItem.getProductId() + "] becuase not in group [" + groupNumber + "]", module);
+                    continue;
+                }
                 if (CategoryWorker.isProductInCategory(delegator, cartItem.getProductId(), productCategoryId)) {
                     itemsToReturn.add(cartItem);
+                } else {
+                    //Debug.logInfo("Not using cartItem with product [" + cartItem.getProductId() + "] becuase not in category [" + productCategoryId + "]", module);
                 }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error getting cart items that are in a category: " + e.toString(), module);
         }
+        //Debug.logInfo("Got [" + itemsToReturn.size() + "] cart items in category [" + productCategoryId + "] and item group [" + groupNumber + "]", module);
         return itemsToReturn;
     }
 
@@ -627,8 +640,9 @@ public class ShoppingCart implements Serializable {
 
     /** Get a ShoppingCartItem from the cart object. */
     public ShoppingCartItem findCartItem(int index) {
-        if (cartLines.size() <= index)
+        if (cartLines.size() <= index) {
             return null;
+        }
         return (ShoppingCartItem) cartLines.get(index);
     }
 
@@ -643,6 +657,11 @@ public class ShoppingCart implements Serializable {
             }
         }
         return null;
+    }
+
+    public void removeCartItem(ShoppingCartItem item, LocalDispatcher dispatcher) throws CartItemModifyException {
+        if (item == null) return;
+        this.removeCartItem(this.getItemIndex(item), dispatcher);
     }
 
     /** Remove an item from the cart object. */
@@ -3328,6 +3347,7 @@ public class ShoppingCart implements Serializable {
         }
         
         public boolean equals(Object obj) {
+            if (obj == null) return false;
             ShoppingCartItemGroup that = (ShoppingCartItemGroup) obj;
             if (that.groupNumber == this.groupNumber) {
                 return true;
