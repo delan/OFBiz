@@ -248,7 +248,7 @@
         <field name="contactMechIdFrom" title="${uiLabelMap.PartyFromContactMech}">
             <text default-value="${thisUserPrimaryEmail.contactMechId}"/>          <!-- this default value is the logged in user's primary email and is useful for comm events which are emails -->
         </field>
-        <field name="contactListId" title="${uiLabelMap.ContactListId}"><lookup size="20" target-form-name="LookupContactList"/></field>
+        <field name="contactListId"><lookup size="20" target-form-name="LookupContactList"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-time/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><date-time/></field>
         <field name="subject" title="${uiLabelMap.PartySubject}"><text size="30"/></field>
@@ -293,7 +293,7 @@
         <field name="contactMechTypeId" title="${uiLabelMap.ContactListContactMechTypeId}"><display-entity description="${description}" entity-name="ContactMechType" key-field-name="contactMechTypeId"/></field>
         <field name="roleTypeIdFrom" title="${uiLabelMap.PartyRoleTypeIdFrom}"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="roleTypeIdTo" title="${uiLabelMap.PartyRoleTypeIdTo}"><display-entity description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/></field>
-        <field name="custReqestId" position="1" title="{uiLabelMap.ServicemgntCustRequestId}"><text size="20"/></field>
+        <field name="custReqestId" position="1"><text size="20"/></field>
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><display/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><display/></field>
         <field map-name="subjectMap" name="subject" title="${uiLabelMap.PartyCommEventSubject}"><text size="30"/></field>
@@ -401,10 +401,10 @@
             </entity-and>
         </actions>
         
-        <field name="contactMechId"  widget-style="buttontext" title="${uiLabelMap.PartyContactMechId}">
+        <field name="contactMechId"  widget-style="buttontext">
             <hyperlink description="${contactMechId}" target-type="plain" target="javascript:set_value('${contactMechId}')" also-hidden="false"/>
         </field>
         <field name="contactMechTypeId" title="${uiLabelMap.ContactListContactMechTypeId}"><display-entity entity-name="ContactMechType"/></field>
-        <field name="cmDetail" title="${uiLabelMap.PartyContactMechDetail}"><display description="[${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress2}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]" also-hidden="false"/></field>
+        <field name="cmDetail"><display description="[${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress2}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]" also-hidden="false"/></field>
     </form>
 </forms>
