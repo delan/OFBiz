@@ -133,8 +133,8 @@
         </field>
         <field name="finAccountTransId" position="1"><text/></field>
         <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field position="1" use-when="payment==null" name="createButton" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field position="1" use-when="payment!=null" name="updateButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field position="1" use-when="payment==null" name="createButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field position="1" use-when="payment!=null" name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="editPaymentApplicationsInv" default-title-style="tableheadtext" default-entity-name="PaymentApplication"

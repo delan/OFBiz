@@ -229,10 +229,10 @@ under the License.
         </field>
         <field position="1" name="invoiceMessage"><text size="100"/></field>
         <!--field position="2" name="invoiceAmount" use-when="invoiceId!=null"><display/></field-->
-        <field position="1" use-when="invoice==null" name="createButton" widget-style="smallSubmit">
+        <field position="1" use-when="invoice==null" name="createButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field position="1" use-when="invoice!=null" name="updateButton" widget-style="smallSubmit">
+        <field position="1" use-when="invoice!=null" name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
