@@ -274,6 +274,7 @@ under the License.
     <screen name="ManualTransaction">
         <section>
             <actions>
+                <set field="headerItem" value="transaction"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/manualTx.bsh"/>
             </actions>
             <widgets>
