@@ -84,7 +84,7 @@
     <form name="listLookupVirtualProduct" extends="listLookupProduct"
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        list-name="entityList" paginate-target="LookupVirtualProduct" 
+        list-name="listIt" paginate-target="LookupVirtualProduct" 
         title="" type="list">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
