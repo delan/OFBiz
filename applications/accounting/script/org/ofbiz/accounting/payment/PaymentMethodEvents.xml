@@ -95,6 +95,7 @@
         <check-errors/>
         <call-service service-name="updateEftAccount" in-map-name="context">
             <default-message>EFT Account Info successfully updated.</default-message>
-            <result-to-request result-name="newPaymentMethodId" request-name="paymentMethodId"/></call-service>
+            <result-to-request result-name="paymentMethodId" request-name="paymentMethodId"/>
+        </call-service>
     </simple-method>
 </simple-methods>
