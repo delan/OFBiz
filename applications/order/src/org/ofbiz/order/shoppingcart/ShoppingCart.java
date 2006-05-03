@@ -60,6 +60,7 @@ import org.ofbiz.order.finaccount.FinAccountHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
+import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
@@ -107,7 +108,7 @@ public class ShoppingCart implements Serializable {
     private boolean orderTermSet = false;
     private List orderTerms = new LinkedList();
 
-    private List cartLines = new LinkedList();
+    private List cartLines = FastList.newInstance();
     private Map itemGroupByNumberMap = FastMap.newInstance();
     protected long nextGroupNumber = 1;
     private List paymentInfo = new LinkedList();
@@ -543,16 +544,37 @@ public class ShoppingCart implements Serializable {
 
     /** Get all ShoppingCartItems from the cart object with the given productId. */
     public List findAllCartItems(String productId) {
-        if (productId == null) return new LinkedList(this.cartLines);
-        List itemsToReturn = new LinkedList();
+        if (productId == null) return this.items();
 
+        List itemsToReturn = FastList.newInstance();
         // Check for existing cart item.
-        for (int i = 0; i < this.cartLines.size(); i++) {
-            ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
-
+        Iterator cartItemIter = this.cartLines.iterator();
+        while (cartItemIter.hasNext()) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
             if (productId.equals(cartItem.getProductId())) {
                 itemsToReturn.add(cartItem);
             }
+        }
+        return itemsToReturn;
+    }
+
+    /** Get all ShoppingCartItems from the cart object with the given productCategoryId */
+    public List findAllCartItemsInCategory(String productCategoryId) {
+        if (productCategoryId == null) return this.items();
+
+        GenericDelegator delegator = this.getDelegator();
+        List itemsToReturn = FastList.newInstance();
+        try {
+            // Check for existing cart item.
+            Iterator cartItemIter = this.cartLines.iterator();
+            while (cartItemIter.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
+                if (CategoryWorker.isProductInCategory(delegator, cartItem.getProductId(), productCategoryId)) {
+                    itemsToReturn.add(cartItem);
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting cart items that are in a category: " + e.toString(), module);
         }
         return itemsToReturn;
     }
@@ -652,7 +674,9 @@ public class ShoppingCart implements Serializable {
 
     /** Returns a Collection of items in the cart object. */
     public List items() {
-        return cartLines;
+        List result = FastList.newInstance();
+        result.addAll(cartLines);
+        return result;
     }
 
     /** Returns an iterator of cart items. */
