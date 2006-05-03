@@ -37,7 +37,7 @@
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
-                <set field="title" value="Lookup SegmentGroup"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupSegmentGroup}"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
@@ -47,29 +47,6 @@
                 <decorator-section name="body">
                     <include-form name="LookupSegmentGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                     <include-form name="listLookupSegmentGroup" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
-                </decorator-section>
-              </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    
-    <!-- Geo Lookup Screen -->
-    <screen name="LookupGeo">
-        <section>
-            <actions>
-                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-
-                <set field="title" value="Lookup Geo"/>
-                <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-            </actions>
-            <widgets>
-               <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
-                <decorator-section name="body">
-                    <include-form name="LookupGeo" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
-                    <include-form name="listLookupGeo" location="component://marketing/webapp/marketing/lookup/LookupForms.xml"/>
                 </decorator-section>
               </decorator-screen>
             </widgets>

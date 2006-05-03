@@ -61,7 +61,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreId" title="${uiLabelMap.CatalogProductStore}">
+        <field name="productStoreId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
                     <entity-order-by field-name="storeName"/>
@@ -81,7 +81,7 @@
         
         <field name="segmentGroupId"><hidden/></field>
 
-        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyPartyClassificationGroupId}">
+        <field name="partyClassificationGroupId">
             <lookup target-form-name="LookupPartyClassificationGroup"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
@@ -95,7 +95,7 @@
             </entity-and>
         </actions>
         <field name="segmentGroupId"><hidden/></field>
-        <field name="partyClassificationGroupId" title="${uiLabelMap.SegmentGroupPartyClassificationGroupId}"><display/></field>
+        <field name="partyClassificationGroupId"><display/></field>
         <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteSegmentGroupClassification?segmentGroupId=${segmentGroupId}&amp;partyClassificationGroupId=${partyClassificationGroupId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
@@ -109,7 +109,7 @@
         
         <field name="segmentGroupId"><hidden/></field>
         
-        <field name="geoId" title="${uiLabelMap.CommonGeoId}"><lookup target-form-name="LookupGeo"/></field>
+        <field name="geoId" title="${uiLabelMap.SegmentGroupGeoId}"><lookup target-form-name="LookupGeo"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
     <form name="listSegmentGroupGeo" default-title-style="tableheadtext"
@@ -135,7 +135,7 @@
         
         <field name="segmentGroupId"><hidden/></field>
         
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="roleTypeId">
             <drop-down>
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">

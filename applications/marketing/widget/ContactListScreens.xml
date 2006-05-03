@@ -204,7 +204,7 @@
             <widgets>
                 <decorator-screen name="CommonContactListDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleListContactList} for contactListId=${contactListId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleListContactList} ${uiLabelMap.CommonFor} contactListId=${contactListId}</label></container>
                         <container><link  text="${uiLabelMap.ContactListCommEventCreate}" target="EditContactListCommEvent?contactListId=${contactListId}&amp;DONE_PAGE=${donePage}" style="buttontext"/></container>
                         <include-form name="ListContactListCommEvents" location="component://marketing/webapp/marketing/contact/ContactListForms.xml"/>
                     </decorator-section>
@@ -237,6 +237,7 @@
     <screen name="LookupContactList">
         <section>
             <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleLookupContactList"/>
                 <set field="tabButtonItem" value="ContactList"/>
                 <set field="labelTitleProperty" value="PageTitleLookupContactList"/>
@@ -256,6 +257,7 @@
     <screen name="LookupPreferredContactMech">
         <section>
             <actions>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitlePreferredContactMech"/>
                 <set field="tabButtonItem" value="ContactList"/>
                 <set field="labelTitleProperty" value="PageTitlePreferredContactMech"/>
