@@ -211,7 +211,7 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListLookupWorkEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
+    <form name="ListLookupWorkEffort" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" list-name="listIt" type="list">
         <actions>
             <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map field-name="inputFields" env-name="parameters"/>
@@ -465,7 +465,7 @@
         <field name="thruDate"><date-find/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListWorkEffortCommEvents" default-map-name="workEffortCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" type="list">
+    <form name="ListWorkEffortCommEvents" default-map-name="workEffortCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox" title="" list-name="listIt" type="list">
         <actions>
             <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="requestParameters" field-name="inputFields"/>
@@ -541,7 +541,7 @@
         <field map-name="subjectMap" name="subject"><text-find/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
-    <form name="ListLookupCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" type="list">
+    <form name="ListLookupCommEvent" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext" target="" title="" list-name="listIt" type="list">
         <actions>
             <service result-map-list-name="listIt" result-map-name="result" service-name="performFind">
                 <field-map env-name="parameters" field-name="inputFields"/>
