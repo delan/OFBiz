@@ -105,13 +105,13 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="INOUT" optional="false"/>
         <attribute name="cardNumber" type="String" mode="IN" optional="true"/>
         <attribute name="pinNumber" type="String" mode="IN" optional="true"/>
         <attribute name="expireDate" type="String" mode="IN" optional="true"/>
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
         <attribute name="expYear" type="String" mode="IN" optional="true"/>
-        <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
+        <attribute name="oldPaymentMethodId" type="String" mode="OUT" optional="true"/>
     </service>
 
     <service name="createEftAccount" engine="java"
@@ -145,7 +145,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="INOUT" optional="false"/>
         <attribute name="bankName" type="String" mode="IN" optional="false"/>
         <attribute name="routingNumber" type="String" mode="IN" optional="false"/>
         <attribute name="accountType" type="String" mode="IN" optional="false"/>
@@ -153,7 +153,7 @@
         <attribute name="nameOnAccount" type="String" mode="IN" optional="false"/>
         <attribute name="companyNameOnAccount" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
-        <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
+        <attribute name="oldPaymentMethodId" type="String" mode="OUT" optional="true"/>
     </service>
 
     <service name="setPaymentMethodAddress" engine="simple"

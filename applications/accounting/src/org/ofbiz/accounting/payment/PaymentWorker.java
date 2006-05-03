@@ -125,11 +125,6 @@ public class PaymentWorker {
             paymentMethodId = (String) request.getAttribute("paymentMethodId");
         }
 
-        // check for an update
-        if (request.getAttribute("newPaymentMethodId") != null) {
-            paymentMethodId = (String) request.getAttribute("newPaymentMethodId");
-        }
-
         results.put("paymentMethodId", paymentMethodId);
 
         GenericValue paymentMethod = null;

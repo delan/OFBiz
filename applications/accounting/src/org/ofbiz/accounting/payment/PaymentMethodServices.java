@@ -565,14 +565,16 @@ public class PaymentMethodServices {
                     "ERROR: Could not update EFT Account (write failure): " + e.getMessage());
             }
         } else {
-            result.put("newPaymentMethodId", paymentMethodId);
+            result.put("paymentMethodId", paymentMethodId);
+            result.put("oldPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating EFT Account");
 
             return result;
         }
 
-        result.put("newPaymentMethodId", newGc.getString("paymentMethodId"));
+        result.put("paymentMethodId", newGc.getString("paymentMethodId"));
+        result.put("oldPaymentMethodId", paymentMethodId);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
@@ -783,15 +785,16 @@ public class PaymentMethodServices {
                     "ERROR: Could not update EFT Account (write failure): " + e.getMessage());
             }
         } else {
-            result.put("newPaymentMethodId", paymentMethodId);
+            result.put("paymentMethodId", paymentMethodId);
+            result.put("oldPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating EFT Account");
 
             return result;
         }
 
-        result.put("newPaymentMethodId", newEa.getString("paymentMethodId"));
-
+        result.put("paymentMethodId", newEa.getString("paymentMethodId"));
+        result.put("oldPaymentMethodId", paymentMethodId);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
