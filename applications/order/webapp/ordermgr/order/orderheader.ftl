@@ -784,6 +784,7 @@
                <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
 
                  <#-- Special shipment options -->
+                 <#if security.hasEntityPermission("FACILITY", "_CREATE", session)>
                  <tr><td colspan="7"><hr class="sepbar"></td></tr>
                  <tr>
                    <td align="right" valign="top" width="15%">
@@ -811,7 +812,8 @@
                      </div>
                    </td>
                  </tr>
-
+                </#if>
+   
                  <#-- Manual shipment options -->
                  <tr><td colspan="7"><hr class="sepbar"></td></tr>
                  <tr>
