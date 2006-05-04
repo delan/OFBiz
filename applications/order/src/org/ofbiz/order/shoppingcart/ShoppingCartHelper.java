@@ -330,25 +330,32 @@ public class ShoppingCartHelper {
      */
     public Map addToCartBulk(String catalogId, String categoryId, Map context) {
         String itemGroupNumber = (String) context.get("itemGroupNumber");
+        // use this prefix for the main structure such as a checkbox or a text input where name="quantity_${productId}" value="${quantity}" 
         String keyPrefix = "quantity_";
+        // use this prefix for a different structure, useful for radio buttons; can have any suffix, name="product_${whatever}" value="${productId}" and quantity is always 1 
+        String productQuantityKeyPrefix = "product_";
         
         // iterate through the context and find all keys that start with "quantity_"
         Iterator entryIter = context.entrySet().iterator();
         while (entryIter.hasNext()) {
             Map.Entry entry = (Map.Entry) entryIter.next();
             String productId = null;
+            String quantStr = null;
             if (entry.getKey() instanceof String) {
                 String key = (String) entry.getKey();
                 //Debug.logInfo("Bulk Key: " + key, module);
                 if (key.startsWith(keyPrefix)) {
                     productId = key.substring(keyPrefix.length());
+                    quantStr = (String) entry.getValue();
+                } else if (key.startsWith(productQuantityKeyPrefix)) {
+                    productId = (String) entry.getValue();
+                    quantStr = "1";
                 } else {
                     continue;
                 }
             } else {
                 continue;
             }
-            String quantStr = (String) entry.getValue();
 
             if (quantStr != null && quantStr.length() > 0) {
                 double quantity = 0;
