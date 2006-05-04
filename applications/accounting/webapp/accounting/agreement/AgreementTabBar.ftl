@@ -38,6 +38,7 @@
     <div class="tabContainer">
         <a href="<@ofbizUrl>EditAgreementItem?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.EditAgreementItem?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementItem}</a>
         <a href="<@ofbizUrl>ListAgreementPromoAppls?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementPromoAppls?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementPromoAppls}</a>
+        <a href="<@ofbizUrl>ListAgreementItemTerms?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementItemTerms?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementItemTerms}</a>
     </div>
 </#if>
 
