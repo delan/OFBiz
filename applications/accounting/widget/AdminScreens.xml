@@ -40,7 +40,7 @@
         </section>
     </screen>
 
-    <screen name="AdminMain">
+    <screen name="TimePeriods">
         <section>
             <actions>
                 <set field="labelTitleProperty" value="Time Periods"/>
