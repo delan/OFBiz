@@ -111,8 +111,8 @@ public class ShoppingCart implements Serializable {
     private List cartLines = FastList.newInstance();
     private Map itemGroupByNumberMap = FastMap.newInstance();
     protected long nextGroupNumber = 1;
-    private List paymentInfo = new LinkedList();
-    private List shipInfo = new LinkedList();
+    private List paymentInfo = FastList.newInstance();
+    private List shipInfo = FastList.newInstance();
     private Map contactMechIdsMap = new HashMap();
     private Map orderAttributes = new HashMap();
     private Map attributes = new HashMap(); // user defined attributes
@@ -1468,7 +1468,7 @@ public class ShoppingCart implements Serializable {
 
     /** Returns the Payment Method Ids */
     public List getPaymentMethodTypeIds() {
-       List pmt = new LinkedList();
+        List pmt = FastList.newInstance();
         Iterator i = paymentInfo.iterator();
         while (i.hasNext()) {
             CartPaymentInfo inf = (CartPaymentInfo) i.next();
@@ -1481,13 +1481,18 @@ public class ShoppingCart implements Serializable {
 
     /** Returns a list of PaymentMethod value objects selected in the cart */
     public List getPaymentMethods() {
-        List methods = new LinkedList();
+        List methods = FastList.newInstance();
         if (paymentInfo != null && paymentInfo.size() > 0) {
-            Iterator i = getPaymentMethodIds().iterator();
-            while (i.hasNext()) {
-                String id = (String) i.next();
+            Iterator paymentMethodIdIter = getPaymentMethodIds().iterator();
+            while (paymentMethodIdIter.hasNext()) {
+                String paymentMethodId = (String) paymentMethodIdIter.next();
                 try {
-                    methods.add(this.getDelegator().findByPrimaryKeyCache("PaymentMethod", UtilMisc.toMap("paymentMethodId", id)));
+                    GenericValue paymentMethod = this.getDelegator().findByPrimaryKeyCache("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+                    if (paymentMethod != null) {
+                        methods.add(paymentMethod);
+                    } else {
+                        Debug.logError("Error getting cart payment methods, the paymentMethodId [" + paymentMethodId +"] is not valid", module);
+                    }
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Unable to get payment method from the database", module);
                 }
@@ -1669,7 +1674,7 @@ public class ShoppingCart implements Serializable {
     public Map getShipGroups(ShoppingCartItem item) {
         Map shipGroups = new LinkedMap();
         if (item != null) {
-            for (int i = 0; i < shipInfo.size(); i++) {
+            for (int i = 0; i < this.shipInfo.size(); i++) {
                 CartShipInfo csi = (CartShipInfo) shipInfo.get(i);
                 CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) csi.shipItemInfo.get(item);
                 if (csii != null) {
@@ -1740,10 +1745,10 @@ public class ShoppingCart implements Serializable {
         if ((shipGroups != null) && (shipGroups.keySet() != null)) {
             for (Iterator shipGroupKeys = shipGroups.keySet().iterator(); shipGroupKeys.hasNext(); ) {
                 Integer shipGroup = (Integer) shipGroupKeys.next();
-                CartShipInfo shipInfo = this.getShipInfo(shipGroup.intValue());
+                CartShipInfo cartShipInfo = this.getShipInfo(shipGroup.intValue());
                 
-                shipInfo.resetShipAfterDateIfBefore(item.getShipAfterDate());
-                shipInfo.resetShipBeforeDateIfAfter(item.getShipBeforeDate());
+                cartShipInfo.resetShipAfterDateIfBefore(item.getShipAfterDate());
+                cartShipInfo.resetShipBeforeDateIfAfter(item.getShipBeforeDate());
             }
         }
     }
@@ -1814,8 +1819,8 @@ public class ShoppingCart implements Serializable {
         CartShipInfo toGroup = null;
         if (toIndex == -1) {
             toGroup = new CartShipInfo();
-            shipInfo.add(toGroup);
-            toIndex = shipInfo.size() - 1;
+            this.shipInfo.add(toGroup);
+            toIndex = this.shipInfo.size() - 1;
         } else {
             toGroup = this.getShipInfo(toIndex);
         }
@@ -1849,7 +1854,7 @@ public class ShoppingCart implements Serializable {
     }
 
     protected void cleanUpShipGroups() {
-        for (int i = 0; i < shipInfo.size(); i++) {
+        for (int i = 0; i < this.shipInfo.size(); i++) {
             CartShipInfo csi = this.getShipInfo(i);
             Iterator si = csi.shipItemInfo.keySet().iterator();
             while (si.hasNext()) {
@@ -1859,7 +1864,7 @@ public class ShoppingCart implements Serializable {
                 }
             }
             if (csi.shipItemInfo.size() == 0) {
-                shipInfo.remove(csi);
+                this.shipInfo.remove(csi);
             }
         }
     }
@@ -2082,7 +2087,7 @@ public class ShoppingCart implements Serializable {
     public double getTotalShipping() {
         double tempShipping = 0.0;
 
-        Iterator shipIter = shipInfo.iterator();
+        Iterator shipIter = this.shipInfo.iterator();
         while (shipIter.hasNext()) {
             CartShipInfo csi = (CartShipInfo) shipIter.next();
             tempShipping += csi.shipEstimate;
@@ -3133,7 +3138,7 @@ public class ShoppingCart implements Serializable {
 
     public List makeAllShipGroupInfos() {
         List groups = new LinkedList();
-        Iterator grpIterator = shipInfo.iterator();
+        Iterator grpIterator = this.shipInfo.iterator();
         long seqId = 1;
         while (grpIterator.hasNext()) {
             CartShipInfo csi = (CartShipInfo) grpIterator.next();
