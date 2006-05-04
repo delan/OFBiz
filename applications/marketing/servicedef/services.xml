@@ -104,7 +104,7 @@
     <service name="createContactList" default-entity-name="ContactList" engine="simple"
             location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="createContactList" auth="true">
         <description>Create a ContactList record</description>
-        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="contactListTypeId" optional="false"/>
         <override name="contactListName" optional="false"/>
