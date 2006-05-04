@@ -76,10 +76,4 @@
         <description>Remove a default GL account number from a payment method type.</description>
         <auto-attributes mode="IN" entity-name="PaymentMethodTypeGlAccount" include="pk" optional="false"/>
     </service>
-    
-    <!-- these services are for GL export -->
-    <service name="exportGLToFile" engine="java"
-            location="org.ofbiz.accounting.integration.GLExportServices" invoke="exportGLToFile" transaction-timout="7200" auth="true">
-        <implements service="storeEntitySyncData"/>
-    </service>
 </services>
