@@ -867,11 +867,11 @@
     </request-map>
     <request-map uri="AdminMain">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="AdminMain"/>
+        <response name="success" type="view" value="TimePeriods"/>
     </request-map>
     <request-map uri="TimePeriods">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="AdminMain"/>
+        <response name="success" type="view" value="TimePeriods"/>
     </request-map>
     <request-map uri="PartyAcctgPreference">
         <security https="true" auth="true"/>
@@ -1152,7 +1152,6 @@
     <view-map name="EditTaxAuthorityPartyInfo" type="screen" page="component://accounting/widget/TaxAuthorityScreens.xml#EditTaxAuthorityPartyInfo"/>
     <!-- administrative pages -->
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/AdminScreens.xml#ListCompanies"/>
-    <view-map name="AdminMain" type="screen" page="component://accounting/widget/AdminScreens.xml#AdminMain"/>
     <view-map name="TimePeriods" type="screen" page="component://accounting/widget/AdminScreens.xml#TimePeriods"/>
     <view-map name="PartyAcctgPreference" type="screen" page="component://accounting/widget/AdminScreens.xml#PartyAcctgPreference"/>
     <view-map name="ViewFXConversions" type="screen" page="component://accounting/widget/AdminScreens.xml#ViewFXConversions"/>
