@@ -756,6 +756,8 @@
       <field name="allowSolicitation" type="indicator"></field>
       <field name="extension" type="long-varchar"></field>
       <field name="comments" type="comment"></field>
+      <field name="yearsWithContactMech" type="numeric"></field>
+      <field name="monthsWithContactMech" type="numeric"></field>
       <prim-key field="partyId"/>
       <prim-key field="contactMechId"/>
       <prim-key field="fromDate"/>
@@ -1760,6 +1762,7 @@
       <field name="totalYearsWorkExperience" type="floating-point"></field>
       <field name="comments" type="comment"></field>
       <field name="employmentStatusEnumId" type="id"></field>
+      <field name="residenceStatusEnumId" type="id"></field>
       <field name="occupation" type="name"></field>
       <field name="yearsWithEmployer" type="numeric"></field>
       <field name="monthsWithEmployer" type="numeric"></field>
@@ -1769,6 +1772,9 @@
       </relation>
         <relation type="one" fk-name="PERSON_EMPS_ENUM" title="EmploymentStatus" rel-entity-name="Enumeration">
             <key-map field-name="employmentStatusEnumId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="PERSON_RESS_ENUM" title="ResidenceStatus" rel-entity-name="Enumeration">
+            <key-map field-name="residenceStatusEnumId" rel-field-name="enumId"/>
         </relation>
       <index name="FIRST_NAME_IDX">
         <index-field name="firstName"/>
