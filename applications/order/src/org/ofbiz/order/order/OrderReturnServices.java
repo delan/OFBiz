@@ -309,6 +309,9 @@ public class OrderReturnServices {
 
         String itemStatus = orderItem.getString("statusId");
         double orderQty = orderItem.getDouble("quantity").doubleValue();
+        if (orderItem.getDouble("cancelQuantity") != null) {
+            orderQty -= orderItem.getDouble("cancelQuantity").doubleValue();
+        }
 
         // get the returnable quantity
         double returnableQuantity = 0.00;
