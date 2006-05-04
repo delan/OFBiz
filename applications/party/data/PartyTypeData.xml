@@ -97,6 +97,12 @@
     <Enumeration description="Retired" enumCode="RETIRED" enumId="EMPS_RETIRED" sequenceId="05" enumTypeId="EMPLOY_STTS"/>
     <Enumeration description="Student" enumCode="STUDENT" enumId="EMPS_STUDENT" sequenceId="06" enumTypeId="EMPLOY_STTS"/>
     <Enumeration description="Unemployed" enumCode="UNEMP" enumId="EMPS_UNEMP" sequenceId="07" enumTypeId="EMPLOY_STTS"/>
+
+    <EnumerationType description="Residence Status" enumTypeId="PTY_RESID_STTS" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Own Home" enumCode="OWN" enumId="PRESS_OWN" sequenceId="01" enumTypeId="PTY_RESID_STTS"/>
+    <Enumeration description="Private Tenant" enumCode="PVT_TENANT" enumId="PRESS_PVT_TENANT" sequenceId="02" enumTypeId="PTY_RESID_STTS"/>
+    <Enumeration description="Public Tenant" enumCode="PUB_TENANT" enumId="PRESS_PUB_TENANT" sequenceId="03" enumTypeId="PTY_RESID_STTS"/>
+    <Enumeration description="With Parents" enumCode="PARENTS" enumId="PRESS_PARENTS" sequenceId="04" enumTypeId="PTY_RESID_STTS"/>
     
     <!-- top level role types -->
     <RoleType description="Administrator" hasTable="N" parentTypeId="" roleTypeId="ADMIN"/>
