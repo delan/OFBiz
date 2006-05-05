@@ -444,6 +444,33 @@
         <key-map field-name="termTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="AgreementItemAndProductAppl"
+        package-name="org.ofbiz.party.agreement"
+        title="Agreement Item and Agreement Product Applicability View Entity">
+        <member-entity entity-alias="AGI" entity-name="AgreementItem"/>
+        <member-entity entity-alias="AGPA" entity-name="AgreementProductAppl"/>
+        <alias-all entity-alias="AGI"/>
+        <alias-all entity-alias="AGPA"/>
+        <view-link entity-alias="AGI" rel-entity-alias="AGPA">
+            <key-map field-name="agreementId"/>
+            <key-map field-name="agreementItemSeqId"/>
+        </view-link>
+        <relation type="one-nofk" rel-entity-name="Agreement">
+            <key-map field-name="agreementId"/>
+        </relation>
+    </view-entity>
+    <view-entity entity-name="AgreementItemAndPartyAppl"
+        package-name="org.ofbiz.party.agreement"
+        title="Agreement Item and Agreement Party Applicability View Entity">
+        <member-entity entity-alias="AGI" entity-name="AgreementItem"/>
+        <member-entity entity-alias="AGPA" entity-name="AgreementPartyApplic"/>
+        <alias-all entity-alias="AGI"/>
+        <alias-all entity-alias="AGPA"/>
+        <view-link entity-alias="AGI" rel-entity-alias="AGPA">
+            <key-map field-name="agreementId"/>
+            <key-map field-name="agreementItemSeqId"/>
+        </view-link>
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.party.communication -->

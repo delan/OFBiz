@@ -48,6 +48,9 @@
     <entity-group group="org.ofbiz" entity="TermType" />
     <entity-group group="org.ofbiz" entity="TermTypeAttr" />
 
+    <entity-group group="org.ofbiz" entity="AgreementItemAndProductAppl" />
+    <entity-group group="org.ofbiz" entity="AgreementItemAndPartyAppl" />
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.party.communication -->
   <!-- ========================================================= -->
