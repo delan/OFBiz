@@ -408,8 +408,8 @@ public class ShoppingCartHelper {
                 "Y".equalsIgnoreCase((String)context.get("_useRowSubmit"));
         
         // check if we are to also look in a global scope (no delimiter)        
-        boolean checkGlobalScope = (!context.containsKey("_checkGlobalScope"))? false :
-                "Y".equalsIgnoreCase((String)context.get("_checkGlobalScope"));
+        //boolean checkGlobalScope = (!context.containsKey("_checkGlobalScope"))? false :
+        //        "Y".equalsIgnoreCase((String)context.get("_checkGlobalScope"));
         
         int rowCount = 0; // parsed int value
         try {
@@ -590,8 +590,8 @@ public class ShoppingCartHelper {
         ArrayList deleteList = new ArrayList();
         ArrayList errorMsgs = new ArrayList();
 
-        Set names = context.keySet();
-        Iterator i = names.iterator();
+        Set parameterNames = context.keySet();
+        Iterator parameterNameIter = parameterNames.iterator();
 
         double oldQuantity = -1;
         String oldDescription = "";
@@ -605,62 +605,62 @@ public class ShoppingCartHelper {
         }
 
         // TODO: This should be refactored to use UtilHttp.parseMultiFormData(parameters)
-        while (i.hasNext()) {
-            String o = (String) i.next();
-            int underscorePos = o.lastIndexOf('_');
+        while (parameterNameIter.hasNext()) {
+            String parameterName = (String) parameterNameIter.next();
+            int underscorePos = parameterName.lastIndexOf('_');
 
             if (underscorePos >= 0) {
                 try {
-                    String indexStr = o.substring(underscorePos + 1);
+                    String indexStr = parameterName.substring(underscorePos + 1);
                     int index = Integer.parseInt(indexStr);
-                    String quantString = (String) context.get(o);
+                    String quantString = (String) context.get(parameterName);
                     double quantity = -1;
                     String itemDescription="";
                     if (quantString != null) quantString = quantString.trim();
 
                     // get the cart item
                     ShoppingCartItem item = this.cart.findCartItem(index);
-                    if (o.toUpperCase().startsWith("OPTION")) {
+                    if (parameterName.toUpperCase().startsWith("OPTION")) {
                         if (quantString.toUpperCase().startsWith("NO^")) {
                             if (quantString.length() > 2) { // the length of the prefix
-                                String featureTypeId = this.getRemoveFeatureTypeId(o);
+                                String featureTypeId = this.getRemoveFeatureTypeId(parameterName);
                                 if (featureTypeId != null) {
                                     item.removeAdditionalProductFeatureAndAppl(featureTypeId);
                                 }
                             }
                         } else {
-                            GenericValue featureAppl = this.getFeatureAppl(item.getProductId(), o, quantString);
+                            GenericValue featureAppl = this.getFeatureAppl(item.getProductId(), parameterName, quantString);
                             if (featureAppl != null) {
                                 item.putAdditionalProductFeatureAndAppl(featureAppl);
                             }
                         }
-                    } else if (o.toUpperCase().startsWith("DESCRIPTION")) {
+                    } else if (parameterName.toUpperCase().startsWith("DESCRIPTION")) {
                         itemDescription = quantString;  // the quantString is actually the description if the field name starts with DESCRIPTION
-                    } else if (o.startsWith("reservStart")) {
+                    } else if (parameterName.startsWith("reservStart")) {
                         // should have format: yyyy-mm-dd hh:mm:ss.fffffffff
                         quantString += " 00:00:00.000000000"; 
                         if (item != null) {
                                 Timestamp reservStart = Timestamp.valueOf((String) quantString);
                                 item.setReservStart(reservStart);
                         }
-                    } else if (o.startsWith("reservLength")) {
+                    } else if (parameterName.startsWith("reservLength")) {
                         if (item != null) {
                                 double reservLength = nf.parse(quantString).doubleValue();
                                 item.setReservLength(reservLength);
                         }
-                    } else if (o.startsWith("reservPersons")) {
+                    } else if (parameterName.startsWith("reservPersons")) {
                         if (item != null) {
                                 double reservPersons = nf.parse(quantString).doubleValue();
                                 item.setReservPersons(reservPersons);
                         }
-                    } else if (o.startsWith("shipBeforeDate")) {
+                    } else if (parameterName.startsWith("shipBeforeDate")) {
                         if (item != null && quantString.length() > 0) {
                             // input is either yyyy-mm-dd or a full timestamp
                             if (quantString.length() == 10)
                                 quantString += " 00:00:00.000"; 
                             item.setShipBeforeDate(Timestamp.valueOf(quantString));
                         }
-                    } else if (o.startsWith("shipAfterDate")) {
+                    } else if (parameterName.startsWith("shipAfterDate")) {
                         if (item != null && quantString.length() > 0) {
                             // input is either yyyy-mm-dd or a full timestamp
                             if (quantString.length() == 10)
@@ -675,11 +675,11 @@ public class ShoppingCartHelper {
                     }
 
                     // perhaps we need to reset the ship groups' before and after dates based on new dates for the items
-                    if (o.startsWith("shipAfterDate") || o.startsWith("shipBeforeDate")) {
+                    if (parameterName.startsWith("shipAfterDate") || parameterName.startsWith("shipBeforeDate")) {
                         this.cart.setShipGroupShipDatesFromItem(item);
                     }
                     
-                    if (o.toUpperCase().startsWith("UPDATE")) {
+                    if (parameterName.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
                             deleteList.add(item);
                         } else {
@@ -723,7 +723,7 @@ public class ShoppingCartHelper {
                         }
                     }
 
-                    if (o.toUpperCase().startsWith("DESCRIPTION")) {
+                    if (parameterName.toUpperCase().startsWith("DESCRIPTION")) {
                        if (!oldDescription.equals(itemDescription)){
                            if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
                                if (item != null) {
@@ -733,7 +733,7 @@ public class ShoppingCartHelper {
                        }
                     }
 
-                    if (o.toUpperCase().startsWith("PRICE")) {
+                    if (parameterName.toUpperCase().startsWith("PRICE")) {
                       NumberFormat pf = NumberFormat.getCurrencyInstance(locale);
                       String tmpQuantity = pf.format(quantity);
                       String tmpOldPrice = pf.format(oldPrice);
@@ -746,7 +746,7 @@ public class ShoppingCartHelper {
                         }
                     }
 
-                    if (o.toUpperCase().startsWith("DELETE")) {
+                    if (parameterName.toUpperCase().startsWith("DELETE")) {
                         deleteList.add(this.cart.findCartItem(index));
                     }
                 } catch (NumberFormatException nfe) {
@@ -953,17 +953,13 @@ public class ShoppingCartHelper {
 
     public Map addOrderTerm(String termTypeId,Double termValue,Long termDays) {
         Map result = null;
-        String errMsg = null;
-
         this.cart.addOrderTerm(termTypeId,termValue,termDays);
         result = ServiceUtil.returnSuccess();
-
         return result;
     }
 
     public Map removeOrderTerm(int index) {
         Map result = null;
-        String errMsg = null;
         this.cart.removeOrderTerm(index);
         result = ServiceUtil.returnSuccess();
         return result;
@@ -972,10 +968,7 @@ public class ShoppingCartHelper {
     /** Get the first SupplierProduct record for productId with matching quantity and currency */
     public GenericValue getProductSupplier(String productId, Double quantity, String currencyUomId) {
         GenericValue productSupplier = null;
-        Map params = UtilMisc.toMap("productId", productId,
-                                    "partyId", cart.getPartyId(),
-                                    "currencyUomId", currencyUomId,
-                                    "quantity", quantity);
+        Map params = UtilMisc.toMap("productId", productId, "partyId", cart.getPartyId(), "currencyUomId", currencyUomId, "quantity", quantity);
         try {
             Map result = dispatcher.runSync("getSuppliersForProduct", params);
             List productSuppliers = (List)result.get("supplierProducts");
