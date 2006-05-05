@@ -223,6 +223,38 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="ListAgreementItemProducts" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="agreementProducts"
+            target="" paginate-target="ListAgreementItemProducts" title="" type="list">
+        <auto-fields-entity entity-name="AgreementProductAppl" default-field-type="display"/>
+        <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
+        <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
+        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${productId}" target="EditAgreementItemProduct?productId=${productId}&amp;agreementId=${agreementId}&amp;agreementItemSeqId=${agreementItemSeqId}"/>
+        </field>
+        <field name="internalName" entry-name="productId">
+            <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
+        </field>
+        <field name="deleteLink" title="" widget-style="buttontext">
+            <hyperlink target="removeAgreementItemProduct?productId=${productId}&amp;agreementId=${agreementId}&amp;agreementItemSeqId=${agreementItemSeqId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="EditAgreementItemProduct" type="single"
+            target="updateAgreementItemProduct" title="" default-map-name="agreementProductAppl"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="agreementProductAppl==null" target="createAgreementItemProduct"/>
+        <auto-fields-entity entity-name="AgreementProductAppl" default-field-type="edit"/>
+        <field name="agreementId"><hidden/></field>
+        <field name="agreementItemSeqId"><hidden/></field>
+        <field name="productId" use-when="agreementProductAppl==null">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="productId" use-when="agreementProductAppl!=null"><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
     <form name="ListAgreementPromoAppls" default-title-style="tableheadtext"
             default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="agreementPromoAppls"
             target="" paginate-target="ListAgreementPromoAppls" title="" type="list">

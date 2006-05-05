@@ -318,4 +318,59 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ListAgreementItemProducts">
+        <section>
+            <actions>
+                <set field="title" value="List Agreement Item Products"/>
+                <set field="titleProperty" value="PageTitleListAgreementItemProducts"/>
+                <set field="headerItem" value="agreement"/>
+                <set field="tabButtonItem" value="ListAgreementItemProducts"/>
+
+                <entity-one entity-name="Agreement" value-name="agreement" auto-field-map="true"/>
+                <entity-one entity-name="AgreementItem" value-name="agreementItem"/>
+                <entity-and entity-name="AgreementProductAppl" list-name="agreementProducts">
+                    <field-map env-name="agreement.agreementId" field-name="agreementId"/>
+                    <field-map env-name="agreementItem.agreementItemSeqId" field-name="agreementItemSeqId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAgreementDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="EditAgreementItemProduct?agreementId=${agreement.agreementId}&amp;agreementItemSeqId=${agreementItem.agreementItemSeqId}" text="${uiLabelMap.ProductNewProduct}" style="buttontext"/>
+                        </container>
+                        <include-form name="ListAgreementItemProducts" location="component://accounting/webapp/accounting/agreement/AgreementForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditAgreementItemProduct">
+        <section>
+            <actions>
+                <set field="title" value="Edit Agreement Item Product"/>
+                <set field="titleProperty" value="PageTitleEditAgreementItemProduct"/>
+                <set field="headerItem" value="agreement"/>
+                <set field="tabButtonItem" value="ListAgreementItemProducts"/>
+                
+                <set field="agreementId" from-field="parameters.agreementId"/>
+                <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId"/>
+                <set field="productId" from-field="parameters.productId"/>
+
+                <entity-one entity-name="Agreement" value-name="agreement" auto-field-map="true"/>
+                <entity-one entity-name="AgreementItem" value-name="agreementItem"/>
+                <entity-one entity-name="AgreementProductAppl" value-name="agreementProductAppl" auto-field-map="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAgreementDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="EditAgreementItemProduct?agreementId=${agreement.agreementId}&amp;agreementItemSeqId=${agreementItem.agreementItemSeqId}" text="${uiLabelMap.ProductNewProduct}" style="buttontext"/>
+                        </container>
+                        <include-form name="EditAgreementItemProduct" location="component://accounting/webapp/accounting/agreement/AgreementForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
