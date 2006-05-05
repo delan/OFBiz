@@ -194,7 +194,7 @@ public class OrderManagerEvents {
             if (!UtilValidate.isEmpty(amountStr)) {
                 double paymentTypeAmount = 0.00;
                 try {
-                    paymentTypeAmount = NumberFormat.getNumberInstance().parse(amountStr).doubleValue();
+                    paymentTypeAmount = NumberFormat.getNumberInstance(locale).parse(amountStr).doubleValue();
                 } catch (java.text.ParseException pe) {
                 	request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderProblemsPaymentParsingAmount", locale));
                     return "error";
