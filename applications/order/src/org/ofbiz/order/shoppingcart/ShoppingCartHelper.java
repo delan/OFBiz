@@ -326,7 +326,12 @@ public class ShoppingCartHelper {
     /** 
      * Adds all products in a category according to quantity request parameter
      * for each; if no parameter for a certain product in the category, or if
-     * quantity is 0, do not add
+     * quantity is 0, do not add. 
+     * If a _ign_${itemGroupNumber} is appended to the name it will be put in that group instead of the default in the request parameter in itemGroupNumber
+     * 
+     * There are 2 options for the syntax:
+     *  - name="quantity_${productId}" value="${quantity}
+     *  - name="product_${whatever}" value="${productId}" (note: quantity is always 1)
      */
     public Map addToCartBulk(String catalogId, String categoryId, Map context) {
         String itemGroupNumber = (String) context.get("itemGroupNumber");
@@ -335,15 +340,26 @@ public class ShoppingCartHelper {
         // use this prefix for a different structure, useful for radio buttons; can have any suffix, name="product_${whatever}" value="${productId}" and quantity is always 1 
         String productQuantityKeyPrefix = "product_";
         
+        // If a _ign_${itemGroupNumber} is appended to the name it will be put in that group instead of the default in the request parameter in itemGroupNumber
+        String ignSeparator = "_ign_";
+        
         // iterate through the context and find all keys that start with "quantity_"
         Iterator entryIter = context.entrySet().iterator();
         while (entryIter.hasNext()) {
             Map.Entry entry = (Map.Entry) entryIter.next();
             String productId = null;
             String quantStr = null;
+            String itemGroupNumberToUse = itemGroupNumber;
             if (entry.getKey() instanceof String) {
                 String key = (String) entry.getKey();
                 //Debug.logInfo("Bulk Key: " + key, module);
+
+                int ignIndex = key.indexOf(ignSeparator);
+                if (ignIndex > 0) {
+                    itemGroupNumberToUse = key.substring(ignIndex + ignSeparator.length());
+                    key = key.substring(0, ignIndex);
+                }
+                
                 if (key.startsWith(keyPrefix)) {
                     productId = key.substring(keyPrefix.length());
                     quantStr = (String) entry.getValue();
@@ -368,7 +384,7 @@ public class ShoppingCartHelper {
                 if (quantity > 0.0) {
                     try {
                         if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "] in Item Group [" + itemGroupNumber + "]", module);
-                        this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, itemGroupNumber, dispatcher);
+                        this.cart.addOrIncreaseItem(productId, 0.0, quantity, null, null, catalogId, itemGroupNumberToUse, dispatcher);
                     } catch (CartItemModifyException e) {
                         return ServiceUtil.returnError(e.getMessage());
                     } catch (ItemNotFoundException e) {

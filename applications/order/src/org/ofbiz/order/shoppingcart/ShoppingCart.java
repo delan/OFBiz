@@ -548,6 +548,10 @@ public class ShoppingCart implements Serializable {
 
     /** Get all ShoppingCartItems from the cart object with the given productId. */
     public List findAllCartItems(String productId) {
+        return this.findAllCartItems(productId, null);
+    }
+    /** Get all ShoppingCartItems from the cart object with the given productId and optional groupNumber to limit it to a specific item group */
+    public List findAllCartItems(String productId, String groupNumber) {
         if (productId == null) return this.items();
 
         List itemsToReturn = FastList.newInstance();
@@ -555,6 +559,9 @@ public class ShoppingCart implements Serializable {
         Iterator cartItemIter = this.cartLines.iterator();
         while (cartItemIter.hasNext()) {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartItemIter.next();
+            if (UtilValidate.isNotEmpty(groupNumber) && !cartItem.isInItemGroup(groupNumber)) {
+                continue;
+            }
             if (productId.equals(cartItem.getProductId())) {
                 itemsToReturn.add(cartItem);
             }
@@ -562,7 +569,7 @@ public class ShoppingCart implements Serializable {
         return itemsToReturn;
     }
 
-    /** Get all ShoppingCartItems from the cart object with the given productCategoryId and optional groupNumber to limit it to a specific group */
+    /** Get all ShoppingCartItems from the cart object with the given productCategoryId and optional groupNumber to limit it to a specific item group */
     public List findAllCartItemsInCategory(String productCategoryId, String groupNumber) {
         if (productCategoryId == null) return this.items();
 
@@ -607,6 +614,85 @@ public class ShoppingCart implements Serializable {
         }
     }
 
+    // =============== some misc utility methods, mostly for dealing with lists of items =================
+    public void removeExtraItems(List multipleItems, LocalDispatcher dispatcher, int maxItems) throws CartItemModifyException {
+        // if 1 or 0 items, do nothing
+        if (multipleItems.size() <= maxItems) return;
+        
+        // remove all except first <maxItems> in list from the cart, first because new cart items are added to the beginning...
+        List localList = FastList.newInstance();
+        localList.addAll(multipleItems);
+        // the ones to keep...
+        for (int i=0; i<maxItems; i++) localList.remove(0);
+        Iterator localIter = localList.iterator();
+        while (localIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) localIter.next();
+            this.removeCartItem(item, dispatcher);
+        }
+    }
+
+    public static double getItemsTotalQuantity(List cartItems) {
+        double totalQuantity = 0;
+        Iterator localIter = cartItems.iterator();
+        while (localIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) localIter.next();
+            totalQuantity += item.getQuantity();
+        }
+        return totalQuantity;
+    }
+    
+    public static List getItemsProducts(List cartItems) {
+        List productList = FastList.newInstance();
+        Iterator localIter = cartItems.iterator();
+        while (localIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) localIter.next();
+            GenericValue product = item.getProduct();
+            if (product != null) {
+                productList.add(product);
+            }
+        }
+        return productList;
+    }
+    
+    public void ensureItemsQuantity(List cartItems, LocalDispatcher dispatcher, double quantity) throws CartItemModifyException {
+        Iterator localIter = cartItems.iterator();
+        while (localIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) localIter.next();
+            if (item.getQuantity() != quantity) {
+                item.setQuantity(quantity, dispatcher, this);
+            }
+        }
+    }
+    
+    public double ensureItemsTotalQuantity(List cartItems, LocalDispatcher dispatcher, double quantity) throws CartItemModifyException {
+        double quantityRemoved = 0;
+        // go through the items and reduce quantityToKeep by the item quantities until it is 0, then remove the remaining...
+        double quantityToKeep = quantity;
+        Iterator localIter = cartItems.iterator();
+        while (localIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) localIter.next();
+            
+            if (quantityToKeep > item.getQuantity()) {
+                // quantityToKeep sufficient to keep it all... just reduce quantityToKeep and move on  
+                quantityToKeep = quantityToKeep - item.getQuantity();
+            } else {
+                // there is more in this than we want to keep, so reduce the quantity, or remove altogether...
+                if (quantityToKeep == 0) {
+                    // nothing left to keep, just remove it...
+                    this.removeCartItem(item, dispatcher);
+                    quantityRemoved += item.getQuantity();
+                } else {
+                    // there is some to keep, so reduce quantity by quantityToKeep, at this point we know we'll take up all of the rest of the quantityToKeep
+                    item.setQuantity(item.getQuantity() - quantityToKeep, dispatcher, this);
+                    quantityRemoved += quantityToKeep;
+                    quantityToKeep = 0;
+                }
+            }
+        }
+        return quantityRemoved;
+    }
+    
+    // ============== WorkEffort related methods ===============
     public boolean containAnyWorkEffortCartItems() {
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size();) {

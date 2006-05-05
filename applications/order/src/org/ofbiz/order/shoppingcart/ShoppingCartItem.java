@@ -265,7 +265,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     
             // first see if there is a purchase allow category and if this product is in it or not
             String purchaseProductCategoryId = CatalogWorker.getCatalogPurchaseAllowCategoryId(delegator, prodCatalogId);
-            if (purchaseProductCategoryId != null) {
+            if (product != null && purchaseProductCategoryId != null) {
                 if (!CategoryWorker.isProductInCategory(delegator, product.getString("productId"), purchaseProductCategoryId)) {
                     // a Purchase allow productCategoryId was found, but the product is not in the category, axe it...
                     product = null;
