@@ -1035,7 +1035,8 @@ public class PartyServices {
                         andExprs.add(new EntityExpr("statusId", EntityOperator.EQUALS, statusId));
                     }
                 } else {
-                    andExprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PARTY_DISABLED"));
+                    // NOTE: _must_ explicitly allow null as it is not included in a not equal in many databases... odd but true
+                    andExprs.add(new EntityExpr(new EntityExpr("statusId", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PARTY_DISABLED")));
                 }
 
                 // ----
