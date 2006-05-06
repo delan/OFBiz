@@ -31,7 +31,7 @@
             </entity-condition>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}" widget-style="buttontext">
+        <field name="partyId" widget-style="buttontext">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" link-style="buttontext"/>
             </display-entity>

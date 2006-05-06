@@ -249,9 +249,9 @@
             <sort-field name="sequenceNum"/>
             <sort-field name="fromDate"/>
             <sort-field name="thruDate"/>
-            <banner left-text-style="tabletext" left-text="Enter an existing workEffortId below,"/>
+            <banner left-text-style="tabletext" left-text="${uiLabelMap.WorkEffortBanner1}"/>
             <sort-field name="workEffortIdFrom"/>
-            <banner left-text-style="tabletext" left-text="OR enter the WorkEffort below (leave the workEffort Id blank)"/>
+            <banner left-text-style="tabletext" left-text="${uiLabelMap.WorkEffortBanner2}"/>
             <sort-field name="workEffortName"/>
             <sort-field name="description"/>
         </sort-order>
@@ -298,13 +298,13 @@
         <field name="workEffortTypeId"><display-entity entity-name="WorkEffortType"/></field>
         <field name="workEffortPurposeTypeId"><display-entity entity-name="WorkEffortPurposeType"/></field>
         <field name="editLink" title="" widget-style="linktext">
-            <hyperlink also-hidden="false" description="Edit" target="EditWorkEffort?workEffortId=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditWorkEffort?workEffortId=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
         </field>
         <field name="childLink" title="" widget-style="linktext">
-            <hyperlink also-hidden="false" description="SubNodes" target="ChildWorkEfforts?trail=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
+            <hyperlink also-hidden="false" description="${uiLabelMap.WorkEffortChildren}" target="ChildWorkEfforts?trail=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
         </field>
         <field name="editChildLink" title="" widget-style="linktext">
-            <hyperlink also-hidden="false" description="Detail + SubNodes" target="EditListWorkEfforts?trail=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDetail} + ${uiLabelMap.WorkEffortChildren}" target="EditListWorkEfforts?trail=${workEffortId}&amp;DONE_PAGE=ListWorkEfforts?${queryStringEncoded}"/>
         </field>
         <field name="deleteLink" title="" widget-style="linktext">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeWorkEffort?workEffortId=${workEffortId}"/>
@@ -688,14 +688,14 @@
         
         <field name="workEffortId"><hidden/></field>
         <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
-        <field name="submitButton" title="Add Work Effort Time to Existing Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddWorkEffortTimeToNewInvoice" target="addWorkEffortTimeToNewInvoice" title="" type="single"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         
         <field name="workEffortId"><hidden/></field>
-        <field name="partyIdFrom" title="Bill From Party"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyId" title="Bill To Party"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
-        <field name="submitButton" title="Add Work Effort Time to New Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="${uiLabelMap.WorkEffortTimeBillToParty}"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
+        <field name="submitButton" title="${uiLabelMap.PageTitleAddWorkEffortTimeToNewInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

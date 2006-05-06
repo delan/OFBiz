@@ -124,15 +124,15 @@ under the License.
         
         <field name="timesheetId"><hidden/></field>
         <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
-        <field name="submitButton" title="Add Timesheet to Existing Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddTimesheetToNewInvoice" target="addTimesheetToNewInvoice" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         
         <field name="timesheetId"><hidden/></field>
-        <field name="partyIdFrom" title="Bill From Party"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyId" title="Bill To Party"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
-        <field name="submitButton" title="Add Timesheet to New Invoice" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="${uiLabelMap.WorkEffortTimeBillToParty}"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
+        <field name="submitButton" title="${uiLabelMap.PageTitleAddWorkEffortTimeToNewInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <!-- TimesheetRole -->
@@ -197,7 +197,7 @@ under the License.
         
         <field name="workEffortId">
             <lookup size="10" target-form-name="LookupWorkEffort">
-                <sub-hyperlink target="EditWorkEffort?workEffortId=${workEffortId}" link-style="buttontext" description="WE:${workEffortId}"/>
+                <sub-hyperlink target="EditWorkEffort?workEffortId=${workEffortId}" link-style="buttontext" description="${uiLabelMap.WorkEffortWorkEffort}:${workEffortId}"/>
             </lookup>
         </field>
 

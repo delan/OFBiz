@@ -58,23 +58,23 @@
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} for ID [${workEffortId}]</label>
+                        <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} ${uiLabelMap.CommonFor} ${uiLabelMap.CommonId} [${workEffortId}]</label>
                         <container><label style="head2">${uiLabelMap.WorkEffort}</label></container>
                         <container>
-                            <label text="Name: " style="tableheadtext"/><label text="${workEffort.workEffortName}" style="tabletext"/>
-                            <label text=", Type: " style="tableheadtext"/><label text="${workEffortType.description}" style="tabletext"/>
-                            <label text=", Purpose: " style="tableheadtext"/><label text="${workEffortPurposeType.description}" style="tabletext"/>
+                            <label text="${uiLabelMap.CommonName}: " style="tableheadtext"/><label text="${workEffort.workEffortName}" style="tabletext"/>
+                            <label text=", ${uiLabelMap.CommonType}: " style="tableheadtext"/><label text="${workEffortType.description}" style="tabletext"/>
+                            <label text=", ${uiLabelMap.CommonPurpose}: " style="tableheadtext"/><label text="${workEffortPurposeType.description}" style="tabletext"/>
                         </container>
                         <container>
-                            <label text="Status: " style="tableheadtext"/><label text="${currentStatusItem.description}" style="tabletext"/>
-                            <label text=", Percent Complete: " style="tableheadtext"/><label text="${workEffort.percentComplete}" style="tabletext"/>
-                            <label text=", Priority: " style="tableheadtext"/><label text="${workEffort.priority}" style="tabletext"/>
+                            <label text="${uiLabelMap.CommonStatus}: " style="tableheadtext"/><label text="${currentStatusItem.description}" style="tabletext"/>
+                            <label text=", ${uiLabelMap.WorkEffortPercentComplete}: " style="tableheadtext"/><label text="${workEffort.percentComplete}" style="tabletext"/>
+                            <label text=", ${uiLabelMap.CommonPriority}: " style="tableheadtext"/><label text="${workEffort.priority}" style="tabletext"/>
                         </container>
                         <container>
-                            <label text="Estimated Start Date: " style="tableheadtext"/><label text="${workEffort.estimatedStartDate}" style="tabletext"/>
-                            <label text=", Estimated Completion Date: " style="tableheadtext"/><label text="${workEffort.estimatedCompletionDate}" style="tabletext"/>
+                            <label text="${uiLabelMap.WorkEffortEstimatedStartDate}: " style="tableheadtext"/><label text="${workEffort.estimatedStartDate}" style="tabletext"/>
+                            <label text=", ${uiLabelMap.WorkEffortEstimatedCompletionDate}: " style="tableheadtext"/><label text="${workEffort.estimatedCompletionDate}" style="tabletext"/>
                         </container>
-                        <container><label style="head2">Party Assignments</label></container>
+                        <container><label style="head2">${uiLabelMap.PartyPartyAssignmentsDetail}</label></container>
                         <iterate-section list-name="relatedPartyAssigns" entry-name="partyAssign">
                             <section>
                                 <actions>
@@ -86,15 +86,15 @@
                                     <container>
                                         <link target="/partymgr/control/viewprofile?partyId=${partyAssign.partyId}" url-mode="inter-app" text="[${partyAssign.partyId}]" style="linktext"/>
                                         <label text="${partyAssign.firstName} ${partyAssign.lastName} ${partyAssign.groupName}" style="tabletext"/>
-                                        <label text=", Role: " style="tableheadtext"/><label text="${partyAssignRoleType.description}" style="tabletext"/>
-                                        <label text=", Status: " style="tableheadtext"/><label text="${partyAssignStatusItem.description}" style="tabletext"/>
-                                        <label text=", Expectation: " style="tableheadtext"/><label text="${partyAssignExpectationEnumeration.description}" style="tabletext"/>
+                                        <label text=", ${uiLabelMap.PartyRoleId}" style="tableheadtext"/><label text="${partyAssignRoleType.description}" style="tabletext"/>
+                                        <label text=", ${uiLabelMap.CommonStatus}: " style="tableheadtext"/><label text="${partyAssignStatusItem.description}" style="tabletext"/>
+                                        <label text=", ${uiLabelMap.CommonExpectation}: " style="tableheadtext"/><label text="${partyAssignExpectationEnumeration.description}" style="tabletext"/>
                                     </container>
                                 </widgets>
                             </section>
                         </iterate-section>
                         
-                        <container><label style="head2">Communication Events</label></container>
+                        <container><label style="head2">${uiLabelMap.WorkEffortCommEvents}</label></container>
                         <iterate-section list-name="commEvents" entry-name="commEvent">
                             <section>
                                 <widgets>
@@ -106,7 +106,7 @@
                             </section>
                         </iterate-section>
                         
-                        <container><label style="head2">Shopping Lists</label></container>
+                        <container><label style="head2">${uiLabelMap.WorkEffortShopLists}</label></container>
                         <iterate-section list-name="shoppingLists" entry-name="shopList">
                             <section>
                                 <widgets>
@@ -118,7 +118,7 @@
                             </section>
                         </iterate-section>
                         
-                        <container><label style="head2">Quotes</label></container>
+                        <container><label style="head2">${uiLabelMap.WorkEffortQuotes}</label></container>
                         <iterate-section list-name="quotes" entry-name="quote">
                             <section>
                                 <widgets>
@@ -130,16 +130,16 @@
                             </section>
                         </iterate-section>
                         
-                        <container><label style="head2">Orders</label></container>
+                        <container><label style="head2">${uiLabelMap.WorkEffortOrderHeaders}</label></container>
                         <iterate-section list-name="orderHeaders" entry-name="orderHeader">
                             <section>
                                 <widgets>
                                     <container>
                                         <link target="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" url-mode="inter-app" text="[${orderHeader.orderId}]" style="linktext"/>
-                                        <label text="Type: " style="tableheadtext"/><label text="${orderHeader.orderTypeDescription}" style="tabletext"/>
-                                        <label text=", Status: " style="tableheadtext"/><label text="${orderHeader.statusItemDescription}" style="tabletext"/>
-                                        <label text=", Total: " style="tableheadtext"/><label text="${orderHeader.grandTotal}" style="tabletext"/>
-                                        <label text=", Date: " style="tableheadtext"/><label text="${orderHeader.orderDate}" style="tabletext"/>
+                                        <label text="${uiLabelMap.CommonType}: " style="tableheadtext"/><label text="${orderHeader.orderTypeDescription}" style="tabletext"/>
+                                        <label text=", ${uiLabelMap.CommonStatus} : " style="tableheadtext"/><label text="${orderHeader.statusItemDescription}" style="tabletext"/>
+                                        <label text=", ${uiLabelMap.CommonTotal}: " style="tableheadtext"/><label text="${orderHeader.grandTotal}" style="tabletext"/>
+                                        <label text=", ${uiLabelMap.CommonDate}: " style="tableheadtext"/><label text="${orderHeader.orderDate}" style="tabletext"/>
                                     </container>
                                 </widgets>
                             </section>

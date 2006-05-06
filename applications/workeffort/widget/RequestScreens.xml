@@ -28,7 +28,7 @@
     <screen name="RequestList">
         <section>
             <actions>
-                <set field="title" value="List Requests"/>
+                <set field="titleProperty" value="PageTitleListWorkEffortRequests"/>
                 <set field="tabButtonItem" value="requestlist"/>
                 <set field="headerItem" value="request"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>

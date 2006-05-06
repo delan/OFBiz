@@ -50,9 +50,9 @@
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="buttontext"><submit button-type="text-link"/></field>
         <sort-order>
             <sort-field name="workEffortId"/>
-            <banner left-text-style="tabletext" left-text="Enter existing CommunicationEvent Id below"/>
+            <banner left-text-style="tabletext" left-text="${uiLabelMap.WorkEffortBanner3}"/>
             <sort-field name="communicationEventId"/>
-            <banner left-text-style="tabletext" left-text="OR add new CommunicationEvent data below to create new entity (leave CommunicationEvent Id empty)"/>
+            <banner left-text-style="tabletext" left-text="${uiLabelMap.WorkEffortBanner4}"/>
             <sort-field name="description"/>
         </sort-order>
     </form>

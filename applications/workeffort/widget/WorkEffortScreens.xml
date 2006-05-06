@@ -75,7 +75,7 @@
                                     <condition><not><if-empty field-name="workEffortId"/></not></condition>
                                     <widgets>
                                         <include-menu name="WorkEffortTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                                        <container><label style="head1">WorkEffortId: ${workEffortId}</label></container>
+                                        <container><label style="head1">${uiLabelMap.WorkEffortWorkEffortId}: ${workEffortId}</label></container>
                                     </widgets>
                                 </section>
                                 
@@ -148,9 +148,9 @@
     <screen name="ListWorkEfforts">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListWorkEffort"/>
+                <set field="titleProperty" value="PageTitleListWorkEfforts"/>
                 <set field="tabButtonItem" value="WorkEffort"/>
-                <set field="labelTitleProperty" value="PageTitleListWorkEffort"/>
+                <set field="labelTitleProperty" value="PageTitleListWorkEfforts"/>
 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
@@ -169,9 +169,9 @@
     <screen name="ChildWorkEfforts">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListWorkEffort"/>
+                <set field="titleProperty" value="PageTitleListWorkEfforts"/>
                 <set field="tabButtonItem" value="WorkEffortAssocs"/>
-                <set field="labelTitleProperty" value="PageTitleListWorkEffort"/>
+                <set field="labelTitleProperty" value="PageTitleListWorkEfforts"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
                 <set field="trail" from-field="parameters.trail"/>
@@ -197,7 +197,7 @@
             <widgets> 
                 <label text=" ${workEffort.workEffortName} - ${workEffort.description}" style="tabletext"/>
                 <link target="EditWorkEffort?workEffortId=${workEffort.workEffortId}" text="[${workEffort.workEffortId}]" style="linktext"/>
-                <link target="AddWorkEffortAndAssoc?workEffortIdTo=${workEffort.workEffortId}" text="Add Child" style="linktext"></link>
+                <link target="AddWorkEffortAndAssoc?workEffortIdTo=${workEffort.workEffortId}" text="${uiLabelMap.WorkEffortAddChild}" style="linktext"></link>
                 <section>
                     <condition>
                         <not>
@@ -471,9 +471,9 @@
                         <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortTimeEntry}</label></container>
                         <include-form name="AddWorkEffortTimeEntry" location="component://workeffort/widget/WorkEffortForms.xml"/>
 
-                        <container><label style="head1">Add Work Effort Time to Invoice</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}</label></container>
                         <include-form name="AddWorkEffortTimeToInvoice" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                        <container><label style="head1">Add Work Effort Time to New Invoice</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleAddWorkEffortTimeToNewInvoice}</label></container>
                         <include-form name="AddWorkEffortTimeToNewInvoice" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
