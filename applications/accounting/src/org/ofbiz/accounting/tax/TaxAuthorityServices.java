@@ -103,7 +103,7 @@ public class TaxAuthorityServices {
                     throw new IllegalArgumentException("Could not find any Tax Authories for store with ID [" + productStoreId + "] for tax calculation; the store settings may need to be corrected.");
                 }
                 
-                List taxAdustmentList = getTaxAdjustments(delegator, product, productStore, billToPartyId, taxAuthoritySet, basePrice, amount, shippingPrice);
+                List taxAdustmentList = getTaxAdjustments(delegator, product, productStore, null, billToPartyId, taxAuthoritySet, basePrice, amount, shippingPrice);
                 if (taxAdustmentList.size() == 0) {
                     // this is something that happens every so often for different products and such, so don't blow up on it...
                     Debug.logWarning("Could not find any Tax Authories Rate Rules for store with ID [" + productStoreId + "], productId [" + productId + "], basePrice [" + basePrice + "], amount [" + amount + "], for tax calculation; the store settings may need to be corrected.", module);
@@ -140,6 +140,7 @@ public class TaxAuthorityServices {
     public static Map rateProductTaxCalc(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         String productStoreId = (String) context.get("productStoreId");
+        String payToPartyId = (String) context.get("payToPartyId");
         String billToPartyId = (String) context.get("billToPartyId");
         List itemProductList = (List) context.get("itemProductList");
         List itemAmountList = (List) context.get("itemAmountList");
@@ -179,13 +180,13 @@ public class TaxAuthorityServices {
             BigDecimal shippingAmount = (BigDecimal) itemShippingList.get(i);
             List taxList = null;
             if (shippingAddress != null) {
-                taxList = getTaxAdjustments(delegator, product, productStore, billToPartyId, taxAuthoritySet, itemPrice, itemAmount, shippingAmount);
+                taxList = getTaxAdjustments(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, itemAmount, shippingAmount);
             }
             // this is an add and not an addAll because we want a List of Lists of GenericValues, one List of Adjustments per item
             itemAdjustments.add(taxList);
         }
         if (orderShippingAmount.doubleValue() > 0) {
-            List taxList = getTaxAdjustments(delegator, null, productStore, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, orderShippingAmount);
+            List taxList = getTaxAdjustments(delegator, null, productStore, payToPartyId, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, orderShippingAmount);
             orderAdjustments.addAll(taxList);
         }
 
@@ -213,11 +214,13 @@ public class TaxAuthorityServices {
         taxAuthoritySet.addAll(taxAuthorityRawList);
     }
 
-    private static List getTaxAdjustments(GenericDelegator delegator, GenericValue product, GenericValue productStore, String billToPartyId, Set taxAuthoritySet, BigDecimal itemPrice, BigDecimal itemAmount, BigDecimal shippingAmount) {
+    private static List getTaxAdjustments(GenericDelegator delegator, GenericValue product, GenericValue productStore, String payToPartyId, String billToPartyId, Set taxAuthoritySet, BigDecimal itemPrice, BigDecimal itemAmount, BigDecimal shippingAmount) {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         List adjustments = FastList.newInstance();
 
-        String payToPartyId = productStore.getString("payToPartyId");
+        if (payToPartyId == null) {
+            payToPartyId = productStore.getString("payToPartyId");
+        }
 
         // store expr
         EntityCondition storeCond = new EntityExpr("productStoreId", EntityOperator.EQUALS, productStore.get("productStoreId"));
