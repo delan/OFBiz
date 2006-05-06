@@ -136,7 +136,7 @@ public class TaxAuthorityServices {
         result.put("priceWithTax", priceWithTax);
         return result;
     }
-    
+
     public static Map rateProductTaxCalc(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         String productStoreId = (String) context.get("productStoreId");
@@ -148,30 +148,14 @@ public class TaxAuthorityServices {
         BigDecimal orderShippingAmount = (BigDecimal) context.get("orderShippingAmount");
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
 
+        if (shippingAddress == null || (shippingAddress.get("countryGeoId") == null && shippingAddress.get("stateProvinceGeoId") == null)) {
+            return ServiceUtil.returnError("The address(es) used for tax calculation did not have State/Province or Country values set, so we cannot determine the taxes to charge.");
+        }
         // without knowing the TaxAuthority parties, just find all TaxAuthories for the set of IDs...
         Set taxAuthoritySet = FastSet.newInstance();
         GenericValue productStore = null;
         try {
-            Set geoIdSet = FastSet.newInstance();
-            if (shippingAddress != null) {
-                if (shippingAddress.getString("countryGeoId") != null) {
-                    geoIdSet.add(shippingAddress.getString("countryGeoId"));
-                }
-                if (shippingAddress.getString("stateProvinceGeoId") != null) {
-                    geoIdSet.add(shippingAddress.getString("stateProvinceGeoId"));
-                }
-            }
-            
-            if (geoIdSet.size() == 0) {
-                return ServiceUtil.returnError("The address(es) used for tax calculation did not have State/Province or Country values set, so we cannot determine the taxes to charge.");
-            }
-            
-            // get the most granular, or all available, geoIds and then find parents by GeoAssoc with geoAssocTypeId="REGIONS" and geoIdTo=<granular geoId> and find the GeoAssoc.geoId
-            geoIdSet = GeoWorker.expandGeoRegionDeep(geoIdSet, delegator);
-
-            List taxAuthorityRawList = delegator.findByConditionCache("TaxAuthority", new EntityExpr("taxAuthGeoId", EntityOperator.IN, geoIdSet), null, null);
-            taxAuthoritySet.addAll(taxAuthorityRawList);
-
+            getTaxAuthorities(delegator, shippingAddress, taxAuthoritySet);
             productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
         } catch (GenericEntityException e) {
             String errMsg = "Data error getting tax settings: " + e.toString();
@@ -210,6 +194,23 @@ public class TaxAuthorityServices {
         result.put("itemAdjustments", itemAdjustments);
 
         return result;
+    }
+
+    private static void getTaxAuthorities(GenericDelegator delegator, GenericValue shippingAddress, Set taxAuthoritySet) throws GenericEntityException {
+        Set geoIdSet = FastSet.newInstance();
+        if (shippingAddress != null) {
+            if (shippingAddress.getString("countryGeoId") != null) {
+                geoIdSet.add(shippingAddress.getString("countryGeoId"));
+            }
+            if (shippingAddress.getString("stateProvinceGeoId") != null) {
+                geoIdSet.add(shippingAddress.getString("stateProvinceGeoId"));
+            }
+        }
+        // get the most granular, or all available, geoIds and then find parents by GeoAssoc with geoAssocTypeId="REGIONS" and geoIdTo=<granular geoId> and find the GeoAssoc.geoId
+        geoIdSet = GeoWorker.expandGeoRegionDeep(geoIdSet, delegator);
+
+        List taxAuthorityRawList = delegator.findByConditionCache("TaxAuthority", new EntityExpr("taxAuthGeoId", EntityOperator.IN, geoIdSet), null, null);
+        taxAuthoritySet.addAll(taxAuthorityRawList);
     }
 
     private static List getTaxAdjustments(GenericDelegator delegator, GenericValue product, GenericValue productStore, String billToPartyId, Set taxAuthoritySet, BigDecimal itemPrice, BigDecimal itemAmount, BigDecimal shippingAmount) {
@@ -295,7 +296,7 @@ public class TaxAuthorityServices {
                 if (product != null && (product.get("taxable") == null || (product.get("taxable") != null && product.getBoolean("taxable").booleanValue()))) {
                     taxable = taxable.add(itemAmount);
                 }
-                if (taxAuthorityRateProduct != null && (taxAuthorityRateProduct.get("taxShipping") == null || (taxAuthorityRateProduct.get("taxShipping") != null && taxAuthorityRateProduct.getBoolean("taxShipping").booleanValue()))) {
+                if (shippingAmount != null && taxAuthorityRateProduct != null && (taxAuthorityRateProduct.get("taxShipping") == null || (taxAuthorityRateProduct.get("taxShipping") != null && taxAuthorityRateProduct.getBoolean("taxShipping").booleanValue()))) {
                     taxable = taxable.add(shippingAmount);
                 }
                 
