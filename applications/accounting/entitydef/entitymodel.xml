@@ -741,6 +741,8 @@
       <field name="inventoryItemId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="productFeatureId" type="id"></field>
+      <field name="parentInvoiceId" type="id"></field>
+      <field name="parentInvoiceItemSeqId" type="id"></field>
       <field name="uomId" type="id"></field>
       <field name="taxableFlag" type="indicator"></field>
       <field name="quantity" type="floating-point"></field>
@@ -768,6 +770,10 @@
       </relation>
       <relation type="one" fk-name="INVCE_ITM_PRDFT" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="one" fk-name="INVCE_ITM_PINVIT" rel-entity-name="InvoiceItem">
+        <key-map field-name="parentInvoiceId" rel-field-name="invoiceId" />
+        <key-map field-name="parentInvoiceItemSeqId" rel-field-name="invoiceItemSeqId" />
       </relation>
       <relation type="one" fk-name="INVCE_ITM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
