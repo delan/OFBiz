@@ -99,7 +99,7 @@
                 <entity-options entity-name="RequirementType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="statusId" title="Status" widget-style="selectBox">
+        <field name="statusId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="REQUIREMENT_STATUS"/>
@@ -107,12 +107,12 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
+        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
         <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="custRequestId" map-name="parameters"><text/></field>
         <field name="custRequestItemSeqId" map-name="parameters"><text/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
