@@ -67,7 +67,7 @@
     </form>
 
     <form name="ListRequests" type="list" use-row-submit="true" list-name="listIt"
-            title="" list-name="custRequestAndRoles" paginate-target="FindRequest"
+            title="" paginate-target="FindRequest"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
       	<actions>
           <!--<set field="entityName" value="CustRequestAndRole"/>-->
