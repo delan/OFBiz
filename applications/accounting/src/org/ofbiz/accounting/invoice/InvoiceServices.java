@@ -427,6 +427,7 @@ public class InvoiceServices {
                     orderItemBill.set("amount", invoiceItem.get("amount"));
                     toStore.add(orderItemBill);
 
+                    String parentInvoiceItemSeqId = invoiceItemSeqId;
                     // increment the counter
                     invoiceItemSeqNum++;
                     invoiceItemSeqId = UtilFormatOut.formatPaddedNumber(invoiceItemSeqNum, 2);
@@ -447,6 +448,8 @@ public class InvoiceServices {
                             adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceType, "INVOICE_ITM_ADJ"));
                             adjInvItem.set("productId", orderItem.get("productId"));
                             adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
+                            adjInvItem.set("parentInvoiceId", invoiceId);
+                            adjInvItem.set("parentInvoiceItemSeqId", parentInvoiceItemSeqId);
                             //adjInvItem.set("uomId", "");
                             
                             // invoice items for sales tax are not taxable themselves
@@ -2177,5 +2180,4 @@ public class InvoiceServices {
             return ServiceUtil.returnError(ee.getMessage());
         }
     }
-
 }
