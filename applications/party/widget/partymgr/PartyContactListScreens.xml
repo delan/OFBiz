@@ -26,7 +26,7 @@
     <screen name="ListPartyContactLists">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitlePartyContactLists"/>
+                <set field="titleProperty" value="PageTitleListContactList"/>
                 <set field="headerItem" value="contactlist"/>
                 <set field="tabButtonItem" value="ContactList"/>
                 <set field="partyId" value="${parameters.partyId}"/>
