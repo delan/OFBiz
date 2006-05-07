@@ -25,8 +25,7 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="CreateProductCategoryAttribute" type="single"
             target="createProductCategoryAttribute" title=""
-            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
-            default-map-name="productCategory">
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createProductCategoryAttribute" default-field-type="edit"/>
         <field name="productCategoryId"><display/></field>
         <field name="submitForm" title="${uiLabelMap.CommonCreate}"><submit/></field>
