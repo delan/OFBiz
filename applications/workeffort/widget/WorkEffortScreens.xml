@@ -29,7 +29,7 @@
         <section>
             <actions>
                 <set field="headerItem" value="task"/>
-                <set field="title" value="View Activity and Task List"/>
+                <set field="titleProperty" value="PageTitleViewActivityAndTaskList"/>
                 
                 <service service-name="getWorkEffortAssignedActivities"/>
                 <service service-name="getWorkEffortAssignedActivitiesByRole"/>
