@@ -23,7 +23,6 @@
  */
 package org.ofbiz.product.inventory;
 
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +35,6 @@ import java.util.Set;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -413,7 +411,12 @@ public class InventoryServices {
                 Timestamp currentPromiseDate = reservation.getTimestamp("currentPromisedDate");
                 Timestamp actualPromiseDate = currentPromiseDate;
                 if (actualPromiseDate == null) {
-                    actualPromiseDate = promisedDate;
+                    if (promisedDate != null) {
+                        actualPromiseDate = promisedDate;
+                    } else {
+                        // fall back if there is no promised date stored
+                        actualPromiseDate = reservation.getTimestamp("reservedDatetime");
+                    }
                 }
                 
                 Debug.log("Promised Date: " + actualPromiseDate, module);
