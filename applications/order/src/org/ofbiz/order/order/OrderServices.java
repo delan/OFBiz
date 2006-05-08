@@ -1188,6 +1188,11 @@ public class OrderServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,"OrderErrorNoValidOrderHeaderFoundForOrderId", UtilMisc.toMap("orderId",orderId), locale));
         }
 
+        // don't charge tax on purchase orders
+        if ("PURCHASE_ORDER".equals(orderHeader.getString("orderTypeId"))) {
+            return ServiceUtil.returnSuccess();
+        }
+
         // remove the tax adjustments
         int removed = 0;
         try {
