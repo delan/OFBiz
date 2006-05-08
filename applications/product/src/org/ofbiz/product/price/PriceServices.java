@@ -1164,6 +1164,15 @@ public class PriceServices {
                 prices = delegator.findByAnd("ProductPrice", UtilMisc.toMap("productId", productId,
                         "productPricePurposeId", "PURCHASE"), UtilMisc.toList("-fromDate"));
 
+                // if no prices are found; find the prices of the parent product
+                if (prices == null || prices.size() == 0) {
+                    GenericValue parentProduct = ProductWorker.getParentProduct(productId, delegator);
+                    if (parentProduct != null) {
+                        String parentProductId = parentProduct.getString("productId");
+                        prices = delegator.findByAnd("ProductPrice", UtilMisc.toMap("productId", parentProductId,
+                                "productPricePurposeId", "PURCHASE"), UtilMisc.toList("-fromDate"));
+                    }
+                }
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError(e.getMessage());
@@ -1184,7 +1193,7 @@ public class PriceServices {
             }
 
             // use the most current price
-            GenericValue thisPrice = EntityUtil.getFirst(prices);
+            GenericValue thisPrice = EntityUtil.getFirst(pricesToUse);
             if (thisPrice != null) {
                 price = thisPrice.getDouble("price").doubleValue();
                 validPriceFound = true;
