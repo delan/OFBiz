@@ -224,10 +224,10 @@
         <response name="error" type="view" value="ViewForumResponse"/>
     </request-map>
 
-    <request-map uri="addPublishStatus">
+    <!--request-map uri="addPublishStatus">
         <security https="false" auth="true"/>
         <event type="service" path="" invoke="followNodeChildren"/>
-    </request-map>
+    </request-map-->
 
 
     <!-- end of request mappings -->

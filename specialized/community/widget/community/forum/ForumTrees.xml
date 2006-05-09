@@ -10,13 +10,12 @@
             <include-screen name="responseTreeLine" location="component://community/widget/community/forum/ForumScreens.xml" />
             <sub-node node-name="node-body">
                 <entity-condition entity-name="ContentAssocViewFrom" use-cache="false" >
-                
-                    <order-by field-name="caFromDate DESC"/>
                    <condition-list combine="and">
                         <condition-expr field-name="caContentIdTo" operator="equals" env-name="rsp.contentId" />
                         <condition-expr field-name="caContentAssocTypeId" operator="equals" value="RESPONSE" />
                         <condition-expr field-name="caThruDate" operator="equals" value=""/>
                    </condition-list> 
+                    <order-by field-name="caFromDate DESC"/>
                 </entity-condition>
             </sub-node>
         </node>
@@ -24,12 +23,12 @@
             <include-screen name="responseTreeLine"  location="component://community/widget/community/forum/ForumScreens.xml" />
             <sub-node node-name="node-body">
                 <entity-condition entity-name="ContentAssocViewFrom" use-cache="true" >
-                    <order-by field-name="caFromDate DESC"/>
                    <condition-list combine="and">
                         <condition-expr field-name="caContentIdTo" operator="equals" env-name="rsp.contentId" />
                         <condition-expr field-name="caContentAssocTypeId" operator="equals" value="RESPONSE" />
                         <condition-expr field-name="caThruDate" operator="equals" value=""/>
                    </condition-list> 
+                    <order-by field-name="caFromDate DESC"/>
                 </entity-condition>
             </sub-node>
         </node>
