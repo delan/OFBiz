@@ -179,13 +179,8 @@ public class ContentManagementServices {
         
         // If "deactivateExisting" is set, other Contents that are tied to the same
         // contentIdTo will be deactivated (thruDate set to now)
-        String deactivateExisting = (String) context.get("deactivateExisting"); 
-        if (UtilValidate.isEmpty(deactivateExisting)) {
-            if (UtilValidate.isEmpty(mapKey)) 
-                deactivateExisting = "false";
-            else 
-                deactivateExisting = "true";
-        }
+        boolean deactivateExisting = UtilValidate.isNotEmpty((String) context.get("deactivateExisting")); 
+
         if (Debug.infoOn()) Debug.logInfo("in persist... mapKey(0):" + mapKey, null);
 
         // ContentPurposes can get passed in as a delimited string or a list. Combine.
@@ -291,7 +286,7 @@ public class ContentManagementServices {
 
         context.put("skipPermissionCheck", null);  // Force check here
         boolean contentExists = true;
-        if (Debug.infoOn()) Debug.logInfo("in persist... contentTypeId" +  contentTypeId + " dataResourceTypeId:" + dataResourceTypeId + " contentId:" + contentId + " dataResourceId:" + dataResourceId, null);
+        if (Debug.infoOn()) Debug.logInfo("in persist... contentTypeId:" +  contentTypeId + " dataResourceTypeId:" + dataResourceTypeId + " contentId:" + contentId + " dataResourceId:" + dataResourceId, null);
         if (UtilValidate.isNotEmpty(contentTypeId) ) {
             if (UtilValidate.isEmpty(contentId)) {
                 contentExists = false;
@@ -339,8 +334,7 @@ public class ContentManagementServices {
             results.put("contentId", contentId);
             context.put("contentId", contentId);
             context.put("caContentId", contentId);
-
-        
+            contentAssoc.put("contentId", contentId);
 
             // Add ContentPurposes if this is a create operation
             if (contentId != null && !contentExists) {
@@ -381,20 +375,14 @@ public class ContentManagementServices {
 
         if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
-            if (Debug.infoOn()) Debug.logInfo("in persistContentAndAssoc, deactivateExistin:" +  deactivateExisting, null);
+            if (Debug.infoOn()) Debug.logInfo("in persistContentAndAssoc, deactivateExisting:" +  deactivateExisting, null);
             Map contentAssocContext = new HashMap();
             contentAssocContext.put("userLogin", userLogin);
             contentAssocContext.put("displayFailCond", bDisplayFailCond);
             contentAssocContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
             Map thisResult = null;
             try {
-                contentAssoc.setPKFields(context);
-                contentAssoc.setNonPKFields(context);
-                GenericValue contentAssocPK = (GenericValue)contentAssoc.clone();
-                GenericValue contentAssocExisting = null;
-                if (contentAssocPK.isPrimaryKey())
-                    contentAssocExisting = delegator.findByPrimaryKeyCache("ContentAssoc", contentAssocPK);
-                    
+                GenericValue contentAssocExisting = delegator.findByPrimaryKey("ContentAssoc", contentAssoc.getPrimaryKey());
                 if (contentAssocExisting == null) {
                     ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("createContentAssoc");
                     Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
@@ -416,9 +404,8 @@ public class ContentManagementServices {
                     results.put("caFromDate", thisResult.get("fromDate"));
                     results.put("caSequenceNum", thisResult.get("sequenceNum"));
                 } else {
-                    if ("true".equalsIgnoreCase(deactivateExisting)) {
-                        // TODO: DEJ20060221 Does something need to be done here?
-                        //Map deactivateContext = UtilMisc.toMap("contentId", contentId, "contentAssocTypeId", contentAssocTypeId );
+                    if (deactivateExisting) {
+                    	contentAssoc.put("thruDate",UtilDateTime.nowTimestamp());
                     }
                     ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("updateContentAssoc");
                     Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");

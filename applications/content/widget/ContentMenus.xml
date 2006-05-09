@@ -31,6 +31,7 @@
         <menu-item name="main" title="${uiLabelMap.ContentMain}"><link target="main"/></menu-item>
         <menu-item name="websites" title="${uiLabelMap.ContentWebSites}"><link target="FindWebSite"/></menu-item>
         <menu-item name="survey" title="${uiLabelMap.ContentSurvey}"><link target="FindSurvey"/></menu-item>
+        <menu-item name="Forum" title="${uiLabelMap.ContentForum}"><link target="findForumGroups"/></menu-item>
         <menu-item name="Content" title="${uiLabelMap.ContentContent}"><link target="ContentMenu"/></menu-item>
         <menu-item name="DataResource" title="${uiLabelMap.ContentDataResource}"><link target="FindDataResource"/></menu-item>
         <menu-item name="ContentSetupMenu" title="${uiLabelMap.ContentContentSetup}"><link target="ContentSetupMenu"/></menu-item>
