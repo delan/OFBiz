@@ -120,7 +120,8 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <sequenced-id-to-env sequence-name="ProductConfigOption" env-name="newEntity.configOptionId"/>
         <create-value value-name="newEntity"/>
-        <field-to-result field-name="configOptionId" map-name="newEntity"/>
+        <field-to-result field-name="newEntity.configItemId" result-name="configItemId"/>
+        <field-to-result field-name="newEntity.configOptionId" result-name="configOptionId"/>
     </simple-method>
     <simple-method method-name="updateProductConfigOption" short-description="Update a Config Option">
         <check-permission action="_UPDATE" permission="CATALOG">
