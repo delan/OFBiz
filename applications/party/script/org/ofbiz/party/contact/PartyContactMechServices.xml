@@ -114,12 +114,15 @@
         <env-to-field env-name="now" field-name="fromDate" map-name="newPartyContactMech"/>
         <env-to-field env-name="now" field-name="thruDate" map-name="partyContactMech"/>
         <field-to-list list-name="storeList" field-name="newPartyContactMech"/>
-        
+
         <if-compare-field field-name="contactMechId" map-name="parameters" to-map-name="newPartyContactMech" operator="not-equals">
             <get-related value-name="partyContactMech" relation-name="PartyContactMechPurpose" list-name="partyContactMechPurposes"/>   
-            <iterate entry-name="partyContactMechPurpose" list-name="partyContactMechPurposes">
+            <iterate entry-name="partyContactMechPurposeOld" list-name="partyContactMechPurposes">
+                <clone-value value-name="partyContactMechPurposeOld" new-value-name="partyContactMechPurpose"/>
+                <set field="partyContactMechPurposeOld.thruDate" from-field="now"/>
+                <field-to-list field-name="partyContactMechPurposeOld" list-name="storeList"/>
+
                 <field-to-field field-name="contactMechId" map-name="newPartyContactMech" to-map-name="partyContactMechPurpose"/>
-                
                 <field-to-field field-name="partyId" map-name="partyContactMechPurpose" to-map-name="purposeMap"/>
                 <field-to-field field-name="contactMechPurposeTypeId" map-name="partyContactMechPurpose" to-map-name="purposeMap"/>
                 <field-to-field field-name="contactMechId" map-name="partyContactMechPurpose" to-map-name="purposeMap"/>
@@ -129,6 +132,8 @@
                     <field-to-list field-name="partyContactMechPurpose" list-name="storeList"/>    
                 </if-empty>
             </iterate>
+
+
         </if-compare-field>
         
         <store-list list-name="storeList"/>
