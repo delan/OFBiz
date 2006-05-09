@@ -1,24 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2002-2006 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    $Id$
+    
+    Copyright 2001-2006 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not
+    use this file except in compliance with the License. You may obtain a copy of
+    the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
 -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -96,6 +92,114 @@
         <response name="error" type="view" value="error"/>
     </request-map>    
 
+    <!-- ================ Forum Requests ================= -->
+    <request-map uri="findForumGroups">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindForumGroups"/>
+    </request-map>
+    <request-map uri="createForumGroup">
+        <security https="true" auth="true"/>
+        <event invoke="createContent" type="service"/>
+        <response name="success" type="view" value="FindForumGroups"/>
+        <response name="error" type="view" value="FindForumGroups"/>
+    </request-map>
+    <request-map uri="updateForumGroup">
+        <security https="true" auth="true"/>
+        <event invoke="updateContent" type="service"/>
+        <response name="success" type="view" value="FindForumGroups"/>
+        <response name="error" type="view" value="FindForumGroups"/>
+    </request-map>
+    
+    <request-map uri="forumGroupRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ForumGroupRoles"/>
+    </request-map>
+    <request-map uri="createForumGroupRole">
+        <security https="true" auth="true"/>
+        <event invoke="createContentRole" type="service"/>
+        <response name="success" type="view" value="ForumGroupRoles"/>
+        <response name="error" type="view" value="ForumGroupRoles"/>
+    </request-map>
+    <request-map uri="updateForumGroupRole">
+        <security https="true" auth="true"/>
+        <event invoke="updateContentRole" type="service"/>
+        <response name="success" type="view" value="ForumGroupRoles"/>
+        <response name="error" type="view" value="ForumGroupRoles"/>
+    </request-map>
+    <request-map uri="deleteForumGroupRole">
+        <security https="true" auth="true"/>
+        <event invoke="removeContentRole" type="service"/>
+        <response name="success" type="view" value="ForumGroupRoles"/>
+        <response name="error" type="view" value="ForumGroupRoles"/>
+    </request-map>
+    
+    <request-map uri="forumGroupPurposes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ForumGroupPurposes"/>
+    </request-map>
+    <request-map uri="createForumGroupPurpose">
+        <security https="true" auth="true"/>
+        <event invoke="createContentPurpose" type="service"/>
+        <response name="success" type="view" value="ForumGroupPurposes"/>
+        <response name="error" type="view" value="ForumGroupPurposes"/>
+    </request-map>
+    <request-map uri="deleteForumGroupPurpose">
+        <security https="true" auth="true"/>
+        <event invoke="removeContentPurpose" type="service"/>
+        <response name="success" type="view" value="ForumGroupPurposes"/>
+        <response name="error" type="view" value="ForumGroupPurposes"/>
+    </request-map>
+    
+    <request-map uri="findForums">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindForums"/>
+    </request-map>
+    <request-map uri="createForum">
+        <security https="true" auth="true"/>
+        <event invoke="persistContentAndAssoc" type="service"/>
+        <response name="success" type="view" value="FindForums"/>
+        <response name="error" type="view" value="FindForums"/>
+    </request-map>
+    <request-map uri="updateForum">
+        <security https="true" auth="true"/>
+        <event invoke="persistContentAndAssoc" type="service"/>
+        <response name="success" type="view" value="FindForums"/>
+        <response name="error" type="view" value="FindForums"/>
+    </request-map>
+
+    <request-map uri="findForumMessages">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindForumMessages"/>
+    </request-map>
+    <request-map uri="findForumThreads">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindForumThreads"/>
+    </request-map>
+    <request-map uri="addForumMessage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddForumMessage"/>
+    </request-map>
+    <request-map uri="addForumThreadMessage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddForumThreadMessage"/>
+    </request-map>
+    <request-map uri="editForumMessage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditForumMessage"/>
+    </request-map>
+    <request-map uri="updateForumMessage">
+        <security https="true" auth="true"/>
+        <event invoke="persistContentAndAssoc" type="service"/>
+        <response name="success" type="view" value="FindForumMessages"/>
+        <response name="error" type="view" value="FindForumMessages"/>
+    </request-map>
+    <request-map uri="updateForumThreadMessage">
+        <security https="true" auth="true"/>
+        <event invoke="persistContentAndAssoc" type="service"/>
+        <response name="success" type="view" value="FindForumThreads"/>
+        <response name="error" type="view" value="FindForumThreads"/>
+    </request-map>
+    
     <!-- ================ WebSite Requests ================= -->
     <request-map uri="FindWebSite"><security https="true" auth="true"/><response name="success" type="view" value="FindWebSite"/></request-map>
     <request-map uri="EditWebSite"><security https="true" auth="true"/><response name="success" type="view" value="EditWebSite"/></request-map>
@@ -111,7 +215,7 @@
         <response name="success" type="view" value="EditWebSite"/>
         <response name="error" type="view" value="EditWebSite"/>
     </request-map>
-
+    
     <!-- ================ WebSite Parties Requests ================= -->
     <request-map uri="EditWebSiteParties">
         <security https="true" auth="true"/>
@@ -1424,6 +1528,16 @@
     <view-map name="main" type="screen" page="component://content/widget/CommonScreens.xml#main"/>
     <view-map name="login" type="screen" page="component://content/widget/CommonScreens.xml#login"/>
     <view-map name="fonts.fo" page="/fonts.fo.ftl" type="fop"/>
+    
+    <view-map name="FindForumGroups" page="component://content/widget/forum/ForumScreens.xml#FindForumGroups" type="screen"/>
+    <view-map name="ForumGroupRoles" page="component://content/widget/forum/ForumScreens.xml#ForumGroupRoles" type="screen"/>
+    <view-map name="ForumGroupPurposes" page="component://content/widget/forum/ForumScreens.xml#ForumGroupPurposes" type="screen"/>
+    <view-map name="FindForums" page="component://content/widget/forum/ForumScreens.xml#FindForums" type="screen"/>
+    <view-map name="FindForumMessages" page="component://content/widget/forum/ForumScreens.xml#FindForumMessages" type="screen"/>
+    <view-map name="FindForumThreads" page="component://content/widget/forum/ForumScreens.xml#FindForumThreads" type="screen"/>
+    <view-map name="AddForumMessage" page="component://content/widget/forum/ForumScreens.xml#AddForumMessage" type="screen"/>
+    <view-map name="AddForumThreadMessage" page="component://content/widget/forum/ForumScreens.xml#AddForumThreadMessage" type="screen"/>
+    <view-map name="EditForumMessage" page="component://content/widget/forum/ForumScreens.xml#EditForumMessage" type="screen"/>
     
     <view-map name="FindWebSite" page="component://content/widget/WebSiteScreens.xml#FindWebSite" type="screen"/>
     <view-map name="EditWebSite" page="component://content/widget/WebSiteScreens.xml#EditWebSite" type="screen"/>
