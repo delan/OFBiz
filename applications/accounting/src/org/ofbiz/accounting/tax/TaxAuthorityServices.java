@@ -157,15 +157,17 @@ public class TaxAuthorityServices {
         GenericValue productStore = null;
         try {
             getTaxAuthorities(delegator, shippingAddress, taxAuthoritySet);
-            productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+            if (productStoreId != null) {
+                productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+            }
         } catch (GenericEntityException e) {
             String errMsg = "Data error getting tax settings: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
         
-        if (productStore == null) {
-            throw new IllegalArgumentException("Could not find ProductStore with ID [" + productStoreId + "] for tax calculation");
+        if (productStore == null && payToPartyId == null) {
+            throw new IllegalArgumentException("Could not find payToPartyId [" + payToPartyId + "] or ProductStore [" + productStoreId + "] for tax calculation");
         }
         
         // Setup the return lists.
@@ -219,11 +221,21 @@ public class TaxAuthorityServices {
         List adjustments = FastList.newInstance();
 
         if (payToPartyId == null) {
-            payToPartyId = productStore.getString("payToPartyId");
+            if (productStore != null) {
+                payToPartyId = productStore.getString("payToPartyId");
+            }
         }
 
         // store expr
-        EntityCondition storeCond = new EntityExpr("productStoreId", EntityOperator.EQUALS, productStore.get("productStoreId"));
+        EntityCondition storeCond = null;
+        if (productStore != null) {
+            storeCond = new EntityExpr(
+                    new EntityExpr("productStoreId", EntityOperator.EQUALS, productStore.get("productStoreId")),
+                    EntityOperator.OR,
+                    new EntityExpr("productStoreId", EntityOperator.EQUALS, null));
+        } else {
+            storeCond = new EntityExpr("productStoreId", EntityOperator.EQUALS, null);
+        }
 
         // build the TaxAuthority expressions (taxAuthGeoId, taxAuthPartyId)
         List taxAuthCondOrList = FastList.newInstance();
@@ -314,7 +326,7 @@ public class TaxAuthorityServices {
                 String taxAuthGeoId = taxAuthorityRateProduct.getString("taxAuthGeoId");
                 String taxAuthPartyId = taxAuthorityRateProduct.getString("taxAuthPartyId");
 
-                // get glAccountId from TaxAuthorityGlAccount entity using the ProductStore.payToPartyId as the organizationPartyId
+                // get glAccountId from TaxAuthorityGlAccount entity using the payToPartyId as the organizationPartyId
                 GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKey("TaxAuthorityGlAccount", UtilMisc.toMap("taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId, "organizationPartyId", payToPartyId));
                 String taxAuthGlAccountId = null;
                 if (taxAuthorityGlAccount != null) {
