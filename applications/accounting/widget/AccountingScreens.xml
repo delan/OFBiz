@@ -129,7 +129,7 @@
                 <set field="titleProperty" value="AcctgListGlAcctOrg"/>
                 <set field="tabButtonItem" value="ListGlAccountOrganization"/>
                 <set field="labelTitleProperty" value="AcctgListGlAcctOrg"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
             </actions>
             <widgets>
@@ -278,7 +278,7 @@
                 <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list-name="entityList" use-cache="true" >
                     <limit-range start="0" size="20" />
                 </entity-and -->
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
             </actions>
             <widgets>
