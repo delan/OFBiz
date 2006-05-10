@@ -1294,12 +1294,14 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the item type description. */
     public String getItemTypeDescription() {
         GenericValue orderItemType = null;
-        try {
-            orderItemType = this.getDelegator().findByPrimaryKeyCache("OrderItemType", UtilMisc.toMap("orderItemTypeId", this.getItemType()));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingOrderItemTypeFor", UtilMisc.toMap("orderItemTypeId",this.getItemType()), locale));
+        if (this.getItemType() != null) {
+            try {
+                orderItemType = this.getDelegator().findByPrimaryKeyCache("OrderItemType", UtilMisc.toMap("orderItemTypeId", this.getItemType()));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingOrderItemTypeFor", UtilMisc.toMap("orderItemTypeId",this.getItemType()), locale));
+            }
         }
-        if (itemType != null) {
+        if (orderItemType != null) {
             return orderItemType.getString("description");
         }
         return null;
