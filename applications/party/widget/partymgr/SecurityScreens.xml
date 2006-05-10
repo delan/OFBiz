@@ -33,7 +33,7 @@
                 <set field="headerItem" value="security"/>
                 <set field="tabButtonItem" value="FindSecurityGroup"/>
 
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
