@@ -158,6 +158,17 @@ public class ComponentConfig {
         return serviceInfos;
     }
 
+    public static List getAllTestSuiteInfos() {
+        List testSuiteInfos = FastList.newInstance();
+        Iterator i = getAllComponents().iterator();
+        while (i.hasNext()) {
+            ComponentConfig cc = (ComponentConfig) i.next();
+            testSuiteInfos.addAll(cc.getTestSuiteInfos());
+        }
+        return testSuiteInfos;
+
+    }
+
     public static List getAllWebappResourceInfos() {
         List webappInfos = FastList.newInstance();
         Iterator i = getAllComponents().iterator();
@@ -278,6 +289,7 @@ public class ComponentConfig {
     protected List classpathInfos = FastList.newInstance();
     protected List entityResourceInfos = FastList.newInstance();
     protected List serviceResourceInfos = FastList.newInstance();
+    protected List testSuiteInfos = FastList.newInstance();
     protected List webappInfos = FastList.newInstance();
 
     protected ComponentConfig() {}
@@ -352,6 +364,14 @@ public class ComponentConfig {
             Element curElement = (Element) elementIter.next();
             ServiceResourceInfo serviceResourceInfo = new ServiceResourceInfo(this, curElement);
             this.serviceResourceInfos.add(serviceResourceInfo);
+        }
+
+        // test-suite - serviceResourceInfos
+        elementIter = UtilXml.childElementList(ofbizComponentElement, "test-suite").iterator();
+        while (elementIter.hasNext()) {
+            Element curElement = (Element) elementIter.next();
+            TestSuiteInfo testSuiteInfo = new TestSuiteInfo(this, curElement);
+            this.testSuiteInfos.add(testSuiteInfo);
         }
 
         // webapp - webappInfos
@@ -452,39 +472,43 @@ public class ComponentConfig {
     }
 
     public List getClasspathInfos() {
-        return classpathInfos;
+        return this.classpathInfos;
     }
 
     public String getComponentName() {
-        return componentName;
+        return this.componentName;
     }
 
     public List getEntityResourceInfos() {
-        return entityResourceInfos;
+        return this.entityResourceInfos;
     }
 
     public String getGlobalName() {
-        return globalName;
+        return this.globalName;
     }
 
     public Map getResourceLoaderInfos() {
-        return resourceLoaderInfos;
+        return this.resourceLoaderInfos;
     }
 
     public String getRootLocation() {
-        return rootLocation;
+        return this.rootLocation;
     }
 
     public List getServiceResourceInfos() {
-        return serviceResourceInfos;
+        return this.serviceResourceInfos;
+    }
+
+    public List getTestSuiteInfos() {
+        return this.testSuiteInfos;
     }
 
     public List getWebappInfos() {
-        return webappInfos;
+        return this.webappInfos;
     }
 
     public boolean enabled() {
-        return enabled;
+        return this.enabled;
     }
 
     public static class ResourceLoaderInfo {
@@ -546,6 +570,12 @@ public class ComponentConfig {
         public ServiceResourceInfo(ComponentConfig componentConfig, Element element) {
             super(componentConfig, element);
             this.type = element.getAttribute("type");
+        }
+    }
+
+    public static class TestSuiteInfo extends ResourceInfo {
+        public TestSuiteInfo(ComponentConfig componentConfig, Element element) {
+            super(componentConfig, element);
         }
     }
 
