@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry excluding="org/ofbiz/base/util/OfbizJsBsfEngine.java" kind="src" path="base/src/base"/>
+	<classpathentry kind="src" path="framework/testtools/src"/>
 	<classpathentry kind="src" path="framework/geronimo/src"/>
 	<classpathentry excluding="org/ofbiz/accounting/thirdparty/clearcommerce/**|org/ofbiz/accounting/thirdparty/verisign/**" kind="src" path="applications/accounting/src"/>
 	<classpathentry excluding="org/ofbiz/content/openoffice/|org/ofbiz/content/report/" kind="src" path="applications/content/src"/>
