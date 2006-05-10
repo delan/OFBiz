@@ -154,12 +154,12 @@ function runAction() {
                 <td>
                   <select name='orderTypeId' class='selectBox'>
                     <#if currentType?has_content>
-                    <option value="${currentType.orderTypeId}">${currentType.description}</option>
+                    <option value="${currentType.orderTypeId}">${currentType.get("description", locale)}</option>
                     <option value="${currentType.orderTypeId}">---</option>
                     </#if>
                     <option value="ANY">${uiLabelMap.CommonAnyOrderType}</option>
                     <#list orderTypes as orderType>
-                      <option value="${orderType.orderTypeId}">${orderType.description}</option>
+                      <option value="${orderType.orderTypeId}">${orderType.get("description", locale)}</option>
                     </#list>
                   </select>
                 </td>

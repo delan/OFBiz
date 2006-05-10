@@ -1030,6 +1030,7 @@
     </entity>
     <entity entity-name="OrderType"
             package-name="org.ofbiz.order.order"
+            default-resource-name="OrderEntityLabels"
             title="Order Type Entity">
       <field name="orderTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
