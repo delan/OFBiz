@@ -437,5 +437,73 @@
         </else>
         </if-compare>
     </simple-method>
+
+    <simple-method method-name="recreateOrderAdjustments" short-description="Auto create OrderAdjustments">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunAutoCreateOrderAdjustments"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="OrderHeader" value-name="order" auto-field-map="true"/>
+        <!-- all existing promo order items are cancelled -->
+        <get-related value-name="order" relation-name="OrderItem" list-name="orderItems"/>
+        <iterate list-name="orderItems" entry-name="orderItem">
+            <if-compare field-name="orderItem.isPromo" value="Y" operator="equals">
+                <clear-field field-name="cancelOrderItemInMap"/>
+                <set-service-fields service-name="cancelOrderItem" to-map-name="cancelOrderItemInMap" map-name="parameters"/>
+                <set from-field="orderItem.orderItemSeqId" field="cancelOrderItemInMap.orderItemSeqId"/>
+                <call-service service-name="cancelOrderItem" in-map-name="cancelOrderItemInMap"/>
+            </if-compare>
+        </iterate>
+        <!-- all existing auto order adjustments are removed -->
+        <get-related value-name="order" relation-name="OrderAdjustment" list-name="orderAdjustments"/>
+        <iterate list-name="orderAdjustments" entry-name="orderAdjustment">
+            <!-- make sure this is not a manual adjustments -->
+            <if-not-empty field-name="orderAdjustment.productPromoId">
+                <remove-value value-name="orderAdjustment"/>
+            </if-not-empty>
+        </iterate>
+        <set-service-fields service-name="loadCartFromOrder" to-map-name="loadCartFromOrderInMap" map-name="parameters"/>
+        <!--<set value="false" field="loadCartFromOrderInMap.applyOrderAdjustments"/>-->
+        <call-service service-name="loadCartFromOrder" in-map-name="loadCartFromOrderInMap">
+            <result-to-field result-name="shoppingCart" field-name="cart"/>
+        </call-service>
+        <call-object-method obj-field-name="cart" method-name="items" ret-field-name="items"/>
+        <iterate list-name="items" entry-name="item">
+            <call-object-method obj-field-name="item" method-name="getOrderItemSeqId" ret-field-name="orderItemSeqId"/>
+            <if-empty field-name="orderItemSeqId">
+                <!-- this is a new (promo) item -->
+                <!-- a new order item is created -->
+                <make-value value-name="newOrderItem" entity-name="OrderItem"/>
+                <set field="newOrderItem.orderId" from-field="parameters.orderId"/>
+                <call-object-method obj-field-name="item" method-name="getItemType" ret-field-name="newOrderItem.orderItemTypeId"/>
+                <call-object-method obj-field-name="item" method-name="getSelectedAmount" ret-field-name="newOrderItem.selectedAmount"/>
+                <call-object-method obj-field-name="item" method-name="getBasePrice" ret-field-name="newOrderItem.unitPrice"/>
+                <call-object-method obj-field-name="item" method-name="getListPrice" ret-field-name="newOrderItem.unitListPrice"/>
+                <call-object-method obj-field-name="item" method-name="getName" ret-field-name="newOrderItem.itemDescription"/>
+                <call-object-method obj-field-name="item" method-name="getStatusId" ret-field-name="newOrderItem.statusId"/>
+                <call-object-method obj-field-name="item" method-name="getProductId" ret-field-name="newOrderItem.productId"/>
+                <call-object-method obj-field-name="item" method-name="getQuantity" ret-field-name="newOrderItem.quantity"/>
+                <set field="newOrderItem.isModifiedPrice" value="N"/>
+                <set field="newOrderItem.isPromo" value="Y"/>
+                <if-empty field-name="newOrderItem.statusId">
+                    <set field="newOrderItem.statusId" value="ITEM_CREATED"/>
+                </if-empty>
+                <make-next-seq-id value-name="newOrderItem" seq-field-name="orderItemSeqId"/>
+                <set from-field="orderItemSeqId" field="newOrderItem.orderItemSeqId"/>
+                <create-value value-name="newOrderItem"/>
+                <!-- and the orderItemSeqId is assigned to the shopping cart item-->
+                <call-object-method obj-field-name="item" method-name="setOrderItemSeqId">
+                    <field field-name="newOrderItem.orderItemSeqId" type="String"/>
+                </call-object-method>
+                <call-object-method obj-field-name="item" method-name="getOrderItemSeqId" ret-field-name="newOrderItemSeqId"/>
+            </if-empty>
+        </iterate>
+        <call-object-method obj-field-name="cart" method-name="makeAllAdjustments" ret-field-name="adjustments"/>
+        <iterate list-name="adjustments" entry-name="adjustment">
+            <set from-field="parameters.orderId" field="adjustment.orderId"/>
+            <sequenced-id-to-env sequence-name="OrderAdjustment" env-name="adjustment.orderAdjustmentId"/>
+            <create-value value-name="adjustment"/>
+        </iterate>
+    </simple-method>
 </simple-methods>
 
