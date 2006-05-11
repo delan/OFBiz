@@ -103,7 +103,7 @@ public class otsUtils {
     			while(t.hasNext()) {
     				GenericValue topEntityListItem = (GenericValue) t.next();
     				if (xmlWrite0) { topEntityListItem.writeXmlText(writer,""); numberWritten++; }
-    				if (child2EntityName != null)	{
+    				if (child1EntityName != null)	{
     					List children1 = topEntityListItem.getRelated(child1EntityName);
     					if (children1 != null && children1.size() > 0)	{
     						Iterator psr1 = children1.iterator();

@@ -24,8 +24,6 @@
  *@version    $Rev: 4791 $
  *@since      2.1
 -->
-<#assign includeHtmlArea=false/>
-<#if "Y"=page.includeHtmlArea?if_exists><#assign includeHtmlArea=true/></#if>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <#-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> <html> -->
@@ -55,56 +53,4 @@
 <link href="/HaagscheSuites/html/haagsestyles.css" rel="stylesheet" type="text/css">
 </head>
 
-<body<#if includeHtmlArea> onLoad="init_all()"</#if>>
-<#--
-<div id="ecom-header">
-    <div id="left">
-        <#if sessionAttributes.overrideLogo?exists>
-            <img src="${sessionAttributes.overrideLogo}"/>
-        <#elseif catalogHeaderLogo?exists>
-            <imh src="${catalogHeaderLogo}"/>
-        <#elseif (productStore.headerLogo)?has_content>
-            <img src="<@ofbizContentUrl>${productStore.headerLogo}</@ofbizContentUrl>"/>
-        </#if>
-    </div>
-    <div id="right"<#if (productStore.headerRightBackground)?has_content> style="background-image: <@ofbizContentUrl>${productStore.headerRightBackground}</@ofbizContentUrl>;"</#if>>
-        ${screens.render("component://ecommerce/widget/CartScreens.xml#microcart")}
-    </div>
-    <div id="middle"<#if (productStore.headerMiddleBackground)?has_content> style="background-image: <@ofbizContentUrl>${productStore.headerMiddleBackground}</@ofbizContentUrl>;"</#if>>
-        <#if !productStore?exists>
-            <div class="head2">There is no ProductStore for this WebSite; Check Settings.</div>
-        </#if>
-        <#if (productStore.title)?exists><div id="company-name">${productStore.title}</div></#if>
-        <#if (productStore.subtitle)?exists><div id="company-subtitle">${productStore.subtitle}</div></#if>
-        <div id="welcome-message">
-            <#if sessionAttributes.autoName?has_content>
-                ${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName}!
-                (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
-            <#else/>
-                ${uiLabelMap.CommonWelcome}!
-            </#if>
-        </div>
-    </div>
-</div>
-
-<div id="ecom-header-bar">
-    <ul id="left-links">
-        <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
-            <li id="header-bar-logout"><a href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a></li>
-        <#else/>
-            <li id="header-bar-login"><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></li>
-        </#if>
-        <li id="header-bar-contactus"><a href="<@ofbizUrl>contactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a></li>
-        <li id="header-bar-main"><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonMain}</a></li>
-    </ul>
-    <ul id="right-links">
-        <!-- NOTE: these are in reverse order because they are stacked right to left instead of left to right -->
-<#--        <li id="header-bar-viewprofile"><a href="<@ofbizUrl>viewprofile</@ofbizUrl>">${uiLabelMap.CommonProfile}</a></li>
-        <li id="header-bar-editShoppingList"><a href="<@ofbizUrl>editShoppingList</@ofbizUrl>">${uiLabelMap.EcommerceShoppingLists}</a></li>
-        <li id="header-bar-orderhistory"><a href="<@ofbizUrl>orderhistory</@ofbizUrl>">${uiLabelMap.OrderHistory}</a></li>
-        <#if catalogQuickaddUse>
-            <li id="header-bar-quickadd"><a href="<@ofbizUrl>quickadd</@ofbizUrl>">${uiLabelMap.CommonQuickAdd}</a></li>
-        </#if>
-    </ul>
-</div>
--->
+<body>

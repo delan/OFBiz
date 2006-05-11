@@ -30,7 +30,7 @@
                 <set field="title" value="Find a Party"/>
                 <set field="page.headerItem" value="find"/>
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>                
             </actions>
             <widgets>
@@ -52,7 +52,7 @@
                 <set field="title" value="Find a Party"/>
                 <set field="headerItem" value="disabled"/>
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>                
             </actions>
             <widgets>

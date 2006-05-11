@@ -63,11 +63,11 @@
     
     
     <form name="ListElectronicTexts" type="list" separate-columns="true" 
-        title="ElectronicText List"  default-title-style="tableheadtext" list-name="newElectronicTexts" target=""
+        title="ElectronicText List"  default-title-style="tableheadtext" list-name="listIt" target=""
         default-widget-style="tabletext" default-tooltip-style="tabletext"
-        paginate-target="findElectronicTexts" list-iterator-name="listIt" default-entity-name="ElectronicText">
+        paginate-target="findElectronicTexts" default-entity-name="ElectronicText">
         <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
                 <field-map field-name="entityName" value="ElectronicText"/>
                 <field-map field-name="orderBy" value="dataResourceId"/>
