@@ -112,7 +112,10 @@ public class FindServices {
         }
         
         // get the organizationPartyId, if defined limit the search result depending on the entity
-        String organizationPartyId =  (String) ((GenericValue) inputFields.get("userLogin")).getString("partyId");
+        GenericValue userLogin = (GenericValue) inputFields.get("userLogin");
+        String organizationPartyId =  null;
+        if (userLogin != null)   
+            organizationPartyId =  (String)  userLogin.getString("partyId");
         if (organizationPartyId != null) {
         	GenericValue partyAcctgPreference = null;
         	try{
