@@ -72,7 +72,7 @@
               </#if>
               <option value=""></option>
               <#list surveyPageList as surveyPage>
-                <option value="${surveyPage.surveyPageSeqId}">${surveyPage.pageName} [${surveyPage.surveyPageSeqId}]</option>
+                <option value="${surveyPage.surveyPageSeqId}">${surveyPage.pageName?if_exists} [${surveyPage.surveyPageSeqId}]</option>
               </#list>
             </select>
           </td>
