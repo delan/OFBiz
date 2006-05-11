@@ -99,7 +99,7 @@
                     <#list shipmentPackages as shipmentPackage>
                         <option>${shipmentPackage.shipmentPackageSeqId}</option>
                     </#list>
-                    <option>${uiLabelMap.CommonNew}</option>
+                    <option value="New">${uiLabelMap.CommonNew}</option><!-- Warning: the "New" value cannot be translated because it is used in secas -->
                 </select>
                 </div>
             </td>
