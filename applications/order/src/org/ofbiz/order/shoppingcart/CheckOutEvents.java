@@ -104,7 +104,19 @@ public class CheckOutEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-
+        if (result.containsKey(ModelService.ERROR_MESSAGE)) {
+            request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
+            return "error";
+        }
+ 
+        try {
+            result = dispatcher.runSync("recreateOrderAdjustments", UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            errMsg = UtilProperties.getMessage(resource, "checkevents.cannot_recalc_adjustments", locale);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            return "error";
+        }
         if (result.containsKey(ModelService.ERROR_MESSAGE)) {
             request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
             return "error";
