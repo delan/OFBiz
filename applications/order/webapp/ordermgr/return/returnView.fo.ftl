@@ -30,6 +30,25 @@
 <#assign fromPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", returnHeader.fromPartyId, "compareDate", returnHeader.entryDate, "userLogin", userLogin))/>
 <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", returnHeader.toPartyId, "compareDate", returnHeader.entryDate, "userLogin", userLogin))/>
 
+<#macro displayReturnAdjustment returnAdjustment>
+    <#assign returnHeader = returnAdjustment.getRelatedOne("ReturnHeader")>
+    <#assign adjReturnType = returnAdjustment.getRelatedOne("ReturnType")?if_exists>
+    <fo:table-row>
+    <fo:table-cell padding="1mm"/>
+    <fo:table-cell padding="1mm"/>
+    <fo:table-cell padding="1mm">
+      <fo:block wrap-option="wrap">
+        ${returnAdjustment.description?default("N/A")}
+        <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
+      </fo:block>
+    </fo:table-cell>
+    <fo:table-cell padding="1mm"/>
+    <fo:table-cell padding="1mm"/>
+    <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnAdjustment.amount}</fo:block></fo:table-cell>
+    </fo:table-row>
+    <#assign total = total + returnAdjustment.get("amount")>
+</#macro>
+
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
   <fo:layout-master-set>
@@ -231,6 +250,15 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
                 <fo:table-cell padding="1mm" text-align="right"><fo:block>${(returnItem.returnPrice * returnItem.returnQuantity)}</fo:block></fo:table-cell>
               </fo:table-row>
               <#assign total = total + returnItem.returnQuantity.doubleValue() * returnItem.returnPrice.doubleValue()/>
+              
+              <#assign returnItemAdjustments = returnItem.getRelated("ReturnAdjustment")>
+              <#if (returnItemAdjustments?has_content)>
+                  <#list returnItemAdjustments as returnItemAdjustment>
+                     <@displayReturnAdjustment returnAdjustment=returnItemAdjustment/>
+                  </#list>
+              </#if>
+
+              
             </#list>
 
         </fo:table-body>
@@ -246,6 +274,11 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
           <fo:table-column column-width="0.85in"/>
           <fo:table-column column-width="0.85in"/>
           <fo:table-body>
+            <#if (returnAdjustments?has_content)>                  
+                <#list returnAdjustments as returnAdjustment>
+                    <@displayReturnAdjustment returnAdjustment=returnAdjustment/>
+                </#list>
+            </#if>
             <fo:table-row>
               <fo:table-cell/>
               <fo:table-cell/>
@@ -255,7 +288,7 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
                 <fo:block font-weight="bold" text-align="center">Total</fo:block>
               </fo:table-cell>
               <fo:table-cell text-align="right" padding="1mm" border-style="solid" border-width="0.2pt">
-                <fo:block>${total}</fo:block>
+                <fo:block><@ofbizCurrency amount=total isoCode=returnHeader.currencyUomId/></fo:block>
               </fo:table-cell>
             </fo:table-row>
           </fo:table-body>
