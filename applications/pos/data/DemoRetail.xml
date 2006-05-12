@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2001-2006 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not
+    use this file except in compliance with the License. You may obtain a copy of
+    the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
+-->
 <entity-engine-xml>
     <UserLogin userLoginId="1" partyId="admin" currentPassword="356a192b7913cf4c54574d18bdf24699395428d4" passwordHint="The Number One, Yeah, Literally"/>
     <UserLogin userLoginId="2" partyId="ltdadmin" currentPassword="a54bed37c5b3b28ee30760b5c8d1bbd735ef10cf" passwordHint="The Number Two, Yeah, Literally"/>
