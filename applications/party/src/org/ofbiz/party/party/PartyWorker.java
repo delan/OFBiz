@@ -29,26 +29,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import javolution.util.FastList;
-import javolution.util.FastSet;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityUtil;
 
@@ -155,6 +153,13 @@ public class PartyWorker {
     public static String findPartyId(GenericDelegator delegator, String address1, String address2, String city,
                             String stateProvinceGeoId, String postalCode, String postalCodeExt, String countryGeoId,
                             String firstName, String middleName, String lastName) throws GeneralException {
+        return findPartyAndContactMechId(delegator, address1, address2, city, stateProvinceGeoId, postalCode,
+                postalCodeExt, countryGeoId, firstName, middleName, lastName)[0];
+    }
+
+    public static String[] findPartyAndContactMechId(GenericDelegator delegator, String address1, String address2, String city,
+                            String stateProvinceGeoId, String postalCode, String postalCodeExt, String countryGeoId,
+                            String firstName, String middleName, String lastName) throws GeneralException {
 
         // address information
         if (firstName == null || lastName == null || address1 == null || city == null || postalCode == null) {
@@ -197,7 +202,8 @@ public class PartyWorker {
         List addresses = EntityUtil.filterByDate(delegator.findByCondition("PartyAndPostalAddress", addrCond, null, sort));
         //Debug.log("Checking for matching address: " + addrCond.toString() + "[" + addresses.size() + "]", module);
 
-        Set validParty = FastSet.newInstance();
+        //Set validParty = FastSet.newInstance();
+        Map validParty = FastMap.newInstance();
         if (UtilValidate.isNotEmpty(addresses)) {
             // check the address line
             Iterator v = addresses.iterator();
@@ -223,23 +229,24 @@ public class PartyWorker {
 
                                 if (addr2Source.equals(addr2Target)) {
                                     Debug.log("Matching address2; adding valid address", module);
-                                    validParty.add(address.getString("partyId"));
+                                    validParty.put(address.getString("partyId"), address.getString("contactMechId"));
                                 }
                             }
                         } else {
                             if (address.get("address2") == null) {
                                 Debug.log("No address2; adding valid address", module);
-                                validParty.add(address.getString("partyId"));
+                                validParty.put(address.getString("partyId"), address.getString("contactMechId"));
                             }
                         }
                     }
                 }
             }
 
-            if (UtilValidate.isNotEmpty(validParty)) {
-                Iterator a = validParty.iterator();
+            if (validParty != null && validParty.size() > 0) {
+                Iterator a = validParty.keySet().iterator();
                 while (a.hasNext()) {
                     String partyId = (String) a.next();
+                    String cmId = (String) validParty.get(partyId);
                     if (UtilValidate.isNotEmpty(partyId)) {
                         GenericValue p = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
                         if (p != null) {
@@ -250,10 +257,10 @@ public class PartyWorker {
                                 if (fName.toUpperCase().equals(firstName.toUpperCase())) {
                                     if (mName != null && middleName != null) {
                                         if (mName.toUpperCase().equals(middleName.toUpperCase())) {
-                                            return partyId;
+                                            return new String[] { partyId, cmId };
                                         }
                                     } else if (middleName == null) {
-                                        return partyId;
+                                        return new String[] { partyId, cmId };
                                     }
                                 }
                             }
