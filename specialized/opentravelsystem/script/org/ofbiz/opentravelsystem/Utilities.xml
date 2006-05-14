@@ -176,6 +176,7 @@
                      </if>
                      
                      <!-- apply the payment to the invoice -->
+                     <clear-field field-name="application"/>
                      <set field="application.invoiceId" from-field="invoiceItem.invoiceId"/>
                      <set field="application.paymentId" from-field="payment.paymentId"/> 
                      <set field="application.amountApplied" from-field="payment.amount" />
