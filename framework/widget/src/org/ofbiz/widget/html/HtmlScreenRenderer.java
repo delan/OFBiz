@@ -95,8 +95,8 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         String style = label.getStyle(context);
         String id = label.getId(context);
         if (UtilValidate.isNotEmpty(style) || UtilValidate.isNotEmpty(id) ) {
-       		writer.write("<span");
-        	
+               writer.write("<span");
+            
             if (UtilValidate.isNotEmpty(id)) {
                 writer.write(" id=\"");
                 writer.write(id);
@@ -113,8 +113,8 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             writer.write(label.getText(context));
             
             // close tag
-       		writer.write("</span>");
-        	
+               writer.write("</span>");
+            
         } else {
             writer.write(label.getText(context));
         }
@@ -284,49 +284,49 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContentBody(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
-            Locale locale = Locale.getDefault();
-            Boolean nullThruDatesOnly = new Boolean(false);
-            String mimeTypeId = "text/html";
-            String expandedContentId = content.getContentId(context);
-            String renderedContent = null;
-            GenericDelegator delegator = (GenericDelegator) context.get("delegator");
+        Locale locale = UtilMisc.ensureLocale(context.get("locale"));
+        //Boolean nullThruDatesOnly = new Boolean(false);
+        String mimeTypeId = "text/html";
+        String expandedContentId = content.getContentId(context);
+        String renderedContent = null;
+        GenericDelegator delegator = (GenericDelegator) context.get("delegator");
 
-            if (Debug.verboseOn()) Debug.logVerbose("expandedContentId:" + expandedContentId, module);
-            
-            try {
-                if (UtilValidate.isNotEmpty(expandedContentId)) {
+        if (Debug.verboseOn()) Debug.logVerbose("expandedContentId:" + expandedContentId, module);
+        
+        try {
+            if (UtilValidate.isNotEmpty(expandedContentId)) {
+                if (WidgetContentWorker.contentWorker != null) {
+                    renderedContent = WidgetContentWorker.contentWorker.renderContentAsTextCacheExt(delegator, expandedContentId, context, null, locale, mimeTypeId);
+                } else {
+                    Debug.logError("Not rendering content, not ContentWorker found.", module);
+                }
+            }
+            if (UtilValidate.isEmpty(renderedContent)) {
+                String editRequest = content.getEditRequest(context);
+                if (UtilValidate.isNotEmpty(editRequest)) {
                     if (WidgetContentWorker.contentWorker != null) {
-                        renderedContent = WidgetContentWorker.contentWorker.renderContentAsTextCacheExt(delegator, expandedContentId, context, null, locale, mimeTypeId);
+                        WidgetContentWorker.contentWorker.renderContentAsTextCacheExt(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                     } else {
                         Debug.logError("Not rendering content, not ContentWorker found.", module);
                     }
                 }
-                if (UtilValidate.isEmpty(renderedContent)) {
-                    String editRequest = content.getEditRequest(context);
-                    if (UtilValidate.isNotEmpty(editRequest)) {
-                        if (WidgetContentWorker.contentWorker != null) {
-                            WidgetContentWorker.contentWorker.renderContentAsTextCacheExt(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
-                        } else {
-                            Debug.logError("Not rendering content, not ContentWorker found.", module);
-                        }
-                    }
-                } else {
-                    if (content.xmlEscape()) {
-                        renderedContent = UtilFormatOut.encodeXmlValue(renderedContent);
-                    }
-                    
-                    writer.write(renderedContent);
+            } else {
+                if (content.xmlEscape()) {
+                    renderedContent = UtilFormatOut.encodeXmlValue(renderedContent);
                 }
-
-            } catch(GeneralException e) {
-                String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
-                Debug.logError(e, errMsg, module);
-                //throw new RuntimeException(errMsg);
-            } catch(IOException e2) {
-                String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e2.toString();
-                Debug.logError(e2, errMsg, module);
-                //throw new RuntimeException(errMsg);
+                
+                writer.write(renderedContent);
             }
+
+        } catch(GeneralException e) {
+            String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
+            Debug.logError(e, errMsg, module);
+            //throw new RuntimeException(errMsg);
+        } catch(IOException e2) {
+            String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e2.toString();
+            Debug.logError(e2, errMsg, module);
+            //throw new RuntimeException(errMsg);
+        }
     }
 
     public void renderContentEnd(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
@@ -366,27 +366,27 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContentFrame(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
-    	
-    	String dataResourceId = content.getDataResourceId(context);
-    	String urlString = "ViewSimpleContent?dataResourceId=" + dataResourceId;
-    	
-    	String width = content.getWidth();
-    	String widthString=" width=\"" + width + "\"";
-    	String height = content.getHeight();
-    	String heightString=" height=\"" + height + "\"";
-    	String border = content.getBorder();
-    	String borderString = (UtilValidate.isNotEmpty(border)) ? " border=\"" + border + "\"" : "";
-    	
+        
+        String dataResourceId = content.getDataResourceId(context);
+        String urlString = "ViewSimpleContent?dataResourceId=" + dataResourceId;
+        
+        String width = content.getWidth();
+        String widthString=" width=\"" + width + "\"";
+        String height = content.getHeight();
+        String heightString=" height=\"" + height + "\"";
+        String border = content.getBorder();
+        String borderString = (UtilValidate.isNotEmpty(border)) ? " border=\"" + border + "\"" : "";
+        
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         if (request != null && response != null) {
-        	ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
-        	RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-        	String fullUrlString = rh.makeLink(request, response, urlString, true, false, false);
-        	String linkString = "<iframe src=\"" + fullUrlString + "\" " + widthString + heightString + borderString + " />";
-        	writer.write(linkString);
+            ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+            RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+            String fullUrlString = rh.makeLink(request, response, urlString, true, false, false);
+            String linkString = "<iframe src=\"" + fullUrlString + "\" " + widthString + heightString + borderString + " />";
+            writer.write(linkString);
         }
-    	
+        
     }
 
 

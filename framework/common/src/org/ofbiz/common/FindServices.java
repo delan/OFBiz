@@ -357,6 +357,43 @@ public class FindServices {
     }
     
     /**
+     * 
+     *  same as performFind but now returning a list instead of an iterator
+     *  Extra parameters viewIndex: startPage of the partial list (0 = first page)
+     *                              viewSize: the length of the page (number of records)
+     *  Extra output parameter: listSize: size of the totallist
+     *                                         list : the list itself.
+     * 
+     * @param dctx
+     * @param context
+     * @return Map
+     */
+    public static Map performFindList(DispatchContext dctx, Map context) {
+        Map result = performFind(dctx,context);
+        
+        Integer viewSize = (Integer) context.get("viewSize");
+        Integer viewIndex = (Integer) context.get("viewIndex");
+        
+        int start = viewIndex.intValue() * viewSize.intValue();
+        List list = null;
+        Integer listSize = null;
+        try{
+            EntityListIterator it = (EntityListIterator) result.get("listIt");
+            list = it.getPartialList(start+1, viewSize.intValue()); // list starts at '1'
+            it.last();
+            listSize = new Integer(it.currentIndex());
+            it.close();
+        } catch (Exception e) {
+            Debug.logInfo("Problem getting partial list" + e,module);
+        }
+        
+        result.put("listSize", listSize);
+        result.put("list",list);
+        result.remove("listIt");
+        return result;
+    }
+        
+    /**
      * performFind
      *
      * This is a generic method that expects entity data affixed with special suffixes
