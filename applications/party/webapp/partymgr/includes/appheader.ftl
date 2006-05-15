@@ -37,17 +37,20 @@
 
 <div class="apptitle">&nbsp;${uiLabelMap.PartyManagerApplication}&nbsp;</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>   
+  <div class="col"><a href="<@ofbizUrl>main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>
   <div class="col"><a href="<@ofbizUrl>findparty</@ofbizUrl>" class="${selectedLeftClassMap.find?default(unselectedLeftClassName)}">${uiLabelMap.CommonFind}</a></div>
   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
     <div class="col"><a href="<@ofbizUrl>createnew</@ofbizUrl>" class="${selectedLeftClassMap.create?default(unselectedLeftClassName)}">${uiLabelMap.CommonCreate}</a></div>
   </#if>
-  <div class="col"><a href="<@ofbizUrl>FindCommunicationEvents</@ofbizUrl>" class="${selectedLeftClassMap.comm?default(unselectedLeftClassName)}">${uiLabelMap.PartyCommunications}</a></div>  
+  <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
+    <div class="col"><a href="<@ofbizUrl>linkparty</@ofbizUrl>" class="${selectedLeftClassMap.link?default(unselectedLeftClassName)}">Link</a></div>
+  </#if>
+  <div class="col"><a href="<@ofbizUrl>FindCommunicationEvents</@ofbizUrl>" class="${selectedLeftClassMap.comm?default(unselectedLeftClassName)}">${uiLabelMap.PartyCommunications}</a></div>
   <div class="col"><a href="<@ofbizUrl>showvisits</@ofbizUrl>" class="${selectedLeftClassMap.visits?default(unselectedLeftClassName)}">${uiLabelMap.PartyVisits}</a></div>
   <div class="col"><a href="<@ofbizUrl>showclassgroups</@ofbizUrl>" class="${selectedLeftClassMap.classification?default(unselectedLeftClassName)}">${uiLabelMap.PartyClassifications}</a></div>
   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
     <div class="col"><a href="<@ofbizUrl>FindSecurityGroup</@ofbizUrl>" class="${selectedLeftClassMap.security?default(unselectedLeftClassName)}">${uiLabelMap.CommonSecurity}</a></div>
-  </#if>    
+  </#if>
   <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${unselectedRightClassName}">${uiLabelMap.CommonLogout}</a></div>
   <#else>

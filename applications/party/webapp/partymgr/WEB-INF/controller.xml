@@ -88,6 +88,12 @@
     <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
     <request-map uri="EditPartyRelationships"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyRelationships"/></request-map>
     <request-map uri="viewroles"><security https="true" auth="true"/><response name="success" type="view" value="viewroles"/></request-map>
+    <request-map uri="linkparty"><security https="true" auth="true"/><response name="success" type="view" value="linkparty"/></request-map>
+    <request-map uri="setPartyLink">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="linkPartyRecord"/>
+        <response name="success" type="view" value="viewprofile"/>
+    </request-map>
 
     <request-map uri="editcontactmech"><security https="true" auth="true"/><response name="success" type="view" value="editcontactmech"/></request-map>
     <request-map uri="createContactMech">
@@ -808,6 +814,7 @@
 
     <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
     <view-map name="viewroles" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewroles"/>
+    <view-map name="linkparty" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#linkparty"/>
     <view-map name="EditPartyRelationships" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyRelationships"/>
     <view-map name="viewvendor" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewvendor"/>
     <view-map name="EditPartyTaxAuthInfos" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyTaxAuthInfos"/>

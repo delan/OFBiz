@@ -171,6 +171,13 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <service name="linkPartyRecord" engine="java" auth="true" use-transaction="false"
+                location="org.ofbiz.party.party.PartyServices" invoke="linkParty">
+        <description>Merges customer accounts and disabled the duplicate</description>
+        <attribute name="partyId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
+    </service>
+
     <!-- Party Role services -->
     <service name="createPartyRole" engine="java"
             location="org.ofbiz.party.party.PartyRoleServices" invoke="createPartyRole" auth="true">
