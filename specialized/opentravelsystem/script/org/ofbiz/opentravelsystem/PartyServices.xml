@@ -30,36 +30,31 @@
     <!-- Opentravelsystem Party Services -->
     <!-- ================================================================ -->
     
-    <!--
-    <simple-method method-name="createPartyGroup" short-description="-Add a Party with prefix -" login-required="false">
-        <sequenced-id-to-env sequence-name="${parameters.productStoreId}Party" env-name="nextPartyId"/>
-        <set field="parameters.partyId" value="${parameters.productStoreId}${nextPartyId}"/>
-        
-        <set-service-fields service-name="createPartyGroupOfbiz" map-name="parameters" to-map-name="createPartyGroupParam"/>
-        <call-service service-name="createPartyGroupOfbiz" in-map-name="createPartyGroupParam" include-user-login="true">
-            <result-to-result result-name="partyId" service-result-name="partyId"/>
-        </call-service>
-    </simple-method>
-    
-    <simple-method method-name="createPerson" short-description="-Add a Party with prefix-" login-required="false">
-        <sequenced-id-to-env sequence-name="${parameters.productStoreId}Party" env-name="nextPartyId"/>
-        <set field="parameters.partyId" value="${parameters.productStoreId}${nextPartyId}"/>
-        
-        <set-service-fields service-name="createPersonOfbiz" map-name="parameters" to-map-name="createPersonParam"/>
-        <call-service service-name="createPersonOfbiz" in-map-name="createPersonParam" include-user-login="true">
-            <result-to-result result-name="partyId" service-result-name="partyId"/>
-        </call-service>
-    </simple-method>
-    -->
     <simple-method method-name="getOrganizationParty" short-description="-get all info about the organizational party-">
-        <set field="partyData.partyId" from-field="parameters.organizationPartyId"/>
+        <set field="partyData.partyId" from-field="parameters.userLogin.partyId"/>
         <call-service service-name="otsGetParty" in-map-name="partyData">
-            <result-to-result result-name="organizationPartyId" service-result-name="partyId"/>
             <result-to-result result-name="groupName" service-result-name="groupName"/>
+            <result-to-result result-name="logoImageUrl" service-result-name="logoImageUrl"/>
+            <result-to-result service-result-name="address1"  result-name="address1"/>
+            <result-to-result service-result-name="address2" result-name="address2"/>
+            <result-to-result service-result-name="city" result-name="city"/>
+            <result-to-result service-result-name="postalCode" result-name="postalCode"/>
+            <result-to-result service-result-name="countryGeoId" result-name="countryGeoId"/>
             <result-to-result result-name="accountNumber" service-result-name="accountNumber"/>
         </call-service>
+        <log level="always" message="============== get party: ${parameters.userLogin.partyId} name: ${groupName}"></log>
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false">
+            <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
+        </entity-one>
+        <field-to-result field-name="partyAcctgPreference.baseCurrencyUomId" result-name="baseCurrencyUomId"/>
     </simple-method>
-
+    
+    <simple-method method-name="updateOrganizationParty" short-description="-get all info about the organizational party-">
+        <set-service-fields service-name="otsUpdateParty" map-name="parameters" to-map-name="updParty"/>
+        <set field="updParty.partyId" from-field="parameters.userLogin.partyId"/>
+        <call-service service-name="otsUpdateParty" in-map-name="updParty"/>
+    </simple-method>
+    
     <simple-method method-name="addParty" short-description="--Add a Party--">
         <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
             <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
@@ -83,6 +78,7 @@
         <!--loop count="100"-->
             <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Party" env-name="nextPartyId"/>
         <!--/loop-->
+        <set-service-fields service-name="createPartyGroup" map-name="parameters" to-map-name="createPartyGroup"/>
         <set field="createPartyGroup.partyId" value="${partyAcctgPreference.invoiceIdPrefix}${nextPartyId}"/>        
         <call-service service-name="createPartyGroup" in-map-name="createPartyGroup">
             <result-to-field result-name="partyId" field-name="partyId"/>
@@ -168,15 +164,8 @@
         </if-empty>
         <check-errors/>
         
-        <if-compare-field field-name="partyGroup.groupName" operator="not-equals" to-field-name="parameters.groupName">
-            <set-service-fields service-name="updatePartyGroup" map-name="parameters" to-map-name="pg"/>
-            <call-service service-name="updatePartyGroup" in-map-name="pg"/>
-        </if-compare-field>
-        
-        <if-compare-field field-name="parameters.name" operator="not-equals" to-field-name="partyGroup.groupName">
-            <set-service-fields service-name="updatePartyGroup" map-name="parameters" to-map-name="updPartyGroup"/>
-            <call-service service-name="updatePartyGroup" in-map-name="updPartyGroup"/>
-        </if-compare-field>        
+        <set-service-fields service-name="updatePartyGroup" map-name="parameters" to-map-name="pg"/>
+        <call-service service-name="updatePartyGroup" in-map-name="pg"/>
         
         <!-- postal address -->
         <if-not-empty field-name="parameters.address1">
@@ -300,7 +289,8 @@
             <field-map field-name="partyIdTo" value="${parameters.partyId}"/>
         </entity-and>
         <first-from-list entry-name="partyRelationship" list-name="partyRelationships"/>
-        <if-compare-field field-name="parameters.partyRelationshipTypeId" operator="not-equals" to-field-name="partyRelationship.partyRelationshipTypeId">
+        <if-not-empty field-name="partyRelationship">
+            <if-compare-field field-name="parameters.partyRelationshipTypeId" operator="not-equals" to-field-name="partyRelationship.partyRelationshipTypeId">
             <set field="newPartyRelationship.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/>
             <set field="newPartyRelationship.partyIdFrom" from-field="partyRelationship.partyIdFrom"/>
             <set field="newPartyRelationship.partyIdTo" from-field="partyRelationship.partyIdTo"/>
@@ -308,12 +298,15 @@
             <set field="newPartyRelationship.roleTypeIdTo" from-field="partyRelationship.roleTypeIdTo"/>
             <set field="newPartyRelationship.fromDate" from-field="partyRelationship.fromDate"/>
             <call-service service-name="updatePartyRelationship" in-map-name="newPartyRelationship"/>
-        </if-compare-field>
-        <if-empty field-name="partyRelationship.statusId"><!-- update old rcords -->
-            <set field="partyRelationship.statusId" value="PARTYREL-ACTIVE"/>
-            <store-value value-name="partyRelationship"/>
-        </if-empty>
-
+            </if-compare-field>
+            <else><!-- old records -->
+                <set field="rel.partyIdFrom" from-field="parameters.userLogin.partyId"/>
+                <set field="rel.partyIdTo" from-field="parameters.partyId"/>
+                <set field="rel.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId"/>
+                <set field="rel.statusId" value="PARTYREL-ACTIVE"/>
+                <call-service service-name="createPartyRelationship" in-map-name="rel"/>
+            </else>
+        </if-not-empty>
         <field-to-result field-name="parameters.partyId" result-name="partyId"/>
         
     </simple-method>
@@ -326,7 +319,8 @@
         <check-errors/>
         
         <if-empty field-name="parameters.partyId">
-            <return/>
+            <add-error><fail-message message="Party ID is missing"/></add-error>
+            <check-errors/>
         </if-empty>
 
         <!-- party relationship -->
@@ -336,7 +330,7 @@
         </entity-and>
         <first-from-list entry-name="partyRelationship" list-name="partyRelationships"/>
         <if-empty field-name="partyRelationship">
-            <return/>
+            <add-error><fail-message message="Partyrelationship type is missing"/></add-error>
         </if-empty>
         
         <field-to-result field-name="partyRelationship.partyRelationshipTypeId" result-name="partyRelationshipTypeId"/>
@@ -346,9 +340,11 @@
             <field-map field-name="partyId" value="${parameters.partyId}"/>
         </entity-one>
         <if-empty field-name="partyGroup">
+            <add-error><fail-message message="Partygroup not found"/></add-error>
             <return/>
         </if-empty>
         <field-to-result field-name="partyGroup.groupName" result-name="groupName"/>
+        <field-to-result field-name="partyGroup.logoImageUrl" result-name="logoImageUrl"/>
         
         <!-- get the postal address defined as GENERAL LOCATION -->
         <set field="getKey.partyId" from-field="parameters.partyId"/>
