@@ -169,6 +169,7 @@
     </form>
     <form name="AddForumMessage" type="single" target="updateForumMessage" default-map-name="message"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="threadView"><hidden value="${parameters.threadView}"/></field>
         <field name="forumGroupId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
         <field name="forumId"><hidden value="${parameters.forumId}"/></field>
@@ -178,7 +179,7 @@
         <field name="ownerContentId"><hidden value="${parameters.forumId}"/></field>
         <field name="contentIdTo"><hidden value="${parameters.forumMessageIdTo}"/></field>
         <field name="contentAssocTypeId"><hidden value="RESPONSE"/></field>
-        <field name="forumMessageText" parameter-name="textData"><textarea rows="10"/></field>
+        <field name="forumMessageText" parameter-name="textData"><textarea rows="10" visual-editor-enable="true" visual-editor-buttons="undo redo bold italic underline bullet indent outdent link"/></field>
         <field name="addButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddForumThreadMessage" type="single" extends="AddForumMessage" target="updateForumThreadMessage"/>

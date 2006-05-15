@@ -37,50 +37,6 @@
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
     <link rel='stylesheet' href='<@ofbizContentUrl>/content/images/wrap.css</@ofbizContentUrl>' type='text/css'>    
-<#assign primaryHTMLField= page.getProperty("primaryHTMLField")?if_exists />
-<#if (dynamicPrimaryHTMLField?exists)>
-<#assign primaryHTMLField= dynamicPrimaryHTMLField />
-</#if>
-<#assign secondaryHTMLField= page.getProperty("secondaryHTMLField")?if_exists />
-<#if (primaryHTMLField?exists && (primaryHTMLField?length >0))>
-    <script type="text/javascript" language="javascript"> 
-      _editor_url = "/content/images/htmlarea/"; // omit the final slash 
-    </script> 
-
-    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>' 
-                                                       type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>' 
-                                                       type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>' 
-                                                       type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>' 
-                                                       type='text/javascript'></script>
-    <style type="text/css">
-        @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
-    
-#        html, body {
-#          font-family: Verdana,sans-serif;
-#          background-color: #fea;
-#          color: #000;
-#        }
-#        a:link, a:visited { color: #00f; }
-#        a:hover { color: #048; }
-#        a:active { color: #f00; }
-        
-        textarea { background-color: #fff; border: 1px solid 00f; }
-    </style>
-
-    <script type="text/javascript">
-        var editor = null;
-        var summary = null;
-        function initEditor() {
-        primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
-        <#if secondaryHTMLField?exists>
-        secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
-        </#if>
-        }
-    </script>
-</#if>
 
     <script language="JavaScript" type="text/javascript">
         // This code inserts the value lookedup by a popup window back into the associated form element
@@ -149,7 +105,7 @@
 
 </head>
 
-<body <#if primaryHTMLField?exists && (primaryHTMLField?length >0)>onLoad="initEditor()"</#if> >
+<body>
 
 ${common.get("/includes/header.ftl")}
 ${common.get("/includes/appbar.ftl")}

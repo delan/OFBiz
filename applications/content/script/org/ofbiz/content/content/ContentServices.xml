@@ -852,9 +852,9 @@
     </simple-method>
     
     <!-- retrieve Data resource information -->
-    <simple-method method-name="getDataResource" short-description="get the content and relasted resource information">
-        <check-permission permission="CONTENTMGR" action="_READ"><fail-message message="Security Error: to retrieve content information you must have the CONTENTMGR_READ permission"/></check-permission>
-        <check-errors/>
+    <simple-method method-name="getDataResource" short-description="get the content and relasted resource information" login-required="false">
+        <!--check-permission permission="CONTENTMGR" action="_READ"><fail-message message="Security Error: to retrieve content information you must have the CONTENTMGR_READ permission"/></check-permission>
+        <check-errors/-->
         <entity-one entity-name="DataResource" value-name="resultData.dataResource">
             <field-map field-name="dataResourceId" env-name="parameters.dataResourceId"/>
         </entity-one>
@@ -871,24 +871,28 @@
         <field-to-result field-name="resultData" result-name="resultData"/>
     </simple-method>
         
-    <simple-method method-name="getContentAndDataResource" short-description="get the content and relasted resource information">
-        <check-permission permission="CONTENTMGR" action="_READ"><fail-message message="Security Error: to retrive content information you must have the CONTENTMGR_READ permission"/></check-permission>
-        <check-errors/>
-        <entity-one entity-name="Content" value-name="resultData.content">
+    <simple-method method-name="getContentAndDataResource" short-description="get the content and related resource information" login-required="false">
+        <if-empty field-name="publicForumMessage">
+            <check-permission permission="CONTENTMGR" action="_READ"><fail-message message="Security Error: to retrieve content information you must have the CONTENTMGR_READ permission"/></check-permission>
+            <check-errors/>
+        </if-empty>
+        <entity-one entity-name="Content" value-name="resultDataContent.content">
             <field-map field-name="contentId" env-name="parameters.contentId"/>
         </entity-one>
-        <if-not-empty field-name="resultData.content">
-            <if-not-empty field-name="resultData.content.dataResourceId">
-                <set field="dataResource.dataResourceId" from-field="resultData.content.dataResourceId"/>
-                <call-service service-name="getDataResource" in-map-name="dataResource">
-                    <result-to-field result-name="resultData" field-name="drResultData"/>
-                </call-service>
-                <set field="resultData.dataResource" from-field="drResultData.dataResource"/>
-                <set field="resultData.electronicText" from-field="drResultData.electronicText"/>
-                <set field="resultData.imageDataResource" from-field="drResultData.imageDataResource"/>
+        <if-not-empty field-name="resultDataContent.content">
+            <if-not-empty field-name="resultDataContent.content.dataResourceId">
+                <set field="parameters.dataResourceId" from-field="resultDataContent.content.dataResourceId"/>
+                <call-simple-method method-name="getDataResource"/>
+                <set field="resultDataContent.dataResource" from-field="resultData.dataResource"/>
+                <set field="resultDataContent.electronicText" from-field="resultData.electronicText"/>
+                <set field="resultDataContent.imageDataResource" from-field="resultData.imageDataResource"/>
             </if-not-empty>
-            <field-to-result field-name="resultData" result-name="resultData"/>
+            <field-to-result field-name="resultDataContent" result-name="resultData"/>
         </if-not-empty>
     </simple-method>
-    
+
+    <simple-method method-name="getPublicForumMessage" short-description="get the content and related resource information without security" login-required="false">
+        <set field="publicForumMessage" value="true"/>
+        <call-simple-method method-name="getContentAndDataResource"/>
+    </simple-method>
 </simple-methods>

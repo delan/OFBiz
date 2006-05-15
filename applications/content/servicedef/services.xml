@@ -66,6 +66,13 @@
     </service>
 
     <!--Contentservices.-->
+    <service name="getPublicForumMessage" engine="simple" default-entity-name="Content"
+        location="org/ofbiz/content/content/ContentServices.xml" invoke="getPublicForumMessage" auth="false">
+        <description>Get Content and resource information</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute mode="OUT" name="resultData" optional="true" type="java.util.Map"/>
+    </service>
+
     <service name="getContentAndDataResource" engine="simple" default-entity-name="Content"
         location="org/ofbiz/content/content/ContentServices.xml" invoke="getContentAndDataResource" auth="true">
         <description>Get Content and resource information</description>
@@ -1407,7 +1414,7 @@
         <attribute name="filenameOut" type="String" mode="IN" optional="false"/>
     </service>
 
-    <!-- CompDoc Rendering Services -->
+    <!-- CompDoc Rendering Services  -->
     <service name="renderCompDocPdf" engine="java"
         location="org.ofbiz.content.compdoc.CompDocServices"
         invoke="renderCompDocPdf" auth="true">
