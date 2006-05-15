@@ -1089,6 +1089,67 @@
         <response name="success" type="view" value="EditFixedAssetRegistrations"/>
         <response name="error" type="view" value="EditFixedAssetRegistrations"/>
     </request-map>
+    <!-- FixedAssetMaintenance Meter -->
+    <request-map uri="EditFixedAssetMaintMeters">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAssetMaintMeters"/>
+        <response name="error" type="view" value="EditFixedAssetMaintMeters"/>
+    </request-map>
+    <request-map uri="createFixedAssetMaintMeter">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFixedAssetMaintMeter"/>
+        <response name="success" type="view" value="EditFixedAssetMaintMeters"/>
+        <response name="error" type="view" value="EditFixedAssetMaintMeters"/>
+    </request-map>
+    <request-map uri="updateFixedAssetMaintMeter">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAssetMaintMeter"/>
+        <response name="success" type="view" value="EditFixedAssetMaintMeters"/>
+        <response name="error" type="view" value="EditFixedAssetMaintMeters"/>
+    </request-map>
+    <request-map uri="deleteFixedAssetMaintMeter">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteFixedAssetMaintMeter"/>
+        <response name="success" type="view" value="EditFixedAssetMaintMeters"/>
+        <response name="error" type="view" value="EditFixedAssetMaintMeters"/>
+    </request-map>
+    <!-- FixedAssetMaintenance -->
+    <request-map uri="ListFixedAssetMaints">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="ListFixedAssetMaints"/>
+    	<response name="error" type="view" value="ListFixedAssetMaints"/>
+    </request-map>
+    <request-map uri="EditFixedAssetMaint">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditFixedAssetMaint"/>
+    	<response name="error" type="view" value="EditFixedAssetMaint"/>
+    </request-map>
+    <request-map uri="createFixedAssetMaint">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFixedAssetMaint"/>
+        <response name="success" type="view" value="EditFixedAssetMaint"/>
+        <response name="error" type="view" value="EditFixedAssetMaint"/>
+    </request-map>
+    <request-map uri="updateFixedAssetMaint">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAssetMaint"/>
+        <response name="success" type="view" value="EditFixedAssetMaint"/>
+        <response name="error" type="view" value="EditFixedAssetMaint"/>
+    </request-map>
+    <request-map uri="deleteFixedAssetMaint">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteFixedAssetMaint"/>
+        <response name="success" type="view" value="EditFixedAssetMaint"/>
+        <response name="error" type="view" value="EditFixedAssetMaint"/>
+    </request-map>
+    <request-map uri="LookupWorkEffort">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="LookupWorkEffort" />
+    </request-map>
+    <request-map uri="LookupOrderHeader">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="LookupOrderHeader" />
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -1221,6 +1282,13 @@
     <view-map name="EditFixedAssetIdents" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetIdents"/>
     <!-- Fixed Asset Registrations -->
     <view-map name="EditFixedAssetRegistrations" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetRegistrations"/>
-    
+    <!-- Fixed Asset Maintenance -->
+    <view-map name="EditFixedAssetMaint" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetMaint"/>
+    <view-map name="ListFixedAssetMaints" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetMaints"/>
+    <!-- Fixed Asset Maintenance Meter -->
+    <view-map name="EditFixedAssetMaintMeters" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetMaintMeters"/>
+    <view-map name="LookupWorkEffort" type="screen" page="component://workeffort/widget/LookupScreens.xml#LookupWorkEffort" />
+    <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader" />
+   	
     <!-- end of view mappings -->
 </site-conf>

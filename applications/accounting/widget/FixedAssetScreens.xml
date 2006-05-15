@@ -224,4 +224,69 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <!-- Fixed Asset Maintenance --> 
+    <screen name="ListFixedAssetMaints">
+        <section>
+            <actions>
+                <set field="titleProperty" value="List Fixed Asset Maintenance"/>
+                <set field="tabButtonItem" value="ListFixedAssetMaints"/>
+                <set field="labelTitleProperty" value="List Fixed Asset Maintenance"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <set field="fromDate" from-field="parameters.fromDate"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container><link target="EditFixedAssetMaint?fixedAssetId=${fixedAssetId}" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="buttontext"/></container>
+                        <include-form name="ListFixedAssetMaints" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditFixedAssetMaint">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Fixed Asset Maintenance"/>
+                <set field="tabButtonItem" value="ListFixedAssetMaints"/>
+                <set field="labelTitleProperty" value="Edit Fixed Asset Maintenance"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+                <entity-one entity-name="FixedAssetMaint" value-name="fixedAssetMaint"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container><link target="EditFixedAssetMaint?fixedAssetId=${fixedAssetId}" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="buttontext"/></container>
+                        <include-form name="EditFixedAssetMaint" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Fixed Asset MaintMeter --> 
+    <screen name="EditFixedAssetMaintMeters">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Edit Fixed Asset MaintMeter"/>
+                <set field="tabButtonItem" value="ListFixedAssetMaints"/>
+                <set field="labelTitleProperty" value="Edit Fixed Asset MaintMeter"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+                <entity-one entity-name="FixedAssetMaint" value-name="fixedAssetMaint"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListFixedAssetMaintMeters" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="AddFixedAssetMaintMeter" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
