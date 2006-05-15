@@ -199,5 +199,42 @@ under the License.
         <description>Delete a FixedAsset Registration</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- FixedAsset Maintenance Create/Update/Delete-->
+    <service name="createFixedAssetMaint" default-entity-name="FixedAssetMaint" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="createFixedAssetMaint" auth="true">
+        <description>Create a FixedAsset Maintenance</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="maintHistSeqId" mode="OUT"/> <!-- make this OUT rather than IN, we will automatically generate the next sub-sequence ID -->        
+    </service>
+    <service name="updateFixedAssetMaint" default-entity-name="FixedAssetMaint" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="updateFixedAssetMaint" auth="true">
+        <description>Update a FixedAsset Maintenance</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFixedAssetMaint" default-entity-name="FixedAssetMaint" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="deleteFixedAssetMaint" auth="true">
+        <description>Remove a FixedAsset Maintenance</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <!-- FixedAsset Maintenance Meter Create/Update/Delete-->
+    <service name="createFixedAssetMaintMeter" default-entity-name="FixedAssetMaintMeter" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="createFixedAssetMaintMeter" auth="true">
+        <description>Create a FixedAsset Maintenance Meter</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateFixedAssetMaintMeter" default-entity-name="FixedAssetMaintMeter" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="updateFixedAssetMaintMeter" auth="true">
+        <description>Update a FixedAsset Maintenance Meter</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFixedAssetMaintMeter" default-entity-name="FixedAssetMaintMeter" engine="simple"
+                location="org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="deleteFixedAssetMaintMeter" auth="true">
+        <description>Remove a FixedAsset Maintenance Meter</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     
 </services>
