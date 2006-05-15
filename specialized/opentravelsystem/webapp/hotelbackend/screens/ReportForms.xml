@@ -142,9 +142,17 @@
         <field name="partyIdFrom" title="Party Billed From"><display description="${partyNameResultFrom.fullName} [${partyIdFrom}]"/></field>
         <field name="partyId" title="Party Billed To"><display description="${partyNameResultTo.fullName} [${partyId}]"/></field>
         <field name="invoiceDate"><display/></field>
-        <field name="total" widget-area-style="tabletextright"><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(delegator,invoiceId)}" type="currency" currency="${currencyUomId}" also-hidden="false"/></field>
+        <field name="total" widget-area-style="tabletextright"><display 
+            description="${bsh:
+                import java.text.NumberFormat;
+                return(NumberFormat.getNumberInstance(context.get(&quot;locale&quot;))
+                    .format(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(delegator,invoiceId)))}" type="currency" currency="${currencyUomId}" also-hidden="false"/></field>
         <!-- payments applied means the invoice has been paid -->
-        <field name="applied" title="Paid" widget-area-style="tabletextright"><display description="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceAppliedBd(delegator,invoiceId)}" type="currency" currency="${currencyUomId}" also-hidden="false"/></field>
+        <field name="applied" title="Paid" widget-area-style="tabletextright"><display 
+            description="${bsh:
+                import java.text.NumberFormat;
+                return(NumberFormat.getNumberInstance(context.get(&quot;locale&quot;))
+                    .format(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceAppliedBd(delegator,invoiceId)))}" type="currency" currency="${currencyUomId}" also-hidden="false"/></field>
     </form>
 
     <form name="OpenPaymentOptions" type="single" target="OpenPaymentReport" title=""
