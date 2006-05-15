@@ -149,12 +149,7 @@ public class ModelForm {
 
     /** Pagination settings and defaults. */
     public static int DEFAULT_PAGE_SIZE = 100;
-    protected int viewIndex = 0;
-    protected int viewSize = DEFAULT_PAGE_SIZE;
-    protected int lowIndex = -1;
-    protected int highIndex = -1;
-    protected int listSize = 0;
-    protected int actualPageSize = 0;
+    protected int defaultViewSize = DEFAULT_PAGE_SIZE;
     public static String DEFAULT_PAG_INDEX_FIELD = "viewIndex";
     public static String DEFAULT_PAG_SIZE_FIELD = "viewSize";
     public static String DEFAULT_PAG_PREV_LABEL = "Previous";
@@ -381,10 +376,12 @@ public class ModelForm {
             if (rowSubmit != null && rowSubmit.equalsIgnoreCase("true"))
                 useRowSubmit = true;
         }
-        if (formElement.hasAttribute("view-size"))
-            setViewSize(formElement.getAttribute("view-size"));
-        if (this.rowCountExdr == null || formElement.hasAttribute("row-count"))
+        if (formElement.hasAttribute("view-size")) {
+            setDefaultViewSize(formElement.getAttribute("view-size"));
+        }
+        if (this.rowCountExdr == null || formElement.hasAttribute("row-count")) {
             this.rowCountExdr = new FlexibleStringExpander(formElement.getAttribute("row-count"));
+        }
 
         // alt-target
         List altTargetElements = UtilXml.childElementList(formElement, "alt-target");
@@ -1114,10 +1111,16 @@ public class ModelForm {
             iter = items.listIterator();
             setPaginate(true);
         }
-        // set low and high index
 
+        // set low and high index
         getListLimits(context, obj);
 
+        int listSize = ((Integer) context.get("listSize")).intValue();
+        int viewIndex = ((Integer) context.get("viewIndex")).intValue();
+        int viewSize = ((Integer) context.get("viewSize")).intValue();
+        int lowIndex = ((Integer) context.get("lowIndex")).intValue();
+        int highIndex = ((Integer) context.get("highIndex")).intValue();
+        
         if (iter != null) {
             // render item rows
             int itemIndex = -1;
@@ -1271,10 +1274,12 @@ public class ModelForm {
                 // render row formatting close
                 formStringRenderer.renderFormatItemRowClose(buffer, localContext, this);
             }
+            
             if ((itemIndex + 1) < highIndex) {
-                setHighIndex(itemIndex + 1);
+                highIndex = itemIndex + 1;
+                context.put("highIndex", new Integer(highIndex));
             }
-            setActualPageSize(highIndex - lowIndex);
+            context.put("actualPageSize", new Integer(highIndex - lowIndex));
             
             if (iter instanceof EntityListIterator) {
                 try {
@@ -1283,10 +1288,6 @@ public class ModelForm {
                     Debug.logError(e, "Error closing list form render EntityListIterator: " + e.toString(), module);
                 }
             }
-//            if (listSize < actualPageSize) {
-//                setListSize(actualPageSize);
-//                context.put("listSize", new Integer(listSize));
-//            }
         }
     }
 
@@ -1858,98 +1859,94 @@ public class ModelForm {
         this.paginateNextStyle = (UtilValidate.isEmpty(string) ? DEFAULT_PAG_NEXT_STYLE : string);
     }
 
-    public void setViewIndex(int val) {
-        viewIndex = val;
+    public void setDefaultViewSize(int val) {
+        defaultViewSize = val;
     }
 
-    public void setViewSize(int val) {
-        viewSize = val;
-    }
-
-    public void setViewSize(String val) {
+    public void setDefaultViewSize(String val) {
         try {
             Integer sz = new Integer(val);
-            viewSize = sz.intValue();
+            defaultViewSize = sz.intValue();
         } catch(NumberFormatException e) {
-            viewSize = DEFAULT_PAGE_SIZE;   
+            defaultViewSize = DEFAULT_PAGE_SIZE;   
         }
     }
-
-    public void setListSize(int val) {
-        listSize = val;
-    }
-
-    public void setLowIndex(int val) {
-        lowIndex = val;
-    }
-
-    public void setHighIndex(int val) {
-        highIndex = val;
-    }
-    public void setActualPageSize(int val) {
-        actualPageSize = val;
-    }
-
-    public int getViewIndex() {
-        return viewIndex;
-    }
-
-    public int getViewSize() {
-        return viewSize;
-    }
-
-    public int getListSize() {
-        return listSize;
-    }
-
-    public int getLowIndex() {
-        return lowIndex;
-    }
-
-    public int getHighIndex() {
-        return highIndex;
-    }
     
-    public int getActualPageSize() {
-        return actualPageSize;
+    public int getListSize(Map context) {
+        Integer value = (Integer) context.get("listSize");
+        return value != null ? value.intValue() : 0;
     }
-    
-    public void getListLimits(Map context, Object obj) {
-        ListIterator iter = null;
-        List items = null;
-        if (obj instanceof ListIterator) {
-            iter = (ListIterator)obj;   
+
+    public int getViewIndex(Map context) {
+        Integer value = (Integer) context.get("viewIndex");
+        return value != null ? value.intValue() : 0;
+    }
+
+    public int getViewSize(Map context) {
+        Integer value = (Integer) context.get("viewSize");
+        return value != null ? value.intValue() : 20;
+    }
+
+    public int getLowIndex(Map context) {
+        Integer value = (Integer) context.get("lowIndex");
+        return value != null ? value.intValue() : 0;
+    }
+
+    public int getHighIndex(Map context) {
+        Integer value = (Integer) context.get("highIndex");
+        return value != null ? value.intValue() : 0;
+    }
+
+    public int getActualPageSize(Map context) {
+        Integer value = (Integer) context.get("actualPageSize");
+        return value != null ? value.intValue() : (getHighIndex(context) - getLowIndex(context));
+    }
+
+    public void getListLimits(Map context, Object entryList) {
+        int listSize = 0;
+        int viewIndex = 0;
+        int viewSize = 0;
+        int lowIndex = 0;
+        int highIndex = 0;
+        
+        if (entryList instanceof EntityListIterator) {
+            EntityListIterator iter = (EntityListIterator) entryList;   
             try {
-                ((EntityListIterator)iter).last();
-                listSize = ((EntityListIterator)iter).currentIndex();
-                ((EntityListIterator)iter).beforeFirst();
-            } catch (GenericEntityException e2) {
-                Debug.logError(e2, "Error getting list size", module);
+                iter.last();
+                listSize = iter.currentIndex();
+                iter.beforeFirst();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error getting list size", module);
                 listSize = 0;
             }
-        } else  if (obj instanceof List) {
-            items = (List)obj;
+        } else if (entryList instanceof List) {
+            List items = (List) entryList;
             listSize = items.size();
         }
         
-       if (paginate) {
+        if (paginate) {
             viewIndex = 0;
             viewSize = DEFAULT_PAGE_SIZE;
             try {
                 Object value = context.get(getPaginateIndexField(context));
-                if (value instanceof Integer) 
+                if (value instanceof Integer) { 
                     viewIndex = ((Integer) value).intValue();
-                else if (value instanceof String) 
+                } else if (value instanceof String) { 
                     viewIndex = Integer.parseInt((String) value);
+                }
             } catch (Exception e) {
+                Debug.logWarning(e, "Error getting paginate view index: " + e.toString(), module);
             }
+            
             try {
                 Object value = context.get(getPaginateSizeField(context));
-                if (value instanceof Integer) 
+                if (value instanceof Integer) { 
                     viewSize = ((Integer) value).intValue();
-                else if (value instanceof String) 
+                } else if (value instanceof String) { 
                     viewSize = Integer.parseInt((String) value);
+                }
             } catch (Exception e) {
+                Debug.logWarning(e, "Error getting paginate view size: " + e.toString(), module);
             }
             lowIndex = viewIndex * viewSize;
             highIndex = (viewIndex + 1) * viewSize;
@@ -1959,6 +1956,12 @@ public class ModelForm {
             lowIndex = 0;
             highIndex = DEFAULT_PAGE_SIZE;
         }
+        
+        context.put("listSize", new Integer(listSize));
+        context.put("viewIndex", new Integer(viewIndex));
+        context.put("viewSize", new Integer(viewSize));
+        context.put("lowIndex", new Integer(lowIndex));
+        context.put("highIndex", new Integer(highIndex));
     }
     
     public String getPassedRowCount(Map context) {
@@ -2110,7 +2113,6 @@ public class ModelForm {
         public FlexibleStringExpander rightTextStyle;
         
         public Banner(Element sortOrderElement, ModelForm modelForm) {
-          
             this.modelForm = modelForm;
             this.style = new FlexibleStringExpander(sortOrderElement.getAttribute("style"));
             this.text = new FlexibleStringExpander(sortOrderElement.getAttribute("text"));
@@ -2120,7 +2122,6 @@ public class ModelForm {
             this.rightText = new FlexibleStringExpander(sortOrderElement.getAttribute("right-text"));
             this.rightTextStyle = new FlexibleStringExpander(sortOrderElement.getAttribute("right-text-style"));
         }
-        
         
         public String getStyle(Map context) { return this.style.expandString(context); }
         public String getText(Map context) { return this.text.expandString(context); }
@@ -2134,5 +2135,4 @@ public class ModelForm {
             formStringRenderer.renderBanner(buffer, context, this);
         }
     }
-
 }
