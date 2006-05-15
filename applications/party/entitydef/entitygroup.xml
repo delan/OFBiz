@@ -95,6 +95,8 @@
   <!-- org.ofbiz.party.party -->
   <!-- ========================================================= -->
 
+
+    <entity-group group="org.ofbiz" entity="AddressMatchMap" />        
     <entity-group group="org.ofbiz" entity="Affiliate" />
     <entity-group group="org.ofbiz" entity="Party" />
     <entity-group group="org.ofbiz" entity="PartyAndGroup" />

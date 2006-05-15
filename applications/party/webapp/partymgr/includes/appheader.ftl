@@ -55,6 +55,7 @@
     <div class="col-right"><a href="<@ofbizUrl>logout</@ofbizUrl>" class="${unselectedRightClassName}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
-  </#if>  
+  </#if>
+  <div class="col-right"><a href="<@ofbizUrl>addressMatchMap</@ofbizUrl>" class="${selectedLeftClassMap.addrmap?default(unselectedLeftClassName)}">Addr MatchMap</a></div>
   <div class="col-fill">&nbsp;</div>
 </div>

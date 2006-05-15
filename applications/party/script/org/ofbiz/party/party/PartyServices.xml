@@ -676,4 +676,27 @@
         <first-from-list entry-name="emailAddress" list-name="emailAddresses"/>
         <field-to-result field-name="emailAddress.infoString" result-name="emailAddress"/>
     </simple-method>
+
+    <!-- address match map -->
+    <simple-method method-name="createAddressMatchMap" short-description="create a AddressMatchMap">
+        <call-object-method obj-field-name="mapValue" obj-map-name="parameters" method-name="toUpperCase" ret-field-name="mapValue" ret-map-name="parameters"/>
+        <call-object-method obj-field-name="mapKey" obj-map-name="parameters" method-name="toUpperCase" ret-field-name="mapKey" ret-map-name="parameters"/>
+        <make-value entity-name="AddressMatchMap" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="deleteAddressMatchMap" short-description="remove a AddressMatchMap">
+        <make-value entity-name="AddressMatchMap" value-name="fieldMap"/>
+        <set-pk-fields map-name="parameters" value-name="fieldMap"/>
+        <remove-value value-name="fieldMap"/>
+    </simple-method>
+    <simple-method method-name="clearAddressMatchMap" short-description="remove all AddressMatchMap">
+        <entity-condition entity-name="AddressMatchMap" list-name="addrs">
+            <use-iterator/>
+        </entity-condition>
+        <iterate entry-name="addr" list-name="addrs">
+            <remove-value value-name="addr"/>
+        </iterate>        
+    </simple-method>
 </simple-methods>

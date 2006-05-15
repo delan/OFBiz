@@ -28,6 +28,41 @@
     <version>1.0</version>
 
     <!-- Party services -->
+    <service name="createAddressMatchMap" engine="simple" default-entity-name="AddressMatchMap" auth="true"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="createAddressMatchMap">
+        <description>Create an AddressMatchMap record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="PARTYMGR" action="_CREATE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="importAddressMatchMapCsv" engine="java" auth="true"
+            location="org.ofbiz.party.party.PartyServices" invoke="importAddressMatchMapCsv">
+        <description>Import a CSV (name,value) of AddressMatchMap records</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="PARTYMGR" action="_CREATE"/>
+        </required-permissions>
+        <attribute name="uploadedFile" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="false"/>
+        <attribute name="_uploadedFile_fileName" type="String" mode="IN" optional="false"/>
+        <attribute name="_uploadedFile_contentType" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="removeAddressMatchMap" engine="simple" default-entity-name="AddressMatchMap" auth="true"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="deleteAddressMatchMap">
+        <description>Delete an AddressMatchMap record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="PARTYMGR" action="_DELETE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <service name="clearAddressMatchMap" engine="simple" default-entity-name="AddressMatchMap" auth="true"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="clearAddressMatchMap">
+        <description>Delete an AddressMatchMap record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="PARTYMGR" action="_DELETE"/>
+        </required-permissions>        
+    </service>
+
     <service name="deleteParty" engine="java"
             location="org.ofbiz.party.party.PartyServices" invoke="deleteParty" auth="true">
         <description>Delete a Party</description>
