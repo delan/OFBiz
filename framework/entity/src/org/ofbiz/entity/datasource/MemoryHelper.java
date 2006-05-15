@@ -390,7 +390,7 @@ public class MemoryHelper implements GenericHelper {
         return null;
     }
 
-    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException {
+    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition, EntityFindOptions findOptions) throws GenericEntityException {
         return 0;
     }
 
