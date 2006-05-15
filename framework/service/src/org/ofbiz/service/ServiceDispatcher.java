@@ -34,6 +34,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -98,7 +99,11 @@ public class ServiceDispatcher {
 
         // make sure we haven't disabled these features from running
         if (enableJM) {
-            this.jm = new JobManager(this.delegator);
+            try {
+                this.jm = new JobManager(this.delegator);
+            } catch (GeneralRuntimeException e) {
+                Debug.logWarning(e.getMessage(), module);
+            }
         }
 
         if (enableJMS) {
