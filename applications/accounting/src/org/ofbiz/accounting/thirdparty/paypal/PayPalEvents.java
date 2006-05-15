@@ -159,7 +159,7 @@ public class PayPalEvents {
         parameters.put("no_note", "1");        // no notes allowed in paypal (not passed back)
         parameters.put("no_shipping", "1");    // no shipping address required (local shipping used)
                 
-        String encodedParameters = UtilHttp.urlEncodeArgs(parameters);
+        String encodedParameters = UtilHttp.urlEncodeArgs(parameters, false);
         String redirectString = redirectUrl + "?" + encodedParameters;   
         
         // set the order in the session for cancelled orders
