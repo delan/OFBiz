@@ -46,7 +46,7 @@ under the License.
             <fo:table-body>
               <fo:table-row >
                 <fo:table-cell>
-                       <fo:block>To: </fo:block>
+                       <fo:block>${uiLabelMap.CommonTo}: </fo:block>
                <#if billingAddress?has_content>
                 <#assign billingPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", billingParty.partyId, "compareDate", invoice.invoiceDate, "userLogin", userLogin))/>
                 <fo:block>${billingPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
@@ -59,7 +59,7 @@ under the License.
                 </#if>
                 <fo:block>${billingAddress.postalCode?if_exists} ${billingAddress.city?if_exists}</fo:block>
             <#else>
-                <fo:block>No general/billing address found for party: ${billingParty.partyId}</fo:block>
+                <fo:block>${uiLabelMap.AccountingNoGenBilAddressFound}${billingParty.partyId}</fo:block>
             </#if>
                 </fo:table-cell>
                 <fo:table-cell>
@@ -69,30 +69,30 @@ under the License.
                     <fo:table-body>
                     <fo:table-row>
                       <fo:table-cell>
-                         <fo:block number-columns-spanned="2" font-weight="bold">INVOICE</fo:block>
+                         <fo:block number-columns-spanned="2" font-weight="bold">${uiLabelMap.AccountingInvoiceCapitals}</fo:block>
                       </fo:table-cell>
                     </fo:table-row>
                     
                     <fo:table-row>
-                      <fo:table-cell><fo:block>Inv.Date</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${uiLabelMap.AccountingInvoiceDateAbbr}:</fo:block></fo:table-cell>
                       <fo:table-cell><fo:block>${invoiceDate?if_exists}</fo:block></fo:table-cell>
                     </fo:table-row>
                                   
                     <fo:table-row>
-                      <fo:table-cell><fo:block>Cust.Nr</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${uiLabelMap.AccountingCustNr}:</fo:block></fo:table-cell>
                       <fo:table-cell><fo:block><#if invoice?has_content>${billingParty.partyId}</#if></fo:block></fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
-                      <fo:table-cell><fo:block>Inv.Nr</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${uiLabelMap.AccountingInvNr}:</fo:block></fo:table-cell>
                       <fo:table-cell><fo:block><#if invoice?has_content>${invoice.invoiceId}</#if></fo:block></fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
-                      <fo:table-cell><fo:block>Descr.</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${uiLabelMap.AccountingDescr}:</fo:block></fo:table-cell>
                       <fo:table-cell><fo:block><#if invoice?has_content>${invoice.description?if_exists}</#if></fo:block></fo:table-cell>
                     </fo:table-row>
 
                     <!--fo:table-row>
-                      <fo:table-cell><fo:block>Status</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${uiLabelMap.CommonStatus}</fo:block></fo:table-cell>
                       <fo:table-cell><fo:block font-weight="bold">${invoiceStatus.description}</fo:block></fo:table-cell>
                     </fo:table-row-->
                   </fo:table-body>
@@ -115,7 +115,7 @@ under the License.
                 <fo:table-body>
                   <fo:table-row>
                     <fo:table-cell>
-                      <fo:block font-size="10pt" font-weight="bold">Order #:</fo:block>
+                      <fo:block font-size="10pt" font-weight="bold">${uiLabelMap.AccountingOrderNr}:</fo:block>
                     </fo:table-cell>
                     <fo:table-cell>
                       <fo:block font-size ="10pt" font-weight="bold"><#list orders as order> ${order} </#list></fo:block>
@@ -152,22 +152,22 @@ under the License.
             <fo:table-header height="14px">
               <fo:table-row>
                 <fo:table-cell border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
-                  <fo:block font-weight="bold">ItemNr</fo:block>
+                  <fo:block font-weight="bold">${uiLabelMap.AccountingItemNr}</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
-                  <fo:block font-weight="bold">Product</fo:block>
+                  <fo:block font-weight="bold">${uiLabelMap.AccountingProduct}</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
-                  <fo:block font-weight="bold">Description</fo:block>
+                  <fo:block font-weight="bold">${uiLabelMap.CommonDescription}</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
-                  <fo:block font-weight="bold" text-align="center">Qty</fo:block>
+                  <fo:block font-weight="bold" text-align="center">${uiLabelMap.CommonQty}</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
-                  <fo:block font-weight="bold" text-align="center">Unit Price</fo:block>
+                  <fo:block font-weight="bold" text-align="center">${uiLabelMap.AccountingUnitPrice}</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
-                  <fo:block font-weight="bold" text-align="center">Amount</fo:block>
+                  <fo:block font-weight="bold" text-align="center">${uiLabelMap.CommonAmount}</fo:block>
                 </fo:table-cell>
               </fo:table-row>
             </fo:table-header>
@@ -239,7 +239,7 @@ under the License.
                    <fo:table-cell number-columns-spanned="4">
                    </fo:table-cell>
                    <fo:table-cell background-color="#EEEEEE">
-                      <fo:block font-weight="bold">TOTAL</fo:block>
+                      <fo:block font-weight="bold">${uiLabelMap.AccountingTotalCapital}</fo:block>
                    </fo:table-cell>
                    <fo:table-cell text-align="right">
                       <fo:block font-weight="bold"><@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block>
