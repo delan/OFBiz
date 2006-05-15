@@ -33,7 +33,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -150,16 +149,30 @@ public class PartyWorker {
         }
     }
 
-    public static String findPartyId(GenericDelegator delegator, String address1, String address2, String city,
-                            String stateProvinceGeoId, String postalCode, String postalCodeExt, String countryGeoId,
-                            String firstName, String middleName, String lastName) throws GeneralException {
-        return findPartyAndContactMechId(delegator, address1, address2, city, stateProvinceGeoId, postalCode,
+    public static String findFirstMatchingPartyId(GenericDelegator delegator, String address1, String address2, String city,
+            String stateProvinceGeoId, String postalCode, String postalCodeExt, String countryGeoId,
+            String firstName, String middleName, String lastName) throws GeneralException {
+
+        return findFirstMatchingPartyAndContactMechId(delegator, address1, address2, city, stateProvinceGeoId, postalCode,
                 postalCodeExt, countryGeoId, firstName, middleName, lastName)[0];
     }
 
-    public static String[] findPartyAndContactMechId(GenericDelegator delegator, String address1, String address2, String city,
+    public static String[] findFirstMatchingPartyAndContactMechId(GenericDelegator delegator, String address1, String address2, String city,
+            String stateProvinceGeoId, String postalCode, String postalCodeExt, String countryGeoId,
+            String firstName, String middleName, String lastName) throws GeneralException {
+
+        List matching = findMatchingPartyAndPostalAddress(delegator, address1, address2, city, stateProvinceGeoId, postalCode,
+            postalCodeExt, countryGeoId, firstName, middleName, lastName);
+        GenericValue v = EntityUtil.getFirst(matching);
+        return new String[] { v.getString("partyId"), v.getString("contactMechId") };
+    }
+
+    public static List findMatchingPartyAndPostalAddress(GenericDelegator delegator, String address1, String address2, String city,
                             String stateProvinceGeoId, String postalCode, String postalCodeExt, String countryGeoId,
                             String firstName, String middleName, String lastName) throws GeneralException {
+
+        // return list
+        List returnList = FastList.newInstance();
 
         // address information
         if (firstName == null || lastName == null || address1 == null || city == null || postalCode == null) {
@@ -197,13 +210,16 @@ public class PartyWorker {
             addrExprs.add(new EntityExpr("countryGeoId", EntityOperator.EQUALS, countryGeoId.toUpperCase()));
         }
 
+        // limit to only non-disabled status
+        addrExprs.add(new EntityExpr(new EntityExpr("statusId", EntityOperator.EQUALS, null),
+                EntityOperator.OR, new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PARTY_DISABLED")));
+
         List sort = UtilMisc.toList("-fromDate");
         EntityCondition addrCond = new EntityConditionList(addrExprs, EntityOperator.AND);
         List addresses = EntityUtil.filterByDate(delegator.findByCondition("PartyAndPostalAddress", addrCond, null, sort));
         //Debug.log("Checking for matching address: " + addrCond.toString() + "[" + addresses.size() + "]", module);
 
-        //Set validParty = FastSet.newInstance();
-        Map validParty = FastMap.newInstance();
+        List validFound = FastList.newInstance();
         if (UtilValidate.isNotEmpty(addresses)) {
             // check the address line
             Iterator v = addresses.iterator();
@@ -211,42 +227,43 @@ public class PartyWorker {
                 GenericValue address = (GenericValue) v.next();
 
                 // address 1 field
-                String addr1Source = address1.toUpperCase().replaceAll("\\W", "");
-                String addr1Target = address.getString("address1");
+                String addr1Source = PartyWorker.makeMatchingString(delegator, address1);
+                String addr1Target = PartyWorker.makeMatchingString(delegator, address.getString("address1"));
 
                 if (addr1Target != null) {
-                    addr1Target = addr1Target.toUpperCase().replaceAll("\\W", "");
                     Debug.log("Comparing address1 : " + addr1Source + " / " + addr1Target, module);
                     if (addr1Target.equals(addr1Source)) {
 
                         // address 2 field
                         if (address2 != null) {
-                            String addr2Source = address2.toUpperCase().replaceAll("\\W", "");
-                            String addr2Target = address.getString("address2");
+                            String addr2Source = PartyWorker.makeMatchingString(delegator, address2);
+                            String addr2Target = PartyWorker.makeMatchingString(delegator, address.getString("address2"));
                             if (addr2Target != null) {
-                                addr2Target = addr2Target.toUpperCase().replaceAll("\\W", "");
                                 Debug.log("Comparing address2 : " + addr2Source + " / " + addr2Target, module);
 
                                 if (addr2Source.equals(addr2Target)) {
                                     Debug.log("Matching address2; adding valid address", module);
-                                    validParty.put(address.getString("partyId"), address.getString("contactMechId"));
+                                    validFound.add(address);
+                                    //validParty.put(address.getString("partyId"), address.getString("contactMechId"));
                                 }
                             }
                         } else {
                             if (address.get("address2") == null) {
                                 Debug.log("No address2; adding valid address", module);
-                                validParty.put(address.getString("partyId"), address.getString("contactMechId"));
+                                validFound.add(address);
+                                //validParty.put(address.getString("partyId"), address.getString("contactMechId"));
                             }
                         }
                     }
                 }
             }
 
-            if (validParty != null && validParty.size() > 0) {
-                Iterator a = validParty.keySet().iterator();
+            if (validFound != null && validFound.size() > 0) {
+                Iterator a = validFound.iterator();
                 while (a.hasNext()) {
-                    String partyId = (String) a.next();
-                    String cmId = (String) validParty.get(partyId);
+                    GenericValue partyAndAddr = (GenericValue) a.next();
+                    String partyId = partyAndAddr.getString("partyId");
+                    String cmId = (String) partyAndAddr.getString("contactMechId");
                     if (UtilValidate.isNotEmpty(partyId)) {
                         GenericValue p = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
                         if (p != null) {
@@ -257,10 +274,12 @@ public class PartyWorker {
                                 if (fName.toUpperCase().equals(firstName.toUpperCase())) {
                                     if (mName != null && middleName != null) {
                                         if (mName.toUpperCase().equals(middleName.toUpperCase())) {
-                                            return new String[] { partyId, cmId };
+                                            returnList.add(partyAndAddr);
+                                            //return new String[] { partyId, cmId };
                                         }
                                     } else if (middleName == null) {
-                                        return new String[] { partyId, cmId };
+                                        returnList.add(partyAndAddr);
+                                        //return new String[] { partyId, cmId };
                                     }
                                 }
                             }
@@ -270,7 +289,35 @@ public class PartyWorker {
             }
         }
 
-        return null;
+        return returnList;
+    }
+
+    public static String makeMatchingString(GenericDelegator delegator, String address) {
+        if (address == null) {
+            return null;
+        }
+
+        // upper case the address
+        String str = address.trim().toUpperCase();
+
+        // replace mapped words
+        List addressMap = null;
+        try {
+            addressMap = delegator.findAll("AddressMatchMap", UtilMisc.toList("sequenceNum"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (addressMap != null) {
+            Iterator i = addressMap.iterator();
+            while (i.hasNext()) {
+                GenericValue v = (GenericValue) i.next();
+                str = str.replaceAll(v.getString("mapKey").toUpperCase(), v.getString("mapValue").toUpperCase());
+            }
+        }
+
+        // remove all non-word characters
+        return str.replaceAll("\\W", "");
     }
 
 }

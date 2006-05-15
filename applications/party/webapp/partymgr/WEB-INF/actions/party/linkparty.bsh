@@ -28,6 +28,7 @@ import java.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.party.party.*;
 
 partyIdFrom = request.getParameter("partyId");
 partyIdTo = request.getParameter("partyIdTo");

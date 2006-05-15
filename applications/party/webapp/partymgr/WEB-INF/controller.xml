@@ -785,7 +785,41 @@
         <response name="success" type="view" value="ListCommWorkEfforts"/>
         <response name="error" type="view" value="ListCommWorkEfforts"/>
     </request-map>
-    
+
+    <!-- address match map requests -->
+    <request-map uri="addressMatchMap">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddressMatchMap"/>
+    </request-map>
+    <request-map uri="createAddressMatchMap">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAddressMatchMap"/>
+        <response name="success" type="view" value="AddressMatchMap"/>
+        <response name="error" type="view" value="AddressMatchMap"/>
+    </request-map>
+    <request-map uri="removeAddressMatchMap">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeAddressMatchMap"/>
+        <response name="success" type="view" value="AddressMatchMap"/>
+        <response name="error" type="view" value="AddressMatchMap"/>
+    </request-map>
+    <request-map uri="clearAddressMatchMap">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="clearAddressMatchMap"/>
+        <response name="success" type="view" value="AddressMatchMap"/>
+        <response name="error" type="view" value="AddressMatchMap"/>
+    </request-map>
+    <request-map uri="importAddressMatchMapCsv">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="importAddressMatchMapCsv"/>
+        <response name="success" type="view" value="AddressMatchMap"/>
+        <response name="error" type="view" value="AddressMatchMap"/>
+    </request-map>
+    <request-map uri="findAddressMatch">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindAddressMatch"/>
+    </request-map>
+
    <!-- ================ SimpleContent Requests ================= -->
 
     <request-map uri="ViewSimpleContent">
@@ -888,5 +922,7 @@
 	
     <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
 
+    <view-map name="AddressMatchMap" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#AddressMatchMap"/>
+    <view-map name="FindAddressMatch" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#FindAddressMatch"/>
     <!-- end of view mappings -->
 </site-conf>

@@ -645,4 +645,45 @@
             </widgets>
         </section>
     </screen>
+
+    <!-- Address Match Map Screen -->
+    <screen name="AddressMatchMap">
+        <section>
+            <actions>
+                <set field="title" value="Address Match Map Entry"/>
+                <set field="headerItem" value="addrmap"/>
+                <entity-condition entity-name="AddressMatchMap" list-name="addressMatchMaps">
+                    <order-by field-name="sequenceNum"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/addressMatchMap.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="FindAddressMatch">
+        <section>
+            <actions>
+                <set field="title" value="Address Matches"/>
+                <set field="headerItem" value="addrmap"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/findMatches.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/findMatches.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

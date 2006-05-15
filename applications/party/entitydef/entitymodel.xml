@@ -1021,6 +1021,7 @@
         <member-entity entity-alias="PA" entity-name="PostalAddress"/>
         <alias entity-alias="CM" name="contactMechId"/>
         <alias entity-alias="PTY" name="partyId"/>
+        <alias entity-alias="PTY" name="statusId"/>
         <alias entity-alias="PCM" name="fromDate"/>
         <alias entity-alias="PCM" name="thruDate"/>
         <alias entity-alias="PTY" name="partyTypeId"/>
@@ -1072,6 +1073,7 @@
         <member-entity entity-alias="TN" entity-name="TelecomNumber"/>
         <alias entity-alias="CM" name="contactMechId"/>
         <alias entity-alias="PTY" name="partyId"/>
+        <alias entity-alias="PTY" name="statusId"/> 
         <alias entity-alias="PCM" name="fromDate"/>
         <alias entity-alias="PCM" name="thruDate"/>
         <alias entity-alias="PTY" name="partyTypeId"/>
@@ -1169,6 +1171,15 @@
   <!-- org.ofbiz.party.party -->
   <!-- ========================================================= -->
 
+    <entity entity-name="AddressMatchMap"
+            package-name="org.ofbiz.party.party"
+            title="Address Matching Map">
+      <field name="mapKey" type="id-vlong"></field>
+      <field name="mapValue" type="id-vlong"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="mapKey"/>
+      <prim-key field="mapValue"/>
+    </entity>
     <entity entity-name="Affiliate"
             package-name="org.ofbiz.party.party"
             title="Affiliate Party Entity">

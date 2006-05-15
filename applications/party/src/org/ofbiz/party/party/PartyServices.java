@@ -54,6 +54,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
@@ -1390,5 +1391,57 @@ public class PartyServices {
         Map resp = ServiceUtil.returnSuccess();
         resp.put("partyId", partyIdTo);
         return resp;
+    }
+
+    public static Map importAddressMatchMapCsv(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        ByteWrapper file = (ByteWrapper) context.get("uploadedFile");
+        String csvFile = new String(file.getBytes());
+        csvFile = csvFile.replaceAll("\\r", "");
+        String[] records = csvFile.split("\\n");
+
+        for (int i = 0; i < records.length; i++) {
+            if (records[i] != null) {
+                String str = records[i].trim();
+                String[] map = str.split(",");
+                if (map.length != 2 && map.length != 3) {
+                    return ServiceUtil.returnError("Invalid format for CSV (key,value,sequence)");
+                } else {
+                    GenericValue addrMap = delegator.makeValue("AddressMatchMap", null);
+                    addrMap.put("mapKey", map[0].trim().toUpperCase());
+                    addrMap.put("mapValue", map[1].trim().toUpperCase());
+                    int seq = i + 1;
+                    if (map.length == 3) {
+                        char[] chars = map[2].toCharArray();
+                        boolean isNumber = true;
+                        for (int c = 0; c < chars.length; c++) {
+                            if (!Character.isDigit(chars[c])) {
+                                isNumber = false;
+                            }
+                        }
+                        if (isNumber) {
+                            try {
+                                seq = Integer.parseInt(map[2]);
+                            } catch (Throwable t) {
+                                Debug.logWarning(t, "Unable to parse number", module);
+                            }
+                        }
+                    }
+
+                    addrMap.put("sequenceNum", new Long(seq));
+                    Debug.log("Creating map entry: " + addrMap, module);
+                    try {
+                        delegator.create(addrMap);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());                        
+                    }
+                }
+            } else {
+                return ServiceUtil.returnError("No records found in file");
+            }
+        }
+
+        return ServiceUtil.returnSuccess();
     }
 }
