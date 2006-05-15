@@ -50,16 +50,12 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     -->
 
     <delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false">
-        <group-map group-name="org.ofbiz" datasource-name="localmysql"/>
-        <group-map group-name="org.ofbiz.odbc" datasource-name="odbcmysql"/>
+        <group-map group-name="org.ofbiz" datasource-name="localderby"/>
+        <group-map group-name="org.ofbiz.odbc" datasource-name="localderbyodbc"/>
     </delegator>
     <delegator name="default-no-eca" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" entity-eca-enabled="false" distributed-cache-clear-enabled="false">
-        <group-map group-name="org.ofbiz" datasource-name="localmysql"/>
-        <group-map group-name="org.ofbiz.odbc" datasource-name="odbcmysql"/>
-    </delegator>
-
-    <delegator name="remote" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false">
-        <group-map group-name="org.ofbiz" datasource-name="remotemysql"/>
+        <group-map group-name="org.ofbiz" datasource-name="localderby"/>
+        <group-map group-name="org.ofbiz.odbc" datasource-name="localderbyodbc"/>
     </delegator>
 
     <delegator name="test" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main">
@@ -185,7 +181,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             pool-maxsize="20"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/DerbyDataSource" isolation-level="ReadCommitted"/> -->
     </datasource>
-
+    
     <datasource name="localcloudscape"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="cloudscape"
@@ -263,33 +259,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <read-data reader-name="ext"/>
         <inline-jdbc
                 jdbc-driver="com.mysql.jdbc.Driver"
-                jdbc-uri="jdbc:mysql://127.0.0.1/cybers7?autoReconnect=true"
-                jdbc-username="root"
-                jdbc-password=""
-                isolation-level="ReadCommitted"
-                pool-minsize="2"
-                pool-maxsize="20"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource" isolation-level="Serializable"/> -->
-    </datasource>
-
-    <datasource name="remotemysql"
-            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
-            field-type-name="mysql"
-            check-on-start="true"
-            add-missing-on-start="true"
-            check-pks-on-start="false"
-            use-foreign-keys="true"
-            join-style="ansi-no-parenthesis"
-            alias-view-columns="true"
-            drop-fk-use-foreign-key-keyword="true"
-            table-type="InnoDB"
-            character-set="latin1"
-            collate="latin1_general_cs">
-        <inline-jdbc
-                jdbc-driver="com.mysql.jdbc.Driver"
-                jdbc-uri="jdbc:mysql://backoffice.cyberswim.com/cybers7?autoReconnect=true"
-                jdbc-username="root"
-                jdbc-password="cyberswim1"
+                jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="20"/>
@@ -313,8 +285,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <inline-jdbc
                 jdbc-driver="com.mysql.jdbc.Driver"
                 jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz_odbc?autoReconnect=true"
-                jdbc-username="root"
-                jdbc-password=""
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="20"/>
