@@ -106,6 +106,26 @@
             </widgets>
         </section>
     </screen>
+    <screen name="linkparty">
+        <section>
+            <actions>
+                <set field="title" value="Link Party"/>
+                <set field="headerItem" value="link"/>
+                <set field="tabButtonItem" value="linkparty"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.bsh"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/linkparty.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/linkparty.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="EditPartyRelationships">
         <section>

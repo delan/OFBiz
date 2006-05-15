@@ -1289,4 +1289,106 @@ public class PartyServices {
 
         return result;
     }
+
+    /**
+     * Changes the association of contact mechs, purposes, notes, orders and attributes from
+     * one party to another for the purpose of merging records together. Flags the from party
+     * as disabled so it no longer appears in a search.
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map linkParty(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator _delegator = dctx.getDelegator();
+        GenericDelegator delegator = _delegator.cloneDelegator();
+        delegator.setEntityEcaHandler(null);
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String partyIdTo = (String) context.get("partyIdTo");
+        String partyId = (String) context.get("partyId");
+        Timestamp now = UtilDateTime.nowTimestamp();
+
+        // update the contact mech records
+        try {
+            delegator.storeByCondition("PartyContactMech", UtilMisc.toMap("partyId", partyIdTo, "thruDate", now),
+                    new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // update the contact mech purpose records
+        try {
+            delegator.storeByCondition("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyIdTo, "thruDate", now),
+                    new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // update the party notes
+        try {
+            delegator.storeByCondition("PartyNote", UtilMisc.toMap("partyId", partyIdTo),
+                    new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // update the order role records
+        try {
+            delegator.storeByCondition("OrderRole", UtilMisc.toMap("partyId", partyIdTo),
+                    new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // update the non-existing attributes
+        List attrsToMove;
+        try {
+            attrsToMove = delegator.findByAnd("PartyAttribute", UtilMisc.toMap("partyId", partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        Iterator atmi = attrsToMove.iterator();
+        while (atmi.hasNext()) {
+            GenericValue attr = (GenericValue) atmi.next();
+            attr.set("partyId", partyIdTo);
+            try {
+                if (delegator.findByPrimaryKey("PartyAttribute", attr.getPrimaryKey()) == null) {
+                    attr.create();
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        try {
+            delegator.removeByAnd("PartyAttribute", UtilMisc.toMap("partyId", partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // disable the party
+        Map disableResp = null;
+        try {
+            disableResp = dispatcher.runSync("setPartyStatus", UtilMisc.toMap("partyId", partyId, "statusId", "PARTY_DISABLED", "userLogin", userLogin));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        if (disableResp != null && ServiceUtil.isError(disableResp)) {
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(disableResp));
+        }
+
+        Map resp = ServiceUtil.returnSuccess();
+        resp.put("partyId", partyIdTo);
+        return resp;
+    }
 }
