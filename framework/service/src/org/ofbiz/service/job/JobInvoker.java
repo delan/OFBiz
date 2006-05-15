@@ -68,9 +68,12 @@ public class JobInvoker implements Runnable {
         this.jp = jp;
         this.wait = wait;
 
+        // service dispatcher delegator name (for thread name)
+        String delegatorName = jp.getManager().getDelegator().getDelegatorName();
+
         // get a new thread
         this.thread = new Thread(this);
-        this.name = "invoker-" + this.thread.getName();
+        this.name = delegatorName + "-invoker-" + this.thread.getName();
 
         this.thread.setDaemon(false);
         this.thread.setName(this.name);
@@ -215,6 +218,8 @@ public class JobInvoker implements Runnable {
                     stop();
                 }
             } else {
+                Debug.log("Invoker: " + thread.getName() + " received job -- " + job.getJobName() + " from poller - " + jp.toString(), module);
+                
                 // setup the current job settings
                 this.currentJob = job;
                 this.statusCode = 1;
