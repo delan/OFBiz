@@ -33,11 +33,14 @@ import java.util.List;
 import java.util.Map;
 import java.sql.Timestamp;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -70,14 +73,20 @@ public class JobManager {
     public static final Map updateFields = UtilMisc.toMap("runByInstanceId", instanceId, "statusId", "SERVICE_QUEUED");
     public static final String module = JobManager.class.getName();
     public static final String dispatcherName = "JobDispatcher";
+    public static Map registeredManagers = FastMap.newInstance();
 
     protected GenericDelegator delegator;
     protected JobPoller jp;
 
     /** Creates a new JobManager object. */
     public JobManager(GenericDelegator delegator) {
+        if (JobManager.registeredManagers.get(delegator.getDelegatorName()) != null) {
+            throw new GeneralRuntimeException("JobManager for [" + delegator.getDelegatorName() + "] already running");
+        }
+
         this.delegator = delegator;
         jp = new JobPoller(this);
+        JobManager.registeredManagers.put(delegator.getDelegatorName(), this);
     }
 
     /** Queues a Job to run now. */
