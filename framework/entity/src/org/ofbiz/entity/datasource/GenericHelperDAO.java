@@ -158,8 +158,8 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.selectByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo, orderBy);
     }
 
-    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException {
-        return genericDAO.selectCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition);
+    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition, EntityFindOptions findOptions) throws GenericEntityException {
+        return genericDAO.selectCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition, findOptions);
     }
 
     /** Removes/deletes Generic Entity records found by all the specified condition

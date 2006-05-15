@@ -1851,6 +1851,11 @@ public class GenericDelegator implements DelegatorInterface {
 
     public long findCountByCondition(String entityName, EntityCondition whereEntityCondition,
             EntityCondition havingEntityCondition) throws GenericEntityException {
+        return findCountByCondition(entityName, whereEntityCondition, havingEntityCondition, null);
+    }
+
+    public long findCountByCondition(String entityName, EntityCondition whereEntityCondition,
+            EntityCondition havingEntityCondition, EntityFindOptions findOptions) throws GenericEntityException {
 
         boolean beganTransaction = false;
         try {
@@ -1874,7 +1879,7 @@ public class GenericDelegator implements DelegatorInterface {
 
             this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
             GenericHelper helper = getEntityHelper(modelEntity.getEntityName());
-            long count = helper.findCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition);
+            long count = helper.findCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition, findOptions);
 
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
             return count;

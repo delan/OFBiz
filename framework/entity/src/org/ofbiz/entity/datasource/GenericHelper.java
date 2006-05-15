@@ -100,7 +100,8 @@ public interface GenericHelper {
         EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
         throws GenericEntityException;
 
-    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException;
+    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition,
+            EntityCondition havingEntityCondition, EntityFindOptions findOptions) throws GenericEntityException;
 
     /** Removes/deletes Generic Entity records found by all the specified condition
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file

@@ -30,11 +30,11 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.LinkedList;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -42,19 +42,9 @@ import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.EntityLockedException;
-import org.ofbiz.entity.GenericDataSourceException;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntity;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericEntityNotFoundException;
-import org.ofbiz.entity.GenericModelException;
-import org.ofbiz.entity.GenericNotImplementedException;
-import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionParam;
-import org.ofbiz.entity.condition.EntityFieldMap;
-import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
@@ -912,13 +902,15 @@ public class GenericDAO {
         return retlist;
     }
 
-    public long selectCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException {
+    public long selectCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition, EntityFindOptions findOptions) throws GenericEntityException {
         if (modelEntity == null) {
             return 0;
         }
 
         // if no find options passed, use default
-        EntityFindOptions findOptions = new EntityFindOptions();
+        if (findOptions == null) {
+            findOptions = new EntityFindOptions();
+        }
         boolean verboseOn = Debug.verboseOn();
 
         if (verboseOn) {
@@ -989,7 +981,8 @@ public class GenericDAO {
         String sql = sqlBuffer.toString();
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
-        sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(), findOptions.getResultSetConcurrency());
+        sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(),
+                findOptions.getResultSetConcurrency(), findOptions.getFetchSize(), findOptions.getMaxRows());
         if (verboseOn) {
             // put this inside an if statement so that we don't have to generate the string when not used...
             Debug.logVerbose("Setting the whereEntityConditionParams: " + whereEntityConditionParams, module);
