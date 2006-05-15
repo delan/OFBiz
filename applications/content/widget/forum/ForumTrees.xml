@@ -42,7 +42,7 @@
             </sub-node>
         </node>
         <node name="node-body" entry-name="rsp">
-            <include-screen name="responseTreeLine"  location="component://content/widget/forum/ForumScreens.xml" />
+            <include-screen name="responseTreeLine"  location="${parameters.mainDecoratorLocation}" />
             <sub-node node-name="node-body">
                 <entity-condition entity-name="ContentAssocViewFrom" use-cache="true" >
                     <condition-list combine="and">

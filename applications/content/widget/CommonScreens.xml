@@ -206,4 +206,41 @@
             </widgets>
         </section>
     </screen>
+    <screen name="responseTreeLine">
+        <section>
+            <actions>
+                <service service-name="getContentAndDataResource" result-map-name="contentData">
+                    <field-map field-name="contentId" env-name="rsp.contentId"/>
+                </service>
+                <set field="textData" from-field="contentData.resultData.electronicText.textData"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-compare-field field-name="responseContentId" operator="equals" to-field-name="rsp.contentId" />
+                    </condition>
+                    <widgets>
+                        <container style="responseSelected">
+                            <label text="${rsp.contentName} - ${rsp.description} [${rsp.contentId}]" style="responseheader" />
+                            <link  text="Reply" target="addForumThreadMessage?forumGroupId=${parameters.forumGroupId}&amp;forumId=${parameters.forumId}&amp;forumMessageIdTo=${rsp.contentId}&amp;contentAssocTypeId=RESPONSE" style="buttontext"/>
+                            <container style="responsetext">
+                                <include-form name="EditForumThreadMessage" location="component://content/widget/forum/ForumForms.xml"/>
+                            </container>
+                        </container>    
+                    </widgets>
+                    <fail-widgets>
+                        <container>
+                            <label text="${rsp.contentName} - ${rsp.description} [${rsp.contentId}]" style="responseheader" />
+                            <link  text="Reply" target="addForumThreadMessage?forumGroupId=${parameters.forumGroupId}&amp;forumId=${parameters.forumId}&amp;forumMessageIdTo=${rsp.contentId}&amp;contentAssocTypeId=RESPONSE" style="buttontext"/>
+                            <container style="responsetext">
+                                <include-form name="EditForumThreadMessage" location="component://content/widget/forum/ForumForms.xml"/>
+                            </container>
+                        </container>    
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    
 </screens>
