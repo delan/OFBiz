@@ -1338,6 +1338,43 @@ public class PartyServices {
             return ServiceUtil.returnError(e.getMessage());
         }
 
+        // update the non-existing party roles
+        List rolesToMove;
+        try {
+            rolesToMove = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        Iterator rtmi = rolesToMove.iterator();
+        while (rtmi.hasNext()) {
+            GenericValue attr = (GenericValue) rtmi.next();
+            attr.set("partyId", partyIdTo);
+            try {
+                if (delegator.findByPrimaryKey("PartyRole", attr.getPrimaryKey()) == null) {
+                    attr.create();
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        try {
+            delegator.removeByAnd("PartyRole", UtilMisc.toMap("partyId", partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        try {
+            delegator.storeByCondition("PartyRole", UtilMisc.toMap("partyId", partyIdTo),
+                    new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
         // update the order role records
         try {
             delegator.storeByCondition("OrderRole", UtilMisc.toMap("partyId", partyIdTo),
