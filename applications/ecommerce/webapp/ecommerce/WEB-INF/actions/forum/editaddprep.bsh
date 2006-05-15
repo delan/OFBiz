@@ -59,9 +59,6 @@ userLogin = session.getAttribute("userLogin");
 paramMap = UtilHttp.getParameterMap(request);
 
 singleWrapper = context.get("singleWrapper");
-singleWrapper.putInContext("contentPurposeTypeId", page.getProperty("contentPurposeTypeId"));
-singleWrapper.putInContext("targetOperation", page.getProperty("targetOperation"));
-singleWrapper.putInContext("entityOperation", page.getProperty("entityOperation"));
 contentIdTo = paramMap.get("contentIdTo");
 singleWrapper.putInContext("contentIdTo", contentIdTo);
 mapKey = paramMap.get("mapKey");
