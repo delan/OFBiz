@@ -1891,54 +1891,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
         String viewIndexParam = modelForm.getPaginateIndexField(context);
         String viewSizeParam = modelForm.getPaginateSizeField(context);
 
-        int viewIndex = -1;
-        try {
-            Object value = context.get(viewIndexParam);
-            if (value instanceof Integer)
-                viewIndex = ((Integer) value).intValue();
-            else if (value instanceof String)
-                viewIndex = Integer.parseInt((String) value);
-        } catch (Exception e) {
-            viewIndex = 0;
-        }
-
-        int viewSize = -1;
-        try {
-            Object value = context.get(viewSizeParam);
-            if (value instanceof Integer)
-                viewSize = ((Integer) value).intValue();
-            else if (value instanceof String)
-                viewSize = Integer.parseInt((String) value);
-        } catch (Exception e) {
-            viewSize = modelForm.getViewSize();
-        }
-
-        int listSize = -1;
-        try {
-            listSize = modelForm.getListSize();
-        } catch (Exception e) {
-            listSize = -1;
-        }
-
-/*
-        int highIndex = -1;
-        try {
-            highIndex = modelForm.getHighIndex();
-        } catch (Exception e) {
-            highIndex = 0;
-        }
-
-        int lowIndex = -1;
-        try {
-            lowIndex = modelForm.getLowIndex();
-        } catch (Exception e) {
-            lowIndex = 0;
-        }
-*/        
+        int viewIndex = modelForm.getViewIndex(context);
+        int viewSize = modelForm.getViewSize(context);
+        int listSize = modelForm.getListSize(context);
         
-        int lowIndex = viewIndex * viewSize;
-        int highIndex = (viewIndex + 1) * viewSize;
-        int actualPageSize = modelForm.getActualPageSize();
+        int lowIndex = modelForm.getLowIndex(context);
+        int highIndex = modelForm.getHighIndex(context);
+        int actualPageSize = modelForm.getActualPageSize(context);
+
         // if this is all there seems to be (if listSize < 0, then size is unknown)
         if (actualPageSize >= listSize && listSize >= 0) {
             return;
