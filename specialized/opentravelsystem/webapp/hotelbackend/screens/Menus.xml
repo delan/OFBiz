@@ -29,14 +29,14 @@
         default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
     </menu>
 
-    <menu name="PartyAppBar" selected-menuitem-context-field-name="page.headerItem" default-menu-item-name="main" default-selected-style="appButtonSelected" 
+    <menu name="PartyAppBar" selected-menuitem-context-field-name="headerItem" default-menu-item-name="main" default-selected-style="appButtonSelected" 
         default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
         menu-container-style="appContainer" orientation="horizontal" type="simple">
         <menu-item name="find" title="Find"><link target="findParties?statusId=PARTYREL-ACTIVE"/></menu-item>
         <menu-item name="disabled" title="Disabled Parties"><link target="findDisabledParties?statusId=PARTYREL-DELETED"/></menu-item>
         <menu-item name="security" title="Security"><link target="security"/></menu-item>
         <menu-item name="contactlist" title="ContactLists"><link target="ListContactLists"/></menu-item>
-        <menu-item name="companies" title="CompanyInfo"><link target="editCompany?organizationPartyId=${organizationPartyId}"/></menu-item>
+        <menu-item name="company" title="CompanyInfo"><link target="editOrganizationCompany"/></menu-item>
         <menu-item name="help" title="Help"><link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/></menu-item>
     </menu>
     

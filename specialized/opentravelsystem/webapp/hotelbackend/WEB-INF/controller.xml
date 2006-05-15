@@ -333,14 +333,14 @@
 
     <!--============= edit/create parties ================-->    
 
-    <request-map uri="editCompany">
+    <request-map uri="editOrganizationCompany">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editCompany"/>
+        <response name="success" type="view" value="editOrganizationCompany"/>
     </request-map>
-    <request-map uri="updateCompany">
+    <request-map uri="updateOrganizationCompany">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="otsUpdateOrganizationParty"/>
-        <response name="success" type="view" value="editCompany"/>
+        <response name="success" type="view" value="editOrganizationCompany"/>
     </request-map>
     <request-map uri="editParty">
         <security https="true" auth="true"/>
@@ -3152,7 +3152,7 @@
     <view-map name="findParties" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findParties"/>
     <view-map name="findDisabledParties" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findDisabledParties"/>    
     <view-map name="editParty" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#editParty"/>
-    <view-map name="editCompany" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#editCompany"/>
+    <view-map name="editOrganizationCompany" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#editOrganizationCompany"/>
     <view-map name="partyFinancialHistory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#partyFinancialHistory"/>
     <view-map name="listPaymentsReceived" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsReceived"/>
     <view-map name="listPaymentsSend" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#listPaymentsSend"/>

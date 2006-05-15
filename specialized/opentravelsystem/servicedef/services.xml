@@ -54,6 +54,7 @@
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyRelationshipTypeId" type="String" mode="OUT" optional="true"/>
         <attribute name="groupName" type="String" mode="OUT" optional="true"/>
+        <attribute name="logoImageUrl" type="String" mode="OUT" optional="true"/>
         <attribute name="address1" type="String" mode="OUT" optional="true"/>
         <attribute name="address2" type="String" mode="OUT" optional="true"/>
         <attribute name="city" type="String" mode="OUT" optional="true"/>
@@ -68,9 +69,8 @@
     <service name="otsGetOrganizationParty" engine="simple" location="org/ofbiz/opentravelsystem/PartyServices.xml"
         invoke="getOrganizationParty" auth="true">
         <description>Retrieve the organization party information (partyId from the loginId)</description>
-        <attribute name="organizationPartyId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="partyRelationshipTypeId" type="String" mode="OUT" optional="true"/>
         <attribute name="groupName" type="String" mode="OUT" optional="true"/>
+        <attribute name="logoImageUrl" type="String" mode="OUT" optional="true"/>
         <attribute name="address1" type="String" mode="OUT" optional="true"/>
         <attribute name="address2" type="String" mode="OUT" optional="true"/>
         <attribute name="city" type="String" mode="OUT" optional="true"/>
@@ -80,14 +80,15 @@
         <attribute name="telephone" type="String" mode="OUT" optional="true"/>
         <attribute name="fax" type="String" mode="OUT" optional="true"/>
         <attribute name="accountNumber" type="String" mode="OUT" optional="true"/>
+        <attribute name="baseCurrencyUomId" type="String" mode="OUT" optional="true"/>
     </service>
     
     <service name="otsUpdateParty" engine="simple"
         location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="updateParty" auth="true">
         <description>Modify the party information including the relationship to the organizationPartyId</description>
-        <attribute name="partyId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="groupName" type="String" mode="IN" optional="true"/>
+        <attribute name="logoImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="address1" type="String" mode="IN" optional="true"/>
         <attribute name="address2" type="String" mode="IN" optional="true"/>
         <attribute name="city" type="String" mode="IN" optional="true"/>
@@ -103,6 +104,7 @@
         location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="updateOrganizationParty" auth="true">
         <description>Modify the party organization information</description>
         <attribute name="groupName" type="String" mode="IN" optional="true"/>
+        <attribute name="logoImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="address1" type="String" mode="IN" optional="true"/>
         <attribute name="address2" type="String" mode="IN" optional="true"/>
         <attribute name="city" type="String" mode="IN" optional="true"/>
@@ -115,6 +117,7 @@
         <attribute name="bankName" type="String" mode="IN" optional="true"/>
         <attribute name="routingCode" type="String" mode="IN" optional="true"/>
         <attribute name="accountNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="baseCurrencyUomId" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="otsSetStatusParty" engine="simple"

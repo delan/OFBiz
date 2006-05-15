@@ -95,11 +95,11 @@
         </field>
     </form>
 
-    <form name="editCompany" type="single" 
-        target="updateCompany" title="Edit Organization Party" default-map-name="info"
+    <form name="editOrganizationCompany" type="single" 
+        target="updateOrganizationCompany" title="Edit Organization Party" default-map-name="partyInfo"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
-            <service service-name="otsGetOrganizationParty" result-map-name="info"/>
+            <service service-name="otsGetOrganizationParty" result-map-name="partyInfo"/>
         </actions>
         <auto-fields-service service-name="otsUpdateOrganizationParty"/>
         <field name="countryGeoId" title="Country">
@@ -111,10 +111,11 @@
             </drop-down>
         </field>
         <field name="accountNumber" title="Bank Account Number"><text/></field>
-        <field position="1" use-when="party==null||partyId==null" name="submitButton" title="Create" widget-style="smallSubmit">
+        <field name="baseCurrencyUomId" widget-style="tabletext"><display/></field>
+        <field position="1" use-when="party==null||partyId==null" name="addButton" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-        <field position="1" use-when="party!=null&amp;&amp;partyId!=null" name="submitButton" title="Update" widget-style="smallSubmit">
+        <field position="1" use-when="party!=null&amp;&amp;partyId!=null" name="updateButton" title="Update" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>

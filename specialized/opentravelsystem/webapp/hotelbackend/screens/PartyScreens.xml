@@ -28,7 +28,7 @@
         <section>
             <actions>
                 <set field="title" value="Find a Party"/>
-                <set field="page.headerItem" value="find"/>
+                <set field="headerItem" value="find"/>
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>                
@@ -73,6 +73,7 @@
             <actions>
                 <set field="title" value="add/update a new party"/>
                 <set field="partyId" from-field="parameters.partyId"/>
+                <set field="headerItem" value="find"/>
                 <set field="tabButtonItem" value="EditParty"/>
                 <entity-one entity-name="Party" value-name="party"></entity-one>
             </actions>
@@ -97,22 +98,21 @@
         </section>
     </screen>
     
-    <screen name="editCompany">
+    <screen name="editOrganizationCompany">
         <section>
             <actions>
                 <set field="title" value="add/update a new party"/>
-                <set field="partyId" from-field="parameters.partyId"/>
-                <set field="tabButtonItem" value="CompanyInfo"/>
+                <set field="headerItem" value="company"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <container><label style="head1" text="Update the Organization Party Information"/></container>
+                                <container><label style="head1" text="Update the Organization Party Information: ${organizationPartyId}"/></container>
                             </widgets>
                         </section>
-                        <include-form name="editCompany" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <include-form name="editOrganizationCompany" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
