@@ -76,13 +76,16 @@ under the License.
                 <entity-one entity-name="Invoice" value-name="invoice"/>
                 <entity-and entity-name="InvoiceRole" list-name="invoiceRoles">
                     <field-map env-name="parameters.invoiceId" field-name="invoiceId"/>
+                    <order-by field-name="partyId"/>
                 </entity-and>
                 <entity-and entity-name="InvoiceStatus" list-name="invoiceStatus">
                     <field-map env-name="parameters.invoiceId" field-name="invoiceId"/>
+                    <order-by field-name="statusDate"/>
                 </entity-and>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/createApplicationList.bsh"/>
                 <entity-and entity-name="InvoiceItem" list-name="invoiceItems">
                     <field-map field-name="invoiceId" value="${parameters.invoiceId}"/>
+                    <order-by field-name="invoiceItemSeqId"/>
                 </entity-and>
                 <set field="invoiceAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalBd(invoice)}"/>
                 <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"/>
@@ -144,6 +147,7 @@ under the License.
                 <entity-one entity-name="Invoice" value-name="invoice" auto-field-map="true"/>
                 <entity-and entity-name="InvoiceStatus" list-name="invoiceStatus">
                     <field-map env-name="invoice.invoiceId" field-name="invoiceId"/>
+                    <order-by field-name="statusDate"/>
                 </entity-and>
             </actions>
             <widgets>
@@ -231,6 +235,7 @@ under the License.
                 <entity-one entity-name="InvoiceItem" value-name="invoiceItem"/>
                 <entity-and entity-name="InvoiceItem" list-name="invoiceItems">
                     <field-map field-name="invoiceId" env-name="parameters.invoiceId"/>
+                    <order-by field-name="invoiceItemSeqId"/>
                 </entity-and>
             </actions>
             <widgets>
@@ -256,6 +261,7 @@ under the License.
                 <entity-one entity-name="Invoice" value-name="invoice"/>
                 <entity-and entity-name="InvoiceRole" list-name="invoiceRoles">
                     <field-map env-name="invoiceId" field-name="invoiceId"/>
+                    <order-by field-name="partyId"/>
                 </entity-and>
             </actions>
             <widgets>
