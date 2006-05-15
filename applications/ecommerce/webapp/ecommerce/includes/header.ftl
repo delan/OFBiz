@@ -24,8 +24,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign includeHtmlArea=false/>
-<#if "Y"=page.includeHtmlArea?if_exists><#assign includeHtmlArea=true/></#if>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <#-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> <html> -->
@@ -36,6 +34,7 @@
     <script language="javascript" src="<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>" type="text/javascript"></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
     <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/images/ecommain.css")}</@ofbizContentUrl>" type="text/css"/>
+    ${layoutSettings.extraHead?if_exists}
 
     <#-- Append CSS for catalog -->
     <#if catalogStyleSheet?exists>
@@ -53,43 +52,9 @@
         <meta name="keywords" content="${metaKeywords}"/>
     </#if>
 
-    <#if includeHtmlArea>    
-        <#assign contextPath=request.getContextPath()/>
-        <link rel="stylesheet" href="<@ofbizContentUrl>${contextPath}/images/css/${(webSitePublishPoint.styleSheetFile)?if_exists}</@ofbizContentUrl>" type="text/css"/>
-        
-        <#assign primaryHTMLField=page.primaryHTMLField?if_exists/>
-        <#if (dynamicPrimaryHTMLField?exists)>
-          <#assign primaryHTMLField=dynamicPrimaryHTMLField/>
-        </#if>
-        <#assign secondaryHTMLField=page.secondaryHTMLField?if_exists/>
-        <#if (primaryHTMLField?exists && (primaryHTMLField?length > 0))>
-            <script type="text/javascript" language="javascript"> 
-              _editor_url = "/content/images/htmlarea/"; // omit the final slash
-            </script> 
-        
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>" type="text/javascript"></script>
-            <style type="text/css">
-                @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
-                textarea { background-color: #fff; border: 1px solid 00f; }
-            </style>
-            <script type="text/javascript">
-                var editor = null;
-                var summary = null;
-                function init_all() {
-                    primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
-                    <#if secondaryHTMLField?exists>
-                        secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
-                    </#if>
-                }
-            </script>
-        </#if>
-    </#if>
 </head>
 
-<body<#if includeHtmlArea> onLoad="init_all()"</#if>>
+<body>
 
 <div id="ecom-header">
     <div id="left">

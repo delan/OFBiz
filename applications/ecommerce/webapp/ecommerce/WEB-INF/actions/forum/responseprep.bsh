@@ -86,7 +86,7 @@ context.put("siteAncestorList", siteAncestorList);
 //Debug.logInfo("in viewprep, siteAncestorList:" + siteAncestorList,"");
 
 singleWrapper = context.get("singleWrapper");
-singleWrapper.putInContext("pageName", page.getPageName());
+// singleWrapper.putInContext("pageName", page.getPageName());
 singleWrapper.putInContext("contentIdTo", contentIdTo);
 singleWrapper.putInContext("summaryDataResourceTypeId", null);
 singleWrapper.putInContext("mapKey", null);

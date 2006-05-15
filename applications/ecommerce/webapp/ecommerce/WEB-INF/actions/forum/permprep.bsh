@@ -57,13 +57,13 @@ paramMap = UtilHttp.getParameterMap(request);
 //Debug.logInfo("in permprep, userLogin(0):" + userLogin, null);
 
 // Get permission from pagedef config file
-permission = page.get("permission");
-permissionType = page.get("permissionType");
+permission = context.get("permission");
+permissionType = context.get("permissionType");
 if (permissionType == null) permissionType = "simple";
 
-entityName = page.get("entityName");
-entityOperation = page.get("entityOperation");
-targetOperation = page.get("targetOperation");
+entityName = context.get("entityName");
+entityOperation = context.get("entityOperation");
+targetOperation = context.get("targetOperation");
 //Debug.logInfo("in permprep, targetOperation(0):" + targetOperation, null);
 
 mode = paramMap.get("mode");
@@ -73,17 +73,17 @@ currentValue = (GenericValue)request.getAttribute("currentValue");
 //Debug.logInfo("in permprep, currentValue(1):" + currentValue, null);
 
 if (UtilValidate.isNotEmpty(mode) && mode.equals("add")) {
-    entityOperation = page.get("addEntityOperation");
+    entityOperation = context.get("addEntityOperation");
     if (UtilValidate.isEmpty(entityOperation)) {
-        entityOperation = page.get("entityOperation");
+        entityOperation = context.get("entityOperation");
         if (UtilValidate.isEmpty(entityOperation)) {
             entityOperation = "_CREATE";
         }
     }
-    targetOperation = page.get("addTargetOperation");
+    targetOperation = context.get("addTargetOperation");
     //org.ofbiz.base.util.Debug.logInfo("in permprep, targetOperation:" + targetOperation, null);
     if (UtilValidate.isEmpty(targetOperation)) {
-        targetOperation = page.get("targetOperation");
+        targetOperation = context.get("targetOperation");
         if (UtilValidate.isEmpty(targetOperation)) {
             targetOperation = "CONTENT_CREATE";
         }
@@ -109,7 +109,7 @@ if (permissionType.equals("complex")) {
         //Debug.logInfo("in permprep, userLoginId(1):" + userLogin.get("userLoginId"), null);
     //}
     if (currentValue == null || (entityName != null && !entityName.equals("Content"))) {
-        permissionIdName = page.get("permissionIdName");
+        permissionIdName = context.get("permissionIdName");
         //org.ofbiz.base.util.Debug.logInfo("in permprep, permissionIdName(1):" + permissionIdName, null);
         if (UtilValidate.isNotEmpty(permissionIdName)) {
             thisContentId = ContentManagementWorker.getFromSomewhere(permissionIdName, paramMap, request, context);
@@ -132,12 +132,12 @@ if (permissionType.equals("complex")) {
         }
     }
     if (UtilValidate.isNotEmpty(mode) && mode.equals("add")) {
-        addEntityOperation = page.get("addEntityOperation");
+        addEntityOperation = context.get("addEntityOperation");
         if (UtilValidate.isNotEmpty(addEntityOperation)) {
             entityOperation = addEntityOperation;
         }
     } else {
-        editEntityOperation = page.get("editEntityOperation");
+        editEntityOperation = context.get("editEntityOperation");
         if (UtilValidate.isNotEmpty(editEntityOperation)) {
             entityOperation = editEntityOperation;
         }
@@ -148,7 +148,7 @@ if (permissionType.equals("complex")) {
     }
     mapIn.put("entityOperation", entityOperation);
 
-    contentPurposeTypeId = page.get("contentPurposeTypeId");
+    contentPurposeTypeId = context.get("contentPurposeTypeId");
     if (UtilValidate.isNotEmpty(contentPurposeTypeId)) {
         mapIn.put("contentPurposeList", StringUtil.split(contentPurposeTypeId, "|"));
     }

@@ -30,10 +30,23 @@
     <screen name="forums">
         <section>
             <actions>
-                <set field="contentSuffix" value="FORUM"/>
+                <entity-condition entity-name="ContentAssocViewFrom" list-name="forums" use-cache="true">
+                    <condition-list combine="and">
+                        <condition-expr field-name="contentIdStart" operator="equals" value="WebStoreFORUM"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="caFromDate" operator="equals" env-name="null"/>
+                            <condition-expr field-name="caFromDate" operator="less-equals" env-name="nowTimestamp"/>
+                        </condition-list>
+                        <condition-list combine="or">
+                            <condition-expr field-name="caThruDate" operator="equals" env-name="null"/>
+                            <condition-expr field-name="caThruDate" operator="greater-equals" env-name="nowTimestamp"/>
+                        </condition-list>
+                    </condition-list>
+                </entity-condition>
             </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/forums.ftl"/></html></platform-specific>
+            <widgets><platform-specific><html>
+                <html-template location="component://ecommerce/webapp/ecommerce/forum/forums.ftl"/>
+            </html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -48,21 +61,44 @@
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="title-property" value="PageTitleForumSummary"/>
-                <set field="headerItem" value="Forum"/>
-                <set field="formDefFile" value="/BlogForms.xml"/>
-                <set field="entityName" value="Content"/>
-                <set field="permissionType" value="none"/>
-                <set field="viewSize" value="10"/>
-                <set field="mainMenuDefFile" value="/AgepsMenus.xml"/>
-                <set field="mainMenuName" value="main"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/pubinit.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/viewprep.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/listparamprep.bsh"/>
+                <entity-one entity-name="Content" value-name="forum">
+                    <field-map field-name="contentId" env-name="parameters.forumId"/>
+                </entity-one>
+                <!-- parameters for the performFind service -->
+                <set field="parameters.ownerContentId" from-field="parameters.forumId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="3"/>
+                <service service-name="performFindList" result-map-name="result">
+                    <field-map field-name="viewIndex" env-name="viewIndex"/>
+                    <field-map field-name="viewSize" env-name="viewSize"/>
+                    <field-map field-name="inputFields" env-name="parameters"/>
+                    <field-map field-name="entityName" value="ContentAssocViewFrom"/>
+                </service>
+                <set field="forumMessages" from-field="result.list"/>
+                <set field="listSize" from-field="result.listSize"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/showforum.ftl"/></html></platform-specific>
+                        <section>
+                            <condition>
+                                <if-empty field-name="parameters.threadView"/>
+                            </condition>
+                            <widgets>
+                                <label style="head1" text="Message list for forum: ${forum.description}"/>
+                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}" text="New message"/>
+                                <link style="buttontext" target="showforum?threadView=yes&amp;forumId=${parameters.forumId}" text="Thread View"/>
+                                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/forumPaging.ftl"/></html></platform-specific>
+                                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/showforum.ftl"/></html></platform-specific>
+                                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/forumPaging.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head1" text="Thread list for forum: ${forum.description}"/>
+                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}" text="New message"/>
+                                <link style="buttontext" target="showforum?forumId=${parameters.forumId}" text="List View"/>
+                                <include-tree name="MessageTree" location="component://content/widget/forum/ForumTrees.xml" /> 
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -74,18 +110,10 @@
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
-
                 <set field="title-property" value="PageTitleForumArticle"/>
-                <set field="headerItem" value="Forum"/>
-                <set field="formDefFile" value="/BlogForms.xml"/>
-                <set field="entityName" value="Content"/>
-                <set field="permissionType" value="none"/>
-                <set field="viewSize" value="10"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/nodetrailprep.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/viewprep.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/listparamprep.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/pubinit.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/permprep.bsh"/>
+                <entity-and entity-name="" list-name="">
+                    <field-map field-name=""/>
+                </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

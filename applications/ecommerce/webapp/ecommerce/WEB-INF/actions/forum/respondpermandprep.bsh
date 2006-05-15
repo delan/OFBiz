@@ -89,7 +89,7 @@ if (contentToPurposeList.contains("RESPONSE")) {
 mapIn = new HashMap();
 userLogin = session.getAttribute("userLogin");
 mapIn.put("userLogin", userLogin);
-List targetOperationList = StringUtil.split(page.getProperty("targetOperation"), "|");
+List targetOperationList = StringUtil.split(context.get("targetOperation"), "|");
 mapIn.put("targetOperationList", targetOperationList );
 
 if (currentValue != null) {
@@ -160,9 +160,9 @@ if (UtilValidate.isEmpty(permissionStatus) || !permissionStatus.equals("granted"
 
 request.setAttribute("currentValue", currentValue);
 singleWrapper = context.get("singleWrapper");
-singleWrapper.putInContext("contentPurposeTypeId", page.getProperty("contentPurposeTypeId"));
-singleWrapper.putInContext("targetOperation", page.getProperty("targetOperation"));
-singleWrapper.putInContext("targetOperationString", page.getProperty("targetOperation"));
+singleWrapper.putInContext("contentPurposeTypeId", context.get("contentPurposeTypeId"));
+singleWrapper.putInContext("targetOperation", context.get("targetOperation"));
+singleWrapper.putInContext("targetOperationString", context.get("targetOperation"));
 singleWrapper.putInContext("currentValue", currentValue);
 
 trailList = context.get("trailList");
