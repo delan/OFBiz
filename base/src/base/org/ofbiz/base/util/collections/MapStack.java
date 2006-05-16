@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ import org.ofbiz.base.util.Debug;
  * @version    $Rev$
  * @since      3.1
  */
-public class MapStack implements Map, Reusable {
+public class MapStack implements Map, Reusable, LocalizedMap {
 
     public static final String module = MapStack.class.getName();
 
@@ -224,6 +225,31 @@ public class MapStack implements Map, Reusable {
             // only return if the curMap contains the key, rather than checking for null; this allows a null at a lower level to override a value at a higher level
             if (curMap.containsKey(key)) {
                 return curMap.get(key);
+            }
+        }
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.base.util.collections.LocalizedMap#get(java.lang.String, java.util.Locale)
+     */
+    public Object get(String name, Locale locale) {
+        if ("context".equals(name)) {
+            return this;
+        }
+        
+        // walk the stackList and for the first place it is found return true; otherwise refurn false
+        Iterator stackIter = this.stackList.iterator();
+        while (stackIter.hasNext()) {
+            Map curMap = (Map) stackIter.next();
+            // only return if the curMap contains the key, rather than checking for null; this allows a null at a lower level to override a value at a higher level
+            if (curMap.containsKey(name)) {
+                if (curMap instanceof LocalizedMap) {
+                    LocalizedMap lmap = (LocalizedMap) curMap;
+                    return lmap.get(name, locale);
+                } else {
+                    return curMap.get(name);
+                }
             }
         }
         return null;
