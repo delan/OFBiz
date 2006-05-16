@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *  $Id$
+$Id$
+
+Copyright 2001-2006 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -42,6 +36,7 @@
                             <condition-expr field-name="caThruDate" operator="greater-equals" env-name="nowTimestamp"/>
                         </condition-list>
                     </condition-list>
+                    <order-by field-name="contentName"/>
                 </entity-condition>
             </actions>
             <widgets><platform-specific><html>
@@ -53,7 +48,7 @@
 
     <!-- =========== Top-Level and Stand-Alone Screens =========== -->
 
-    <screen name="showforum">
+    <screen name="Showforum">
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
@@ -65,14 +60,15 @@
                     <field-map field-name="contentId" env-name="parameters.forumId"/>
                 </entity-one>
                 <!-- parameters for the performFind service -->
-                <set field="parameters.ownerContentId" from-field="parameters.forumId"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="3"/>
+                <set field="inpField.ownerContentId" from-field="parameters.forumId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="10"/>
                 <service service-name="performFindList" result-map-name="result">
                     <field-map field-name="viewIndex" env-name="viewIndex"/>
                     <field-map field-name="viewSize" env-name="viewSize"/>
-                    <field-map field-name="inputFields" env-name="parameters"/>
+                    <field-map field-name="inputFields" env-name="inpField"/>
                     <field-map field-name="entityName" value="ContentAssocViewFrom"/>
+                    <field-map field-name="orderBy" value="createdDate"/>
                 </service>
                 <set field="forumMessages" from-field="result.list"/>
                 <set field="listSize" from-field="result.listSize"/>
@@ -86,7 +82,7 @@
                             </condition>
                             <widgets>
                                 <label style="head1" text="Message list for forum: ${forum.description}"/>
-                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}" text="New message"/>
+                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}&amp;VIEW_INDEX=${parameters.VIEW_INDEX}" text="New message"/>
                                 <link style="buttontext" target="showforum?threadView=yes&amp;forumId=${parameters.forumId}" text="Thread View"/>
                                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/forumPaging.ftl"/></html></platform-specific>
                                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/showforum.ftl"/></html></platform-specific>
@@ -94,7 +90,7 @@
                             </widgets>
                             <fail-widgets>
                                 <label style="head1" text="Thread list for forum: ${forum.description}"/>
-                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}" text="New message"/>
+                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}&amp;VIEW_INDEX=${parameters.VIEW_INDEX}" text="New message"/>
                                 <link style="buttontext" target="showforum?forumId=${parameters.forumId}" text="List View"/>
                                 <include-tree name="MessageTree" location="component://content/widget/forum/ForumTrees.xml" /> 
                             </fail-widgets>
