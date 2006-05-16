@@ -626,7 +626,18 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      *    property value is returned; otherwise returns the field value
      */
     public Object get(String name, String resource, Locale locale) {
-        Object fieldValue = get(name);
+        Object fieldValue = null;
+        try {
+            fieldValue = get(name);
+        } catch (IllegalArgumentException e) {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose(e, "The field name (or key) [" + name + "] is not valid for entity [" + this.getEntityName() + "], printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.", module);
+            } else {
+                Debug.logWarning("The field name (or key) [" + name + "] is not valid for entity [" + this.getEntityName() + "], printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.", module);
+            }
+            fieldValue = null;
+        }
+        
         if (UtilValidate.isEmpty(resource)) {
             resource = this.getModelEntity().getDefaultResourceName();
             // still empty? return the fieldValue
@@ -1231,7 +1242,11 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         try {
             return this.get((String) key);
         } catch (IllegalArgumentException e) {
-            Debug.logWarning(e, "The field name (or key) [" + key + "] is not valid, printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.", module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose(e, "The field name (or key) [" + key + "] is not valid for entity [" + this.getEntityName() + "], printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.", module);
+            } else {
+                Debug.logWarning("The field name (or key) [" + key + "] is not valid for entity [" + this.getEntityName() + "], printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.", module);
+            }
             return null;
         }
     }

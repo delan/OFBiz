@@ -1642,12 +1642,16 @@ public class ModelFormField {
                 while (valueIter.hasNext()) {
                     GenericValue value = (GenericValue) valueIter.next();
                     // add key and description with string expansion, ie expanding ${} stuff, passing locale explicitly to expand value string because it won't be found in the Entity
-
-                    // expand with the value first, which is a LocalizedMap, and may have the value and if nothing found, use the incoming context
-                    String optionDesc = this.description.expandString(value, locale);
-                    if (UtilValidate.isEmpty(optionDesc)) {
-                        optionDesc = this.description.expandString(context, locale);
+                    MapStack localContext = null;
+                    if (context instanceof MapStack) {
+                        localContext = ((MapStack) context).standAloneStack();
+                    } else {
+                        localContext = MapStack.create(context);
                     }
+                    localContext.addToBottom(value);
+
+                    // expand with the new localContext, which is locale aware
+                    String optionDesc = this.description.expandString(localContext, locale);
                     
                     Object keyFieldObject = value.get(this.getKeyFieldName());
                     if (keyFieldObject == null) {
