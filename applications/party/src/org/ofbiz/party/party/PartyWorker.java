@@ -153,8 +153,12 @@ public class PartyWorker {
             String stateProvinceGeoId, String postalCode, String postalCodeExt, String countryGeoId,
             String firstName, String middleName, String lastName) throws GeneralException {
 
-        return findFirstMatchingPartyAndContactMechId(delegator, address1, address2, city, stateProvinceGeoId, postalCode,
-                postalCodeExt, countryGeoId, firstName, middleName, lastName)[0];
+        String[] info = findFirstMatchingPartyAndContactMechId(delegator, address1, address2, city, stateProvinceGeoId, postalCode,
+                postalCodeExt, countryGeoId, firstName, middleName, lastName);
+        if (info != null) {
+            return info[0];
+        }
+        return null;
     }
 
     public static String[] findFirstMatchingPartyAndContactMechId(GenericDelegator delegator, String address1, String address2, String city,
