@@ -90,9 +90,9 @@
                                             <section>
                                                 <condition><if-has-permission permission="ACCOUNTING" action="_VIEW"/></condition>
                                                 <widgets>
-                                                    <link target="/accounting/control/findPayment?lookupFlag=Y&amp;hideFields=Y&amp;toPartyId=${partyId}" url-mode="inter-app" 
+                                                    <link target="/accounting/control/findPayments?lookupFlag=Y&amp;hideFields=Y&amp;partyIdTo=${partyId}" url-mode="inter-app" 
                                                         text="${uiLabelMap.AccountingPaymentsSent}" style="buttontext"/>
-                                                    <link target="/accounting/control/findPayment?lookupFlag=Y&amp;hideFields=Y&amp;fromPartyId=${partyId}" url-mode="inter-app" 
+                                                    <link target="/accounting/control/findPayments?lookupFlag=Y&amp;hideFields=Y&amp;partyIdFrom=${partyId}" url-mode="inter-app" 
                                                         text="${uiLabelMap.AccountingPaymentsReceived}" style="buttontext"/>
                                                 </widgets>
                                             </section>
