@@ -372,7 +372,9 @@ public class FindServices {
         Map result = performFind(dctx,context);
         
         Integer viewSize = (Integer) context.get("viewSize");
+        if (viewSize == null) viewSize = new Integer(20);       // default 
         Integer viewIndex = (Integer) context.get("viewIndex");
+        if (viewIndex == null)  viewIndex = new Integer(0);  // default
         
         int start = viewIndex.intValue() * viewSize.intValue();
         List list = null;
