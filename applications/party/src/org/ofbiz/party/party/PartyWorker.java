@@ -164,7 +164,10 @@ public class PartyWorker {
         List matching = findMatchingPartyAndPostalAddress(delegator, address1, address2, city, stateProvinceGeoId, postalCode,
             postalCodeExt, countryGeoId, firstName, middleName, lastName);
         GenericValue v = EntityUtil.getFirst(matching);
-        return new String[] { v.getString("partyId"), v.getString("contactMechId") };
+        if (v != null) {
+            return new String[] { v.getString("partyId"), v.getString("contactMechId") };
+        }
+        return null;
     }
 
     public static List findMatchingPartyAndPostalAddress(GenericDelegator delegator, String address1, String address2, String city,
