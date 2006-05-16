@@ -39,6 +39,8 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceTypeId" mode="IN" optional="false"/>
         <override name="statusId" mode = "IN" optional="false"/>
+        <override name="partyIdFrom" mode = "IN" optional="false"/>
+        <override name="partyId" mode = "IN" optional="false"/>
     </service>
     <service name="copyInvoice" engine="simple" default-entity-name="Invoice"
         location="org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="copyInvoice">
