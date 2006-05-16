@@ -1058,7 +1058,7 @@
     <!-- used in new forum -->
     <request-map uri="showforum">
         <security https="true" auth="false"/>
-        <response name="success" type="view" value="showforum"/>
+        <response name="success" type="view" value="Showforum"/>
     </request-map>
     <request-map uri="addForumMessage">
         <security https="true" auth="true"/>
@@ -1067,8 +1067,8 @@
     <request-map uri="updateForumMessage">
         <security https="true" auth="true"/>
         <event invoke="persistContentAndAssoc" type="service"/>
-        <response name="success" type="view" value="showforum"/>
-        <response name="error" type="view" value="addForumMessage"/>
+        <response name="success" type="view" value="Showforum"/>
+        <response name="error" type="view" value="AddForumMessage"/>
     </request-map>
     
 
@@ -1318,7 +1318,7 @@
 
     <!-- Forum Views -->
     <!-- new -->
-    <view-map name="showforum" type="screen" page="component://ecommerce/widget/ForumScreens.xml#showforum"/>
+    <view-map name="Showforum" type="screen" page="component://ecommerce/widget/ForumScreens.xml#Showforum"/>
     <view-map name="AddForumMessage" page="component://content/widget/forum/ForumScreens.xml#AddForumMessage" type="screen"/>
     <!-- old -->    
     <view-map name="showforumarticle" type="screen" page="component://ecommerce/widget/ForumScreens.xml#showforumarticle"/>
