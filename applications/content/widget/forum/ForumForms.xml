@@ -169,6 +169,7 @@
     </form>
     <form name="AddForumMessage" type="single" target="updateForumMessage" default-map-name="message"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="VIEW_INDEX"><hidden value="${parameters.VIEW_INDEX}"/></field>
         <field name="threadView"><hidden value="${parameters.threadView}"/></field>
         <field name="forumGroupId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
