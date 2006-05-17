@@ -213,4 +213,24 @@
         <description>Remove a ProductFeatureType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- ProductFeatureApplAttr  -->
+    <service name="createProductFeatureApplAttr" default-entity-name="ProductFeatureApplAttr" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureApplAttr" auth="true">
+        <description>Create a ProductFeatureApplAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateProductFeatureApplAttr" default-entity-name="ProductFeatureApplAttr" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureApplAttr" auth="true">
+        <description>Update a ProductFeatureApplAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductFeatureApplAttr" default-entity-name="ProductFeatureApplAttr" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="removeProductFeatureApplAttr" auth="true">
+        <description>Remove a ProductFeatureApplAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
 </services>

@@ -83,6 +83,7 @@
     <entity-group group="org.ofbiz" entity="ProductFeatureAndAppl" />
     <entity-group group="org.ofbiz" entity="ProductFeatureAppl" />
     <entity-group group="org.ofbiz" entity="ProductFeatureApplType" />
+    <entity-group group="org.ofbiz" entity="ProductFeatureApplAttr" />
     <entity-group group="org.ofbiz" entity="ProductFeatureCategory" />
     <entity-group group="org.ofbiz" entity="ProductFeatureCategoryAppl" />
     <entity-group group="org.ofbiz" entity="ProductFeatureCatGrpAppl" />

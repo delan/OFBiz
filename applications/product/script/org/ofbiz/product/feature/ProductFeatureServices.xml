@@ -382,4 +382,53 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
+    <!-- create a new ProductFeatureApplAttr -->
+    <simple-method method-name="createProductFeatureApplAttr" short-description="Create a ProductFeatureApplAttr">
+        <check-permission permission="CATALOG" action="_CREATE">
+            <fail-message message="Security Error: to run createProductFeatureApplAttr you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="ProductFeatureApplAttr"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <entity-condition entity-name="ProductFeatureAppl" list-name="productFeatureAppls" filter-by-date="true">
+                <condition-list combine="and">
+                    <condition-expr field-name="productId" env-name="newEntity.productId"/>
+                    <condition-expr field-name="productFeatureId" env-name="newEntity.productFeatureId"/>
+                </condition-list>
+                <order-by field-name="-fromDate"/>
+            </entity-condition>
+            <first-from-list list-name="productFeatureAppls" entry-name="productFeatureAppl"/>
+            <set field="newEntity.fromDate" from-field="productFeatureAppl.fromDate"/>
+        </if-empty>
+        <create-value value-name="newEntity"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- update an existing ProductFeatureApplAttr -->
+    <simple-method method-name="updateProductFeatureApplAttr" short-description="Update an existing ProductFeatureApplAttr">
+        <check-permission permission="CATALOG" action="_UPDATE">
+            <fail-message message="Security Error: to run updateProductFeatureApplAttr you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="ProductFeatureApplAttr" value-name="productFeatureApplAttr" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="productFeatureApplAttr"/>
+        <store-value value-name="productFeatureApplAttr"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- remove an existing ProductFeatureApplAttr -->
+    <simple-method method-name="removeProductFeatureApplAttr" short-description="Remove an existing ProductFeatureApplAttr">
+        <check-permission permission="CATALOG" action="_DELETE">
+            <fail-message message="Security Error: to run removeProductFeatureApplAttr you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="ProductFeatureApplAttr" value-name="productFeatureApplAttr" auto-field-map="true"/>
+        <check-errors/>
+        <remove-value value-name="productFeatureApplAttr"/>
+        <check-errors/>
+    </simple-method>
+
 </simple-methods>

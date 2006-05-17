@@ -1142,6 +1142,18 @@
         <response name="success" type="view" value="EditProductFeatures"/>
         <response name="error" type="view" value="EditProductFeatures"/>
     </request-map>
+    <request-map uri="createProductFeatureApplAttr">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFeatureApplAttr"/>
+        <response name="success" type="view" value="EditProductFeatures"/>
+        <response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+    <request-map uri="deleteProductFeatureApplAttr">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductFeatureApplAttr"/>
+        <response name="success" type="view" value="EditProductFeatures"/>
+        <response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
 
     <request-map uri="CreateVirtualWithVariantsForm">
         <security https="true" auth="true"/>
