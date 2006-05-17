@@ -43,7 +43,6 @@
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/tabstyles.css</@ofbizContentUrl>' type='text/css'>       
-
 	${layoutSettings.extraHead?if_exists}
     <#if htmlEdit?exists> 
 		<script language="Javascript" type="text/javascript" src="/${activeApp}/html/whizzywig.js"></script>
@@ -86,7 +85,7 @@
             <#else>
               <div class="insideHeaderText">${uiLabelMap.CommonWelcome}!</div>
             </#if>
-            <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
+            <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString().substring(0,16)}</div>
             <div class="insideHeaderText">
                 <form method="post" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>" style="margin: 0;">
                   <select name="locale" class="selectBox">

@@ -42,7 +42,6 @@
             <result-to-result service-result-name="countryGeoId" result-name="countryGeoId"/>
             <result-to-result result-name="accountNumber" service-result-name="accountNumber"/>
         </call-service>
-        <log level="always" message="============== get party: ${parameters.userLogin.partyId} name: ${groupName}"></log>
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false">
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
