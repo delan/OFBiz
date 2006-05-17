@@ -76,7 +76,7 @@ under the License.
                                                     <label style="tabletext" text="${currentTimeEntry.comments} [${currentRateType.description}]"/>
                                                     <section>
                                                         <condition><not><if-empty field-name="currentTimeEntry.workEffortId"/></not></condition>
-                                                        <widgets><link target="WorkEffortSummary?workEffortId=${currentTimeEntry.workEffortId}" text="${uiLabelMap.WorkEffort}: ${currentTimeEntry.workEffortId}" style="linktext"/></widgets>
+                                                        <widgets><link target="WorkEffortSummary?workEffortId=${currentTimeEntry.workEffortId}" text="${uiLabelMap.WorkEffortWorkEffort}: ${currentTimeEntry.workEffortId}" style="linktext"/></widgets>
                                                     </section>
                                                 </container>
                                             </widgets>
