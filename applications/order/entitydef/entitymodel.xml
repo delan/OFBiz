@@ -175,6 +175,7 @@
     </entity>
     <entity entity-name="OrderAdjustmentType"
             package-name="org.ofbiz.order.order"
+            default-resource-name="OrderEntityLabels"
             title="Order Adjustment Type Entity">
       <field name="orderAdjustmentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -1325,6 +1326,7 @@
     </entity>
     <entity entity-name="QuoteType"
             package-name="org.ofbiz.order.quote"
+            default-resource-name="OrderEntityLabels"
             title="Quote Type Entity">
       <field name="quoteTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -1658,6 +1660,7 @@
     </entity>
     <entity entity-name="CustRequestType"
             package-name="org.ofbiz.order.request"
+            default-resource-name="OrderEntityLabels"
             title="Customer Request Type Entity">
       <field name="custRequestTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -1881,6 +1884,7 @@
     </entity>
     <entity entity-name="RequirementType"
             package-name="org.ofbiz.order.requirement"
+            default-resource-name="OrderEntityLabels"
             title="Requirement Type Entity">
       <field name="requirementTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
