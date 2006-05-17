@@ -59,7 +59,7 @@
                 <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} ${uiLabelMap.CommonFor} ${uiLabelMap.CommonId} [${workEffortId}]</label>
-                        <container><label style="head2">${uiLabelMap.WorkEffort}</label></container>
+                        <container><label style="head2">${uiLabelMap.WorkEffortWorkEffort}</label></container>
                         <container>
                             <label text="${uiLabelMap.CommonName}: " style="tableheadtext"/><label text="${workEffort.workEffortName}" style="tabletext"/>
                             <label text=", ${uiLabelMap.CommonType}: " style="tableheadtext"/><label text="${workEffortType.description}" style="tabletext"/>
