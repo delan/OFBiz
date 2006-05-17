@@ -1109,5 +1109,39 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    <form name="AddProductFeatureApplAttr" type="single" 
+            target="createProductFeatureApplAttr" title="" 
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createProductFeatureApplAttr" /> 
+        <field name="productId"><hidden/></field>
+        <field name="productFeatureId" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProductFeatureAndAppl" description="${description} [${productFeatureId}]" key-field-name="productFeatureId">
+                    <entity-constraint name="productId" env-name="productId"/>
+                    <entity-order-by field-name="sequenceNum"/>
+                    <entity-order-by field-name="defaultSequenceNum"/>
+                    <entity-order-by field-name="fromDate"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListProductFeatureApplAttrs" type="list" list-name="productFeatureApplAttrs" target="EditProductFeatureAppl"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <entity-condition entity-name="ProductFeatureApplAttr" list-name="productFeatureApplAttrs">
+                <condition-expr field-name="productId" env-name="productId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="ProductFeatureApplAttr" default-field-type="display"/>
+        <field name="productId"><hidden/></field>
+        <field name="productFeatureId">
+            <display-entity entity-name="ProductFeature" description="${description} [${productFeatureId}]"/>
+        </field>
+        <field name="deleteLink" title="" widget-style="buttontext">
+            <hyperlink target="deleteProductFeatureApplAttr?productId=${productId}&amp;productFeatureId=${productFeatureId}&amp;fromDate=${fromDate}&amp;attrName=${attrName}"
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
+        </field>
+    </form>
 </forms>
 

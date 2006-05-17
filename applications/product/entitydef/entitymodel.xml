@@ -833,6 +833,30 @@
         <key-map field-name="parentTypeId" rel-field-name="productFeatureApplTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="ProductFeatureApplAttr"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Applicability Attribute Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="productFeatureId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>
+      <prim-key field="productId"/>
+      <prim-key field="productFeatureId"/>
+      <prim-key field="fromDate"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="PROD_FAPPA_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FAPPA_FEATURE" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FAPPA_FEATAPP" rel-entity-name="ProductFeatureAppl">
+        <key-map field-name="productId"/>
+        <key-map field-name="productFeatureId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+    </entity>
     <entity entity-name="ProductFeatureCategory"
             package-name="org.ofbiz.product.feature"
             title="Product Feature Category Entity">

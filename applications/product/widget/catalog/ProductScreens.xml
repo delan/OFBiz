@@ -153,10 +153,10 @@
                         <container>
                             <label/>
                             <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
-                             </container>    
-                                <container>
-                                    <link target="newFixedAssetProduct?productId=${productId}" text="[${uiLabelMap.AccountingFixedAssetNew}]" style="buttontext"/>
-                                </container>
+                        </container>
+                        <container>
+                            <link target="newFixedAssetProduct?productId=${productId}" text="[${uiLabelMap.AccountingFixedAssetNew}]" style="buttontext"/>
+                        </container>
                         <include-form name="ListProductFixedAssets" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -542,6 +542,11 @@
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductFeatures.ftl"/></html>
                         </platform-specific>
+                        <container>
+                            <label style="head2">${uiLabelMap.ProductFeatureAttributes}</label>
+                        </container>
+                        <include-form name="AddProductFeatureApplAttr" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="ListProductFeatureApplAttrs" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
