@@ -723,6 +723,7 @@
     </entity>
     <entity entity-name="ContactMechPurposeType"
             package-name="org.ofbiz.party.contact"
+            default-resource-name="PartyEntityLabels"
             title="Contact Mechanism Purpose Type Entity">
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -1830,6 +1831,7 @@
     </entity>
     <entity entity-name="RoleType"
             package-name="org.ofbiz.party.party"
+            default-resource-name="PartyEntityLabels"
             title="Role Type Entity">
       <field name="roleTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
