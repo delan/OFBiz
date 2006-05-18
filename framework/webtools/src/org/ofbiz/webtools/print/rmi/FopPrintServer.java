@@ -26,6 +26,7 @@ package org.ofbiz.webtools.print.rmi;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.StringWriter;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
@@ -49,10 +50,17 @@ import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.widget.screen.ScreenRenderer;
+import org.ofbiz.widget.html.HtmlScreenRenderer;
 
 /**
  * FopPrintServer
@@ -66,6 +74,7 @@ public class FopPrintServer implements Container {
     public static final String module = FopPrintServer.class.getName();
     private static UtilCache settingsCache = new UtilCache("printer.applet.settings", 50, 50, 0, false, true);
 
+    protected static HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
     protected static FopPrintServer instance = null;
     protected FopPrintRemote remote = null;
     protected String configFile = null;
@@ -193,7 +202,7 @@ public class FopPrintServer implements Container {
     }
 
     public static String getXslFo(HttpServletRequest req, HttpServletResponse resp) {
-        FopPrintRemote remote = instance.getRemote();
+        LocalDispatcher dispatcher = (LocalDispatcher) req.getAttribute("dispatcher");
         Map reqParams = UtilHttp.getParameterMap(req);
         reqParams.put("locale", UtilHttp.getLocale(req));
 
@@ -201,9 +210,9 @@ public class FopPrintServer implements Container {
         if (screenUri != null && reqParams.size() > 0) {
             String base64String = null;
             try {
-                byte[] bytes = remote.getXslFo(screenUri, reqParams);
+                byte[] bytes = FopPrintServer.getXslFo(dispatcher.getDispatchContext(), screenUri, reqParams);
                 base64String = new String(Base64.encodeBase64(bytes));
-            } catch (RemoteException e) {
+            } catch (GeneralException e) {
                 Debug.logError(e, module);
                 try {
                     resp.sendError(500);
@@ -226,6 +235,31 @@ public class FopPrintServer implements Container {
         }
 
         return null;
+    }
+
+    public static byte[] getXslFo(DispatchContext dctx, String screen, Map parameters) throws GeneralException {
+        // run as the system user
+        GenericValue system = null;
+        try {
+            system = dctx.getDelegator().findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "system"));
+        } catch (GenericEntityException e) {
+            throw new GeneralException(e.getMessage(), e);
+        }
+        parameters.put("userLogin", system);
+        if (!parameters.containsKey("locale")) {
+            parameters.put("locale", Locale.getDefault());
+        }
+
+        // render and obtain the XSL-FO
+        Writer writer = new StringWriter();
+        try {
+            ScreenRenderer screens = new ScreenRenderer(writer, null, htmlScreenRenderer);
+            screens.populateContextForService(dctx, parameters);
+            screens.render(screen);
+        } catch (Throwable t) {
+            throw new GeneralException("Problems rendering FOP XSL-FO", t);
+        }
+        return writer.toString().getBytes();
     }
 
     public static String readFopPrintServerSettings(HttpServletRequest req, HttpServletResponse resp) {
