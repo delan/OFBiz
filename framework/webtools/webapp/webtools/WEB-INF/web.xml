@@ -26,26 +26,25 @@
 <web-app>
   <display-name>Open For Business - Web Tools</display-name>
   <description>Common Application Components of the Open For Business Project</description>
-
   <context-param>
     <param-name>entityDelegatorName</param-name>
     <param-value>default</param-value>
-    <description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>
+    <!--<description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>-->
   </context-param>
   <context-param>
     <param-name>localDispatcherName</param-name>
     <param-value>webtools</param-value>
-    <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
+    <!--<description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>-->
   </context-param>
   <context-param>
     <param-name>serviceReaderUrls</param-name>
     <param-value>/WEB-INF/services.xml</param-value>
-    <description>Configuration File(s) For The Service Dispatcher</description>
+    <!--<description>Configuration File(s) For The Service Dispatcher</description>-->
   </context-param>
   <context-param>
     <param-name>scriptLocationPath</param-name>
     <param-value>/WEB-INF/bsh</param-value>
-    <description>BeanShell Script Location</description>
+    <!--<description>BeanShell Script Location</description>-->
   </context-param>   
   
     <filter>

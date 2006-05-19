@@ -454,7 +454,7 @@
         <response name="error" type="view" value="error"/>
     </request-map>
     <request-map uri="getXslFo">
-        <event type="java" path="org.ofbiz.webtools.print.rmi.FopPrintServer" invoke="getXslFo"/>
+        <event type="java" path="org.ofbiz.webtools.print.FoPrintServerEvents" invoke="getXslFo"/>
         <response name="success" type="none"/>
         <response name="error" type="none"/>
     </request-map>
