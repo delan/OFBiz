@@ -91,18 +91,16 @@ function popUp(url, name, height, width) {
 function popUpSmall(url, name) {
     popUp(url, name, '300', '450');
 }
-function popUpPrint(serverRoot, screen1) {
-    popUpPrint(serverRoot, screen1, null, null);
+function popUpPrint(printserver, screen1) {
+    popUpPrint(printserver, screen1, null, null);
 }
-function popUpPrint(serverRoot, screen1, screen2) {
-    popUpPrint(serverRoot, screen1, screen2, null);
+function popUpPrint(printserver, screen1, screen2) {
+    popUpPrint(printserver, screen1, screen2, null);
 }
-function popUpPrint(serverRoot, screen1, screen2, screen3) {
-    if  (serverRoot == null) {
-        serverRoot = "";
+function popUpPrint(printserver, screen1, screen2, screen3) {
+    if  (printserver == null) {
+        printserver = "http://localhost:10080/"; // default print server port
     }
-
-    var url = serverRoot + "/webtools/control/print";
 
     if (screen1 != null) {
         screen1 = screen1.replace(/\:/g, "%3A");
@@ -110,7 +108,9 @@ function popUpPrint(serverRoot, screen1, screen2, screen3) {
         screen1 = screen1.replace(/\#/g, "%23");
         screen1 = screen1.replace(/\?/g, "%3F");
         screen1 = screen1.replace(/\=/g, "%3D");
-        url = url + "?screen=" + screen1;
+        url = printserver + screen1;
+        window.open(url, "screen1", 'location=no,statusbar=1,menubar=0,scrollbars,width=60,height=10,top=0,left=0');
+        self.focus();
 
         if (screen2 != null) {
             screen2 = screen2.replace(/\:/g, "%3A");
@@ -118,7 +118,9 @@ function popUpPrint(serverRoot, screen1, screen2, screen3) {
             screen2 = screen2.replace(/\#/g, "%23");
             screen2 = screen2.replace(/\?/g, "%3F");
             screen2 = screen2.replace(/\=/g, "%3D");
-            url = url + "&screen=" + screen2;
+            url = printserver + screen2;
+            window.open(url, "screen2", 'location=no,statusbar=1,menubar=0,scrollbars,width=60,height=10,top=0,left=0');
+            self.focus();
 
             if (screen3 != null) {
                 screen3 = screen3.replace(/\:/g, "%3A");
@@ -126,12 +128,12 @@ function popUpPrint(serverRoot, screen1, screen2, screen3) {
                 screen3 = screen3.replace(/\#/g, "%23");
                 screen3 = screen3.replace(/\?/g, "%3F");
                 screen3 = screen3.replace(/\=/g, "%3D");
-                url = url + "&screen=" + screen3;
+                url = printserver + screen3;
+                window.open(url, "screen13", 'location=no,statusbar=1,menubar=0,scrollbars,width=60,height=10,top=0,left=0');
+                self.focus();
             }
         }
     }
-
-    popupWindow = window.open(url, name, 'location=no,statusbar=1,menubar=0,scrollbars,width=375,height=75,top=0,left=0');    
 }
 
 // hidden div functions
