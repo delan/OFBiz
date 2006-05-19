@@ -449,11 +449,16 @@
         title="Agreement Item and Agreement Product Applicability View Entity">
         <member-entity entity-alias="AGI" entity-name="AgreementItem"/>
         <member-entity entity-alias="AGPA" entity-name="AgreementProductAppl"/>
+        <member-entity entity-alias="AG" entity-name="Agreement"/>
         <alias-all entity-alias="AGI"/>
         <alias-all entity-alias="AGPA"/>
+        <alias-all entity-alias="AG"/>
         <view-link entity-alias="AGI" rel-entity-alias="AGPA">
             <key-map field-name="agreementId"/>
             <key-map field-name="agreementItemSeqId"/>
+        </view-link>
+        <view-link entity-alias="AGI" rel-entity-alias="AG">
+            <key-map field-name="agreementId"/>
         </view-link>
         <relation type="one-nofk" rel-entity-name="Agreement">
             <key-map field-name="agreementId"/>
@@ -464,11 +469,16 @@
         title="Agreement Item and Agreement Party Applicability View Entity">
         <member-entity entity-alias="AGI" entity-name="AgreementItem"/>
         <member-entity entity-alias="AGPA" entity-name="AgreementPartyApplic"/>
+        <member-entity entity-alias="AG" entity-name="Agreement"/>
         <alias-all entity-alias="AGI"/>
         <alias-all entity-alias="AGPA"/>
+        <alias-all entity-alias="AG"/>
         <view-link entity-alias="AGI" rel-entity-alias="AGPA">
             <key-map field-name="agreementId"/>
             <key-map field-name="agreementItemSeqId"/>
+        </view-link>
+        <view-link entity-alias="AGI" rel-entity-alias="AG">
+            <key-map field-name="agreementId"/>
         </view-link>
     </view-entity>
 
