@@ -4,6 +4,7 @@
     <AgreementItemType agreementItemTypeId="AGREEMENT_EXHIBIT" description="Exhibit" hasTable="N" parentTypeId=""/>
     <AgreementItemType agreementItemTypeId="AGREEMENT_PRICING_PR" description="Pricing" hasTable="N" parentTypeId=""/>
     <AgreementItemType agreementItemTypeId="AGREEMENT_SECTION" description="Section" hasTable="N" parentTypeId=""/>
+    <AgreementItemType agreementItemTypeId="AGREEMENT_COMMISSION" description="Section" hasTable="N" parentTypeId=""/>
 
     <AgreementType agreementTypeId="PRODUCT_AGREEMENT" description="Product" hasTable="N" parentTypeId=""/>
     <AgreementType agreementTypeId="PURCHASE_AGREEMENT" description="Purchase" hasTable="N" parentTypeId="PRODUCT_AGREEMENT"/>
@@ -271,5 +272,11 @@
     <TermType description="Indemnification" hasTable="N" parentTypeId="" termTypeId="INDEMNIFICATION"/>
     <TermType description="Non-Compete" hasTable="N" parentTypeId="" termTypeId="NON_COMPETE"/>
     <TermType description="Exclusive Relationship" hasTable="N" parentTypeId="" termTypeId="EXCLUSIVE_RELATIONSH"/>
+
+    <TermType description="Commission" hasTable="N" parentTypeId="" termTypeId="COMMISSION_TERM"/>
+    <TermType description="Commission Term Fixed Per Unit" hasTable="N" parentTypeId="COMMISSION_TERM" termTypeId="FIN_COMM_FIXED"/>
+    <TermType description="Commission Term Variable" hasTable="N" parentTypeId="COMMISSION_TERM" termTypeId="FIN_COMM_VARIABLE"/>
+    <TermType description="Commission Term Minimum Per Unit" hasTable="N" parentTypeId="COMMISSION_TERM" termTypeId="FIN_COMM_MIN"/>
+    <TermType description="Commission Term Maximum Per Unit" hasTable="N" parentTypeId="COMMISSION_TERM" termTypeId="FIN_COMM_MAX"/>
     <TermType description="Other" hasTable="N" parentTypeId="" termTypeId="OTHER_TERM"/>
 </entity-engine-xml>
