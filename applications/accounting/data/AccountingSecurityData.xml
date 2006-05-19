@@ -46,6 +46,12 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUAL_PAYMENT"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="MANUAL_PAYMENT"/>
 
+    <!-- ACCOUNTING_COMMs security -->
+    <SecurityPermission description="View commission rates" permissionId="ACCOUNTING_COMM_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_COMM_VIEW"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_COMM_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="ACCOUNTING_COMM_VIEW"/>
+
     <!-- Ability to print checks -->
     <SecurityPermission description="Print checks." permissionId="ACCOUNTING_PRINT_CHECKS"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_PRINT_CHECKS"/>

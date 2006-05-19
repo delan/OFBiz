@@ -287,9 +287,13 @@
     <InvoiceItemType description="Return Marketing Package Adjustment" hasTable="N" invoiceItemTypeId="CRT_MKTG_PKG_ADJ" parentTypeId=""/>
     <InvoiceItemType description="Return Manual Adjustment" hasTable="N" invoiceItemTypeId="CRT_MAN_ADJ" parentTypeId=""/>
     
+    <!-- invoice item types for commission invoices -->
+    <InvoiceItemType description="Commission Item" hasTable="N" invoiceItemTypeId="COMM_INV_ITEM" parentTypeId=""/>
+    
     <InvoiceType description="Purchase" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
     <InvoiceType description="Sales" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>
     <InvoiceType description="Customer Return" hasTable="N" invoiceTypeId="CUST_RTN_INVOICE" parentTypeId=""/>
+    <InvoiceType description="Commission" hasTable="N" invoiceTypeId="COMMISSION_INVOICE" parentTypeId=""/>
 
     <!-- maps line items such as order items to invoice item types.  separate mapping for sales and purchase invoices -->
     <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="FINISHED_GOOD" invoiceItemTypeId="INV_FPROD_ITEM"/>
