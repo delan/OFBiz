@@ -31,6 +31,7 @@
         default-map-name="partyAcctgPreference" default-service-name="createPartyAcctgPreference"
         default-widget-style="tabletext" default-title-style="tableheadtext">
         <auto-fields-service service-name="createPartyAcctgPreference"/>
+        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
         <!-- the partyId is always displayed -->
         <field name="partyId" title="Organization Party Id"><display/></field>
         <!-- if there is no partyAcctgPreference yet, then we show drop-downs for the fields and a submit button -->
