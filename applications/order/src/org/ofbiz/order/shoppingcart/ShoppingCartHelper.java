@@ -26,18 +26,9 @@ package org.ofbiz.order.shoppingcart;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-import java.util.Locale;
+import java.util.*;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -615,7 +606,7 @@ public class ShoppingCartHelper {
                     int index = Integer.parseInt(indexStr);
                     String quantString = (String) context.get(parameterName);
                     double quantity = -1;
-                    String itemDescription="";
+                    String itemDescription = "";
                     if (quantString != null) quantString = quantString.trim();
 
                     // get the cart item
@@ -638,33 +629,33 @@ public class ShoppingCartHelper {
                         itemDescription = quantString;  // the quantString is actually the description if the field name starts with DESCRIPTION
                     } else if (parameterName.startsWith("reservStart")) {
                         // should have format: yyyy-mm-dd hh:mm:ss.fffffffff
-                        quantString += " 00:00:00.000000000"; 
+                        quantString += " 00:00:00.000000000";
                         if (item != null) {
-                                Timestamp reservStart = Timestamp.valueOf((String) quantString);
-                                item.setReservStart(reservStart);
+                            Timestamp reservStart = Timestamp.valueOf((String) quantString);
+                            item.setReservStart(reservStart);
                         }
                     } else if (parameterName.startsWith("reservLength")) {
                         if (item != null) {
-                                double reservLength = nf.parse(quantString).doubleValue();
-                                item.setReservLength(reservLength);
+                            double reservLength = nf.parse(quantString).doubleValue();
+                            item.setReservLength(reservLength);
                         }
                     } else if (parameterName.startsWith("reservPersons")) {
                         if (item != null) {
-                                double reservPersons = nf.parse(quantString).doubleValue();
-                                item.setReservPersons(reservPersons);
+                            double reservPersons = nf.parse(quantString).doubleValue();
+                            item.setReservPersons(reservPersons);
                         }
                     } else if (parameterName.startsWith("shipBeforeDate")) {
                         if (item != null && quantString.length() > 0) {
                             // input is either yyyy-mm-dd or a full timestamp
                             if (quantString.length() == 10)
-                                quantString += " 00:00:00.000"; 
+                                quantString += " 00:00:00.000";
                             item.setShipBeforeDate(Timestamp.valueOf(quantString));
                         }
                     } else if (parameterName.startsWith("shipAfterDate")) {
                         if (item != null && quantString.length() > 0) {
                             // input is either yyyy-mm-dd or a full timestamp
                             if (quantString.length() == 10)
-                                quantString += " 00:00:00.000"; 
+                                quantString += " 00:00:00.000";
                             item.setShipAfterDate(Timestamp.valueOf(quantString));
                         }
                     } else {
@@ -678,7 +669,7 @@ public class ShoppingCartHelper {
                     if (parameterName.startsWith("shipAfterDate") || parameterName.startsWith("shipBeforeDate")) {
                         this.cart.setShipGroupShipDatesFromItem(item);
                     }
-                    
+
                     if (parameterName.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
                             deleteList.add(item);
@@ -714,7 +705,7 @@ public class ShoppingCartHelper {
                                             }
                                         }
                                     } else {
-                                       item.setQuantity(quantity, dispatcher, this.cart);
+                                        item.setQuantity(quantity, dispatcher, this.cart);
                                     }
                                 } catch (CartItemModifyException e) {
                                     errorMsgs.add(e.getMessage());
@@ -724,24 +715,25 @@ public class ShoppingCartHelper {
                     }
 
                     if (parameterName.toUpperCase().startsWith("DESCRIPTION")) {
-                       if (!oldDescription.equals(itemDescription)){
-                           if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
-                               if (item != null) {
-                                  item.setName(itemDescription);
-                               }
-                           }
-                       }
+                        if (!oldDescription.equals(itemDescription)) {
+                            if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
+                                if (item != null) {
+                                    item.setName(itemDescription);
+                                }
+                            }
+                        }
                     }
 
                     if (parameterName.toUpperCase().startsWith("PRICE")) {
-                      NumberFormat pf = NumberFormat.getCurrencyInstance(locale);
-                      String tmpQuantity = pf.format(quantity);
-                      String tmpOldPrice = pf.format(oldPrice);
-                      if (!tmpOldPrice.equals(tmpQuantity)) {
-                        if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
-                            if (item != null) {
-                               item.setBasePrice(quantity); // this is quantity because the parsed number variable is the same as quantity
-                             }
+                        NumberFormat pf = NumberFormat.getCurrencyInstance(locale);
+                        String tmpQuantity = pf.format(quantity);
+                        String tmpOldPrice = pf.format(oldPrice);
+                        if (!tmpOldPrice.equals(tmpQuantity)) {
+                            if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
+                                if (item != null) {
+                                    item.setBasePrice(quantity); // this is quantity because the parsed number variable is the same as quantity
+                                    item.setIsModifiedPrice(true); // flag as a modified price
+                                }
                             }
                         }
                     }
@@ -750,11 +742,11 @@ public class ShoppingCartHelper {
                         deleteList.add(this.cart.findCartItem(index));
                     }
                 } catch (NumberFormatException nfe) {
-                	Debug.logWarning(nfe, UtilProperties.getMessage(resource_error,"OrderCaughtNumberFormatExceptionOnCartUpdate", cart.getLocale()));
+                    Debug.logWarning(nfe, UtilProperties.getMessage(resource_error, "OrderCaughtNumberFormatExceptionOnCartUpdate", cart.getLocale()));
                 } catch (ParseException pe) {
-                	Debug.logWarning(pe, UtilProperties.getMessage(resource_error,"OrderCaughtParseExceptionOnCartUpdate", cart.getLocale()));
+                    Debug.logWarning(pe, UtilProperties.getMessage(resource_error, "OrderCaughtParseExceptionOnCartUpdate", cart.getLocale()));
                 } catch (Exception e) {
-                	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderCaughtExceptionOnCartUpdate", cart.getLocale()));
+                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderCaughtExceptionOnCartUpdate", cart.getLocale()));
                 }
             } // else not a parameter we need
         }
@@ -768,7 +760,7 @@ public class ShoppingCartHelper {
                     int index = Integer.parseInt(indexStr);
                     item = this.cart.findCartItem(index);
                 } catch (Exception e) {
-                	Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingTheCartItemByIndex", cart.getLocale()));
+                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderProblemsGettingTheCartItemByIndex", cart.getLocale()));
                 }
                 if (item != null) {
                     deleteList.add(item);
