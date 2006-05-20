@@ -86,6 +86,7 @@ public class AgreementServices {
         String errMsg = null;
         List commissions = FastList.newInstance();
         
+        // either ACCOUNTING_COMM_VIEW or ACCOUNTING_MANAGER should be allowed to see commission amounts
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "ACCOUNTING", "_COMM_VIEW");
         if (result.size() > 0)
             return result;
@@ -99,26 +100,27 @@ public class AgreementServices {
             quantity = quantity.abs();
             String productId = (String) context.get("productId");
             // Collect agreementItems applicable to this orderItem/returnItem
-            // Use the view entity to reduce database access
-            List agreementItems = delegator.findByAnd("AgreementItemAndProductAppl", UtilMisc.toMap(
+            // Use the view entity to reduce database access and cache to improve performance
+            List agreementItems = delegator.findByAndCache("AgreementItemAndProductAppl", UtilMisc.toMap(
                     "productId", productId,
                     "agreementItemTypeId", "AGREEMENT_COMMISSION"));
-            // Try virtual product if this is a variant product
+            // Try the first available virtual product if this is a variant product
             if (agreementItems.size() == 0) {
-                List productAssocs = delegator.findByAnd("ProductAssoc", UtilMisc.toMap(
+                List productAssocs = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap(
                         "productIdTo", productId,
                         "productAssocTypeId", "PRODUCT_VARIANT"));
                 if (productAssocs.size() > 0) {
                     GenericEntity productAssoc = EntityUtil.getFirst(productAssocs);
-                    agreementItems = delegator.findByAnd("AgreementItemAndProductAppl", UtilMisc.toMap(
+                    agreementItems = delegator.findByAndCache("AgreementItemAndProductAppl", UtilMisc.toMap(
                             "productId", productAssoc.getString("productId"),
                             "agreementItemTypeId", "AGREEMENT_COMMISSION"));
                 }
             }
+            
             Iterator it = agreementItems.iterator();
             while (it.hasNext()) {
                 GenericValue agreementItem = (GenericValue) it.next();
-                List terms = delegator.findByAnd("AgreementTerm", UtilMisc.toMap(
+                List terms = delegator.findByAndCache("AgreementTerm", UtilMisc.toMap(
                         "agreementId", agreementItem.getString("agreementId"),
                         "agreementItemSeqId", agreementItem.getString("agreementItemSeqId")));
                 BigDecimal commission = ZERO;
@@ -134,6 +136,7 @@ public class AgreementServices {
                         if (termTypeId.equals("FIN_COMM_FIXED")) {
                             commission = commission.add(termValue.multiply(quantity));
                         } else if (termTypeId.equals("FIN_COMM_VARIABLE")) {
+                            // if variable percentage commission, need to divide by 100, because 5% is stored as termValue of 5.0
                             commission = commission.add(termValue.multiply(price).divide(new BigDecimal("100"), 12, rounding));
                         } else if (termTypeId.equals("FIN_COMM_MIN")) {
                             min = termValue.multiply(quantity);

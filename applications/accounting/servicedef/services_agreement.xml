@@ -112,6 +112,7 @@
             days            Long    term days &lt;br/&gt;
             currencyUomId   String  Currency &lt;br/&gt;
             productId       String  Product Id &lt;br/&gt;
+            Will use the virtual product if no agreement is found for a variant product.  If no quantity is specified, defaults to one (1).
         </description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="price" type="BigDecimal" mode="IN" optional="false"/>
