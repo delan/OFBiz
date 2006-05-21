@@ -32,8 +32,9 @@
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="mainContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <container><link target="EditContent" text="${uiLabelMap.CommonCreateNew}" style="buttontext"/></container>
                         <label style="head1" text="${uiLabelMap.PageTitleFindContent}"></label>
                         <include-form name="FindContent" location="component://content/webapp/content/content/ContentForms.xml"/>
                         <label style="head1" text="Content List"></label>
@@ -49,17 +50,15 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="EditContent" to-scope="user"/>
-                <set field="contentId" from-field="parameters.contentId"  />
+                <set field="tabButtonItem" value="content"/>
                 <entity-one entity-name="Content" value-name="currentValue">
-                    <field-map field-name="contentId" env-name="contentId"/>
+                    <field-map field-name="contentId" env-name="parameters.contentId"/>
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditContent" location="component://content/webapp/content/content/ContentForms.xml"/>
                     </decorator-section>
@@ -74,13 +73,12 @@
             </condition>
             <actions>
                 <set field="headerItem" value="Content"/>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="CMS Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+                <set field="titleProperty" value="PageTitleAddContent"/>
+                <set field="tabButtonItem" value="content"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonContentDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddContent" location="component://content/webapp/content/content/ContentForms.xml"/>
                     </decorator-section>
@@ -94,24 +92,24 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="contentassoc" to-scope="user"/>
-                
+                <set field="titleProperty" value="PageTitleAssociations"/>
+                <set field="extraFunctionName" value="'From'"/>
+                <set field="tabButtonItem" value="association"/>
                 <set field="contentId" from-field="parameters.contentId"  />
-                
                 <set field="contentIdTo" from-field="parameters.contentIdTo"  />
-                
                 <set field="contentAssocTypeId" from-field="parameters.contentAssocTypeId"  default-value="${defaultContentAssocTypeId}"/>
                 <set field="contentAssocTypeId" from-field="contentAssocTypeId" to-scope="user"/>
-                
                 <set field="fromDate" from-field="parameters.fromDate"  />
+                <entity-one entity-name="Content" value-name="currentValue">
+                    <field-map field-name="contentId" env-name="parameters.contentId"/>
+                </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListContentAssocFrom" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <label style="head1" text="List associations 'to'"></label>
                         <include-form name="ListContentAssocTo" location="component://content/webapp/content/content/ContentForms.xml"/>
                         <section>
                             <condition>
@@ -123,6 +121,7 @@
                                 </and>  
                             </condition>
                             <widgets>
+                                <label style="head1" text="Add an association"></label>
                                 <include-form name="EditContentAssoc" location="component://content/webapp/content/content/ContentForms.xml"/>
                             </widgets>
                         </section>
@@ -136,6 +135,7 @@
                                 </or>  
                             </condition>
                             <widgets>
+                                <label style="head1" text="Add an association"></label>
                                 <include-form name="AddContentAssoc" location="component://content/webapp/content/content/ContentForms.xml"/>
                             </widgets>
                         </section>
@@ -154,15 +154,19 @@
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="role" to-scope="user"/>
+                <set field="tabButtonItem" value="role"/>
                 
                 <set field="contentId" from-field="parameters.contentId"  />
                 <set field="contentRoleTarget" value=""/>
+                <entity-one entity-name="Content" value-name="currentValue">
+                    <field-map field-name="contentId" env-name="parameters.contentId"/>
+                </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListContentRole" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <label style="head1" text="Add a Role"></label>
                         <include-form name="AddContentRole" location="component://content/webapp/content/content/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -179,14 +183,17 @@
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="purpose" to-scope="user"/>
-                
+                <set field="tabButtonItem" value="purpose"/>
                 <set field="contentId" from-field="parameters.contentId"  />
+                <entity-one entity-name="Content" value-name="currentValue">
+                    <field-map field-name="contentId" env-name="parameters.contentId"/>
+                </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListContentPurpose" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <label style="head1" text="Add a purpose"></label>
                         <include-form name="AddContentPurpose" location="component://content/webapp/content/content/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -203,14 +210,17 @@
             <script location="component://content/widget/getMenuContext.bsh"/>
             <set field="title" value="Content Edit Page"/>
             <set field="titleProperty" value="PageTitleEditContent"/>
-            <set field="currentContentMenuItemName" value="attribute" to-scope="user"/>
-            
+            <set field="tabButtonItem" value="attribute"/>
             <set field="contentId" from-field="parameters.contentId"  />
+            <entity-one entity-name="Content" value-name="currentValue">
+                <field-map field-name="contentId" env-name="parameters.contentId"/>
+            </entity-one>
         </actions>
         <widgets>
-            <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+            <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
                 <decorator-section name="body">
                     <include-form name="ListContentAttribute" location="component://content/webapp/content/content/ContentForms.xml"/>
+                    <label style="head1" text="Add an attribute"></label>
                     <include-form name="AddContentAttribute" location="component://content/webapp/content/content/ContentForms.xml"/>
                 </decorator-section>
             </decorator-screen>
@@ -228,13 +238,17 @@
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
-                <set field="currentContentMenuItemName" value="metadata" to-scope="user"/>
+                <set field="tabButtonItem" value="metaData"/>
                 <set field="contentId" from-field="parameters.contentId"  />
+                <entity-one entity-name="Content" value-name="currentValue">
+                    <field-map field-name="contentId" env-name="parameters.contentId"/>
+                </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="component://content/widget/CommonScreens.xml">
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListContentMetaData" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <label style="head1" text="Add a metadata"></label>
                         <include-form name="AddContentMetaData" location="component://content/webapp/content/content/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -255,7 +269,7 @@
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                <decorator-screen name="LookupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="lookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
                         <include-form name="listLookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>

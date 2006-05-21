@@ -69,6 +69,20 @@
                 <decorator-screen name="mainContentDecorator">
                     <decorator-section name="body">
                         <include-menu name="content" location="component://content/widget/ContentMenus.xml"/>
+                        <container>
+                            <include-menu name="contentSub" location="component://content/widget/ContentMenus.xml"/>
+                        </container>
+                        <section>
+                            <condition>
+                                <not><if-empty field-name="currentValue.contentId"/></not>
+                            </condition>
+                            <widgets>
+                                <label style="head1" text="${uiLabelMap.${titleProperty}} ${uiLabelMap.CommonFor}: ${currentValue.contentName},${currentValue.description} [${currentValue.contentId}]  ${uiLabelMap.${extraFunctionName}}"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head1" text="${uiLabelMap.${titleProperty}}"/>
+                            </fail-widgets>
+                        </section>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

@@ -53,48 +53,34 @@
         default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN"
         default-associated-content-id="${userLogin.userLoginId}"
-        selected-menuitem-context-field-name="currentMenuItemName"
+        selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         
-        <menu-item name="NewContent" title="Create New" widget-style="buttontext" >
+        <menu-item name="content" title="Content" >
             <condition>
-                <if-empty field-name="content.contentId"/>
+                <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
-            <link target="EditContent?contentId=${contentId}"/>
-        </menu-item>
-
-        <menu-item name="EditContent" title="Content" >
-            <condition>
-                <not><if-empty field-name="content.contentId"/></not>
-            </condition>
-            <link target="EditContent?contentId=${contentId}"/>
+            <link target="EditContent?contentId=${parameters.contentId}"/>
         </menu-item>
         
-        <menu-item name="AddContent" title="Content" >
+        <menu-item name="association" title="Association" >
             <condition>
-                <not><if-empty field-name="content.contentId"/></not>
+                <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
-            <link target="AddContent"/>
-        </menu-item>
-        
-        <menu-item name="contentassoc" title="Association" >
-            <condition>
-                <not><if-empty field-name="content.contentId"/></not>
-            </condition>
-            <link target="EditContentAssoc?contentId=${contentId}"/>
+            <link target="EditContentAssoc?contentId=${parameters.contentId}"/>
         </menu-item>
         
         <menu-item name="role" title="Role" >
             <condition>
-                <not><if-empty field-name="content.contentId"/></not>
+                <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
-            <link target="EditContentRole?contentId=${contentId}"/>
+            <link target="EditContentRole?contentId=${parameters.contentId}"/>
         </menu-item>
         
         <menu-item name="purpose" title="Purpose" >
             <condition>
                 <not>
-                    <if-empty field-name="content.contentId" />
+                    <if-empty field-name="currentValue.contentId" />
                 </not>
             </condition>
             <link target="EditContentPurpose?contentId=${contentId}"/>
@@ -102,18 +88,37 @@
         
         <menu-item name="attribute" title="Attribute" >
             <condition>
-                <not><if-empty field-name="content.contentId"/></not>
+                <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
             <link target="EditContentAttribute?contentId=${contentId}"/>
         </menu-item>
         
-        <menu-item name="metadata" title="Metadata" >
+        <menu-item name="metaData" title="Metadata" >
             <condition>
-                <not><if-empty field-name="content.contentId"/></not>
+                <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
             <link target="EditContentMetaData?contentId=${contentId}"/>
         </menu-item>
         
     </menu>
-    
+    <menu name="contentSub" default-title-style="buttontext"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="content"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="buttontext"
+        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN"
+        default-associated-content-id="${userLogin.userLoginId}"
+        selected-menuitem-context-field-name="currentMenuItemName"
+        title="" type="simple">
+        
+        <menu-item name="NewContent" title="${uiLabelMap.CommonCreateNew}">
+            <condition>
+                <not><if-empty field-name="currentValue.contentId"/></not>
+            </condition>
+            <link target="AddContent"/>
+        </menu-item>
+     </menu>
+        
 </menus>
