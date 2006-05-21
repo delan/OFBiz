@@ -17,12 +17,12 @@
     under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="../../../../../framework/widget/dtd/widget-form.xsd">
     
     <form name="FindContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="FindContent" title="" type="single">
+        target="findContent" title="" type="single">
         <!--auto-fields-entity entity-name="Content" default-field-type="find" /-->
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="contentId"><text-find default-option="contains" ignore-case="true"/></field>
@@ -47,11 +47,16 @@
         <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="CONTENT_STATUS "/>
+                    <entity-constraint name="statusTypeId" operator="equals" value="CONTENT_STATUS"/>
                 </entity-options>
             </drop-down>
         </field>
         <field name="createdByUserLogin" position="2"><lookup target-form-name="LookupPerson"/></field>
+        <field name="localeString">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="CountryCode" description="${countryName}[${countryCode}]" key-field-name="countryCode"/>
+            </drop-down>
+        </field>
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
@@ -72,6 +77,7 @@
         <field name="contentName"><display/></field>
         <field name="description"><display/></field>
         <field name="statusId"><display-entity entity-name="StatusItem"></display-entity></field>
+        <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}[${countryCode}]"></display-entity></field>
         <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field>
         <field name="mimeTypeId"><display-entity entity-name="MimeType"></display-entity></field>
         <field name="dataResourceId"><display/></field>

@@ -17,8 +17,8 @@
     under the License.
 -->
 
-<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="../../../framework/widget/dtd/widget-screen.xsd">
     <screen name="mainContentDecorator">
         <section>
             <actions>
@@ -141,7 +141,18 @@
             <widgets>
                 <decorator-screen name="mainContentDecorator">
                     <decorator-section name="body">
-                        <include-menu name="dataresource" location="component://content/webapp/content/data/DataResourceMenus.xml"/>
+                        <section>
+                            <condition>
+                                <not><if-empty field-name="currentValue.dataResourceId"/></not>
+                            </condition>
+                            <widgets>
+                                <label style="head1" text="${uiLabelMap.${titleProperty}} ${uiLabelMap.CommonFor}: ${currentValue.dataResourceName} [${currentValue.dataResourceId}]  ${uiLabelMap.${extraFunctionName}}"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head1" text="${uiLabelMap.${titleProperty}}"/>
+                            </fail-widgets>
+                        </section>
+                        <include-menu name="dataresource" location="component://content/widget/content/DataResourceMenus.xml"/>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
