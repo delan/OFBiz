@@ -39,6 +39,7 @@
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <!--set field="domainName" value="${bsh:s=parameters.get(&quot;_SERVER_ROOT_URL_&quot;).substring(8);i=s.indexOf(&quot;:&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/-->
                 <set field="productStoreId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
                 <set field="prodCatalogId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
                 <set field="organizationPartyId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
@@ -47,9 +48,11 @@
                 <entity-one entity-name="PartyGroup" value-name="partyGroup" use-cache="true">
                     <field-map field-name="partyId" value="${parameters.userLogin.partyId}"/>
                 </entity-one>
+                <set field="component" from-field="requestParameters.component" default-value="${parameters.component}" global="true" to-scope="user"/><!-- frontend component and webapp -->
+                <set field="webapp" from-field="requestParameters.webapp" default-value="${parameters.webapp}" global="true" to-scope="user"/>
                 <set field="layoutSettings.companyName" value="${partyGroup.groupName}" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ProductCompanySubtitle" global="true"/>
-                <set field="layoutSettings.headerImageUrl" value="/${parameters.userLogin.partyId}/html/images/company.jpg" global="true"/>
+                <set field="layoutSettings.headerImageUrl" value="/${activeApp}/html/images/opentravelsystem_logo.jpg" global="true"/>
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <entity-one entity-name="PartyAcctgPreference"  value-name="preference" use-cache="true">
@@ -58,20 +61,33 @@
                 <set field="prefix" from-field="preference.invoiceIdPrefix" global="true"/>
             </actions>
             <widgets>
-                <!-- render header -->
                 <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/header.ftl"/></html></platform-specific>
                 <section>
                     <condition>
-                        <if-empty field-name="parameters.popup"/>
+                        <and>
+                            <not><if-empty field-name="component"/></not>
+                            <not><if-compare field-name="component" operator="equals" value="null"/></not>
+                            <not><if-empty field-name="webapp"/></not>
+                            <not><if-compare field-name="webapp" operator="equals" value="null"/></not>
+                            <if-empty field-name="parameters.popup"/>
+                        </and>
                     </condition>
                     <widgets>
-                        <!-- render appbar -->
-                        <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://${parameters.component}/${parameters.webapp}/ftl/backendTop.ftl"/></html></platform-specific>
                     </widgets>
                 </section>
-                <decorator-section-include name="body"/>
-                <!-- render footer -->
-                <platform-specific><html><html-template location="component://opentravelsystem/includes/footer.ftl"/></html></platform-specific>
+                <container style="backendBottom">
+                    <section>
+                        <condition>
+                            <if-empty field-name="parameters.popup"/>
+                        </condition>
+                        <widgets>
+                            <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
+                        </widgets>
+                    </section>
+                    <decorator-section-include name="body"/>
+                </container>
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/footer.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -88,8 +104,13 @@
                     <decorator-section name="body">
                         
                         <container style="centerarea">
-                            <label style="apptitle" text="${uiLabelMap.opentravelsystemCatalog}"/>
-                            <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="ProductAppBar"/>  
+                            <section>
+                                <condition><not><if-empty field-name="userLogin"/></not></condition>
+                                <widgets>
+                                    <label style="apptitle" text="${uiLabelMap.opentravelsystemCatalog}"/>
+                                    <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="ProductAppBar"/>  
+                                </widgets>
+                            </section>
                             <!--<platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/appheaderCatalog.ftl"/></html></platform-specific>-->
                             <container style="contentarea">
                                 <container style="${MainColumnStyle}">
@@ -205,8 +226,7 @@
         <section>
             <condition>
                 <or>
-                    <if-has-permission permission="OPENTRAVELSYSTEM" action="_R"/>
-                    <if-has-permission permission="${parameters.organizationPartyId}" action="_R"/>                    
+                    <if-compare field-name="parameters.userLogin.partyId" operator="equals" value="admin"/>
                 </or>
             </condition>
             <actions>
@@ -253,7 +273,7 @@
             </widgets>
             <fail-widgets>
                 <container style="contentarea">
-                    <label text="Security Error: you need at least readaccess to &quot;${parameters.organizationPartyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+                    <label style="head1" text="${uiLabelMap.NoAccess}"/>
                     <link text="click here to to to the main screen" target="main"/>
                 </container>
             </fail-widgets>

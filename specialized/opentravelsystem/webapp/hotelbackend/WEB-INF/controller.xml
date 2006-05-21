@@ -159,7 +159,7 @@
 
     <request-map uri="editPage">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditElectronicText"/>
+        <response name="success" type="view" value="EditonicText"/>
     </request-map>
     
     <request-map uri="updateHelpText">
@@ -3016,10 +3016,10 @@
         <response name="success" type="view" value="ViewGlReconciliation"/>
     </request-map>
     
-    <!-- electronic text -->
-    <request-map uri="findElectronicTexts">
+    <!-- Website Content -->
+    <request-map uri="findWebsiteContent">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="findElectronicTexts"/>
+        <response name="success" type="view" value="findWebsiteContent"/>
     </request-map>
     
 
@@ -3104,7 +3104,7 @@
     <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
     <view-map name="help" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#help"/>
     <view-map name="EditHelpText"  page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditHelpText" type="screen"/>
-    <view-map name="EditElectronicText"  page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditElectronicText" type="screen"/>
+    <view-map name="findWebsiteContent"  page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#findWebsiteContent" type="screen"/>
     <view-map name="EditSecurityGroupUserLogins" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#EditSecurityGroupUserLogins"/>
     <!-- Accounting screens-->
     <view-map name="mainAccounting" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#main"/>

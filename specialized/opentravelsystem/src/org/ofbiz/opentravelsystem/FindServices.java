@@ -155,9 +155,15 @@ public class FindServices {
         				|| entityName.equals("PartyNameView"))  {
         			extraCond = new EntityExpr("partyId", EntityOperator.LIKE, companyPrefix); 
         		}
-        		else if (entityName.equals("ElectronicText") || entityName.equals("DataResource"))  {
-        			extraCond = new EntityExpr("dataResourceId", EntityOperator.LIKE, companyPrefix); 
-        		}
+                else if (entityName.equals("ElectronicText") || entityName.equals("DataResource"))  {
+                    extraCond = new EntityExpr("dataResourceId", EntityOperator.LIKE, companyPrefix); 
+                }
+                else if (entityName.equals("ContentAssocViewFrom"))  {
+                    extraCond = new EntityExpr("contentIdStart", EntityOperator.LIKE, companyPrefix); 
+                }
+                else if (entityName.equals("Content"))  {
+                    extraCond = new EntityExpr("contentId", EntityOperator.LIKE, companyPrefix); 
+                }
         		else if (entityName.equals("ContactList")
         				|| entityName.equals("ContactListParty")
         				|| entityName.equals("ContactListPartyStatus")

@@ -37,7 +37,7 @@
         <menu-item name="security" title="Security"><link target="security"/></menu-item>
         <menu-item name="contactlist" title="ContactLists"><link target="ListContactLists"/></menu-item>
         <menu-item name="company" title="CompanyInfo"><link target="editOrganizationCompany"/></menu-item>
-        <menu-item name="help" title="Help"><link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/></menu-item>
+        <menu-item name="help" title="Help" widget-style="headerButtonRight"><link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/></menu-item>
     </menu>
     
     <menu name="PartyTabBar" default-menu-item-name="EditParty" default-selected-style="tabButtonSelected" 

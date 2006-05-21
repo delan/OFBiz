@@ -62,23 +62,25 @@
     </form>
     
     
-    <form name="ListElectronicTexts" type="list" separate-columns="true" 
-        title="ElectronicText List"  default-title-style="tableheadtext" list-name="listIt" target=""
+    <form name="listWebsiteContent" type="list" separate-columns="true" 
+        title="List of Website content pages"  default-title-style="tableheadtext" list-name="listIt" target=""
         default-widget-style="tabletext" default-tooltip-style="tabletext"
-        paginate-target="findElectronicTexts" default-entity-name="ElectronicText">
+        paginate-target="findWebsiteContent">
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
-                <field-map field-name="entityName" value="ElectronicText"/>
-                <field-map field-name="orderBy" value="dataResourceId"/>
+                <field-map field-name="entityName" value="ContentAssocViewFrom"/>
+                <field-map field-name="orderBy" value="contentName"/>
+                <field-map field-name="noConditionFind" value="Y"/>
             </service>
         </actions>
-        <field name="DataResourceId" widget-style="buttontext">
+        <field name="contentName" widget-style="buttontext">
             <hyperlink description="${dataResourceId}" target="editPage?contentId=${dataResourceId}"/>
         </field>
-        <field name="dataResourceName"><display-entity entity-name="DataResource" key-field-name="dataResourceId" description="${dataResourceName}"></display-entity></field>
-        <field name="createdStamp" ><display type="text"/></field>
-        <field name="lastUpdatedStamp"><display type="text"/></field>
+        <field name="description"><text/></field>
+        <field name="statusId"><text/></field>
+        <field name="localeString"><text/></field>
+        <field name="contentId"><text/></field>
     </form>
     
  

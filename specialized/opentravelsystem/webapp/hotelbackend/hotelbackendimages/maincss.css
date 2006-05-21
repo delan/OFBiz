@@ -9,10 +9,6 @@ padding-bottom: 20px;
 /* ===== General Styles ===== */
 BODY {
 background: #FFFFFF;
-margin-top: 0px;
-margin-right: 10px;
-margin-bottom: 0px;
-margin-left: 10px;
 }
 
 h1 {
@@ -477,6 +473,9 @@ A IMG.imageborder {
 border-style: solid;
 border-width: 1px;
 border-color: #999999;
+}
+.appContainer {
+width: 100%;
 }
 
 .headerButtonLeft {
