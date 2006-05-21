@@ -665,7 +665,11 @@
     <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
 
     <!-- ================ Redirect Content Requests ================= -->
-    <request-map uri="ContentMenu"><security auth="true" https="true"/><response name="success" type="view" value="ContentMenu"/></request-map>
+    <!--request-map uri="ContentMenu"><security auth="true" https="true"/><response name="success" type="view" value="ContentMenu"/></request-map-->
+    <request-map uri="findContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FindContent"/>
+    </request-map>
     <request-map uri="ContentSetupMenu"><security auth="true" https="true"/><response name="success" type="view" value="ContentSetupMenu"/></request-map>
     <request-map uri="DataSetupMenu"><security auth="true" https="true"/><response name="success" type="view" value="DataSetupMenu"/></request-map>
     <request-map uri="LayoutMenu"><security auth="true" https="true"/><response name="success" type="view" value="LayoutMenu"/></request-map>
@@ -1598,7 +1602,7 @@
     <view-map name="EditLayoutImage" page="/layout/EditLayoutImage.ftl" type="jpublish"/>
     <view-map name="EditLayoutUrl" page="/layout/EditLayoutUrl.ftl" type="jpublish"/>
 
-    <view-map name="ContentMenu"  page="component://content/widget/content/ContentScreens.xml#ContentMenu" type="screen"/>
+    <view-map name="FindContent"  page="component://content/widget/content/ContentScreens.xml#FindContent" type="screen"/>
     <view-map name="ContentSetupMenu" page="/cms/ContentSetupMenu.ftl" type="jpublish"/>
     <view-map name="DataSetupMenu" page="/datasetup/DataSetupMenu.ftl" type="jpublish"/>
     <view-map name="LayoutMenu" page="/layout/LayoutMenu.ftl" type="jpublish"/>
