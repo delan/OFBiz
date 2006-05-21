@@ -169,14 +169,16 @@ public class ShoppingCartEvents {
         if (productCategoryId != null && productCategoryId.length() == 0) {
             productCategoryId = null;
         }
+        
+        if (paramMap.containsKey("ADD_ITEM_TYPE")) {
+            itemType = (String) paramMap.remove("ADD_ITEM_TYPE");
+        } else if (paramMap.containsKey("add_item_type")) {
+            itemType = (String) paramMap.remove("add_item_type");
+        }
 
         if (productId == null) {
             // before returning error; check make sure we aren't adding a special item type
-            if (paramMap.containsKey("ADD_ITEM_TYPE")) {
-                itemType = (String) paramMap.remove("ADD_ITEM_TYPE");
-            } else if (paramMap.containsKey("add_item_type")) {
-                itemType = (String) paramMap.remove("add_item_type");
-            } else {
+            if (UtilValidate.isEmpty(itemType)) {
                 request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource, "cart.addToCart.noProductInfoPassed", locale));
                 return "success"; // not critical return to same page
             }
@@ -399,8 +401,9 @@ public class ShoppingCartEvents {
 
         // Translate the parameters and add to the cart
         result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-                itemType, itemDescription, price, amount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, configWrapper, itemGroupNumber, paramMap);
-            controlDirective = processResult(result, request);
+                itemType, itemDescription, price, amount, quantity, reservStart, reservLength, reservPersons, 
+                shipBeforeDate, shipAfterDate, configWrapper, itemGroupNumber, paramMap);
+        controlDirective = processResult(result, request);
 
         // Determine where to send the browser
         if (controlDirective.equals(ERROR)) {

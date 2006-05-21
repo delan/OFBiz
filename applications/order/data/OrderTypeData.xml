@@ -32,11 +32,15 @@
     <OrderBlacklistType orderBlacklistTypeId="BLACKLIST_EMAIL" description="E-Mail"/>
     <OrderBlacklistType orderBlacklistTypeId="BLACKLIST_PHONE" description="Phone Number"/>
 
-    <OrderItemType description="Bulk Item" hasTable="N" orderItemTypeId="BULK_ORDER_ITEM" parentTypeId=""/>
+    <OrderItemType description="Purchase Order Specific" hasTable="N" orderItemTypeId="PURCHASE_SPECIFIC" parentTypeId=""/>
+    <OrderItemType description="PO: Inventory" hasTable="N" orderItemTypeId="INVENTORY_ORDER_ITEM" parentTypeId="PURCHASE_SPECIFIC"/>
+    <OrderItemType description="PO: Supplies (to Expense)" hasTable="N" orderItemTypeId="SUPPLIES_ORDER_ITEM" parentTypeId="PURCHASE_SPECIFIC"/>
+    <OrderItemType description="PO: Fixed Asset" hasTable="N" orderItemTypeId="ASSET_ORDER_ITEM" parentTypeId="PURCHASE_SPECIFIC"/>
     <OrderItemType description="Product Item" hasTable="N" orderItemTypeId="PRODUCT_ORDER_ITEM" parentTypeId=""/>
     <OrderItemType description="Work Item" hasTable="N" orderItemTypeId="WORK_ORDER_ITEM" parentTypeId=""/>
     <OrderItemType description="Rental Item" hasTable="N" orderItemTypeId="RENTAL_ORDER_ITEM" parentTypeId=""/>
-
+    <OrderItemType description="Bulk Item" hasTable="N" orderItemTypeId="BULK_ORDER_ITEM" parentTypeId=""/>
+    
     <OrderType description="Purchase" hasTable="N" orderTypeId="PURCHASE_ORDER" parentTypeId=""/>
     <OrderType description="Sales" hasTable="N" orderTypeId="SALES_ORDER" parentTypeId=""/>
 

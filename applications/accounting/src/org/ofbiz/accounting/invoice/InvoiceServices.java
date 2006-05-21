@@ -367,13 +367,6 @@ public class InvoiceServices {
                     if (orderedQuantity == null) orderedQuantity = ZERO;
                     if (billingQuantity == null) billingQuantity = ZERO;
 
-                    String lookupType = "FINISHED_GOOD"; // the default product type
-                    if (product != null) {
-                        lookupType = product.getString("productTypeId");
-                    } else if (orderItem != null) {
-                        lookupType = orderItem.getString("orderItemTypeId");
-                    }
-
                     // check if shipping applies to this item.  Shipping is calculated for sales invoices, not purchase invoices.
                     boolean shippingApplies = false;
                     if ((product != null) && (ProductWorker.shippingApplies(product)) && (invoiceType.equals("SALES_INVOICE"))) {
@@ -381,7 +374,10 @@ public class InvoiceServices {
                     }
 
                     GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId));
-                    invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, lookupType, invoiceType, "INV_FPROD_ITEM"));
+                    invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, 
+                            (orderItem == null ? null : orderItem.getString("orderItemTypeId")), 
+                            (product == null ? null : product.getString("productTypeId")), 
+                            invoiceType, "INV_FPROD_ITEM"));
                     invoiceItem.set("description", orderItem.get("itemDescription"));
                     invoiceItem.set("quantity", new Double(billingQuantity.doubleValue()));
                     invoiceItem.set("amount", orderItem.get("unitPrice"));
@@ -445,7 +441,7 @@ public class InvoiceServices {
                             amount = amount.multiply(invoiceItem.getBigDecimal("quantity"));
                             amount = amount.setScale(decimals, rounding);
                             GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId));
-                            adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceType, "INVOICE_ITM_ADJ"));
+                            adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceType, "INVOICE_ITM_ADJ"));
                             adjInvItem.set("productId", orderItem.get("productId"));
                             adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
                             adjInvItem.set("parentInvoiceId", invoiceId);
@@ -633,7 +629,7 @@ public class InvoiceServices {
     }
 
     public static Map createInvoicesFromShipment(DispatchContext dctx, Map context) {
-        GenericDelegator delegator = dctx.getDelegator();
+        //GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String shipmentId = (String) context.get("shipmentId");
         Locale locale = (Locale) context.get("locale");
@@ -642,7 +638,7 @@ public class InvoiceServices {
         Map serviceContext = UtilMisc.toMap("shipmentIds", UtilMisc.toList(shipmentId), "userLogin", context.get("userLogin"));
         try {
             Map result = dispatcher.runSync("createInvoicesFromShipments", serviceContext);
-            invoicesCreated = (List)result.get("invoicesCreated");
+            invoicesCreated = (List) result.get("invoicesCreated");
         } catch (GenericServiceException e) {
             Debug.logError(e, "Trouble calling createInvoicesFromShipments service; invoice not created for shipment [" + shipmentId + "]", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingTroubleCreateInvoicesFromShipmentsService",UtilMisc.toMap("shipmentId",shipmentId),locale));
@@ -663,7 +659,7 @@ public class InvoiceServices {
         
         List invoicesCreated = new ArrayList();
 
-        List shipmentIdList = new LinkedList();
+        //DEJ20060520: not used? planned to be used? List shipmentIdList = new LinkedList();
         for (int i = 0; i < shipmentIds.size(); i++) {
             String tmpShipmentId = (String)shipmentIds.get(i);
             try {
@@ -838,12 +834,17 @@ public class InvoiceServices {
         return response;
     }
 
-    private static String getInvoiceItemType(GenericDelegator delegator, String key, String invoiceTypeId, String defaultValue) {
+    private static String getInvoiceItemType(GenericDelegator delegator, String key1, String key2, String invoiceTypeId, String defaultValue) {
         GenericValue itemMap = null;
         try {
-            itemMap = delegator.findByPrimaryKey("InvoiceItemTypeMap", UtilMisc.toMap("invoiceItemMapKey", key, "invoiceTypeId", invoiceTypeId));
+            if (UtilValidate.isNotEmpty(key1)) {
+                itemMap = delegator.findByPrimaryKeyCache("InvoiceItemTypeMap", UtilMisc.toMap("invoiceItemMapKey", key1, "invoiceTypeId", invoiceTypeId));
+            }
+            if (itemMap == null && UtilValidate.isNotEmpty(key2)) {
+                itemMap = delegator.findByPrimaryKeyCache("InvoiceItemTypeMap", UtilMisc.toMap("invoiceItemMapKey", key2, "invoiceTypeId", invoiceTypeId));
+            }
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Trouble getting InvoiceItemTypeMap entity", module);
+            Debug.logError(e, "Trouble getting InvoiceItemTypeMap entity record", module);
             return defaultValue;
         }
         if (itemMap != null) {
@@ -978,7 +979,7 @@ public class InvoiceServices {
                 BigDecimal returnPrice = returnItem.getBigDecimal("returnPrice");
 
                 // determine invoice item type from the return item type
-                String invoiceItemTypeId = getInvoiceItemType(delegator, returnItem.getString("returnItemTypeId"), "CUST_RTN_INVOICE", null);
+                String invoiceItemTypeId = getInvoiceItemType(delegator, returnItem.getString("returnItemTypeId"), null, "CUST_RTN_INVOICE", null);
                 if (invoiceItemTypeId == null) {
                     return ServiceUtil.returnError(errorMsg + UtilProperties.getMessage(resource, "AccountingNoKnownInvoiceItemTypeReturnItemType",UtilMisc.toMap("returnItemTypeId",returnItem.getString("returnItemTypeId")),locale));
                 }
@@ -1030,7 +1031,7 @@ public class InvoiceServices {
                     GenericValue adjustment = (GenericValue) adjIter.next();
 
                     // determine invoice item type from the return item type
-                    invoiceItemTypeId = getInvoiceItemType(delegator, adjustment.getString("returnAdjustmentTypeId"), "CUST_RTN_INVOICE", null);
+                    invoiceItemTypeId = getInvoiceItemType(delegator, adjustment.getString("returnAdjustmentTypeId"), null, "CUST_RTN_INVOICE", null);
                     if (invoiceItemTypeId == null) {
                         return ServiceUtil.returnError(errorMsg + "No known invoice item type for the return adjustment type [" 
                                 +  adjustment.getString("returnAdjustmentTypeId") + "]");
@@ -1090,7 +1091,7 @@ public class InvoiceServices {
                 GenericValue adjustment = (GenericValue) iter.next();
 
                 // determine invoice item type from the return item type
-                String invoiceItemTypeId = getInvoiceItemType(delegator, adjustment.getString("returnAdjustmentTypeId"), "CUST_RTN_INVOICE", null);
+                String invoiceItemTypeId = getInvoiceItemType(delegator, adjustment.getString("returnAdjustmentTypeId"), null, "CUST_RTN_INVOICE", null);
                 if (invoiceItemTypeId == null) {
                     return ServiceUtil.returnError(errorMsg + UtilProperties.getMessage(resource, "AccountingNoKnownInvoiceItemTypeReturnAdjustmentType",
                             UtilMisc.toMap("returnAdjustmentTypeId",adjustment.getString("returnAdjustmentTypeId")),locale));
@@ -1240,7 +1241,7 @@ public class InvoiceServices {
             }
             if (amount.signum() != 0) {
                 GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId));
-                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), invoiceTypeId, "INVOICE_ADJ"));
+                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceTypeId, "INVOICE_ADJ"));
                 //invoiceItem.set("productId", orderItem.get("productId"));
                 //invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
                 //invoiceItem.set("uomId", "");
