@@ -260,6 +260,10 @@
     <InvoiceItemType description="Invoice Product-Feature Item" hasTable="N" invoiceItemTypeId="PINV_PROD_FEATR_ITEM" parentTypeId="PINV_PROD_ITEM"/>
     <InvoiceItemType description="Invoice Service Product Item" hasTable="N" invoiceItemTypeId="PINV_SPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
 
+    <InvoiceItemType description="Invoice Inventory Product Item" hasTable="N" invoiceItemTypeId="PINV_INVPRD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Supplies (to Expense) Product Item" hasTable="N" invoiceItemTypeId="PINV_SUPLPRD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Fixed Asset Product Item" hasTable="N" invoiceItemTypeId="PINV_FXASTPRD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+    
     <InvoiceItemType description="Invoice Work-Effort Item" hasTable="N" invoiceItemTypeId="PINV_WE_ITEM" parentTypeId=""/>
     <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="PINV_TE_ITEM" parentTypeId=""/>
 
@@ -310,9 +314,17 @@
     <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="ADDITIONAL_FEATURE" invoiceItemTypeId="ITM_ADD_FEATURE"/>
     <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="WARRANTY_ADJUSTMENT" invoiceItemTypeId="ITM_WARRANTY_ADJ"/>
 
+    <!-- orderItemTypeId -->
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="INVENTORY_ORDER_ITEM" invoiceItemTypeId="PINV_INVPRD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="SUPPLIES_ORDER_ITEM" invoiceItemTypeId="PINV_SUPLPRD_ITEM"/>
+    <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="ASSET_ORDER_ITEM" invoiceItemTypeId="PINV_FXASTPRD_ITEM"/>
+
+    <!-- productTypeId -->
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="FINISHED_GOOD" invoiceItemTypeId="PINV_FPROD_ITEM"/>
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="DIGITAL_GOOD" invoiceItemTypeId="PINV_DPROD_ITEM"/>
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="FINDIG_GOOD" invoiceItemTypeId="PINV_FDPROD_ITEM"/>
+
+    <!-- orderAdjustmentTypeId -->
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="PITM_PROMOTION_ADJ"/>
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="REPLACE_ADJUSTMENT" invoiceItemTypeId="PITM_REPLACE_ADJ"/>
     <InvoiceItemTypeMap invoiceTypeId="PURCHASE_INVOICE" invoiceItemMapKey="DISCOUNT_ADJUSTMENT" invoiceItemTypeId="PITM_DISCOUNT_ADJ"/>
