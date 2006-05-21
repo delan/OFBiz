@@ -113,9 +113,8 @@
         </field>
         <field name="statusId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
-                    <entity-constraint name="statusTypeId" value="PUBLISH_STATUS"/>
-                    <entity-order-by field-name="sequenceId"/>
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="CONTENT_STATUS "/>
                 </entity-options>
             </drop-down>
         </field>
@@ -167,16 +166,15 @@
         </field>
         <field name="statusId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId"/>
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="CONTENT_STATUS "/>
+                </entity-options>
             </drop-down>
         </field>
         <field name="createdByUserLogin" position="1"><display/></field>
         <field name="createdDate" position="2"><display/></field>
         <field name="lastModifiedByUserLogin" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
-        <field name="findContent" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Find"  target="FindContent"/>
-        </field>
     </form>
     
     
