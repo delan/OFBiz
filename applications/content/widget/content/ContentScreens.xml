@@ -35,7 +35,7 @@
                 <decorator-screen name="mainContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><link target="EditContent" text="${uiLabelMap.CommonCreateNew}" style="buttontext"/></container>
-                        <label style="head1" text="${uiLabelMap.PageTitleFindContent}"></label>
+                        <label style="head1" text="${uiLabelMap.PageTitleFindContent}"/>
                         <include-form name="FindContent" location="component://content/webapp/content/content/ContentForms.xml"/>
                         <label style="head1" text="Content List"></label>
                         <include-form name="ListContent" location="component://content/webapp/content/content/ContentForms.xml"/>
