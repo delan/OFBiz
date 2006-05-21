@@ -67,13 +67,13 @@
         </section>
     </screen>
     
-    <screen name="findElectronicTexts">
+    <screen name="findWebsiteContent">
         <section>
             <actions>
                 <set field="title" value="Find an Electronic Text"/>
                 <set field="headerItem" value="websites"/>
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
             </actions>
             <widgets>
@@ -82,7 +82,7 @@
                         <container><label style="head1">List website pages</label></container>
                         <!--include-form name="FindInvoices" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
                         <container><link target="editInvoice" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingInvoice}" style="buttontext"/></container-->
-                        <include-form name="ListElectronicTexts"  location="component://opentravelsystem/webapp/hotelbackend/screens/ContentForms.xml"/>
+                        <include-form name="listWebsiteContent"  location="component://opentravelsystem/webapp/hotelbackend/screens/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

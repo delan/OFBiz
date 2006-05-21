@@ -39,7 +39,7 @@
 		,{"title":"Reservations",	"url":"findorders"}
 		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
 		,{"title":"Accounting",			"url":"mainAccounting"}
-		,{"title":"Website", 			"url":"findElectronicTexts"}
+		,{"title":"Website", 			"url":"findWebsiteContent"}
 		,{"title":"SysAdmin", 			"url":"sysAdminMain"}
 		,{"title":"Logout", 			"url":"logout"}
 		]>

@@ -41,19 +41,9 @@
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <script language='javascript' src='<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>' type='text/javascript'></script>
     <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/maincss.css</@ofbizContentUrl>' type='text/css'>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/tabstyles.css</@ofbizContentUrl>' type='text/css'>       
+    <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/maincss.css</@ofbizContentUrl>' type='text/css'></link>
+    <link rel='stylesheet' href='<@ofbizContentUrl>/${activeApp}/hotelbackendimages/tabstyles.css</@ofbizContentUrl>' type='text/css'></link>       
 	${layoutSettings.extraHead?if_exists}
-    <#if htmlEdit?exists> 
-		<script language="Javascript" type="text/javascript" src="/${activeApp}/html/whizzywig.js"></script>
-		<script language="Javascript" type="text/javascript" src="/${activeApp}/html/xhtml.js"></script>
-	<script language="JavaScript">
-		// wizzywig variables
-		buttonPath = "/${activeApp}/html/images/";
-		cssFile = "/${activeApp}/html/images/simple.css";
-		gentleClean = "true";
-	</script>
-	</#if>
 	<script language="JavaScript">
 		function getHelpWindow(url) {
 	    win=window.open(url,"helpwin","height=400,width=800,toolbar=no,location=no,scrollbars=yes,directories=no,status=no,menubar=no,resizable=yes");
@@ -63,17 +53,13 @@
 </head>
 
 <body>
-<#if !parameters.popup?exists>
+<#if !parameters.popup?exists && ((!component?exists && !webapp?exists) || (component?if_exists == "null" && webapp?if_exists == "null"))>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
-         <#if userLogin?has_content && productStoreId?exists>
           <td align="left" width='1%'><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"/></td>
-          <#else>
-          <td align="left" width='1%'><img alt="Backend system" src="/${activeApp}/html/images/system.jpg"/></td>
-          </#if>  
             <#if userLogin?has_content && productStoreId?exists>
 				<td class="head2"><center><u>Store Name: ${productStoreId}<br/>Org.Party: ${organizationPartyId?if_exists}</u></center></td/>
 			</#if>

@@ -203,6 +203,7 @@ public class importDataBw {
                 case 1: // category with connection to browse category
                     sub1Category.put("productCategoryId", infoItem); // is prefixed by the service
                     sub1Category.put("description",infoItem);
+                    sub1Category.put("categoryImageUrl","/".concat(prefix).concat("/html/images/").concat(infoItem).concat(".jpg"));
                     sub1CategoryId = prefix.concat(infoItem); // used for roll up (not prefixed by service)
                     productCategoryRollup1.put("productCategoryId", prefix.concat(infoItem));
                     break;
@@ -210,6 +211,7 @@ public class importDataBw {
                     sub2Category.put("productCategoryId", infoItem);
                     sub2Category.put("description",infoItem);
                     sub2CategoryId = prefix.concat(infoItem);
+                    sub2Category.put("categoryImageUrl","/".concat(prefix).concat("/html/images/").concat(infoItem).concat(".jpg"));
                     productCategoryRollup2.put("productCategoryId", prefix.concat(infoItem));
                     productCategoryRollup2.put("parentProductCategoryId", sub1CategoryId);
                     break;
@@ -217,6 +219,7 @@ public class importDataBw {
                     sub3Category.put("productCategoryId", infoItem);
                     sub3Category.put("description",infoItem);
                     sub3CategoryId = prefix.concat(infoItem);
+                    sub3Category.put("categoryImageUrl","/".concat(prefix).concat("/html/images/").concat(infoItem).concat(".jpg"));
                     productCategoryRollup3.put("productCategoryId", prefix.concat(infoItem));
                     productCategoryRollup3.put("parentProductCategoryId", sub2CategoryId);
                     sub3CategoryMember.put("productCategoryId", prefix.concat(infoItem));
@@ -226,8 +229,8 @@ public class importDataBw {
                     productId = prefix.concat(infoItem);
 					productPrice.put("productId", prefix.concat(infoItem));  // not prefixed by service
 					sub3CategoryMember.put("productId",prefix.concat(infoItem)); // connect to category, not prefixed by service
-                    product.put("largeImageUrl", "/".concat(organizationPartyId).concat("/html/images/").concat(infoItem).concat(".jpg"));
-                    product.put("smallImageUrl","/".concat(organizationPartyId).concat("/html/images").concat(infoItem).concat(".jpg"));
+                    product.put("largeImageUrl", "/".concat(prefix).concat("/html/images/").concat(infoItem).concat(".jpg"));
+                    product.put("smallImageUrl","/".concat(prefix).concat("/html/images/").concat(infoItem).concat(".jpg"));
 					break;
 				case 5: //description
 					product.put("productName", infoItem);
@@ -308,6 +311,9 @@ public class importDataBw {
                     results = dispatcher.runSync("createProductCategory",sub3Category);                                 // add category
                     categoryNbr++;
                     results = dispatcher.runSync("addProductCategoryToCategory",productCategoryRollup3); // link to higherlevel category
+                    if(prExist != null) { // new category but existing product so create the link
+                        results = dispatcher.runSync("addProductToCategory",sub3CategoryMember);                
+                    }
                 }
                 // update comments when category already exists
                 if (cat3MemExist != null)  {
