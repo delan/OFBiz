@@ -102,7 +102,7 @@ under the License.
             
         <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteExampleItem?exampleId=${exampleId}&amp;exampleItemSeqId=${exampleItemSeqId}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -136,9 +136,9 @@ under the License.
         <auto-fields-service service-name="updateExampleFeatureAppl"/>
         
         <field name="exampleId"><hidden/></field>
-        <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}">
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}" widget-style="tabletext">
             <display-entity entity-name="ExampleFeature" description="${description}">
-                <sub-hyperlink target="EditExampleFeature?exampleFeatureId=${exampleFeatureId}" description="[${exampleFeatureId}]" link-style="buttontext"/>
+                <sub-hyperlink target="EditExampleFeature?exampleFeatureId=${exampleFeatureId}" description="${exampleFeatureId}" link-style="buttontext"/>
             </display-entity>
         </field>
         <field name="fromDate"><display/></field>
@@ -153,7 +153,7 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="example_deleteExampleFeatureAppl?exampleId=${exampleId}&amp;exampleFeatureId=${exampleFeatureId}&amp;fromDate=${fromDate}"
-                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+                description="${uiLabelMap.CommonDelete}" also-hidden="false"/>
         </field>
     </form>
     <form name="AddExampleFeatureAppl" type="single" 
