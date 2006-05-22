@@ -305,17 +305,20 @@ public class EmailServices {
      */
     public static Map sendMailFromScreen(DispatchContext dctx, Map serviceContext) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) serviceContext.get("locale");
         String webSiteId = (String) serviceContext.remove("webSiteId");
         String bodyText = (String) serviceContext.remove("bodyText");
         String bodyScreenUri = (String) serviceContext.remove("bodyScreenUri");
         String xslfoAttachScreenLocation = (String) serviceContext.remove("xslfoAttachScreenLocation");
         Map bodyParameters = (Map) serviceContext.remove("bodyParameters");
+        bodyParameters.put("locale", locale);
         String partyId = (String) bodyParameters.get("partyId");
         NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
 
         StringWriter bodyWriter = new StringWriter();
 
         MapStack screenContext = MapStack.create();
+        screenContext.put("locale", locale);
         ScreenRenderer screens = new ScreenRenderer(bodyWriter, screenContext, htmlScreenRenderer);
         screens.populateContextForService(dctx, bodyParameters);
         screenContext.putAll(bodyParameters);
@@ -404,7 +407,7 @@ public class EmailServices {
                 // store in the list of maps for sendmail....
                 List bodyParts = FastList.newInstance();
                 if (bodyText != null) {
-                    bodyText = FlexibleStringExpander.expandString(bodyText, screenContext, (Locale) screenContext.get("locale"));
+                    bodyText = FlexibleStringExpander.expandString(bodyText, screenContext,  locale);
                     bodyParts.add(UtilMisc.toMap("content", bodyText, "type", "text/html"));
                 } else {
                     bodyParts.add(UtilMisc.toMap("content", bodyWriter.toString(), "type", "text/html"));
@@ -436,7 +439,7 @@ public class EmailServices {
             isMultiPart = false;
             // store body and type for single part message in the context.
             if (bodyText != null) {
-                bodyText = FlexibleStringExpander.expandString(bodyText, screenContext, (Locale) screenContext.get("locale"));
+                bodyText = FlexibleStringExpander.expandString(bodyText, screenContext,  locale);
                 serviceContext.put("body", bodyText);
             } else {
                 serviceContext.put("body", bodyWriter.toString());
@@ -446,7 +449,7 @@ public class EmailServices {
         
         // also expand the subject at this point, just in case it has the FlexibleStringExpander syntax in it...
         String subject = (String) serviceContext.remove("subject");
-        subject = FlexibleStringExpander.expandString(subject, screenContext, (Locale) screenContext.get("locale"));
+        subject = FlexibleStringExpander.expandString(subject, screenContext, locale);
         serviceContext.put("subject", subject);
         serviceContext.put("partyId", partyId);
 
