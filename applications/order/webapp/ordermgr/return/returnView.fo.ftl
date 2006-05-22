@@ -36,15 +36,12 @@
     <fo:table-row>
     <fo:table-cell padding="1mm"/>
     <fo:table-cell padding="1mm"/>
-    <fo:table-cell padding="1mm">
+    <fo:table-cell number-columns-spanned="3" padding="1mm">
       <fo:block wrap-option="wrap">
-        ${returnAdjustment.description?default("N/A")}
-        <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
+        <#if returnAdjustment.comments?has_content>${returnAdjustment.comments}<#else>${returnAdjustment.description?default("N/A")}</#if>
       </fo:block>
     </fo:table-cell>
-    <fo:table-cell padding="1mm"/>
-    <fo:table-cell padding="1mm"/>
-    <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnAdjustment.amount}</fo:block></fo:table-cell>
+    <fo:table-cell padding="1mm" text-align="right"><fo:block><@ofbizCurrency amount=returnAdjustment.amount isoCode=returnHeader.currencyUomId/></fo:block></fo:table-cell>
     </fo:table-row>
     <#assign total = total + returnAdjustment.get("amount")>
 </#macro>
@@ -79,7 +76,6 @@
         <fo:table-row>
 
         <fo:table-cell>
-          <#-- TODO: find a way to share logo in /includes/ directory. -->
              ${screens.render("component://order/widget/ordermgr/OrderPrintForms.xml#CompanyLogo")}
         </fo:table-cell>
 
@@ -246,8 +242,8 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
                 </fo:table-cell>
                 <fo:table-cell padding="1mm"><fo:block wrap-option="wrap">${returnItem.description}</fo:block></fo:table-cell>
                 <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnItem.returnQuantity}</fo:block></fo:table-cell>
-                <fo:table-cell padding="1mm" text-align="right"><fo:block>${returnItem.returnPrice}</fo:block></fo:table-cell>
-                <fo:table-cell padding="1mm" text-align="right"><fo:block>${(returnItem.returnPrice * returnItem.returnQuantity)}</fo:block></fo:table-cell>
+                <fo:table-cell padding="1mm" text-align="right"><fo:block><@ofbizCurrency amount=returnItem.returnPrice isoCode=returnHeader.currencyUomId/></fo:block></fo:table-cell>
+                <fo:table-cell padding="1mm" text-align="right"><fo:block><@ofbizCurrency amount=(returnItem.returnPrice * returnItem.returnQuantity) isoCode=returnHeader.currencyUomId/></fo:block></fo:table-cell>
               </fo:table-row>
               <#assign total = total + returnItem.returnQuantity.doubleValue() * returnItem.returnPrice.doubleValue()/>
               
@@ -257,9 +253,14 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
                      <@displayReturnAdjustment returnAdjustment=returnItemAdjustment/>
                   </#list>
               </#if>
-
-              
             </#list>
+            
+            <#-- order level adjustments -->
+            <#if (returnAdjustments?has_content)>                  
+                <#list returnAdjustments as returnAdjustment>
+                    <@displayReturnAdjustment returnAdjustment=returnAdjustment/>
+                </#list>
+            </#if>
 
         </fo:table-body>
         </fo:table>
@@ -274,11 +275,6 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
           <fo:table-column column-width="0.85in"/>
           <fo:table-column column-width="0.85in"/>
           <fo:table-body>
-            <#if (returnAdjustments?has_content)>                  
-                <#list returnAdjustments as returnAdjustment>
-                    <@displayReturnAdjustment returnAdjustment=returnAdjustment/>
-                </#list>
-            </#if>
             <fo:table-row>
               <fo:table-cell/>
               <fo:table-cell/>
