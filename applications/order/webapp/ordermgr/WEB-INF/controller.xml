@@ -187,7 +187,7 @@
         <response name="error" type="view" value="ordertasklist"/>
     </request-map>
 
-    <!-- Purchase Order Manager Delivery Info Requests -->
+    <!-- Delivery Info Requests, intended for sales orders but can be used for purchase orders as well -->
     <request-map uri="OrderDeliveryScheduleInfo">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="OrderDeliveryScheduleInfo"/>
