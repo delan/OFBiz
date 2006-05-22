@@ -23,6 +23,9 @@
  *@version    $Rev$
  */
  
+ // this script is used to get the company's logo header information for orders, invoices, and returns.  It can either take order, invoice, returnHeader from
+ // parameters or use orderId, invoiceId, or returnId to look them up.  
+  
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
@@ -33,6 +36,8 @@ orderHeader = (GenericValue) parameters.get("orderHeader");
 orderId = parameters.get("orderId");
 invoice = (GenericValue) parameters.get("invoice");
 invoiceId = parameters.get("invoiceId");
+returnHeader = (GenericValue) parameters.get("returnHeader");
+returnId = parameters.get("returnId");
 nowTimestamp = UtilDateTime.nowTimestamp();
 
 if (orderHeader == null && orderId != null) {
@@ -40,7 +45,11 @@ if (orderHeader == null && orderId != null) {
 }
 
 if (invoice == null && invoiceId != null)	{
-    invoice = (GenericValue) delegator.findByPrimaryKey("Invoice",UtilMisc.toMap("invoiceId",invoiceId));
+    invoice = (GenericValue) delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));
+}
+
+if (returnHeader == null && returnId != null) {
+    returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
 }
 
 // defaults:
@@ -58,6 +67,10 @@ if (orderHeader != null) {
     }
     if (invoice.get("invoiceTypeId").equals("PURCHASE_INVOICE") && invoice.get("partyId") != null) {
         partyId = invoice.getString("partyId");
+    }
+} else if (returnHeader != null) {
+    if (returnHeader.getString("returnHeaderTypeId").equals("CUSTOMER_RETURN") && returnHeader.get("toPartyId") != null) {
+        partyId = returnHeader.getString("toPartyId");
     }
 }
 
