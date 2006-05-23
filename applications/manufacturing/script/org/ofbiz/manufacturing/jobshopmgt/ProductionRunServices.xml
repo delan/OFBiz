@@ -125,6 +125,7 @@ under the License.
                     <clear-field field-name="createInvItemInMap"/>
                     <clear-field field-name="createInvItemOutMap"/>
                     <set field="createInvItemInMap.productId" from-field="workEffortGoodStandard.productId"/>
+                    <set field="createInvItemInMap.facilityId" from-field="workEffort.facilityId"/>
                     <set field="createInvItemInMap.inventoryItemTypeId" value="NON_SERIAL_INV_ITEM"/>
                     <call-service service-name="createInventoryItem" in-map-name="createInvItemInMap">
                         <result-to-field result-name="inventoryItemId" field-name="createInvItemOutMap.inventoryItemId"/>
