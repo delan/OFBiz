@@ -393,6 +393,7 @@ public class ShoppingCartHelper {
      * Adds a set of requirements to the cart.
      */
     public Map addToCartBulkRequirements(String catalogId, Map context) {
+        NumberFormat nf = NumberFormat.getNumberInstance(this.cart.getLocale());
         String itemGroupNumber = (String) context.get("itemGroupNumber");
         // check if we are using per row submit
         boolean useRowSubmit = (!context.containsKey("_useRowSubmit"))? false : 
@@ -433,8 +434,8 @@ public class ShoppingCartHelper {
                 if (quantStr != null && quantStr.length() > 0) {
                     double quantity = 0;
                     try {
-                        quantity = Double.parseDouble(quantStr);
-                    } catch (NumberFormatException nfe) {
+                        quantity = nf.parse(quantStr).doubleValue();
+                    } catch (ParseException nfe) {
                         quantity = 0;
                     }
                     if (quantity > 0.0) {
