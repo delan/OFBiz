@@ -64,22 +64,22 @@
                     <#if website?exists>
                     <fo:table-row>
                       <fo:table-cell><fo:block>${uiLabelMap.CommonWebsite}:</fo:block></fo:table-cell>
-                      <fo:table-cell><fo:block>${website.infoString}</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${website.infoString?if_exists}</fo:block></fo:table-cell>
                     </fo:table-row>
                     </#if>
 
                     <#if eftAccount?exists>
                     <fo:table-row>
                       <fo:table-cell><fo:block>${uiLabelMap.CommonFinBankName}:</fo:block></fo:table-cell>
-                      <fo:table-cell><fo:block>${eftAccount.bankName}</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${eftAccount.bankName?if_exists}</fo:block></fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
                       <fo:table-cell><fo:block>${uiLabelMap.CommonRouting}:</fo:block></fo:table-cell>
-                      <fo:table-cell><fo:block>${eftAccount.routingNumber}</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${eftAccount.routingNumber?if_exists}</fo:block></fo:table-cell>
                     </fo:table-row>
                     <fo:table-row>
                       <fo:table-cell><fo:block>${uiLabelMap.CommonBankAccntNrAbbr}:</fo:block></fo:table-cell>
-                      <fo:table-cell><fo:block>${eftAccount.accountNumber}</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block>${eftAccount.accountNumber?if_exists}</fo:block></fo:table-cell>
                     </fo:table-row>
                     </#if>
 
