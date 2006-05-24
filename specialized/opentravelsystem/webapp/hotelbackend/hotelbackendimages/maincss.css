@@ -35,7 +35,8 @@ visibility: hidden;
 
 .head1 {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-padding-top: 10px;
+display: block;
+margin-top: 10px;
 font-size: 12pt;
 font-weight: bold;
 color: #a91930;
