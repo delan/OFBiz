@@ -23,19 +23,12 @@
  */
 package org.ofbiz.order.shoppingcart;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import javolution.util.FastMap;
 import org.apache.commons.collections.set.ListOrderedSet;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -51,7 +44,6 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
-import org.ofbiz.order.shoppingcart.ShoppingCart.ShoppingCartItemGroup;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
 import org.ofbiz.product.catalog.CatalogWorker;
@@ -64,7 +56,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import javolution.util.FastMap;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -92,6 +83,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private String delegatorName = null;
     private String prodCatalogId = null;
     private String productId = null;
+    private String externalId = null;
     /** ends up in orderItemTypeId */
     private String itemType = null;
     private ShoppingCart.ShoppingCartItemGroup itemGroup = null;
@@ -750,6 +742,14 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.prodCatalogId;
     }
 
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getExternalId() {
+        return this.externalId;
+    }
+    
     /** Sets the user selected amount */
     public void setSelectedAmount(double selectedAmount) {
         this.selectedAmount = selectedAmount;

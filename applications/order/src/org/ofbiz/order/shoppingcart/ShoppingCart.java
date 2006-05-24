@@ -2896,6 +2896,7 @@ public class ShoppingCart implements Serializable {
 
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
                 orderItem.set("orderItemSeqId", item.getOrderItemSeqId());
+                orderItem.set("externalId", item.getExternalId());
                 orderItem.set("orderItemTypeId", item.getItemType());
                 if (item.getItemGroup() != null) orderItem.set("orderItemGroupSeqId", item.getItemGroup().getGroupNumber());
                 orderItem.set("productId", item.getProductId());

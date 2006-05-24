@@ -408,6 +408,7 @@
             title="Order Item Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="externalId" type="id"></field>
       <field name="orderItemTypeId" type="id-ne"></field>
       <field name="orderItemGroupSeqId" type="id-ne"></field>
       <field name="isItemGroupPrimary" type="indicator"></field>
@@ -489,6 +490,9 @@
       <relation type="one" fk-name="ORDER_ITEM_OGLA" title="Override" rel-entity-name="GlAccount">
         <key-map field-name="overrideGlAccountId" rel-field-name="glAccountId"/>
       </relation>
+      <index name="ORDITMEXT_ID_IDX">
+        <index-field name="externalId"/>
+      </index>
     </entity>
     <entity entity-name="OrderItemAssociation"
             package-name="org.ofbiz.order.order"
