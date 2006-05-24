@@ -159,7 +159,12 @@
 
     <request-map uri="editPage">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditonicText"/>
+        <response name="success" type="view" value="EditElectronicText"/>
+    </request-map>
+    
+    <request-map uri="gotoContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditElectronicText"/>
     </request-map>
     
     <request-map uri="updateHelpText">
@@ -3306,22 +3311,16 @@
     <view-map name="ViewGlReconciliation" type="screen" page="component://accounting/widget/AccountingScreens.xml#ViewGlReconciliation"/>
     <!-- electronic texts -->
     <view-map name="findElectronicTexts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#findElectronicTexts"/>
+    <view-map name="EditElectronicText" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditElectronicText"/>
+    <!-- contact lists -->
     <view-map name="ListContactLists" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactLists"/>
     <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>
     <view-map name="ListContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParties"/>
     <view-map name="EditContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListParty"/>
     <view-map name="FindContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListParties"/>
-    
-    <view-map name="ListContactLists" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactLists"/>
-    <view-map name="EditContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactList"/>
-    <view-map name="ListContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListParties"/>
-    <view-map name="EditContactListParty" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListParty"/>
-    <view-map name="FindContactListParties" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListParties"/>
-    
     <view-map name="ListContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#ListContactListCommEvents"/>
     <view-map name="EditContactListCommEvent" type="screen" page="component://marketing/widget/ContactListScreens.xml#EditContactListCommEvent"/>
     <view-map name="FindContactListCommEvents" type="screen" page="component://marketing/widget/ContactListScreens.xml#FindContactListCommEvents"/>
-    
     <view-map name="CreateEmailToContactList" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#CreateEmailToContactList"/>
     <!-- PDFs  -->
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintForms.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>

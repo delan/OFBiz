@@ -1,27 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
- * Copyright (c) 2001-2005 The Open For Business Project and repective authors.
- * Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author <a href="mailto:support@opentravelsystem.org">Hans Bakker</a>
- * @version 1.0
- -->
+    $Id: $
+    
+    Copyright 2001-2006 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not
+    use this file except in compliance with the License. You may obtain a copy of
+    the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
+-->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
@@ -33,14 +27,20 @@
     <simple-method method-name="getOrganizationParty" short-description="-get all info about the organizational party-">
         <set field="partyData.partyId" from-field="parameters.userLogin.partyId"/>
         <call-service service-name="otsGetParty" in-map-name="partyData">
-            <result-to-result result-name="groupName" service-result-name="groupName"/>
-            <result-to-result result-name="logoImageUrl" service-result-name="logoImageUrl"/>
+            <result-to-result service-result-name="groupName" result-name="groupName"/>
+            <result-to-result service-result-name="logoImageUrl" result-name="logoImageUrl"/>
             <result-to-result service-result-name="address1"  result-name="address1"/>
             <result-to-result service-result-name="address2" result-name="address2"/>
             <result-to-result service-result-name="city" result-name="city"/>
             <result-to-result service-result-name="postalCode" result-name="postalCode"/>
             <result-to-result service-result-name="countryGeoId" result-name="countryGeoId"/>
-            <result-to-result result-name="accountNumber" service-result-name="accountNumber"/>
+            <result-to-result service-result-name="emailAddress" result-name="emailAddress"/>
+            <result-to-result service-result-name="telephone" result-name="telephone"/>
+            <result-to-result service-result-name="fax" result-name="fax"/>
+            <result-to-result service-result-name="webAddress" result-name="webAddress"/>
+            <result-to-result service-result-name="bankName" result-name="bankName"/>
+            <result-to-result service-result-name="accountNumber" result-name="accountNumber"/>
+            <result-to-result service-result-name="routingNumber" result-name="routingNumber"/>
         </call-service>
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false">
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
@@ -128,8 +128,18 @@
             <set field="createEftAccount.partyId" from-field="partyId"/>
             <set field="createEftAccount.accountNumber" from-field="parameters.accountNumber"/>
             <set field="createEftAccount.accountType" value=" "/>
-            <set field="createEftAccount.bankName" value=" "/>
-            <set field="createEftAccount.routingNumber" value=" "/>
+            <if-not-empty field-name="parameters.bankName">
+                <set field="createEftAccount.bankName" from-field="parameters.bankName"/>
+                <else>
+                    <set field="createEftAccount.bankName" value=" "/>
+                </else>
+            </if-not-empty>
+            <if-not-empty field-name="parameters.routingNumber">
+                <set field="createEftAccount.routingNumber" from-field="parameters.routingNumber"/>
+                <else>
+                    <set field="createEftAccount.routingNumber" value=" "/>
+                </else>
+            </if-not-empty>
             <set field="createEftAccount.nameOnAccount" value=" "/>
             <call-service service-name="createEftAccount" in-map-name="createEftAccount"/>
         </if-not-empty>
@@ -255,32 +265,79 @@
             </if-compare-field>
         </if-not-empty>
         
-        <!-- Bank account number -->
-        <if-not-empty field-name="parameters.accountNumber">
-            <entity-and entity-name="PaymentMethod" list-name="paymentMethods">
+        <!-- website address  -->
+        <if-not-empty field-name="parameters.websiteAddress">
+            <entity-and entity-name="PartyAndContactMech" list-name="websitesU">
                 <field-map field-name="partyId" value="${parameters.partyId}"/>
-                <field-map field-name="paymentMethodTypeId" value="EFT_ACCOUNT"/>
-            </entity-and>
-            <if-not-empty field-name="paymentMethods">
-                <first-from-list entry-name="paymentMethod" list-name="paymentMethods"/>
-                <get-related-one value-name="paymentMethod" relation-name="EftAccount" to-value-name="eftAccount"/>
+                <field-map field-name="contactMechTypeId" value="WEB_ADDRESS"/>
+            </entity-and> 
+            <filter-list-by-date list-name="websitesU" to-list-name="websites"/>
+            <if-not-empty field-name="websites">
+                <first-from-list entry-name="website" list-name="websites"/>
             </if-not-empty>
-            <if-compare-field field-name="parameters.accountNumber" operator="not-equals" to-field-name="eftAccount.accountNumber">
-                <if-empty field-name="paymentMethods">
-                    <set field="createEftAccount.partyId" from-field="parameters.partyId"/>
-                    <set field="createEftAccount.accountNumber" from-field="parameters.accountNumber"/>
-                    <set field="createEftAccount.accountType" value=" "/>
-                    <set field="createEftAccount.bankName" value=" "/>
-                    <set field="createEftAccount.routingNumber" value=" "/>
-                    <set field="createEftAccount.nameOnAccount" value=" "/>
-                    <call-service service-name="createEftAccount" in-map-name="createEftAccount"/>
+            <if-compare-field field-name="parameters.webAddress" operator="not-equals" to-field-name="website.infoString">
+                <set field="updWebsiteAddress.infoString" from-field="parameters.webAddress"/>
+                <set field="updWebsiteAddress.partyId" from-field="parameters.partyId"/>
+                <set field="updWebsiteAddress.contactMechTypeId" value="WEB_ADDRESS"/>
+                <if-empty field-name="websites">
+                    <call-service service-name="createPartyContactMech" in-map-name="updWebsiteAddress"/>    
                     <else>
-                        <set field="eftAccount.accountNumber" from-field="parameters.accountNumber"/>
-                        <store-value value-name="eftAccount"/>
-                    </else>
+                        <set field="updWebsiteAddress.contactMechId" value="${website.contactMechId}"/>
+                        <call-service service-name="updatePartyContactMech" in-map-name="updWebsiteAddress"/>    
+                    </else>                
                 </if-empty>
             </if-compare-field>
         </if-not-empty>
+        
+        <!-- Bank account number/name/routing -->
+        <if>
+            <condition>
+                <or>
+                    <not><if-empty field-name="parameters.accountNumber"/></not>
+                    <not><if-empty field-name="parameters.bankName"/></not>
+                    <not><if-empty field-name="parameters.routingNumber"/></not>
+                </or>
+            </condition>
+            <then>
+                <entity-and entity-name="PaymentMethod" list-name="paymentMethods">
+                    <field-map field-name="partyId" value="${parameters.partyId}"/>
+                    <field-map field-name="paymentMethodTypeId" value="EFT_ACCOUNT"/>
+                </entity-and>
+                <if-not-empty field-name="paymentMethods">
+                    <first-from-list entry-name="paymentMethod" list-name="paymentMethods"/>
+                    <get-related-one value-name="paymentMethod" relation-name="EftAccount" to-value-name="eftAccount"/>
+                </if-not-empty>
+                <if-empty field-name="paymentMethods"><!-- add -->
+                    <set field="createEftAccount.partyId" from-field="parameters.partyId"/>
+                    <set field="createEftAccount.accountNumber" from-field="parameters.accountNumber"/>
+                    <set field="createEftAccount.accountType" value=" "/>
+                    <if-not-empty field-name="parameters.bankName">
+                        <set field="createEftAccount.bankName" from-field="parameters.bankName"/>
+                        <else>
+                            <set field="createEftAccount.bankName" value=" "/>
+                        </else>
+                    </if-not-empty>
+                    <if-not-empty field-name="parameters.routingNumber">
+                        <set field="createEftAccount.routingNumber" from-field="parameters.routingNumber"/>
+                        <else>
+                            <set field="createEftAccount.routingNumber" value=" "/>
+                        </else>
+                    </if-not-empty>
+                    <set field="createEftAccount.nameOnAccount" value=" "/>
+                    <call-service service-name="createEftAccount" in-map-name="createEftAccount"/>
+                    <else><!-- update -->
+                        <set field="eftAccount.accountNumber" from-field="parameters.accountNumber"/>
+                        <if-not-empty field-name="parameters.bankName">
+                            <set field="eftAccount.bankName" from-field="parameters.bankName"/>
+                        </if-not-empty>
+                        <if-not-empty field-name="parameters.routingNumber">
+                            <set field="eftAccount.routingNumber" from-field="parameters.routingNumber"/>
+                        </if-not-empty>
+                        <store-value value-name="eftAccount"/><!-- had a problem with the updateEftAccount service -->
+                    </else>
+                </if-empty>
+            </then>
+        </if>
         
         <!-- party relationship -->
         <entity-and entity-name="PartyRelationship" list-name="partyRelationships">
@@ -366,6 +423,17 @@
             <field-to-result field-name="email.infoString" result-name="emailAddress"/>
         </if-not-empty>
         
+        <!-- website address  -->
+        <entity-and entity-name="PartyAndContactMech" list-name="websitesU">
+            <field-map field-name="partyId" value="${parameters.partyId}"/>
+            <field-map field-name="contactMechTypeId" value="WEB_ADDRESS"/>
+        </entity-and> 
+        <filter-list-by-date list-name="websitesU" to-list-name="websites"/>
+        <if-not-empty field-name="websites">
+            <first-from-list entry-name="website" list-name="websites"/>
+            <field-to-result field-name="website.infoString" result-name="webAddress"/>
+        </if-not-empty>
+        
         <!-- telephone  -->
         <entity-and entity-name="PartyContactMechPurpose" list-name="partyContactMechPurposesU">
             <field-map field-name="partyId" value="${parameters.partyId}"/>
@@ -399,6 +467,8 @@
             <first-from-list entry-name="paymentMethod" list-name="paymentMethods"/>
             <get-related-one value-name="paymentMethod" relation-name="EftAccount" to-value-name="eftAccount"/>
             <field-to-result field-name="eftAccount.accountNumber" result-name="accountNumber"/>
+            <field-to-result field-name="eftAccount.bankName" result-name="bankName"/>
+            <field-to-result field-name="eftAccount.routingNumber" result-name="routingNumber"/>
         </if-not-empty>
 
     </simple-method>
@@ -512,7 +582,6 @@
                         <make-value value-name="newPostalAddress" entity-name="PostalAddress"/>
                         <set-nonpk-fields value-name="newPostalAddress" map-name="parameters"/>
                         <set field="newPostalAddress.contactMechId" from-field="contactMechId" />
-                        <log level="always" message="===================${newPostalAddress}"></log>
                         <store-value value-name="newPostalAddress"/><!-- seems that updatePostalAddress service does not work -->
                     </else>
                 </if-empty>

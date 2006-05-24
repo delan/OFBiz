@@ -22,7 +22,8 @@
  *
  *  $Id: Menus.xml  jacopo $ Hans Bakker (h.bakker@antwebsystems.com)
 -->
-<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="../../../../../framework/widget/dtd/widget-menu.xsd">
     
     <menu name="WebsiteAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" selected-menuitem-context-field-name="headerItem"
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
@@ -95,12 +96,13 @@
         </menu-item>
     </menu>
 
-    <menu name="SysAdminAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" selected-menuitem-context-field-name="headerItem"
-        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
-        default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
-        <menu-item name="Intro"><link target="intro"/></menu-item>
-        <menu-item name="Download"><link target="download"/></menu-item>
-        <menu-item name="UpLoad"><link target="upload"/></menu-item>
+    <menu name="SysAdminAppBar" selected-menuitem-context-field-name="headerItem" default-menu-item-name="main" default-selected-style="appButtonSelected" 
+        default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
+        menu-container-style="appContainer" orientation="horizontal" type="simple">
+        <!--menu-item name="intro" title="Intro"><link target="intro"/></menu-item-->
+        <menu-item name="download" title="Download"><link target="download"/></menu-item>
+        <!--menu-item name="upLoad"><link target="upload"/></menu-item-->
+        <!--menu-item name="webtools" title="Webtools"><link target="/webtools"/></menu-item-->
     </menu>
     <menu name="dataExchangeTabBar" default-menu-item-name="ContactList" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 

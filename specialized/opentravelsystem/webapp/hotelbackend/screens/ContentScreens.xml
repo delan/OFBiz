@@ -80,9 +80,7 @@
                 <decorator-screen name="WebsiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">List website pages</label></container>
-                        <!--include-form name="FindInvoices" location="component://accounting/webapp/accounting/invoice/InvoiceForms.xml"/>
-                        <container><link target="editInvoice" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingInvoice}" style="buttontext"/></container-->
-                        <include-form name="listWebsiteContent"  location="component://opentravelsystem/webapp/hotelbackend/screens/ContentForms.xml"/>
+                        <include-form name="ListContent" location="component://content/webapp/content/content/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

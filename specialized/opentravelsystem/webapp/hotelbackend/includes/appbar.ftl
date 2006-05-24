@@ -33,7 +33,16 @@
 <#assign ofbizServerName = application.getAttribute("_serverId")?if_exists>
 <#assign contextPath = request.getContextPath()>
 
-<#if requestAttributes.userLogin?has_content>
+<#if requestAttributes.userLogin?has_content && userLogin.partyId != "admin">
+	<#assign displayApps = [
+ 		{"title":"Product",				"url":"mainCatalog"}
+		,{"title":"Reservations",	"url":"findorders"}
+		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
+		,{"title":"Accounting",			"url":"mainAccounting"}
+		,{"title":"Website", 			"url":"findWebsiteContent"}
+		,{"title":"Logout", 			"url":"logout"}
+		]>
+<#elseif requestAttributes.userLogin?has_content && userLogin.partyId == "admin">
 	<#assign displayApps = [
  		{"title":"Product",				"url":"mainCatalog"}
 		,{"title":"Reservations",	"url":"findorders"}
@@ -43,10 +52,6 @@
 		,{"title":"SysAdmin", 			"url":"sysAdminMain"}
 		,{"title":"Logout", 			"url":"logout"}
 		]>
-<#--<#else>
-	<#assign displayApps = [
-		{"title":"Login",				"url":"checkLogin/main"}
-		]>-->
 </#if>
 
 <script language="JavaScript">

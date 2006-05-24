@@ -23,8 +23,8 @@
  *  $Id$
 -->
 
-<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="../../../../../framework/widget/dtd/widget-screen.xsd">
 
     <!-- Top level decorator taking care of header and main tab bar.... -->
     <screen name="main-decorator">
@@ -636,28 +636,4 @@
             </widgets>
         </section>
     </screen>
-    <screen name="CommonAdminDecorator">
-        <section>
-            <actions>
-                <set field="page.headerItem" value="companies"/>
-                <set field="title" value="GL Account defaults"/>
-                <set field="requestParameters.organizationPartyId" from-scope="user"  from-field="productStoreId" />
-            </actions>
-            <widgets>
-                <decorator-screen name="mainAccountingDecorator">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://accounting/webapp/accounting/admin/AdminTabBar.ftl"/></html>
-                                </platform-specific>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
  </screens>
