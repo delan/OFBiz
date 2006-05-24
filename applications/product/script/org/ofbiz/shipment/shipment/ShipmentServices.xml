@@ -750,7 +750,7 @@
     </simple-method>
     <simple-method method-name="ensurePackageRouteSeg" short-description="Ensure ShipmentPackageRouteSeg exists for all RouteSegments for this Package">
         <entity-and entity-name="ShipmentRouteSegment" list-name="shipmentRouteSegments">
-            <field-map field-name="shipmentId" env-name="lookupRouteSegmentsMap.shipmentId"/>
+            <field-map field-name="shipmentId" env-name="shipmentId"/>
         </entity-and>
         
         <iterate entry-name="shipmentRouteSegment" list-name="shipmentRouteSegments">
@@ -761,8 +761,11 @@
             </entity-one>
             
             <if-empty field-name="checkShipmentPackageRouteSeg">
-                <call-service service-name="createShipmentPackageRouteSeg" in-map-name="checkShipmentPackageRouteSegMap">
-                </call-service>
+               <set field="checkShipmentPackageRouteSegMap.shipmentRouteSegmentId" from-field="shipmentRouteSegment.shipmentRouteSegmentId"/>
+               <set field="checkShipmentPackageRouteSegMap.shipmentPackageSeqId" from-field="shipmentPackageSeqId"/>
+               <set field="checkShipmentPackageRouteSegMap.shipmentId" from-field="shipmentId"/>
+               <call-service service-name="createShipmentPackageRouteSeg" in-map-name="checkShipmentPackageRouteSegMap">
+               </call-service>
             </if-empty>
         </iterate>
     </simple-method>
