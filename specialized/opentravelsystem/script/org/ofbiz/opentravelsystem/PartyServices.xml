@@ -266,7 +266,7 @@
         </if-not-empty>
         
         <!-- website address  -->
-        <if-not-empty field-name="parameters.websiteAddress">
+        <if-not-empty field-name="parameters.webAddress">
             <entity-and entity-name="PartyAndContactMech" list-name="websitesU">
                 <field-map field-name="partyId" value="${parameters.partyId}"/>
                 <field-map field-name="contactMechTypeId" value="WEB_ADDRESS"/>
