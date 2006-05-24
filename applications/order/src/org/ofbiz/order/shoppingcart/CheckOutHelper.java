@@ -584,9 +584,11 @@ public class CheckOutHelper {
                         inputMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                         inputMap.put("quantity", orderItem.getDouble("quantity"));
                         inputMap.put("userLogin", userLogin);
-                        // TODO: check service result for an error return
-                        // TODO: needs a productionRunId, commenting out because it will crash order creation
-                        //Map prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
+                        
+                        Map prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
+                        if (ServiceUtil.isError(prunResult)) {
+                            Debug.logError(ServiceUtil.getErrorMessage(prunResult) + " for input:" + inputMap, module);
+                        }
                     }
                 } catch (Exception e) {
                     String service = e.getMessage();
