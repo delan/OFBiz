@@ -26,16 +26,58 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="titleProperty" value="PageTitleFindDataResource"/>
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="30"/>
+                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="30"/>
             </actions>
             <widgets>
                 <decorator-screen name="mainContentDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><link target="editDataResource" text="${uiLabelMap.CommonCreateNew}" style="buttontext"/></container>
                         <label style="head1" text="${uiLabelMap.PageTitleFindDataResource}"/>
-                        <include-form name="FindDataResource" location="component://content/webapp/content/data/DataResourceForms.xml"/>
-                        <include-form name="ListDataResource" location="component://content/webapp/content/data/DataResourceForms.xml"/>
+                        <include-form name="FindDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
+                        <label style="head1" text="Data Resource List"></label>
+                        <include-form name="ListDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LookupDataResource">
+        <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+            </condition>
+            <actions>
+                <set field="title" value="Lookup Data Resource"/>
+                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-form name="LookupDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
+                        <include-form name="ListLookupDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditDataResource">
+        <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+            </condition>
+            <actions>
+                <set field="headerItem" value="DataResource"/>
+                <set field="tabButtonItem" value="editDataResource"/>
+                <set field="dataResourceId" from-field="parameters.dataResourceId"/>
+                <entity-one entity-name="DataResource" value-name="currentValue"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="EditDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -81,28 +123,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditDataResource">
-        <section>
-            <condition>
-                <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
-            </condition>
-            <actions>
-                <set field="headerItem" value="DataResource"/>
-                <set field="tabButtonItem" value="editDataResource"/>
-                <entity-one entity-name="DataResource" value-name="currentValue">
-                    <field-map field-name="dataResourceId" env-name="parameters.dataResourceId"/>
-                </entity-one>
-            </actions>
-            <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <include-form name="EditDataResource" location="component://content/webapp/content/data/DataResourceForms.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="AddDataResource">
+    <!--screen name="AddDataResource">
         <section>
             <condition>
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
@@ -119,7 +140,7 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen-->
     <screen name="AddDataResourceText">
         <section>
             <condition>
