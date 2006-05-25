@@ -32,14 +32,15 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces -->
 
     <!-- Use this one for Geronimo, this is being tested now, seems to be working -->
-    <!-- <transaction-factory class="org.ofbiz.geronimo.GeronimoTransactionFactory"/> -->
+    <transaction-factory class="org.ofbiz.geronimo.GeronimoTransactionFactory"/>
 
     <!-- Use this one for JNDI -->
-    <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->
+    <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties
     <transaction-factory class="org.ofbiz.entity.transaction.JNDIFactory">
         <user-transaction-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
         <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
     </transaction-factory>
+    -->
     <!--
     	It is common to use UserTransaction for the TransactionManager, but if that doesn't work, try this: <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/TransactionManager"/>
         Common UserTransaction locations:

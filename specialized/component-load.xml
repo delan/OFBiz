@@ -32,5 +32,7 @@
     <load-component component-location="${ofbiz.home}/specialized/wholesale"/>
     <load-component component-location="${ofbiz.home}/specialized/tests"/>
     <load-component component-location="${ofbiz.home}/specialized/libraries"/>
+    <load-component component-location="${ofbiz.home}/specialized/minerva"/>
+    <load-component component-location="${ofbiz.home}/specialized/jotm"/>
 -->
 </component-loader>

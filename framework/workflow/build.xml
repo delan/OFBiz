@@ -46,7 +46,6 @@
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/lib/scripting" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
-            <fileset dir="../minerva/lib" includes="*.jar"/>
             <fileset dir="../entity/lib" includes="*.jar"/>
             <fileset dir="../entity/build/lib" includes="*.jar"/>
             <fileset dir="../security/build/lib" includes="*.jar"/>

@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity.transaction;
+package org.ofbiz.jotm;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -38,6 +38,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
+import org.ofbiz.entity.transaction.TransactionFactoryInterface;
+import org.ofbiz.entity.transaction.MinervaConnectionFactory;
 
 /**
  * JotmFactory - Central source for JOTM JTA objects
