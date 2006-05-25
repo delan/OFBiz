@@ -71,7 +71,7 @@
             </service>
         </actions>
         
-        <field name="contentId" title="${parameters.statusId}" widget-style="buttontext">
+        <field name="contentId" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
         </field>
         <field name="contentName"><display/></field>
@@ -84,12 +84,38 @@
         <field name="ownerContentId"><display/></field>
         <field name="createdByUserLogin"><display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/></field>
     </form>
+
+    <form name="LookupContent"  default-tooltip-style="tabletext" extends="FindContent"
+        target="LookupContent" title="" type="single">
+    </form>
+    <form name="ListLookupContent" extends="ListContent" paginate-target="LookupContent" default-widget-style="tabletext" 
+        type="list" list-name="listIt">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="Content"/>
+                <field-map field-name="orderBy" value="contentId"/>
+            </service>
+        </actions>
+        <field name="contentId">
+            <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
+        </field> 
+        <field name="createdByUserLogin"><ignored/></field>
+    </form>
     
     <form name="EditContent" target="updateContent" title="" type="single"
         default-title-style="tableheadtext" default-map-name="currentValue"
         default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <actions>
+            <entity-one entity-name="StatusItem" value-name="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" env-name="currentValue.statusId"/>
+            </entity-one>
+        </actions>
+        <alt-target use-when="currentValue==null" target="createContent"/>
         <auto-fields-entity entity-name="Content" />
-        <field name="contentId"><display/></field>
+        <field use-when="currentValue!=null" name="contentId" tooltip="${uiLabelMap.CommonNotModifRecreat}" widget-style="tabletext"><display/></field>
+        <field use-when="currentValue==null&amp;&amp;contentId==null" name="contentId"><ignored/></field>
+        <field use-when="currentValue==null&amp;&amp;contentId!=null" name="contentId" widget-style="tabletext"><display description="${uiLabelMap.CommonCannotBeFound}: [${contentId}]" also-hidden="false"/></field>
         <field name="contentTypeId">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
@@ -117,10 +143,12 @@
                 <entity-options description="${description}" entity-name="CharacterSet" key-field-name="characterSetId"/>
             </drop-down>
         </field>
-        <field name="statusId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="CONTENT_STATUS "/>
+        <field name="statusId" use-when="currentValue==null"><ignored/></field>
+        <field name="statusId" use-when="currentValue!=null" widget-style="selectBox">
+                <drop-down allow-empty="false" current-description="${currentStatus.description}">
+                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
+                    <entity-constraint name="statusId" value="${currentValue.statusId}"/>
+                    <entity-order-by field-name="sequenceId"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -128,13 +156,8 @@
         <field name="createdDate" position="2"><display/></field>
         <field name="lastModifiedByUserLogin" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="createLink" title="" widget-style="buttontext" position="1">
-            <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
-        </field>
-        <field name="findContent" title="" widget-style="buttontext" position="2">
-            <hyperlink also-hidden="false" description="Find"  target="FindContent"/>
-        </field>
+        <field name="createButton" use-when="currentValue==null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="updateButton" use-when="currentValue!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="AddContent" target="createContent" title="" type="single"
@@ -185,34 +208,6 @@
     
     
     <!-- Content Lookup forms -->
-    <form name="lookupContent" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="LookupContent" title="" type="single">
-        <auto-fields-entity entity-name="Content" default-field-type="find" />
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    <form name="listLookupContent" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="listIt" target="" paginate-target="/LookupContent" 
-        title="" type="list">
-        <actions>
-            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
-                <field-map field-name="inputFields" env-name="requestParameters"/>
-                <field-map field-name="entityName" env-name="entityName"/>
-            </service>
-        </actions>
-        
-        <auto-fields-entity entity-name="Content" default-field-type="display"/>
-        <field name="contentId" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
-        </field>
-        <!--
-            <field name="createdDate"><ignored/></field>
-            <field name="createdByUserLogin"><ignored/></field>
-            <field name="lastModifiedDate"><ignored/></field>
-            <field name="lastModifiedByUserLogin"><ignored/></field>
-        -->
-    </form>
     <form name="mruLookupContent" default-entity-name="Content"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
         list-name="mruList" target="" title="" type="list">

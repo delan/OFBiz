@@ -53,9 +53,8 @@
                 <set field="title" value="Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleEditContent"/>
                 <set field="tabButtonItem" value="content"/>
-                <entity-one entity-name="Content" value-name="currentValue">
-                    <field-map field-name="contentId" env-name="parameters.contentId"/>
-                </entity-one>
+                <set field="contentId" from-field="parameters.contentId"/>
+                <entity-one entity-name="Content" value-name="currentValue"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -269,10 +268,10 @@
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
             <widgets>
-                <decorator-screen name="LookupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="lookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
-                        <include-form name="listLookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <include-form name="LookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <include-form name="ListLookupContent" location="component://content/webapp/content/content/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
