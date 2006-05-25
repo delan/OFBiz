@@ -243,7 +243,9 @@ under the License.
                 <result-to-field result-name="taskCost" field-name="taskCost"/>
             </call-service>
             <calculate field-name="totalTaskCost">
-                <calcop field-name="taskCost" operator="add"/>
+                <calcop field-name="totalTaskCost" operator="add">
+                    <calcop field-name="taskCost" operator="get"/>
+                </calcop>
             </calculate>
         </iterate>
         
