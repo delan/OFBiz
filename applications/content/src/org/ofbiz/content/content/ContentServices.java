@@ -297,6 +297,18 @@ public class ContentServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String userLoginId = (String) userLogin.get("userLoginId");
 
+        // get first statusId  for content out of the statusItem table if not provided 
+        if (UtilValidate.isEmpty(context.get("statusId"))) {
+            try {
+                List statusItems = delegator.findByAnd("StatusItem",UtilMisc.toMap("statusTypeId", "CONTENT_STATUS"), UtilMisc.toList("sequenceId"));
+                if (!UtilValidate.isEmpty(statusItems)) {
+                    content.put("statusId",  ((GenericValue) statusItems.get(0)).getString("statusId")); 
+                }
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+
         content.put("createdByUserLogin", userLoginId);
         content.put("lastModifiedByUserLogin", userLoginId);
         content.put("createdDate", nowTimestamp);

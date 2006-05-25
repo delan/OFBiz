@@ -654,8 +654,6 @@
     <request-map uri="ClipBoardDataResource"><security auth="true" https="true"/><response name="success" type="view" value="ClipBoardDataResource"/></request-map>
     <request-map uri="ClipBoardContent"><security auth="true" https="true"/><response name="success" type="view" value="ClipBoardContent"/></request-map>
     
-    <request-map uri="LookupSubContent"><security auth="true" https="true"/><response name="success" type="view" value="LookupSubContent"/></request-map>
-
     <request-map uri="gotoDataResource">
         <security auth="true" https="true"/>
         <!--
@@ -665,8 +663,6 @@
         -->
         <response name="success" type="view" value="EditDataResource"/>
     </request-map>
-
-    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
 
     <!-- ================ Redirect Content Requests ================= -->
     <request-map uri="findContent">
@@ -1295,11 +1291,9 @@
         <response name="error" type="view" value="EditSurveyResponse"/>
     </request-map>
 
-    <!-- end of request mappings -->
     <request-map uri="subcontent"><security auth="true" https="true"/><response name="success" type="view" value="subcontent"/></request-map>
 
     <!-- ================ Layout Requests ================= -->
-    <request-map uri="LookupListLayout"><security auth="true" https="true"/><response name="success" type="view" value="LookupListLayout"/></request-map>
     <request-map uri="ListLayout"><security auth="true" https="true"/><response name="success" type="view" value="ListLayout"/></request-map>
     <request-map uri="clipFindLayout">
         <security auth="true" https="true"/>
@@ -1520,16 +1514,36 @@
     </request-map>
     
     <!-- ================ Lookup Requests ================= -->
-    <request-map uri="LookupContent"><security auth="true" https="true"/><response name="success" type="view" value="LookupContent"/></request-map>
-    <request-map uri="LookupDataResource"><security auth="true" https="true"/><response name="success" type="view" value="LookupDataResource"/></request-map>
-
-    <request-map uri="LookupSurvey"><security auth="true" https="true"/><response name="success" type="view" value="LookupSurvey"/></request-map>
-    <request-map uri="LookupSurveyResponse"><security auth="true" https="true"/><response name="success" type="view" value="LookupSurveyResponse"/></request-map>
-    
+    <request-map uri="LookupContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupContent"/>
+    </request-map>
+    <request-map uri="LookupSubContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupSubContent"/>
+    </request-map>
+    <request-map uri="LookupDataResource">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupDataResource"/>
+    </request-map>
+    <request-map uri="LookupListLayout">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupListLayout"/>
+    </request-map>
+    <request-map uri="LookupSurvey">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupSurvey"/>
+    </request-map>
+    <request-map uri="LookupSurveyResponse">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupSurveyResponse"/>
+    </request-map>
+    <!-- lookup other components -->    
     <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
     <request-map uri="LookupPartyAndUserLoginAndPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/></request-map>
     <request-map uri="LookupProductFeature"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductFeature"/></request-map>
-
+    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="screen" page="component://content/widget/CommonScreens.xml#main"/>
@@ -1670,16 +1684,17 @@
 
     <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
 
-    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
-    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
-    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
-    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
-    <view-map name="LookupListLayout" page="/layout/LookupListLayout.ftl" type="jpublish"/>
-    <view-map name="LookupSubContent" page="/layout/LookupSubContent.ftl" type="jpublish"/>
-
+    <!-- lookup content component -->
     <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
     <view-map name="LookupDataResource" page="component://content/widget/content/DataScreens.xml#LookupDataResource" type="screen"/>
     <view-map name="LookupSurvey" page="component://content/widget/SurveyScreens.xml#LookupSurvey" type="screen"/>
     <view-map name="LookupSurveyResponse" page="component://content/widget/SurveyScreens.xml#LookupSurveyResponse" type="screen"/>
+    <view-map name="LookupListLayout" page="/layout/LookupListLayout.ftl" type="jpublish"/>
+    <view-map name="LookupSubContent" page="/layout/LookupSubContent.ftl" type="jpublish"/>
+    <!-- lookup other components -->
+    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
     <!-- end of view mappings -->
 </site-conf>
