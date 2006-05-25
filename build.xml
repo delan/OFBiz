@@ -28,7 +28,7 @@
 <project name="OFBiz Main Build" default="build" basedir=".">
 
     <filelist id="framework-builds" dir="framework"
-        files="minerva/build.xml,jotm/build.xml,entity/build.xml,geronimo/build.xml,
+        files="entity/build.xml,geronimo/build.xml,
                catalina/build.xml,jetty/build.xml,
                security/build.xml,service/build.xml,entityext/build.xml,
                datafile/build.xml,minilang/build.xml,

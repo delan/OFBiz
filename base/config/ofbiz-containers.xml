@@ -32,12 +32,14 @@
     <!-- load the cached classloader container (always second) -->
     <container name="classloader-container" class="org.ofbiz.base.container.ClassLoaderContainer"/>
 
-    <!-- load JNDI/JOTM -->
+    <!-- load JNDI/JOTM; this is no longer needed, leaving this in for now just in case someone wants to drop in JOTM from the specialized directory
     <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer">
         <property name="jndi-config" value="iiop.properties"/>
     </container>
+    -->
     
     <!-- RMI Service Dispatcher -->
+    <!--
     <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
         <property name="bound-name" value="RMIDispatcher"/>
         <property name="bound-host" value="127.0.0.1"/>
@@ -47,6 +49,7 @@
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory"/>
         <property name="ssl-client-auth" value="true"/>
     </container>
+    -->
 
     <!-- JavaMail Listener Container -->
     <container name="javamail-container" class="org.ofbiz.service.mail.JavaMailContainer">

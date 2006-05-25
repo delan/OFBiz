@@ -26,8 +26,6 @@
 
 <component-loader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/component-loader.xsd">
-    <load-component component-location="${ofbiz.home}/framework/minerva"/>
-    <load-component component-location="${ofbiz.home}/framework/jotm"/>
     <load-component component-location="${ofbiz.home}/framework/geronimo"/>
     <load-component component-location="${ofbiz.home}/framework/entity"/>
     <load-component component-location="${ofbiz.home}/framework/catalina"/>

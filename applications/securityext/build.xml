@@ -45,7 +45,6 @@
             <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
-            <fileset dir="../../framework/minerva/lib" includes="*.jar"/>
             <fileset dir="../../framework/entity/lib" includes="*.jar"/>
             <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
             <fileset dir="../../framework/security/build/lib" includes="*.jar"/>
