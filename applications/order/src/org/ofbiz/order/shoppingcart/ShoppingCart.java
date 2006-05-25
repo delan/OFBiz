@@ -3306,6 +3306,7 @@ public class ShoppingCart implements Serializable {
 
         result.put("orderTypeId", this.getOrderType());
         result.put("externalId", this.getExternalId());
+        result.put("orderDate", this.getOrderDate());
         result.put("internalCode", this.getInternalCode());
         result.put("salesChannelEnumId", this.getChannelType());
         result.put("orderItemGroups", this.makeOrderItemGroups());
