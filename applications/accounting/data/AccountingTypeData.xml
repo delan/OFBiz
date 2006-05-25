@@ -294,8 +294,8 @@
     <!-- invoice item types for commission invoices -->
     <InvoiceItemType description="Commission Item" hasTable="N" invoiceItemTypeId="COMM_INV_ITEM" parentTypeId=""/>
     
-    <InvoiceType description="Purchase" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
-    <InvoiceType description="Sales" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>
+    <InvoiceType description="Purchase Invoice" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
+    <InvoiceType description="Sales Invoice" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>
     <InvoiceType description="Customer Return" hasTable="N" invoiceTypeId="CUST_RTN_INVOICE" parentTypeId=""/>
     <InvoiceType description="Commission" hasTable="N" invoiceTypeId="COMMISSION_INVOICE" parentTypeId=""/>
 

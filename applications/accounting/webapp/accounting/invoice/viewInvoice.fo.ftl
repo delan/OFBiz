@@ -69,7 +69,7 @@ under the License.
                     <fo:table-body>
                     <fo:table-row>
                       <fo:table-cell>
-                         <fo:block number-columns-spanned="2" font-weight="bold">${uiLabelMap.AccountingInvoiceCapitals}</fo:block>
+                         <fo:block number-columns-spanned="2" font-weight="bold" wrap-option="no-wrap">${invoice.getRelatedOne("InvoiceType").get("description")}</fo:block>
                       </fo:table-cell>
                     </fo:table-row>
                     
@@ -210,7 +210,7 @@ under the License.
                         </fo:table-row>
                         <#assign currentShipmentId = newShipmentId>
                     </#if>
-                        <fo:table-row height="14px">
+                        <fo:table-row height="7px">
                         </fo:table-row>
                         <fo:table-row height="14px">
                             <fo:table-cell>
@@ -233,6 +233,10 @@ under the License.
                             </fo:table-cell>
                         </fo:table-row>
                 </#list>
+                
+                <#-- blank line -->
+                <fo:table-row height="7px">
+                </fo:table-row>
                 
                 <#-- the grand total -->
                 <fo:table-row height="14px">
