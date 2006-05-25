@@ -39,7 +39,7 @@
     -->
     
     <!-- RMI Service Dispatcher -->
-    <!--
+    <!-- DEJ20060525 this will be put back in as soon as we get a JNDI server back in, should be very soon
     <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
         <property name="bound-name" value="RMIDispatcher"/>
         <property name="bound-host" value="127.0.0.1"/>
