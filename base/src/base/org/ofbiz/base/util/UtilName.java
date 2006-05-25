@@ -28,9 +28,11 @@ public class UtilName {
 
     protected boolean middleIsInitial = false;
     protected String name[] = null;
+    protected String raw = null;
 
     public UtilName(String name, boolean initial) {
         this.middleIsInitial = initial;
+        this.raw = name;
 
         // check the name for empty elements
         String[] splitStr = name.split(" ");
@@ -55,6 +57,10 @@ public class UtilName {
     protected UtilName() {
     }
 
+    public String getRawString() {
+        return this.raw;
+    }
+    
     public String getPrefix() {
         return this.getField(PREFIX);
     }
