@@ -33,6 +33,7 @@ import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -127,6 +129,18 @@ public class DataServices {
             dataResource.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
             dataResource.put("createdDate", createdDate);
             dataResource.put("lastModifiedDate", lastModifiedDate);
+            // get first statusId  for content out of the statusItem table if not provided 
+            if (UtilValidate.isEmpty(dataResource.get("statusId"))) {
+                try {
+                    List statusItems = delegator.findByAnd("StatusItem",UtilMisc.toMap("statusTypeId", "CONTENT_STATUS"), UtilMisc.toList("sequenceId"));
+                    if (!UtilValidate.isEmpty(statusItems)) {
+                        dataResource.put("statusId",  ((GenericValue) statusItems.get(0)).getString("statusId")); 
+                    }
+                } catch (GenericEntityException e) {
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+            }
+            
             try {
                 dataResource.create();
             } catch (GenericEntityException e) {

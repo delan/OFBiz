@@ -740,22 +740,16 @@
         <response name="success" type="request" value="EditDataResource"/>
         <response name="error" type="view" value="EditDataResource"/>
     </request-map>
-    <request-map uri="UpdateDataResource">
+    <request-map uri="updateDataResource">
         <security auth="true" https="true"/>
         <event invoke="updateDataResource" path="" type="service"/>
         <response name="success" type="view" value="EditDataResource"/>
         <response name="error" type="view" value="EditDataResource"/>
     </request-map>
-    <request-map uri="updateDataResource">
-        <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="persistDataResource" />
-        <response name="success" type="request" value="EditDataResource"/>
-        <response name="error" type="view" value="EditDataResource"/>
-    </request-map>
     <request-map uri="createDataResource">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="persistDataResource" />
-        <response name="success" type="request" value="EditDataResource"/>
+        <response name="success" type="view" value="EditDataResource"/>
         <response name="ELECTRONIC_TEXT" type="view" value="EditElectronicText"/>
         <response name="IMAGE_OBJECT" type="view" value="UploadImage"/>
         <response name="error" type="view" value="AddDataResource"/>
@@ -1686,7 +1680,7 @@
 
     <!-- lookup content component -->
     <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
-    <view-map name="LookupDataResource" page="component://content/widget/content/DataScreens.xml#LookupDataResource" type="screen"/>
+    <view-map name="LookupDataResource" page="component://content/widget/content/DataResourceScreens.xml#LookupDataResource" type="screen"/>
     <view-map name="LookupSurvey" page="component://content/widget/SurveyScreens.xml#LookupSurvey" type="screen"/>
     <view-map name="LookupSurveyResponse" page="component://content/widget/SurveyScreens.xml#LookupSurveyResponse" type="screen"/>
     <view-map name="LookupListLayout" page="/layout/LookupListLayout.ftl" type="jpublish"/>
