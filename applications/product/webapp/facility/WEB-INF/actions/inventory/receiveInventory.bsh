@@ -28,6 +28,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.service.ServiceUtil;
 
 delegator = request.getAttribute("delegator");
 facilityId = request.getParameter("facilityId"); 
@@ -112,9 +113,14 @@ if (purchaseOrder != null) {
                 item = iter.next();
                 serviceResults = dispatcher.runSync("convertUom", 
                         UtilMisc.toMap("uomId", orderCurrencyUomId, "uomIdTo", ownerCurrencyUomId, "originalValue", item.get("unitPrice")));
-                convertedValue = serviceResults.get("convertedValue");
-                if (convertedValue != null) {
-                    item.put("unitPrice", convertedValue);
+                if (ServiceUtil.isError(serviceResults)) {
+                    request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(serviceResults)); 
+                    return;
+                } else {
+                    convertedValue = serviceResults.get("convertedValue");
+                    if (convertedValue != null) {
+                        item.put("unitPrice", convertedValue);
+                    }
                 }
             }
         }
