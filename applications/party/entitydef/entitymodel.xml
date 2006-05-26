@@ -1371,6 +1371,7 @@
     </entity>
     <entity entity-name="PartyClassificationType"
             package-name="org.ofbiz.party.party"
+            default-resource-name="PartyEntityLabels"
             title="Party Classification Type Entity">
       <field name="partyClassificationTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
@@ -1755,6 +1756,7 @@
     </entity>
     <entity entity-name="PartyType"
             package-name="org.ofbiz.party.party"
+            default-resource-name="PartyEntityLabels"
             title="Party Type Entity">
       <field name="partyTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>

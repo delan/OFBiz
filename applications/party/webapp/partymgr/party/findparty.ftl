@@ -110,12 +110,12 @@ function refreshInfo() {
               <td>
                 <select name="roleTypeId" class="selectBox">
                   <#if currentRole?has_content>
-                    <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
+                    <option value="${currentRole.roleTypeId}">${currentRole.get("description",locale)}</option>
                     <option value="${currentRole.roleTypeId}">---</option>
                   </#if>
                   <option value="ANY">${uiLabelMap.CommonAnyRoleType}</option>
                   <#list roleTypes as roleType>
-                    <option value="${roleType.roleTypeId}">${roleType.description}</option>
+                    <option value="${roleType.roleTypeId}">${roleType.get("description",locale)}</option>
                   </#list>
                 </select>
               </td>
@@ -302,7 +302,7 @@ function refreshInfo() {
                   <#if extInfo?default("") == "T">
                     <td><div class="tabletext">${partyRow.areaCode?if_exists}</div></td>
                   </#if>
-                  <td><div class="tabletext">${partyType.description?default("???")}</div></td>
+                  <td><div class="tabletext">${partyType.get("description",locale)?default("???")}</div></td>
                   <td align="right">
                     <!-- this is all on one line so that no break will be inserted -->
                     <div class="tabletext"><nobr>
