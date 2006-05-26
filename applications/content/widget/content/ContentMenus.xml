@@ -117,8 +117,14 @@
             <condition>
                 <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
-            <link target="AddContent"/>
+            <link target="EditContent"/>
         </menu-item>
-     </menu>
+        <menu-item name="NewContentAssoc" title="${uiLabelMap.CommonCreateNew} Assoc">
+            <condition>
+                <if-compare field-name="tabButtonItem" operator="equals" value="association"/>
+            </condition>
+            <link target="EditContentAssoc?contentId=${parameters.contentId}"/>
+        </menu-item>
+    </menu>
         
 </menus>

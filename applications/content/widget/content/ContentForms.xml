@@ -18,7 +18,7 @@
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="../../../../../framework/widget/dtd/widget-form.xsd">
+ xsi:noNamespaceSchemaLocation="../../../../framework/widget/dtd/widget-form.xsd">
     
     <form name="FindContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
@@ -71,10 +71,12 @@
             </service>
         </actions>
         
-        <field name="contentId" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
+        <field name="contentId"><hidden/></field>
+        <field name="contentName" title="Name [id]" widget-style="tabletext">
+            <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
+                <sub-hyperlink target="gotoContent?contentId=${contentId}" description="[${contentId}]" link-style="tabletext"/>
+            </display-entity>
         </field>
-        <field name="contentName"><display/></field>
         <field name="description"><display/></field>
         <field name="statusId"><display-entity entity-name="StatusItem"></display-entity></field>
         <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}[${countryCode}]"></display-entity></field>
@@ -100,6 +102,7 @@
         <field name="contentId">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field> 
+        <field name="contentName" title="contenName" widget-style="tabletext"><display/></field>
         <field name="createdByUserLogin"><ignored/></field>
     </form>
     
@@ -220,28 +223,28 @@
             </entity-one>
         </actions>
         <auto-fields-entity entity-name="ContentAssoc"/>
-        <field name="contentId" title="" widget-style="buttontext"><display/></field>
-        <field name="contentIdTo" title="" widget-style="buttontext"><display/></field>
-        <field name="contentAssocTypeId" title="" widget-style="buttontext"><display/></field>
-        <field name="fromDate" title="" widget-style="buttontext"><display/></field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="contentId" widget-style="tabletext"><display/></field>
+        <field name="contentIdTo" title="" widget-style="tabletext"><display/></field>
+        <field name="contentAssocTypeId" title="" widget-style="tabletext"><display/></field>
+        <field name="fromDate" widget-style="tabletext"><display/></field>
+        <field name="updateButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddContentAssoc" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="createContentAssoc" title="" type="single">
         <auto-fields-service service-name="createContentAssoc"/>
-        <field name="contentId" title="" widget-style="buttontext"><display description="${contentId}"/></field>
-        <field name="contentIdTo" title="" widget-style="buttontext" map-name="currentValue">
+        <field name="contentId" widget-style="tabletext"><display description="${contentId}"/></field>
+        <field name="contentIdTo" map-name="currentValue">
             <lookup target-form-name="LookupContent"/>
         </field>
         <field name="contentAssocTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="ContentAssocType" key-field-name="contentAssocTypeId"/>
+                <entity-options description="${description}" entity-name="ContentAssocType"/>
             </drop-down>
         </field>
         <field name="metaDataPredicateId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
+                <entity-options description="${description}" entity-name="MetaDataPredicate"/>
             </drop-down>
         </field>
         <field name="submitButton" title="Create" widget-style="smallSubmit">
@@ -253,48 +256,35 @@
         <field name="lastModifiedByUserLogin"><hidden/></field>
     </form>
     <form name="ListContentAssocFrom" default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        default-tooltip-style="tabletext" default-widget-style="tabletext"
         target="" title="Assoc From this Content" type="list">
         <actions>
             <entity-and entity-name="ContentAssoc" use-cache="true">
                 <field-map env-name="contentId" field-name="contentId" />
             </entity-and>
         </actions>
-        <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
-        <field name="contentId" title="" widget-style="buttontext">
+        <!--auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/-->
+        <field name="contentId">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
         </field>
-        <field name="contentIdTo" title="" widget-style="buttontext">
+        <field name="contentIdTo">
             <hyperlink also-hidden="false" description="${contentIdTo}" target="gotoContent?contentId=${contentIdTo}"/>
         </field>
-        <field name="deleteLink" title="" widget-style="buttontext">
+        <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" description="${description}"></display-entity></field>
+        <field name="fromDate"><display description="${bsh:fromDate.toString().substring(0,10)}"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
-        <field name="editLink" title="" widget-style="buttontext">
+        <field name="editLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
     </form>
-    <form name="ListContentAssocTo" default-entity-name="Content"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        target="EditContentAssoc" title="Assoc To this Content" type="list">
+    <form name="ListContentAssocTo" target="EditContentAssoc" title="Assoc To this Content" type="list" extends="ListContentAssocFrom">
         <actions>
             <entity-and entity-name="ContentAssoc" use-cache="true">
                 <field-map env-name="contentId" field-name="contentIdTo" />
             </entity-and>
         </actions>
-        <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
-        <field name="contentId" title="Content Id " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
-        </field>
-        <field name="contentIdTo" title="Content Id To" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${contentIdTo}" target="gotoContent?contentId=${contentIdTo}"/>
-        </field>
-        <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
-        </field>
-        <field name="editLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
-        </field>
     </form>
     
     
