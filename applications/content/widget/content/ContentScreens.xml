@@ -65,7 +65,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="AddContent">
+    <!--screen name="AddContent">
         <section>
             <condition>
                 <if-has-permission permission="CONTENTMGR" action="CREATE"/>
@@ -84,7 +84,7 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen-->
     <screen name="EditContentAssoc">
         <section>
             <condition>
@@ -100,9 +100,7 @@
                 <set field="contentAssocTypeId" from-field="parameters.contentAssocTypeId"  default-value="${defaultContentAssocTypeId}"/>
                 <set field="contentAssocTypeId" from-field="contentAssocTypeId" to-scope="user"/>
                 <set field="fromDate" from-field="parameters.fromDate"  />
-                <entity-one entity-name="Content" value-name="currentValue">
-                    <field-map field-name="contentId" env-name="parameters.contentId"/>
-                </entity-one>
+                <entity-one entity-name="Content" value-name="currentValue"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -120,7 +118,7 @@
                                 </and>  
                             </condition>
                             <widgets>
-                                <label style="head1" text="Add an association"></label>
+                                <label style="head1" text="Edit an association"></label>
                                 <include-form name="EditContentAssoc" location="component://content/widget/content/ContentForms.xml"/>
                             </widgets>
                         </section>

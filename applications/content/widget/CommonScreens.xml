@@ -35,7 +35,7 @@
                 <set field="activeApp" value="contentmgr" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.ContentContentManagerApplication" global="true"/>
                 <set field="applicationMenuName" value="ContentAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://content/widget/ContentMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="component://content/widget/content/ContentMenus.xml" global="true"/>
             </actions>
             <widgets>
                 <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
@@ -68,9 +68,9 @@
             <widgets>
                 <decorator-screen name="mainContentDecorator">
                     <decorator-section name="body">
-                        <include-menu name="content" location="component://content/widget/ContentMenus.xml"/>
+                        <include-menu name="content" location="component://content/widget/content/ContentMenus.xml"/>
                         <container>
-                            <include-menu name="contentSub" location="component://content/widget/ContentMenus.xml"/>
+                            <include-menu name="contentSub" location="component://content/widget/content/ContentMenus.xml"/>
                         </container>
                         <section>
                             <condition>
@@ -80,7 +80,7 @@
                                 <label style="head1" text="${uiLabelMap.${titleProperty}} ${uiLabelMap.CommonFor}: ${currentValue.contentName},${currentValue.description} [${currentValue.contentId}]  ${uiLabelMap.${extraFunctionName}}"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="head1" text="${uiLabelMap.${titleProperty}}"/>
+                                <label style="head1" text="${uiLabelMap.PageTitleAddContent}"/>
                             </fail-widgets>
                         </section>
                         <decorator-section-include name="body"/>

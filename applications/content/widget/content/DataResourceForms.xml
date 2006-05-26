@@ -65,10 +65,12 @@
             <field-map field-name="orderBy" value="dataResourceId"/>
           </service>
         </actions>
-        <field name="dataResourceId" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${dataResourceId}" target="editDataResource?dataResourceId=${dataResourceId}"/>
+        <field name="dataResourceId"><hidden/></field>
+        <field name="dataResourceName" title="Name [id]" widget-style="tabletext">
+            <display-entity entity-name="DataResource" description="${dataResourceName}" key-field-name="dataResourceId">
+                <sub-hyperlink target="editDataResource?dataResourceId=${dataResourceId}" description="[${dataResourceId}]" link-style="tabletext"/>
+            </display-entity>
         </field>
-        <field name="dataResourceName"><display/></field>
         <field name="dataResourceTypeId"><display-entity entity-name="DataResourceType" description="${description}"></display-entity></field>
         <field name="mimeTypeId"><display-entity entity-name="MimeType" description="${description}"></display-entity></field>
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"></display-entity></field>
@@ -92,6 +94,7 @@
         <field name="dataResourceId">
             <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>
         </field>
+        <field name="dataResourceName" title="Name"><display/></field>
     </form>
 
     <form name="mruLookupDataResource" default-entity-name="DataResource" list-name="mruList" target="" title="" type="list"
