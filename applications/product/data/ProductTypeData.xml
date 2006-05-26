@@ -137,6 +137,7 @@
     <ProductAssocType description="Equivalent or Substitute" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
     <ProductAssocType description="Product Variant" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_VARIANT"/>
     <ProductAssocType description="Unique Item" hasTable="N" parentTypeId="" productAssocTypeId="UNIQUE_ITEM"/>
+    <ProductAssocType description="Accessory" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_ACCESSORY"/>
 
     <ProductAssocType description="Revision" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_REVISION"/>
     <ProductAssocType description="Manufacturing Bill of Materials" hasTable="N" parentTypeId="PRODUCT_COMPONENT" productAssocTypeId="MANUF_COMPONENT"/>
