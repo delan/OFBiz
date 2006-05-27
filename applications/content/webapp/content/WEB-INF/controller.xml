@@ -654,16 +654,6 @@
     <request-map uri="ClipBoardDataResource"><security auth="true" https="true"/><response name="success" type="view" value="ClipBoardDataResource"/></request-map>
     <request-map uri="ClipBoardContent"><security auth="true" https="true"/><response name="success" type="view" value="ClipBoardContent"/></request-map>
     
-    <request-map uri="gotoDataResource">
-        <security auth="true" https="true"/>
-        <!--
-        <event invoke="org/ofbiz/content/mruaddDataResource.bsh" path="" type="bsf" />
-        <event invoke="org/ofbiz/content/clearCurrentDataResource.bsh" path="" type="bsf" />
-        <response name="success" type="request" value="gotoDataResourceP2"/>
-        -->
-        <response name="success" type="view" value="EditDataResource"/>
-    </request-map>
-
     <!-- ================ Redirect Content Requests ================= -->
     <request-map uri="findContent">
         <security auth="true" https="true"/>
@@ -675,7 +665,10 @@
     <request-map uri="CMSMenu"><security auth="true" https="true"/><response name="success" type="view" value="CMSMenu"/></request-map>
 
     <!-- Content requests -->
-    <request-map uri="EditContent"><security auth="true" https="true"/><response name="success" type="view" value="EditContent"/></request-map>
+    <request-map uri="EditContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContent"/>
+    </request-map>
     <request-map uri="updateContent">
         <security auth="true" https="true"/>
         <event invoke="updateContent" type="service"/>
@@ -688,11 +681,11 @@
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="AddContent"/>
     </request-map>
-    <request-map uri="AddContent">
+    <!--request-map uri="AddContent">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="AddContent"/>
-    </request-map>
-    <request-map uri="gotoContent">
+    </request-map-->
+    <request-map uri="editContent">
         <security auth="true" https="true"/>
         <!--
         <event invoke="org/ofbiz/content/mruadd.bsh" path="" type="bsf" />
@@ -704,7 +697,10 @@
 
 
     <!-- Content Assoc requests -->
-    <request-map uri="EditContentAssoc"><security auth="true" https="true"/><response name="success" type="view" value="EditContentAssoc"/></request-map>
+    <request-map uri="EditContentAssoc">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+    </request-map>
     <request-map uri="updateContentAssoc">
         <security auth="true" https="true"/>
         <event invoke="updateContentAssoc" path="" type="service"/>
