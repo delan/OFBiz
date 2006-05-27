@@ -84,7 +84,7 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 visibility: hidden;
 }
 
-A.tabletext, DIV.tabletext, SPAN.tabletext, P.tabletext, .tabletext {
+DIV.tabletext, SPAN.tabletext, P.tabletext, .tabletext {
 font-size: 10px;
 text-decoration: none;
 font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -235,8 +235,11 @@ color: #000000;
 .tabletext {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
-text-decoration: none;
 color: #000000;
+}
+
+A.tabletext {
+text-decoration: underline;
 }
 
 A.tableheadbutton {

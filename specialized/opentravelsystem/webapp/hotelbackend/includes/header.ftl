@@ -53,7 +53,7 @@
 </head>
 
 <body>
-<#if !parameters.popup?exists && ((!component?exists && !webapp?exists) || (component?if_exists == "null" && webapp?if_exists == "null"))>
+<#if !parameters.popup?exists && ((!component?exists && !webapp?exists) || (!component?has_content && !webapp?has_content))>
 <table border="0" width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <tr>
     <td width='100%'>

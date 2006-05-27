@@ -27,12 +27,15 @@
     <screen name="EditElectronicText">
         <section>
             <actions>
+                <set field="tabButtonItem" value="text"/>
                 <service service-name="getElectronicText" result-map-name="electronicText">
                     <field-map field-name="contentId" value="${parameters.contentId}"/>
                 </service>
+                <set field="contentId" from-field="parameters.contentId"/>
+                <entity-one entity-name="Content" value-name="currentValue"/>
             </actions>
             <widgets>
-                <decorator-screen name="WebsiteDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                             <container style="${MainColumnStyle}">
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
@@ -44,6 +47,25 @@
         </section>
     </screen>
     
+    <screen name="EditContent">
+        <section>
+            <actions>
+                <set field="title" value="Content Edit Page"/>
+                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="tabButtonItem" value="content"/>
+                <set field="contentId" from-field="parameters.contentId"/>
+                <entity-one entity-name="Content" value-name="currentValue"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="EditContent" location="component://opentravelsystem/webapp/hotelbackend/screens/ContentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="EditHelpText">
         <section>
             <actions>
@@ -72,15 +94,48 @@
             <actions>
                 <set field="title" value="Find an Electronic Text"/>
                 <set field="headerItem" value="websites"/>
-                <set field="titleProperty" value="PageTitleFindInvoice"/>
+                <set field="titleProperty" value="PageTitleFindWebsitePages"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <set field="parameters.noConditionFind" value="Y"/>
             </actions>
             <widgets>
-                <decorator-screen name="WebsiteDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><label style="head1">List website pages</label></container>
-                        <include-form name="ListContent" location="component://content/webapp/content/content/ContentForms.xml"/>
+                        <container><label style="head1" text="Find website pages"/></container>
+                        <include-form name="FindContent" location="component://opentravelsystem/webapp/hotelbackend/screens/ContentForms.xml"/>
+                        <container><label style="head1" text="Website pages list"/></container>
+                        <include-form name="ListContent" location="component://opentravelsystem/webapp/hotelbackend/screens/ContentForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditContentAssoc">
+        <section>
+            <condition>
+                <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+            </condition>
+            <actions>
+                <set field="title" value="Content Edit Page"/>
+                <set field="titleProperty" value="PageTitleAssociations"/>
+                <set field="extraFunctionName" value="'From'"/>
+                <set field="tabButtonItem" value="association"/>
+                <set field="contentId" from-field="parameters.contentId"  />
+                <set field="contentIdTo" from-field="parameters.contentIdTo"  />
+                <set field="contentAssocTypeId" from-field="parameters.contentAssocTypeId"  default-value="${defaultContentAssocTypeId}"/>
+                <set field="contentAssocTypeId" from-field="contentAssocTypeId" to-scope="user"/>
+                <set field="fromDate" from-field="parameters.fromDate"  />
+                <entity-one entity-name="Content" value-name="currentValue"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListContentAssocFrom" location="component://content/widget/content/ContentForms.xml"/>
+                        <label style="head1" text="List associations 'to'"></label>
+                        <include-form name="ListContentAssocTo" location="component://content/widget/content/ContentForms.xml"/>
+                        <label style="head1" text="Add an association"></label>
+                        <include-form name="AddContentAssoc" location="component://opentravelsystem/webapp/hotelbackend/screens/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -135,15 +135,14 @@
             </widgets>
         </section>
     </screen>
-    <screen name="WebsiteDecorator">
+    <screen name="commonWebsiteDecorator">
         <section>
             <actions>
-                <set field="page.appTabButtonItem" value="Website"/>
+                <set field="appTabButtonItem" value="Website"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        
                         <container style="centerarea">
                             <label style="apptitle" text="Website text pages."/>
                             <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="WebsiteAppBar"/>
@@ -153,10 +152,8 @@
                                     <decorator-section-include name="body"/>
                                 </container>
                                 <container style="endcolumns"><label text="&amp;nbsp;"/></container>
-                                <!--/container-->
                             </container>
                         </container>
-                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -636,4 +633,21 @@
             </widgets>
         </section>
     </screen>
- </screens>
+    <screen name="commonContentDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="content"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="commonWebsiteDecorator">
+                    <decorator-section name="body">
+                        <include-menu name="ContentTabBar" location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml"/>
+                        <include-menu name="ContentSubTabBar" location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml"/>
+                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

@@ -261,6 +261,39 @@
     </service>
 
     <!-- add functions to existing services -->
+    <service name="createContent" default-entity-name="Content" engine="simple"
+        location="org/ofbiz/opentravelsystem/ContentServices.xml" invoke="createContent" auth="true">
+        <description>Create a Content</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="targetOperationString" optional="true" type="String"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
+        <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
+        <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
+        <attribute mode="OUT" name="contentId" optional="false" type="String"/>
+        <override name="contentTypeId" optional="false"/>
+    </service>
+    <service name="createContentOfbiz" default-entity-name="Content" engine="java"
+        location="org.ofbiz.content.content.ContentServices" invoke="createContent" transaction-timout="72000" auth="true" >
+        <description>Create a Content</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="targetOperationString" optional="true" type="String"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
+        <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
+        <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
+        <attribute mode="INOUT" name="contentId" optional="true" type="String"/>
+        <override name="contentTypeId" optional="false"/>
+    </service>
+
     <!-- add a prefix to the paymentId -->
     <service name="createPayment" engine="simple" default-entity-name="Payment"
         location="org/ofbiz/opentravelsystem/PaymentServices.xml" invoke="createPayment" auth="true">

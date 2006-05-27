@@ -162,24 +162,13 @@
         <response name="success" type="view" value="EditElectronicText"/>
     </request-map>
     
-    <request-map uri="gotoContent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditElectronicText"/>
-    </request-map>
-    
     <request-map uri="updateHelpText">
         <security auth="true" https="true"/>
         <event invoke="updateElectronicText" type="service"/>
         <response name="success" type="view" value="help"/>
         <response name="error" type="view" value="EditHelpText"/>
     </request-map>
-    <request-map uri="updateElectronicText">
-        <security auth="true" https="true"/>
-        <event invoke="updateElectronicText" type="service"/>
-        <response name="success" type="view" value="EditElectronicText"/>
-        <response name="error" type="view" value="EditElectronicText"/>
-    </request-map>
-    
+
     <!--request-map uri="updateHelp">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateHelp"/>
@@ -2512,6 +2501,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupInvoice"/>
     </request-map>
+    <request-map uri="LookupContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupContent"/>
+    </request-map>
     <!-- invoice requests -->
     <request-map uri="findInvoices">
         <security https="true" auth="true"/>
@@ -3096,7 +3089,61 @@
         <response name="success" type="view" value="CreateEmailToContactList"/>
         <response name="error" type="view" value="CreateEmailToContactList"/>
     </request-map>
+
+    <!-- content -->
+    <request-map uri="editContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditContent"/>
+    </request-map>
     
+    <request-map uri="createContent">
+        <security auth="true" https="true"/>
+        <event invoke="createContent" type="service"/>
+        <response name="success" type="view" value="EditContent"/>
+        <response name="error" type="view" value="EditContent"/>
+    </request-map>
+
+    <request-map uri="updateContent">
+        <security auth="true" https="true"/>
+        <event invoke="updateContent" type="service"/>
+        <response name="success" type="view" value="EditContent"/>
+        <response name="error" type="view" value="EditContent"/>
+    </request-map>
+
+    <request-map uri="EditElectronicText">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditElectronicText"/>
+    </request-map>
+    
+    <request-map uri="updateElectronicText">
+        <security auth="true" https="true"/>
+        <event invoke="updateElectronicText" type="service"/>
+        <response name="success" type="view" value="EditElectronicText"/>
+        <response name="error" type="view" value="EditElectronicText"/>
+    </request-map>
+    
+    <request-map uri="EditContentAssoc">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+    </request-map>
+    <request-map uri="updateContentAssoc">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentAssoc" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+        <response name="error" type="view" value="EditContentAssoc"/>
+    </request-map>
+    <request-map uri="createContentAssoc">
+        <security auth="true" https="true"/>
+        <event invoke="createContentAssoc" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+        <response name="error" type="view" value="EditContentAssoc"/>
+    </request-map>
+    <request-map uri="removeContentAssoc">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentAssoc" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+        <response name="error" type="view" value="EditContentAssoc"/>
+    </request-map>
     
     <!-- end of request mappings -->
     
@@ -3107,10 +3154,12 @@
     <view-map name="setStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#setStore"/>
     <view-map name="noAccess" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#noAccess"/>
     <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
+    <!-- content -->
     <view-map name="help" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#help"/>
     <view-map name="EditHelpText"  page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditHelpText" type="screen"/>
     <view-map name="findWebsiteContent"  page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#findWebsiteContent" type="screen"/>
-    <view-map name="EditSecurityGroupUserLogins" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#EditSecurityGroupUserLogins"/>
+    <view-map name="EditContent" page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditContent" type="screen"/>
+    <view-map name="EditContentAssoc" page="component://opentravelsystem/webapp/hotelbackend/screens/ContentScreens.xml#EditContentAssoc" type="screen"/>
     <!-- Accounting screens-->
     <view-map name="mainAccounting" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/AccountingScreens.xml#main"/>
     <!-- Catalog screens-->
@@ -3169,6 +3218,7 @@
     <view-map name="viewvendor" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewvendor"/>
     <view-map name="EditPartyTaxInfos" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyTaxInfos"/>
     <view-map name="editShoppingList" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#editShoppingList"/>
+    <view-map name="EditSecurityGroupUserLogins" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#EditSecurityGroupUserLogins"/>
     
     <view-map name="EditPerson" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPerson"/>
     <view-map name="EditPartyGroup" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup"/>
@@ -3244,6 +3294,7 @@
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <view-map name="LookupContactList" type="screen" page="component://party/widget/partymgr/PartyContactListScreens.xml#ListLookupContactList"/>
+    <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
     
     <!-- Lookup request mappings accounting component-->
     <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>

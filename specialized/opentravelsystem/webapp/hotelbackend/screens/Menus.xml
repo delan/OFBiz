@@ -25,11 +25,56 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="../../../../../framework/widget/dtd/widget-menu.xsd">
     
-    <menu name="WebsiteAppBar" default-menu-item-name="main" default-selected-style="headerButtonLeftSelected" selected-menuitem-context-field-name="headerItem"
-        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="headerButtonLeft" 
-        default-align-style="col" menu-container-style="row" fill-style="col-fill" orientation="horizontal" type="simple">
+    <menu name="WebsiteAppBar" selected-menuitem-context-field-name="headerItem" default-menu-item-name="main" default-selected-style="appButtonSelected" 
+        default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
+        menu-container-style="appContainer" orientation="horizontal" type="simple">
+        <menu-item name="content" title="Content"><link target="findWebsiteContent"/></menu-item>
+        <menu-item name="help" title="Help" widget-style="headerButtonRight">
+            <link target="woow"/>
+        </menu-item>
     </menu>
 
+    <menu name="ContentTabBar" title="simple">
+        <menu-item name="find" title="Find" >
+            <condition>
+                <not><if-empty field-name="tabButtonItem"/></not>
+            </condition>
+            <link target="findWebsiteContent"/>
+        </menu-item>
+        <menu-item name="content" title="Content" >
+            <condition>
+                <not><if-empty field-name="currentValue"/></not>
+            </condition>
+            <link target="editContent?contentId=${parameters.contentId}"/>
+        </menu-item>
+        <menu-item name="association" title="Association" >
+            <condition>
+                <not><if-empty field-name="currentValue"/></not>
+            </condition>
+            <link target="EditContentAssoc?contentId=${parameters.contentId}"/>
+        </menu-item>
+        <menu-item name="text" title="Text">
+            <condition>
+                <not><if-empty field-name="currentValue"/></not>
+            </condition>
+            <link target="EditElectronicText?contentId=${parameters.contentId}"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="ContentSubTabBar" default-menu-item-name="EditParty" default-selected-style="tabButtonSelected" 
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="buttontext" 
+        menu-container-style="tabContainer" orientation="horizontal" title="simple">
+        <menu-item name="newContent" title="New Content">
+            <condition>
+                <or>
+                <not><if-empty field-name="currentValue"/></not>
+                <if-empty field-name="tabButtonItem"/>
+                </or>
+            </condition>
+            <link target="editContent"/>
+        </menu-item>
+    </menu>
+    
     <menu name="PartyAppBar" selected-menuitem-context-field-name="headerItem" default-menu-item-name="main" default-selected-style="appButtonSelected" 
         default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
         menu-container-style="appContainer" orientation="horizontal" type="simple">
