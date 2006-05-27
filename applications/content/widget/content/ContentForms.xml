@@ -74,7 +74,7 @@
         <field name="contentId"><hidden/></field>
         <field name="contentName" title="Name [id]" widget-style="tabletext">
             <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
-                <sub-hyperlink target="gotoContent?contentId=${contentId}" description="[${contentId}]" link-style="tabletext"/>
+                <sub-hyperlink target="editContent?contentId=${contentId}" description="[${contentId}]" link-style="buttontext"/>
             </display-entity>
         </field>
         <field name="description"><display/></field>
@@ -82,9 +82,17 @@
         <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}[${countryCode}]"></display-entity></field>
         <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field>
         <field name="mimeTypeId"><display-entity entity-name="MimeType"></display-entity></field>
-        <field name="dataResourceId"><display/></field>
-        <field name="ownerContentId"><display/></field>
-        <field name="createdByUserLogin"><display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/></field>
+        <field name="dataResourceId" use-when="dataResourceId==null"><display/></field>
+        <field name="dataResourceId" use-when="dataResourceId!=null">
+                <display-entity entity-name="DataResource" description="${dataResourceName}">
+                    <sub-hyperlink target="editDataResource?dataResourceId=${dataResourceId}" link-style="buttontext" description="[${dataResourceId}]"/>
+            </display-entity>
+        </field>
+        <field name="ownerContentId">
+            <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
+                <sub-hyperlink target="editContent?contentId=${contentId}" description="[${contentId}]" link-style="buttontext"/>
+            </display-entity>
+        </field>
     </form>
 
     <form name="LookupContent"  default-tooltip-style="tabletext" extends="FindContent"
@@ -126,10 +134,10 @@
         </field>
         <field name="dataResourceId">
             <lookup target-form-name="LookupDataResource">
-                <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+                <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="editDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
                 <!--
-                    <sub-hyperlink link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
-                    <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+                    <sub-hyperlink link-style="buttontext" target-type="intra-app" target="editDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+                    <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="editDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
                 -->
             </lookup>
         </field>
@@ -155,10 +163,6 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="createdByUserLogin" position="1"><display/></field>
-        <field name="createdDate" position="2"><display/></field>
-        <field name="lastModifiedByUserLogin" position="1"><display/></field>
-        <field name="lastModifiedDate" position="2"><display/></field>
         <field name="createButton" use-when="currentValue==null" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="updateButton" use-when="currentValue!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -265,16 +269,17 @@
         </actions>
         <!--auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/-->
         <field name="contentId">
-            <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
+            <hyperlink also-hidden="false" description="${contentId}" target="editContent?contentId=${contentId}"/>
         </field>
         <field name="contentIdTo">
-            <hyperlink also-hidden="false" description="${contentIdTo}" target="gotoContent?contentId=${contentIdTo}"/>
+            <hyperlink also-hidden="false" description="${contentIdTo}" target="editContent?contentId=${contentIdTo}"/>
         </field>
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" description="${description}"></display-entity></field>
         <field name="fromDate"><display description="${bsh:fromDate.toString().substring(0,10)}"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
+        <field name="toDate"><date-time/></field>
         <field name="editLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>

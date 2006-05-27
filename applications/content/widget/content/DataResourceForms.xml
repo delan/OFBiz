@@ -68,7 +68,7 @@
         <field name="dataResourceId"><hidden/></field>
         <field name="dataResourceName" title="Name [id]" widget-style="tabletext">
             <display-entity entity-name="DataResource" description="${dataResourceName}" key-field-name="dataResourceId">
-                <sub-hyperlink target="editDataResource?dataResourceId=${dataResourceId}" description="[${dataResourceId}]" link-style="tabletext"/>
+                <sub-hyperlink target="editDataResource?dataResourceId=${dataResourceId}" description="[${dataResourceId}]" link-style="buttontext"/>
             </display-entity>
         </field>
         <field name="dataResourceTypeId"><display-entity entity-name="DataResourceType" description="${description}"></display-entity></field>
