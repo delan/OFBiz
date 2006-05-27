@@ -116,7 +116,12 @@ public class FindServices {
         String organizationPartyId =  null;
         if (userLogin != null)   
             organizationPartyId =  (String)  userLogin.getString("partyId");
-        if (organizationPartyId != null) {
+        /*
+         * Only insert extra find string with key prefix if the logged on uersId was found in the partyPreeference table.
+         * and also only insert extra find string if another selection is made or the noConditionFind was set to true
+         */
+//        Debug.logInfo("=====orgPartyId:" + organizationPartyId + " list empty?:" + UtilValidate.isEmpty(tmpList) + " nocondfind:" +  noConditionFind + "- entity: " + entityName,module);
+        if (organizationPartyId != null && (UtilValidate.isNotEmpty(tmpList) || (noConditionFind != null && noConditionFind.equals("Y")))) {
         	GenericValue partyAcctgPreference = null;
         	try{
         		partyAcctgPreference = delegator.findByPrimaryKeyCache("PartyAcctgPreference",UtilMisc.toMap("partyId",organizationPartyId));

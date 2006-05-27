@@ -21,10 +21,10 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
 
     <!-- ================================================================ -->
-    <!-- Opentravelsystem Payment Services -->
+    <!-- Opentravelsystem Content Services -->
     <!-- ================================================================ -->
     
-    <simple-method method-name="createPayment" short-description="--Add a payment with the invoice prefix--">
+    <simple-method method-name="createContent" short-description="--Add a content with the invoice prefix--">
         <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
             <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
         </entity-one>
@@ -36,13 +36,13 @@
             <check-errors/>
             
             <!-- create id using the invoice prefix -->
-            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Payment" env-name="nextPaymentId"/>
-            <set field="parameters.paymentId" value="${partyAcctgPreference.invoiceIdPrefix}${nextPaymentId}"/>
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}Content" env-name="nextContentId"/>
+            <set field="parameters.contentId" value="${partyAcctgPreference.invoiceIdPrefix}${nextContentId}"/>
         </if-not-empty>
-        <!-- call original ofbiz service with preset paymentId -->
-        <set-service-fields service-name="createPaymentOfbiz" map-name="parameters" to-map-name="createPayment"/>
-        <call-service service-name="createPaymentOfbiz" in-map-name="createPayment">
-            <result-to-result result-name="paymentId" service-result-name="paymentId"/>
+        <!-- call original ofbiz service with preset contentId -->
+        <set-service-fields service-name="createContentOfbiz" map-name="parameters" to-map-name="createContent"/>
+        <call-service service-name="createContentOfbiz" in-map-name="createContent">
+            <result-to-result result-name="contentId" service-result-name="contentId"/>
         </call-service>
         
     </simple-method>
