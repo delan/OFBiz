@@ -1207,7 +1207,7 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
 
         // if the contentId is a publishpoint and the resource ID is not defined get the related contentId
         if (view.get("contentTypeId").equals("WEB_SITE_PUB_PT") && view.get("dataResourceId") == null) {
-            List relContentIds = delegator.findByAnd("ContentAssocDataResourceViewFrom", 
+            List relContentIds = delegator.findByAnd("ContentAssocDataResourceViewTo", 
                     UtilMisc.toMap("contentIdStart", view.get("contentId"),"statusId","CTNT_PUBLISHED", "caContentAssocTypeId", "PUBLISH_LINK"),
                     UtilMisc.toList("caFromDate"));
             relContentIds = EntityUtil.filterByDate(relContentIds, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
