@@ -47,4 +47,27 @@
         
     </simple-method>
     
+    <simple-method method-name="createDataResource" short-description="--Add a dataresource with the invoice prefix--">
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
+            <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
+        </entity-one>
+        <if-not-empty field-name="partyAcctgPreference">
+            <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+                <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+                <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            </check-permission>        
+            <check-errors/>
+            
+            <!-- create id using the invoice prefix -->
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}DataResource" env-name="nextDataResourceId"/>
+            <set field="parameters.dataResourceId" value="${partyAcctgPreference.invoiceIdPrefix}${nextDataResourceId}"/>
+        </if-not-empty>
+        <!-- call original ofbiz service with preset DataResourceId -->
+        <set-service-fields service-name="createDataResourceOfbiz" map-name="parameters" to-map-name="createDataResource"/>
+        <call-service service-name="createDataResourceOfbiz" in-map-name="createDataResource">
+            <result-to-result result-name="dataResourceId" service-result-name="dataResourceId"/>
+        </call-service>
+        
+    </simple-method>
+    
 </simple-methods>

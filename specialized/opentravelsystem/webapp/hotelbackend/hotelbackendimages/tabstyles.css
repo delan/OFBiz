@@ -95,6 +95,7 @@ border-right: solid #070872 1px;
 border-bottom: solid #070872 1px;
 border-top: solid #070872 1px;
 padding: 10px;
+margin-top:18px;
 }
 
 DIV.endcolumns {
@@ -163,9 +164,59 @@ text-align: right;
 .appContainer {  
 background-color: #f9f4a2;
 padding-top: 4px;
+width:100%;
 }
 
 A.appButton {
+float:left;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 11px;
+font-weight: bold;
+text-decoration: none;
+color: #070872;
+background: #B4B0AA;
+padding-right: 5px;
+padding-left: 5px;
+padding-top: 1px;
+padding-bottom: 1px;
+margin-right: 5px;
+margin-bottom: 1px;
+border: solid #070872 1px;
+}
+
+A.appButton:hover {
+float:left;
+color: #a91930;
+background: #FFFFFF;
+border-top: solid #070872 1px;
+border-right: solid #070872 1px;
+border-left: solid #070872 1px;
+border-bottom: solid #FFFFFF 1px;
+margin-right: 5px;
+margin-bottom: 1px;
+}
+
+A.appButtonSelected {
+float:left;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 12px;
+font-weight: bold;
+text-decoration: none;
+color: #a91930;
+background: #FFFFFF;
+padding-right: 5px;
+padding-left: 5px;
+padding-top: 1px;
+margin-right: 5px;
+margin-bottom: 1px;
+border-top: solid #070872 1px;
+border-right: solid #070872 1px;
+border-left: solid #070872 1px;
+border-bottom: solid #FFFFFF 1px;
+}
+
+A.appButtonRight {
+float:right;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 11px;
 font-weight: bold;
@@ -179,7 +230,8 @@ padding-bottom: 1px;
 border: solid #070872 1px;
 }
 
-A.appButton:hover {
+A.appButtonRight:hover {
+float:right;
 color: #a91930;
 background: #FFFFFF;
 border-top: solid #070872 1px;
@@ -188,7 +240,8 @@ border-left: solid #070872 1px;
 border-bottom: solid #FFFFFF 1px;
 }
 
-A.appButtonSelected {
+A.appButtonRightSelected {
+float:right;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 12px;
 font-weight: bold;

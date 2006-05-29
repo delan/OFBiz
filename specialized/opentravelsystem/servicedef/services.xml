@@ -294,6 +294,27 @@
         <override name="contentTypeId" optional="false"/>
     </service>
 
+    <service name="createDataResource" default-entity-name="DataResource" engine="simple"
+        location="org/ofbiz/opentravelsystem/ContentServices.xml" invoke="createDataResource" auth="true">
+        <description>Create a DataResource</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="INOUT" name="dataResourceId" optional="true" type="String"/>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
+        <attribute mode="OUT" name="dataResource" optional="true" type="GenericValue"/>
+    </service>
+
+    <service name="createDataResourceOfbiz" default-entity-name="DataResource" engine="java"
+        location="org.ofbiz.content.data.DataServices" invoke="createDataResource" auth="true">
+        <description>Create a DataResource</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="INOUT" name="dataResourceId" optional="true" type="String"/>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
+        <attribute mode="OUT" name="dataResource" optional="true" type="GenericValue"/>
+    </service>
     <!-- add a prefix to the paymentId -->
     <service name="createPayment" engine="simple" default-entity-name="Payment"
         location="org/ofbiz/opentravelsystem/PaymentServices.xml" invoke="createPayment" auth="true">
