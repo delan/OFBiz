@@ -29,8 +29,8 @@
         default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
         menu-container-style="appContainer" orientation="horizontal" type="simple">
         <menu-item name="content" title="Content"><link target="findWebsiteContent"/></menu-item>
-        <menu-item name="help" title="Help" widget-style="headerButtonRight">
-            <link target="woow"/>
+        <menu-item name="help" title="Help" widget-style="appButtonRight">
+            <link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/>
         </menu-item>
     </menu>
 
@@ -55,7 +55,10 @@
         </menu-item>
         <menu-item name="text" title="Text">
             <condition>
-                <not><if-empty field-name="currentValue"/></not>
+                <and>
+                    <not><if-empty field-name="currentValue"/></not>
+                    <if-compare field-name="currentValue.contentTypeId" operator="equals" value="DOCUMENT"/>
+                </and>
             </condition>
             <link target="EditElectronicText?contentId=${parameters.contentId}"/>
         </menu-item>
@@ -67,11 +70,19 @@
         <menu-item name="newContent" title="New Content">
             <condition>
                 <or>
-                <not><if-empty field-name="currentValue"/></not>
-                <if-empty field-name="tabButtonItem"/>
+                    <not><if-empty field-name="currentValue"/></not>
+                    <if-empty field-name="tabButtonItem"/>
                 </or>
             </condition>
             <link target="editContent"/>
+        </menu-item>
+        <menu-item name="copyContent" title="Copy Content">
+            <condition>
+                <or>
+                    <not><if-empty field-name="currentValue"/></not>
+                </or>
+            </condition>
+            <link target="copyContent"/>
         </menu-item>
     </menu>
     
@@ -83,7 +94,7 @@
         <menu-item name="security" title="Security"><link target="security"/></menu-item>
         <menu-item name="contactlist" title="ContactLists"><link target="ListContactLists"/></menu-item>
         <menu-item name="company" title="CompanyInfo"><link target="editOrganizationCompany"/></menu-item>
-        <menu-item name="help" title="Help" widget-style="headerButtonRight"><link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/></menu-item>
+        <menu-item name="help" title="Help" widget-style="appButtonRight"><link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/></menu-item>
     </menu>
     
     <menu name="PartyTabBar" default-menu-item-name="EditParty" default-selected-style="tabButtonSelected" 

@@ -163,8 +163,11 @@ public class FindServices {
                 else if (entityName.equals("ElectronicText") || entityName.equals("DataResource"))  {
                     extraCond = new EntityExpr("dataResourceId", EntityOperator.LIKE, companyPrefix); 
                 }
-                else if (entityName.equals("ContentAssocViewFrom"))  {
-                    extraCond = new EntityExpr("contentIdStart", EntityOperator.LIKE, companyPrefix); 
+                else if (entityName.equals("ContentAssocViewFrom") || entityName.equals("ContentAssocOptViewFrom"))  {
+                    extraCond = new EntityExpr("contentId", EntityOperator.LIKE, companyPrefix); 
+                }
+                else if (entityName.equals("ContentAssocViewTo") || entityName.equals("ContentAssocOptViewTo"))  {
+                    extraCond = new EntityExpr("contentId", EntityOperator.LIKE, companyPrefix); 
                 }
                 else if (entityName.equals("Content"))  {
                     extraCond = new EntityExpr("contentId", EntityOperator.LIKE, companyPrefix); 

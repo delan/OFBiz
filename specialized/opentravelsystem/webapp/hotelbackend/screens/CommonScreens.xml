@@ -643,7 +643,17 @@
                     <decorator-section name="body">
                         <include-menu name="ContentTabBar" location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml"/>
                         <include-menu name="ContentSubTabBar" location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml"/>
-                        <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${invoice.description} [${uiLabelMap.CommonId}:${invoiceId}]  ${${extraFunctionName}}</label>
+                        <section>
+                            <condition>
+                                <not><if-empty field-name="currentValue.contentId"/></not>
+                            </condition>
+                            <widgets>
+                                <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${currentValue.contentName}, ${currentValue.description} [${uiLabelMap.CommonId}:${contentId}]  ${${extraFunctionName}}</label>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head1" text="${uiLabelMap.PageTitleAddContent}"/>
+                            </fail-widgets>
+                        </section>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

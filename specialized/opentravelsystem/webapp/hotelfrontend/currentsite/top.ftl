@@ -8,7 +8,10 @@
 					<td height="70" align="center">
 						<table width="99%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
-								<td align="center">&nbsp;</td>
+								<td align="right">
+	<#if context.locale != "nl"><a href="<@ofbizUrl>setSessionLocale?locale=nl</@ofbizUrl>"><font color="white">${uiLabelMap.dutch}&nbsp;</font></a></#if><br/>
+	<#if context.locale != "en"><a href="<@ofbizUrl>setSessionLocale?locale=en</@ofbizUrl>"><font color="white">${uiLabelMap.english}</font></a></#if>
+								</td>
 							</tr>
 						</table>
 					</td>

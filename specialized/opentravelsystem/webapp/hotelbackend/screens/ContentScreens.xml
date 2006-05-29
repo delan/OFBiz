@@ -134,7 +134,7 @@
                         <include-form name="ListContentAssocFrom" location="component://content/widget/content/ContentForms.xml"/>
                         <label style="head1" text="List associations 'to'"></label>
                         <include-form name="ListContentAssocTo" location="component://content/widget/content/ContentForms.xml"/>
-                        <label style="head1" text="Add an association"></label>
+                        <label style="head1" text="Add an association to [${currentValue.contentId}]"></label>
                         <include-form name="AddContentAssoc" location="component://opentravelsystem/webapp/hotelbackend/screens/ContentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

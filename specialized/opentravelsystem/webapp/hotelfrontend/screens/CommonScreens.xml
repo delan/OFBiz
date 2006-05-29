@@ -80,7 +80,7 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <content content-id="hds-home"/>
+                        <content content-id="hds-home-pp"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

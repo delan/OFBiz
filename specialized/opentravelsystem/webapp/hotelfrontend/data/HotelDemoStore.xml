@@ -130,9 +130,14 @@
     <ProductCategoryMember productCategoryId="hds-Rooms" productId="hds-RoomStd" fromDate="2004-10-18 20:40:12.749" lastUpdatedStamp="2004-12-25 09:33:36.699" lastUpdatedTxStamp="2004-12-25 09:33:36.651" createdStamp="2004-12-25 09:33:36.699" createdTxStamp="2004-12-25 09:33:36.651"/>
     <ProductCategoryMember productCategoryId="hds-Rooms" productId="hds-RoomLux" fromDate="2004-10-18 20:39:58.563" lastUpdatedStamp="2004-12-25 09:33:37.064" lastUpdatedTxStamp="2004-12-25 09:33:36.946" createdStamp="2004-12-25 09:33:37.064" createdTxStamp="2004-12-25 09:33:36.946"/>
     
-    <DataResource dataResourceId="hds-home" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" mimeTypeId="text/html" lastUpdatedStamp="2005-12-18 14:56:13.407" lastUpdatedTxStamp="2005-12-18 14:56:12.525" createdStamp="2005-12-18 14:56:13.407" createdTxStamp="2005-12-18 14:56:12.525"/>
-    <Content contentId="hds-home" contentTypeId="DOCUMENT" dataResourceId="hds-home" contentName="Name of hds-home" description="Description of hds-home" lastUpdatedStamp="2005-12-18 14:56:13.435" lastUpdatedTxStamp="2005-12-18 14:56:12.525" createdStamp="2005-12-18 14:56:13.435" createdTxStamp="2005-12-18 14:56:12.525"/>
-    <ElectronicText dataResourceId="hds-home" lastUpdatedStamp="2005-12-20 12:50:48.822" lastUpdatedTxStamp="2005-12-20 12:50:48.814" createdStamp="2005-12-18 14:56:13.429" createdTxStamp="2005-12-18 14:56:12.525">
+    <Content contentId="hds-home-pp" contentTypeId="WEB_SITE_PUB_PT" contentName="homePage" description="Home page publish point" lastUpdatedStamp="2005-12-18 14:56:13.435" lastUpdatedTxStamp="2005-12-18 14:56:12.525" createdStamp="2005-12-18 14:56:13.435" createdTxStamp="2005-12-18 14:56:12.525"/>
+    <DataResource dataResourceId="hds-home-text-en" statusId="CTNT_PUBLISHED" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" lastUpdatedStamp="2005-12-18 14:56:13.407" lastUpdatedTxStamp="2005-12-18 14:56:12.525" createdStamp="2005-12-18 14:56:13.407" createdTxStamp="2005-12-18 14:56:12.525"/>
+    <DataResource dataResourceId="hds-home-text-nl" statusId="CTNT_PUBLISHED" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="NONE" lastUpdatedStamp="2005-12-18 14:56:13.407" lastUpdatedTxStamp="2005-12-18 14:56:12.525" createdStamp="2005-12-18 14:56:13.407" createdTxStamp="2005-12-18 14:56:12.525"/>
+    <Content contentId="hds-home-text-en" contentTypeId="DOCUMENT" localeString="en" ownerContentId="hds-home-pp" statusId="CTNT_PUBLISHED" dataResourceId="hds-home-text-en" contentName="Name of hds-home" description="Description of hds-home" lastUpdatedStamp="2005-12-18 14:56:13.435" lastUpdatedTxStamp="2005-12-18 14:56:12.525" createdStamp="2005-12-18 14:56:13.435" createdTxStamp="2005-12-18 14:56:12.525"/>
+    <Content contentId="hds-home-text-nl" contentTypeId="DOCUMENT" localeString="nl" ownerContentId="hds-home-pp" statusId="CTNT_PUBLISHED" dataResourceId="hds-home-text-nl" contentName="Name of hds-home" description="Description of hds-home" lastUpdatedStamp="2005-12-18 14:56:13.435" lastUpdatedTxStamp="2005-12-18 14:56:12.525" createdStamp="2005-12-18 14:56:13.435" createdTxStamp="2005-12-18 14:56:12.525"/>
+    <ContentAssoc contentId="hds-home-text-en" contentIdTo="hds-home-pp" fromDate="2005-12-20 12:50:48.814" contentAssocTypeId="PUBLISH_LINK"/>  
+    <ContentAssoc contentId="hds-home-text-en" contentIdTo="hds-home-text-nl" fromDate="2005-12-20 12:50:48.814" contentAssocTypeId="ALTERNATE_LOCALE"/>  
+    <ElectronicText dataResourceId="hds-home-text-en" lastUpdatedStamp="2005-12-20 12:50:48.822" lastUpdatedTxStamp="2005-12-20 12:50:48.814" createdStamp="2005-12-18 14:56:13.429" createdTxStamp="2005-12-18 14:56:12.525">
         <textData><![CDATA[
             <table align="center" width="77%" cellpadding="0" cellspacing="0">
 	<tr>
@@ -153,7 +158,137 @@
 							<tr>
 								<td><a href="#"><img src="/hds/images/hotel_front.gif" width="80" height="80" border="0"></a></td>
 								<td valign="top" class="tabletext">
-									Rydges Tapae Chiang Mai Hotel is the newest addition to the skyline of this ancient and beautiful city, Chiang Mai, the Rose of Thailands' beautiful North. It's is very conveniently located at one of Chiang Mai&#8217;s most famous entrance gates into the city, Tahpae Gate, and is only 10 minutes away from the airport... 
+									English:Rydges Tapae Chiang Mai Hotel is the newest addition to the skyline of this ancient and beautiful city, Chiang Mai, the Rose of Thailands' beautiful North. It's is very conveniently located at one of Chiang Mai&#8217;s most famous entrance gates into the city, Tahpae Gate, and is only 10 minutes away from the airport... 
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<br class="vspace1" clear="all">
+			<table width="100%" class="boxoutside" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="100%">
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxtop">
+							<tr>
+								<td><img src="/hds/images/tick.gif" width="15" height="15" align="left" border="0"> <a href="#" target="_self" class="subtitle">Facilities</a></td>
+							</tr>
+						</table>
+					</td>
+				</tr>			
+				<tr>
+					<td>
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxbottom">
+							<tr>				
+								<td valign="top" class="tabletext">
+									Rydges Chiang Mai offers the most modern rooms in Chiang Mai with the best facilities for all guests, whether business or leisure travellers.Rydges Chiang Mai IT staff can assist you to set your computer up to access your e-mail or your home office, and we can also provide high end computer support if you experience problems... 
+								</td>
+								<td><a href="#" target="_self"><img src="/hds/images/pool.gif" width="80" height="80" border="0"></a></td>
+							</tr>
+						</table>
+					</td>			
+				</tr>
+			</table>
+			<br class="vspace1" clear="all">
+			<table width="100%" class="boxoutside" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="100%">
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxtop">
+							<tr>
+								<td><img src="/hds/images/tick.gif" width="15" height="15" align="left" border="0"> <a href="#" target="_self" class="subtitle">Conferences</a></td>
+							</tr>
+						</table>
+					</td>
+				</tr>			
+				<tr>
+					<td>
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxbottom">
+							<tr>			
+								<td><a href="#" target="_self"><img src="/hds/images/conference.gif" width="80" height="80" border="0"></a></td>
+								<td valign="top" class="tabletext">
+									As the newest Hotel on the Map of Chiang Mai, Rydges Tapae Chiang Mai Hotel has the staff capacity to not only host your conference but to provide a total support package, from managing the meeting rooms, decorations, supporting staff etc., right up to and including rooms management for those attending your conference... 
+								</td>
+							</tr>
+						</table>
+					</td>			
+				</tr>
+			</table>
+			<br class="vspace1" clear="all">			
+			<table width="100%" class="boxoutside" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="100%">
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxtop">
+							<tr>
+								<td><img src="/hds/images/tick.gif" width="15" height="15" align="left" border="0"> <a href="#" target="_self" class="subtitle">Business Center</a></td>
+							</tr>
+						</table>
+					</td>
+				</tr>			
+				<tr>
+					<td>
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxbottom">
+							<tr>							
+								<td valign="top" class="tabletext">
+									Located on Level 2, in front of the Elevators, Rydges Tapae Chiang Mai has the most modern Business Centre of any Hotel in Chiang Mai, and one of the best equippped and supported in Asia. High Speed(256/128 KBps) Internet Access from 7.30 AM to 10.00 PM daily is available on our own machines, with minimum time-on-line tickets... 
+								</td>
+								<td><a href="#" target="_self"><img src="/hds/images/biz_center.gif" width="80" height="80" border="0"></a></td>
+							</tr>
+						</table>
+					</td>
+				</tr>					
+			</table>
+			<br class="vspace1" clear="all">				
+			<table width="100%" class="boxoutside" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="100%">
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxtop">
+							<tr>
+								<td><img src="/hds/images/tick.gif" width="15" height="15" align="left" border="0"> <a href="#" target="_self" class="subtitle">Wireless Internet Access</a></td>
+							</tr>
+						</table>
+					</td>
+				</tr>			
+				<tr>
+					<td>
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxbottom">
+							<tr>					
+								<td><a href="#" target="_self"><img src="/hds/images/satellite.gif" width="80" height="80" border="0"></a></td>
+								<td valign="top" class="tabletext">
+									High Speed (256/128 KBps) Internet Access from 7.30 AM to 10.00 PM daily is available on our own machines, with minimum time-on-line tickets, which can be used during your entire stay. In-house IT support staff can also assist you to set up your own computer on our 802.11 Wireless Access System... 
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+        ]]></textData> 
+    </ElectronicText>
+    
+    <ElectronicText dataResourceId="hds-home-text-nl" lastUpdatedStamp="2005-12-20 12:50:48.822" lastUpdatedTxStamp="2005-12-20 12:50:48.814" createdStamp="2005-12-18 14:56:13.429" createdTxStamp="2005-12-18 14:56:12.525">
+        <textData><![CDATA[
+            <table align="center" width="77%" cellpadding="0" cellspacing="0">
+	<tr>
+		<td>
+			<table width="100%" class="boxoutside" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="100%">
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boxtop">
+							<tr>
+								<td><img src="/hds/images/tick.gif" width="15" height="15" align="left" border="0"> <a href="#" target="_self" class="subtitle">Profile</a></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%" cellpadding="5" cellspacing="0" border="0" class="boxbottom">
+							<tr>
+								<td><a href="#"><img src="/hds/images/hotel_front.gif" width="80" height="80" border="0"></a></td>
+								<td valign="top" class="tabletext">
+									Dutch: Rydges Tapae Chiang Mai Hotel is een van de nieuwste Hotels van dit oude en mooie stadje, Chiang Mai, the Rose of Thailands' beautiful North. It's is very conveniently located at one of Chiang Mai&#8217;s most famous entrance gates into the city, Tahpae Gate, and is only 10 minutes away from the airport... 
 								</td>
 							</tr>
 						</table>
