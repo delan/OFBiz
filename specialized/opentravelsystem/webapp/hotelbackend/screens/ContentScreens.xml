@@ -94,6 +94,7 @@
             <actions>
                 <set field="title" value="Find an Electronic Text"/>
                 <set field="headerItem" value="websites"/>
+                <set field="tabButtonItem" value="find"/>
                 <set field="titleProperty" value="PageTitleFindWebsitePages"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>

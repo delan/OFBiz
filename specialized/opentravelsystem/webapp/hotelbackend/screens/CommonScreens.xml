@@ -650,9 +650,17 @@
                             <widgets>
                                 <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${currentValue.contentName}, ${currentValue.description} [${uiLabelMap.CommonId}:${contentId}]  ${${extraFunctionName}}</label>
                             </widgets>
-                            <fail-widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-compare field-name="tabButtonItem" operator="equals" value="content"/>
+                                    <if-empty field-name="currentValue.contentId"/>
+                                </and>
+                            </condition>
+                            <widgets>
                                 <label style="head1" text="${uiLabelMap.PageTitleAddContent}"/>
-                            </fail-widgets>
+                            </widgets>
                         </section>
                         <decorator-section-include name="body"/>
                     </decorator-section>
