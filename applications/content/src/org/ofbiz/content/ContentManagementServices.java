@@ -374,7 +374,8 @@ public class ContentManagementServices {
             contentAssocTypeId = (String)context.get("caContentAssocTypeId");
 
         if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
-        if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
+        // create content assoc if the key values are present....
+        if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 && contentAssoc.get("contentId") != null && contentAssoc.get("contentIdTo") != null ) {
             if (Debug.infoOn()) Debug.logInfo("in persistContentAndAssoc, deactivateExisting:" +  deactivateExisting, null);
             Map contentAssocContext = new HashMap();
             contentAssocContext.put("userLogin", userLogin);
