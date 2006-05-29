@@ -1205,6 +1205,20 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
         results.put("view", view);
         results.put("content", content);
 
+        // if the contentId is a publishpoint and the resource ID is not defined get the related contentId
+        if (view.get("contentTypeId").equals("WEB_SITE_PUB_PT") && view.get("dataResourceId") == null) {
+            List relContentIds = delegator.findByAnd("ContentAssocDataResourceViewFrom", 
+                    UtilMisc.toMap("contentIdStart", view.get("contentId"),"statusId","CTNT_PUBLISHED", "caContentAssocTypeId", "PUBLISH_LINK"),
+                    UtilMisc.toList("caFromDate"));
+            relContentIds = EntityUtil.filterByDate(relContentIds, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+            if (relContentIds != null && relContentIds.size() > 0) {
+                view = (GenericValue) relContentIds.get(0);
+            }
+            else {
+                throw new GeneralException("No related content found for publish point contentId=" + contentId);
+            }
+        }
+        
         if (locale != null) {
             String targetLocaleString = locale.toString();
             String thisLocaleString = (String) view.get("localeString");
@@ -1236,6 +1250,7 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
         // TODO: what should we REALLY do here? looks like there is no decision between Java and Service style error handling...
 
         if (UtilValidate.isEmpty(templateDataResourceId)) {
+            // Debug.logInfo("=====rendering contentId" + contentId + " dataResourceId:" + dataResourceId + " view:" + view,module);
             if (UtilValidate.isNotEmpty(dataResourceId) || view != null)
                 DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
 
