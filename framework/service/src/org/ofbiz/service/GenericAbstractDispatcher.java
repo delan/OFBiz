@@ -27,6 +27,8 @@ package org.ofbiz.service;
 import java.util.Date;
 import java.util.Map;
 
+import javax.transaction.xa.XAException;
+
 import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.security.Security;
@@ -70,6 +72,34 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
             }
             
         } catch (JobManagerException e) {
+            throw new GenericServiceException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * @see org.ofbiz.service.LocalDispatcher#setRollbackService(java.lang.String, java.util.Map, boolean)
+     */
+    public void addRollbackService(String serviceName, Map context, boolean persist) throws GenericServiceException {
+        ServiceXaWrapper xa = new ServiceXaWrapper(this.getDispatchContext());
+        xa.setRollbackService(serviceName, context, true, persist);
+        try {
+            xa.enlist();
+        } catch (XAException e) {
+            Debug.logError(e, module);
+            throw new GenericServiceException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * @see org.ofbiz.service.LocalDispatcher#setCommitService(java.lang.String, java.util.Map, boolean)
+     */
+    public void addCommitService(String serviceName, Map context, boolean persist) throws GenericServiceException {
+        ServiceXaWrapper xa = new ServiceXaWrapper(this.getDispatchContext());
+        xa.setCommitService(serviceName, context, true, persist);
+        try {
+            xa.enlist();
+        } catch (XAException e) {
+            Debug.logError(e, module);
             throw new GenericServiceException(e.getMessage(), e);
         }
     }

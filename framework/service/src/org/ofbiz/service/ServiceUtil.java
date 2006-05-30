@@ -102,8 +102,12 @@ public class ServiceUtil {
         return returnProblem(ModelService.RESPOND_FAIL, errorMessage, null, null, null);
     }
 
-     public static Map returnFailure(List errorMessageList) {
+    public static Map returnFailure(List errorMessageList) {
         return returnProblem(ModelService.RESPOND_FAIL, null, errorMessageList, null, null);
+    }
+
+    public static Map returnFailure() {
+        return returnProblem(ModelService.RESPOND_FAIL, null, null, null, null);
     }
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code, also forwards any error messages from the nestedResult */

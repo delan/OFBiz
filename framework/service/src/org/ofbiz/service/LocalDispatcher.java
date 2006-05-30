@@ -239,6 +239,25 @@ public interface LocalDispatcher {
      */
     public void schedule(String serviceName, Map context, long startTime) throws GenericServiceException;
 
+
+    /**
+     * Adds a rollback service to the current TX using the ServiceXaWrapper
+     * @param serviceName
+     * @param context
+     * @param persist
+     * @throws GenericServiceException
+     */
+    public void addRollbackService(String serviceName, Map context, boolean persist) throws GenericServiceException;
+
+    /**
+     * Adds a commit service to the current TX using the ServiceXaWrapper
+     * @param serviceName
+     * @param context
+     * @param persist
+     * @throws GenericServiceException
+     */
+    public void addCommitService(String serviceName, Map context, boolean persist) throws GenericServiceException;
+
     /**
      * Gets the JobManager associated with this dispatcher
      * @return JobManager that is associated with this dispatcher
