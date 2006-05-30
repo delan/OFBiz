@@ -71,7 +71,7 @@ under the License.
                 <decorator-screen name="commonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ListForums" location="component://content/widget/forum/ForumForms.xml"/>
-                        <label style="head1" text="Add forum to &quot;${forumGroup.contentName}&quot;"/>
+                        <label style="head1" text="${uiLabelMap.ForumAddTo} &quot;${forumGroup.contentName}&quot;"/>
                         <include-form name="AddForum" location="component://content/widget/forum/ForumForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -98,7 +98,7 @@ under the License.
                 <decorator-screen name="commonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ForumGroupRoles" location="component://content/widget/forum/ForumForms.xml"/>
-                        <label style="head1" text="Add role to &quot;${forumGroup.contentName}&quot; [${forumGroup.contentId}]"/>
+                        <label style="head1" text="${uiLabelMap.ForumAddRoleTo} &quot;${forumGroup.contentName}&quot; [${forumGroup.contentId}]"/>
                         <include-form name="AddForumGroupRole" location="component://content/widget/forum/ForumForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -125,7 +125,7 @@ under the License.
                 <decorator-screen name="commonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ForumGroupPurposes" location="component://content/widget/forum/ForumForms.xml"/>
-                        <label style="head1" text="Add purpose to &quot;${forumGroup.contentName}&quot; [${forumGroup.contentId}]"/>
+                        <label style="head1" text="${uiLabelMap.ForumAddPurposeTo} &quot;${forumGroup.contentName}&quot; [${forumGroup.contentId}]"/>
                         <include-form name="AddForumGroupPurpose" location="component://content/widget/forum/ForumForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -162,7 +162,7 @@ under the License.
                             <widgets>
                                 <container>
                                     <include-form name="ListForumMessages" location="component://content/widget/forum/ForumForms.xml"/>
-                                    <label style="head1" text="Add new thread to this Forum: ${forum.description}" ></label>
+                                    <label style="head1" text="${uiLabelMap.ForumAddThreadTo}: ${forum.description}" ></label>
                                     <include-form name="AddForumMessage" location="component://content/widget/forum/ForumForms.xml"/>
                                 </container>
                             </widgets>

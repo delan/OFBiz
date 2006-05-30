@@ -36,19 +36,19 @@
         title="" type="simple">
 
 
-        <menu-item name="contentfind" title="Content" >
+        <menu-item name="contentfind" title="${uiLabelMap.ContentContent}" >
             <link id="contentfind" target="${menuContext.contentTarget}"/>
         </menu-item>
-        <menu-item name="subsites" title="SubSites" >
+        <menu-item name="subsites" title="${uiLabelMap.ContentSubSites}" >
             <link id="dflt" target="CMSSites?forumId=${subsites.forumId}"/>
         </menu-item>
 
-        <menu-item name="index" title="Index" >
+        <menu-item name="index" title="${uiLabelMap.ContentIndex}" >
             <link id="dflt" target="AdminIndex">
             </link>
         </menu-item>
 
-        <menu-item name="search" title="Search" >
+        <menu-item name="search" title="${uiLabelMap.CommonFind}" >
             <link id="dflt" target="AdminSearch">
             </link>
         </menu-item>
@@ -69,18 +69,18 @@
         title="" type="simple">
 
 
-       <menu-item name="contentfind" title="Content" >
+       <menu-item name="contentfind" title="${uiLabelMap.ContentContent}" >
             <link id="CMSContentFind" target="CMSContentFind?listSize=${content.listSize}&amp;highIndex=${content.highIndex}&amp;lowIndex=${content.lowIndex}&amp;viewSize=${content.viewSize}&amp;viewIndex=${content.viewIndex}&amp;queryString=${content.queryString}" >
             </link>
         </menu-item>
-       <menu-item name="ownedcontentfind" title="Content" >
+       <menu-item name="ownedcontentfind" title="${uiLabelMap.ContentContent}" >
             <link id="CMSFindOwnedContent" target="CMSFindOwnedContent?listSize=${content.listSize}&amp;highIndex=${content.highIndex}&amp;lowIndex=${content.lowIndex}&amp;viewSize=${content.viewSize}&amp;viewIndex=${content.viewIndex}&amp;queryString=${content.queryString}" >
             </link>
         </menu-item>
-       <menu-item name="contentedit" title="Edit" >
+       <menu-item name="contentedit" title="${uiLabelMap.CommonEdit}" >
             <link id="CMSContentEdit" target="CMSContentEdit?contentId=${content.currentValue.contentId}&amp;dataResourceId=${content.currentValue.dataResourceId}"/>
         </menu-item>
-       <menu-item name="contentadd" title="Add" >
+       <menu-item name="contentadd" title="${uiLabelMap.CommonAdd}" >
             <link id="CMSContentAdd" target="CMSContentAdd">
             </link>
         </menu-item>

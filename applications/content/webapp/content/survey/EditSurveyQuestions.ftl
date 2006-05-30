@@ -27,18 +27,18 @@
 
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
-      <td><div class="tableheadtext">ID</div></td>
-      <td><div class="tableheadtext">Type</div></td>
-      <td><div class="tableheadtext">Category</div></td>
-      <td><div class="tableheadtext">Description</div></td>
-      <td><div class="tableheadtext">Question</div></td>
-      <td><div class="tableheadtext">Page</div></td>
-      <td><div class="tableheadtext">Multi-Resp</div></td>
-      <td><div class="tableheadtext">M-R Col</div></td>
-      <td><div class="tableheadtext">Required</div></td>
-      <td><div class="tableheadtext">Seq #</div></td>
-      <td><div class="tableheadtext">W/Question</div></td>
-      <td><div class="tableheadtext">W/Option</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonId}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.SurveryCategory}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.SurveyQuestion}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonPage}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.SurveyMultiResp}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.SurveyMultiRespColumn}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonRequired}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonSequenceNum}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.SurveyWithQuestion}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.SurveyWithOption}</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
@@ -115,9 +115,9 @@
           <td><input type="text" name="sequenceNum" size="5" class="inputBox" value="${surveyQuestionAndAppl.sequenceNum?if_exists}"/></td>
           <td><input type="text" name="withSurveyQuestionId" size="5" class="inputBox" value="${surveyQuestionAndAppl.withSurveyQuestionId?if_exists}"/></td>
           <td><input type="text" name="withSurveyOptionSeqId" size="5" class="inputBox" value="${surveyQuestionAndAppl.withSurveyOptionSeqId?if_exists}"/></td>
-          <td><input type="submit" value="Update" class="smallSubmit"/></td>
-          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">Edit&nbsp;Question</a></td>
-          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">Remove</a></td>
+          <td><input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/></td>
+          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.SurveyQuestion}</a></td>
+          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${surveyQuestionAndAppl.surveyId}&surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}&fromDate=${surveyQuestionAndAppl.fromDate}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a></td>
         </tr>
       </form>
     </#list>
@@ -127,21 +127,21 @@
   <#if surveyQuestionCategory?has_content>
     <hr class="sepbar">
     <a name="appl">
-    <div class="head1">Apply Question From Category - <span class="head2">${surveyQuestionCategory.description?if_exists} [${surveyQuestionCategory.surveyQuestionCategoryId}]</div>
+    <div class="head1">${uiLabelMap.SurveyApplyQuestionFromCategory} - <span class="head2">${surveyQuestionCategory.description?if_exists} [${surveyQuestionCategory.surveyQuestionCategoryId}]</div>
     <br/><br/>
     <table border="1" cellpadding='2' cellspacing='0'>
       <tr>
-        <td><div class="tableheadtext">ID</div></td>
-        <td><div class="tableheadtext">Description</div></td>
-        <td><div class="tableheadtext">Type</div></td>
-        <td><div class="tableheadtext">Question</div></td>
-        <td><div class="tableheadtext">Page</div></td>
-        <td><div class="tableheadtext">Multi-Resp</div></td>
-        <td><div class="tableheadtext">M-R Col</div></td>
-        <td><div class="tableheadtext">Required</div></td>
-        <td><div class="tableheadtext">Seq #</div></td>
-        <td><div class="tableheadtext">W/Question</div></td>
-        <td><div class="tableheadtext">W/Option</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonId}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonType}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.SurveyQuestion}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonPage}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.SurveyMultiResp}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.SurveyMultiRespColumn}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonRequired}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonSequenceNum}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.SurveyWithQuestion}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.SurveyWithOption}</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
       </tr>
 
@@ -182,7 +182,7 @@
             <td><input type="text" name="sequenceNum" size="5" class="inputBox"/></td>
             <td><input type="text" name="withSurveyQuestionId" size="5" class="inputBox"/></td>
             <td><input type="text" name="withSurveyOptionSeqId" size="5" class="inputBox"/></td>
-            <td><input type="submit" value="Apply" class="smallSubmit"/></td>
+            <td><input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit"/></td>
           </tr>
         </form>
       </#list>
@@ -191,7 +191,7 @@
   </#if>
 
   <hr class="sepbar">
-  <div class="head2">Apply Question(s) From Category</div>
+  <div class="head2">${uiLabelMap.SurveyApplyQuestionFromCategory}</div>
   <br/>
   <form method="post" action="<@ofbizUrl>EditSurveyQuestions</@ofbizUrl>">
     <input type="hidden" name="surveyId" value="${requestParameters.surveyId}"/>
@@ -201,7 +201,7 @@
       </#list>
     </select>
     &nbsp;
-    <input type="submit" value="Apply" class="smallSubmit"/>
+    <input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit"/>
   </form>
   <br/>
 
@@ -209,18 +209,18 @@
   <a name="edit">
   <#-- new question / category -->
   <#if requestParameters.newCategory?default("N") == "Y">
-    <div class="head2">Create Question Category</div>
-    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">New Question</a>
+    <div class="head2">${uiLabelMap.SurveyCreateQuestionCategory}</div>
+    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNew} ${uiLabelMap.SurveyQuestion}</a>
     <br/><br/>
     ${createSurveyQuestionCategoryWrapper.renderFormString(context)}
   <#else>
     <#if surveyQuestionId?has_content>
-      <div class="head2">Edit Question:</div>
-      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">New Question</a>
+      <div class="head2">${uiLabelMap.CommonEdit} ${uiLabelMap.SurveyQuestion}:</div>
+      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNew} ${uiLabelMap.SurveyQuestion}</a>
     <#else>
-      <div class="head2">Create New Question</div>
+      <div class="head2">${uiLabelMap.SurveyCreateQuestion}</div>
     </#if>
-    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">New Question Category</a>
+    <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNew} ${uiLabelMap.SurveyQuestion} ${uiLabelMap.SurveryCategory}</a>
     <br/><br/>
     ${createSurveyQuestionWrapper.renderFormString(context)}
   </#if>
@@ -229,12 +229,12 @@
     <br/>
     <hr class="sepbar">
     <br/>
-    <div class="head1">Survey Options - <span class="head2">ID: ${surveyQuestion.surveyQuestionId?if_exists}</div>
+    <div class="head1">${uiLabelMap.SurveyOptions} - <span class="head2">${uiLabelMap.CommonId}: ${surveyQuestion.surveyQuestionId?if_exists}</div>
     <br/><br/>
     <table border="1" cellpadding='2' cellspacing='0'>
       <tr>
-        <td><div class="tableheadtext">Description</div></td>
-        <td><div class="tableheadtext">Seq #</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonSequenceNum}</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
       </tr>
@@ -243,17 +243,17 @@
         <tr valign="middle">
           <td><div class="tabletext">${option.description?if_exists}</div></td>
           <td><div class="tabletext">${option.sequenceNum?if_exists}</div></td>
-          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[Edit]</a>
-          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+          <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+          <td><a href="<@ofbizUrl>removeSurveyQuestionAppl?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
         </tr>
       </#list>
     </table>
     <br/>
     <#if !surveyQuestionOption?has_content>
-      <div class="head2">Create Question Option:</div>
+      <div class="head2">${uiLabelMap.SurveyCreateQuestionOption}:</div>
     <#else>
-      <div class="head2">Edit Question Option:</div>
-      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="buttontext">[New Option]</a>
+      <div class="head2">${uiLabelMap.SurveyEditQuestionOption}:</div>
+      <a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNew} ${uiLabelMap.SurveyOption}]</a>
     </#if>
     ${createSurveyOptionWrapper.renderFormString()}
   </#if>

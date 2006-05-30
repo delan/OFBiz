@@ -31,8 +31,8 @@
         
         <auto-fields-service service-name="updateWebSite" map-name=""/>
         
-        <field use-when="webSite!=null" name="webSiteId" tooltip="This cannot be changed without re-creating the WebSite."><display/></field>
-        <field use-when="webSite==null&amp;&amp;webSiteId!=null" name="webSiteId" tooltip="Could not find WebSite with ID [${webSiteId}]"><text size="20" maxlength="20"/></field>
+        <field use-when="webSite!=null" name="webSiteId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="webSite==null&amp;&amp;webSiteId!=null" name="webSiteId" tooltip="${uiLabelMap.CommonCannotBeFound}: [${webSiteId}]"><text size="20" maxlength="20"/></field>
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
         <field use-when="webSite==null&amp;&amp;webSiteId==null" name="webSiteId"><text size="20" maxlength="20"/></field>
 
@@ -46,7 +46,7 @@
                 <entity-options entity-name="ProductStore" description="${storeName}">
                     <entity-order-by field-name="storeName"/>
                 </entity-options>
-                <sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="buttontext" target-type="inter-app" target="/catalog/control/EditProductStore?productStoreId=${webSite.productStoreId}" description="Edit Product Store"/>
+                <sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="buttontext" target-type="inter-app" target="/catalog/control/EditProductStore?productStoreId=${webSite.productStoreId}" description="${uiLabelMap.ContentEditProductStore}"/>
             </drop-down>
         </field>
 
@@ -57,14 +57,14 @@
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="addWebSiteRole"/>
         <field name="webSiteId" map-name="webSite"><hidden/></field>
-        <field name="roleTypeId" title="Role" widget-style="selectBox">
+        <field name="roleTypeId" widget-style="selectBox">
             <drop-down no-current-selected-key="_NA_">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="UpdateWebSiteRole" type="list" 
         target="updateWebSiteRole" title="" list-name="webSiteRoleDatas"
@@ -72,16 +72,16 @@
         <auto-fields-service service-name="updateWebSiteRole" map-name="webSiteRole"/>
         <field name="webSiteId"><hidden/></field>
         <!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
-        <field name="partyId" title="Party [ID]" widget-style="buttontext">
+        <field name="partyId" widget-style="buttontext">
             <hyperlink target-type="inter-app" target="/partymgr/control/viewprofile?partyId=${webSiteRole.partyId}"
                 description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix} ${partyGroup.groupName} [${webSiteRole.partyId}]"/>
         </field>
-        <field name="roleTypeId" title="Role" widget-style="tabletext">
+        <field name="roleTypeId" widget-style="tabletext">
             <display description="${roleType.description}"/>
         </field>
-        <field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
-        <field name="thruDate" title="Thru Date &amp;amp; Time"></field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="fromDate" widget-style="tabletext"><display/></field>
+        <field name="thruDate"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="removeWebSiteRole?webSiteId=${webSiteRole.webSiteId}&amp;partyId=${webSiteRole.partyId}&amp;roleTypeId=${webSiteRole.roleTypeId}&amp;fromDate=${webSiteRole.fromDate}"
                 description="[Delete]" also-hidden="false"/>

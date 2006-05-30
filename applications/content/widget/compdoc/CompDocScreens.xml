@@ -259,7 +259,7 @@ under the License.
             </condition>
             <actions>
                 <set field="menuName" value="empty"/>
-                <set field="title" value="Find CompDoc"/>
+                <set field="title" value="Find CompDoc"/>				
                 <set field="entityName" value="ContentAssocViewFrom"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="currentContentMenuItemName" value=""/>

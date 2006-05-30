@@ -52,11 +52,17 @@
             </drop-down>
         </field>
         <field name="createdByUserLogin" position="2"><lookup target-form-name="LookupPerson"/></field>
-        <field name="localeString">
+        <field name="createdDate"><date-find/></field>
+        <field name="lastModifiedByUserLogin"><lookup target-form-name="LookupParty"/></field>
+        <field name="lastModifiedDate"><date-find/></field>
+		<field name="localeString">
             <drop-down allow-empty="true">
                 <entity-options entity-name="CountryCode" description="${countryName}[${countryCode}]" key-field-name="countryCode"/>
             </drop-down>
-        </field>
+		</field>        
+        <field name="createLink" title="" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}"  target="AddContent"/>
+		</field>
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     

@@ -60,7 +60,7 @@
         <field name="ownerContentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentIdTo"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentAssocTypeId"><hidden value="SUBSITE"/></field>
-        <field name="addButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ForumGroupPurposes" type="list" list-name="forumPurposes" target="deleteForumGroupPurpose"
@@ -69,7 +69,7 @@
         <field name="forumGroupId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentPurposeTypeId"><display-entity entity-name="ContentPurposeType" description="${description}"/></field>
-        <field name="deleteButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddForumGroupPurpose" type="single" 
         target="createForumGroupPurpose" title=""
@@ -81,7 +81,7 @@
             <drop-down>
                 <entity-options entity-name="ContentPurposeType" description="${description}"></entity-options>    
             </drop-down></field>
-        <field name="addButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ForumGroupRoles" type="list" list-name="forumRoles" target="updateForumGroupRole" separate-columns="true"
@@ -107,7 +107,7 @@
             <drop-down>
                 <entity-options entity-name="RoleType" description="${description}"></entity-options>    
             </drop-down></field>
-        <field name="addButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="ListForumMessages" type="list" list-name="forumMessages" separate-columns="true" target="updateForumMessage"
@@ -165,7 +165,7 @@
         <field name="contentIdTo"><hidden/></field>
         <field name="contentAssocTypeId"><hidden value="RESPONSE"/></field>
         <field name="forumMessageText" parameter-name="textData"><textarea rows="10"/></field>
-        <field name="addButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddForumMessage" type="single" target="updateForumMessage" default-map-name="message"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -181,7 +181,7 @@
         <field name="contentIdTo"><hidden value="${parameters.forumMessageIdTo}"/></field>
         <field name="contentAssocTypeId"><hidden value="RESPONSE"/></field>
         <field name="forumMessageText" parameter-name="textData"><textarea rows="10" visual-editor-enable="true" visual-editor-buttons="undo redo bold italic underline bullet indent outdent link"/></field>
-        <field name="addButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddForumThreadMessage" type="single" extends="AddForumMessage" target="updateForumThreadMessage"/>
     
@@ -199,6 +199,6 @@
         <field name="rsp.caContentIdTo" parameter-name="contentIdTo"><hidden/></field>
         <field name="rsp.caContentAssocTypeId" parameter-name="contentAssocTypeId"><hidden/></field>
         <field name="textData"><textarea rows="8"/></field>
-        <field name="updateButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -1,3 +1,4 @@
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign currentPage =  page.getPageName() >
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {currentPage : "tabButtonSelected"}>
@@ -18,9 +19,9 @@
 
 
 <div class='tabContainer'>
-<a href="<@ofbizUrl>ListLayout</@ofbizUrl>" class="${selectedClassMap.ListLayout?default(unselectedClassName)}">List</a>
-<a href="<@ofbizUrl>FindLayout</@ofbizUrl>" class="${selectedClassMap.FindLayout?default(unselectedClassName)}">Find</a>
-<a href="<@ofbizUrl>EditLayout</@ofbizUrl>" class="${layoutClass}">Layout</a>
+<a href="<@ofbizUrl>ListLayout</@ofbizUrl>" class="${selectedClassMap.ListLayout?default(unselectedClassName)}">${uiLabelMap.CommonList}</a>
+<a href="<@ofbizUrl>FindLayout</@ofbizUrl>" class="${selectedClassMap.FindLayout?default(unselectedClassName)}">${uiLabelMap.CommonFind}</a>
+<a href="<@ofbizUrl>EditLayout</@ofbizUrl>" class="${layoutClass}">${uiLabelMap.ContentLayout}</a>
 <!--
 <a href="<@ofbizUrl>EditLayoutContent</@ofbizUrl>" class="${selectedClassMap.EditLayoutContent?default(unselectedClassName)}">SubContent</a>
 <a href="<@ofbizUrl>EditLayoutText</@ofbizUrl>" class="${selectedClassMap.EditLayoutText?default(unselectedClassName)}">Text</a>

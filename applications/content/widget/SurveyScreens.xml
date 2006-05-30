@@ -255,7 +255,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSurveyDecorator">
                     <decorator-section name="body">
-                        <container><label style="head1">${uiLabelMap.PageTitleEditSurveyResponse}, Response ID: ${parameters.surveyResponseId}, Survey ID: ${surveyId}</label></container>
+                        <container><label style="head1">${uiLabelMap.PageTitleEditSurveyResponse}, ${uiLabelMap.SurveyResponse}: ${parameters.surveyResponseId}, ${uiLabelMap.SurveySurveyId}: ${surveyId}</label></container>
                         <platform-specific><html><html-template location="component://content/webapp/content/survey/EditSurveyResponse.ftl"/></html></platform-specific>
                     	<include-form name="BuildSurveyResponseFromPdf" location="component://content/webapp/content/survey/SurveyForms.xml"/>
                     </decorator-section>
@@ -271,7 +271,7 @@ under the License.
             </condition>
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="Lookup Survey"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupSurvey}"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
@@ -293,7 +293,7 @@ under the License.
             </condition>
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="Lookup SurveyResponse"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupSurveyResponse}"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
