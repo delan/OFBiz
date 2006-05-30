@@ -1,4 +1,8 @@
 
+DESCRIPTION: This file contains information about libraries that are supported by code in OFBiz but that are left out of SVN because of licesning issues. What is below is a list of jar files and where to put them, and the file(s) to change to include them in the OFBiz build and/or run-time configuration.
+
+NOTE: While these aren't included in the main SVN repository they are available on the old Undersun SVN server in the specialized/libraries component directory.
+
 -=-Workflow
 
 -Shark (LGPL):
@@ -57,10 +61,22 @@
     framework/webapp/build.xml:org/ofbiz/webapp/view/JasperReportsPdfViewHandler.java,org/ofbiz/webapp/view/JasperReportsXmlViewHandler.java
     applications/content/build.xml:org/ofbiz/content/report/JREntityListIteratorDataSource.java,org/ofbiz/content/report/JRMapCollectionDataSource.java
 
--=- POS L&F
+-=- POS
 -GTK Swing (LGPL):
   http://sourceforge.net/projects/gtkswing/
-  TO DEPLOY: base/config/pos-containers.xml:org.gtk.java.swing.plaf.gtk.GtkLookAndFeel for look and feel
+  TO DEPLOY: base/config/pos-containers.xml:org.gtk.java.swing.plaf.gtk.GtkLookAndFeel for look and feel  
+-JavaPOS hardware drivers
+  TO DEPLOY: applications/pos/lib/
+ 
+  Epson Printer TM-T88III (Proprietay licence) needs jpos18-controls.jar (version specific)
+  https://www.epson-pos.com/cgi-bin/sdssm/main/td_login.jsp
+     epsonJposService180.jar 
+     epsonJposServiceCommon.jar
+ 
+ Star (Proprietay licence)
+ http://www.star-micronics.co.jp/service/s_print/starjavapos_win32-linux-macosx_yyyymmdd.zip.htm
+     starjavapos.jar   
+  
 
 -=- Office (Word, etc) File Handling
 -OpenOffice UNO (LGPL)
@@ -80,3 +96,4 @@
     ridl.jar
     unoil.jar    
   TO BUILD comment out exclude: applications/content/build.xml:org/ofbiz/content/openoffice/*
+
