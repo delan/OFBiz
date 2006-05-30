@@ -196,7 +196,7 @@ public class otsUtils {
      */
     public static String unLoad(HttpServletRequest request, HttpServletResponse response) {
         delegator = (GenericDelegator) request.getAttribute("delegator");
-        String productStoreId = (String) request.getSession().getAttribute("productStoreId");
+        String productStoreId = (String) request.getParameter("downloadId");
         StringBuffer msgs = new StringBuffer();
 
         // single file
@@ -205,8 +205,8 @@ public class otsUtils {
             return "error";
         }
 
-        String fileName = new String("specialized/opentravelsystem/webapp/" + productStoreId + "/html/" + productStoreId + ".xml");
-        String downloadLoc = new String(productStoreId + "/html/" + productStoreId + ".xml");
+        String fileName = new String("specialized/opentravelsystem/webapp/hotelbackend/html/" + productStoreId + ".xml");
+        String downloadLoc = new String("backend/html/" + productStoreId + ".xml");
 
         FileOutputStream fos = null;
         try { fos = new FileOutputStream(fileName);

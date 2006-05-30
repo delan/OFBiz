@@ -5,7 +5,12 @@
 
     <form name="SysAdminMain" type="single" target="unLoad">
 
-    <field name="dummy" title=""><display description="press submit to download all information"/></field>
+    <field name="dummy" title=""><display description="select een shop en press submit to download all information"/></field>
+    <field name="downloadId">
+        <drop-down allow-empty="false">
+            <entity-options entity-name="PartyAcctgPreference" description="${invoiceIdPrefix}" key-field-name="partyId"/>
+        </drop-down>
+        </field>
     <field name="submitButton"><submit/></field>
     </form>
 

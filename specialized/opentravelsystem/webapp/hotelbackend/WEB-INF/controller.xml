@@ -137,13 +137,6 @@
         <response name="success" type="view" value="mainAccounting"/>
     </request-map>
     
-    <request-map uri="unLoad">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.opentravelsystem.otsUtils" invoke="unLoad"/>
-        <response name="success" type="view" value="SysAdminMain"/>
-        <response name="error" type="view" value="SysAdminMain"/>
-    </request-map>
-    
     <!-- help system -->
     <request-map uri="help">
         <security https="false" auth="false"/>
@@ -2700,11 +2693,19 @@
         <event type="simple" path="org/ofbiz/opentravelsystem/Utilities.xml" invoke="PostInvoicesStatements"/>
         <response name="success" type="view" value="Utilities"/>
     </request-map>    
-    <!-- ================ System Administratvie Requests ================ -->
+    <!-- ================ System Administrative Requests ================ -->
     <request-map uri="sysAdminMain">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="SysAdminMain"/>
     </request-map>
+
+    <request-map uri="unLoad">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.opentravelsystem.otsUtils" invoke="unLoad"/>
+        <response name="success" type="view" value="SysAdminMain"/>
+        <response name="error" type="view" value="SysAdminMain"/>
+    </request-map>
+    
     <!-- ================ Administratvie Requests ================ -->
     <request-map uri="AdminMain">
         <security https="true" auth="true"/>
