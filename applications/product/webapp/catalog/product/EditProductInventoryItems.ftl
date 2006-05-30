@@ -137,12 +137,12 @@
             <#if curInventoryItemType?exists>
                 <tr valign="middle">
                     <td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}${externalKeyParam}" class="buttontext">${(inventoryItem.inventoryItemId)?if_exists}</a></td>
-                    <td><div class="tabletext">&nbsp;${(curInventoryItemType.description)?if_exists}</div></td>
+                    <td><div class="tabletext">&nbsp;${(curInventoryItemType.get("description",locale))?if_exists}</div></td>
                     <td>
                         <div class="tabletext">
                             <#if inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                                 <#if curStatusItem?has_content>
-                                    ${(curStatusItem.description)?if_exists}
+                                    ${(curStatusItem.get("description",locale))?if_exists}
                                 <#elseif inventoryItem.statusId?has_content>
                                     [${inventoryItem.statusId}]
                                 <#else>
@@ -165,7 +165,7 @@
                     <#else>
                         <td>&nbsp;</td>
                     </#if>
-                    <td><div class="tabletext"><a href="/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)?if_exists}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}${externalKeyParam}" class="linktext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.description})</#if> [${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
+                    <td><div class="tabletext"><a href="/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)?if_exists}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}${externalKeyParam}" class="linktext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.get("description",locale)})</#if> [${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
                     <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>
                     <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
                     <td><div class="tabletext">&nbsp;${inventoryItem.unitCost?default(0)?string("##0.00")}</div></td>

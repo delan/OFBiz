@@ -191,10 +191,10 @@
         <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="smallSubmit"><submit button-type="button"/></field>
 
         <field use-when="product!=null" position="1" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
-            <display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
+            <display description="[${product.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${product.lastModifiedDate}" also-hidden="false"/>
         </field>
         <field use-when="product!=null" position="2" name="createdByText" title="${uiLabelMap.ProductCreatedBy}:" widget-style="tabletext">
-            <display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
+            <display description="[${product.createdByUserLogin}] ${uiLabelMap.CommonOn} ${product.createdDate}" also-hidden="false"/>
         </field>
     </form>
     <!-- ProductPrice -->
@@ -696,13 +696,13 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createProductConfig" map-name=""/>
         <field name="productId"><hidden value="${productId}"/></field>
-        <field name="configTypeId" title="${uiLabelMap.ProductConfigTypeId}" widget-style="selectBox">
+        <field name="configTypeId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <option key="STANDARD" description="${uiLabelMap.ProductStandard}" />
                 <option key="QUESTION" description="${uiLabelMap.ProductQuestion}"/>
             </drop-down>
         </field>
-        <field name="configItemId" title="${uiLabelMap.ProductConfigItemId}" widget-style="selectBox">
+        <field name="configItemId" title="${uiLabelMap.ProductConfigItem}" widget-style="selectBox">
             <drop-down>
                 <entity-options entity-name="ProductConfigItem" description="${configItemName} [${configItemId}] (${description})"> <!-- [${productTypeId}] -->
                     <entity-order-by field-name="configItemName"/>
@@ -717,11 +717,11 @@
         <auto-fields-service service-name="updateProductConfig" map-name="productConfig"/>
         <field name="productId"><hidden/></field>
         <!-- TODO: get descriptions from IDs <display description="${roleType.description}"/> -->
-        <field name="sequenceNum" title="${uiLabelMap.CommonSeqNum}" widget-style="tabletext"><display/></field>
-        <field name="configItemId" title="${uiLabelMap.ProductConfig}" widget-style="tabletext">
+        <field name="sequenceNum" widget-style="tabletext"><display/></field>
+        <field name="configItemId" title="${uiLabelMap.ProductConfigItem}" widget-style="tabletext">
             <display-entity entity-name="ProductConfigItem" key-field-name="configItemId" description="${configItemName} [${configItemId}] (${description})"/>
         </field>
-        <field name="configTypeId" title="${uiLabelMap.ProductConfigTypeId}" widget-style="selectBox">
+        <field name="configTypeId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <option key="STANDARD" description="${uiLabelMap.ProductStandard}" />
                 <option key="QUESTION" description="${uiLabelMap.ProductQuestion}"/>
@@ -966,7 +966,7 @@
         <field name="productId"><hidden value="${productId}"/></field>
         <field name="costComponentTypePrefix" widget-style="selectBox">
             <drop-down allow-empty="false">
-                <option key="EST_STD" description="Estimated Standard Costs"/>
+                <option key="EST_STD" description="${uiLabelMap.ProductEstimatedCosts}"/>
             </drop-down>
         </field>
         <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}" widget-style="selectBox">
@@ -997,21 +997,21 @@
         <auto-fields-service service-name="createProductMaint" /> 
         <field name="productId"><hidden/></field>
         <field name="productMaintSeqId"><ignored/></field>
-        <field name="productMaintTypeId" title="${uiLabelMap.ProductProductMaintTypeId}" widget-style="selectBox">
+        <field name="productMaintTypeId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductMaintType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="intervalUomId" title="${uiLabelMap.ProductProductMaintIntervalUomId}" widget-style="selectBox">
+        <field name="intervalUomId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-order-by field-name="description"/>
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="intervalMeterTypeId" title="${uiLabelMap.ProductProductMaintIntervalMeterTypeId}" widget-style="selectBox">
+        <field name="intervalMeterTypeId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductMeterType" description="${description}" key-field-name="productMeterTypeId">
                     <entity-order-by field-name="description"/>
@@ -1037,8 +1037,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="maintName" title="${uiLabelMap.ProductProductMaintName}"><text size="20" /></field> 
-        <field name="intervalUomId" title="${uiLabelMap.ProductProductMaintIntervalUomId}" widget-style="selectBox">
+        <field name="maintName"><text size="20" /></field> 
+        <field name="intervalUomId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-order-by field-name="description"/>
@@ -1066,21 +1066,21 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createProductMeter" /> 
         <field name="productId"><hidden/></field>
-        <field name="productMeterTypeId" title="${uiLabelMap.ProductProductMeterTypeId}">
+        <field name="productMeterTypeId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductMeterType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="meterUomId" title="${uiLabelMap.ProductProductMeterUomId}" widget-style="selectBox">
+        <field name="meterUomId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-order-by field-name="description"/>
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="meterName" title="${uiLabelMap.ProductProductMeterName}"><text size="20" /></field> 
+        <field name="meterName"><text size="20" /></field> 
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListProductMeters" type="list"  list-name="productMeters"  target="updateProductMeter"
@@ -1095,14 +1095,14 @@
         <field name="productMeterTypeId">
             <display-entity entity-name="ProductMeterType"/>
         </field>
-        <field name="meterUomId" title="${uiLabelMap.ProductProductMeterUomId}" widget-style="selectBox">
+        <field name="meterUomId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-order-by field-name="description"/>
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="meterName" title="${uiLabelMap.ProductProductMeterName}"><text size="20" /></field> 
+        <field name="meterName"><text size="20" /></field> 
         <field name="deleteLink" title="" widget-style="buttontext">
             <hyperlink target="deleteProductMeter?productId=${productId}&amp;productMeterTypeId=${productMeterTypeId}"
                 description="${uiLabelMap.CommonDelete}" also-hidden="false"/>

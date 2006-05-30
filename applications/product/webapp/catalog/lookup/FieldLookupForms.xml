@@ -69,7 +69,7 @@
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
-        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display-entity entity-name="ProductType"/></field>
         <field name="searchVariants" title="" widget-style="buttontext" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct?productId=${productId}"/>
         </field>
@@ -97,7 +97,7 @@
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
-        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display-entity entity-name="ProductType"/></field>
     </form>
 
     <form name="lookupProductAndPrice" target="LookupProductAndPrice" title="" type="single"

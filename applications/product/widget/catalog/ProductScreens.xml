@@ -784,7 +784,7 @@
     <screen name="EditProductMaints">
         <section>
             <actions>
-                <set field="titleProperty" value="Edit Product Maintenance"/>
+                <set field="titleProperty" value="PageTitleEditProductMaintenance"/>
                 <set field="tabButtonItem" value="EditProductMaints"/>
                 <set field="productId" from-field="parameters.productId"/>
             </actions>
@@ -801,7 +801,7 @@
     <screen name="EditProductMeters">
         <section>
             <actions>
-                <set field="titleProperty" value="Edit Product Meter"/>
+                <set field="titleProperty" value="PageTitleEditProductMeter"/>
                 <set field="tabButtonItem" value="EditProductMeters"/>
                 <set field="productId" from-field="parameters.productId"/>
             </actions>

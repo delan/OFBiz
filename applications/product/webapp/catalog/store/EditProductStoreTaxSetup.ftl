@@ -68,7 +68,7 @@
           </td>
         </tr>
         <tr>
-          <td><span class="tableheadtext">State/Province</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.PartyState}</span></td>
           <td>
             <select name="stateProvinceGeoId" class="selectBox">
               <option value="_NA_">${uiLabelMap.CommonAll}</option>

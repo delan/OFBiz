@@ -70,15 +70,15 @@ function insertImageName(type,nameValue) {
         <#assign productContentType=productContent.getRelatedOneCache("ProductContentType")/>
         <tr class="tabletext">
             <td><a href="<@ofbizUrl>EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
-            <td>${productContentType.description?default(productContent.productContentTypeId)}</td>
-            <td>${productContent.fromDate?default("N/A")}</td>
-            <td>${productContent.thruDate?default("N/A")}</td>
-            <td>${productContent.purchaseFromDate?default("N/A")}</td>
-            <td>${productContent.purchaseThruDate?default("N/A")}</td>
-            <td>${productContent.useCountLimit?default("N/A")}</td>
-            <td>${productContent.useTime?default("N/A")}</td>
-            <td>${productContent.useTimeUomId?default("N/A")}</td>
-            <td>${productContent.useRoleTypeId?default("N/A")}</td>
+            <td>${productContentType.get("description",locale)?default(productContent.productContentTypeId)}</td>
+            <td>${productContent.fromDate?default("${uiLabelMap.CommonNA}")}</td>
+            <td>${productContent.thruDate?default("${uiLabelMap.CommonNA}")}</td>
+            <td>${productContent.purchaseFromDate?default("${uiLabelMap.CommonNA}")}</td>
+            <td>${productContent.purchaseThruDate?default("${uiLabelMap.CommonNA}")}</td>
+            <td>${productContent.useCountLimit?default("${uiLabelMap.CommonNA}")}</td>
+            <td>${productContent.useTime?default("${uiLabelMap.CommonNA}")}</td>
+            <td>${productContent.useTimeUomId?default("${uiLabelMap.CommonNA}")}</td>
+            <td>${productContent.useRoleTypeId?default("${uiLabelMap.CommonNA}")}</td>
             <td><a href="<@ofbizUrl>removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></td>
             <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.ProductEditContent} ${entry.content.contentId}]</td>
          </tr>
@@ -125,7 +125,7 @@ function insertImageName(type,nameValue) {
         <td>&nbsp;</td>
         <td width="80%" colspan="4" valign="top">
             <input type="text" class="inputBox" name="detailScreen" value="${(product.detailScreen)?if_exists}" size="60" maxlength="250">
-            <br/><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, for screens in other files use something like: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</span>
+            <br/><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</span>
         </td>
     </tr>        
     <tr>

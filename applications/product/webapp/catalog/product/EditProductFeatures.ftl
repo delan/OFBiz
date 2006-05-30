@@ -52,8 +52,8 @@
                 <input type="hidden" name="productFeatureId_o_${rowCount}" value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
                 <input type="hidden" name="fromDate_o_${rowCount}" value="${(productFeatureAndAppl.fromDate)?if_exists}">
                 <td><div class="tabletext">${(productFeatureAndAppl.productFeatureId)?if_exists}</div></td>
-                <td><div class="tabletext">${(productFeatureAndAppl.description)?if_exists}</div></td>
-                <td><div class="tabletext">${(curProductFeatureType.description)?default((productFeatureAndAppl.productFeatureTypeId)?if_exists)}</div></td>
+                <td><div class="tabletext">${(productFeatureAndAppl.get("description",locale))?if_exists}</div></td>
+                <td><div class="tabletext">${(curProductFeatureType.get("description",locale))?default((productFeatureAndAppl.productFeatureTypeId)?if_exists)}</div></td>
                 <td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}&productId=${(productFeatureAndAppl.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                     ${(curProductFeatureCategory.description)?if_exists}
                     [${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}]</a></td>
@@ -69,11 +69,11 @@
                     <input type="text" size='5' name='sequenceNum_o_${rowCount}' value='${(productFeatureAndAppl.sequenceNum)?if_exists}' class='inputBox'>
                 <select class='selectBox' name='productFeatureApplTypeId_o_${rowCount}' size="1">
                     <#if (productFeatureAndAppl.productFeatureApplTypeId)?exists>
-                        <option value='${(productFeatureAndAppl.productFeatureApplTypeId)?if_exists}'><#if curProductFeatureApplType?exists> ${(curProductFeatureApplType.description)?if_exists} <#else> [${productFeatureAndAppl.productFeatureApplTypeId}]</#if></option>
+                        <option value='${(productFeatureAndAppl.productFeatureApplTypeId)?if_exists}'><#if curProductFeatureApplType?exists> ${(curProductFeatureApplType.get("description",locale))?if_exists} <#else> [${productFeatureAndAppl.productFeatureApplTypeId}]</#if></option>
                         <option value='${productFeatureAndAppl.productFeatureApplTypeId}'> </option>
                     </#if>
                     <#list productFeatureApplTypes as productFeatureApplType>
-                        <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.description)?if_exists} </option>
+                        <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.get("description",locale))?if_exists} </option>
                     </#list>
                 </select>
                 </td>
@@ -111,7 +111,7 @@
         </select>
         <span class='tabletext'>${uiLabelMap.ProductFeatureApplicationType}: </span><select class='selectBox' name='productFeatureApplTypeId' size="1">
             <#list productFeatureApplTypes as productFeatureApplType>
-            <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.description)?if_exists} </option>
+            <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.get("description",locale))?if_exists} </option>
             </#list>
         </select>
         <input type="submit" value='${uiLabelMap.CommonAdd}' style='font-size: x-small;'>
@@ -125,14 +125,14 @@
         <br/>
         <span class='tabletext'>${uiLabelMap.ProductFeatureType}: </span><select class='selectBox' name='productFeatureTypeId' size="1">
             <#list productFeatureTypes as productFeatureType>
-            <option value='${(productFeatureType.productFeatureTypeId)?if_exists}'>${(productFeatureType.description)?if_exists} </option>
+            <option value='${(productFeatureType.productFeatureTypeId)?if_exists}'>${(productFeatureType.get("description",locale))?if_exists} </option>
             </#list>
         </select>
         <span class='tabletext'>${uiLabelMap.CommonIdCode}: </span><input type="text" size='10' name='idCode' value='' class='inputBox'>
         <br/>
         <span class='tabletext'>${uiLabelMap.ProductFeatureApplicationType}: </span><select class='selectBox' name='productFeatureApplTypeId' size="1">
             <#list productFeatureApplTypes as productFeatureApplType>
-            <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.description)?if_exists} </option>
+            <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.get("description",locale))?if_exists} </option>
             </#list>
         </select>
         <br/>
@@ -159,7 +159,7 @@
         </span>
         <span class="tabletext">${uiLabelMap.ProductFeatureApplicationType}: </span><select class="selectBox" name="productFeatureApplTypeId" size="1">
             <#list productFeatureApplTypes as productFeatureApplType>
-            <option value="${(productFeatureApplType.productFeatureApplTypeId)?if_exists}">${(productFeatureApplType.description)?if_exists} </option>
+            <option value="${(productFeatureApplType.productFeatureApplTypeId)?if_exists}">${(productFeatureApplType.get("description",locale))?if_exists} </option>
             </#list>
         </select>
         <br/>

@@ -40,8 +40,8 @@
       <tr>                  
         <td><div class="tabletext">${payMeth.get("description",locale)}</div></td>
         <td><div class="tabletext">${enum.get("description",locale)}</div></td>
-        <td><div class="tabletext">${setting.paymentService?default("N/A")}</div></td>
-        <td><div class="tabletext">${setting.paymentPropertiesPath?default("[global]")}</div></td>
+        <td><div class="tabletext">${setting.paymentService?default("${uiLabelMap.CommonNA}")}</div></td>
+        <td><div class="tabletext">${setting.paymentPropertiesPath?default("[${uiLabelMap.ProductGlobal}]")}</div></td>
         <td><div class="tabletext">${setting.applyToAllProducts?if_exists}</div></td>
         <td align="center" nowrap>
           <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>storeRemovePaySetting?productStoreId=${productStoreId}&amp;paymentMethodTypeId=${setting.paymentMethodTypeId}&amp;paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>EditProductStorePaySetup?productStoreId=${productStoreId}&amp;paymentMethodTypeId=${setting.paymentMethodTypeId}&amp;paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div>
@@ -108,8 +108,8 @@
                   <option>${editSetting.applyToAllProducts}</option>
                   <option value="${editSetting.applyToAllProducts}">---</option>
                   </#if>
-                  <option>Y</option>
-                  <option>N</option>
+                  <option value="Y">${uiLabelMap.CommonY}</option>
+				  <option value="N">${uiLabelMap.CommonN}</option>                  
               </select>
           </td>
         </tr>               

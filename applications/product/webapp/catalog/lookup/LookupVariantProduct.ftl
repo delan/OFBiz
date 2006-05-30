@@ -40,9 +40,9 @@
                     <option value=""></option>
                     <#list features as feature>
                         <#if searchFeature.selectedFeatureId?has_content && searchFeature.selectedFeatureId == feature.productFeatureId>
-                            <option value="${feature.productFeatureId}" selected>${feature.description}</option>
+                            <option value="${feature.productFeatureId}" selected>${feature.get("description",locale)}</option>
                         <#else>
-                            <option value="${feature.productFeatureId}">${feature.description}</option>
+                            <option value="${feature.productFeatureId}">${feature.get("description",locale)}</option>
                         </#if>
                     </#list>
                     </select>
@@ -82,7 +82,7 @@
         <input type="hidden" name="productId" value="${product.productId}">
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}">
         <input type="text" name="productVariantId" value="${productVariantId}" class="inputBox">
-        <input type="submit" value="Quick Add Variant" class="smallSubmit">
+        <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="smallSubmit">
         </form>
     </table>
 </#if>

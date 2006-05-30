@@ -96,6 +96,7 @@
     </entity>
     <entity entity-name="ProdCatalogCategoryType"
             package-name="org.ofbiz.product.catalog"
+			default-resource-name="ProductEntityLabels"
             title="Catalog Category Association Type Entity">
       <field name="prodCatalogCategoryTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -281,6 +282,7 @@
     </view-entity>
     <entity entity-name="ProductCategoryContentType"
             package-name="org.ofbiz.product.category"
+			default-resource-name="ProductEntityLabels"
             title="Product Category Content Type Entity">
       <field name="prodCatContentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
@@ -442,6 +444,7 @@
     </view-entity>
     <entity entity-name="ProductCategoryType"
             package-name="org.ofbiz.product.category"
+			default-resource-name="ProductEntityLabels"
             title="Product Category Type Entity">
       <field name="productCategoryTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
@@ -707,6 +710,7 @@
     </entity>
     <entity entity-name="CostComponentType"
             package-name="org.ofbiz.product.cost"
+			default-resource-name="ProductEntityLabels"
             title="Cost Component Type Entity">
       <field name="costComponentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -823,6 +827,7 @@
     </entity>
     <entity entity-name="ProductFeatureApplType"
             package-name="org.ofbiz.product.feature"
+			default-resource-name="ProductEntityLabels"
             title="Product Feature Applicability Type Entity">
       <field name="productFeatureApplTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
@@ -984,6 +989,7 @@
     </entity>
     <entity entity-name="ProductFeatureType"
             package-name="org.ofbiz.product.feature"
+			default-resource-name="ProductEntityLabels"
             title="Product Feature Type Entity">
       <field name="productFeatureTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
@@ -1210,6 +1216,7 @@
     </entity>
     <entity entity-name="InventoryItemType"
             package-name="org.ofbiz.product.inventory"
+			default-resource-name="ProductEntityLabels"
             title="Inventory Item Type Entity">
       <field name="inventoryItemTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -1561,6 +1568,7 @@
     </entity>
     <entity entity-name="ProductPriceActionType"
             package-name="org.ofbiz.product.price"
+			default-resource-name="ProductEntityLabels"	
             title="Product Price Type Entity">
       <field name="productPriceActionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -1626,6 +1634,7 @@
     </entity>
     <entity entity-name="ProductPricePurpose"
             package-name="org.ofbiz.product.price"
+			default-resource-name="ProductEntityLabels"
             title="Product Price Purpose Entity">
         <field name="productPricePurposeId" type="id-ne"></field>
         <field name="description" type="description"></field>
@@ -1643,6 +1652,7 @@
     </entity>
     <entity entity-name="ProductPriceType"
             package-name="org.ofbiz.product.price"
+			default-resource-name="ProductEntityLabels"
             title="Product Price Type Entity">
       <field name="productPriceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -1764,6 +1774,7 @@
     </view-entity>
     <entity entity-name="GoodIdentificationType"
             package-name="org.ofbiz.product.product"
+			default-resource-name="ProductEntityLabels"
             title="Good Identification Type Entity">
       <field name="goodIdentificationTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
@@ -1930,6 +1941,7 @@
     </entity>
     <entity entity-name="ProductAssocType"
             package-name="org.ofbiz.product.product"
+			default-resource-name="ProductEntityLabels"
             title="Product Association Type Entity">
       <field name="productAssocTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
@@ -2035,6 +2047,7 @@
     </view-entity>
     <entity entity-name="ProductContentType"
             package-name="org.ofbiz.product.product"
+			default-resource-name="ProductEntityLabels"
             title="Product Content Type Entity">
       <field name="productContentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
@@ -2136,7 +2149,10 @@
             <key-map field-name="meterUomId" rel-field-name="uomId"/>
         </relation>
     </entity>
-    <entity entity-name="ProductMeterType" package-name="org.ofbiz.product.product" title="Product Meter Type Entity">
+    <entity entity-name="ProductMeterType" 
+			package-name="org.ofbiz.product.product"
+			default-resource-name="ProductEntityLabels"			
+			title="Product Meter Type Entity">
         <field name="productMeterTypeId" type="id-ne"></field>
         <field name="description" type="description"></field>
         <field name="defaultUomId" type="id"><description>This is optional and if applicable can describe the meter better</description></field>
@@ -2175,7 +2191,10 @@
             <key-map field-name="intervalMeterTypeId" rel-field-name="productMeterTypeId"/>
         </relation>
     </entity>
-    <entity entity-name="ProductMaintType" package-name="org.ofbiz.product.product" title="Product Maintenance Type Entity">
+    <entity entity-name="ProductMaintType" 
+			package-name="org.ofbiz.product.product"
+			default-resource-name="ProductEntityLabels"
+			title="Product Maintenance Type Entity">
         <description>This is for both scheduled and unscheduled maintenance; use ProductMaint to track details for scheduled maintenance</description>
         <field name="productMaintTypeId" type="id-ne"></field>
         <field name="description" type="description"></field>
@@ -3218,6 +3237,7 @@
     </view-entity>
     <entity entity-name="ProductStoreGroup"
             package-name="org.ofbiz.product.store"
+			default-resource-name="ProductEntityLabels"
             title="ProductStore Group Entity">
       <field name="productStoreGroupId" type="id-ne"></field>
       <field name="productStoreGroupTypeId" type="id"></field>

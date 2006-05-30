@@ -24,7 +24,7 @@
  *@since      3.0
 -->
     <#if contentId?has_content>
-        <a href="/content/control/gotoContent?contentId=${contentId}" class='buttontext' target='_blank'>[Content Page]</a>
+        <a href="/content/control/gotoContent?contentId=${contentId}" class='buttontext' target='_blank'>[${uiLabelMap.Content} ${uiLabelMap.CommonPage}]</a>
     </#if>
     <br/>
     <#if productCategoryId?has_content && categoryContent?has_content>

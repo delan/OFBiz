@@ -39,7 +39,7 @@
     <#assign productGlAccountType = productGlAccount.getRelatedOneCache("GlAccountType")>
     <#assign curGlAccount = productGlAccount.getRelatedOneCache("GlAccount")>
     <tr valign="middle">
-        <td><div class="tabletext"><#if productGlAccountType?exists>${(productGlAccountType.description)?if_exists}<#else>[${(productGlAccount.productGlAccountTypeId)?if_exists}]</#if></div></td>
+        <td><div class="tabletext"><#if productGlAccountType?exists>${(productGlAccountType.get("description",locale))?if_exists}<#else>[${(productGlAccount.productGlAccountTypeId)?if_exists}]</#if></div></td>
         <td><div class="tabletext">
            ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, productGlAccount.getString("organizationPartyId"), true)} [${productGlAccount.organizationPartyId}]
         </div></td>
@@ -77,7 +77,7 @@
             ${uiLabelMap.ProductAccountType} :
             <select name="glAccountTypeId" class="selectBox">
                 <#list productGlAccountTypes as productGlAccountType>
-                    <option value="${(productGlAccountType.glAccountTypeId)?if_exists}">${(productGlAccountType.description)?if_exists}</option>
+                    <option value="${(productGlAccountType.glAccountTypeId)?if_exists}">${(productGlAccountType.get("description",locale))?if_exists}</option>
                 </#list>
             </select><br/>
             ${uiLabelMap.ProductGlAccount} : 
