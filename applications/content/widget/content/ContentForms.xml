@@ -135,10 +135,6 @@
         <field name="dataResourceId">
             <lookup target-form-name="LookupDataResource">
                 <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="editDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
-                <!--
-                    <sub-hyperlink link-style="buttontext" target-type="intra-app" target="editDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
-                    <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="editDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
-                -->
             </lookup>
         </field>
         <field name="ownerContentId"><lookup target-form-name="LookupContent"/></field>
@@ -261,7 +257,7 @@
     </form>
     <form name="ListContentAssocFrom" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="tabletext"
-        target="" title="Assoc From this Content" type="list">
+        target="updateContentAssoc" title="Assoc From this Content" type="list">
         <actions>
             <entity-and entity-name="ContentAssoc" use-cache="true">
                 <field-map env-name="contentId" field-name="contentId" />
@@ -269,19 +265,23 @@
         </actions>
         <!--auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/-->
         <field name="contentId">
-            <hyperlink also-hidden="false" description="${contentId}" target="editContent?contentId=${contentId}"/>
+            <display-entity entity-name="Content" description="${contentName},${description}">
+                <sub-hyperlink target="EditContentAssoc?contentId=${contentId}" description="${contentId}" link-style="tabletext"/>
+            </display-entity>
         </field>
         <field name="contentIdTo">
-            <hyperlink also-hidden="false" description="${contentIdTo}" target="editContent?contentId=${contentIdTo}"/>
+            <display-entity entity-name="Content" description="${contentName},${description}" key-field-name="contentId">
+                <sub-hyperlink target="EditContentAssoc?contentId=${contentIdTo}" description="${contentIdTo}" link-style="tabletext"/>
+            </display-entity>
         </field>
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" description="${description}"></display-entity></field>
         <field name="fromDate"><display description="${bsh:fromDate.toString().substring(0,10)}"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
-        <field name="toDate"><date-time/></field>
-        <field name="editLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
+        <field name="thruDate"><date-time/></field>
+        <field name="updateButton" widget-style="buttontext">
+            <submit button-type="text-link"/>
         </field>
     </form>
     <form name="ListContentAssocTo" target="EditContentAssoc" title="Assoc To this Content" type="list" extends="ListContentAssocFrom">

@@ -103,6 +103,11 @@
         <attribute mode="INOUT" name="contentId" optional="true" type="String"/>
         <override name="contentTypeId" optional="false"/>
     </service>
+    <service name="copyContentAndElectronicTextandAssoc" default-entity-name="Content" engine="simple"
+        location="org/ofbiz/content/content/ContentServices.xml" invoke="copyContentAndElectronicTextandAssoc" transaction-timout="72000" auth="true" >
+        <description>Copy a Content, e;ectronic text and assocs</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
     <service name="updateContent" default-entity-name="Content" engine="java"
         location="org.ofbiz.content.content.ContentServices" invoke="updateContent" auth="true">
         <description>Update a Content</description>
