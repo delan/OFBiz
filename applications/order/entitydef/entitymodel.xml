@@ -1606,6 +1606,7 @@
       </relation>
       <relation type="one" fk-name="CUST_REQ_WEFF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
+            default-resource-name="OrderEntityLabels"
       </relation>
     </entity>
     <entity entity-name="CustRequestResolution"
@@ -2257,6 +2258,7 @@
       </relation>
       <relation type="one-nofk" rel-entity-name="ReturnAdjustmentType">
         <key-map field-name="returnItemTypeId" rel-field-name="returnAdjustmentTypeId"/>
+            default-resource-name="OrderEntityLabels"
       </relation>
     </entity>
     <entity entity-name="ReturnReason"
@@ -2285,6 +2287,7 @@
         <relation type="one-nofk" rel-entity-name="ReturnItem">
             <key-map field-name="returnId"/>
             <key-map field-name="returnItemSeqId"/>
+            default-resource-name="OrderEntityLabels"
         </relation>
     </entity>
     <entity entity-name="ReturnType"
@@ -2470,6 +2473,7 @@
       </relation>
       <relation type="one" fk-name="SHLIST_ITSUR_RESP" rel-entity-name="SurveyResponse">
         <key-map field-name="surveyResponseId"/>
+            default-resource-name="OrderEntityLabels"
       </relation>
     </entity>
     <entity entity-name="ShoppingListType"

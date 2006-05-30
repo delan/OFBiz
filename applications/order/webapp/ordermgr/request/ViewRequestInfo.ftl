@@ -42,7 +42,7 @@
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
-                                <div class="tabletext">${(custRequestType.description)?default(custRequest.custRequestTypeId?if_exists)}</div>
+                                <div class="tabletext">${(custRequestType.get("description",locale))?default(custRequest.custRequestTypeId?if_exists)}</div>
                             </td>
                         </tr>
                         <tr><td colspan="7"><hr class="sepbar"/></td></tr>
@@ -97,7 +97,7 @@
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
-                                <div class="tabletext"><#if currency?exists>${currency.description?default(custRequest.maximumAmountUomId?if_exists)}</#if></div>
+                                <div class="tabletext"><#if currency?exists>${currency.get("description", locale)?default(custRequest.maximumAmountUomId?if_exists)}</#if></div>
                             </td>
                         </tr>
                         <#-- request currency -->
@@ -170,7 +170,7 @@
                             <#assign party = requestRole.getRelatedOne("Party")>
                             <tr>
                                 <td align="right" valign="top" width="15%">
-                                    <div class="tabletext">&nbsp;<b>${roleType.description?if_exists}</b></div>
+                                    <div class="tabletext">&nbsp;<b>${roleType.get("description", locale)?if_exists}</b></div>
                                 </td>
                                 <td width="5">&nbsp;</td>
                                 <td align="left" valign="top" width="80%">

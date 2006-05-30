@@ -34,7 +34,7 @@
       <table border="0" width="100%" cellpadding="0">
         <#list roleList as role>
           <tr>
-            <td align="left" valign="bottom"><div class="tableheadtext">${roleData[role].description}</div></td>
+            <td align="left" valign="bottom"><div class="tableheadtext">${roleData[role].get("description",locale)}</div></td>
           </tr>
           <tr>
             <td colspan="4"><hr class="sepbar"/></td>

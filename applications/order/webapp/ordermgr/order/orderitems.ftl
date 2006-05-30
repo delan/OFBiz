@@ -123,12 +123,12 @@
                   <#-- now show status details per line item -->
                   <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem")>
                   <td align="left" colspan="1" valign="top">
-                    <div class="tabletext">${uiLabelMap.CommonCurrent}: ${currentItemStatus.description?default(currentItemStatus.statusId)}</div>
+                    <div class="tabletext">${uiLabelMap.CommonCurrent}: ${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}</div>
                     <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                     <#list orderItemStatuses as orderItemStatus>
                       <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem")>
                       <div class="tabletext">
-                        ${orderItemStatus.statusDatetime.toString()} : ${loopStatusItem.description?default(orderItemStatus.statusId)}
+                        ${orderItemStatus.statusDatetime.toString()} : ${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
                       </div>
                     </#list>
                     <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
@@ -206,7 +206,7 @@
                         <td colspan="9">
                           <div class="tabletext">
                             <#if orderItem.orderItemTypeId != "RENTAL_ORDER_ITEM">
-                              <b><i>Production Run</i>:</b>
+                              <b><i>${uiLabelMap.ManufacturingProductionRun}</i>:</b>
                               <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>&nbsp;
                             </#if>
                             ${uiLabelMap.CommonFrom}: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} ${uiLabelMap.CommonTo}: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} ${uiLabelMap.OrderNumberOfPersons}: ${workEffort.reservPersons?default("")}
@@ -281,10 +281,10 @@
                 <#list orderItemAdjustments as orderItemAdjustment>
                   <#assign adjustmentType = orderItemAdjustment.getRelatedOneCache("OrderAdjustmentType")>
                   <tr>
-                    <td align="right" colspan="2">
+                    <td align="right" colspan="2">					
                       <div class="tabletext" style="font-size: xx-small;">
-                        <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${adjustmentType.description}</b>:
-                        ${orderItemAdjustment.description?if_exists} 
+                        <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${adjustmentType.get("description",locale)}</b>:
+                        ${orderItemAdjustment.get("description",locale)?if_exists} 
                         <#if orderItemAdjustment.comments?has_content>(${orderItemAdjustment.comments?default("")})</#if>
                         <#if orderItemAdjustment.productPromoId?has_content><a href="/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}&externalLoginKey=${externalLoginKey}">${orderItemAdjustment.getRelatedOne("ProductPromo").getString("promoName")}</a></#if>
                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
@@ -472,8 +472,8 @@
             <#assign adjustmentAmount = Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal)>
             <#if adjustmentAmount != 0>
               <tr>
-                <td align="right" colspan="5">
-                  <div class="tabletext"><b>${adjustmentType.description}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
+                <td align="right" colspan="5">					
+                  <div class="tabletext"><b>${adjustmentType.get("description",locale)}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
                 </td>
                 <td align="right" nowrap>
                   <div class="tabletext"><@ofbizCurrency amount=adjustmentAmount isoCode=currencyUomId/></div>

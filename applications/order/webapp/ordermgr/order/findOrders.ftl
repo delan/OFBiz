@@ -128,12 +128,12 @@ function runAction() {
                 <td>
                   <select name='roleTypeId' class='selectBox'>
                     <#if currentRole?has_content>
-                    <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
+                    <option value="${currentRole.roleTypeId}">${currentRole.get("description", locale)}</option>
                     <option value="${currentRole.roleTypeId}">---</option>
                     </#if>
                     <option value="ANY">${uiLabelMap.CommonAnyRoleType}</option>
                     <#list roleTypes as roleType>
-                      <option value="${roleType.roleTypeId}">${roleType.description}</option>
+                      <option value="${roleType.roleTypeId}">${roleType.get("description", locale)}</option>
                     </#list>
                   </select>
                 </td>
@@ -180,12 +180,12 @@ function runAction() {
                 <td>
                   <select name='salesChannelEnumId' class='selectBox'>
                     <#if currentSalesChannel?has_content>
-                    <option value="${currentSalesChannel.enumId}">${currentSalesChannel.description}</option>
+                    <option value="${currentSalesChannel.enumId}">${currentSalesChannel.get("description", locale)}</option>
                     <option value="${currentSalesChannel.enumId}">---</option>
                     </#if>
                     <option value="ANY">${uiLabelMap.CommonAnySalesChannel}</option>
                     <#list salesChannels as channel>
-                      <option value="${channel.enumId}">${channel.description}</option>
+                      <option value="${channel.enumId}">${channel.get("description", locale)}</option>
                     </#list>
                   </select>
                 </td>
@@ -228,12 +228,12 @@ function runAction() {
                 <td>
                   <select name='orderStatusId' class='selectBox'>
                     <#if currentStatus?has_content>
-                    <option value="${currentStatus.statusId}">${currentStatus.description}</option>
+                    <option value="${currentStatus.statusId}">${currentStatus.get("description", locale)}</option>
                     <option value="${currentStatus.statusId}">---</option>
                     </#if>
                     <option value="ANY">${uiLabelMap.CommonAnyOrderStatus}</option>
                     <#list orderStatuses as orderStatus>
-                      <option value="${orderStatus.statusId}">${orderStatus.description}</option>
+                      <option value="${orderStatus.statusId}">${orderStatus.get("description", locale)}</option>
                     </#list>
                   </select>
                 </td>
@@ -322,7 +322,7 @@ document.lookuporder.orderId.focus();
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
                 <#if (orderHeaderListSize > 0)>
-                  <span class="submenutextinfo">${lowIndex} - ${highIndex}${uiLabelMap.CommonOf} ${orderHeaderListSize}</span>
+                  <span class="submenutextinfo">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${orderHeaderListSize}</span>
                 </#if>
                 <#if (orderHeaderListSize > highIndex)>
                   <a href="<@ofbizUrl>findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
@@ -386,15 +386,15 @@ document.lookuporder.orderId.focus();
               <td>
                  <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}"/>
               </td>
-              <td><div class='tabletext'>${orderType.description?default(orderType.orderTypeId?default(""))}</div></td>
+              <td><div class='tabletext'>${orderType.get("description",locale)?default(orderType.orderTypeId?default(""))}</div></td>
               <td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
               <td>
                 <div class="tabletext">
                   <#if displayParty?has_content>
                       <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
-                      ${displayPartyNameResult.fullName?default("[Name Not Found]")}
+                      ${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
                   <#else>
-                    N/A
+                    ${uiLabelMap.CommonNA}
                   </#if>
                 </div>
                 <#--
@@ -406,17 +406,17 @@ document.lookuporder.orderId.focus();
                     <#if placingParty.lastName?exists>
                       ${placingParty.lastName}<#if placingParty.firstName?exists>, ${placingParty.firstName}</#if>
                     <#else>
-                      N/A
+                      ${uiLabelMap.CommonNA}
                     </#if>
                   <#else>
                     <#if placingParty.groupName?exists>
                       ${placingParty.groupName}
                     <#else>
-                      N/A
+                      ${uiLabelMap.CommonNA}
                     </#if>
                   </#if>
                 <#else>
-                  N/A
+                  ${uiLabelMap.CommonNA}
                 </#if>
                 </div>
                 -->
@@ -435,7 +435,7 @@ document.lookuporder.orderId.focus();
                 <#if partyId != "_NA_">
                   <a href="${customerDetailLink}${partyId}" class="buttontext">${partyId}</a>
                 <#else>
-                  <span class='tabletext'>N/A</span>
+                  <span class='tabletext'>${uiLabelMap.CommonNA}</span>
                 </#if>
               </td>
               <td align='right'>

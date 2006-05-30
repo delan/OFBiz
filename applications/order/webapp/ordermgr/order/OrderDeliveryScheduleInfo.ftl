@@ -29,19 +29,19 @@
     <div class="screenlet-header">
         <div style="float: right;">
             <#if orderId?exists>
-                <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="submenutext">[View&nbsp;Order]</a>
+                <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="submenutext">[${uiLabelMap.OrderViewOrder}]</a>
             </#if>
         </div>
-        <div class="boxhead">Delivery Schedule Info</div>
+        <div class="boxhead">${uiLabelMap.OrderScheduleDelivery}</div>
     </div>
     <div class="screenlet-body">
         <#if orderId?has_content>
           ${updatePODeliveryInfoWrapper.renderFormString()}
         <#else>
-          <div class="tabletext">No Purchase Order was specified</div>
+          <div class="tabletext">${uiLabelMap.OrderNoPurchaseSpecified}</div>
         </#if>
     </div>
 </div>
 <#else>
- <h3>You do not have permission to view this page. ("ORDERMGR_VIEW", "ORDERMGR_ADMIN" or associated in the "Supplier Agent" role needed)</h3>
+ <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

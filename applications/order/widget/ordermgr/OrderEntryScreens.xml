@@ -26,7 +26,7 @@
     <screen name="CheckInits">
         <section>
             <actions>
-                <set field="title" value="Order Inits"/>
+                <set field="titleProperty" value="PageTitleOrderInits"/>
                 <set field="headerItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/checkinits.bsh"/>
             </actions>
@@ -42,7 +42,7 @@
     <screen name="OrderAgreements">
         <section>
             <actions>
-                <set field="title" value="Order Agreements"/>
+                <set field="titleProperty" value="PageTitleOrderAgreements"/>
                 <set field="headerItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderagreements.bsh"/>
             </actions>

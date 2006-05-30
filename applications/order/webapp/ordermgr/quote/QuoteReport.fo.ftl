@@ -66,14 +66,14 @@
                     <fo:table-cell>
                         <fo:block>
                             <#assign quotePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", quote.partyId, "compareDate", quote.issueDate, "userLogin", userLogin))/>
-                            <fo:block font-weight="bold">${quotePartyNameResult.fullName?default("[Name Not Found]")}</fo:block>
+                            <fo:block font-weight="bold">${quotePartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</fo:block>
                         </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
                     <fo:table-cell>
                         <fo:block>
-                            <fo:block font-weight="bold">Address: </fo:block>
+                            <fo:block font-weight="bold">${uiLabelMap.OrderAddress}: </fo:block>
                             <#if toPostalAddress?exists>
                             <fo:block font-weight="bold">${toPostalAddress.address1?if_exists}</fo:block>
                             <fo:block font-weight="bold">${toPostalAddress.address2?if_exists}</fo:block>
@@ -93,7 +93,7 @@
             <fo:table-body>
                 <fo:table-row>
                     <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.CommonType}</fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block>${(quoteType.description)?default(quote.quoteTypeId?if_exists)}</fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block>${(quoteType.get("description",locale))?default(quote.quoteTypeId?if_exists)}</fo:block></fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
                     <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.OrderOrderQuoteId}</fo:block></fo:table-cell>
@@ -113,7 +113,7 @@
                 </fo:table-row>
                 <fo:table-row>
                     <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.CommonCurrency}</fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block><#if currency?exists>${currency.description?default(quote.currencyUomId?if_exists)}</#if></fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block><#if currency?exists>${currency.get("description",locale)?default(quote.currencyUomId?if_exists)}</#if></fo:block></fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
                     <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.OrderOrderQuoteIssueDate}</fo:block></fo:table-cell>
@@ -136,7 +136,7 @@
     <#-- Footer -->
     <fo:static-content flow-name="xsl-region-after">
         <#-- displays page number.  "theEnd" is an id of a fo:block at the very end -->
-        <fo:block font-size="10pt" text-align="center">Page <fo:page-number/> of <fo:page-number-citation ref-id="theEnd"/></fo:block>
+        <fo:block font-size="10pt" text-align="center">${uiLabelMap.CommonPage} <fo:page-number/> ${uiLabelMap.CommonOf} <fo:page-number-citation ref-id="theEnd"/></fo:block>
     </fo:static-content>
 
     <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
@@ -152,7 +152,7 @@
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductItem}</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.EcommerceProduct}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductProduct}</fo:block></fo:table-cell>
                         <fo:table-cell border-bottom="thin solid grey"><fo:block text-align="right">${uiLabelMap.ProductQuantity}</fo:block></fo:table-cell>
                         <fo:table-cell border-bottom="thin solid grey"><fo:block text-align="right">${uiLabelMap.OrderAmount}</fo:block></fo:table-cell>
                         <fo:table-cell border-bottom="thin solid grey"><fo:block text-align="right">${uiLabelMap.OrderOrderQuoteUnitPrice}</fo:block></fo:table-cell>
@@ -212,7 +212,7 @@
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block font-size="7pt" text-align="right">${adjustmentType.description?if_exists}</fo:block>
+                                    <fo:block font-size="7pt" text-align="right">${adjustmentType.get("description",locale)?if_exists}</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
                                     <fo:block font-size="7pt" text-align="right"><@ofbizCurrency amount=quoteItemAdjustment.amount isoCode=quote.currencyUomId/></fo:block>
@@ -257,7 +257,7 @@
                                 <fo:table-row>
                                     <fo:table-cell></fo:table-cell>
                                     <fo:table-cell padding="2pt">
-                                        <fo:block font-weight="bold" text-align="right">${adjustmentType.description?if_exists}</fo:block>
+                                        <fo:block font-weight="bold" text-align="right">${adjustmentType.get("description", locale)?if_exists}</fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell padding="2pt">
                                         <fo:block font-weight="bold" text-align="right"><@ofbizCurrency amount=quoteAdjustment.amount isoCode=quote.currencyUomId/></fo:block>
@@ -286,7 +286,7 @@
 <#else>
 <fo:page-sequence master-reference="main">
     <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-        <fo:block font-size="14pt">Quote Not Found.</fo:block>
+        <fo:block font-size="14pt">${uiLabelMap.OrderNoQuoteFound}</fo:block>
     </fo:flow>
 </fo:page-sequence>
 </#if>

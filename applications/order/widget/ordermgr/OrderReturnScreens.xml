@@ -41,7 +41,7 @@
     <screen name="OrderFindReturn">
         <section>
             <actions>
-                <set field="title" value="Find Return"/>
+                <set field="titleProperty" value="PageTitleFindReturn"/>
                 <set field="headerItem" value="return"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
@@ -65,7 +65,7 @@
     <screen name="OrderQuickReturn">
         <section>
             <actions>
-                <set field="title" value="Quick Return"/>
+                <set field="titleProperty" value="PageTitleFindQuickReturn"/>
                 <set field="headerItem" value="return"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/quickReturn.bsh"/>
             </actions>
@@ -85,7 +85,7 @@
     <screen name="OrderReturnHeader">
         <section>
             <actions>
-                <set field="title" value="Return"/>
+                <set field="titleProperty" value="PageTitleReturnHeader"/>
                 <set field="headerItem" value="return"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/returnHeader.bsh"/>
             </actions>
@@ -105,7 +105,7 @@
     <screen name="OrderReturnList">
         <section>
             <actions>
-                <set field="title" value="Return"/>
+                <set field="titleProperty" value="PageTitleReturnList"/>
                 <set field="headerItem" value="return"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/returnList.bsh"/>
             </actions>
@@ -125,7 +125,7 @@
     <screen name="OrderReturnItems">
         <section>
             <actions>
-                <set field="title" value="Return"/>
+                <set field="titleProperty" value="PageTitleReturnItems"/>
                 <set field="headerItem" value="return"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/returnItems.bsh"/>
             </actions>

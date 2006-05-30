@@ -34,8 +34,8 @@
 		<field use-when="returnHeader==null&amp;&amp;returnId!=null" name="returnId" tooltip="Could not find Return with ID [${returnId}]"><text size="20" maxlength="20"/></field>
 		<field use-when="returnHeader==null&amp;&amp;returnId==null" name="returnId"><ignored/></field>
 		
-		<field position="1" name="entryDate" title="Entry Date"/>
-		<field name="statusId" title="Return Status" widget-style="selectBox">
+		<field position="1" name="entryDate"/>
+		<field name="statusId" widget-style="selectBox">
 			<drop-down>
 				<entity-options entity-name="StatusItem" description="${description}">
 					<entity-constraint name="statusTypeId" value="ORDER_RETURN_STTS"/>
@@ -44,7 +44,7 @@
 			</drop-down>
 		</field>
 		
-		<field name="destinationFacilityId" title="Destination Facility">
+		<field name="destinationFacilityId">
 			<radio no-current-selected-key="">
 				<option key="" description="No Facility Specified"/>				
 				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName}">
@@ -53,8 +53,8 @@
 			</radio>
 		</field>
 		
-		<field service-name="updateReturnHeader" name="fromPartyId" title="From Party"/>
-		<field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+		<field service-name="updateReturnHeader" name="fromPartyId"/>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	
 	<form name="ReturnItems" type="multi" list-name="orderItems" target="createReturnItem" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">

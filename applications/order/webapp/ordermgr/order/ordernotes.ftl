@@ -61,10 +61,10 @@
                     <div class="tabletext">${note.noteInfo?if_exists}</div>
                   </td>
                   <td align="right" valign="top" width="10%">
-			<#if note.internalNote?if_exists == "N">
+					<#if note.internalNote?if_exists == "N">
 	                    <div class="tabletext">${uiLabelMap.OrderPrintableNote}</div>
 	                </#if>    
-			<#if note.internalNote?if_exists == "Y">
+					<#if note.internalNote?if_exists == "Y">
 	                    <div class="tabletext">${uiLabelMap.OrderNotPrintableNote}</div>
 	                </#if>    
                   </td>

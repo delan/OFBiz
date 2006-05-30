@@ -368,7 +368,7 @@ function makeExpDate() {
                 *</td>
               </tr>
               <#--<tr>
-                <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.Card Security Code</div></td>
+                <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.OrderCardSecurityCode}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
                   <input type="text" size="5" maxlength="10" name="cardSecurityCode" value=""/>
@@ -507,5 +507,5 @@ function makeExpDate() {
     </div>
 </div>
 <#else>
-  <h3>You do not have permission to view this page. ("ORDERMGR_CREATE" or "ORDERMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

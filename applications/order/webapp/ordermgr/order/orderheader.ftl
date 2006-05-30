@@ -56,13 +56,13 @@
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
-                        <div class="tabletext">${uiLabelMap.OrderCurrentStatus}: ${currentStatus.description}</div>
+                        <div class="tabletext">${uiLabelMap.OrderCurrentStatus}: ${currentStatus.get("description",locale)}</div>
                         <#if orderHeaderStatuses?has_content>
                           <hr class="sepbar">
                           <#list orderHeaderStatuses as orderHeaderStatus>
                             <#assign loopStatusItem = orderHeaderStatus.getRelatedOne("StatusItem")>
                             <div class="tabletext">
-                              ${loopStatusItem.description} - ${orderHeaderStatus.statusDatetime?default("0000-00-00 00:00:00")?string}
+                              ${loopStatusItem.get("description",locale)} - ${orderHeaderStatus.statusDatetime?default("0000-00-00 00:00:00")?string}
                             </div>
                           </#list>
                         </#if>
@@ -116,9 +116,9 @@
                         <div class="tabletext">
                           <#if orderHeader.salesChannelEnumId?has_content>
                             <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration")>
-                            ${(channel.description)?default("N/A")}
+                            ${(channel.get("description",locale))?default("N/A")}
                           <#else>
-                            N/A
+                            ${uiLabelMap.CommonNA}
                           </#if>
                         </div>
                       </td>
@@ -134,7 +134,7 @@
                           <#if orderHeader.productStoreId?has_content>
                             <a href="/catalog/control/EditProductStore?productStoreId=${orderHeader.productStoreId}" target="catalogmgr" class="buttontext">${orderHeader.productStoreId}</a>
                           <#else>
-                            N/A
+                            ${uiLabelMap.CommonNA}
                           </#if>
                         </div>
                       </td>
@@ -150,7 +150,7 @@
                           <#if orderHeader.originFacilityId?has_content>
                             <a href="/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${externalKeyParam}" target="facilitymgr" class="buttontext">${orderHeader.originFacilityId}</a>
                           <#else>
-                            N/A
+                            ${uiLabelMap.CommonNA}
                           </#if>
                         </div>
                       </td>
@@ -166,7 +166,7 @@
                           <#if orderHeader.createdBy?has_content>
                             <a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}" target="partymgr" class="buttontext">${orderHeader.createdBy}</a>
                           <#else>
-                            [Not Set]
+                            [${uiLabelMap.CommonNotSet}]
                           </#if>
                         </div>
                       </td>
@@ -182,7 +182,7 @@
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
                           <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", distributorId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
-                          ${distPartyNameResult.fullName?default("[Name Not Found]")}
+                          ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
                         </div>
                       </td>
                     </tr>
@@ -197,7 +197,7 @@
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
                           <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", affiliateId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
-                          ${affPartyNameResult.fullName?default("[Name Not Found]")}
+                          ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
                         </div>
                       </td>
                     </tr>
@@ -237,7 +237,7 @@
               <tr><td colspan="3"><hr class='sepbar'></td></tr>
               <#list orderTerms as orderTerm>
                   <tr>
-                    <td width="60%" align="left"><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description")}</div></td>
+                    <td width="60%" align="left"><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description", locale)}</div></td>
                     <td width="20%" align="center"><div class="tabletext">${orderTerm.termValue?default("")}</div></td>
                     <td width="20%" align="center"><div class="tabletext">${orderTerm.termDays?default("")}</div></td>
                   </tr>
@@ -272,18 +272,18 @@
                     <#else>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${paymentMethodType.description?if_exists}</b></div>
+                          <div class="tabletext">&nbsp;<b>${paymentMethodType.get("description",locale)?if_exists}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE">
                           <td align="left">
                             <div class="tabletext">
                               <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
-                              &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                              &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                             </div>
                             <#--
                             <div class="tabletext"><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())?if_exists}</div>
-                            <div class="tabletext">&nbsp;<#if orderPaymentPreference.authRefNum?exists>(Ref: ${orderPaymentPreference.authRefNum})</#if></div>
+                            <div class="tabletext">&nbsp;<#if orderPaymentPreference.authRefNum?exists>(${uiLabelMap.OrderReference}: ${orderPaymentPreference.authRefNum})</#if></div>
                             -->
                          </td>
                         <#else>
@@ -320,10 +320,10 @@
                                 ${creditCard.cardType}
                                 ${creditCard.cardNumber}
                                 ${creditCard.expireDate}
-                                &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
                                 ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
-                                &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               </#if>
                               <br/>
                               
@@ -338,7 +338,7 @@
                               </div>
 
                             <#else>
-                              ${uiLabelMap.CommonInformationNotAvailable}
+                              ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                             </#if>
                           </div>
                           <#if gatewayResponses?has_content>
@@ -346,7 +346,7 @@
                               <hr />
                               <#list gatewayResponses as gatewayResponse>
                                 <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration")>
-                                ${(transactionCode.description)?default("Unknown")}:
+                                ${(transactionCode.get("description",locale))?default("Unknown")}:
                                 ${gatewayResponse.transactionDate.toString()}
                                 <@ofbizCurrency amount=gatewayResponse.amount isoCode=currencyUomId/><br/>
                                 (<b>${uiLabelMap.OrderReference}:</b> ${gatewayResponse.referenceNum?if_exists}
@@ -377,7 +377,7 @@
                               ${uiLabelMap.AccountingBankName}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br/>
                               ${uiLabelMap.AccountingAccount}#: ${eftAccount.accountNumber}
                             <#else>
-                              ${uiLabelMap.CoomonInformationNotAvailable}
+                              ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                             </#if>
                           </div>
                         </td>
@@ -397,7 +397,7 @@
                             <#if giftCard?has_content>
                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                 ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
-                                &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
                                 <#if giftCard?has_content && giftCard.cardNumber?has_content>
                                   <#assign giftCardNumber = "">
@@ -415,10 +415,10 @@
                                   </#if>
                                 </#if>
                                 ${giftCardNumber?default("N/A")}
-                                &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               </#if>
                             <#else>
-                              ${uiLabelMap.CommonInformationNotAvailable}
+                              ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                             </#if>
                           </div>
                         </td>
@@ -515,7 +515,7 @@
                     <div class="tabletext">
                       <#if displayParty?has_content>
                         <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
-                        ${displayPartyNameResult.fullName?default("[Name Not Found]")}
+                        ${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
                       </#if>
                       <#if partyId?exists>
                         <span>&nbsp;(<a href="${customerDetailLink}${partyId}" target="partymgr" class="buttontext">${partyId}</a>)</span>
@@ -533,7 +533,7 @@
                   <tr><td colspan="7"><hr class="sepbar"></td></tr>
                   <tr>
                     <td align="right" valign="top" width="15%">
-                      <div class="tabletext">&nbsp;<b>${contactMechPurpose.description}</b></div>
+                      <div class="tabletext">&nbsp;<b>${contactMechPurpose.get("description",locale)}</b></div>
                     </td>
                     <td width="5">&nbsp;</td>
                     <td align="left" valign="top" width="80%">
@@ -637,7 +637,7 @@
                           <#if shipGroup.carrierPartyId != "_NA_">
                             ${shipGroup.carrierPartyId?if_exists}
                           </#if>
-                          ${shipmentMethodType.description?default("")}
+                          ${shipmentMethodType.get("description",locale)?default("")}
                         </div>
                       </#if>
                     </td>
@@ -671,7 +671,7 @@
                           <#if orderShipmentInfoSummary.shipGroupSeqId?if_exists == shipGroup.shipGroupSeqId?if_exists>
                             <div class="tabletext">
                               <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
-                              ${uiLabelMap.CommonIdCode}: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
+                              ${uiLabelMap.CommonIdCode}: ${orderShipmentInfoSummary.trackingCode?default("[${uiLabelMap.OrderNotYetKnown}]")}
                               <#if orderShipmentInfoSummary.boxNumber?has_content> ${uiLabelMap.ProductBox} #${orderShipmentInfoSummary.boxNumber}</#if>
                               <#if orderShipmentInfoSummary.carrierPartyId?has_content>((${uiLabelMap.ProductCarrier}: ${orderShipmentInfoSummary.carrierPartyId})</#if>
                             </div>
@@ -884,5 +884,5 @@
 </table>
 
 <#else/>
-    <div class="head2">${uiLabelMap.OrderNoOrderFound} with ID: [${orderId?if_exists}]</div>
+    <div class="head2">${uiLabelMap.OrderNoOrderFound} ${uiLabelMap.CommonWith} ${uiLabelMap.CommonId}: [${orderId?if_exists}]</div>
 </#if>

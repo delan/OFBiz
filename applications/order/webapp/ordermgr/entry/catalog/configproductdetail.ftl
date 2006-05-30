@@ -388,7 +388,7 @@ ${virtualJavaScript?if_exists}
               <#assign indexer = indexer + 1>
             </#list>
             <#if (indexer > maxIndex)>
-              <div class="tabletext"><b>More options available in drop down.</b></div>
+              <div class="tabletext"><b>${uiLabelMap.OrderMoreOptionsAvailable}.</b></div>
             </#if>
           </tr>
         </table>

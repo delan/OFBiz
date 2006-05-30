@@ -54,7 +54,7 @@
                     <fo:table-body>
                     <fo:table-row>
                       <fo:table-cell>
-                         <fo:block number-columns-spanned="2" font-weight="bold">${orderHeader.getRelatedOne("OrderType").getString("description")} ${uiLabelMap.OrderOrder}</fo:block>
+                         <fo:block number-columns-spanned="2" font-weight="bold">${orderHeader.getRelatedOne("OrderType").get("description",locale)} ${uiLabelMap.OrderOrder}</fo:block>
                       </fo:table-cell>
                     </fo:table-row>
                     
@@ -72,7 +72,7 @@
 
                     <fo:table-row>
                       <fo:table-cell><fo:block>${uiLabelMap.OrderCurrentStatus}</fo:block></fo:table-cell>
-                      <fo:table-cell><fo:block font-weight="bold">${currentStatus.description}</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block font-weight="bold">${currentStatus.get("description",locale)}</fo:block></fo:table-cell>
                     </fo:table-row>
                   </fo:table-body>
                 </fo:table>
@@ -95,7 +95,7 @@
                <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">
                <fo:table-cell>
                  <fo:block white-space-collapse="false">
-<fo:block font-weight="bold">${contactMechPurpose.description} : </fo:block><#assign postalAddress = orderContactMechValueMap.postalAddress><#if postalAddress?has_content><#if postalAddress.toName?has_content>${postalAddress.toName}</#if><#if postalAddress.attnName?has_content>
+<fo:block font-weight="bold">${contactMechPurpose.get("description",locale)} : </fo:block><#assign postalAddress = orderContactMechValueMap.postalAddress><#if postalAddress?has_content><#if postalAddress.toName?has_content>${postalAddress.toName}</#if><#if postalAddress.attnName?has_content>
 ${postalAddress.attnName}</#if>
 ${postalAddress.address1}<#if postalAddress.address2?has_content>
 ${postalAddress.address2}</#if>
@@ -126,7 +126,7 @@ ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${posta
                            <#assign creditCard = orderPaymentPreference.getRelatedOne("PaymentMethod").getRelatedOne("CreditCard")>
                              ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                          <#else>
-                             ${paymentMethodType.description?if_exists}
+                             ${paymentMethodType.get("description",locale)?if_exists}
                          </#if>
                       </#list>
                    </#if>
@@ -153,7 +153,7 @@ ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${posta
              <#if orderTerms?has_content>
              <fo:table-row>
                <fo:table-cell><fo:block>${uiLabelMap.OrderOrderTerms}: </fo:block></fo:table-cell>
-               <fo:table-cell white-space-collapse="false"><fo:block><#list orderTerms as orderTerm>${orderTerm.getRelatedOne("TermType").get("description")} ${orderTerm.termValue?default("")} ${orderTerm.termDays?default("")}
+               <fo:table-cell white-space-collapse="false"><fo:block><#list orderTerms as orderTerm>${orderTerm.getRelatedOne("TermType").get("description",locale)} ${orderTerm.termValue?default("")} ${orderTerm.termDays?default("")}
 </#list></fo:block></fo:table-cell>
              </fo:table-row>
              </#if>
@@ -210,7 +210,7 @@ Here is a good place to put boilerplate terms and conditions for a purchase orde
                                <#if productId?exists>
                                 ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription?xml?if_exists}
                               <#elseif orderItemType?exists>
-                                ${orderItemType.description} - ${orderItem.itemDescription?xml?if_exists}
+                                ${orderItemType.get("description",locale)} - ${orderItem.itemDescription?xml?if_exists}
                               <#else>
                                 ${orderItem.itemDescription?xml?if_exists}
                               </#if>
@@ -287,7 +287,7 @@ Here is a good place to put boilerplate terms and conditions for a purchase orde
                     </fo:table-cell>
                         <fo:table-cell number-columns-spanned="2">
                         <#assign notePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", note.noteParty, "compareDate", note.noteDateTime, "lastNameFirst", "Y", "userLogin", userLogin))/>
-                        <fo:block>${uiLabelMap.CommonBy}: ${notePartyNameResult.fullName?default("Name Not Found")}</fo:block>
+                        <fo:block>${uiLabelMap.CommonBy}: ${notePartyNameResult.fullName?default("${uiLabelMap.OrderPartyNameNotFound}")}</fo:block>
                     </fo:table-cell>
                         <fo:table-cell number-columns-spanned="1">
                         <fo:block>${uiLabelMap.CommonAt}: ${note.noteDateTime?string?if_exists}</fo:block>    

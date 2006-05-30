@@ -31,6 +31,6 @@
         <b>${uiLabelMap.OrderCopyCustRequestItem}:</b>
         ${uiLabelMap.OrderOrderQuoteItems}&nbsp;<input type="checkbox" class="checkBox" name="copyLinkedQuotes" value="Y"/>
     </div>
-    <input type="submit" class="smallSubmit" value="Copy"/>
+    <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCopy}"/>
 </form>
 </#if>

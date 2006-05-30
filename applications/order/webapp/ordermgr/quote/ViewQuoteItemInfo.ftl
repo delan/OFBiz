@@ -89,7 +89,7 @@
                 <#list quoteItemAdjustments as quoteItemAdjustment>
                     <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType")>
                     <tr>
-                        <td align="right" colspan="5"><div class="tabletext" style="font-size: xx-small;"><b>${adjustmentType.description?if_exists}</b></div></td>
+                        <td align="right" colspan="5"><div class="tabletext" style="font-size: xx-small;"><b>${adjustmentType.get("description",locale)?if_exists}</b></div></td>
                         <td align="right">
                           <div class="tabletext" style="font-size: xx-small;"><@ofbizCurrency amount=quoteItemAdjustment.amount isoCode=quote.currencyUomId/></div>
                         </td>
@@ -110,7 +110,7 @@
                 <#if !quoteAdjustment.quoteItemSeqId?exists>
                     <#assign totalQuoteHeaderAdjustmentAmount = quoteAdjustment.amount?default(0) + totalQuoteHeaderAdjustmentAmount>
                     <tr>
-                      <td align="right" colspan="6"><div class="tabletext"><b>${adjustmentType.description?if_exists}</b></div></td>
+                      <td align="right" colspan="6"><div class="tabletext"><b>${adjustmentType.get("description",locale)?if_exists}</b></div></td>
                       <td align="right"><div class="tabletext"><@ofbizCurrency amount=quoteAdjustment.amount isoCode=quote.currencyUomId/></div></td>
                     </tr>
                 </#if>

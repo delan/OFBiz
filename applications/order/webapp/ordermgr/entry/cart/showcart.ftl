@@ -185,8 +185,8 @@ function quicklookup(element) {
           <td>
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
                 <div class="tableheadtext">
-                    ${uiLabelMap.ProductItem}:&nbsp;${uiLabelMap.ProductType}:&nbsp;<select name="add_item_type" class="selectBox"><option value="BULK_ORDER_ITEM">Bulk Item</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option></select>
-                    Category:&nbsp;<select name="add_category_id" class="selectBox">
+                    ${uiLabelMap.ProductItem}:&nbsp;${uiLabelMap.ProductType}:&nbsp;<select name="add_item_type" class="selectBox"><option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option></select>
+                    ${uiLabelMap.ProductProductCategory}:&nbsp;<select name="add_category_id" class="selectBox">
                       <option></option>
                       <#list productCategoryList as productCategory>
                         <option value="${productCategory.productCategoryId}">${productCategory.description?default("No Description")} [${productCategory.productCategoryId}]</option>

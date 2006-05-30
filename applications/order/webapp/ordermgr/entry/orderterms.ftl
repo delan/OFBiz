@@ -50,13 +50,13 @@
                 <#assign index=0>
                 <#list orderTerms as orderTerm>
                   <tr>
-                  <td><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description")}</div></td>
+                  <td><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description",locale)}</div></td>
                   <td><div class="tabletext">${orderTerm.termValue?default("")}</div></td>
                   <td><div class="tabletext">${orderTerm.termDays?default("")}</div></td>
                   <td align="right">
-                    <a href="<@ofbizUrl>setOrderTerm?termIndex=${index}&createNew=Y</@ofbizUrl>" class="buttontext">update</a>
+                    <a href="<@ofbizUrl>setOrderTerm?termIndex=${index}&createNew=Y</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonUpdate}</a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="<@ofbizUrl>removeOrderTerm?termIndex=${index}</@ofbizUrl>" class="buttontext">remove</a>
+                    <a href="<@ofbizUrl>removeOrderTerm?termIndex=${index}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
                   </td>
                   </tr>
                   <#if orderTerms.size()&lt;index >
@@ -89,7 +89,7 @@
                           <#if termTypes?has_content>
                                <option value=""/>
                              <#list termTypes as termType>
-                               <option value="${termType.termTypeId}" <#if termTypeId?default("")==termType.termTypeId> selected</#if>>${termType.description}</option>
+                               <option value="${termType.termTypeId}" <#if termTypeId?default("")==termType.termTypeId> selected</#if>>${termType.get("description",locale)}</option>
                              </#list>
                           </#if>
                        </select>

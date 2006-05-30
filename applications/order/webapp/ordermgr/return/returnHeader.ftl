@@ -75,7 +75,7 @@
   <#else>
      <select class="selectBox" name="currencyUomId">
         <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
-          <option value="${orderHeader.currencyUom}" selected>${orderHeader.getRelatedOne("Uom").getString("description")}</option>
+          <option value="${orderHeader.currencyUom}" selected>${orderHeader.getRelatedOne("Uom").getString("description",locale)}</option>
           <option value="${orderHeader.currencyUom}">---</option>
         <#elseif defaultCurrency?has_content>
           <option value="${defaultCurrency.uomId}" selected>${defaultCurrency.getString("description")}</option>
@@ -83,7 +83,7 @@
         </#if>
         <#if currencies?has_content>
           <#list currencies as currency>
-            <option value="${currency.uomId}">${currency.description}</option>
+            <option value="${currency.uomId}">${currency.get("description",locale)}</option>
           </#list>
         </#if>
      </select>
@@ -149,7 +149,7 @@
   </tr>
   <tr>
     <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Needs Auto-Receive (On ACCEPT)</div></td>
+    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.OrderReturnNeedsAutoReceive}</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
       <select name='needsInventoryReceive' class='selectBox'>
@@ -170,18 +170,19 @@
       <td width='74%'>
         <select name="statusId" class="selectBox">
           <#if currentStatus?exists>
-            <option value="${currentStatus.statusId}">${currentStatus.description}</option>
+            <option value="${currentStatus.statusId}">${currentStatus.get("description",locale)}</option>
             <option value="${currentStatus.statusId}">---</option>
           </#if>
           <#list returnStatus as status>
-            <option value="${status.statusIdTo}">${status.description}</option>
+		  ${status}
+            <option value="${status.statusIdTo}">${status.get("description",locale)}</option>
           </#list>
         </select>
       </td>
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Created By</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.FormFieldTitle_createdBy}</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <b>${returnHeader.createdBy?default("Unknown")}</b>
@@ -244,8 +245,8 @@
                 <input type='radio' name="originContactMechId" value="${postalAddress.contactMechId?if_exists}" 
                   <#if ( postalAddressFrom?has_content && postalAddressFrom.contactMechId?default("") == postalAddress.contactMechId)>checked="checked"</#if>>        
               </#if>              
-              <#if postalAddress.toName?has_content><b>To:</b>&nbsp;${postalAddress.toName}<br/></#if>
-              <#if postalAddress.attnName?has_content><b>Attn:</b>&nbsp;${postalAddress.attnName}<br/></#if>
+              <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${postalAddress.toName}<br/></#if>
+              <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${postalAddress.attnName}<br/></#if>
               <#if postalAddress.address1?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address1}<br/></#if>
               <#if postalAddress.address2?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address2}<br/></#if>
               <#if postalAddress.city?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.city}</#if>

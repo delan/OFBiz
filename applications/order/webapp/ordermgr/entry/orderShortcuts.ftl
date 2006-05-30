@@ -46,7 +46,7 @@
                 <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
                   <tr>
                     <td>
-                      <a href="<@ofbizUrl>RequirementsForSupplier</@ofbizUrl>" class="buttontext">${uiLabelMap.Requirements}</a>
+                      <a href="<@ofbizUrl>RequirementsForSupplier</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderRequirements}</a>
                     </td>
                   </tr>
                 </#if>
