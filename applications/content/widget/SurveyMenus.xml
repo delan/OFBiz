@@ -21,7 +21,7 @@ under the License.
     <menu name="SurveyTabBar" default-menu-item-name="Survey" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
         orientation="horizontal" type="simple">
-        <menu-item name="Survey" title="${uiLabelMap.Survey}">
+        <menu-item name="Survey" title="${uiLabelMap.SurveySurveyId}">
             <link target="EditSurvey?surveyId=${surveyId}"/>
         </menu-item>
         <menu-item name="SurveyMultiResps" title="${uiLabelMap.SurveyMultiResps}">

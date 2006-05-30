@@ -4,7 +4,7 @@
 
 <tr>
 <td width="20%" align="right">
-<span class="tableheadtext">Enter query parameters</span>
+<span class="tableheadtext">${uiLabelMap.ContentQueryLine}</span>
 </td>
 <td>&nbsp;</td>
 <td width="80%" align="left">
@@ -14,7 +14,7 @@
 <tr>
 <tr>
 <td width="20%" align="right">
-<span class="tableheadtext">Select category</span>
+<span class="tableheadtext">${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}</span>
 </td>
 <td>&nbsp;</td>
 <td width="80%" align="left">
@@ -31,12 +31,12 @@
   <table border="0" wdith="100%">
     <tr>
       <td align="right" valign="middle">
-        <div class="tabletext">Features:</div>
+        <div class="tabletext">${uiLabelMap.ProductFeatures}:</div>
       </td>
       <td align="right" valign="middle">
         <div class="tabletext">
-          All <input type="radio" name="any_or_all" value="all" checked>
-          Any <input type="radio" name="any_or_all" value="any">
+          ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked>
+          ${uiLabelMap.CommonAny} <input type="radio" name="any_or_all" value="any">
         </div>
       </td>
     </tr>
@@ -65,7 +65,7 @@
         <td valign="middle">
           <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
-              <option value="">- Any -</option>
+              <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
@@ -77,16 +77,16 @@
     <#if searchConstraintStrings?has_content>
       <tr>
         <td align="right" valign="top">
-          <div class="tabletext">Last Search:</div>
+          <div class="tabletext">${uiLabelMap.CommonLast} ${uiLabelMap.CommonSearch}:</div>
         </td>
         <td valign="top">
             <#list searchConstraintStrings as searchConstraintString>
                 <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
-            <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+            <div class="tabletext">${uiLabelMap.CommonSortedBy}: ${searchSortOrderString}</div>
             <div class="tabletext">
-              New Search<input type="radio" name="clearSearch" value="Y" checked>
-              Refine Search<input type="radio" name="clearSearch" value="N">
+              ${uiLabelMap.CommonNew} ${uiLabelMap.CommonSearch} <input type="radio" name="clearSearch" value="Y" checked>
+              ${uiLabelMap.CommonRefine} ${uiLabelMap.CommonSearch} <input type="radio" name="clearSearch" value="N">
             </div>
         </td>
       </tr>
@@ -95,7 +95,7 @@
 &nbsp;</td>
 <td>&nbsp;</td>
 <td width="80%" align="left" colspan="4">
-<input type="submit" class="smallSubmit" name="submitButton" value="Query"/>
+<input type="submit" class="smallSubmit" name="submitButton" value="${uiLabelMap.CommonFind}"/>
 </td>
 
 </tr>

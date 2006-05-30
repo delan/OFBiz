@@ -30,7 +30,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addDataResourceType" title="" type="single">
         <auto-fields-service service-name="createDataResourceType"/>
-        <field name="submitButton" title="Add" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -41,14 +41,14 @@
         list-name="contentList" 
         target="updateDataResourceType" title="" type="list">
         <auto-fields-service service-name="updateDataResourceType"/>
-        <field name="dataResourceTypeId" title="DataResourceTypeId" widget-style="buttontext">
+        <field name="dataResourceTypeId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceType?dataResourceTypeId=${dataResourceTypeId}"/>
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeDataResourceType?dataResourceTypeId=${dataResourceTypeId}"/>
         </field>
     </form>
     
@@ -66,7 +66,7 @@
                     entity-name="DataResourceType" key-field-name="dataResourceTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -77,14 +77,14 @@
         list-name="contentList" 
         target="updateDataResourceTypeAttr" title="" type="list">
         <auto-fields-service service-name="createDataResourceTypeAttr"/>
-        <field name="dataResourceTypeId" title="DataResourceTypeId" widget-style="buttontext">
+        <field name="dataResourceTypeId" widget-style="buttontext">
             <display/>
         </field>
         <field name="attrName" title="Attribute Name" widget-style="buttontext">
             <display/>
         </field>
         <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceTypeAttr?dataResourceTypeId=${dataResourceTypeId}&amp;attrName=${attrName}"/>
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeDataResourceTypeAttr?dataResourceTypeId=${dataResourceTypeId}&amp;attrName=${attrName}"/>
         </field>
     </form>
     
@@ -95,7 +95,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addCharacterSet" title="" type="single">
         <auto-fields-service service-name="createCharacterSet"/>
-        <field name="submitButton" title="Add" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -106,14 +106,14 @@
         list-name="contentList" 
         target="updateCharacterSet" title="" type="list">
         <auto-fields-service service-name="updateCharacterSet"/>
-        <field name="characterSetId" title="CharacterSetId" widget-style="buttontext">
+        <field name="characterSetId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeCharacterSet?characterSetId=${characterSetId}"/>
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeCharacterSet?characterSetId=${characterSetId}"/>
         </field>
     </form>
     
@@ -131,7 +131,7 @@
                     />
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -142,7 +142,7 @@
         list-name="contentList" 
         target="updateDataCategory" title="" type="list">
         <auto-fields-service service-name="updateDataCategory"/>
-        <field name="dataCategoryId" title="DataCategoryId" widget-style="buttontext">
+        <field name="dataCategoryId" widget-style="buttontext">
             <display/>
         </field>
         <field name="parentCategoryId">
@@ -152,11 +152,11 @@
                     />
             </drop-down>
         </field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeDataCategory?dataCategoryId=${dataCategoryId}"/>
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeDataCategory?dataCategoryId=${dataCategoryId}"/>
         </field>
     </form>
     
@@ -173,7 +173,7 @@
                     entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -184,7 +184,7 @@
         list-name="contentList" 
         target="updateFileExtension" title="" type="list">
         <auto-fields-service service-name="updateFileExtension"/>
-        <field name="fileExtensionId" title="FileExtensionId" widget-style="buttontext">
+        <field name="fileExtensionId" widget-style="buttontext">
             <display/>
         </field>
         <field name="mimeTypeId" title="" >
@@ -193,11 +193,11 @@
                     entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeFileExtension?fileExtensionId=${fileExtensionId}"/>
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeFileExtension?fileExtensionId=${fileExtensionId}"/>
         </field>
     </form>
     
@@ -208,7 +208,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addMetaDataPredicate" title="" type="single">
         <auto-fields-service service-name="createMetaDataPredicate"/>
-        <field name="submitButton" title="Add" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -219,14 +219,14 @@
         list-name="contentList" 
         target="updateMetaDataPredicate" title="" type="list">
         <auto-fields-service service-name="updateMetaDataPredicate"/>
-        <field name="metaDataPredicateId" title="MetaDataPredicateId" widget-style="buttontext">
+        <field name="metaDataPredicateId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeMetaDataPredicate?metaDataPredicateId=${metaDataPredicateId}"/>
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeMetaDataPredicate?metaDataPredicateId=${metaDataPredicateId}"/>
         </field>
     </form>
     
@@ -237,7 +237,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addMimeType" title="" type="single">
         <auto-fields-service service-name="createMimeType"/>
-        <field name="submitButton" title="Add" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -248,14 +248,14 @@
         list-name="contentList" 
         target="updateMimeType" title="" type="list">
         <auto-fields-service service-name="updateMimeType"/>
-        <field name="mimeTypeId" title="MimeTypeId" widget-style="buttontext">
+        <field name="mimeTypeId" widget-style="buttontext">
             <display/>
         </field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeMimeType?mimeTypeId=${mimeTypeId}"/>
+            <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeMimeType?mimeTypeId=${mimeTypeId}"/>
         </field>
     </form>
 </forms>

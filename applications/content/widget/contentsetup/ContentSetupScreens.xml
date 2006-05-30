@@ -53,6 +53,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+				<set field="titleProperty" value="PageTitleEditContentType"/>
                 <set field="headerItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="type"/>
             </actions>
@@ -73,6 +74,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+				<set field="titleProperty" value="PageTitleEditContentAttribute"/>
                 <set field="headerItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="typeAttr"/>
             </actions>
@@ -92,7 +94,8 @@
             <condition>
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
-            <actions>
+            <actions>			
+				<set field="titleProperty" value="PageTitleEditContentAssoc"/>
                 <set field="headerItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="assocType"/>
             </actions>
@@ -113,6 +116,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+				<set field="titleProperty" value="PageTitleEditContentPurpose"/>
                 <set field="headerItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="purposeType"/>
             </actions>
@@ -133,6 +137,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+				<set field="titleProperty" value="PageTitleEditContentAssocPredicate"/>
                 <set field="headerItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="assocPred"/>
             </actions>
@@ -153,6 +158,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+				<set field="titleProperty" value="PageTitleEditContentPurposeOperation"/>
                 <set field="headerItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="contentPurposeOp"/>
             </actions>
@@ -173,6 +179,7 @@
                 <if-has-permission permission="CONTENTMGR" action="ADMIN"/>
             </condition>
             <actions>
+				<set field="titleProperty" value="PageTitleEditContentUserPermissions"/>
                 <set field="headerItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="userpermission"/>
                 <set field="webSitePublishPoint" from-field="parameters.webSitePublishPoint" default-value="OFBIZDOCROOT"/>
@@ -196,7 +203,8 @@
             <condition>
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
-            <actions>
+            <actions>			
+				<set field="titleProperty" value="PageTitleEditContentOperation"/>
                 <set field="headerItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="contentOp"/>
             </actions>

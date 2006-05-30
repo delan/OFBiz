@@ -21,8 +21,8 @@ under the License.
 
 <#if webSite?has_content>
     <div class='tabContainer'>
-        <a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="${selectedClassMap.EditWebSite?default(unselectedClassName)}">WebSite</a>
-        <a href="<@ofbizUrl>EditWebSiteParties?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="${selectedClassMap.EditWebSiteParties?default(unselectedClassName)}">Parties</a> 
+        <a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="${selectedClassMap.EditWebSite?default(unselectedClassName)}">${uiLabelMap.ContentWebSite}</a>
+        <a href="<@ofbizUrl>EditWebSiteParties?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="${selectedClassMap.EditWebSiteParties?default(unselectedClassName)}">${uiLabelMap.PartyParties}</a> 
     </div>
-    <div class="head1">Web Site <span class='head2'><#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [ID:${webSite.webSiteId}]</span></div>
+    <div class="head1">${uiLabelMap.ContentWebSite} <span class='head2'><#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [${uiLabelMap.CommonId}:${webSite.webSiteId}]</span></div>
 </#if>

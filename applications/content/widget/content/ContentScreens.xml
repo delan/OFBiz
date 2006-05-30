@@ -74,7 +74,9 @@
                 <set field="headerItem" value="Content"/>
                 <set field="title" value="CMS Content Edit Page"/>
                 <set field="titleProperty" value="PageTitleAddContent"/>
-                <set field="tabButtonItem" value="content"/>
+                <set field="currentContentMenuItemName" value="AddContent" to-scope="user"/>
+				<set field="tabButtonItem" value="content"/>
+                <set field="titleProperty" value="PageTitleAddContent"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonContentDecorator"  location="${parameters.mainDecoratorLocation}">
@@ -92,7 +94,8 @@
             </condition>
             <actions>
                 <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleAssociations"/>
+                <set field="titleProperty" value="PageTitleEditContentAssoc"/>
+                <set field="currentContentMenuItemName" value="contentassoc" to-scope="user"/>                
                 <set field="extraFunctionName" value="'From'"/>
                 <set field="tabButtonItem" value="association"/>
                 <set field="contentId" from-field="parameters.contentId"  />
@@ -150,7 +153,7 @@
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="titleProperty" value="PageTitleEditContentRole"/>
                 <set field="tabButtonItem" value="role"/>
                 
                 <set field="contentId" from-field="parameters.contentId"  />
@@ -179,7 +182,7 @@
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="titleProperty" value="PageTitleEditContentPurpose"/>
                 <set field="tabButtonItem" value="purpose"/>
                 <set field="contentId" from-field="parameters.contentId"  />
                 <entity-one entity-name="Content" value-name="currentValue">
@@ -206,7 +209,7 @@
         <actions>
             <script location="component://content/widget/getMenuContext.bsh"/>
             <set field="title" value="Content Edit Page"/>
-            <set field="titleProperty" value="PageTitleEditContent"/>
+            <set field="titleProperty" value="PageTitleEditContentAttribute"/>
             <set field="tabButtonItem" value="attribute"/>
             <set field="contentId" from-field="parameters.contentId"  />
             <entity-one entity-name="Content" value-name="currentValue">
@@ -234,7 +237,7 @@
             <actions>
                 <script location="component://content/widget/getMenuContext.bsh"/>
                 <set field="title" value="Content Edit Page"/>
-                <set field="titleProperty" value="PageTitleEditContent"/>
+                <set field="titleProperty" value="PageTitleEditContentMetadata"/>
                 <set field="tabButtonItem" value="metaData"/>
                 <set field="contentId" from-field="parameters.contentId"  />
                 <entity-one entity-name="Content" value-name="currentValue">

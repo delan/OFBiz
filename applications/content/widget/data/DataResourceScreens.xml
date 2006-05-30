@@ -50,12 +50,13 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="menuName" value="empty"/>
-                <set field="title" value="Find Data Resource"/>
+                <set field="title" value="${UiLabelMap.PageTitleFindDataResource}"/>
+				<set field="titleProperty" value="PageTitleFindDataResource"/>	
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator">
                     <decorator-section name="body">
-						<container><link target="AddDataResource" text="Add DataResource" style="buttontext"/></container>
+						<container><link target="AddDataResource" text="${uiLabelMap.PageTitleAddDataResource}" style="buttontext"/></container>
                         <include-form name="findDataResource" location="component://content/widget/data/DataResourceForms.xml"/>
                         <include-form name="listFindDataResource" location="component://content/widget/data/DataResourceForms.xml"/>
                     </decorator-section>
@@ -123,7 +124,7 @@
                 </entity-one>
                 <set field="menuName" value="dataresource"/>
                 <set field="title" value="Edit Data Resource: ${dataResourceId}"/>
-                <set field="currentMenuItemName" to-scope="user" value="editdataresource"/>
+				<set field="currentMenuItemName" to-scope="user" value="editdataresource"/>
             </actions>
             <widgets>
                 <decorator-screen name="common-decorator">
@@ -142,7 +143,7 @@
             <actions>
                 <set field="headerItem" value="DataResource"/>
                 <set field="menuName" value="empty"/>
-                <set field="title" value="Add Data Resource"/>
+                <set field="titleProperty" value="PageTitleAddDataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="adddataresource"/>
             </actions>
             <widgets>

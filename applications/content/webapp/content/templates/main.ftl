@@ -131,7 +131,7 @@ ${common.get("/includes/appbar.ftl")}
                  ||  hasPermission>
               ${pages.get(page.path)}
             <#else>
-               <h3>You do not have permission to view this page. </h3>
+               <h3>${uiLabelMap.ContentViewPermissionError}</h3>
             </#if>
           </td>
           <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>

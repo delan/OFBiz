@@ -101,9 +101,9 @@
                     <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
                       <div class="tabletext">${answer.floatResponse?default(0)?string("#")}</div>
                     <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
-                      <div class="tabletext">${answer.numericResponse?default(0)?string("#")}&nbsp;[Tally: ${results._tally?default(0)?string("#")} / Average: ${results._average?default(0)?string("#")}]</div>
+                      <div class="tabletext">${answer.numericResponse?default(0)?string("#")}&nbsp;[${uiLabelMap.CommonTally}: ${results._tally?default(0)?string("#")} / ${uiLabelMap.CommonAverage}: ${results._average?default(0)?string("#")}]</div>
                     <#elseif question.surveyQuestionTypeId == "PASSWORD">
-                      <div class="tabletext">[Not Shown]</div>
+                      <div class="tabletext">[${uiLabelMap.CommonNotShown}]</div>
                     <#elseif question.surveyQuestionTypeId == "CONTENT">
                        <#if answer.contentId?has_content>
                          <#assign content = answer.getRelatedOne("Content")>
@@ -122,7 +122,7 @@
       </#list>
     <#else>
       <tr>
-        <td><div class="tabletext">No questions in survey; no responses can be located.</div></td>
+        <td><div class="tabletext">${uiLabelMap.SurveyNoQuestions}</div></td>
       </tr>
     </#if>
   </table>
