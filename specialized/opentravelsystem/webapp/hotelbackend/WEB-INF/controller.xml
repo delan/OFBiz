@@ -3103,6 +3103,13 @@
         <response name="error" type="view" value="EditContent"/>
     </request-map>
 
+    <request-map uri="copyContent">
+        <security auth="true" https="true"/>
+        <event invoke="copyContentAndElectronicTextandAssoc" type="service"/>
+        <response name="success" type="view" value="EditContent"/>
+        <response name="error" type="view" value="EditContent"/>
+    </request-map>
+    
     <request-map uri="updateContent">
         <security auth="true" https="true"/>
         <event invoke="persistContentAndAssoc" type="service"/>
