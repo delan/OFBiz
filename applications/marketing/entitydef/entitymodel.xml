@@ -305,6 +305,7 @@
     </entity>
     <entity entity-name="SegmentGroupType"
             package-name="org.ofbiz.marketing.segment"
+            default-resource-name="MarketingEntityLabels"
             title="Segment Group Type Entity">
         <field name="segmentGroupTypeId" type="id-ne"></field>
         <field name="description" type="description"></field>
