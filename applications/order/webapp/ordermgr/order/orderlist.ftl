@@ -111,7 +111,7 @@
                 <#assign billFromParty = orh.getBillFromParty()?if_exists>
                 <#if billToParty?has_content>
                     <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", billToParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
-                    <#assign billTo = billToPartyNameResult.fullName?default("[Name Not Found]")/>
+                    <#assign billTo = billToPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")/>
                     <#-- <#assign billTo = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(billToParty, true)?if_exists> -->
                 </#if>
                 <#if billFromParty?has_content>
@@ -127,7 +127,7 @@
                     </div>
                   </td>
                   <td>
-                    <div class="tabletext">${orderHeader.getRelatedOneCache("OrderType").getString("description")}</div>
+                    <div class="tabletext">${orderHeader.getRelatedOneCache("OrderType").get("description",locale)}</div>
                   </td>
                   <td>
                     <div class="tabletext">
@@ -153,7 +153,7 @@
                     </#list>
                   </td>
                   <td class="tabletext">
-                  ${orderHeader.getRelatedOneCache("StatusItem").getString("description")}
+                  ${orderHeader.getRelatedOneCache("StatusItem").get("description",locale)}
                   </td>
                 </tr>
               </#list>

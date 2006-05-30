@@ -87,7 +87,7 @@
             <actions>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="tabButtonItem" value="ViewRequest"/>
-                <set field="title-property" value="PageTitleViewRequest"/>
+                <set field="titleProperty" value="PageTitleViewRequest"/>
                 <!--<set field="headerItem" value="Shopping List"/>-->
                 <set field="showRequestManagementLinks" value="Y"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -143,7 +143,7 @@
     <screen name="RequestRoles">
         <section>
             <actions>
-                <set field="title" value="Request Roles"/>
+                <set field="titleProperty" value="PageTitleRequestRoles"/>
                 <set field="tabButtonItem" value="requestroles"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -165,7 +165,7 @@
     <screen name="RequestItems">
         <section>
             <actions>
-                <set field="title" value="Request Items"/>
+                <set field="titleProperty" value="PageTitleRequestItems"/>
                 <set field="tabButtonItem" value="requestitems"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -193,7 +193,7 @@
     <screen name="EditRequestItem">
         <section>
             <actions>
-                <set field="title" value="Edit a Request Item"/>
+                <set field="titleProperty" value="PageTitleEditRequestItem"/>
                 <set field="tabButtonItem" value="requestitem"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -226,7 +226,7 @@
     <screen name="RequestItemNotes">
         <section>
             <actions>
-                <set field="title" value="Request Item Notes"/>
+                <set field="titleProperty" value="PageTitleRequestItemNotes"/>
                 <set field="tabButtonItem" value="requestitemnotes"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -254,7 +254,7 @@
     <screen name="RequestItemRequirements">
         <section>
             <actions>
-                <set field="title" value="Request Item Requirements"/>
+                <set field="titleProperty" value="PageTitleRequestItemRequirements"/>
                 <set field="tabButtonItem" value="requestitemrequirements"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -285,7 +285,7 @@
     <screen name="RequestItemQuotes">
         <section>
             <actions>
-                <set field="title" value="Request Item Quotes"/>
+                <set field="titleProperty" value="PageTitleRequestItemQuotes"/>
                 <set field="tabButtonItem" value="requestitemquotes"/>
                 <set field="headerItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -316,7 +316,7 @@
     <screen name="EditQuoteItemForRequest">
         <section>
             <actions>
-                <set field="title" value="Edit a QuoteItem For a CustRequest"/>
+                <set field="titleProperty" value="PageTitleEditQuoteItemForCustRequest"/>
                 <set field="tabButtonItem" value="requestitemquotes"/>
                 <set field="headerItem" value="request"/>
                 
@@ -346,7 +346,7 @@
     <screen name="CreateQuoteAndQuoteItemForRequest">
         <section>
             <actions>
-                <set field="title" value="Create a new Quote and QuoteItem for a CustRequest"/>
+                <set field="titleProperty" value="PageTitleCreateQuoteForCustRequest"/>
                 <set field="tabButtonItem" value="requestitemquotes"/>
                 <set field="headerItem" value="request"/>
                 
@@ -376,7 +376,7 @@
     <screen name="EditRequestItemWorkEfforts">
         <section>
             <actions>
-                <set field="title" value="Edit a Request Item"/>
+                <set field="titleProperty" value="PageTitleEditRequestItemWorkEffort"/>
                 <set field="tabButtonItem" value="task"/>
                 <set field="headerItem" value="request"/>
 

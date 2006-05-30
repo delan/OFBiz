@@ -25,16 +25,16 @@
 -->
 
 <div class="head1">Current Returns</div>
-<div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="buttontext">Create Return</a></div>
+<div><a href="<@ofbizUrl>returnMain</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderReturnCreate}</a></div>
 
 <br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
   <tr>
-    <td><div class="tableheadtext">Return #</div></td>
-    <td><div class="tableheadtext">Entry Date</div></td>
-    <td><div class="tableheadtext">Party</div></td>
-    <td><div class="tableheadtext">Facility</div></td>
-    <td><div class="tableheadtext">Status</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.OrderReturnId} #</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.FormFieldTitle_entryDate}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.PartyParty}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.FacilityFacility}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
   </tr> 
   <tr><td colspan="5"><hr class="sepbar"></td></tr>
   <#list returnList as returnHeader>
@@ -49,10 +49,10 @@
       <#if returnHeader.fromPartyId?exists>
         <a href="${customerDetailLink}${returnHeader.fromPartyId}${externalKeyParam}" class='buttontext'>${returnHeader.fromPartyId}</a>
       <#else>
-        <span class="tabletext">N/A</span>
+        <span class="tabletext">${uiLabelMap.CommonNA}</span>
       </#if>
     </td>
-    <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>None</#if></div></td>
+    <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></div></td>
     <td><div class="tabletext">${statusItem.get("description",locale)}</div></td>   
   </tr>
   </#list>

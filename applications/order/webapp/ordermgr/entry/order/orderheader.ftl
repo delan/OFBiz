@@ -86,7 +86,7 @@
                      <#assign index=0/>
                      <#list orderTerms as orderTerm>
                        <tr>
-                         <td width="33%"><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description")}</div></td>
+                         <td width="33%"><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description",locale)}</div></td>
                          <td width="33%"><div class="tabletext">${orderTerm.termValue?default("")}</div></td>
                          <td width="33%"><div class="tabletext">${orderTerm.termDays?default("")}</div></td>
                        </tr>

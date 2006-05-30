@@ -55,7 +55,7 @@
         default-associated-content-id="${userLogin.userLoginId}"
         title="" type="simple">
 
-        <menu-item name="requestitem" title="Request Item" >
+        <menu-item name="requestitem">
             <link id="requestitem" target="requestitem?custRequestId=${custRequest.custRequestId}&amp;custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}"/>
         </menu-item>
         <menu-item name="requestitemnotes" title="Request Item Notes" >

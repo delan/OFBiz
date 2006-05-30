@@ -88,12 +88,12 @@
                   <#-- now show status details per line item -->
                   <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem")>
                   <td align="left" colspan="1">
-                    <div class="tabletext">${uiLabelMap.CommonCurrent}: ${currentItemStatus.description?default(currentItemStatus.statusId)}</div>
+                    <div class="tabletext">${uiLabelMap.CommonCurrent}: ${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}</div>
                     <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                     <#list orderItemStatuses as orderItemStatus>
                       <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem")>
                       <div class="tabletext">
-                        ${orderItemStatus.statusDatetime.toString()} : ${loopStatusItem.description?default(orderItemStatus.statusId)}
+                        ${orderItemStatus.statusDatetime.toString()} : ${loopStatusItem.get("description",locale)?default(orderItemStatus.statusId)}
                       </div>
                     </#list>
                     <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
@@ -149,8 +149,8 @@
                   <tr>
                     <td align="right" colspan="2">
                       <div class="tabletext" style="font-size: xx-small;">
-                        <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${adjustmentType.description}</b>:
-                        ${orderItemAdjustment.description?if_exists} (${orderItemAdjustment.comments?default("")})
+                        <b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${adjustmentType.get("description",locale)}</b>:
+                        ${orderItemAdjustment.get("description",locale)?if_exists} (${orderItemAdjustment.comments?default("")})
 
                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                           <#if orderItemAdjustment.primaryGeoId?has_content>
@@ -224,7 +224,7 @@
             <#if adjustmentAmount != 0>
               <tr>
                 <td align="right" colspan="5">
-                  <div class="tabletext"><b>${adjustmentType.description}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
+                  <div class="tabletext"><b>${adjustmentType.get("description",locale)}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
                 </td>
                 <td align="right" nowrap>
                   <div class="tabletext"><@ofbizCurrency amount=adjustmentAmount isoCode=currencyUomId/></div>
@@ -242,7 +242,7 @@
                 <td align="right" colspan="5">
                   <select name="orderAdjustmentTypeId" class="selectBox">
                     <#list orderAdjustmentTypes as type>
-                      <option value="${type.orderAdjustmentTypeId}">${type.description?default(type.orderAdjustmentTypeId)}</option>
+                      <option value="${type.orderAdjustmentTypeId}">${type.get("description",locale)?default(type.orderAdjustmentTypeId)}</option>
                     </#list>
                   </select>
                 </td>

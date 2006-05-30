@@ -91,19 +91,19 @@
 
             <fo:table-row>
               <fo:table-cell number-columns-spanned="3">
-                <fo:block space-after="2mm" font-size="14pt" font-weight="bold" text-align="right">Return Summary</fo:block>
+                <fo:block space-after="2mm" font-size="14pt" font-weight="bold" text-align="right">${uiLabelMap.OrderReturnSummary}</fo:block>
               </fo:table-cell>
             </fo:table-row>
 
             <fo:table-row>
               <fo:table-cell text-align="center" border-style="solid" border-width="0.2pt">
-                <fo:block padding="1mm" font-weight="bold">Date</fo:block>
+                <fo:block padding="1mm" font-weight="bold">${uiLabelMap.CommonDate}</fo:block>
               </fo:table-cell>
               <fo:table-cell text-align="center" border-style="solid" border-width="0.2pt">
-                <fo:block padding="1mm" font-weight="bold">Number</fo:block>
+                <fo:block padding="1mm" font-weight="bold">${uiLabelMap.OrderReturnId}</fo:block>
               </fo:table-cell>
               <fo:table-cell text-align="center" border-style="solid" border-width="0.2pt">
-                <fo:block padding="1mm" font-weight="bold">Status</fo:block>
+                <fo:block padding="1mm" font-weight="bold">${uiLabelMap.CommonStatus}</fo:block>
               </fo:table-cell>
             </fo:table-row>
                                   
@@ -115,7 +115,7 @@
                 <fo:block padding="1mm">${returnId}</fo:block>
               </fo:table-cell>
               <fo:table-cell text-align="center" border-style="solid" border-width="0.2pt">
-                <fo:block padding="1mm">${currentStatus.description}</fo:block>
+                <fo:block padding="1mm">${currentStatus.get("description",locale)}</fo:block>
               </fo:table-cell>
             </fo:table-row>
 
@@ -143,7 +143,7 @@
             <fo:table border-style="solid" border-width="0.2pt" height="1in">
               <fo:table-column column-width="2.75in"/>
               <fo:table-body>
-                <fo:table-row><fo:table-cell border-style="solid" border-width="0.2pt" padding="1mm"><fo:block font-weight="bold">Return From</fo:block></fo:table-cell></fo:table-row>
+                <fo:table-row><fo:table-cell border-style="solid" border-width="0.2pt" padding="1mm"><fo:block font-weight="bold">${uiLabelMap.OrderReturnFromAddress}</fo:block></fo:table-cell></fo:table-row>
                 <fo:table-row><fo:table-cell padding="1mm">
                   <fo:block white-space-collapse="false"><#if fromPartyNameResult.fullName?has_content>${fromPartyNameResult.fullName}<#else/><#if postalAddressFrom?exists><#if (postalAddressFrom.toName)?has_content>${postalAddressFrom.toName}</#if><#if (postalAddressFrom.attnName)?has_content>
 ${postalAddressFrom.attnName}</#if></#if></#if><#if postalAddressFrom?exists>
@@ -163,7 +163,7 @@ ${postalAddressFrom.city}<#if (postalAddressFrom.stateProvinceGeoId)?has_content
             <fo:table border-style="solid" border-width="0.2pt" height="1in">
               <fo:table-column column-width="2.75in"/>
               <fo:table-body>
-                <fo:table-row><fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt"><fo:block font-weight="bold">Return To</fo:block></fo:table-cell></fo:table-row>
+                <fo:table-row><fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt"><fo:block font-weight="bold">${uiLabelMap.OrderReturnToAddress}</fo:block></fo:table-cell></fo:table-row>
                 <fo:table-row><fo:table-cell padding="1mm">
                   <fo:block white-space-collapse="false"><#if toPartyNameResult.fullName?has_content>${toPartyNameResult.fullName}<#else/><#if postalAddressTo?exists><#if (postalAddressTo.toName)?has_content>${postalAddressTo.toName}</#if><#if (postalAddressTo.attnName)?has_content>
 ${postalAddressTo.attnName}</#if></#if></#if><#if postalAddressTo?exists>
@@ -189,12 +189,12 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
           <fo:table-column column-width="0.85in"/>
           <fo:table-body>
             <fo:table-row text-align="center" font-weight="bold">
-              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Order No.</fo:block></fo:table-cell>
-              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Product No.</fo:block></fo:table-cell>
-              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Description</fo:block></fo:table-cell>
-              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Qty</fo:block></fo:table-cell>
-              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Unit Price</fo:block></fo:table-cell>
-              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>Amount</fo:block></fo:table-cell>
+              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>${uiLabelMap.OrderOrderId}</fo:block></fo:table-cell>
+              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>${uiLabelMap.ProductProductId}</fo:block></fo:table-cell>
+              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>${uiLabelMap.CommonDescription}</fo:block></fo:table-cell>
+              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>${uiLabelMap.OrderQty}</fo:block></fo:table-cell>
+              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>${uiLabelMap.OrderUnitPrice}</fo:block></fo:table-cell>
+              <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt" display-align="after"><fo:block>${uiLabelMap.OrderAmount}</fo:block></fo:table-cell>
             </fo:table-row>
           </fo:table-body>
         </fo:table>
@@ -207,7 +207,7 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
 
     <fo:static-content flow-name="xsl-region-after">
       <#-- displays page number.  "theEnd" is an id of a fo:block at the very end -->    
-      <fo:block space-before="5mm" font-size="10pt" text-align="center">Page <fo:page-number/> of <fo:page-number-citation ref-id="theEnd"/></fo:block>
+      <fo:block space-before="5mm" font-size="10pt" text-align="center">${uiLabelMap.CommonPage} <fo:page-number/> ${uiLabelMap.CommonOf} <fo:page-number-citation ref-id="theEnd"/></fo:block>
     </fo:static-content>
 
   
@@ -281,7 +281,7 @@ ${postalAddressTo.city}<#if (postalAddressTo.stateProvinceGeoId)?has_content>, $
               <fo:table-cell/>
               <fo:table-cell/>
               <fo:table-cell padding="1mm" border-style="solid" border-width="0.2pt">
-                <fo:block font-weight="bold" text-align="center">Total</fo:block>
+                <fo:block font-weight="bold" text-align="center">${uiLabelMap.CommonTotal}</fo:block>
               </fo:table-cell>
               <fo:table-cell text-align="right" padding="1mm" border-style="solid" border-width="0.2pt">
                 <fo:block><@ofbizCurrency amount=total isoCode=returnHeader.currencyUomId/></fo:block>

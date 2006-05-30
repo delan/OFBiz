@@ -31,7 +31,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="center">
-            <div class="boxhead">&nbsp;Party</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyParty}</div>
           </td>               
         </tr>
       </table>
@@ -50,7 +50,7 @@
             <form method="post" action="<@ofbizUrl>orderentry</@ofbizUrl>" name="setpartyform">
               <div><input type="text" class="inputBox" name="partyId" size='10' value="${partyId?if_exists}"></div>
               <div class="tabletext">
-                <a href="javascript:document.setpartyform.submit();" class="buttontext">Set</a>&nbsp;|&nbsp;<a href="/partymgr/control/findparty" class="buttontext">Find</a><#if partyId?default("_NA_") != "_NA_" && partyId?default("_NA_") != "">&nbsp;|&nbsp;<a href="${customerDetailLink}${partyId}" class="buttontext">View</a></#if>
+                <a href="javascript:document.setpartyform.submit();" class="buttontext">${uiLabelMap.CommonSet}</a>&nbsp;|&nbsp;<a href="/partymgr/control/findparty" class="buttontext">${uiLabelMap.CommonFind}</a><#if partyId?default("_NA_") != "_NA_" && partyId?default("_NA_") != "">&nbsp;|&nbsp;<a href="${customerDetailLink}${partyId}" class="buttontext">${uiLabelMap.CommonView}</a></#if>
               </div>
             </form>
           </td>                        
@@ -60,5 +60,5 @@
   </TR>
 </TABLE>
 <#else>
-  <h3>You do not have permission to view this page. ("ORDERMGR_CREATE" or "ORDERMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

@@ -27,22 +27,22 @@
 
           <table border="0" width="100%" cellpadding="2" cellspacing="0">
             <tr>
-              <td colspan="8"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
+              <td colspan="8"><div class="head3">${uiLabelMap.OrderReturnFromOrder} #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
               <td align="right">
-                <span class="tableheadtext">Select All</span>&nbsp;
+                <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
                 <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${selectAllFormName}');"/>
               </td>
             </tr>
             <tr>
-              <td><div class="tableheadtext">Description</div></td>
-              <td><div class="tableheadtext">Order Qty</div></td>
-              <td><div class="tableheadtext">Return Qty</div></td>
-              <td><div class="tableheadtext">Unit Price</div></td>
-              <td><div class="tableheadtext">Return Price*</div></td>
-              <td><div class="tableheadtext">Return Reason</div></td>
-              <td><div class="tableheadtext">Return Type</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderOrderQty}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderReturnQty}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderUnitPrice}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderReturnPrice}*</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderReturnReason}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderReturnType}</div></td>
               <td><div class="tableheadtext">${uiLabelMap.OrderItemStatus}</div></td>
-              <td align="right"><div class="tableheadtext">Include?</div></td>
+              <td align="right"><div class="tableheadtext">${uiLabelMap.OrderOrderInclude}?</div></td>
             </tr>
             <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <#if returnableItems?has_content>
@@ -85,23 +85,23 @@
                   <td>
                     <select name="returnReasonId_o_${rowCount}" class="selectBox">
                       <#list returnReasons as reason>
-                      <option value="${reason.returnReasonId}">${reason.description?default(reason.returnReasonId)}</option>
+                      <option value="${reason.returnReasonId}">${reason.get("description",locale)?default(reason.returnReasonId)}</option>
                       </#list>
                     </select>
                   </td>
                   <td>
                     <select name="returnTypeId_o_${rowCount}" class="selectBox">
                       <#list returnTypes as type>
-                      <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
+                      <option value="${type.returnTypeId}">${type.get("description",locale)?default(type.returnTypeId)}</option>
                       </#list>
                     </select>
                   </td>
                   <td>
                     <select name="expectedItemStatus_o_${rowCount}" class="selectBox">
-                      <option value="INV_RETURNED">Returned</option>
+                      <option value="INV_RETURNED">${uiLabelMap.OrderReturned}</option>
                       <option value="INV_RETURNED">---</option>
                       <#list itemStts as status>
-                        <option value="${status.statusId}">${status.description}</option>
+                        <option value="${status.statusId}">${status.get("description",locale)}</option>
                       </#list>
                     </select>
                   </td>
@@ -115,22 +115,22 @@
 
              <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <tr>
-              <td colspan="9"><div class="head3">Return Order Adjustment(s) From Order #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
+              <td colspan="9"><div class="head3">${uiLabelMap.OrderReturnAdjustments} #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
             </tr>
             <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <#if orderHeaderAdjustments?has_content>
               <tr>
                     <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
                     <td><div class="tableheadtext">${uiLabelMap.CommonAmount}</div></td>                                                
-                    <td><div class="tableheadtext">Return Type</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.OrderReturnType}</div></td>
 
-                <td align="right"><div class="tableheadtext">Include?</div></td>
+                <td align="right"><div class="tableheadtext">${uiLabelMap.OrderOrderInclude}?</div></td>
               </tr>
               <tr><td colspan="9"><hr class="sepbar"></td></tr>
               <#list orderHeaderAdjustments as adj>
                 <#assign returnAdjustmentType = returnItemTypeMap.get(adj.get("orderAdjustmentTypeId"))/>
                 <#assign adjustmentType = adj.getRelatedOne("OrderAdjustmentType")/>
-                <#assign description = adj.description?default(adjustmentType.description)/>
+                <#assign description = adj.description?default(adjustmentType.get("description",locale))/>
 
                 <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>                
                 <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${adj.orderAdjustmentId}"/>
@@ -148,7 +148,7 @@
                   <td>
                     <select name="returnTypeId_o_${rowCount}" class="selectBox">
                       <#list returnTypes as type>
-                      <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
+                      <option value="${type.returnTypeId}">${type.get("description",locale)?default(type.returnTypeId)}</option>
                       </#list>
                     </select>
                   </td>
@@ -160,7 +160,7 @@
                 <#assign rowCount = rowCount + 1>
               </#list>
             <#else>
-              <tr><td colspan="9"><div class="tableheadtext">No adjustments on this order.</div></td></tr>
+              <tr><td colspan="9"><div class="tableheadtext">${uiLabelMap.OrderNoOrderAdjustments}</div></td></tr>
             </#if>
 
             <#assign manualAdjRowNum = rowCount/>
@@ -168,7 +168,7 @@
             <tr><td colspan="9"><hr class="sepbar"></td></tr>
             <tr>
               <td colspan="9">
-                <div class="head3">Manual Return Adjustment For Order #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td></div>
+                <div class="head3">${uiLabelMap.OrderReturnManualAdjustment} #<a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td></div>
               </td>
             </tr>
             <tr>
@@ -189,14 +189,14 @@
         
              <tr>
                <td colspan="9" align="right">
-                 <a href="javascript:document.${selectAllFormName}.submit()" class="buttontext">Return Selected Item(s)</a>                 
+                 <a href="javascript:document.${selectAllFormName}.submit()" class="buttontext">${uiLabelMap.OrderReturnSelectedItems}</a>                 
                </td>
              </tr>
            <#else>
-             <tr><td colspan="9"><div class="tabletext">No returnable items found for order #${orderId}</div></td></tr>
+             <tr><td colspan="9"><div class="tabletext">${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</div></td></tr>
            </#if>
            <tr>
-             <td colspan="9"><div class="tabletext">*Price not includes tax & adjustments</div></td>
+             <td colspan="9"><div class="tabletext">*${uiLabelMap.OrderReturnPriceNotIncludeTax}</div></td>
            </tr>
            </table>
 

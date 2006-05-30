@@ -38,7 +38,7 @@
                 <entity-options description="${description}" entity-name="CustRequestType" key-field-name="custRequestTypeId"/>
             </drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+        <field name="statusId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" operator="equals" value="CUSTREQ_STTS"/>
@@ -278,7 +278,7 @@
         <field name="quantity" map-name="parameters" use-when="quoteItem==null"><text/></field>
         <field name="selectedAmount" map-name="parameters" use-when="quoteItem==null"><text/></field>
         <field name="comments" map-name="parameters" use-when="quoteItem==null"><text/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -311,7 +311,7 @@
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="note"><textarea/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -348,7 +348,7 @@
                 <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListRequestItemRequirements" type="list"
             title="" list-name="custRequestRequirements" paginate-target="RequestItemRequirements"

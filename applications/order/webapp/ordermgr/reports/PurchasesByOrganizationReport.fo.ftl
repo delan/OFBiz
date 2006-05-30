@@ -44,14 +44,14 @@
 <#if productReportList?has_content>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-            <fo:block font-size="14pt">Purchases By Organization Report</fo:block>
-            <#if !showToParty><fo:block font-size="10pt">For: ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, toPartyId, false)}</fo:block></#if>
-            <#if !showFromParty><fo:block font-size="10pt">From: ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, fromPartyId, false)}</fo:block></#if>
-            <fo:block font-size="10pt">Order Status: 
-                <#if parameters.orderStatusId?has_content>${parameters.orderStatusId}<#else>Any</#if>
+            <fo:block font-size="14pt">${uiLabelMap.OrderReportPurchasesByOrganization}</fo:block>
+            <#if !showToParty><fo:block font-size="10pt">${uiLabelMap.CommonFor}: ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, toPartyId, false)}</fo:block></#if>
+            <#if !showFromParty><fo:block font-size="10pt">${uiLabelMap.CommonFrom}: ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, fromPartyId, false)}</fo:block></#if>
+            <fo:block font-size="10pt">${uiLabelMap.FormFieldTitle_orderStatusId}: 
+                <#if parameters.orderStatusId?has_content>${parameters.orderStatusId}<#else>${uiLabelMap.CommonAny}</#if>
             </fo:block>
-            <#if parameters.fromOrderDate?has_content><fo:block font-size="10pt">From Date: ${parameters.fromOrderDate} (orderDate &gt;= from)</fo:block></#if>
-            <#if parameters.thruOrderDate?has_content><fo:block font-size="10pt">Thru Date: ${parameters.thruOrderDate} (orderDate &lt; from)</fo:block></#if>
+            <#if parameters.fromOrderDate?has_content><fo:block font-size="10pt">${uiLabelMap.CommonFromDate}: ${parameters.fromOrderDate} (${uiLabelMap.OrderDate} &gt;= ${uiLabelMap.CommonFrom})</fo:block></#if>
+            <#if parameters.thruOrderDate?has_content><fo:block font-size="10pt">${uiLabelMap.CommonThruDate}: ${parameters.thruOrderDate} (${uiLabelMap.OrderDate} &lt; ${uiLabelMap.CommonFrom})</fo:block></#if>
             <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table>
                 <fo:table-column column-width="420pt"/>
@@ -59,9 +59,9 @@
                 <fo:table-column column-width="40pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Product</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Qty Purch</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Value Purch</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductProduct}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.OrderQuantityPurchase}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.OrderValuePurchase}</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
@@ -94,7 +94,7 @@
     <fo:page-sequence master-reference="main">
     <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
         <fo:block font-size="14pt">
-            No Orders Found.
+            ${uiLabelMap.OrderNoOrderFound}.
         </fo:block>
     </fo:flow>
     </fo:page-sequence>
@@ -102,7 +102,7 @@
 
 <#else>
     <fo:block font-size="14pt">
-        You do not have permission to view this report.
+        ${uiLabelMap.OrderViewPermissionError}
     </fo:block>
 </#if>
 

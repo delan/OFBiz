@@ -92,7 +92,7 @@
                 <#assign currentChannel = shoppingCartChannelType>
                 <option value="">${uiLabelMap.OrderNoChannel}</option>
                 <#list salesChannels as salesChannel>
-                  <option value="${salesChannel.enumId}" <#if (salesChannel.enumId == currentChannel)>selected</#if>>${salesChannel.description}</option>
+                  <option value="${salesChannel.enumId}" <#if (salesChannel.enumId == currentChannel)>selected</#if>>${salesChannel.get("description",locale)}</option>
                 </#list>
               </select>
             </div>

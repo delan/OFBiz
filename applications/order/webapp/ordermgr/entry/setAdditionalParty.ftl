@@ -62,7 +62,7 @@
             <input type="radio" name="additionalPartyType" value="None" onclick="<#if additionalPartyType?exists>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if !additionalPartyType?exists> checked="checked"</#if>>
           </td>
           <td>
-            <div class="tabletext">I do not wish to add additional parties.</div>
+            <div class="tabletext">${uiLabelMap.OrderPartyDontWish}</div>
           </td>
         </tr>
       </table>
@@ -112,7 +112,7 @@
 
   <#if roles?has_content>
   <tr>
-    <td><div class="tableheadtext">3) ${uiLabelMap.PartySelectRoleForParty} :</div></td>
+    <td><div class="tableheadtext">3) ${uiLabelMap.OrderPartySelectRoleForParty} :</div></td>
   </tr>
 
   <tr>
@@ -124,14 +124,14 @@
           <td>
             <select name="additionalRoleTypeId" size="5" multiple>
               <#list roles as role>
-              <option value="${role.roleTypeId}" class="tabletext">${role.description}</option>
+              <option value="${role.roleTypeId}" class="tabletext">${role.get("description",locale)}</option>
               </#list>
             </select>
           </td>
           <td>&nbsp;</td>
           <td align="left">
             <input type="hidden" name="additionalPartyId" value="${additionalPartyId}">
-            <input type="submit" class="smallSubmit" value="Add">
+            <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
           </td>
         </tr>
         </form>

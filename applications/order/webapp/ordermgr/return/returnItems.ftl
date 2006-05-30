@@ -33,7 +33,7 @@
     <input type="hidden" name="returnAdjustmentId_o_${rowCount}" value="${returnAdjustment.returnAdjustmentId}" />
     <tr class="tabletext">
         <td colspan="2">&nbsp;</td>
-        <td colspan="3" class="tabletext">${returnAdjustment.description?default("N/A")}
+        <td colspan="3" class="tabletext">${returnAdjustment.get("description",locale)?default("N/A")}
             <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
         </div></td>
         <#if (adjEditable)>
@@ -46,15 +46,15 @@
         <td colspan="2">&nbsp;</td>
         <td><div class="tabletext">
            <#if (!adjEditable)>
-               ${adjReturnType.description?default("N/A")}
+               ${adjReturnType.description?default("${uiLabelMap.CommonNA}")}
            <#else>
                <select name="returnTypeId_o_${rowCount}" class="selectBox">
                   <#if (adjReturnType?has_content)>
-                    <option value="${adjReturnType.returnTypeId}">${adjReturnType.description?if_exists}</option>
+                    <option value="${adjReturnType.returnTypeId}">${adjReturnType.get("description",locale)?if_exists}</option>
                     <option value="${adjReturnType.returnTypeId}">--</option>
                   </#if>
                   <#list returnTypes as returnTypeItem>
-                    <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.description?if_exists}</option>
+                    <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.get("description",locale)?if_exists}</option>
                   </#list>
                 </select>
           </#if>
@@ -71,10 +71,10 @@
 </#macro>
 
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>
-    <a href="<@ofbizUrl>returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Items</a>
+    <a href="<@ofbizUrl>returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">${uiLabelMap.OrderReturnHeader}</a>
+    <a href="<@ofbizUrl>returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.OrderReturnItems}</a>
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
-      <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${externalKeyParam}" class="tabButton">Receive Return</a>
+      <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${externalKeyParam}" class="tabButton">${uiLabelMap.OrderReturnReceive}</a>
     </#if>
 </div>
 <div>
@@ -90,7 +90,7 @@
   <tr><td colspan="10"><hr class="sepbar"></td></tr>
   <tr>
     <td><div class="tableheadtext">${uiLabelMap.OrderOrderItems}</div></td>
-    <td><div class="tableheadtext">Product Id</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.OrderPrice}</div></td>
@@ -161,45 +161,45 @@
         </td>
         <td><div class="tabletext">
             <#if readOnly>
-                ${returnReason.description?default("N/A")}
+                ${returnReason.get("description",locale)?default("N/A")}
             <#else>
                 <select name="returnReasonId_o_${rowCount}"  class='selectBox'>
                     <#if (returnReason?has_content)>
-                        <option value="${returnReason.returnReasonId}">${returnReason.description?if_exists}</option>
+                        <option value="${returnReason.returnReasonId}">${returnReason.get("description",locale)?if_exists}</option>
                         <option value="${returnReason.returnReasonId}">--</option>
                     </#if>
                     <#list returnReasons as returnReasonItem>
-                        <option value="${returnReasonItem.returnReasonId}">${returnReasonItem.description?if_exists}</option>
+                        <option value="${returnReasonItem.returnReasonId}">${returnReasonItem.get("description",locale)?if_exists}</option>
                     </#list>
                 </select>
             </#if>
             </div></td>
         <td><div class="tabletext">
           <#if readOnly>
-              ${status.description?default("N/A")}
+              ${status.get("description",locale)?default("N/A")}
           <#else>
               <select name="expectedItemStatus_o_${rowCount}"  class='selectBox'>
                   <#if (status?has_content)>
-                      <option value="${status.statusId}">${status.description?if_exists}</option>
+                      <option value="${status.statusId}">${status.get("description",locale)?if_exists}</option>
                       <option value="${status.statusId}">--</option>
                   </#if>
                   <#list itemStatus as returnItemStatus>
-                      <option value="${returnItemStatus.statusId}">${returnItemStatus.description?if_exists}</option>
+                      <option value="${returnItemStatus.statusId}">${returnItemStatus.get("description",locale)?if_exists}</option>
                   </#list>
               </select>
           </#if>
           </div></td>
         <td><div class="tabletext">
             <#if (readOnly)>
-                ${returnType.description?default("N/A")}
+                ${returnType.get("description",locale)?default("N/A")}
             <#else>
                 <select name="returnTypeId_o_${rowCount}" class="selectBox">
                     <#if (returnType?has_content)>
-                        <option value="${returnType.returnTypeId}">${returnType.description?if_exists}</option>
+                        <option value="${returnType.returnTypeId}">${returnType.get("description",locale)?if_exists}</option>
                         <option value="${returnType.returnTypeId}">--</option>
                     </#if>
                     <#list returnTypes as returnTypeItem>
-                        <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.description?if_exists}</option>
+                        <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.get("description",locale)?if_exists}</option>
                     </#list>
                 </select>
             </#if></div></td>
@@ -209,17 +209,17 @@
             <#assign itemResp = item.getRelatedOne("ReturnItemResponse")?if_exists>
             <#if itemResp?has_content>
               <#if itemResp.paymentId?has_content>
-                <div class="tabletext">Payment #<a href="/accounting/control/editPayment?paymentId=${itemResp.paymentId}${externalKeyParam}" class="buttontext">${itemResp.paymentId}</a></div>
+                <div class="tabletext">${uiLabelMap.AccountingPayment} #<a href="/accounting/control/editPayment?paymentId=${itemResp.paymentId}${externalKeyParam}" class="buttontext">${itemResp.paymentId}</a></div>
               <#elseif itemResp.replacementOrderId?has_content>
-                <div class="tabletext">Order #<a href="<@ofbizUrl>orderview?orderId=${itemResp.replacementOrderId}</@ofbizUrl>" class="buttontext">${itemResp.replacementOrderId}</a></div>
+                <div class="tabletext">${uiLabelMap.OrderOrder} #<a href="<@ofbizUrl>orderview?orderId=${itemResp.replacementOrderId}</@ofbizUrl>" class="buttontext">${itemResp.replacementOrderId}</a></div>
               <#elseif itemResp.billingAccountId?has_content>
-                <div class="tabletext">Acct #<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${externalKeyParam}" class="buttontext">${itemResp.billingAccountId}</a></div>
+                <div class="tabletext">${uiLabelMap.AccountingAccountId} #<a href="/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${externalKeyParam}" class="buttontext">${itemResp.billingAccountId}</a></div>
               </#if>
             <#else>
-              <div class="tabletext">None</div>
+              <div class="tabletext">${uiLabelMap.CommonNone}</div>
             </#if>
           <#else>
-            <div class="tabletext">N/A</div>
+            <div class="tabletext">${uiLabelMap.CommonNA}</div>
           </#if>
         </td>                  
         </#if>
@@ -239,7 +239,7 @@
     </#list>
 <#else>
     <tr>
-      <td colspan="9"><div class="tabletext">No item(s) in return.</div></td>
+      <td colspan="9"><div class="tabletext">${uiLabelMap.OrderNoReturnItemsFound}</div></td>
     </tr>
   </#if>
    <tr><td colspan="10"><hr class="sepbar"></td></tr>
@@ -273,7 +273,7 @@
 <form name="acceptReturn" method="post" action="<@ofbizUrl>/updateReturn</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${returnId}">
   <input type="hidden" name="statusId" value="RETURN_ACCEPTED">
-  <div class="tabletext" align="right"><input type="submit" value="Accept Return"></div>
+  <div class="tabletext" align="right"><input type="submit" value="${uiLabelMap.OrderReturnAccept}"></div>
 </form>
 </#if>
 
@@ -282,10 +282,10 @@
 <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
   <input type="hidden" name="returnId" value="${returnId}">
   <table border='0' cellpadding='2' cellspacing='0'>
-    <tr><td colspan="4"><div class="head3">Return Item(s)</div></td></tr>
+    <tr><td colspan="4"><div class="head3">${uiLabelMap.OrderReturnItems}</div></td></tr>
     <#if partyOrders?has_content>
       <tr>      
-        <td width='25%' align='right' nowrap><div class='tableheadtext'>Order ID:</div></td>
+        <td width='25%' align='right' nowrap><div class='tableheadtext'>${uiLabelMap.OrderOrderId}:</div></td>
         <td>&nbsp;</td>
         <td width='25%'>        
           <select name="orderId" class="selectBox">
@@ -294,25 +294,25 @@
             </#list>
           </select>
         </td>
-        <td><div class='tabletext'>&nbsp;(Load order items for return)</div></td> 
+        <td><div class='tabletext'>&nbsp;(${uiLabelMap.OrderReturnLoadItems})</div></td> 
       </tr>
     <#else>
       <tr>
-        <td colspan="4" nowrap><div class='tableheadtext'>No orders found for partyId: <a href="${customerDetailLink}${returnHeader.fromPartyId?default('_NA_')}" class="buttontext">${returnHeader.fromPartyId?default('[null]')}</a></div></td>
+        <td colspan="4" nowrap><div class='tableheadtext'>${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${returnHeader.fromPartyId?default('_NA_')}" class="buttontext">${returnHeader.fromPartyId?default('[null]')}</a></div></td>
       </tr>
       <tr>
-        <td width='25%' align='right' nowrap><div class='tableheadtext'>Order ID:</div></td>
+        <td width='25%' align='right' nowrap><div class='tableheadtext'>${uiLabelMap.OrderOrderId}:</div></td>
         <td>&nbsp;</td>
         <td width='25%'>               
           <input type='text' name='orderId' size='20' maxlength='20' class="inputBox">
         </td>
-        <td><div class='tabletext'>&nbsp;(Load order items for return)</div></td> 
+        <td><div class='tabletext'>&nbsp;(${uiLabelMap.OrderReturnLoadItems})</div></td> 
       </tr>
     </#if>      
     <tr>
       <td colspan="2">&nbsp;</td>
       <td colspan="2">
-        <a href="javascript:document.returnItems.submit();" class="buttontext">Load Order Items(s)</a>
+        <a href="javascript:document.returnItems.submit();" class="buttontext">${uiLabelMap.OrderReturnLoadItems}</a>
       </td>
     </tr>
   </table>

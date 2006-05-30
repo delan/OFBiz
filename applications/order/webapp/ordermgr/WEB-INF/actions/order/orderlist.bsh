@@ -153,10 +153,12 @@ queryConditionsList = new EntityConditionList(allConditions, EntityOperator.AND)
 orderHeaderList = delegator.findByCondition("OrderHeader", queryConditionsList, null, UtilMisc.toList("orderId DESC"));
 context.put("orderHeaderList", orderHeaderList);
 
+locale = UtilHttp.getLocale(request);
+
 // a list of order type descriptions
 ordertypes = delegator.findAllCache("OrderType");
 iter = ordertypes.iterator();
 while (iter.hasNext()) {
     type = iter.next();
-    context.put("descr_" + type.getString("orderTypeId"), type.getString("description"));
+    context.put("descr_" + type.getString("orderTypeId"), type.get("description",locale));
 }

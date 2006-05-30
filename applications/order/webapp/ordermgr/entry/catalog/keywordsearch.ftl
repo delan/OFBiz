@@ -40,9 +40,9 @@
         <#-- Start Page Select Drop-Down -->
         <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
         <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
-          <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+          <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax}</option>
           <#list 1..viewIndexMax as curViewNum>
-            <option value="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
+            <option value="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum}</option>
           </#list>
         </select>
         <#-- End Page Select Drop-Down -->
@@ -51,7 +51,7 @@
           <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if 0 < listSize?int>
-          <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+          <span class="tabletext">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
           | <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>
@@ -75,9 +75,9 @@
         <#-- Start Page Select Drop-Down -->
         <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
         <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
-          <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+          <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax}</option>
           <#list 1..viewIndexMax as curViewNum>
-            <option value="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
+            <option value="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum}</option>
           </#list>
         </select>
         <#-- End Page Select Drop-Down -->
@@ -86,7 +86,7 @@
           <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if 0 < listSize?int>
-          <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+          <span class="tabletext">${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
           | <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonNext}</a>

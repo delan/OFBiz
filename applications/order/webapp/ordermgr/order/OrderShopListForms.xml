@@ -40,7 +40,7 @@
         <field name="productStoreId">
             <lookup target-form-name="/marketing/control/LookupProductStore"/>
         </field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListShopLists" type="single" target="" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" 
@@ -52,6 +52,6 @@
         <field name="productStoreId">
             <display-entity entity-name="ProductStore"/>
         </field>
-        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

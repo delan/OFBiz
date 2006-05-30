@@ -149,21 +149,21 @@
               </tr> 
               <#--  
               <tr>
-                <td width="26%" align="right"><div class="tabletext">${uiLabelMap.OrderPassword</div></td>
+                <td width="26%" align="right"><div class="tabletext">${uiLabelMap.OrderPassword}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
                   <input type="password" class="inputBox" name="PASSWORD" value="" size="20" maxlength="50">
                 *</td>
               </tr>
               <tr>
-                <td width="26%" align="right"><div class="tabletext">${uiLabelMap.OrderConfirm Password</div></td>
+                <td width="26%" align="right"><div class="tabletext">${uiLabelMap.OrderConfirm} Password</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
                   <input type="password" class="inputBox" name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
                 *</td>
               </tr>
               <tr>
-                <td width="26%" align="right"><div class="tabletext">${uiLabelMap.OrderPassword Hint</div></td>
+                <td width="26%" align="right"><div class="tabletext">${uiLabelMap.OrderPassword} Hint</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
                   <input type="text" class="inputBox" name="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT?if_exists}" size="40" maxlength="100">

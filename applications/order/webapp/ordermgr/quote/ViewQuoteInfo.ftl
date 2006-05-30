@@ -43,7 +43,7 @@
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
-                                <div class="tabletext">${(quoteType.description)?default(quote.quoteTypeId?if_exists)}</div>
+                                <div class="tabletext">${(quoteType.get("description",locale))?default(quote.quoteTypeId?if_exists)}</div>
                             </td>
                         </tr>
                         <tr><td colspan="7"><hr class="sepbar"/></td></tr>
@@ -98,7 +98,7 @@
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
-                                <div class="tabletext"><#if currency?exists>${currency.description?default(quote.currencyUomId?if_exists)}</#if></div>
+                                <div class="tabletext"><#if currency?exists>${currency.get("description",locale)?default(quote.currencyUomId?if_exists)}</#if></div>
                             </td>
                         </tr>
                         <#-- quote currency -->
@@ -172,7 +172,7 @@
                             <#assign rolePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", quoteRole.partyId, "compareDate", quote.issueDate, "userLogin", userLogin))/>
                             <tr>
                                 <td align="right" valign="top" width="15%">
-                                    <div class="tabletext">&nbsp;<b>${roleType.description?if_exists}</b></div>
+                                    <div class="tabletext">&nbsp;<b>${roleType.get("description",locale)?if_exists}</b></div>
                                 </td>
                                 <td width="5">&nbsp;</td>
                                 <td align="left" valign="top" width="80%">

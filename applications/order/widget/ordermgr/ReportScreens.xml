@@ -28,7 +28,7 @@
     <screen name="OrderPurchaseReportOptions">
         <section>
             <actions>
-                <set field="title" value="Order Purchase Report Options"/>
+                <set field="titleProperty" value="OrderPurchaseReportOptions"/>
                 <set field="headerItem" value="reports"/>
                 <!-- <set field="titleProperty" value=""/> -->
             </actions>
@@ -36,22 +36,22 @@
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="head1" text="Order Reports"/>
+                            <label style="head1" text="${uiLabelMap.OrderReports}"/>
                         </container>
                         <container>
-                            <label style="head2" text="Sales by Store Report"/>
+                            <label style="head2" text="${uiLabelMap.OrderReportSalesByStore}"/>
                             <include-form name="SalesByStoreReport" location="component://order/widget/ordermgr/ReportForms.xml"/>
                         </container>
                         <container>
-                            <label style="head2" text="Purchases by Organization Report"/>
+                            <label style="head2" text="${uiLabelMap.OrderReportPurchasesByOrganization}"/>
                             <include-form name="PurchasesByOrganizationReport" location="component://order/widget/ordermgr/ReportForms.xml"/>
                         </container>
                         <container>
-                            <label style="head2" text="Purchases by Product Report"/>
+                            <label style="head2" text="${uiLabelMap.OrderReportPurchasesByProduct}"/>
                             <include-form name="OrderPurchaseProductOptions" location="component://order/widget/ordermgr/ReportForms.xml"/>
                         </container>
                         <container>
-                            <label style="head2" text="Purchases by Payment Method Report"/>
+                            <label style="head2" text="${uiLabelMap.OrderReportPurchasesByPaymentMethod}"/>
                             <include-form name="OrderPurchasePaymentOptions" location="component://order/widget/ordermgr/ReportForms.xml"/>
                         </container>
                     </decorator-section>
@@ -62,7 +62,12 @@
     <screen name="OrderPurchaseReportPayment">
         <section>
             <actions>
-                <set field="title" value="Order Purchase Report Payment"/>
+                <set field="titleProperty" value="OrderReportPurchasesByPaymentMethod"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="OrderPurchasePaymentSummary" list-name="orderPurchasePaymentSummaryList">
                     <condition-list combine="and">
                         <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
@@ -96,7 +101,11 @@
     <screen name="OrderPurchaseReportProduct">
         <section>
             <actions>
-                <set field="title" value="Order Purchase Report Product"/>
+                <set field="titleProperty" value="OrderReportPurchasesByProduct"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="OrderPurchaseProductSummary" list-name="orderPurchaseProductSummaryList">
                     <condition-list combine="and">
                         <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
@@ -135,8 +144,12 @@
     <screen name="SalesByStoreReport">
         <section>
             <actions>
-                <set field="title" value="Sales By Store Report"/>
+                <set field="titleProperty" value="OrderReportSalesByStore"/>
                 <set field="toPartyId" from-field="parameters.toPartyId"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="OrderReportSalesGroupByProduct" list-name="productReportList">
                     <condition-list combine="and">
                         <!-- this can use the other view, so long as the filter is by SALES_ORDER and fromPartyId = ProductStore.payToPartyId if provided -->
@@ -173,9 +186,13 @@
     <screen name="PurchasesByOrganizationReport">
         <section>
             <actions>
-                <set field="title" value="Purchases By Organziation"/>
+                <set field="titleProperty" value="OrderReportPurchasesByOrganization"/>
                 <set field="toPartyId" from-field="parameters.toPartyId"/>
                 <set field="fromPartyId" from-field="parameters.fromPartyId"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="OrderReportPurchasesGroupByProduct" list-name="productReportList">
                     <condition-list combine="and">
                         <condition-expr field-name="toPartyId" operator="equals" env-name="parameters.toPartyId" ignore-if-empty="true"/>
