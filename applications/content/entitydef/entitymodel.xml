@@ -1068,10 +1068,9 @@
   <!-- org.ofbiz.content.subscription -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Subscription"
-            package-name="org.ofbiz.content.subscription"
-            title="Subscription Entity">
+    <entity entity-name="Subscription" package-name="org.ofbiz.content.subscription" title="Subscription Entity">
       <field name="subscriptionId" type="id-ne"></field>
+      <field name="subscriptionResourceId" type="id"></field>
       <field name="communicationEventId" type="id"></field>
       <field name="contactMechId" type="id"></field>
       <field name="originatedFromPartyId" type="id"></field>
@@ -1083,8 +1082,9 @@
       <field name="productId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
       <field name="subscriptionTypeId" type="id"></field>
-      <field name="startDate" type="date-time"></field>
-      <field name="endDate" type="date-time"></field>
+      <field name="externalSubscriptionId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <prim-key field="subscriptionId"/>
       <relation type="one" fk-name="SUBSC_COM_EVENT" rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventId"/>
@@ -1133,17 +1133,13 @@
         <key-map field-name="subscriptionTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionActivity"
-            package-name="org.ofbiz.content.subscription"
-            title="Subscription Activity Entity">
+    <entity entity-name="SubscriptionActivity" package-name="org.ofbiz.content.subscription" title="Subscription Activity Entity">
       <field name="subscriptionActivityId" type="id-ne"></field>
       <field name="comments" type="comment"></field>
       <field name="dateSent" type="date-time"></field>
       <prim-key field="subscriptionActivityId"/>
     </entity>
-    <entity entity-name="SubscriptionAttribute"
-            package-name="org.ofbiz.content.subscription"
-            title="Subscription Attribute Entity">
+    <entity entity-name="SubscriptionAttribute" package-name="org.ofbiz.content.subscription" title="Subscription Attribute Entity">
       <field name="subscriptionId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>
@@ -1156,9 +1152,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionFulfillmentPiece"
-            package-name="org.ofbiz.content.subscription"
-            title="Subscription Fulfillment Piece Entity">
+    <entity entity-name="SubscriptionFulfillmentPiece" package-name="org.ofbiz.content.subscription" title="Subscription Fulfillment Piece Entity">
       <field name="subscriptionActivityId" type="id-ne"></field>
       <field name="subscriptionId" type="id-ne"></field>
       <prim-key field="subscriptionActivityId"/>
@@ -1170,11 +1164,20 @@
         <key-map field-name="subscriptionActivityId"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionType"
-            package-name="org.ofbiz.content.subscription"
-            title="Subscription Type Entity">
+    <entity entity-name="SubscriptionResource" package-name="org.ofbiz.content.subscription" title="Subscription Resource Entity">
+        <field name="subscriptionResourceId" type="id-ne"></field>
+        <field name="parentResourceId" type="id"></field>
+        <field name="description" type="description"></field>
+        <field name="contentId" type="id"><description>Optional (use if applicable) ID of a Content record that this would represent a subscription to.</description></field>
+        <field name="webSiteId" type="id"><description>Optional (use if applicable) ID of a WebSite record that this would represent a subscription to.</description></field>
+        <prim-key field="subscriptionResourceId"/>
+        <relation type="one" fk-name="SUBSC_RES_PARENT" title="Parent" rel-entity-name="SubscriptionResource">
+            <key-map field-name="parentResourceId" rel-field-name="subscriptionResourceId"/>
+        </relation>
+    </entity>
+    <entity entity-name="SubscriptionType" package-name="org.ofbiz.content.subscription" title="Subscription Type Entity">
       <field name="subscriptionTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="subscriptionTypeId"/>
@@ -1182,9 +1185,7 @@
         <key-map field-name="parentTypeId" rel-field-name="subscriptionTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionTypeAttr"
-            package-name="org.ofbiz.content.subscription"
-            title="Subscription Type Attribute Entity">
+    <entity entity-name="SubscriptionTypeAttr" package-name="org.ofbiz.content.subscription" title="Subscription Type Attribute Entity">
       <field name="subscriptionTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="subscriptionTypeId"/>
