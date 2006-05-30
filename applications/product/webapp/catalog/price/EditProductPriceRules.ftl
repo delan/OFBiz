@@ -87,25 +87,25 @@
                         <select name="inputParamEnumId" size="1" class="selectBox">
                             <#if productPriceCond.inputParamEnumId?has_content>
                               <#assign inputParamEnum = productPriceCond.getRelatedOneCache("InputParamEnumeration")?if_exists>
-                              <option value="${productPriceCond.inputParamEnumId}"><#if inputParamEnum?exists>${inputParamEnum.description}<#else>[${productPriceCond.inputParamEnumId}]</#if></option>
+                              <option value="${productPriceCond.inputParamEnumId}"><#if inputParamEnum?exists>${inputParamEnum.get("description",locale)}<#else>[${productPriceCond.inputParamEnumId}]</#if></option>
                               <option value="${productPriceCond.inputParamEnumId}">&nbsp;</option>
                             <#else>
                               <option value="">&nbsp;</option>
                             </#if>
                             <#list inputParamEnums as inputParamEnum>
-                              <option value="${inputParamEnum.enumId}">${inputParamEnum.description}<#--[${inputParamEnum.enumId}]--></option>
+                              <option value="${inputParamEnum.enumId}">${inputParamEnum.get("description",locale)}<#--[${inputParamEnum.enumId}]--></option>
                             </#list>
                         </select>
                         <select name="operatorEnumId" size="1" class="selectBox">
                             <#if productPriceCond.operatorEnumId?has_content>
                               <#assign operatorEnum = productPriceCond.getRelatedOneCache("OperatorEnumeration")?if_exists>
-                              <option value="${productPriceCond.operatorEnumId}"><#if operatorEnum?exists>${operatorEnum.description}<#else>[${productPriceCond.operatorEnumId}]</#if></option>
+                              <option value="${productPriceCond.operatorEnumId}"><#if operatorEnum?exists>${operatorEnum.get("description",locale)}<#else>[${productPriceCond.operatorEnumId}]</#if></option>
                               <option value="${productPriceCond.operatorEnumId}">&nbsp;</option>
                             <#else>
                               <option value="">&nbsp;</option>
                             </#if>
                             <#list condOperEnums as condOperEnum>
-                              <option value="${condOperEnum.enumId}">${condOperEnum.description}<#--[${condOperEnum.enumId}]--></option>
+                              <option value="${condOperEnum.enumId}">${condOperEnum.get("description",locale)}<#--[${condOperEnum.enumId}]--></option>
                             </#list>
                         </select>
                         <input type="text" size="20" name="condValue" value="${productPriceCond.condValue?if_exists}" class="inputBox">
@@ -125,12 +125,12 @@
                     <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="inputParamEnumId" size="1" class="selectBox">
                         <#list inputParamEnums as inputParamEnum>
-                          <option value="${inputParamEnum.enumId}">${inputParamEnum.description}<#--[${inputParamEnum.enumId}]--></option>
+                          <option value="${inputParamEnum.enumId}">${inputParamEnum.get("description",locale)}<#--[${inputParamEnum.enumId}]--></option>
                         </#list>
                     </select>
                     <select name="operatorEnumId" size="1" class="selectBox">
                         <#list condOperEnums as condOperEnum>
-                          <option value="${condOperEnum.enumId}">${condOperEnum.description}<#--[${condOperEnum.enumId}]--></option>
+                          <option value="${condOperEnum.enumId}">${condOperEnum.get("description",locale)}<#--[${condOperEnum.enumId}]--></option>
                         </#list>
                     </select>
                     <input type="text" size="20" name="condValue" class="inputBox">
@@ -164,13 +164,13 @@
                         <select name="productPriceActionTypeId" size="1" class="selectBox">
                             <#if productPriceAction.productPriceActionTypeId?has_content>
                               <#assign productPriceActionType = productPriceAction.getRelatedOneCache("ProductPriceActionType")>
-                              <option value="${productPriceAction.productPriceActionTypeId}"><#if productPriceActionType?exists>${productPriceActionType.description}<#else>[${productPriceAction.productPriceActionTypeId}]</#if></option>
+                              <option value="${productPriceAction.productPriceActionTypeId}"><#if productPriceActionType?exists>${productPriceActionType.get("description",locale)}<#else>[${productPriceAction.productPriceActionTypeId}]</#if></option>
                               <option value="${productPriceAction.productPriceActionTypeId}">&nbsp;</option>
                             <#else>
                               <option value="">&nbsp;</option>
                             </#if>
                             <#list productPriceActionTypes as productPriceActionType>
-                              <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.description}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
+                              <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.get("description",locale)}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                             </#list>
                         </select>
                         <input type="text" size="8" name="amount" value="${productPriceAction.amount?if_exists}" class="inputBox">
@@ -190,7 +190,7 @@
                     <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <select name="productPriceActionTypeId" size="1" class="selectBox">
                         <#list productPriceActionTypes as productPriceActionType>
-                          <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.description}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
+                          <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.get("description",locale)}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                         </#list>
                     </select>
                     <input type="text" size="8" name="amount" class="inputBox">

@@ -53,7 +53,7 @@
                 <select class="selectBox" name="SEARCH_CATEGORY_ID">
                     <option value="">- ${uiLabelMap.ProductAnyCategory} -</option>
                     <#list productCategories as productCategory>
-                        <#assign displayDesc = productCategory.description?default("No Description")>
+                        <#assign displayDesc = productCategory.description?default("${uiLabelMap.ProductNoDescription}")>
                         <#if 18 < displayDesc?length>
                             <#assign displayDesc = displayDesc[0..15] + "...">
                         </#if>
@@ -97,14 +97,14 @@
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <tr>
         <td align="right" valign="middle">
-          <div class="tabletext">${(productFeatureType.description)?if_exists}:</div>
+          <div class="tabletext">${(productFeatureType.get("description",locale))?if_exists}:</div>
         </td>
         <td valign="middle">
           <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
+              <option value="${productFeature.productFeatureId}">${productFeature.description?default("${uiLabelMap.ProductNoDescription}")} [${productFeature.productFeatureId}]</option>
               </#list>
             </select>
           </div>
@@ -159,7 +159,7 @@
             <#list searchConstraintStrings as searchConstraintString>
                 <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
-            <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+            <div class="tabletext">${uiLabelMap.CommonSortedBy}: ${searchSortOrderString}</div>
             <div class="tabletext">
               New Search<input type="radio" name="clearSearch" value="Y" checked/>
               Refine Search<input type="radio" name="clearSearch" value="N"/>

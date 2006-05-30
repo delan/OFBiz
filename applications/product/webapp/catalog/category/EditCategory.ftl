@@ -87,7 +87,7 @@ function insertImageName(type,nameValue) {
       <select name="productCategoryTypeId" size="1" class="selectBox">
         <option value="">&nbsp;</option>
         <#list productCategoryTypes as productCategoryTypeData>
-          <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected="selected"</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.description}</option>
+          <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected="selected"</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
        </#list>
       </select>
     </td>
@@ -175,7 +175,7 @@ function insertImageName(type,nameValue) {
     <td>&nbsp;</td>
     <td width="74%">
         <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen?if_exists}"</#if> name="detailScreen" size="60" maxlength="250" class="inputBox"/>
-        <br/><span class="tabletext">Defaults to "/catalog/categorydetail.ftl"</span>
+        <br/><span class="tabletext">${uiLabelMap.ProductDefaultsTo} "/catalog/categorydetail.ftl"</span>
     </td>
   </tr>
 

@@ -126,7 +126,7 @@
                 <sub-hyperlink link-style="buttontext" target="EditCategory?productCategoryId=${productCategoryId}" description="${productCategoryId}"/>
             </display-entity>
         </field>
-        <field name="prodCatalogCategoryTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="ProdCatalogCategoryType" also-hidden="true" cache="true"/></field>
+        <field name="prodCatalogCategoryTypeId"><display-entity entity-name="ProdCatalogCategoryType" also-hidden="true" cache="true"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}" widget-style="inputBox"></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" widget-style="inputBox"></field>
@@ -152,7 +152,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="prodCatalogCategoryTypeId" title="${uiLabelMap.CommonType}" widget-style="selectBox">
+        <field name="prodCatalogCategoryTypeId" widget-style="selectBox">
             <drop-down>
                 <entity-options entity-name="ProdCatalogCategoryType" description="${description}">
                     <entity-order-by field-name="description"/>

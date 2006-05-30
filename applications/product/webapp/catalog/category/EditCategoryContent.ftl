@@ -53,8 +53,8 @@ function insertNowTimestamp(field) {
             <#assign categoryContent=entry.categoryContent/>
             <#assign prodCatContentType=categoryContent.getRelatedOneCache("ProductCategoryContentType")/>
             <tr class="tabletext">
-                <td><a href="<@ofbizUrl>EditCategoryContentContent?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[No description]")} [${entry.content.contentId}]</td>
-                <td>${prodCatContentType.description?default(categoryContent.prodCatContentTypeId)}</td>
+                <td><a href="<@ofbizUrl>EditCategoryContentContent?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.get("description",locale)?default("[No description]")} [${entry.content.contentId}]</td>
+                <td>${prodCatContentType.get("description",locale)?default(categoryContent.prodCatContentTypeId)}</td>
                 <td>${categoryContent.fromDate?default("N/A")}</td>
                 <td>${categoryContent.thruDate?default("N/A")}</td>
                 <td>${categoryContent.purchaseFromDate?default("N/A")}</td>
@@ -62,7 +62,7 @@ function insertNowTimestamp(field) {
                 <td>${categoryContent.useCountLimit?default("N/A")}</td>
                 <td>${categoryContent.useDaysLimit?default("N/A")}</td>
                 <td><a href="<@ofbizUrl>removeContentFromCategory?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
-                <td><a href="/content/control/EditContent?contentId=${categoryContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[Edit Content ${entry.content.contentId}]</td>
+                <td><a href="/content/control/EditContent?contentId=${categoryContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonEdit} ${uiLabelMap.Content} ${entry.content.contentId}]</td>
              </tr>
         </#list>
       
@@ -91,7 +91,7 @@ function insertNowTimestamp(field) {
       <select name="productCategoryTypeId" size="1" class="selectBox">
         <option value="">&nbsp;</option>
         <#list productCategoryTypes as productCategoryTypeData>
-          <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.description}</option>
+          <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
        </#list>
       </select>
     </td>
@@ -116,7 +116,7 @@ function insertNowTimestamp(field) {
     <td>&nbsp;</td>
     <td width="74%">
         <input type="text" <#if productCategory?has_content>value="${productCategory.detailScreen?if_exists}"</#if> name="detailScreen" size="60" maxlength="250" class="inputBox">
-        <br/><span class="tabletext">Defaults to &quot;categorydetail&quot;, for screens in other files use something like: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
+        <br/><span class="tabletext">${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
     </td>
   </tr>
         <tr>

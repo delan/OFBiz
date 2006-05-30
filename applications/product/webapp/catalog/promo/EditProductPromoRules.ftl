@@ -78,25 +78,25 @@
                                 <select name="inputParamEnumId" size="1" class="selectBox">
                                     <#if (productPromoCond.inputParamEnumId)?exists>
                                         <#assign inputParamEnum = productPromoCond.getRelatedOneCache("InputParamEnumeration")>
-                                        <option value="${productPromoCond.inputParamEnumId}"><#if inputParamEnum?exists>${(inputParamEnum.description)?if_exists}<#else>[${(productPromoCond.inputParamEnumId)?if_exists}]</#if></option>
+                                        <option value="${productPromoCond.inputParamEnumId}"><#if inputParamEnum?exists>${(inputParamEnum.get("description",locale))?if_exists}<#else>[${(productPromoCond.inputParamEnumId)?if_exists}]</#if></option>
                                         <option value="${(productPromoCond.inputParamEnumId)?if_exists}">&nbsp;</option>
                                     <#else>
                                         <option value="">&nbsp;</option>
                                     </#if>
                                     <#list inputParamEnums as inputParamEnum>
-                                        <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
+                                        <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.get("description",locale))?if_exists}</option>
                                     </#list>
                                 </select>
                                 <select name="operatorEnumId" size="1" class="selectBox">
                                     <#if (productPromoCond.operatorEnumId)?exists>
                                         <#assign operatorEnum = productPromoCond.getRelatedOneCache("OperatorEnumeration")>
-                                        <option value="${(productPromoCond.operatorEnumId)?if_exists}"><#if operatorEnum?exists>${(operatorEnum.description)?if_exists}<#else>[${(productPromoCond.operatorEnumId)?if_exists}]</#if></option>
+                                        <option value="${(productPromoCond.operatorEnumId)?if_exists}"><#if operatorEnum?exists>${(operatorEnum.get("description",locale))?if_exists}<#else>[${(productPromoCond.operatorEnumId)?if_exists}]</#if></option>
                                         <option value="${(productPromoCond.operatorEnumId)?if_exists}">&nbsp;</option>
                                     <#else>
                                         <option value="">&nbsp;</option>
                                     </#if>
                                     <#list condOperEnums as condOperEnum>
-                                    <option value="${(condOperEnum.enumId)?if_exists}">${(condOperEnum.description)?if_exists}</option>
+                                    <option value="${(condOperEnum.enumId)?if_exists}">${(condOperEnum.get("description",locale))?if_exists}</option>
                                     </#list>
                                 </select>
                                 <input type="text" size="25" name="condValue" value="${(productPromoCond.condValue)?if_exists}" class="inputBox">
@@ -110,8 +110,8 @@
                                 <#assign condProductCategory = condProductPromoCategory.getRelatedOneCache("ProductCategory")>
                                 <#assign condApplEnumeration = condProductPromoCategory.getRelatedOneCache("ApplEnumeration")>
                                 <div class="tabletext">
-                                    ${(condProductCategory.description)?if_exists} [${condProductPromoCategory.productCategoryId}]
-                                    - ${(condApplEnumeration.description)?default(condProductPromoCategory.productPromoApplEnumId)}
+                                    ${(condProductCategory.get("description",locale))?if_exists} [${condProductPromoCategory.productCategoryId}]
+                                    - ${(condApplEnumeration.get("description",locale))?default(condProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${condProductPromoCategory.includeSubCategories?default("N")}
                                     - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${condProductPromoCategory.andGroupId}
                                     <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(condProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(condProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(condProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
@@ -131,12 +131,12 @@
                                     </select>
                                     <select name="productPromoApplEnumId" class="selectBox">
                                         <#list productPromoApplEnums as productPromoApplEnum>
-                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
+                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                                         </#list>
                                     </select>
                                     <select name="includeSubCategories" class="selectBox">
-                                        <option value="N">N</option>
-                                        <option value="Y">Y</option>
+                                        <option value="N">${uiLabelMap.CommonN}</option>
+                                        <option value="Y">${uiLabelMap.CommonY}</option>
                                     </select>
                                     ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
@@ -150,7 +150,7 @@
                                 <#assign condApplEnumeration = condProductPromoProduct.getRelatedOneCache("ApplEnumeration")>
                                 <div class="tabletext">
                                     ${(condProduct.internalName)?if_exists} [${condProductPromoProduct.productId}]
-                                    - ${(condApplEnumeration.description)?default(condProductPromoProduct.productPromoApplEnumId)}
+                                    - ${(condApplEnumeration.get("description",locale))?default(condProductPromoProduct.productPromoApplEnumId)}
                                     <a href="<@ofbizUrl>deleteProductPromoProduct?productPromoId=${(condProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoProduct.productPromoCondSeqId)?if_exists}&productId=${(condProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
@@ -164,7 +164,7 @@
                                     ${uiLabelMap.ProductProductId}: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>
                                     <select name="productPromoApplEnumId" class="selectBox">
                                         <#list productPromoApplEnums as productPromoApplEnum>
-                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
+                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                                         </#list>
                                     </select>
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
@@ -186,12 +186,12 @@
                             <#-- <input type="text" size="5" name="productPromoCondSeqId" value="${maxCondSeqId?if_exists}" class="inputBox"> -->
                             <select name="inputParamEnumId" size="1" class="selectBox">
                                 <#list inputParamEnums as inputParamEnum>
-                                    <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
+                                    <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.get("description",locale))?if_exists}</option>
                                 </#list>
                             </select>
                             <select name="operatorEnumId" size="1" class="selectBox">
                                 <#list condOperEnums as condOperEnum>
-                                <option value="${(condOperEnum.enumId)?if_exists}">${(condOperEnum.description)?if_exists}</option>
+                                <option value="${(condOperEnum.enumId)?if_exists}">${(condOperEnum.get("description",locale))?if_exists}</option>
                                 </#list>
                             </select>
                             <input type="text" size="25" name="condValue" class="inputBox">
@@ -227,26 +227,26 @@
                                 <select name="productPromoActionEnumId" size="1" class="selectBox">
                                     <#if (productPromoAction.productPromoActionEnumId)?exists>
                                         <#assign productPromoActionCurEnum = productPromoAction.getRelatedOneCache("ActionEnumeration")>
-                                        <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}"><#if productPromoActionCurEnum?exists>${(productPromoActionCurEnum.description)?if_exists}<#else>[${(productPromoAction.productPromoActionEnumId)?if_exists}]</#if></option>
+                                        <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}"><#if productPromoActionCurEnum?exists>${(productPromoActionCurEnum.get("description",locale))?if_exists}<#else>[${(productPromoAction.productPromoActionEnumId)?if_exists}]</#if></option>
                                         <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}">&nbsp;</option>
                                     <#else>
                                         <option value="">&nbsp;</option>
                                     </#if>
                                     <#list productPromoActionEnums as productPromoActionEnum>
-                                        <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.description)?if_exists}</option>
+                                        <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.get("description",locale))?if_exists}</option>
                                     </#list>
                                 </select>
                                 <input type="hidden" name="orderAdjustmentTypeId" value="${(productPromoAction.orderAdjustmentTypeId)?if_exists}">
                                 <#-- <select name="orderAdjustmentTypeId" size="1" class="selectBox">
                                     <#if (productPromoAction.orderAdjustmentTypeId)?exists>
                                         <#assign orderAdjustmentType = productPromoAction.getRelatedOneCache("OrderAdjustmentType")>
-                                        <option value="${(productPromoAction.orderAdjustmentTypeId)?if_exists}"><#if orderAdjustmentType?exists>${(orderAdjustmentType.description)?if_exists}<#else>[${(productPromoAction.orderAdjustmentTypeId)?if_exists}]</#if></option>
+                                        <option value="${(productPromoAction.orderAdjustmentTypeId)?if_exists}"><#if orderAdjustmentType?exists>${(orderAdjustmentType.get("description",locale))?if_exists}<#else>[${(productPromoAction.orderAdjustmentTypeId)?if_exists}]</#if></option>
                                         <option value="${(productPromoAction.orderAdjustmentTypeId)?if_exists}">&nbsp;</option>
                                     <#else>
                                         <option value="">&nbsp;</option>
                                     </#if>
                                     <#list orderAdjustmentTypes as orderAdjustmentType>
-                                    <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.description)?if_exists}</option>
+                                    <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.get("description",locale))?if_exists}</option>
                                     </#list>
                                 </select> -->
                                 ${uiLabelMap.ProductQuantity}:&nbsp;<input type="text" size="5" name="quantity" value="${(productPromoAction.quantity)?if_exists}" class="inputBox">
@@ -264,7 +264,7 @@
                                 <#assign actionApplEnumeration = actionProductPromoCategory.getRelatedOneCache("ApplEnumeration")>
                                 <div class="tabletext">
                                     ${(actionProductCategory.description)?if_exists} [${actionProductPromoCategory.productCategoryId}]
-                                    - ${(actionApplEnumeration.description)?default(actionProductPromoCategory.productPromoApplEnumId)}
+                                    - ${(actionApplEnumeration.get("description",locale))?default(actionProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${actionProductPromoCategory.includeSubCategories?default("N")}
                                     - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${actionProductPromoCategory.andGroupId}
                                     <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoCategory.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(actionProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
@@ -284,12 +284,12 @@
                                     </select>
                                     <select name="productPromoApplEnumId" class="selectBox">
                                         <#list productPromoApplEnums as productPromoApplEnum>
-                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
+                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                                         </#list>
                                     </select>
                                     <select name="includeSubCategories" class="selectBox">
-                                        <option value="N">N</option>
-                                        <option value="Y">Y</option>
+                                        <option value="N">${uiLabelMap.CommonN}</option>
+                                        <option value="Y">${uiLabelMap.CommonY}</option>
                                     </select>
                                     ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
@@ -303,7 +303,7 @@
                                 <#assign actionApplEnumeration = actionProductPromoProduct.getRelatedOneCache("ApplEnumeration")>
                                 <div class="tabletext">
                                     ${(actionProduct.internalName)?if_exists} [${actionProductPromoProduct.productId}]
-                                    - ${(actionApplEnumeration.description)?default(actionProductPromoProduct.productPromoApplEnumId)}
+                                    - ${(actionApplEnumeration.get("description",locale))?default(actionProductPromoProduct.productPromoApplEnumId)}
                                     <a href="<@ofbizUrl>deleteProductPromoProduct?productPromoId=${(actionProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoProduct.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoProduct.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productId=${(actionProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
@@ -317,7 +317,7 @@
                                     ${uiLabelMap.ProductProductId}: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>
                                     <select name="productPromoApplEnumId" class="selectBox">
                                         <#list productPromoApplEnums as productPromoApplEnum>
-                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
+                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                                         </#list>
                                     </select>
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
@@ -340,13 +340,13 @@
                             <#-- <input type="text" size="5" name="productPromoActionSeqId" value="${maxActionSeqId?if_exists}" class="inputBox"> -->
                             <select name="productPromoActionEnumId" size="1" class="selectBox">
                                 <#list productPromoActionEnums as productPromoActionEnum>
-                                <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.description)?if_exists}</option>
+                                <option value="${(productPromoActionEnum.enumId)?if_exists}">${(productPromoActionEnum.get("description",locale))?if_exists}</option>
                                 </#list>
                             </select>
                             <input type="hidden" name="orderAdjustmentTypeId" value="PROMOTION_ADJUSTMENT">
                             <#-- <select name="orderAdjustmentTypeId" size="1" class="selectBox">
                                 <#list orderAdjustmentTypes as orderAdjustmentType>
-                                <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.description)?if_exists}</option>
+                                <option value="${(orderAdjustmentType.orderAdjustmentTypeId)?if_exists}">${(orderAdjustmentType.get("description",locale))?if_exists}</option>
                                 </#list>
                             </select> -->                                              
                             ${uiLabelMap.ProductQuantity}:&nbsp;<input type="text" size="5" name="quantity" class="inputBox">
@@ -386,7 +386,7 @@
             <#assign promoApplEnumeration = promoProductPromoCategory.getRelatedOneCache("ApplEnumeration")>
             <div class="tabletext">
                 ${(promoProductCategory.description)?if_exists} [${promoProductPromoCategory.productCategoryId}]
-                - ${(promoApplEnumeration.description)?default(promoProductPromoCategory.productPromoApplEnumId)}
+                - ${(promoApplEnumeration.get("description",locale))?default(promoProductPromoCategory.productPromoApplEnumId)}
                 - SubCats? ${promoProductPromoCategory.includeSubCategories?default("N")}
                 - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${promoProductPromoCategory.andGroupId}
                 <a href="<@ofbizUrl>deleteProductPromoCategory?productPromoId=${(promoProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(promoProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(promoProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
@@ -406,12 +406,12 @@
                 </select>
                 <select name="productPromoApplEnumId" class="selectBox">
                     <#list productPromoApplEnums as productPromoApplEnum>
-                        <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
+                        <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                     </#list>
                 </select>
                 <select name="includeSubCategories" class="selectBox">
-                    <option value="N">N</option>
-                    <option value="Y">Y</option>
+                    <option value="N">${uiLabelMap.CommonN}</option>
+                    <option value="Y">${uiLabelMap.CommonY}</option>
                 </select>
                 ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                 <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
@@ -425,7 +425,7 @@
             <#assign promoApplEnumeration = promoProductPromoProduct.getRelatedOneCache("ApplEnumeration")>
             <div class="tabletext">
                 ${(promoProduct.internalName)?if_exists} [${promoProductPromoProduct.productId}]
-                - ${(promoApplEnumeration.description)?default(promoProductPromoProduct.productPromoApplEnumId)}
+                - ${(promoApplEnumeration.get("description",locale))?default(promoProductPromoProduct.productPromoApplEnumId)}
                 <a href="<@ofbizUrl>deleteProductPromoProduct?productPromoId=${(promoProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoProduct.productPromoCondSeqId)?if_exists}&productId=${(promoProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
             </div>
@@ -439,7 +439,7 @@
                 ${uiLabelMap.ProductProductId}: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>*<a href="javascript:call_fieldlookup2(document.createpromoproductform.productId,'LookupProduct');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'/></a>
                 <select name="productPromoApplEnumId" class="selectBox">
                     <#list productPromoApplEnums as productPromoApplEnum>
-                        <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
+                        <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
                     </#list>
                 </select>
                 <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">

@@ -43,7 +43,7 @@
     <tr>
       <td><div class="tabletext">${feature.productFeatureId}</div></td>
       <td><div class="tabletext">${feature.description?if_exists}</div></td>
-      <td><div class="tabletext">${type.description}</div></td>
+      <td><div class="tabletext">${type.get("description",locale)}</div></td>
       <td><div class="tabletext">${category.description} (${category.productFeatureCategoryId})</div></td>
       <td><a href="<@ofbizUrl>RemoveProductFeatureGroupAppl?productFeatureGroupId=${groupAppl.productFeatureGroupId}&productFeatureId=${groupAppl.productFeatureId}&fromDate=${groupAppl.fromDate?string}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>
     </tr>

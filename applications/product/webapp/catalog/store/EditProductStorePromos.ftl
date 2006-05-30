@@ -36,7 +36,7 @@
     <a href="<@ofbizUrl>EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonUserEnteredOnly}]</a>
   </#if>
   <br/>
-  <div class="head3">${uiLabelMap.CommonShowing}
+  <div class="head3">${uiLabelMap.CommonShow}
     <#if activeOnly>${uiLabelMap.CommonActiveOnly}<#else>${uiLabelMap.CommonActiveInactive}</#if>
     ${uiLabelMap.CommonAnd}
     <#if userEntered>${uiLabelMap.CommonUserEnteredOnly}<#else>${uiLabelMap.CommonUserAutoEntered}</#if>

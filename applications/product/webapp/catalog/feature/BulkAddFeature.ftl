@@ -40,7 +40,7 @@
       <td><input type="text" class='inputBox' size='15' name="description_o_${feature_index}"></td>
       <td><select name='productFeatureTypeId_o_${feature_index}' size="1" class='selectBox'>
         <#list productFeatureTypes as productFeatureType>
-          <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.description?if_exists}</option>
+          <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.get("description",locale)?if_exists}</option>
         </#list>
       </select></td>
       <input name='productFeatureCategoryId_o_${feature_index}' type="hidden" value="${productFeatureCategoryId}">

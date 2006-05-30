@@ -94,9 +94,9 @@ function setAssocFields(select) {
         <tr>
           <td><div class="tabletext">${estimate.shipmentCostEstimateId}</div></td>
           <td><div class="tabletext">${estimate.shipmentMethodTypeId}&nbsp;(${estimate.carrierPartyId})</div></td>
-          <td><div class="tabletext">${estimate.geoIdTo?default("All")}</div></td>
-          <td><div class="tabletext">${estimate.partyId?default("All")}</div></td>
-          <td><div class="tabletext">${estimate.roleTypeId?default("All")}</div></td>
+          <td><div class="tabletext">${estimate.geoIdTo?default("${uiLabelMap.CommonAll}")}</div></td>
+          <td><div class="tabletext">${estimate.partyId?default("${uiLabelMap.CommonAll}")}</div></td>
+          <td><div class="tabletext">${estimate.roleTypeId?default("${uiLabelMap.CommonAll}")}</div></td>
           <td><div class="tabletext">${estimate.orderPricePercent?default(0)?string.number}%</div></td>
           <td><div class="tabletext">${estimate.orderFlatPrice?default(0)}</div></td>
           <td><div class="tabletext">${estimate.orderItemFlatPrice?default(0)}</div></td>
@@ -122,22 +122,22 @@ function setAssocFields(select) {
         </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFromGeo}</span></td>
-          <td><span class="tabletext">${estimate.geoIdFrom?default("All")}</span></td>
+          <td><span class="tabletext">${estimate.geoIdFrom?default("${uiLabelMap.CommonAll}")}</span></td>
           <td>&nbsp;</td>
         </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductToGeo}</span></td>
-          <td><span class="tabletext">${estimate.geoIdTo?default("All")}</span></td>
+          <td><span class="tabletext">${estimate.geoIdTo?default("${uiLabelMap.CommonAll}")}</span></td>
           <td>&nbsp;</td>
         </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
-          <td><span class="tabletext">${estimate.partyId?default("All")}</span></td>
+          <td><span class="tabletext">${estimate.partyId?default("${uiLabelMap.CommonAll}")}</span></td>
           <td>&nbsp;</td>
         </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.PartyRole}</span></td>
-          <td><span class="tabletext">${estimate.roleTypeId?default("All")}</span></td>
+          <td><span class="tabletext">${estimate.roleTypeId?default("${uiLabelMap.CommonAll}")}</span></td>
           <td>&nbsp;</td>
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
@@ -167,43 +167,43 @@ function setAssocFields(select) {
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Feature Group</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFeatureGroup}</span></td>
           <td>
-            <span class="tabletext">${estimate.productFeatureGroupId?default("N/A")}</span>
-            <span class="tabletext"> - Below surcharge(s) will be added per-product * per-feature</span>
+            <span class="tabletext">${estimate.productFeatureGroupId?default("${uiLabelMap.CommonNA}")}</span>
+            <span class="tabletext"> - ${uiLabelMap.ProductFeatureMessage}</span>
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Per-Feature Percent</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFeaturePerFeaturePercent}</span></td>
           <td>
             <span class="tabletext">${estimate.featurePercent?default(0)?string.number}%</span>
-            <span class="tabletext"> - shipamount : shipamount + ((orderTotal * percent) * total feature(s) applied)</span>
+            <span class="tabletext"> - ${uiLabelMap.ProductShipamount} : ${uiLabelMap.ProductShipamount} + ((${uiLabelMap.ProductOrderTotal} * ${uiLabelMap.ProductPercent}) * ${uiLabelMap.ProductTotalFeaturesApplied})</span>
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Per-Feature Price</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFeaturePerFeaturePrice}</span></td>
           <td>
             <span class="tabletext">${estimate.featurePrice?default(0)}</span>
-            <span class="tabletext"> - shipamount : shipamount + (price * total feature(s) applied)</span>
+            <span class="tabletext"> - ${uiLabelMap.ProductShipamount} : ${uiLabelMap.ProductShipamount} + (${uiLabelMap.ProductPrice} * ${uiLabelMap.ProductTotalFeaturesApplied})</span>
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Oversize Unit</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductOversizeUnit}</span></td>
           <td>
-            <span class="tabletext">${estimate.oversizeUnit?default("N/A")}</span>
-            <span class="tabletext"> - Each product ((height * 2) + (width * 2) + depth) >= this amount</span>
+            <span class="tabletext">${estimate.oversizeUnit?default("${uiLabelMap.CommonNA}")}</span>
+            <span class="tabletext"> - ${uiLabelMap.ProductEach} ((${uiLabelMap.ProductHeight} * 2) + (${uiLabelMap.ProductWidth} * 2) + ${uiLabelMap.ProductDept}) >= ${uiLabelMap.CommonThis} ${uiLabelMap.ProductAmount}</span>
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Oversize Surcharge</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductOversizeSurcharge}</span></td>
           <td>
             <span class="tabletext">${estimate.oversizePrice?default(0)}</span>
-            <span class="tabletext"> - shipamount : shipamount + (# oversize products * surcharge)</span>
+            <span class="tabletext"> - ${uiLabelMap.ProductShipamount} : ${uiLabelMap.ProductShipamount} + (# ${uiLabelMap.ProductOversize} ${uiLabelMap.ProductProducts} * ${uiLabelMap.ProductSurcharge})</span>
           </td>
           <td>&nbsp;</td>
         </tr>
@@ -352,43 +352,43 @@ function setAssocFields(select) {
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Feature Group</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFeatureGroup}</span></td>
           <td>
             <input type="text" class="inputBox" name="productFeatureGroupId" value="" size="15">
-            <span class="tabletext">Below surcharge(s) will be added per-product * per-feature</span>
+            <span class="tabletext">${uiLabelMap.ProductFeatureMessage}</span>
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Per-Feature Percent</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFeaturePerFeaturePercent}</span></td>
           <td>
             <input type="text" class="inputBox" name="featurePercent" value="0" size="5">
-            <span class="tabletext">shipamount : shipamount + ((orderTotal * percent) * total feature(s) applied)</span>
+			<span class="tabletext">${uiLabelMap.ProductShipamount} : ${uiLabelMap.ProductShipamount} + ((${uiLabelMap.ProductOrderTotal} * ${uiLabelMap.ProductPercent}) * ${uiLabelMap.ProductTotalFeaturesApplied})</span>            
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Per-Feature Price</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFeaturePerFeaturePrice}</span></td>
           <td>
             <input type="text" class="inputBox" name="featurePrice" value="0.00" size="5">
-            <span class="tabletext">shipamount : shipamount + (price * total feature(s) applied)</span>
+			<span class="tabletext">${uiLabelMap.ProductShipamount} : ${uiLabelMap.ProductShipamount} + (${uiLabelMap.ProductPrice} * ${uiLabelMap.ProductTotalFeaturesApplied})</span>            
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Oversize Unit</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductOversizeUnit}</span></td>
           <td>
             <input type="text" class="inputBox" name="oversizeUnit" value="" size="5">
-            <span class="tabletext">Each product ((height * 2) + (width * 2) + depth) >= this amount</span>
+            <span class="tabletext">${uiLabelMap.ProductEach} ((${uiLabelMap.ProductHeight} * 2) + (${uiLabelMap.ProductWidth} * 2) + ${uiLabelMap.ProductDept}) >= ${uiLabelMap.CommonThis} ${uiLabelMap.ProductAmount}</span>          			
           </td>
           <td>&nbsp;</td>
         </tr>
         <tr>
-          <td align='right'><span class="tableheadtext">Oversize Surcharge</span></td>
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductOversizeSurcharge}</span></td>
           <td>
             <input type="text" class="inputBox" name="oversizePrice" value="0.00" size="5">
-            <span class="tabletext">shipamount : shipamount + (# oversize products * surcharge)</span>
+			<span class="tabletext">${uiLabelMap.ProductShipamount} : ${uiLabelMap.ProductShipamount} + (# ${uiLabelMap.ProductOversize} ${uiLabelMap.ProductProducts} * ${uiLabelMap.ProductSurcharge})</span>            
           </td>
           <td>&nbsp;</td>
         </tr>
@@ -409,7 +409,7 @@ function setAssocFields(select) {
           <td>
             <select name="wuom" class="selectBox">
               <#list weightUoms as uom>
-                <option value="${uom.uomId}">${uom.description}</option>
+                <option value="${uom.uomId}">${uom.get("description",locale)}</option>
               </#list>
             </select>
           </td>
@@ -438,7 +438,7 @@ function setAssocFields(select) {
           <td>
             <select name="quom" class="selectBox">
               <#list quantityUoms as uom>
-                <option value="${uom.uomId}">${uom.description}</option>
+                <option value="${uom.uomId}">${uom.get("description",locale)}</option>
               </#list>
             </select>
           </td>
@@ -484,24 +484,24 @@ function setAssocFields(select) {
     <div class="head2">${uiLabelMap.ProductStoreShipmentMethodAssociations}</div>
     <table border="1" cellpadding="2" cellspacing="0">
       <tr>
-        <td><span class="tableheadtext">${uiLabelMap.ProductMethodType}e</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductShipmentMethodType}</span></td>
         <td><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
-        <td><span class="tableheadtext">Min Sz</span></td>
-        <td><span class="tableheadtext">Max Sz</span></td>
-        <td><span class="tableheadtext">Min Wt</span></td>
-        <td><span class="tableheadtext">Max Wt</span></td>
-        <td><span class="tableheadtext">Min $</span></td>
-        <td><span class="tableheadtext">Max $</span></td>
-        <td><span class="tableheadtext">Allow USPS</span></td>
-        <td><span class="tableheadtext">Req USPS</span></td>
-        <td><span class="tableheadtext">Allow Co</span></td>
-        <td><span class="tableheadtext">Req Co</span></td>
-        <td><span class="tableheadtext">Inc FreeShip</span></td>
-        <td><span class="tableheadtext">Inc Geo</span></td>
-        <td><span class="tableheadtext">Exc Geo</span></td>
-        <td><span class="tableheadtext">Inc Feature</span></td>
-        <td><span class="tableheadtext">Exc Feature</span></td>
-        <td><span class="tableheadtext">Seq</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductMinSz}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductMaxSz}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductMinWt}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductMaxWt}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductMinTot}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductMaxTot}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductAllowUSPS}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductRequireUSPS}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductAllowCo}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductRequireCo}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductIncFreeship}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductIncGeo}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductExcGeo}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductIncFeature}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductExcFeature}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.ProductSequence}</span></td>
         <td>&nbsp;</td>
       </tr>
       <#if storeShipMethods?has_content>
@@ -566,104 +566,104 @@ function setAssocFields(select) {
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Min Size</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductMinSize}</span></td>
           <td>
             <input type="text" class="inputBox" name="minSize" size="5">
-            <span class="tabletext">Displays only if smallest product size is equal/greater then this value</span>
+            <span class="tabletext">${uiLabelMap.ProductMinSizeMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Max Size</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductMaxSize}</span></td>
           <td>
             <input type="text" class="inputBox" name="maxSize" size="5">
-            <span class="tabletext">Displays only if largest product size is equal/less then this value</span>
+            <span class="tabletext">${uiLabelMap.ProductMaxSizeMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Min Weight</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductMinWeight}</span></td>
           <td>
             <input type="text" class="inputBox" name="minWeight" size="5">
-            <span class="tabletext">Displays only if total weight is equal/greater then this value</span>
+            <span class="tabletext">${uiLabelMap.ProductMinWeightMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Max Weight</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductMaxWeight}</span></td>
           <td>
             <input type="text" class="inputBox" name="maxWeight" size="5">
-            <span class="tabletext">Displays only if total weight is equal/less then this value</span>
+            <span class="tabletext">${uiLabelMap.ProductMaxWeightMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Min Total</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductMinTotal}</span></td>
           <td>
             <input type="text" class="inputBox" name="minTotal" size="5">
-            <span class="tabletext">Displays only if total price is equal/greater then this value</span>
+            <span class="tabletext">${uiLabelMap.ProductMinTotalMesssage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Max Total</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductMaxTotal}</span></td>
           <td>
             <input type="text" class="inputBox" name="maxTotal" size="5">
-            <span class="tabletext">Displays only if total price is equal/less then this value</span>
+            <span class="tabletext">${uiLabelMap.ProductMaxTotalMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Allow USPS Addr (PO Box, RR, etc)</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductAllowUSPSAddr}</span></td>
           <td>
             <select name="allowUspsAddr" class="selectBox">
-              <option>N</option>
-              <option>Y</option>
+              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonY}</option>
             </select>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Require USPS Addr (PO Box, RR, etc)</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductRequireUSPSAddr}</span></td>
           <td>
             <select name="requireUspsAddr" class="selectBox">
-              <option>N</option>
-              <option>Y</option>
+              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonY}</option>
             </select>
-            <span class="tabletext">Setting ignored if Allow is 'N'</span>
+            <span class="tabletext">${uiLabelMap.ProductRequireMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Allow Company Addr</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductAllowCoAddr}</span></td>
           <td>
             <select name="allowCompanyAddr" class="selectBox">
-              <option>N</option>
-              <option>Y</option>
+              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonY}</option>
             </select>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Require Company Addr</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductRequireCoAddr}</span></td>
           <td>
             <select name="requireCompanyAddr" class="selectBox">
-              <option>N</option>
-              <option>Y</option>
+              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonY}</option>
             </select>
-            <span class="tabletext">Setting ignored if Allow is 'N'</span>
+            <span class="tabletext">${uiLabelMap.ProductRequireMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Company Party ID</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.PartyCompanyId}</span></td>
           <td>
             <input type="text" class="inputBox" name="companyPartyId" size="20">
-            <span class="tabletext">Used with allow company address</span>
+            <span class="tabletext">${uiLabelMap.ProductAllowMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Include Free Ship Items</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductIncludeFreeship}</span></td>
           <td>
             <select name="includeNoChargeItems" class="selectBox">
-              <option>Y</option>
-              <option>N</option>
+              <option value="N">${uiLabelMap.CommonN}</option>
+              <option value="Y">${uiLabelMap.CommonY}</option>
             </select>
-            <span class="tabletext">Set to N to hide when the cart contains ONLY free shipping items</span>
+            <span class="tabletext">${uiLabelMap.ProductIncludeFreeshipMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Include GeoId</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductIncludeGeo}</span></td>
           <td>
             <select name="includeGeoId" class="selectBox">
               <option></option>
@@ -671,11 +671,11 @@ function setAssocFields(select) {
                 <option value="${geo.geoId}">${geo.geoName}</option>
               </#list>
             </select>
-            <span class="tabletext">Displays only if ship-to is in this geo</span>
+            <span class="tabletext">${uiLabelMap.ProductIncludeGeoMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Exclude GeoId</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductExcludeGeo}</span></td>
           <td>
             <select name="excludeGeoId" class="selectBox">
               <option></option>
@@ -683,32 +683,32 @@ function setAssocFields(select) {
                 <option value="${geo.geoId}">${geo.geoName}</option>
               </#list>
             </select>
-            <span class="tabletext">Displays only if ship-to is not in this geo</span>
+            <span class="tabletext">${uiLabelMap.ProductExcludeGeoMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Include Feature Group</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductIncludeFeature}</span></td>
           <td>
             <input type="text" class="inputBox" name="includeFeatureGroup" size="20">
-            <span class="tabletext">Displays only if all items have all features in this group</span>
+            <span class="tabletext">${uiLabelMap.ProductIncludeFeatureMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Exclude Feature Group</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductExcludeFeature}</span></td>
           <td>
             <input type="text" class="inputBox" name="excludeFeatureGroup" size="20">
-            <span class="tabletext">Displays only if all items have no features in this group</span>
+            <span class="tabletext">${uiLabelMap.ProductExcludeFeatureMessage}</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Service Name</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductServiceName}</span></td>
           <td>
             <input type="text" class="inputBox" name="serviceName" size="25">
             <span class="tabletext"></span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Service Config</span></td>
+          <td align="right"><span class="tableheadtext">${uiLabelMap.ProductServiceConfig}</span></td>
           <td>
             <input type="text" class="inputBox" name="configProps" size="25">
             <span class="tabletext"></span>
@@ -835,7 +835,7 @@ function setAssocFields(select) {
             <#else>
               <select class="selectBox" name="roleTypeId">
                 <#list roleTypes as roleType>
-                  <option value="${roleType.roleTypeId}" <#if roleType.roleTypeId == "CARRIER" && !carrierShipmentMethod?has_content>${uiLabelMap.ProductSelected}</#if>>${roleType.description?default(roleType.roleTypeId)}</option>
+                  <option value="${roleType.roleTypeId}" <#if roleType.roleTypeId == "CARRIER" && !carrierShipmentMethod?has_content>${uiLabelMap.ProductSelected}</#if>>${roleType.get("description",locale)?default(roleType.roleTypeId)}</option>
                 </#list>
               </select> *
             </#if>

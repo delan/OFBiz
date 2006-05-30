@@ -39,11 +39,11 @@
       <#assign surveyType = storeSurvey.getRelatedOne("SurveyApplType")>
       <#assign survey = storeSurvey.getRelatedOne("Survey")>
       <tr>
-        <td><span class="tabletext">${surveyType.description}</span></td>
+        <td><span class="tabletext">${surveyType.get("description",locale)}</span></td>
         <td><span class="tabletext">${storeSurvey.groupName?if_exists}</span></td>
         <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="buttontext">${survey.description?default("[" + survey.surveyId + "]")}</a>
-        <td><span class="tabletext">${storeSurvey.productId?default("N/A")}</span></td>
-        <td><span class="tabletext">${storeSurvey.productCategoryId?default("N/A")}</span></td>
+        <td><span class="tabletext">${storeSurvey.productId?default("${uiLabelMap.CommonNA}")}</span></td>
+        <td><span class="tabletext">${storeSurvey.productCategoryId?default("${uiLabelMap.CommonNA}")}</span></td>
         <td><span class="tabletext">${storeSurvey.fromDate?string}</span></td>
         <td><span class="tabletext">${storeSurvey.sequenceNum?if_exists}</span></td>
         <td><a href="<@ofbizUrl>deleteProductStoreSurveyAppl?productStoreId=${productStoreId}&productStoreSurveyId=${storeSurvey.productStoreSurveyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
@@ -60,7 +60,7 @@
         <td>
           <select class="selectBox" name="surveyApplTypeId">
             <#list surveyApplTypes as type>
-              <option value="${type.surveyApplTypeId}">${type.description}</option>
+              <option value="${type.surveyApplTypeId}">${type.get("description",locale)}</option>
             </#list>
           </select>
         </td>
@@ -93,7 +93,7 @@
           <select class="selectBox" name="productCategoryId">
             <option></option>
             <#list productCategories as category>
-              <option value="${category.productCategoryId}">${category.description?default("[No Description]")}</option>
+              <option value="${category.productCategoryId}">${category.description?default("[${uiLabelMap.ProductNoDescription}]")}</option>
             </#list>
           </select>
         </td>

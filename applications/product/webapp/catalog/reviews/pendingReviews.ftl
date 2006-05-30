@@ -61,8 +61,8 @@
             <select name="postedAnonymous" class="selectBox">
               <option>${review.postedAnonymous?default("N")}</option>
               <option value="${review.postedAnonymous?default("N")}">----</option>
-              <option>N</option>
-              <option>Y</option>
+              <option value="N">${uiLabelMap.CommonN}</option>
+			  <option value="Y">${uiLabelMap.CommonY}</option>              
             </select>
           </div>
         </td>
@@ -72,9 +72,9 @@
         <td>
           <div class="tabletext">
             <select name="statusId" class="selectBox">
-              <option value="PRR_PENDING">Pending Approval</option>
-              <option value="PRR_APPROVED">Approve</option>
-              <option value="PRR_DELETED">Delete</option>
+              <option value="PRR_PENDING">${uiLabelMap.PendingReviewPendingApproval}</option>
+              <option value="PRR_APPROVED">${uiLabelMap.PendingReviewApprove}</option>
+              <option value="PRR_DELETED">${uiLabelMap.PendingReviewDelete}</option>
             </select>
           </div>
         </td>

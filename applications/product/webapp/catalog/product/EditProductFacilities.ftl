@@ -43,7 +43,7 @@
                     <input type="text" size="10" name="minimumStock" value="${(productFacility.minimumStock)?if_exists}" class="inputBox"/>
                     <input type="text" size="10" name="reorderQuantity" value="${(productFacility.reorderQuantity)?if_exists}" class="inputBox"/>
                     <input type="text" size="10" name="daysToShip" value="${(productFacility.daysToShip)?if_exists}" class="inputBox"/>
-                    <input type="submit" value="Update" style="font-size: x-small;"/>
+                    <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;"/>
                 </form>
             </td>
             <td align="center">

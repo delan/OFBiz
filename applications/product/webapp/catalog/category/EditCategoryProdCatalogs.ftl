@@ -42,7 +42,7 @@
     <tr valign="middle">
         <td><a href="<@ofbizUrl>EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)?if_exists}</@ofbizUrl>" class="buttontext"><#if prodCatalog?exists>${(prodCatalog.catalogName)?if_exists}</#if> [${(prodCatalogCategory.prodCatalogId)?if_exists}]</a></td>
         <td>
-            <div class="tabletext">${(curProdCatalogCategoryType.description)?default(prodCatalogCategory.prodCatalogCategoryTypeId)}</div>
+            <div class="tabletext">${(curProdCatalogCategoryType.get("description",locale))?default(prodCatalogCategory.prodCatalogCategoryTypeId)}</div>
         </td>
         <#assign hasntStarted = false>
         <#if (prodCatalogCategory.getTimestamp("fromDate"))?exists && nowTimestamp.before(prodCatalogCategory.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
@@ -67,7 +67,7 @@
                         <option value="">&nbsp;</option>
                     </#if>
                     <#list prodCatalogCategoryTypes as prodCatalogCategoryType>
-                    <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)?if_exists}">${(prodCatalogCategoryType.description)?if_exists}</option>
+                    <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)?if_exists}">${(prodCatalogCategoryType.get("description",locale))?if_exists}</option>
                     </#list>
                 </select> -->
                 <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;"/>
@@ -93,7 +93,7 @@
     </select>
         <select name="prodCatalogCategoryTypeId" size="1" class="selectBox">
             <#list prodCatalogCategoryTypes as prodCatalogCategoryType>
-            <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)?if_exists}">${(prodCatalogCategoryType.description)?if_exists}</option>
+            <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)?if_exists}">${(prodCatalogCategoryType.get("description",locale))?if_exists}</option>
             </#list>
         </select>
     <input type="text" size="25" name="fromDate" class="inputBox"/>

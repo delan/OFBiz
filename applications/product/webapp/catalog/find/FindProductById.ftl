@@ -65,7 +65,7 @@
             <td>&nbsp;&nbsp;</td>
             <td>
                 <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">${(product.internalName)?if_exists}</a>
-                <span class="tabletext">(ID Value was the <b>${goodIdentificationType.description?default(goodIdentification.goodIdentificationTypeId)}</b>.)</span>
+                <span class="tabletext">(${uiLabelMap.ProductSearchResultsFound} <b>${goodIdentificationType.get("description",locale)?default(goodIdentification.goodIdentificationTypeId)}</b>.)</span>
             </td>
         </tr>
     </#list>

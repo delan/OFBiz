@@ -51,12 +51,12 @@
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findByPrimaryKey("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId))>
                     <#if curAssocType?exists>
-                        <option selected value="${(curAssocType.productAssocTypeId)?if_exists}">${(curAssocType.description)?if_exists}</option>
+                        <option selected value="${(curAssocType.productAssocTypeId)?if_exists}">${(curAssocType.get("description",locale))?if_exists}</option>
                         <option value="${(curAssocType.productAssocTypeId)?if_exists}"></option>
                     </#if>
                 </#if>
                 <#list assocTypes as assocType>
-                    <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.description)?if_exists}</option>
+                    <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.get("description",locale))?if_exists}</option>
                 </#list>
                 </select>
             </td>
@@ -92,7 +92,7 @@
                 <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size="1">
                 <-- <option value="">&nbsp;</option> -->
                 <#list assocTypes as assocType>
-                    <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.description)?if_exists}</option>
+                    <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.get("description",locale))?if_exists}</option>
                 </#list>
                 </select>
             </td>
@@ -130,7 +130,7 @@
         <tr>
             <td align="right"><div class="tabletext">${uiLabelMap.ProductAssociationType}</div></td>
             <td>&nbsp;</td>
-            <td><b><#if curProductAssocType?exists>${(curProductAssocType.description)?if_exists}<#else> ${productAssocTypeId?if_exists}</#if></b> (You must re-create the association to change this.)</td>
+            <td><b><#if curProductAssocType?exists>${(curProductAssocType.get("description",locale))?if_exists}<#else> ${productAssocTypeId?if_exists}</#if></b> ${uiLabelMap.ProductRecreateAssociation}</td>
         </tr>
         <tr>
             <td align="right"><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
@@ -205,7 +205,7 @@
                 ${(assocFromProduct.thruDate)?if_exists}&nbsp;</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.sequenceNum)?if_exists}</div></td>
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.quantity)?if_exists}</div></td>
-                <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.description)?if_exists}<#else>${(assocFromProduct.productAssocTypeId)?if_exists}</#if></div></td>
+                <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.get("description",locale))?if_exists}<#else>${(assocFromProduct.productAssocTypeId)?if_exists}</#if></div></td>
                 <td>
                 <a href="<@ofbizUrl>UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
@@ -237,7 +237,7 @@
                 <td><#if listToProduct?exists><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">${(listToProduct.internalName)?if_exists}</a></#if></td>
                 <td><div class="tabletext">${(assocToProduct.getTimestamp("fromDate"))?if_exists}&nbsp;</div></td>
                 <td><div class="tabletext">${(assocToProduct.getTimestamp("thruDate"))?if_exists}&nbsp;</div></td>
-                <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.description)?if_exists}<#else> ${(assocToProduct.productAssocTypeId)?if_exists}</#if></div></td>
+                <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.get("description",locale))?if_exists}<#else> ${(assocToProduct.productAssocTypeId)?if_exists}</#if></div></td>
                 <td>
                 <a href="<@ofbizUrl>UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${(assocToProduct.productId)?if_exists}&PRODUCT_ID_TO=${(assocToProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>

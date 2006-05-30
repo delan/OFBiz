@@ -30,7 +30,7 @@
         <div class="tabletext">
         ${uiLabelMap.ProductKeyword} :<input type="text" name="enteredKeyword" size="10" class="inputBox"/>
         ${uiLabelMap.ProductAlternate} :<input type="text" name="alternateKeyword" size="10" class="inputBox"/>
-        ${uiLabelMap.ProductRelationship} :<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.description}</option></#list></select>
+        ${uiLabelMap.ProductRelationship} :<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></select>
         <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallButton">
     </div>
 </form>
@@ -63,7 +63,7 @@
               <div class="tabletext">
                 <input type="hidden" name="enteredKeyword" value=${keyword.enteredKeyword}>
                 ${uiLabelMap.ProductAlternate} : <input type="text" name="alternateKeyword" size="10">
-                ${uiLabelMap.ProductRelationship} :<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.description}</option></#list></select>
+                ${uiLabelMap.ProductRelationship} :<select name="relationshipEnumId" class="selectBox"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></select>
                 <input type="submit" value="${uiLabelMap.CommonAdd}">
               </div>
             </form>
@@ -72,7 +72,7 @@
       </#if>
       <div class="tabletext">
         <a href="<@ofbizUrl>deleteKeywordThesaurus?enteredKeyword=${keyword.enteredKeyword}&alternateKeyword=${keyword.alternateKeyword}</@ofbizUrl>" class="buttontext">[X]</a>
-        <b>${keyword.alternateKeyword}</b>&nbsp;(Rel:${(relationship.description)?default(keyword.relationshipEnumId?if_exists)})
+        <b>${keyword.alternateKeyword}</b>&nbsp;(${uiLabelMap.ProductRelationship}:${(relationship.get("description",locale))?default(keyword.relationshipEnumId?if_exists)})
       </div>
     </#list>
       </td>

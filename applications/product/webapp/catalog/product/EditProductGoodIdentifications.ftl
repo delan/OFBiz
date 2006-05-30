@@ -37,7 +37,7 @@
     <#assign line = line + 1>
     <#assign goodIdentificationType = goodIdentification.getRelatedOneCache("GoodIdentificationType")>
     <tr valign="middle">
-        <td><div class="tabletext"><#if goodIdentificationType?exists>${(goodIdentificationType.description)?if_exists}<#else>[${(goodIdentification.goodIdentificationTypeId)?if_exists}]</#if></div></td>
+        <td><div class="tabletext"><#if goodIdentificationType?exists>${(goodIdentificationType.get("description",locale))?if_exists}<#else>[${(goodIdentification.goodIdentificationTypeId)?if_exists}]</#if></div></td>
         <td align="center">
             <form method="post" action="<@ofbizUrl>updateGoodIdentification</@ofbizUrl>" name="lineForm${line}"/>
                 <input type="hidden" name="productId" value="${(goodIdentification.productId)?if_exists}"/>
@@ -63,7 +63,7 @@
             ${uiLabelMap.ProductIdType} :
             <select name="goodIdentificationTypeId" class="selectBox">
                 <#list goodIdentificationTypes as goodIdentificationType>
-                    <option value="${(goodIdentificationType.goodIdentificationTypeId)?if_exists}">${(goodIdentificationType.description)?if_exists}</option>
+                    <option value="${(goodIdentificationType.goodIdentificationTypeId)?if_exists}">${(goodIdentificationType.get("description",locale))?if_exists}</option>
                 </#list>
             </select>
             ${uiLabelMap.ProductIdValue} : <input type="text" size="20" name="idValue" class="inputBox"/>&nbsp;<input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;"/>

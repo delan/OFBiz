@@ -40,7 +40,7 @@
     <#assign curRoleType = productCategoryRole.getRelatedOneCache("RoleType")>
     <tr valign="middle">
     <td><a href="/partymgr/control/viewprofile?party_id=${(productCategoryRole.partyId)?if_exists}" target="_blank" class="buttontext">[${(productCategoryRole.partyId)?if_exists}]</a></td>
-    <td><div class="tabletext">${(curRoleType.description)?if_exists}</div></td>
+    <td><div class="tabletext">${(curRoleType.get("description",locale))?if_exists}</div></td>
     <#assign hasntStarted = false>
     <#if (productCategoryRole.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productCategoryRole.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
     <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productCategoryRole.fromDate)?if_exists}</div></td>
@@ -73,7 +73,7 @@
     <input type="text" class="inputBox" size="20" maxlength="20" name="partyId" value="">
     <select name="roleTypeId" size="1" class="selectBox">
     <#list roleTypes as roleType>
-        <option value="${(roleType.roleTypeId)?if_exists}" <#if roleType.roleTypeId.equals("_NA_")> ${uiLabelMap.ProductSelected}</#if>>${(roleType.description)?if_exists}</option>
+        <option value="${(roleType.roleTypeId)?if_exists}" <#if roleType.roleTypeId.equals("_NA_")> ${uiLabelMap.ProductSelected}</#if>>${(roleType.get("description",locale))?if_exists}</option>
     </#list>
     </select>
     <input type="text" size="25" name="fromDate" class="inputBox">

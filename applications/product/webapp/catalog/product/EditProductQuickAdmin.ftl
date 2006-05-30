@@ -99,7 +99,7 @@ function doPublish() {
                             <#else>
                                 <#assign selected=""/>
                             </#if>
-                            <option ${selected} value="${featureType.productFeatureTypeId?if_exists}"/>${featureType.description?if_exists}
+                            <option ${selected} value="${featureType.productFeatureTypeId?if_exists}"/>${featureType.get("description",locale)?if_exists}
                         </#list>
                     </select>
                   </form>
@@ -110,8 +110,8 @@ function doPublish() {
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
-                <td>SRCH</td>
-                <td>DL</td>
+                <td>${uiLabelMap.ProductSRCH}</td>
+                <td>${uiLabelMap.ProductDL}</td>
             </tr>
 
             <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" style="margin: 0;" name="selectableFeature">
@@ -144,8 +144,8 @@ function doPublish() {
                 <td>
                     <table border="0" cellpadding="0" cellspacing="0" class="tabletext">
                         <#list selectableFeatureTypes as selectableFeatureType>
-                        <tr><td><a class="buttontext" href="javascript:removeSelectable('${(selectableFeatureType.description)?if_exists}', '${selectableFeatureType.productFeatureTypeId}', '${product.productId}')">[x]</a>
-                            <a class="buttontext" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)?if_exists}&productId=${product.productId?if_exists}</@ofbizUrl>">${(selectableFeatureType.description)?if_exists}</a></td></tr>
+                        <tr><td><a class="buttontext" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))?if_exists}', '${selectableFeatureType.productFeatureTypeId}', '${product.productId}')">[x]</a>
+                            <a class="buttontext" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)?if_exists}&productId=${product.productId?if_exists}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))?if_exists}</a></td></tr>
                         </#list>
                     </table>
                 </td>
@@ -167,7 +167,7 @@ function doPublish() {
                 <td colspan="3"><span class="head2">${uiLabelMap.DistinguishingFeatures}</span></td>
             </tr>
             <tr>
-                <td>Product ID</td>
+                <td>${uiLabelMap.ProductProductId}</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
             </tr>
@@ -175,7 +175,7 @@ function doPublish() {
         <#list distinguishingFeatures as distinguishingFeature>
             <tr>
                 <td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>">[x]</a></td>
-                <td>[${distinguishingFeature.productFeatureId}] ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).description}: ${distinguishingFeature.description} </td>
+                <td>[${distinguishingFeature.productFeatureId}] ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).get("description",locale)}: ${distinguishingFeature.get("description",locale)} </td>
             </tr>
         </#list>
 
@@ -201,13 +201,13 @@ function doPublish() {
                 <td>${uiLabelMap.ProductProductWidth}</td>
                 <td>${uiLabelMap.ProductProductDepth}</td>
                 <td>${uiLabelMap.ProductWeight}</td>
-                <td>Fl. Oz.</td>
-                <td>ML</td>
-                <td>Nt. Wt.</td>
-                <td>Grams</td>
-                <td>HZ</td>
-                <td>ST</td>
-                <td>TD</td>
+                <td>${uiLabelMap.ProductFlOz}</td>
+                <td>${uiLabelMap.ProductML}</td>
+                <td>${uiLabelMap.ProductNtWt}</td>
+                <td>${uiLabelMap.ProductGrams}</td>
+                <td>${uiLabelMap.ProductHZ}</td>
+                <td>${uiLabelMap.ProductST}</td>
+                <td>${uiLabelMap.ProductTD}</td>
             </tr>
 
     <#if (product.isVirtual)?if_exists == "Y">
@@ -275,12 +275,12 @@ function doPublish() {
             </tr>
             <#list addedFeatureTypeIds as addedFeatureTypeId>
                 <tr>
-                    <td align="right">${addedFeatureTypes.get(addedFeatureTypeId).getString("description")}</td>
+                    <td align="right">${addedFeatureTypes.get(addedFeatureTypeId).description}</td>
                     <td>
                         <select name="productFeatureId">
                             <option value="~~any~~">${uiLabelMap.AnyFeatureType}</option>
                         <#list featuresByType.get(addedFeatureTypeId) as feature>
-                            <option value="${feature.getString("productFeatureId")}">${feature.getString("description")}</option>
+                            <option value="${feature.getString("productFeatureId")}">${feature.description}</option>
                         </#list>
                         </select>
                     </td>
@@ -298,8 +298,8 @@ function doPublish() {
                 <#assign featureId = standardFeatureAppl.productFeatureId/>
                 <tr>
                     <td><a href='<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId?if_exists}&productFeatureId=${featureId?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(standardFeatureAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">[x]</a></td>
-                    <td>${productFeatureTypeLookup.get(featureId).getString("description")}:
-                            ${standardFeatureLookup.get(featureId).getString("description")}</td>
+                    <td>${productFeatureTypeLookup.get(featureId).description}:
+                            ${standardFeatureLookup.get(featureId).description}</td>
                 </tr>
             </#list>
         </table>
@@ -316,7 +316,7 @@ function doPublish() {
                 <td>
                     <select multiple name=addFeatureTypeId>
                         <#list featureTypes as featureType>
-                            <option value="${featureType.productFeatureTypeId?if_exists}">${featureType.description?if_exists}
+                            <option value="${featureType.productFeatureTypeId?if_exists}">${featureType.get("description",locale)?if_exists}
                         </#list>
                     </select>&nbsp;
                 </td>
@@ -404,5 +404,5 @@ function doPublish() {
     <!--  **************************************************** end - publish section -->
     
   <#else>
-    <h3>Product not found with ID [${productId?if_exists}]</h3>
+    <h3>${uiLabelMap.ProductProductNotFound} [${productId?if_exists}]</h3>
   </#if>
