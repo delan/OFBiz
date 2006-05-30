@@ -302,23 +302,11 @@
             <check-errors/>
 
             <else>
-                <!-- if returnable quantity is zero, then this operation is only allowed for adjustment and shipping -->
-                <if>
-                    <condition>
-                    	<and>
-                           <if-compare field-name="returnItemTypeId" map-name="parameters" operator="not-equals" type="String" value="RETURN_MAN_ADJ"/>
-                           <if-compare field-name="returnItemTypeId" map-name="parameters" operator="not-equals" type="String" value="RITM_SHIPPING_CHRG"/>
-                        </and>
-                    </condition>
-                    <then>
-                        <set from-field="parameters.orderId" field="orderId"/>
-                        <set from-field="parameters.orderItemSeqId" field="orderItemSeqId"/>
-                        <log level="error" message="Illegal returnItemType: either order ${orderId} item ${orderItemSeqId} has been returned in full, or a return item other than Manual Adjustment or Shipping was being added to the return"/>
-                        <add-error><fail-property resource="OrderErrorUiLabels" property="OrderIllegalReturnItemTypePassed"/></add-error>
-                    <check-errors/>
-
-                    </then>
-                </if>
+                <set from-field="parameters.orderId" field="orderId"/>
+                <set from-field="parameters.orderItemSeqId" field="orderItemSeqId"/>
+                <log level="error" message="Order ${orderId} item ${orderItemSeqId} has been returned in full"/>
+                <add-error><fail-property resource="OrderErrorUiLabels" property="OrderIllegalReturnItemTypePassed"/></add-error>
+                <check-errors/>
             </else>
         </if-compare>
 
