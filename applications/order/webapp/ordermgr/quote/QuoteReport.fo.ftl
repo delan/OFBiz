@@ -65,8 +65,12 @@
                 <fo:table-row>
                     <fo:table-cell>
                         <fo:block>
-                            <#assign quotePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", quote.partyId, "compareDate", quote.issueDate, "userLogin", userLogin))/>
-                            <fo:block font-weight="bold">${quotePartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</fo:block>
+                            <#if quote.partyId?exists>
+                                <#assign quotePartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", quote.partyId, "compareDate", quote.issueDate, "userLogin", userLogin))/>
+                                <fo:block font-weight="bold">${quotePartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</fo:block>
+                            <#else>
+                                <fo:block font-weight="bold">[${uiLabelMap.OrderPartyNameNotFound}]</fo:block>
+                            </#if>
                         </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
