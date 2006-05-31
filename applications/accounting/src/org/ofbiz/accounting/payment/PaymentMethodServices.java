@@ -164,12 +164,13 @@ public class PaymentMethodServices {
 
         toBeStored.add(newCc);
 
-        String newPmId = null;
-        try {
-            newPmId = delegator.getNextSeqId("PaymentMethod");
-        } catch (IllegalArgumentException e) {
-            return ServiceUtil.returnError("ERROR: Could not create credit card (id generation failure)");
-            
+        String newPmId = (String) context.get("paymentMethodId");
+        if (UtilValidate.isEmpty(newPmId)) {
+            try {
+                newPmId = delegator.getNextSeqId("PaymentMethod");
+            } catch (IllegalArgumentException e) {
+                return ServiceUtil.returnError("ERROR: Could not create credit card (id generation failure)");
+            }
         }
 
         newPm.set("partyId", partyId);
@@ -430,11 +431,13 @@ public class PaymentMethodServices {
         GenericValue newGc = delegator.makeValue("GiftCard", null);
         toBeStored.add(newGc);
 
-        String newPmId = null;
-        try {
-            newPmId = delegator.getNextSeqId("PaymentMethod");
-        } catch (IllegalArgumentException e) {
-            return ServiceUtil.returnError("ERROR: Could not create GiftCard (id generation failure)");
+        String newPmId = (String) context.get("paymentMethodId");
+        if (UtilValidate.isEmpty(newPmId)) {
+            try {
+                newPmId = delegator.getNextSeqId("PaymentMethod");
+            } catch (IllegalArgumentException e) {
+                return ServiceUtil.returnError("ERROR: Could not create GiftCard (id generation failure)");
+            }
         }
 
         newPm.set("partyId", partyId);
@@ -606,11 +609,13 @@ public class PaymentMethodServices {
 
         toBeStored.add(newEa);
 
-        String newPmId = null;
-        try {
-            newPmId = delegator.getNextSeqId("PaymentMethod");
-        } catch (IllegalArgumentException e) {
-            return ServiceUtil.returnError("ERROR: Could not create credit card (id generation failure)");
+        String newPmId = (String) context.get("paymentMethodId");
+        if (UtilValidate.isEmpty(newPmId)) {
+            try {
+                newPmId = delegator.getNextSeqId("PaymentMethod");
+            } catch (IllegalArgumentException e) {
+                return ServiceUtil.returnError("ERROR: Could not create payment method Id (id generation failure)");
+            }
         }
 
         newPm.set("partyId", partyId);

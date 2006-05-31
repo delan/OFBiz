@@ -38,7 +38,7 @@
     <service name="createCreditCard" default-entity-name="CreditCard" engine="java"
             location="org.ofbiz.accounting.payment.PaymentMethodServices" invoke="createCreditCard" auth="true">
         <description>Create CreditCard</description>
-        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <!-- these three fields are for updating on the PaymentMethod -->
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
@@ -97,7 +97,7 @@
         <attribute name="expireDate" type="String" mode="IN" optional="true"/>
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
         <attribute name="expYear" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="OUT" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="updateGiftCard" engine="java"
             location="org.ofbiz.accounting.payment.PaymentMethodServices" invoke="updateGiftCard" auth="true">
@@ -127,7 +127,7 @@
         <attribute name="nameOnAccount" type="String" mode="IN" optional="false"/>
         <attribute name="companyNameOnAccount" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="OUT" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="createEftAccountAndAddress" engine="group" location="createEftAccountAndAddress" invoke="" auth="true">
         <description>Creates an EftAccount and PostalAddress</description>
