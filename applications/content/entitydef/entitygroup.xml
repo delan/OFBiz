@@ -106,6 +106,7 @@
     <entity-group group="org.ofbiz" entity="SubscriptionActivity" />
     <entity-group group="org.ofbiz" entity="SubscriptionAttribute" />
     <entity-group group="org.ofbiz" entity="SubscriptionFulfillmentPiece" />
+    <entity-group group="org.ofbiz" entity="SubscriptionResource" />
     <entity-group group="org.ofbiz" entity="SubscriptionType" />
     <entity-group group="org.ofbiz" entity="SubscriptionTypeAttr" />
 
