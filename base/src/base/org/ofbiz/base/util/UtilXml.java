@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -43,6 +44,7 @@ import javolution.util.FastList;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.EntityResolver;
@@ -79,6 +81,25 @@ public class UtilXml {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         writeXmlDocument(bos, element);
+        String outString = bos.toString("UTF-8");
+
+        if (bos != null) bos.close();
+        return outString;
+    }
+
+    public static String writeXmlDocument(DocumentFragment fragment) throws java.io.IOException {
+        if (fragment == null) {
+            Debug.logWarning("[UtilXml.writeXmlDocument] DocumentFragment was null, doing nothing", module);
+            return null;
+        }
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        List elementList = UtilXml.childElementList(fragment);
+        Iterator elementIter = elementList.iterator();
+        while (elementIter.hasNext()) {
+            Element element = (Element) elementIter.next();
+            writeXmlDocument(bos, element);
+        }
         String outString = bos.toString("UTF-8");
 
         if (bos != null) bos.close();
@@ -312,7 +333,6 @@ public class UtilXml {
             do {
                 if (node.getNodeType() == Node.ELEMENT_NODE) { 
                     Element childElement = (Element) node;
-
                     elements.add(childElement);
                 }
             } while ((node = node.getNextSibling()) != null);
@@ -356,7 +376,22 @@ public class UtilXml {
             do {
                 if (node.getNodeType() == Node.ELEMENT_NODE && childElementNames.contains(node.getNodeName())) {
                     Element childElement = (Element) node;
+                    elements.add(childElement);
+                }
+            } while ((node = node.getNextSibling()) != null);
+        }
+        return elements;
+    }
 
+    /** Return a List of Element objects that are children of the given DocumentFragment */
+    public static List childElementList(DocumentFragment fragment) {
+        if (fragment == null) return null;
+        List elements = FastList.newInstance();
+        Node node = fragment.getFirstChild();
+        if (node != null) {
+            do {
+                if (node.getNodeType() == Node.ELEMENT_NODE) { 
+                    Element childElement = (Element) node;
                     elements.add(childElement);
                 }
             } while ((node = node.getNextSibling()) != null);

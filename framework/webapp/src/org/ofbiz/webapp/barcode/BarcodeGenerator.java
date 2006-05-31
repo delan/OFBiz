@@ -23,10 +23,7 @@
 package org.ofbiz.webapp.barcode;
 
 import java.io.ByteArrayInputStream;
-
-import nu.xom.Node;
-import nu.xom.Nodes;
-import nu.xom.converters.DOMConverter;
+import java.io.IOException;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -34,6 +31,7 @@ import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.krysalis.barcode4j.BarcodeException;
 import org.krysalis.barcode4j.BarcodeUtil;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.DocumentFragment;
 
 /**
@@ -68,16 +66,13 @@ public class BarcodeGenerator {
     public String generateSvgXml(String message) throws BarcodeException, ConfigurationException {
         if (config != null) {
             DocumentFragment fragment = barcodeUtil.generateSVGBarcode(config, message);
-
-            Nodes nodes = DOMConverter.convert(fragment);
-
-            StringBuffer buffer = new StringBuffer();
-            for (int i = 0; i < nodes.size(); i++) {
-                Node node = nodes.get(i);
-                buffer.append(node.toXML());
+            try {
+                String barcodeXml = UtilXml.writeXmlDocument(fragment);
+                return barcodeXml;
+            } catch (IOException e) {
+                Debug.logError(e, "Error turning the SVG barcode fragment into a String", module);
+                return "";
             }
-
-            return buffer.toString();
         } else {
             return "";
         }
