@@ -1086,6 +1086,9 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="subscriptionId"/>
+      <relation type="one" fk-name="SUBSC_SRESRC" rel-entity-name="SubscriptionResource">
+        <key-map field-name="subscriptionResourceId"/>
+      </relation>
       <relation type="one" fk-name="SUBSC_COM_EVENT" rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventId"/>
       </relation>
