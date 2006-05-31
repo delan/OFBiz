@@ -48,6 +48,7 @@ under the License.
     </container>
 
     <!-- JavaMail Listener Container -->
+    <!--
     <container name="javamail-container" class="org.ofbiz.service.mail.JavaMailContainer">
         <property name="delegator-name" value="default"/>
         <property name="dispatcher-name" value="JavaMailDispatcher"/>
@@ -61,6 +62,7 @@ under the License.
             <property name="mail.debug" value="false"/>
         </property>
     </container>
+    -->
 
     <!-- load Shark Workflow Engine -->
     <!-- NOTE: before uncommenting this please see the instructions in the ofbiz/OPTIONAL_LIBRARIES file.
