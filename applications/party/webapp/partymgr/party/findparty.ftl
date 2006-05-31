@@ -302,7 +302,7 @@ function refreshInfo() {
                   <#if extInfo?default("") == "T">
                     <td><div class="tabletext">${partyRow.areaCode?if_exists}</div></td>
                   </#if>
-                  <td><div class="tabletext">${partyType.get("description",locale)?default("???")}</div></td>
+                  <td><div class="tabletext"><#if partyType.description?exists>${partyType.get("description", locale)}<#else>???</#if></div></td>
                   <td align="right">
                     <!-- this is all on one line so that no break will be inserted -->
                     <div class="tabletext"><nobr>
