@@ -276,6 +276,18 @@
             </fail-widgets>
         </section>
     </screen>
+    <screen name="CommonWebtoolsDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="CommonSysAdminDecorator">
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
     <screen name="CommonContactListDecorator">
         <section>
