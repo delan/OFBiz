@@ -2706,6 +2706,14 @@
         <response name="error" type="view" value="SysAdminMain"/>
     </request-map>
     
+    <request-map uri="EntityImport"><security https="true" auth="true"/><response name="success" type="view" value="EntityImport"/><response name="error" type="view" value="EntityImportDir"/></request-map>
+    <request-map uri="entityImport">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="entityImport"/>
+        <response name="success" type="view" value="EntityImport"/>
+        <response name="error" type="view" value="EntityImport"/>
+    </request-map>
+
     <!-- ================ Administratvie Requests ================ -->
     <request-map uri="AdminMain">
         <security https="true" auth="true"/>
@@ -3340,6 +3348,7 @@
     <view-map name="AccountActivitiesDetail" type="screen" page="component://accounting/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
     <!-- System administrative pages -->
     <view-map name="SysAdminMain" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SysAdminScreens.xml#SysAdminMain"/>
+    <view-map name="EntityImport" page="component://webtools/widget/EntityScreens.xml#EntityImport" type="screen"/>
     <!-- Accounting administrative pages -->
     <view-map name="AdminMain" type="screen" page="component://accounting/widget/AdminScreens.xml#AdminMain"/>
     <view-map name="PartyAcctgPreference" type="screen" page="component://accounting/widget/AdminScreens.xml#PartyAcctgPreference"/>

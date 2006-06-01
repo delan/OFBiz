@@ -76,25 +76,95 @@ public class otsUtils {
     public static void explode(String topEntityName, String topEntityId,  boolean xmlWrite0, String child1EntityName, boolean xmlWrite1, String child2EntityName, boolean xmlWrite2, String child3EntityName, boolean xmlWrite3, String child4EntityName, boolean xmlWrite4, PrintWriter writer )	{
         explode(  topEntityName,  topEntityId, xmlWrite0, child1EntityName, xmlWrite1, child2EntityName,  xmlWrite2, child3EntityName,  xmlWrite3,child4EntityName,  xmlWrite4, null, true, writer);
     }
-    public static void explode(String topEntityName, String topEntityId, String child1EntityName, String child2EntityName,String child3EntityName,String child4EntityName, String child5EntityName, PrintWriter writer )	{
-        explode(topEntityName,  topEntityId, true,  child1EntityName, true,child2EntityName,  true,child3EntityName, true, child4EntityName, true, child5EntityName, true, writer);
+    // all no entityId and no ignore
+    public static void explode(String topEntityName, String topEntityId, 
+            String child1EntityName,
+            String child2EntityName,
+            String child3EntityName,
+            String child4EntityName, 
+            String child5EntityName, PrintWriter writer )    {
+        explode(topEntityName,  topEntityId, true,  
+                child1EntityName, true,
+                child2EntityName, true,
+                child3EntityName, true, 
+                child4EntityName, true, 
+                child5EntityName, true, writer);
     }
+    // all, no entity id
+    public static void explode(String topEntityName, String topEntityId, boolean xmlWrite0, 
+            String child1EntityName, boolean xmlWrite1, 
+            String child2EntityName, boolean xmlWrite2,
+            String child3EntityName, boolean xmlWrite3,
+            String child4EntityName, boolean xmlWrite4,
+            String child5EntityName, boolean xmlWrite5, PrintWriter writer)    {
+        explode(topEntityName,  topEntityId, xmlWrite0, 
+                child1EntityName, null, xmlWrite1, 
+                child2EntityName, null, xmlWrite2, 
+                child3EntityName, null, xmlWrite3, 
+                child4EntityName, null, xmlWrite4, 
+                child5EntityName, null, xmlWrite5, writer);
+    }
+    // all, no ignore
+    public static void explode(String topEntityName, String topEntityId, 
+            String child1EntityName, String child1EntityId, 
+            String child2EntityName, String child2EntityId,
+            String child3EntityName, String child3EntityId,
+            String child4EntityName, String child4EntityId, 
+            String child5EntityName, String child5EntityId, PrintWriter writer)  {
+        explode(topEntityName,  topEntityId, true, 
+                child1EntityName, null, true, 
+                child2EntityName, null, true, 
+                child3EntityName, null, true, 
+                child4EntityName, null, true, 
+                child5EntityName, null, true, writer);
+    }
+    // 4, no ignore
+    public static void explode(String topEntityName, String topEntityId, 
+            String child1EntityName, String child1EntityId, 
+            String child2EntityName, String child2EntityId,
+            String child3EntityName, String child3EntityId,
+            String child4EntityName, String child4EntityId, 
+            PrintWriter writer)  {
+        explode(topEntityName,  topEntityId, true, 
+                child1EntityName, child1EntityId, true, 
+                child2EntityName, child2EntityId, true, 
+                child3EntityName, child3EntityId, true, 
+                child4EntityName, child4EntityId, true, 
+                null, null, false, writer);
+    }
+    
    /**
     * This routine will export from the data base in xml format if the xmlWrite flag is true.
     * If false then no xml file will be generated but a list will be returned of the lowest level provided
     * Input is a path through the database of related entities.
     * @param topEntityName
     * @param topEntityId
+    * @param xmlWrite0
     * @param child1EntityName
+    * @param child1EntityId
+    * @param xmlWrite1
     * @param child2EntityName
+    * @param child2EntityId
+    * @param xmlWrite2
     * @param child3EntityName
+    * @param child3EntityId
+    * @param xmlWrite3
     * @param child4EntityName
+    * @param child4EntityId
+    * @param xmlWrite4
     * @param child5EntityName
+    * @param child5EntityId
+    * @param xmlWrite5
     * @param writer
     * @param xmlWrite
     * @return
     */
-    private static void explode(String topEntityName, String topEntityId, boolean xmlWrite0, String child1EntityName, boolean xmlWrite1, String child2EntityName, boolean xmlWrite2,String child3EntityName, boolean xmlWrite3,String child4EntityName,  boolean xmlWrite4,String child5EntityName, boolean xmlWrite5, PrintWriter writer)	{
+    private static void explode(String topEntityName, String topEntityId, boolean xmlWrite0, 
+            String child1EntityName, String child1EntityId, boolean xmlWrite1, 
+            String child2EntityName, String child2EntityId, boolean xmlWrite2,
+            String child3EntityName, String child3EntityId, boolean xmlWrite3,
+            String child4EntityName, String child4EntityId, boolean xmlWrite4,
+            String child5EntityName, String child5EntityId, boolean xmlWrite5, PrintWriter writer)	{
     	try {
     		Debug.logInfo("==processing topEntity:" + topEntityName,module);
     		List topEntityList = delegator.findByLike(topEntityName,UtilMisc.toMap(topEntityId,prefix.concat("%")),UtilMisc.toList(topEntityId));
@@ -104,31 +174,51 @@ public class otsUtils {
     				GenericValue topEntityListItem = (GenericValue) t.next();
     				if (xmlWrite0) { topEntityListItem.writeXmlText(writer,""); numberWritten++; }
     				if (child1EntityName != null)	{
-    					List children1 = topEntityListItem.getRelated(child1EntityName);
+                        List children1 = null;
+                        if (child1EntityId != null)
+                            children1 = topEntityListItem.getRelatedByAnd(child1EntityName, UtilMisc.toMap(child1EntityId,prefix.concat("%")));
+                        else
+                            children1 = topEntityListItem.getRelated(child1EntityName);
     					if (children1 != null && children1.size() > 0)	{
     						Iterator psr1 = children1.iterator();
     						while (psr1.hasNext())	{
     							GenericValue child1 = (GenericValue) psr1.next();
     							if (child2EntityName != null)	{
-    								List children2 =  child1.getRelated(child2EntityName);
+                                    List children2 = null;
+                                    if (child2EntityId != null)
+                                        children2 = child1.getRelatedByAnd(child2EntityName, UtilMisc.toMap(child2EntityId,prefix.concat("%")));
+                                    else
+                                        children2 = child1.getRelated(child2EntityName);
     								if (children2 != null && children2.size() > 0)	{
     									Iterator psr2 = children2.iterator();
     									while (psr2.hasNext())	{
     										GenericValue child2 = (GenericValue) psr2.next();
     										if (child3EntityName != null)	{
-    											List children3 = child2.getRelated(child3EntityName);
+                                                List children3 = null;
+                                                if (child3EntityId != null)
+                                                    children3 = child2.getRelatedByAnd(child3EntityName, UtilMisc.toMap(child3EntityId,prefix.concat("%")));
+                                                else
+                                                    children3 = child2.getRelated(child3EntityName);
     											if (children3 != null && children3.size() > 0)	{
     												Iterator psr3 = children3.iterator();
     												while (psr3.hasNext())	{
     													GenericValue child3 = (GenericValue) psr3.next();
     													if (child4EntityName != null)	{
-    														List children4 = child3.getRelated(child4EntityName);
+                                                            List children4 = null;
+                                                            if (child4EntityId != null)
+                                                                children4 = child3.getRelatedByAnd(child4EntityName, UtilMisc.toMap(child4EntityId,prefix.concat("%")));
+                                                            else
+                                                                children4 = child3.getRelated(child4EntityName);
     														if (children4 != null && children4.size() > 0)	{
     															Iterator psr4 = children4.iterator();
     															while (psr4.hasNext())	{
     																GenericValue child4 = (GenericValue) psr4.next();
     																if (child5EntityName != null)	{
-    																	List children5 = child4.getRelated(child5EntityName);
+                                                                        List children5 = null;
+                                                                        if (child5EntityId != null)
+                                                                            children5 = child4.getRelatedByAnd(child5EntityName, UtilMisc.toMap(child5EntityId,prefix.concat("%")));
+                                                                        else
+                                                                            children5 = child4.getRelated(child5EntityName);
     																	if (children5 != null && children5.size() > 0)	{
     																		Iterator psr5 = children5.iterator();
     																		while (psr5.hasNext())	{
@@ -228,6 +318,162 @@ public class otsUtils {
         
         prefix = productStoreId;	// all main entities ID's are prefixed with this prefix
 
+        // create party table first without the created/modified by userlogin fields
+        try {
+            List parties = delegator.findByLike("Party", UtilMisc.toMap("partyId", prefix.concat("%")));
+            Iterator t = parties.iterator();
+            while(t.hasNext()) {
+                GenericValue party = (GenericValue) t.next();
+                party.remove("createdByUserLogin");
+                party.remove("lastModifiedByUserLogin");
+                party.writeXmlText(writer,""); numberWritten++;
+            }
+        } catch (GenericEntityException e) { Debug.logError(e, "Problems parties file", module);}
+        
+        
+        // get all parties
+        explode("Party", "partyId",
+                "UserLogin",null, 
+                "UserLoginSecurityGroup", "groupId", 
+                "SecurityGroupPermission", null, 
+                "SecurityPermission", "permissionId", 
+                writer);
+        explode("Party", "partyId", false, "PartyGroup", true, writer);
+        explode("Party", "partyId", false, "PartyRole",true, writer);
+        
+        // contact mechanisms
+        explode("ContactMech", "contactMechId", "PartyContactMech", writer);
+        explode("PostalAddress", "contactMechId", writer);
+        explode("TelecomNumber", "contactMechId", writer);
+        
+        // payment methods
+        explode("PaymentMethod", "paymentMethodId", writer);
+        explode("EftAccount", "paymentMethodId", writer);
+        explode("CreditCard", "paymentMethodId", writer);
+        explode("GiftCard", "paymentMethodId", writer);
+
+        // specifics for Anet
+        if (prefix.equals("anet")) {
+            
+            try {
+                List cmPartys = delegator.findByLike("PartyContactMech", UtilMisc.toMap("partyId", prefix.concat("%")));
+                if (cmPartys != null && cmPartys.size() > 0) {
+                    Iterator t = cmPartys.iterator();
+                    while(t.hasNext()) {
+                        GenericValue cmParty = (GenericValue) t.next();
+                        GenericValue cm = (GenericValue) delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", cmParty.getString("contactMechId")));
+                        if (cm != null) { cm.writeXmlText(writer,"");numberWritten++; }
+                        cm = (GenericValue) delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", cmParty.getString("contactMechId")));
+                        if (cm != null) { cm.writeXmlText(writer,"");numberWritten++; }
+                        cm = (GenericValue) delegator.findByPrimaryKey("TelecomNumber", UtilMisc.toMap("contactMechId", cmParty.getString("contactMechId")));
+                        if (cm != null) { cm.writeXmlText(writer,"");numberWritten++; }
+                        cmParty.writeXmlText(writer,"");
+                    }
+                }
+                
+                List pms = delegator.findByLike("PaymentMethod", UtilMisc.toMap("partyId", prefix.concat("%")));
+                if (pms != null && pms.size() > 0) {
+                    Iterator t = pms.iterator();
+                    while(t.hasNext()) {
+                        GenericValue pm = (GenericValue) t.next();
+                        String pmId = pm.getString("paymentMethodId");
+                        pm.writeXmlText(writer,"");numberWritten++;
+                        GenericValue cc = delegator.findByPrimaryKey("EftAccount",UtilMisc.toMap("paymentMethodId", pmId));
+                        if (cc != null) {
+                            cc.writeXmlText(writer,"");numberWritten++;
+                        }
+                        cc = delegator.findByPrimaryKey("CreditCard",UtilMisc.toMap("paymentMethodId", pmId));
+                        if (cc != null) {
+                            cc.writeXmlText(writer,"");numberWritten++;
+                        }
+                    }
+                }
+                
+                GenericValue party = delegator.findByPrimaryKey("Party",UtilMisc.toMap("partyId","BelastingDienst"));
+                party.writeXmlText(writer,""); numberWritten++;
+                party = delegator.findByPrimaryKey("TaxAuthority",UtilMisc.toMap("taxAuthPartyId","BelastingDienst","taxAuthGeoId", "NLD"));
+                party.writeXmlText(writer,""); numberWritten++;
+                party = delegator.findByPrimaryKey("PartyGroup",UtilMisc.toMap("partyId","BelastingDienst"));
+                party.writeXmlText(writer,""); numberWritten++;
+                List roles = delegator.findByAnd("PartyRole",UtilMisc.toMap("partyId", "BelastingDienst"));
+                if (roles != null && roles.size() > 0) {
+                    Iterator t = roles.iterator();
+                    while(t.hasNext()) {
+                        GenericValue role = (GenericValue) t.next();
+                        role.writeXmlText(writer,""); numberWritten++;
+                    }
+                }
+                party = delegator.findByPrimaryKey("Party",UtilMisc.toMap("partyId","Stulemeijer"));
+                party.writeXmlText(writer,""); numberWritten++;
+                party = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId","Stulemeijer"));
+                party.writeXmlText(writer,""); numberWritten++;
+                roles = delegator.findByAnd("PartyRole",UtilMisc.toMap("partyId", "Stulemeijer"));
+                if (roles != null && roles.size() > 0) {
+                    Iterator t = roles.iterator();
+                    while(t.hasNext()) {
+                        GenericValue role = (GenericValue) t.next();
+                        role.writeXmlText(writer,""); numberWritten++;
+                    }
+                }
+                pms = delegator.findByAnd("PaymentMethod", UtilMisc.toMap("partyId","Stulemeijer"));
+                if (pms != null && pms.size() > 0) {
+                    Iterator t = pms.iterator();
+                    while(t.hasNext()) {
+                        GenericValue pm = (GenericValue) t.next();
+                        String pmId = pm.getString("paymentMethodId");
+                        pm.writeXmlText(writer,"");numberWritten++;
+                        GenericValue cc = delegator.findByPrimaryKey("EftAccount",UtilMisc.toMap("paymentMethodId", pmId));
+                        if (cc != null) {
+                            cc.writeXmlText(writer,"");numberWritten++;
+                        }
+                        cc = delegator.findByPrimaryKey("CreditCard",UtilMisc.toMap("paymentMethodId", pmId));
+                        if (cc != null) {
+                            cc.writeXmlText(writer,"");numberWritten++;
+                        }
+                    }
+                }
+                party = delegator.findByPrimaryKey("Party",UtilMisc.toMap("partyId","Sidin"));
+                party.writeXmlText(writer,""); numberWritten++;
+                party = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId","Sidin"));
+                party.writeXmlText(writer,""); numberWritten++;
+                roles = delegator.findByAnd("PartyRole",UtilMisc.toMap("partyId", "Sidin"));
+                if (roles != null && roles.size() > 0) {
+                    Iterator t = roles.iterator();
+                    while(t.hasNext()) {
+                        GenericValue role = (GenericValue) t.next();
+                        role.writeXmlText(writer,""); numberWritten++;
+                    }
+                }
+                pms = delegator.findByAnd("PaymentMethod", UtilMisc.toMap("partyId","Sidin"));
+                if (pms != null && pms.size() > 0) {
+                    Iterator t = pms.iterator();
+                    while(t.hasNext()) {
+                        GenericValue pm = (GenericValue) t.next();
+                        String pmId = pm.getString("paymentMethodId");
+                        pm.writeXmlText(writer,"");numberWritten++;
+                        GenericValue cc = delegator.findByPrimaryKey("EftAccount",UtilMisc.toMap("paymentMethodId", pmId));
+                        if (cc != null) {
+                            cc.writeXmlText(writer,"");numberWritten++;
+                        }
+                        cc = delegator.findByPrimaryKey("CreditCard",UtilMisc.toMap("paymentMethodId", pmId));
+                        if (cc != null) {
+                            cc.writeXmlText(writer,"");numberWritten++;
+                        }
+                    }
+                }
+                
+            } catch (GenericEntityException e) { Debug.logError(e, "Problems reading extra parties for A-NeT", module);}
+        }
+
+
+        // tax tables
+        explode("TaxAuthority","taxAuthPartyId",writer);
+        explode("PartyTaxAuthInfo","partyId",writer);
+        
+        // security
+        explode("SecurityGroup", "groupId", "SecurityGroupPermission", writer);
+        explode("Party", "partyId", false, "ToPartyRelationship", true, writer);
+
         // store
         GenericValue productStore = null;
         try{ productStore =delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId",productStoreId));
@@ -262,18 +508,9 @@ public class otsUtils {
         // get all fixed assets and link to product
         explode("FixedAsset","fixedAssetId", "FixedAssetProduct", writer);
 
-        // security
-        explode("SecurityGroup", "groupId", "SecurityGroupPermission", writer);
-        
-        // get all parties
-        explode("Party", "partyId", "PartyGroup", writer);
-        explode("Party", "partyId", false, "PartyRole",true, writer);
-        explode("Party", "partyId", false, "UserLogin", true, "UserLoginSecurityGroup", true, writer);
-        explode("Party", "partyId", false, "ToPartyRelationship", true, writer);
-
         // get all content, resource and electronic text
         explode("Content","contentId",false, "DataResource", true, "ElectronicText", true,  writer);
-        explode("Content","contentId", writer);
+        explode("Content","contentId","FromContentAssoc", writer);
 
         // invoices/payments/applications
         explode("PartyAcctgPreference", "partyId", writer);
@@ -281,7 +518,8 @@ public class otsUtils {
         explode("Invoice", "invoiceId", "InvoiceItem", writer);
         explode("Invoice", "invoiceId",false, "InvoiceStatus", true, writer);
         explode("Invoice", "invoiceId",false, "InvoiceRole", true, writer);
-        explode("Payment", "paymentId", "PaymentApplication", writer);
+        explode("Payment", "paymentId", writer);
+        explode("Payment", "paymentId", false, "PaymentApplication",true, writer);
 
         explode("GlAccountOrganization", "organizationPartyId", writer);
         explode("PaymentMethodTypeGlAccount", "organizationPartyId", writer);
@@ -292,6 +530,9 @@ public class otsUtils {
         // orders (to be completed)
         explode("OrderHeader","orderId", "OrderItem", "orderItemPriceInfo", writer);
         explode("OrderItemBilling","orderId",  writer);
+        
+        // sequence value items: SequenceValueItems
+        explode("SequenceValueItem","seqName",  writer);
         
         writer.println("</entity-engine-xml>");
         writer.close();
