@@ -56,11 +56,13 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="CommunicationEvent" />
-    <entity-group group="org.ofbiz" entity="CommunicationEventAndRole" />
     <entity-group group="org.ofbiz" entity="CommunicationEventPrpTyp" />
     <entity-group group="org.ofbiz" entity="CommunicationEventPurpose" />
     <entity-group group="org.ofbiz" entity="CommunicationEventRole" />
     <entity-group group="org.ofbiz" entity="CommunicationEventType" />
+    <entity-group group="org.ofbiz" entity="CommunicationEventAndRole" />
+    <entity-group group="org.ofbiz" entity="CommunicationEventAndProduct" />
+    <entity-group group="org.ofbiz" entity="CommunicationEventAndOrder" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.party.contact -->
