@@ -706,7 +706,10 @@
                 </else>
                 </if-instance-of>
             </if-compare>
-            
+
+            <if-empty field-name="sequenceNum" map-name="responseAnswer">
+                <set from-field="surveyQuestionAndAppl.sequenceNum" field="responseAnswer.sequenceNum"/>
+            </if-empty>      
             <set from-field="nowTimestamp" field="responseAnswer.answeredDate"/>
             <store-value value-name="responseAnswer"/>
         </if-not-empty>
