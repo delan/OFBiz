@@ -478,7 +478,6 @@
         <override name="contactListTypeId" optional="false"/>
         <override name="contactListName" optional="false"/>
     </service>
-    <!-- ContactList Services -->
     <service name="createContactListOfbiz" default-entity-name="ContactList" engine="simple"
         location="org/ofbiz/marketing/contact/ContactListServices.xml" invoke="createContactList" auth="true">
         <description>Create a ContactList record</description>
@@ -487,7 +486,19 @@
         <override name="contactListTypeId" optional="false"/>
         <override name="contactListName" optional="false"/>
     </service>
-
+    <service name="createCommunicationEvent" engine="simple"
+        location="org/ofbiz/opentravelsystem/PartyServices.xml" invoke="createCommunicationEvent" auth="true">
+        <description>Create a Communication Event</description>
+        <auto-attributes entity-name="CommunicationEvent" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="CommunicationEvent" include="pk" mode="OUT" optional="false"/>
+    </service>
+    <service name="createCommunicationEventOfbiz" engine="simple"
+        location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEvent" auth="true">
+        <description>Create a Communication Event</description>
+        <auto-attributes entity-name="CommunicationEvent" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="CommunicationEvent" include="pk" mode="INOUT" optional="true"/>
+    </service>
+    
     <service name="createGiftCard" engine="simple"
         location="org/ofbiz/opentravelsystem/PaymentMethodServices.xml" invoke="createGiftCard" auth="true">
         <description>Create GiftCard</description>

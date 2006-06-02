@@ -151,9 +151,9 @@
         default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
         menu-container-style="appContainer" orientation="horizontal" type="simple">
         <!--menu-item name="intro" title="Intro"><link target="intro"/></menu-item-->
-        <menu-item name="download" title="Download"><link target="sysAdminMain"/></menu-item>
         <menu-item name="upLoad" title="Upload"><link target="entityImport"/></menu-item>
-        <!--menu-item name="webtools" title="Webtools"><link target="/webtools"/></menu-item-->
+        <menu-item name="download" title="Download"><link target="sysAdminMain"/></menu-item>
+        <menu-item name="delete" title="Delete"><link target="requestDelete"/></menu-item>
     </menu>
     <menu name="dataExchangeTabBar" default-menu-item-name="ContactList" default-selected-style="tabButtonSelected" 
         default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 

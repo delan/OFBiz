@@ -2698,12 +2698,24 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="SysAdminMain"/>
     </request-map>
-
+    
+    <request-map uri="requestDelete">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DeleteShop"/>
+    </request-map>
+    
     <request-map uri="unLoad">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.opentravelsystem.otsUtils" invoke="unLoad"/>
         <response name="success" type="view" value="SysAdminMain"/>
         <response name="error" type="view" value="SysAdminMain"/>
+    </request-map>
+    
+    <request-map uri="deleteShop">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.opentravelsystem.otsUtils" invoke="unLoad"/>
+        <response name="success" type="view" value="DeleteShop"/>
+        <response name="error" type="view" value="DeleteShop"/>
     </request-map>
     
     <request-map uri="EntityImport"><security https="true" auth="true"/><response name="success" type="view" value="EntityImport"/><response name="error" type="view" value="EntityImportDir"/></request-map>
@@ -3348,6 +3360,7 @@
     <view-map name="AccountActivitiesDetail" type="screen" page="component://accounting/widget/AccountingScreens.xml#AccountActivitiesDetail"/>
     <!-- System administrative pages -->
     <view-map name="SysAdminMain" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SysAdminScreens.xml#SysAdminMain"/>
+    <view-map name="DeleteShop" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SysAdminScreens.xml#DeleteShop"/>
     <view-map name="EntityImport" page="component://webtools/widget/EntityScreens.xml#EntityImport" type="screen"/>
     <!-- Accounting administrative pages -->
     <view-map name="AdminMain" type="screen" page="component://accounting/widget/AdminScreens.xml#AdminMain"/>
