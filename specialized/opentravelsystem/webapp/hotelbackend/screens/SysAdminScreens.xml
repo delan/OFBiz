@@ -22,10 +22,28 @@
 
     <screen name="SysAdminMain">
         <section>
+            <actions>
+                <set field="headerItem" value="download"/>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonSysAdminDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="SysAdminMain" location="component://opentravelsystem/webapp/hotelbackend/screens/SysAdminForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DeleteShop">
+        <section>
+            <actions>
+                <set field="headerItem" value="delete"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSysAdminDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="DeleteShop" location="component://opentravelsystem/webapp/hotelbackend/screens/SysAdminForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

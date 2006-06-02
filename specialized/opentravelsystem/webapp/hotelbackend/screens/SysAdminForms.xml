@@ -4,15 +4,29 @@
 
 
     <form name="SysAdminMain" type="single" target="unLoad">
-
-    <field name="dummy" title=""><display description="select een shop en press submit to download all information"/></field>
-    <field name="downloadId">
-        <drop-down allow-empty="false">
-            <entity-options entity-name="PartyAcctgPreference" description="${invoiceIdPrefix}" key-field-name="partyId"/>
-        </drop-down>
+        
+        <field name="dummy" title=""><display description="select een shop en press submit to download all information"/></field>
+        <field name="action"><hidden value="xml"/></field>
+        <field name="downloadId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PartyAcctgPreference" description="${invoiceIdPrefix}" key-field-name="partyId"/>
+            </drop-down>
         </field>
-    <field name="submitButton"><submit/></field>
+        <field name="submitButton"><submit/></field>
     </form>
-
-
+    
+    <form name="DeleteShop" type="single" target="deleteShop">
+        
+        <field name="dummy" title=""><display description="select een shop en "/></field>
+        <field name="dummy1" title=""><display description="press submit to DELETE all information"/></field>
+        <field name="action"><hidden value="delete"/></field>
+        <field name="downloadId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PartyAcctgPreference" description="${invoiceIdPrefix}" key-field-name="partyId"/>
+            </drop-down>
+        </field>
+        <field name="submitButton"><submit/></field>
+    </form>
+    
+    
 </forms>

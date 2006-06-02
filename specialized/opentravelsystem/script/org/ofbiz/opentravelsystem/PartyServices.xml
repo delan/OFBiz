@@ -638,4 +638,24 @@
         </call-service>
     </simple-method>
     
+    <simple-method method-name="createCommunicationEvent" short-description="Create an CommunicationEvent">
+        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
+            <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
+        </entity-one>
+        <if-not-empty field-name="partyAcctgPreference">
+            <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
+                <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
+                <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
+            </check-permission>        
+            <check-errors/>
+            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}CommunicationEvent" env-name="nextCommunicationEventId"/>
+            <set field="parameters.communicationEventId" value="${partyAcctgPreference.invoiceIdPrefix}${nextCommunicationEventId}"/>
+        </if-not-empty>
+        <!-- call original ofbiz service with preset communicationEventId -->
+        <set-service-fields service-name="createCommunicationEventOfbiz" map-name="parameters" to-map-name="createCommunicationEvent"/>
+        <call-service service-name="createCommunicationEventOfbiz" in-map-name="createCommunicationEvent">
+            <result-to-result result-name="communicationEventId" service-result-name="communicationEventId"/>
+        </call-service>
+    </simple-method>
+    
 </simple-methods>
