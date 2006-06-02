@@ -30,7 +30,12 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <simple-method method-name="createContactMech" short-description="Create Contact Mechanism">
         <make-value value-name="newValue" entity-name="ContactMech"/>
-        <sequenced-id-to-env sequence-name="ContactMech" env-name="newValue.contactMechId"/>
+        <if-empty field-name="parameters.contactMechId">
+            <sequenced-id-to-env sequence-name="ContactMech" env-name="newValue.contactMechId"/>
+            <else>
+                <set field="newValue.contactMechId" from-field="parameters.contactMechId"/>
+            </else>
+        </if-empty>
         <set-nonpk-fields map-name="parameters" value-name="newValue"/>
         <create-value value-name="newValue"/>
         <field-to-result map-name="newValue" field-name="contactMechId"/>
@@ -53,7 +58,7 @@
         <if-compare-field map-name="parameters" field-name="infoString" to-map-name="oldValue" operator="not-equals">
              <log level="info" message="Contact mech need updating"/> 
             <clone-value value-name="oldValue" new-value-name="newValue"/>
-            <set-nonpk-fields map-name="parameters" value-name="newValue" set-if-null="false"/>              
+            <set-nonpk-fields map-name="parameters" value-name="newValue" set-if-null="false"/>
             <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="contactMech" in-map-name="newValue" out-map-name="context"/>
             <call-service service-name="createContactMech" in-map-name="context">
