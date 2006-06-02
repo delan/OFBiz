@@ -304,7 +304,7 @@
             location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="createContactMech" auth="true">
         <description>Create a ContactMech</description>
         <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="ContactMech" include="pk" mode="OUT" optional="false"/>
+        <auto-attributes entity-name="ContactMech" include="pk" mode="INOUT" optional="true"/>
         <override name="infoString" optional="true"/>
     </service>
     <service name="createPartyContactMech" engine="simple"
@@ -587,7 +587,7 @@
             location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEvent" auth="true">
         <description>Create a Communication Event</description>
         <auto-attributes entity-name="CommunicationEvent" include="nonpk" mode="IN" optional="true"/>
-        <auto-attributes entity-name="CommunicationEvent" include="pk" mode="OUT" optional="false"/>
+        <auto-attributes entity-name="CommunicationEvent" include="pk" mode="INOUT" optional="true"/>
     </service>
     <service name="updateCommunicationEvent" engine="simple"
             location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="updateCommunicationEvent" auth="true">

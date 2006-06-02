@@ -50,7 +50,12 @@
         <make-value value-name="newEntity" entity-name="CommunicationEvent"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
-        <sequenced-id-to-env sequence-name="CommunicationEvent" env-name="newEntity.communicationEventId"/>
+        <if-empty field-name="parameters.communicationEventId">
+            <sequenced-id-to-env sequence-name="CommunicationEvent" env-name="newEntity.communicationEventId"/>
+            <else>
+                <set field="newEntity.communicationEventId" from-field="parameters.communicationEventId"/>
+            </else>
+        </if-empty>
         <field-to-result field-name="newEntity.communicationEventId" result-name="communicationEventId"/>
         
         <now-timestamp-to-env env-name="newEntity.entryDate"/>
