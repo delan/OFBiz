@@ -326,7 +326,11 @@ public class WorkEffortServices {
         String partyId = (String) context.get("partyId");
         String facilityId = (String) context.get("facilityId");
         String fixedAssetId = (String) context.get("fixedAssetId");
-
+        Boolean filterOutCanceledEvents = (Boolean) context.get("filterOutCanceledEvents");
+        if (filterOutCanceledEvents == null) {
+        	filterOutCanceledEvents = Boolean.FALSE;
+        }
+        
         //To be returned, the max concurrent entries for a single period
         int maxConcurrentEntries = 0;
                 
@@ -361,6 +365,10 @@ public class WorkEffortServices {
         if (UtilValidate.isNotEmpty(partyIdToUse) || UtilValidate.isNotEmpty(facilityId) || UtilValidate.isNotEmpty(fixedAssetId)) {
             validWorkEfforts = getWorkEffortEvents(ctx, startStamp, endStamp, partyIdToUse, facilityId, fixedAssetId);
         }
+        if (filterOutCanceledEvents.booleanValue()) {
+        	validWorkEfforts = EntityUtil.filterOutByCondition(validWorkEfforts, new EntityExpr("currentStatusId", EntityOperator.EQUALS, "EVENT_CANCELLED"));
+        }
+        
         // Split the WorkEffort list into a map with entries for each period, period start is the key
         List periods = new ArrayList();
         if (validWorkEfforts != null) {
