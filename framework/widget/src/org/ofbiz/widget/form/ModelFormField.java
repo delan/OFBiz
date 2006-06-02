@@ -1648,7 +1648,7 @@ public class ModelFormField {
                     } else {
                         localContext = MapStack.create(context);
                     }
-                    localContext.addToBottom(value);
+                    localContext.push(value);
 
                     // expand with the new localContext, which is locale aware
                     String optionDesc = this.description.expandString(localContext, locale);
