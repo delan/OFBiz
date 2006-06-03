@@ -147,6 +147,7 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz" entity="CommunicationEventProduct" />
+    <entity-group group="org.ofbiz" entity="CommunicationEventAndProduct" />
     <entity-group group="org.ofbiz" entity="GoodIdentification" />
     <entity-group group="org.ofbiz" entity="GoodIdentificationAndProduct" />
     <entity-group group="org.ofbiz" entity="GoodIdentificationType" />

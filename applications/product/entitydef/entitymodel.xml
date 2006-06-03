@@ -1703,6 +1703,17 @@
         <key-map field-name="communicationEventId"/>
       </relation>
     </entity>
+    <view-entity entity-name="CommunicationEventAndProduct"
+                 package-name="org.ofbiz.party.communication"
+                 title="Communication Event And Product View Entity">
+      <member-entity entity-alias="CP" entity-name="CommunicationEventProduct"/>
+      <member-entity entity-alias="CE" entity-name="CommunicationEvent"/>
+      <alias-all entity-alias="CP"/>
+      <alias-all entity-alias="CE"/>
+      <view-link entity-alias="CP" rel-entity-alias="CE">
+        <key-map field-name="communicationEventId"/>
+      </view-link>
+    </view-entity>
 
     <entity entity-name="GoodIdentification"
             package-name="org.ofbiz.product.product"
