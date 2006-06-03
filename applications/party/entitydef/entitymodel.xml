@@ -680,28 +680,6 @@
         <key-map field-name="parentTypeId" rel-field-name="communicationEventTypeId"/>
       </relation>
     </entity>
-    <view-entity entity-name="CommunicationEventAndProduct"
-                 package-name="org.ofbiz.party.communication"
-                 title="Communication Event And Product View Entity">
-      <member-entity entity-alias="CP" entity-name="CommunicationEventProduct"/>
-      <member-entity entity-alias="CE" entity-name="CommunicationEvent"/>
-      <alias-all entity-alias="CP"/>
-      <alias-all entity-alias="CE"/>
-      <view-link entity-alias="CP" rel-entity-alias="CE">
-        <key-map field-name="communicationEventId"/>
-      </view-link>
-    </view-entity>
-    <view-entity entity-name="CommunicationEventAndOrder"
-                 package-name="org.ofbiz.party.communication"
-                 title="Communication Event And Order View Entity">
-      <member-entity entity-alias="CO" entity-name="CommunicationEventOrder"/>
-      <member-entity entity-alias="CE" entity-name="CommunicationEvent"/>
-      <alias-all entity-alias="CO"/>
-      <alias-all entity-alias="CE"/>
-      <view-link entity-alias="CO" rel-entity-alias="CE">
-        <key-map field-name="communicationEventId"/>
-      </view-link>
-    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.party.contact -->
