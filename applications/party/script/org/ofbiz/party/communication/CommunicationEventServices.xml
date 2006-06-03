@@ -153,40 +153,4 @@
             </then>
         </if>        
     </simple-method>
-    <simple-method method-name="createCommunicationEventProduct" short-description="Create a CommunicationEventProduct">
-        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
-            <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventProductPermissionError"/>
-        </check-permission>
-        <check-errors/>
-        <make-value value-name="newEntity" entity-name="CommunicationEventProduct"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <create-value value-name="newEntity"/>    
-    </simple-method>
-    <simple-method method-name="removeCommunicationEventProduct" short-description="Remove a CommunicationEventProduct">
-        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
-            <fail-property resource="PartyUiLabels" property="PartyRemoveCommunicationEventProductPermissionError"/>
-        </check-permission>
-        <check-errors/>
-        <entity-one entity-name="CommunicationEventProduct" value-name="eventProduct"/>
-        <remove-value value-name="eventProduct"/>
-    </simple-method>
-    <simple-method method-name="createCommunicationEventOrder" short-description="Create a CommunicationEventOrder">
-        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
-            <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventProductPermissionError"/>
-        </check-permission>
-        <check-errors/>
-        <make-value value-name="newEntity" entity-name="CommunicationEventOrder"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <create-value value-name="newEntity"/>    
-    </simple-method>
-    <simple-method method-name="removeCommunicationEventOrder" short-description="Remove a CommunicationEventOrder">
-        <check-permission permission="PARTYMGR" action="_CME_UPDATE">
-            <fail-property resource="PartyUiLabels" property="PartyRemoveCommunicationEventOrderPermissionError"/>
-        </check-permission>
-        <check-errors/>
-        <entity-one entity-name="CommunicationEventOrder" value-name="eventOrder"/>
-        <remove-value value-name="eventOrder"/>
-    </simple-method>
 </simple-methods>

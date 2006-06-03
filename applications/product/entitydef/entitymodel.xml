@@ -1704,7 +1704,7 @@
       </relation>
     </entity>
     <view-entity entity-name="CommunicationEventAndProduct"
-                 package-name="org.ofbiz.party.communication"
+                 package-name="org.ofbiz.product.communication"
                  title="Communication Event And Product View Entity">
       <member-entity entity-alias="CP" entity-name="CommunicationEventProduct"/>
       <member-entity entity-alias="CE" entity-name="CommunicationEvent"/>
