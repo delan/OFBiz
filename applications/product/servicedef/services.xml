@@ -979,5 +979,15 @@
         <description>Delete a ProductMeter</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="createCommunicationEventProduct" engine="simple"
+            location="org/ofbiz/product/communication/CommunicationEventServices.xml" invoke="createCommunicationEventProduct" auth="true">
+        <description>Create a Communication Event Product</description>
+        <auto-attributes entity-name="CommunicationEventProduct" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="removeCommunicationEventProduct" engine="simple"
+            location="org/ofbiz/product/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventProduct" auth="true">
+        <description>Remove a Communication Event Product</description>
+        <auto-attributes entity-name="CommunicationEventProduct" include="pk" mode="IN" optional="false"/>
+    </service>
     
 </services>

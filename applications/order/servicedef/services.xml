@@ -480,5 +480,17 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    
+    <!-- CommunicationEvents related to orders -->
+    <service name="createCommunicationEventOrder" engine="simple"
+            location="org/ofbiz/order/communication/CommunicationEventServices.xml" invoke="createCommunicationEventOrder" auth="true">
+        <description>Create a Communication Event Order</description>
+        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="removeCommunicationEventOrder" engine="simple"
+            location="org/ofbiz/order/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventOrder" auth="true">
+        <description>Remove a Communication Event Order</description>
+        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN" optional="false"/>
+    </service>
 </services>
 

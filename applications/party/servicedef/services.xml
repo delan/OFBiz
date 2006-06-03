@@ -628,26 +628,6 @@
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="CommunicationEventWorkEff"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEventWorkEff"/>
     </service>
-    <service name="createCommunicationEventProduct" engine="simple"
-            location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEventProduct" auth="true">
-        <description>Create a Communication Event Product</description>
-        <auto-attributes entity-name="CommunicationEventProduct" include="pk" mode="IN" optional="false"/>
-    </service>
-    <service name="removeCommunicationEventProduct" engine="simple"
-            location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventProduct" auth="true">
-        <description>Remove a Communication Event Product</description>
-        <auto-attributes entity-name="CommunicationEventProduct" include="pk" mode="IN" optional="false"/>
-    </service>
-    <service name="createCommunicationEventOrder" engine="simple"
-            location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEventOrder" auth="true">
-        <description>Create a Communication Event Order</description>
-        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN" optional="false"/>
-    </service>
-    <service name="removeCommunicationEventOrder" engine="simple"
-            location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventOrder" auth="true">
-        <description>Remove a Communication Event Order</description>
-        <auto-attributes entity-name="CommunicationEventOrder" include="pk" mode="IN" optional="false"/>
-    </service>
     <service name="markCommEventRead" engine="simple"
             location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="markEventRead" auth="true">
         <description>Marks a communication event as read if in the entered/pending status</description>
