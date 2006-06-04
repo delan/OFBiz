@@ -23,7 +23,7 @@
     <screen name="SysAdminMain">
         <section>
             <actions>
-                <set field="headerItem" value="download"/>
+                <set field="headerItem" value="downLoad"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSysAdminDecorator" location="${parameters.mainDecoratorLocation}">
@@ -50,4 +50,30 @@
         </section>
     </screen>
     
+    <screen name="EntityImport">
+        <section>
+            <condition>
+                <if-has-permission permission="ENTITY_MAINT"/>
+            </condition>
+            <actions>
+                <set field="title" value="XML Import"/>
+                <set field="titleProperty" value="PageTitleEntityImport"/>
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <set field="headerItem" value="upLoad"/>
+                <set field="messages" from-field="parameters.messages"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://webtools/webapp/webtools/entity/EntityImport.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+                <label style="head3">${uiLabelMap.WebtoolsPermissionError}</label>
+            </fail-widgets>
+        </section>
+    </screen>
 </screens>

@@ -32,6 +32,10 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+
 
 
 /**
@@ -42,6 +46,7 @@ public class otsUtils {
     public static final String module = otsUtils.class.getName();
     
     public static long numberWritten = 0;
+    public static long doubleRecords = 0;
     public static String prefix = null;
     public static GenericDelegator delegator = null;
     private static PrintWriter writer = null;
@@ -268,20 +273,6 @@ public class otsUtils {
     	} catch (GenericEntityException e) { Debug.logError(e, "Problems exploding" + topEntityName, module);}
     }
     
-    public static GenericValue usedOn(GenericValue bottomEntityName, String parent1EntityName )	{
-        GenericValue lastParent = (GenericValue) null;
-        GenericValue parent = (GenericValue) null;
-        try { parent = bottomEntityName.getRelatedOne(parent1EntityName);
-        } catch (GenericEntityException e) { Debug.logError(e, "Problems reading parent entity: " + parent1EntityName, module);}
-        if (parent != null)	{
-        	lastParent = parent;
-        }
-    return lastParent;    
-    }
-    
-    
-    
-
     /**
      * Unload Opentravelsystem data from the database (experimental program)
      *
@@ -327,9 +318,7 @@ public class otsUtils {
             writer = new PrintWriter(bw);
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             writer.println("<entity-engine-xml>");
-        }
 
-        if (output.equals("xml")) {
             // create party table first without the created/modified by userlogin fields
             try {
                 List parties = delegator.findByLike("Party", UtilMisc.toMap("partyId", prefix.concat("%")));
@@ -341,8 +330,9 @@ public class otsUtils {
                     action(party);
                 }
             } catch (GenericEntityException e) { Debug.logError(e, "Problems parties file", module);}
+            doubleRecords = numberWritten; // these records should be counted
         }
-        
+
         // security
         explode("SecurityGroup", "groupId" );
         explode("SecurityGroupPermission", "groupId" );
@@ -465,7 +455,7 @@ public class otsUtils {
                 
             } catch (GenericEntityException e) { Debug.logError(e, "Problems reading extra parties for A-NeT", module);}
         }
-*/
+        */
 
         // tax tables
         explode("TaxAuthority","taxAuthPartyId");
@@ -485,15 +475,14 @@ public class otsUtils {
         //get the productstore, related website records id
         // get the payment settings
         explode("ProductStore", "productStoreId", "ProductStorePaymentSetting");
-        explode("WebSite", "webSiteId" );
-        // get the email settings
         explode("ProductStore", "productStoreId", false, "ProductStoreEmailSetting",true);
+        explode("WebSite", "webSiteId" );
         // get the ProductStoreShipmentMeth
         // explode(productStore, "ProductStoreShipmentMeth");  // no direct link...
         explode("ProductStoreShipmentMeth","productStoreId" ); 
         // productStore, catalog and categories
         explode("ProdCatalog","prodCatalogId" ); 
-        explode("ProductStore", "productStoreId", false,"ProductStoreCatalog",true); //productstore and catalog
+        explode("ProductStore", "productStoreId", false,"ProductStoreCatalog",true); //productstore/catalog relation
         explode("ProductCategory","productCategoryId", "ProdCatalogCategory" ); // category and relation to catalog
         explode("ProductCategoryRollup","productCategoryId");  // category relations
         
@@ -547,15 +536,48 @@ public class otsUtils {
             writer.println("</entity-engine-xml>");
             writer.close();
             msgs.append("Unload ended normally, statistics:\n");
-            msgs.append("--Entities written to output file: " + numberWritten + "\n");
+            msgs.append("--Entities written to output file: " + numberWritten + " double records: " + doubleRecords + "\n");
             msgs.append("<a href=/"  + downloadLoc + ">--Download your generated file here</a>");
             if (msgs.length() > 0)
                 request.setAttribute("_EVENT_MESSAGE_", msgs.toString());
         }
 
         if ( output.equals("delete")) {
+            // delete records created in the server hit table
+           
             GenericValue current = null;
             try{
+                // keep history (not tested)
+/*             explode("Party", "partyId", false,  "UserLogin", false, "ServerHit", true ); 
+                explode("Party", "partyId", false,  "UserLogin", false, "UserLoginSession", true ); 
+                explode("Visitor", "partyId"); 
+                explode("UserLoginHistory", "partyId"); 
+*/                
+                // delete history
+                EntityExpr exprParty = new EntityExpr("partyId", EntityOperator.LIKE, prefix.concat("%"));
+                EntityExpr exprContent = new EntityExpr("contentId", EntityOperator.LIKE, prefix.concat("%"));
+                // delete all serverHits related to the visits to be deleted
+                List visits = delegator.findByCondition("Visit", exprParty,null,null);
+                if (visits != null && visits.size() > 0) {
+                    Iterator h = (Iterator) visits.iterator();
+                    while(h.hasNext()) {
+                        GenericValue visit = (GenericValue) h.next();
+                        List serverHits = visit.getRelated("ServerHit");
+                        if (serverHits != null && serverHits.size() > 0) {
+                            Iterator s = serverHits.iterator();
+                            while (s.hasNext()) {
+                                ((GenericValue) s.next()).remove();
+                            }
+                        }
+                        visit.remove(); // delete visit
+                    }
+                }
+                
+                delegator.removeByCondition( "Visitor", exprParty );
+//                delegator.removeByCondition( "UserLoginSession", exprUserLogin );
+                delegator.removeByCondition( "UserLoginHistory", exprParty );
+                delegator.removeByCondition( "ServerHitBin", exprContent );
+                
                 while(!stack.empty()) {
                     current =  (GenericValue) stack.pop();
                     delegator.removeValue(current);
