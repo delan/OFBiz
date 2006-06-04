@@ -172,7 +172,7 @@ public class JavaMailContainer implements Container {
         }
 
         // re-write the URLName including the password for this store
-        if (store != null) {
+        if (store != null && store.getURLName() != null) {
             URLName urlName = this.updateUrlName(store.getURLName(), session.getProperties());
             Debug.log("URLName - " + urlName.toString(), module);
             try {
