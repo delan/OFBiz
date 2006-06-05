@@ -1,436 +1,476 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta http-equiv="CONTENT-TYPE"
- content="text/html; charset=windows-1252">
-  <title>Advanced Framework Training Outline</title>
-  <style>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="CONTENT-TYPE" content="text/html; charset=windows-1252"/>
+        <title>Advanced Framework Training Outline</title>
+        <style type="">
 		DIV,LI {
 		font-size: 11px;
 		font-family: Verdana, Arial, Helvetica, sans-serif;
 		}
-    </style>
-</head>
-<body lang="en-US">
-<center>
-<h2>Advanced Framework Training Outline</h2>
-</center>
-<div>Written By: David E. Jones</div>
-<div>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a></div>
-<div>Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
-</div>
-<div>Last Updated: 31 July 2004<br>
-</div>
-<hr>
-<br>
-Target Audience
-<ol>
-  <li>Senior Developers </li>
-  <li>Senior Architects<br>
-  </li>
-</ol>
-Topics Covered<br>
-<br>
-<div>Part 1: The Webapp Framework, Widgets &amp; MiniLang</div>
-<ol>
-  <li> Basic Framework Review </li>
-  <li> The Webapp Framework</li>
-  <ol>
-    <li> Control Servlet</li>
-    <ol>
-      <li> ofbiz/framework/webapp/dtd/site-conf.dtd </li>
-      <li> &lt;webapp&gt;/WEB-INF/controller.xml </li>
-      <li> Requests </li>
-      <li> Events</li>
-      <ol>
-        <li> Event Context (parameters and return values) </li>
-        <li> Event Handlers/Types </li>
-        <li> simple-method Events </li>
-        <li> Java Events </li>
-        <li> Designing a new Event Handler </li>
-      </ol>
-      <li> Responses </li>
-      <li> Views</li>
-      <ol>
-        <li> View Handlers/Types </li>
-        <li> Designing a new View Handler </li>
-      </ol>
-    </ol>
-    <li>JPublish Based Views - Generic Templates </li>
-    <ol>
-      <li> JPublish</li>
-      <ol>
-        <li> Page Definitions </li>
-        <li> www.jpublish.org </li>
-        <li> &lt;webapp&gt;/WEB-INF/jpublish.xml </li>
-        <li> &lt;webapp&gt;/WEB-INF/pagedefs/**/*.xml </li>
-        <li> Page Variables </li>
-        <li> Decoration Templates </li>
-        <li> Content, Template, and Page Actions </li>
-      </ol>
-      <li> BeanShell</li>
-      <ol>
-        <li> Data Preparation Actions </li>
-        <li> www.beanshell.org </li>
-        <li> &lt;webapp&gt;/WEB-INF/actions/**/*.bsh </li>
-        <li> Java Syntax, with some scripting like features </li>
-        <li> Dynamic Types </li>
-      </ol>
-      <li> FreeMarker</li>
-      <ol>
-        <li> Content Templates </li>
-        <li> www.freemarker.org </li>
-        <li> &lt;webapp&gt;/**/*.ftl </li>
-        <li> PHP-like Syntax with Java Robustness and Flexibility </li>
-        <li> Control Constructs (#if/#else/#elseif, #list, #assign) </li>
-        <li> Built-ins </li>
-        <li> Existence Concept and Fail-Fast (?exists,
-?has_content, ?if_exists)</li>
-      </ol>
-      <li>Generating PDFs (or other print formatted documents)</li>
-      <ol>
-        <li>Introduction to XSL:FO - Like HTML, but for Page Oriented
-Layout</li>
-        <li>A Powerful Combination: JPublish, BeanShell, FreeMarker,
-and FOP</li>
-        <li>How to Setup the view-map in controller.xml<br>
-        </li>
-      </ol>
-    </ol>
-    <li>Region Based Views - Servlet/JSP Templates </li>
-    <ol>
-      <li> Region Framework</li>
-      <ol>
-        <li> Defining Template Based Regions </li>
-        <li> Defining Inheritance or Region Based Regions </li>
-        <li> Using, or Not Using, Sections </li>
-      </ol>
-      <li> OFBiz Taglib</li>
-      <ol>
-        <li> URL Tags </li>
-        <li> Conditional Tags </li>
-        <li> Flow Control Tags </li>
-        <li> Data Presentation Tags </li>
-        <li> Internationalization Tags </li>
-        <li> Service Engine Tags </li>
-        <li> Other Tags </li>
-      </ol>
-    </ol>
-  </ol>
-  <li>OFBiz Widgets</li>
-  <ol>
-    <li>Meant for use in various types of UIs, initial implementations
-for webapps<br>
-    </li>
-    <li>Menu Widget</li>
-    <ol>
-      <li>Menu Definition XML</li>
-      <li>Rendering Menus<br>
-      </li>
-    </ol>
-    <li>Form Widget</li>
-    <ol>
-      <li>Form Definition XML</li>
-      <li>Rendering Forms<br>
-      </li>
-    </ol>
-  </ol>
-  <li> MiniLang
-    <ol>
-      <li> simple-map-processor
+        </style>
+    </head>
+    <body lang="en-US">
+        <center><h2>Advanced Framework Training Outline</h2></center>
+        <div>Written By: David E. Jones</div>
+        <div>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+        <div>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a></div>
+        <br/>
+        <div>Last Updated: June 2006</div>
+        <hr/>
+        <br/>
+        <h3>Target Audience</h3>
         <ol>
-          <li> General Concept </li>
-          <li> Make In String Operations </li>
-          <li> Process Field Operations </li>
+            <li>Senior Developers</li>
+            <li>Senior Architects</li>
         </ol>
-      </li>
-      <li> simple-method</li>
-      <ol>
-        <li> General Concept </li>
-        <li> Call Operations </li>
-        <li> Java Call Operations </li>
-        <li> Control and Error Handling Operations </li>
-        <li> Event Specific Operations </li>
-        <li> Service Specific Operations </li>
-        <li> Method Environment Operations </li>
-        <li> Entity Engine Misc. Operations </li>
-        <li> Entity Engine Find Operations </li>
-        <li> Entity Engine Value Operations </li>
-        <li> Entity Engine List Operations </li>
-        <li> Entity Engine Transaction Operations </li>
-        <li> Conditional (If) Operations </li>
-        <li> Other Operations </li>
-      </ol>
-      <li> Some Examples </li>
-    </ol>
-  </li>
-</ol>
-<br>
-<div>Part 2: The Entity and Service Engines</div>
-<ol>
-  <li> The Entity Engine</li>
-  <ol>
-    <li> ofbiz/website/docs/entity.html </li>
-    <li> ofbiz/website/docs/entityconfig.html </li>
-    <li> Architecture &amp; Design Goals</li>
-    <ol>
-      <li> Database (or datasource) Agnostic </li>
-      <li> Dynamic API Behaves According to Entity Definitions </li>
-      <li> Minimal Redundancy from Data Definitions </li>
-      <li> Uses JDBC and JTA J2EE Components</li>
-      <ol>
-        <li> Can operate in the same transaction with EJB ,
-JDO, Hibernate, etc code</li>
-        <li>Can drop down to JDBC when necessary </li>
-      </ol>
-    </ol>
-    <li> Configuration</li>
-    <ol>
-      <li> ofbiz/components/entity/config/entityengine.xml </li>
-      <li>Transaction (JTA) Setup </li>
-      <li> Delegators </li>
-      <li> Datasources </li>
-    </ol>
-    <li>Entity Groups &amp; Delegation<br>
-    </li>
-    <li> Entity Definitions</li>
-    <ol>
-      <li> Entities </li>
-      <li> Fields </li>
-      <li> Primary Keys </li>
-      <li> Relationships </li>
-    </ol>
-    <li> View Entity Definitions</li>
-    <ol>
-      <li> Member Entities </li>
-      <li> Field Aliases </li>
-      <li> View Links </li>
-      <li> Relationships </li>
-      <li> Joins: Inner &amp; Outer </li>
-      <li> Grouping and Summary Data</li>
-    </ol>
-    <li> The GenericDelegator API</li>
-    <ol>
-      <li> Factory Methods (GenericDelegator, GenericPK,
-GenericValue) </li>
-      <li> Creating, Storing &amp; Removing </li>
-      <li> Finding</li>
-      <ol>
-        <li> By Primary Key </li>
-        <li> By �And� </li>
-        <li> EntityConditions
-          <ol>
-            <li> EntityFieldMap </li>
-            <li> EntityExpr </li>
-            <li> EntityConditionList </li>
-            <li> EntityWhereString </li>
-          </ol>
-        </li>
-        <li> The EntityListIterator (remember to close) </li>
-      </ol>
-      <li> Caching</li>
-      <ol>
-        <li> Theory of Operation </li>
-        <li> UtilCache &amp; The Webtools Cache Page </li>
-        <li> Automatic &amp; Manual Cache Clearing </li>
-      </ol>
-    </ol>
-    <li> The GenericEntity API</li>
-    <ol>
-      <li> GenericPK </li>
-      <li> GenericValue </li>
-    </ol>
-    <li> Overview of GenericHelper Interface</li>
-    <li>Entity ECAs</li>
-    <ol>
-      <li>When to Use an Entity ECA</li>
-      <li>Defining Entity ECAs</li>
-      <li>Limitations </li>
-    </ol>
-  </ol>
-  <li> The Service Engine</li>
-  <ol>
-    <li> Architecture &amp; Design Goals</li>
-    <ol>
-      <li> Agnostic Service Calls</li>
-      <ol>
-        <li> Implementation Agnostic </li>
-        <li> Location Agnostic </li>
-      </ol>
-      <li> Synchronicity Support </li>
-      <li> Parameter Validation </li>
-      <li> Service �Engines�</li>
-      <ol>
-        <li> The GenericEngine Interface </li>
-        <li> Overview of Existing Engines </li>
-        <li> Designing a New Engine </li>
-      </ol>
-    </ol>
-    <li> Service Engine Configuration</li>
-    <ol>
-      <li> website/docs/serviceconfig.html </li>
-      <li> ofbiz/components/service/dtd/service-config.dtd </li>
-      <li> commonapp/etc/serviceengine.xml </li>
-      <li> JNDI Servers &amp; Resource Loaders </li>
-      <li> Global Service Definition Files </li>
-      <li> Service Group and ECA Rule Files </li>
-      <li> JMS Servers </li>
-    </ol>
-    <li> Advanced Service Definitions</li>
-    <ol>
-      <li> Parameters and Validation </li>
-      <li> Interface Services </li>
-      <li> Service Authentication </li>
-      <li> Transaction Control </li>
-    </ol>
-    <li> Remote Services</li>
-    <ol>
-      <li> JMS Services </li>
-      <li> HTTP Services </li>
-    </ol>
-    <li> Implementing Services</li>
-    <ol>
-      <li> Service Context (parameters and return values) </li>
-      <li> Java Services </li>
-      <li> Bean Shell Services </li>
-      <li> simple-method Services </li>
-    </ol>
-    <li> Calling Services</li>
-    <ol>
-      <li> Synch &amp; Asynch </li>
-      <li> Scheduled Services </li>
-      <li> Calling From:</li>
-      <ol>
-        <li> Java </li>
-        <li> simple-method </li>
-        <li> Control Servlet </li>
-      </ol>
-    </ol>
-    <li> Service Groups</li>
-    <ol>
-      <li> ofbiz/components/service/dtd/service-group.dtd </li>
-      <li> Defining Groups</li>
-      <ol>
-        <li> Groups </li>
-        <li> Services Per Group </li>
-      </ol>
-    </ol>
-    <li> Event-Condition-Action (ECA) Rules</li>
-    <ol>
-      <li> ofbiz/components/service/dtd/service-eca.dtd </li>
-      <li> Defining ECA Rules</li>
-      <ol>
-        <li> Events </li>
-        <li> Conditions Per Event </li>
-        <li> Actions Per Event </li>
-      </ol>
-    </ol>
-  </ol>
-</ol>
-<br>
-<div>Part 3: The Workflow &amp; Rule Engines, Data Files, Review,
-Q&amp;A</div>
-<ol>
-  <li> The Workflow Engine
-    <ol>
-      <li>Process Management Concepts</li>
-      <ol>
-        <li>Workflow Style</li>
+        <h3>Topics Covered</h3>
+        <h4>Part 1: The Webapp Framework, Widgets &amp; MiniLang</h4>
         <ol>
-          <li>States &amp; Transitions<br>
-          </li>
-          <li>WfMC &amp; OMG<br>
-          </li>
-          <li>OFBiz Workflow</li>
-          <li>Shark &amp; JaWE<br>
-          </li>
+            <li>Basic Framework Review</li>
+            <li>The Webapp Framework
+                <ol>
+                    <li>Control Servlet
+                        <ol>
+                            <li>ofbiz/framework/webapp/dtd/site-conf.dtd</li>
+                            <li>&lt;webapp&gt;/WEB-INF/controller.xml</li>
+                            <li>Requests</li>
+                            <li>Events
+                                <ol>
+                                    <li>Event Context (parameters and return values)</li>
+                                    <li>Event Handlers/Types</li>
+                                    <li>Service Events</li>
+                                    <li>simple-method Events</li>
+                                    <li>Java Events</li>
+                                    <li>Designing a new Event Handler</li>
+                                </ol>
+                            </li>
+                            <li>Responses</li>
+                            <li>Views
+                                <ol>
+                                    <li>View Handlers/Types</li>
+                                    <li>Designing a new View Handler</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>Screen Widget Based Views - Templates, Widgets, etc
+                        <ol>
+                            <li>Screen Widget
+                                <ol>
+                                    <li>Screen Definitions</li>
+                                    <li>&lt;component&gt;/widgets/**/*Screens.xml</li>
+                                    <li>Screen -> Section</li>
+                                    <li>Section -> Actions</li>
+                                    <li>Section -> Widgets</li>
+                                    <li>Section -> Conditions</li>
+                                    <li>Screen Decoration Pattern</li>
+                                </ol>
+                            </li>
+                            <li>Form Widget
+                                <ol>
+                                    <li>Form Definitions</li>
+                                    <li>&lt;component&gt;/widgets/**/*Forms.xml</li>
+                                    <li>Form Element</li>
+                                    <li>Form Actions</li>
+                                    <li>Form Auto-Fields from Entities and Services</li>
+                                    <li>Form Fields</li>
+                                    <li>Form Sort Order</li>
+                                </ol>
+                            </li>
+                            <li>Menu Widget
+                                <ol>
+                                    <li>Menu Definitions</li>
+                                    <li>&lt;component&gt;/widgets/**/*Menus.xml</li>
+                                    <li>Menu Items</li>
+                                </ol>
+                            </li>
+                            <li>Tree Widget
+                                <ol>
+                                    <li>Tree Definitions</li>
+                                    <li>&lt;component&gt;/widgets/**/*Trees.xml</li>
+                                    <li>Tree Nodes</li>
+                                </ol>
+                            </li>
+                            <li>BeanShell
+                                <ol>
+                                    <li>Data Preparation Actions</li>
+                                    <li>www.beanshell.org</li>
+                                    <li>&lt;webapp&gt;/WEB-INF/actions/**/*.bsh</li>
+                                    <li>Java Syntax, with some scripting like features</li>
+                                    <li>Dynamic Types</li>
+                                </ol>
+                            </li>
+                            <li>FreeMarker
+                                <ol>
+                                    <li>Content Templates</li>
+                                    <li>www.freemarker.org</li>
+                                    <li>&lt;webapp&gt;/**/*.ftl</li>
+                                    <li>PHP-like Syntax with Java Robustness and Flexibility</li>
+                                    <li>Control Constructs (#if/#else/#elseif, #list, #assign)</li>
+                                    <li>Built-ins</li>
+                                    <li>Existence Concept and Fail-Fast (?exists, ?has_content, ?if_exists)</li>
+                                </ol>
+                            </li>
+                            <li>Generating PDFs (or other print formatted documents)
+                                <ol>
+                                    <li>Introduction to XSL:FO - Like HTML, but for Page Oriented Layout</li>
+                                    <li>A Powerful Combination: Screen Widget, BeanShell, FreeMarker, and FOP</li>
+                                    <li>How to Setup the view-map in controller.xml</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>JPublish Based Views - Generic Templates <ol>
+                            <li>JPublish <ol>
+                                    <li>Page Definitions</li>
+                                    <li>www.jpublish.org</li>
+                                    <li>&lt;webapp&gt;/WEB-INF/jpublish.xml</li>
+                                    <li>&lt;webapp&gt;/WEB-INF/pagedefs/**/*.xml</li>
+                                    <li>Page Variables</li>
+                                    <li>Decoration Templates</li>
+                                    <li>Content, Template, and Page Actions</li>
+                                </ol>
+                            </li>
+                            <li>Just as in Screen Widget use BeanShell for data preparation and FreeMarker for temapltes</li>
+                        </ol>
+                    </li>
+                    <li>Region Based Views - Servlet/JSP Templates <ol>
+                            <li>Region Framework
+                                <ol>
+                                    <li>Defining Template Based Regions</li>
+                                    <li>Defining Inheritance or Region Based Regions</li>
+                                    <li>Using, or Not Using, Sections</li>
+                                </ol>
+                            </li>
+                            <li>OFBiz Taglib
+                                <ol>
+                                    <li>URL Tags</li>
+                                    <li>Conditional Tags</li>
+                                    <li>Flow Control Tags</li>
+                                    <li>Data Presentation Tags</li>
+                                    <li>Internationalization Tags</li>
+                                    <li>Service Engine Tags</li>
+                                    <li>Other Tags</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>OFBiz Widgets
+                <ol>
+                    <li>Meant for use in various types of UIs, initial implementations for webapps</li>
+                    <li>Menu Widget
+                        <ol>
+                            <li>Menu Definition XML</li>
+                            <li>Rendering Menus</li>
+                        </ol>
+                    </li>
+                    <li>Form Widget
+                        <ol>
+                            <li>Form Definition XML</li>
+                            <li>Rendering Forms</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>MiniLang
+                <ol>
+                    <li>simple-map-processor
+                        <ol>
+                            <li>General Concept</li>
+                            <li>Make In String Operations</li>
+                            <li>Process Field Operations</li>
+                        </ol>
+                    </li>
+                    <li>simple-method
+                        <ol>
+                            <li>General Concept</li>
+                            <li>Call Operations</li>
+                            <li>Java Call Operations</li>
+                            <li>Control and Error Handling Operations</li>
+                            <li>Event Specific Operations</li>
+                            <li>Service Specific Operations</li>
+                            <li>Method Environment Operations</li>
+                            <li>Entity Engine Misc. Operations</li>
+                            <li>Entity Engine Find Operations</li>
+                            <li>Entity Engine Value Operations</li>
+                            <li>Entity Engine List Operations</li>
+                            <li>Entity Engine Transaction Operations</li>
+                            <li>Conditional (If) Operations</li>
+                            <li>Other Operations</li>
+                        </ol>
+                    </li>
+                    <li>Some Examples</li>
+                </ol>
+            </li>
         </ol>
-        <li>Message Flow Style</li>
+        <h4>Part 2: The Entity and Service Engines</h4>
         <ol>
-          <li>Messages &amp; Nodes (consumers &amp; producers)<br>
-          </li>
-          <li>ebXML BPSS (Business Process Specification, like
-interface)<br>
-          </li>
-          <li>BPML &amp; BPMI</li>
-          <li>SOAP Related Standards<br>
-          </li>
+            <li>The Entity Engine
+                <ol>
+                    <li>ofbiz/website/docs/entity.html</li>
+                    <li>ofbiz/website/docs/entityconfig.html</li>
+                    <li>Architecture &amp; Design Goals
+                        <ol>
+                            <li>Database (or datasource) Agnostic</li>
+                            <li>Dynamic API Behaves According to Entity Definitions</li>
+                            <li>Minimal Redundancy from Data Definitions</li>
+                            <li>Uses JDBC and JTA J2EE Components
+                                <ol>
+                                    <li>Can operate in the same transaction with EJB , JDO, Hibernate, etc code</li>
+                                    <li>Can drop down to JDBC when necessary</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>Configuration
+                        <ol>
+                            <li>ofbiz/components/entity/config/entityengine.xml</li>
+                            <li>Transaction (JTA) Setup</li>
+                            <li>Delegators</li>
+                            <li>Datasources</li>
+                        </ol>
+                    </li>
+                    <li>Entity Groups &amp; Delegation</li>
+                    <li>Entity Definitions
+                        <ol>
+                            <li>Entities</li>
+                            <li>Fields</li>
+                            <li>Primary Keys</li>
+                            <li>Relationships</li>
+                        </ol>
+                    </li>
+                    <li>View Entity Definitions <ol>
+                            <li>Member Entities</li>
+                            <li>Field Aliases</li>
+                            <li>View Links</li>
+                            <li>Relationships</li>
+                            <li>Joins: Inner &amp; Outer</li>
+                            <li>Grouping and Summary Data</li>
+                        </ol>
+                    </li>
+                    <li>The GenericDelegator API
+                        <ol>
+                            <li>Factory Methods (GenericDelegator, GenericPK, GenericValue)</li>
+                            <li>Creating, Storing &amp; Removing</li>
+                            <li>Finding
+                                <ol>
+                                    <li>By Primary Key</li>
+                                    <li>By And</li>
+                                    <li>EntityConditions
+                                        <ol>
+                                            <li>EntityFieldMap</li>
+                                            <li>EntityExpr</li>
+                                            <li>EntityConditionList</li>
+                                            <li>EntityWhereString</li>
+                                        </ol>
+                                    </li>
+                                    <li>The EntityListIterator (remember to close)</li>
+                                </ol>
+                            </li>
+                            <li>Caching
+                                <ol>
+                                    <li>Theory of Operation</li>
+                                    <li>UtilCache &amp; The Webtools Cache Page</li>
+                                    <li>Automatic &amp; Manual Cache Clearing</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>The GenericEntity API
+                        <ol>
+                            <li>GenericPK</li>
+                            <li>GenericValue</li>
+                        </ol>
+                    </li>
+                    <li>Overview of GenericHelper Interface</li>
+                    <li>Entity ECA (Event-Condition-Action) Rules
+                        <ol>
+                            <li>When to Use an Entity ECA: Data Maintenance, not Business Processes</li>
+                            <li>Defining Entity ECAs</li>
+                            <li>Limitations</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>The Service Engine
+                <ol>
+                    <li>Architecture &amp; Design Goals
+                        <ol>
+                            <li>Agnostic Service Calls
+                                <ol>
+                                    <li>Implementation Agnostic</li>
+                                    <li>Location Agnostic</li>
+                                </ol>
+                            </li>
+                            <li>Synchronicity Support</li>
+                            <li>Parameter Validation</li>
+                            <li>Service Engines
+                                <ol>
+                                    <li>The GenericEngine Interface</li>
+                                    <li>Overview of Existing Engines</li>
+                                    <li>Designing a New Engine</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>Service Engine Configuration
+                        <ol>
+                            <li>website/docs/serviceconfig.html</li>
+                            <li>ofbiz/components/service/dtd/service-config.dtd</li>
+                            <li>commonapp/etc/serviceengine.xml</li>
+                            <li>JNDI Servers &amp; Resource Loaders</li>
+                            <li>Global Service Definition Files</li>
+                            <li>Service Group and ECA Rule Files</li>
+                            <li>JMS Servers</li>
+                        </ol>
+                    </li>
+                    <li>Advanced Service Definitions
+                        <ol>
+                            <li>Parameters and Validation</li>
+                            <li>Interface Services</li>
+                            <li>Service Authentication</li>
+                            <li>Transaction Control</li>
+                        </ol>
+                    </li>
+                    <li>Remote Services
+                        <ol>
+                            <li>JMS Services</li>
+                            <li>HTTP Services</li>
+                        </ol>
+                    </li>
+                    <li>Implementing Services
+                        <ol>
+                            <li>Service Context (parameters and return values)</li>
+                            <li>Java Services</li>
+                            <li>Bean Shell Services</li>
+                            <li>simple-method Services</li>
+                        </ol>
+                    </li>
+                    <li>Calling Services
+                        <ol>
+                            <li>Synch &amp; Asynch</li>
+                            <li>Scheduled Services</li>
+                            <li>Calling From:
+                                <ol>
+                                    <li>Java</li>
+                                    <li>simple-method</li>
+                                    <li>Control Servlet</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>Service Groups
+                        <ol>
+                            <li>ofbiz/components/service/dtd/service-group.dtd</li>
+                            <li>Defining Groups
+                                <ol>
+                                    <li>Groups</li>
+                                    <li>Services Per Group</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>Service Event-Condition-Action (ECA) Rules
+                        <ol>
+                            <li>ofbiz/components/service/dtd/service-eca.dtd</li>
+                            <li>Defining ECA Rules
+                                <ol>
+                                    <li>Events</li>
+                                    <li>Conditions Per Event</li>
+                                    <li>Actions Per Event</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
         </ol>
-      </ol>
-      <li> Workflow Concepts
+        <h4>Part 3: The Workflow Engine, Data Files, Review, Q&amp;A</h4>
         <ol>
-          <li> Processes </li>
-          <li> Activities
-            <ol>
-              <li> Manual Start/End </li>
-              <li> Automatic Start/End </li>
-            </ol>
-          </li>
-          <li> Transitions </li>
-          <li> Splitting and Merging </li>
-          <li> Workflow Data Context </li>
-          <li> Asynchronous Execution </li>
+            <li>The Workflow Engine
+                <ol>
+                    <li>Process Management Concepts
+                        <ol>
+                            <li>Workflow Style
+                                <ol>
+                                    <li>States &amp; Transitions</li>
+                                    <li>WfMC &amp; OMG</li>
+                                    <li>OFBiz Workflow</li>
+                                    <li>Shark &amp; JaWE</li>
+                                </ol>
+                            </li>
+                            <li>Message Flow Style
+                                <ol>
+                                    <li>Messages &amp; Nodes (consumers &amp; producers)</li>
+                                    <li>ebXML BPSS (Business Process Specification, like interface)</li>
+                                    <li>BPML &amp; BPMI</li>
+                                    <li>SOAP Related Standards</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>Workflow Concepts
+                        <ol>
+                            <li>Processes</li>
+                            <li>Activities
+                                <ol>
+                                    <li>Manual Start/End</li>
+                                    <li>Automatic Start/End</li>
+                                </ol>
+                            </li>
+                            <li>Transitions</li>
+                            <li>Splitting and Merging</li>
+                            <li>Workflow Data Context</li>
+                            <li>Asynchronous Execution</li>
+                        </ol>
+                    </li>
+                    <li>Workflow Engine Architecture
+                        <ol>
+                            <li>Service Engine Based
+                                <ol>
+                                    <li>Calling Workflows Through Service Engine</li>
+                                    <li>Calling Other Services in a Workflow</li>
+                                </ol>
+                            </li>
+                            <li>Uses Entity Engine for Workflow Definition and Run-Time Data Persistence</li>
+                        </ol>
+                    </li>
+                    <li>Designing Workflows
+                        <ol>
+                            <li>What Needs to be Done?</li>
+                            <li>Who Will Do What?</li>
+                            <li>What Dependencies Exist Between Activities?</li>
+                        </ol>
+                    </li>
+                    <li>Defining Workflows
+                        <ol>
+                            <li>Basic XPDL</li>
+                            <li>Working With Parties, Groups, and Roles</li>
+                            <li>OFBiz Extensions</li>
+                        </ol>
+                    </li>
+                    <li>Importing and Managing Workflow Definitions</li>
+                    <li>Running Workflows</li>
+                    <li>Interacting With Running Workflows</li>
+                    <li>Client API (UI development)</li>
+                    <li>Monitoring &amp; Testing Workflows</li>
+                </ol>
+            </li>
+            <li>The Data File Tool
+                <ol>
+                    <li>The Wonderful World of Flat Files</li>
+                    <li>Generic Data Structures for Flat File Data (very similar to the Entity Engine structures)</li>
+                    <li>Defining Data Files</li>
+                    <li>The Data File API</li>
+                </ol>
+            </li>
+            <li>Review</li>
+            <li>Q&amp;A</li>
         </ol>
-      </li>
-      <li> Workflow Engine Architecture
-        <ol>
-          <li> Service Engine Based
-            <ol>
-              <li> Calling Workflows Through Service Engine </li>
-              <li> Calling Other Services in a Workflow </li>
-            </ol>
-          </li>
-          <li> Uses Entity Engine for Workflow Definition and
-Run-Time Data Persistence </li>
-        </ol>
-      </li>
-      <li>Designing Workflows</li>
-      <ol>
-        <li>What Needs to be Done?</li>
-        <li>Who Will Do What?</li>
-        <li>What Dependencies Exist Between Activities?<br>
-        </li>
-      </ol>
-      <li> Defining Workflows
-        <ol>
-          <li> Basic XPDL </li>
-          <li> Working With Parties, Groups, and Roles </li>
-          <li> OFBiz Extensions </li>
-        </ol>
-      </li>
-      <li> Importing and Managing Workflow Definitions </li>
-      <li> Running Workflows </li>
-      <li> Interacting With Running Workflows </li>
-      <li> Client API (UI development)</li>
-      <li>Monitoring &amp; Testing Workflows<br>
-      </li>
-    </ol>
-  </li>
-  <li> The Rule Engine
-    <ol>
-      <li> A Declarative Logic Language </li>
-      <li> Based on Building Parsers In Java by Steven Metsker </li>
-      <li> Constraint Based Problem Solving </li>
-      <li> Deductive Problem Solving </li>
-      <li> Interaction With a Database (ie as a fact-base) </li>
-      <li> Needs Some Work </li>
-      <li> Applying Concepts with Custom Rule Engines </li>
-    </ol>
-  </li>
-  <li> The Data File Tool
-    <ol>
-      <li> The Wonderful World of Flat Files </li>
-      <li> Generic Data Structures for Flat File Data (very similar
-to the Entity Engine structures) </li>
-      <li> Defining Data Files </li>
-      <li> The Data File API </li>
-    </ol>
-  </li>
-  <li> Review </li>
-  <li> Q&amp;A </li>
-</ol>
-<br>
-<br>
-</body>
+        <br/>
+        <br/>
+    </body>
 </html>
