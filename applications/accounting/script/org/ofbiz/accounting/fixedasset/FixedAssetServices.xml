@@ -521,6 +521,16 @@ under the License.
             </entity-one>
             <set field="newEntity.productMaintTypeId" from-field="productMaint.productMaintTypeId"/>
         </if-not-empty>
+        <!-- Create the WorkEfforts, dates not specified -->
+        <!-- Maintenance WorkEffort entity -->
+        <set value="Maintenance of Fixed Asset #${newEntity.fixedAssetId} " field="maintWorkEffortMap.workEffortName"/>
+        <set value="TASK" field="maintWorkEffortMap.workEffortTypeId"/>
+        <set value="WEPT_MAINTENANCE" field="maintWorkEffortMap.workEffortPurposeTypeId"/>
+        <set value="CAL_TENTATIVE" field="maintWorkEffortMap.currentStatusId"/>
+        <set from-field="userLogin.partyId" field="maintWorkEffortMap.quickAssignPartyId"/>
+        <call-service service-name="createWorkEffort" in-map-name="maintWorkEffortMap">
+            <result-to-field result-name="workEffortId" field-name="newEntity.scheduleWorkEffortId"/>
+        </call-service>
         <create-value value-name="newEntity"/>  
     </simple-method>   
     <simple-method method-name="updateFixedAssetMaint" short-description="Update an existing FixedAsset Maintenance">
