@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,14 +26,13 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-
     <screen name="AvailableServicesList">
         <section>
             <actions>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/availableservices.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main" location="component://webtools/widget/CommonScreens.xml">
+                <decorator-screen name="CommonWebtoolsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -68,5 +67,4 @@
             </widgets>
         </section>
     </screen>
-
 </screens>

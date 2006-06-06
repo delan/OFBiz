@@ -31,8 +31,8 @@
             </actions>
             <widgets>
 				<!-- main defines the regions of the HTML page -->
-                <decorator-screen name="main" location="component://webtools/widget/CommonScreens.xml">
-				<!-- body is the primary display for this page and is called recursively -->
+                <decorator-screen name="CommonWebtoolsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <!-- body is the primary display for this page and is called recursively -->
                     <decorator-section name="body">
                         <section>
                             <widgets>
