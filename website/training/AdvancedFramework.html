@@ -24,8 +24,79 @@
             <li>Senior Developers</li>
             <li>Senior Architects</li>
         </ol>
+        <h3>Pre-Requisites</h3>
+        <ol>
+            <li>OFBiz Framework Introduction (Videos) - Important!</li>
+            <li>Basic Java &amp; J2EE (Servlet, JDBC, JNDI, JTA) Familiarity</li>
+        </ol>
         <h3>Topics Covered</h3>
-        <h4>Part 1: The Webapp Framework, Widgets &amp; MiniLang</h4>
+        <h4>Part 1: Just Enough Java and J2EE</h4>
+        <ol>
+            <li>The Java Classpath</li>
+            <li>Servlet API &amp; JSP
+                <ol>
+                    <li>Request &amp; Response</li>
+                    <li>Contexts: page/screen, request, session, application</li>
+                </ol>
+            </li>
+            <li>JDBC</li>
+            <li>JNDI</li>
+            <li>JTA
+                <ol>
+                    <li>UserTransaction &amp; TransactionManager</li>
+                    <li>Transaction Isolation Levels
+                        <ol>
+                            <li>None</li>
+                            <li>ReadCommitted (Recommended)</li>
+                            <li>ReadUncommitted</li>
+                            <li>RepeatableRead</li>
+                            <li>Serializable (NOT Recommended, Performance and Dead-locking)</li>
+                        </ol>
+                    </li>
+                    <li>Transaction Control: rollback and setRollbackOnly</li>
+                    <li>On Pausing and Resuming Transactions</li>
+                </ol>
+            </li>
+        </ol>
+        <h4>Part 2: The OFBiz Base: Containers and Components</h4>
+        <ol>
+            <li>The OFBiz Base Utilities &amp; Loader</li>
+            <li>Containers</li>
+            <li>Components
+                <ol>
+                    <li>component-load.xml (base/config, applications, framework, specialized, etc)</li>
+                    <li>Component Definition
+                        <ol>
+                            <li>&lt;component-directory&gt;/ofbiz-component.xml</li>
+                            <li>Resource Loaders</li>
+                            <li>Classpath Entries</li>
+                            <li>Entity Resources</li>
+                            <li>Service Resources</li>
+                            <li>Test Resources</li>
+                            <li>Webapps</li>
+                        </ol>
+                    </li>
+                    <li>Component Structure Conventions
+                        <ol>
+                            <li>config</li>
+                            <li>data</li>
+                            <li>dtd</li>
+                            <li>entitydef</li>
+                            <li>lib</li>
+                            <li>script</li>
+                            <li>src</li>
+                            <li>servicedef</li>
+                            <li>templates (email, survey, etc)</li>
+                            <li>testdef</li>
+                            <li>webapp</li>
+                            <li>widget</li>
+                        </ol>
+                    </li>
+                    <li>The Component URI: component://&lt;component-name&gt;/relative-path</li>
+                </ol>
+            </li>
+        </ol>
+        <h4>Part 3: The Webapp Framework, Widgets &amp; MiniLang</h4>
         <ol>
             <li>Basic Framework Review</li>
             <li>The Webapp Framework
@@ -64,6 +135,8 @@
                                     <li>Section -> Actions</li>
                                     <li>Section -> Widgets</li>
                                     <li>Section -> Conditions</li>
+                                    <li>Screen Contexts (protected, inherited, etc)</li>
+                                    <li>parameters Map: request attributes, request parameters, session attributes, application attributes</li>
                                     <li>Screen Decoration Pattern</li>
                                 </ol>
                             </li>
@@ -206,7 +279,7 @@
                 </ol>
             </li>
         </ol>
-        <h4>Part 2: The Entity and Service Engines</h4>
+        <h4>Part 4: The Entity and Service Engines</h4>
         <ol>
             <li>The Entity Engine
                 <ol>
@@ -332,7 +405,13 @@
                             <li>Parameters and Validation</li>
                             <li>Interface Services</li>
                             <li>Service Authentication</li>
-                            <li>Transaction Control</li>
+                            <li>Transaction Control
+                                <ol>
+                                    <li>use-transaction</li>
+                                    <li>require-new-transaction</li>
+                                    <li>transaction-timout</li>
+                                </ol>
+                            </li>
                         </ol>
                     </li>
                     <li>Remote Services
@@ -385,10 +464,17 @@
                             </li>
                         </ol>
                     </li>
+                    <li>Service Engine RemoteDispatcher
+                        <ol>
+                            <li>JNDI &amp; RMI Basics</li>
+                            <li>rmi-dispatcher Container (in ofbiz-containers.xml)</li>
+                            <li>ExampleRemoteClient.java</li>
+                        </ol>
+                    </li>
                 </ol>
             </li>
         </ol>
-        <h4>Part 3: The Workflow Engine, Data Files, Review, Q&amp;A</h4>
+        <h4>Part 5: The Workflow Engine, Data Files, etc</h4>
         <ol>
             <li>The Workflow Engine
                 <ol>
@@ -467,10 +553,12 @@
                     <li>The Data File API</li>
                 </ol>
             </li>
+        </ol>
+        <h4>Part 6: Review, Q&amp;A</h4>
+        <ol>
             <li>Review</li>
             <li>Q&amp;A</li>
         </ol>
-        <br/>
         <br/>
     </body>
 </html>
