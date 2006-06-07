@@ -21,6 +21,12 @@ under the License.
  xsi:noNamespaceSchemaLocation="../../../framework/widget/dtd/widget-menu.xsd">
     
     <menu name="InvoiceTabBar" default-menu-item-name="overview"> 
+        <menu-item name="find" title="${uiLabelMap.CommonFind}" >
+            <condition>
+                <if-compare field-name="tabButtonItem" operator="not-equals" value="find"/>
+            </condition>
+            <link target="findInvoices"/>
+        </menu-item>
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
             <condition>
                 <not><if-empty field-name="invoice.invoiceId"/></not>
@@ -226,6 +232,12 @@ under the License.
     </menu>
 
     <menu name="PaymentTabBar" default-menu-item-name="overview"> 
+        <menu-item name="find" title="${uiLabelMap.CommonFind}" >
+            <condition>
+                <if-compare field-name="tabButtonItem" operator="not-equals" value="find"/>
+            </condition>
+            <link target="findPayments"/>
+        </menu-item>
         <menu-item name="paymentOverview" title="${uiLabelMap.AccountingPaymentTabOverview}">
             <condition>
                 <not><if-empty field-name="payment.paymentId"/></not>
