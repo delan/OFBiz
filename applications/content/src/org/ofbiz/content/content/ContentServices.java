@@ -562,6 +562,15 @@ public class ContentServices {
             String lastModifiedByUserLogin = userLoginId;
             Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
 
+            // update status first to see if allowed
+            Map statusInMap = UtilMisc.toMap("contentId", context.get("contentId"), "statusId", context.get("statusId"),"userLogin", userLogin);
+            try {
+               dispatcher.runSync("setContentStatus", statusInMap);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem updating content Status", "ContentServices");
+                return ServiceUtil.returnError("Problem updating content Status: " + e);
+            }
+            
             content.setNonPKFields(context);
             content.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
             content.put("lastModifiedDate", lastModifiedDate);

@@ -256,6 +256,13 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
+    <service name="setContentStatus" engine="simple"
+        location="org/ofbiz/content/content/ContentServices.xml" invoke="setContentStatus" auth="true">
+        <description>Set the Content Status</description>
+        <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+    </service>
 
     <!--ContentRole services.-->
     <service name="createContentRole" engine="simple" invoke="createContentRole"
@@ -759,7 +766,7 @@
         <attribute mode="OUT" name="nodeMap" optional="true" type="Map"/>
     </service>
     <service name="getContent" engine="java"
-            location="org.ofbiz.content.ContentManagementServices" invoke="getContent" auth="false">
+        location="org.ofbiz.content.ContentManagementServices" invoke="getContent" auth="false">
         <description>Get Content of passed contentId</description>
         <attribute mode="IN" name="contentId" optional="true" type="String"/>
         <attribute mode="OUT" name="view" optional="true" type="GenericValue"/>
