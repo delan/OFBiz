@@ -56,40 +56,6 @@
         </section>
     </screen>
     
-    <screen name="CommonWorkEffortDecorator">
-        <section>
-            <actions>
-                <set field="headerItem" value="workeffort"/>
-                <set field="workEffortId" from-field="parameters.workEffortId"/>
-                <entity-one entity-name="WorkEffort" value-name="workEffort"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field-name="workEffortId"/></not></condition>
-                                    <widgets>
-                                        <include-menu name="WorkEffortTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                                        <container><label style="head1">${uiLabelMap.WorkEffortWorkEffortId}: ${workEffortId}</label></container>
-                                    </widgets>
-                                </section>
-                                
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="EditWorkEffort">
         <section>
             <actions>
@@ -103,7 +69,7 @@
                 <entity-one entity-name="WorkEffort" value-name="workEffort"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -134,7 +100,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleFindWorkEffort}</label></container>
                         <container><link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
@@ -155,7 +121,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEfforts}</label></container>
                         <container><link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
@@ -178,7 +144,7 @@
                 <set field="workEffortId" from-field="parameters.trail"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleTreeWorkEfforts}</label></container>
                         <container><link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort?DONE_PAGE=${donePage}" style="linktext"/></container>
@@ -235,7 +201,7 @@
                 <set field="fromDate" from-field="nowTimestamp"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleAddWorkEffort}</label>
                         <include-form name="AddWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
@@ -262,7 +228,7 @@
                 <set field="parameters.workEffortId" from-field="workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleEditWorkEffort}</label>
                         <include-form name="EditWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
@@ -283,7 +249,7 @@
                 <entity-one entity-name="WorkEffortPartyAssignment" value-name="workEffortPartyAssignment"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortPartyAssigns}</label></container>
                         <include-form name="ListWorkEffortPartyAssigns" location="component://workeffort/widget/WorkEffortPartyAssignForms.xml"/>
@@ -304,7 +270,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortAssignmentRates}</label></container>
                         <include-form name="ListWorkEffortAssignmentRates" location="component://workeffort/widget/WorkEffortForms.xml"/>
@@ -325,7 +291,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortCommEvents}</label></container>
                         <include-form name="ListWorkEffortCommEvents" location="component://workeffort/widget/WorkEffortCommEventForms.xml"/>
@@ -346,7 +312,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortShopLists}</label></container>
                         <include-form name="ListWorkEffortShopLists" location="component://workeffort/widget/WorkEffortShopListForms.xml"/>
@@ -368,7 +334,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortRequests}</label></container>
                         <include-form name="ListWorkEffortRequests" location="component://workeffort/widget/WorkEffortRequestForms.xml"/>
@@ -395,7 +361,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortRequirements}</label></container>
                         <include-form name="ListWorkEffortRequirements" location="component://workeffort/widget/WorkEffortRequirementForms.xml"/>
@@ -417,7 +383,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortQuotes}</label></container>
                         <include-form name="ListWorkEffortQuotes" location="component://workeffort/widget/WorkEffortQuoteForms.xml"/>
@@ -443,7 +409,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortOrderHeaders}</label></container>
                         <include-form name="ListWorkEffortOrderHeaders" location="component://workeffort/widget/WorkEffortOrderHeaderForms.xml"/>
@@ -464,7 +430,7 @@
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleListWorkEffortTimeEntries}</label></container>
                         <include-form name="ListWorkEffortTimeEntries" location="component://workeffort/widget/WorkEffortForms.xml"/>

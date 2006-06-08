@@ -56,7 +56,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortDecorator" location="component://workeffort/widget/WorkEffortScreens.xml">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleWorkEffortRelatedSummary} ${uiLabelMap.CommonFor} ${uiLabelMap.CommonId} [${workEffortId}]</label>
                         <container><label style="head2">${uiLabelMap.WorkEffortWorkEffort}</label></container>
