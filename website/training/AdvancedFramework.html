@@ -81,11 +81,11 @@
                             <li>config</li>
                             <li>data</li>
                             <li>dtd</li>
-                            <li>entitydef</li>
+                            <li>entitydef (entitymodel*.xml, entitygroup.xml, eecas*.xml)</li>
                             <li>lib</li>
                             <li>script</li>
                             <li>src</li>
-                            <li>servicedef</li>
+                            <li>servicedef (services*.xml, secas*.xml, groups*.xml)</li>
                             <li>templates (email, survey, etc)</li>
                             <li>testdef</li>
                             <li>webapp</li>
@@ -104,9 +104,9 @@
                     <li>Control Servlet
                         <ol>
                             <li>ofbiz/framework/webapp/dtd/site-conf.dtd</li>
-                            <li>&lt;webapp&gt;/WEB-INF/controller.xml</li>
+                            <li>component://&lt;component-name&gt;/webapp/&lt;webapp-name&gt;/WEB-INF/controller.xml</li>
                             <li>Requests</li>
-                            <li>Events
+                            <li>Request Events
                                 <ol>
                                     <li>Event Context (parameters and return values)</li>
                                     <li>Event Handlers/Types</li>
@@ -116,7 +116,7 @@
                                     <li>Designing a new Event Handler</li>
                                 </ol>
                             </li>
-                            <li>Responses</li>
+                            <li>Request Responses</li>
                             <li>Views
                                 <ol>
                                     <li>View Handlers/Types</li>
@@ -130,7 +130,7 @@
                             <li>Screen Widget
                                 <ol>
                                     <li>Screen Definitions</li>
-                                    <li>&lt;component&gt;/widgets/**/*Screens.xml</li>
+                                    <li>component://&lt;component-name&gt;/widgets/**/*Screens.xml</li>
                                     <li>Screen -> Section</li>
                                     <li>Section -> Actions</li>
                                     <li>Section -> Widgets</li>
@@ -143,7 +143,7 @@
                             <li>Form Widget
                                 <ol>
                                     <li>Form Definitions</li>
-                                    <li>&lt;component&gt;/widgets/**/*Forms.xml</li>
+                                    <li>component://&lt;component-name&gt;/widgets/**/*Forms.xml</li>
                                     <li>Form Element</li>
                                     <li>Form Actions</li>
                                     <li>Form Auto-Fields from Entities and Services</li>
@@ -154,22 +154,22 @@
                             <li>Menu Widget
                                 <ol>
                                     <li>Menu Definitions</li>
-                                    <li>&lt;component&gt;/widgets/**/*Menus.xml</li>
+                                    <li>component://&lt;component-name&gt;/widgets/**/*Menus.xml</li>
                                     <li>Menu Items</li>
                                 </ol>
                             </li>
                             <li>Tree Widget
                                 <ol>
                                     <li>Tree Definitions</li>
-                                    <li>&lt;component&gt;/widgets/**/*Trees.xml</li>
+                                    <li>component://&lt;component-name&gt;/widgets/**/*Trees.xml</li>
                                     <li>Tree Nodes</li>
                                 </ol>
                             </li>
                             <li>BeanShell
                                 <ol>
                                     <li>Data Preparation Actions</li>
-                                    <li>www.beanshell.org</li>
-                                    <li>&lt;webapp&gt;/WEB-INF/actions/**/*.bsh</li>
+                                    <li>http://www.beanshell.org</li>
+                                    <li>component://&lt;component-name&gt;/webapp/&lt;webapp-name&gt;/WEB-INF/actions/**/*.bsh</li>
                                     <li>Java Syntax, with some scripting like features</li>
                                     <li>Dynamic Types</li>
                                 </ol>
@@ -177,8 +177,8 @@
                             <li>FreeMarker
                                 <ol>
                                     <li>Content Templates</li>
-                                    <li>www.freemarker.org</li>
-                                    <li>&lt;webapp&gt;/**/*.ftl</li>
+                                    <li>http://www.freemarker.org</li>
+                                    <li>component://&lt;component-name&gt;/webapp/&lt;webapp-name&gt;/**/*.ftl</li>
                                     <li>PHP-like Syntax with Java Robustness and Flexibility</li>
                                     <li>Control Constructs (#if/#else/#elseif, #list, #assign)</li>
                                     <li>Built-ins</li>
@@ -195,11 +195,12 @@
                         </ol>
                     </li>
                     <li>JPublish Based Views - Generic Templates <ol>
-                            <li>JPublish <ol>
+                            <li>JPublish
+                                <ol>
                                     <li>Page Definitions</li>
-                                    <li>www.jpublish.org</li>
-                                    <li>&lt;webapp&gt;/WEB-INF/jpublish.xml</li>
-                                    <li>&lt;webapp&gt;/WEB-INF/pagedefs/**/*.xml</li>
+                                    <li>http://www.jpublish.org</li>
+                                    <li>component://&lt;component-name&gt;/webapp/&lt;webapp-name&gt;/WEB-INF/jpublish.xml</li>
+                                    <li>component://&lt;component-name&gt;/webapp/&lt;webapp-name&gt;/WEB-INF/pagedefs/**/*.xml</li>
                                     <li>Page Variables</li>
                                     <li>Decoration Templates</li>
                                     <li>Content, Template, and Page Actions</li>
@@ -289,21 +290,24 @@
                         <ol>
                             <li>Database (or datasource) Agnostic</li>
                             <li>Dynamic API Behaves According to Entity Definitions</li>
-                            <li>Minimal Redundancy from Data Definitions</li>
+                            <li>Minimal Redundancy from Data Layer Artifacts (easier implementation and maintenance)</li>
                             <li>Uses JDBC and JTA J2EE Components
                                 <ol>
-                                    <li>Can operate in the same transaction with EJB , JDO, Hibernate, etc code</li>
+                                    <li>Can operate in the same transaction with EJB, JDO, Hibernate, etc code</li>
                                     <li>Can drop down to JDBC when necessary</li>
                                 </ol>
                             </li>
+                            <li>Choice of Tools for Ease/Efficient or Flexibility</li>
                         </ol>
                     </li>
                     <li>Configuration
                         <ol>
-                            <li>ofbiz/components/entity/config/entityengine.xml</li>
+                            <li>ofbiz/framework/entity/config/entityengine.xml</li>
                             <li>Transaction (JTA) Setup</li>
                             <li>Delegators</li>
                             <li>Datasources</li>
+                            <li>JDBC Drivers (ofbiz/framework/entity/lib/jdbc)</li>
+                            <li>Distributed Cache Clearing</li>
                         </ol>
                     </li>
                     <li>Entity Groups &amp; Delegation</li>
@@ -332,12 +336,16 @@
                                 <ol>
                                     <li>By Primary Key</li>
                                     <li>By And</li>
-                                    <li>EntityConditions
+                                    <li>By Condition
                                         <ol>
-                                            <li>EntityFieldMap</li>
-                                            <li>EntityExpr</li>
-                                            <li>EntityConditionList</li>
-                                            <li>EntityWhereString</li>
+                                            <li>EntityConditions
+                                                <ol>
+                                                    <li>EntityFieldMap</li>
+                                                    <li>EntityExpr</li>
+                                                    <li>EntityConditionList</li>
+                                                    <li>EntityWhereString (caution)</li>
+                                                </ol>
+                                            </li>
                                         </ol>
                                     </li>
                                     <li>The EntityListIterator (remember to close)</li>
@@ -348,6 +356,7 @@
                                     <li>Theory of Operation</li>
                                     <li>UtilCache &amp; The Webtools Cache Page</li>
                                     <li>Automatic &amp; Manual Cache Clearing</li>
+                                    <li>Distributed Cache Clearing Note</li>
                                 </ol>
                             </li>
                         </ol>
@@ -383,7 +392,19 @@
                             <li>Service Engines
                                 <ol>
                                     <li>The GenericEngine Interface</li>
-                                    <li>Overview of Existing Engines</li>
+                                    <li>Overview of Existing Engines
+                                        <ol>
+                                            <li>See definitions in serviceengine.xml, in the <b>engine</b> element</li>
+                                            <li>simple</li>
+                                            <li>java</li>
+                                            <li>interface</li>
+                                            <li>group</li>
+                                            <li>route</li>
+                                            <li>Remote: rmi, jms, soap</li>
+                                            <li>Scripting: bsh, jacl, javascript, jpython</li>
+                                            <li>workflow (Shark Workflow Engine, not old OFBiz Workflow Engine)</li>
+                                        </ol>
+                                    </li>
                                     <li>Designing a New Engine</li>
                                 </ol>
                             </li>
@@ -392,11 +413,11 @@
                     <li>Service Engine Configuration
                         <ol>
                             <li>website/docs/serviceconfig.html</li>
-                            <li>ofbiz/components/service/dtd/service-config.dtd</li>
-                            <li>commonapp/etc/serviceengine.xml</li>
+                            <li>ofbiz/framework/service/dtd/service-config.dtd</li>
+                            <li>ofbiz/framework/service/config/serviceengine.xml</li>
                             <li>JNDI Servers &amp; Resource Loaders</li>
                             <li>Global Service Definition Files</li>
-                            <li>Service Group and ECA Rule Files</li>
+                            <li>Service Group and SECA Rule Files</li>
                             <li>JMS Servers</li>
                         </ol>
                     </li>
@@ -443,7 +464,7 @@
                     </li>
                     <li>Service Groups
                         <ol>
-                            <li>ofbiz/components/service/dtd/service-group.dtd</li>
+                            <li>ofbiz/framework/service/dtd/service-group.dtd</li>
                             <li>Defining Groups
                                 <ol>
                                     <li>Groups</li>
@@ -454,7 +475,7 @@
                     </li>
                     <li>Service Event-Condition-Action (ECA) Rules
                         <ol>
-                            <li>ofbiz/components/service/dtd/service-eca.dtd</li>
+                            <li>ofbiz/framework/service/dtd/service-eca.dtd</li>
                             <li>Defining ECA Rules
                                 <ol>
                                     <li>Events</li>
