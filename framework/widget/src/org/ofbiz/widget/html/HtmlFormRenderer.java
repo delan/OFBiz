@@ -785,6 +785,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ModelFormField modelFormField = submitField.getModelFormField();
         ModelForm modelForm = modelFormField.getModelForm();
         String singleClickAction = " onClick=\"javascript:submitFormDisableButton(this)\" ";
+        String event = null;
+        String action = null;        
 
         if ("text-link".equals(submitField.getButtonType())) {
             buffer.append("<a");
@@ -827,8 +829,18 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(" src=\"");
             this.appendContentUrl(buffer, submitField.getImageLocation());
             buffer.append('"');
-
-            buffer.append(singleClickAction);
+            
+            event = modelFormField.getEvent();
+            action = modelFormField.getAction();
+            if (UtilValidate.isNotEmpty(event) && UtilValidate.isNotEmpty(action)) {
+                buffer.append(" ");
+                buffer.append(event);
+                buffer.append("=\"");
+                buffer.append(action);
+                buffer.append('"');
+            } else {
+            	buffer.append(singleClickAction);
+            }
             
             buffer.append("/>");
         } else {
@@ -854,8 +866,19 @@ public class HtmlFormRenderer implements FormStringRenderer {
                 buffer.append('"');
             }
 
-            // add single click JS onclick
-            buffer.append(singleClickAction);
+            
+            event = modelFormField.getEvent();
+            action = modelFormField.getAction();
+            if (UtilValidate.isNotEmpty(event) && UtilValidate.isNotEmpty(action)) {
+                buffer.append(" ");
+                buffer.append(event);
+                buffer.append("=\"");
+                buffer.append(action);
+                buffer.append('"');
+            } else {
+            	//add single click JS onclick
+            	buffer.append(singleClickAction);
+            }
             
             buffer.append("/>");
         }
