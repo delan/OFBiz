@@ -50,6 +50,47 @@
             </widgets>
         </section>
     </screen>
+    <screen name="CommonWorkEffortDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="workeffort"/>
+                <set field="workEffortId" from-field="parameters.workEffortId"/>
+                <entity-one entity-name="WorkEffort" value-name="workEffort"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not>
+                                            <if-empty field-name="workEffortId"/>
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu name="WorkEffortTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                        <container>
+                                            <label style="head1">${uiLabelMap.WorkEffortWorkEffortId}: ${workEffortId}</label>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="login">
         <section>
             <widgets>
