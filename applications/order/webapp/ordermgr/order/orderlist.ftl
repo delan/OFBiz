@@ -20,6 +20,25 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
+<script language="JavaScript">
+	var checkBoxNameStart = "view";
+	var formName = "findorder";
+
+
+	function setCheckboxes() {
+		// This would be clearer with camelCase variable names
+		var allCheckbox = document.forms[formName].elements[checkBoxNameStart + "all"];
+		for(i = 0;i < document.forms[formName].elements.length;i++) {
+			var elem = document.forms[formName].elements[i];
+			if (elem.name.indexOf(checkBoxNameStart) == 0 && elem.name.indexOf("_") < 0 && elem.type == "checkbox") {
+				elem.checked = allCheckbox.checked;
+			}
+		}
+	}
+	
+</script>
+
+
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
@@ -30,7 +49,7 @@
             <td>&nbsp;&nbsp;</td>
             <td nowrap>
                 <div class="tabletext">
-                    <input type="checkbox" name="viewall" value="Y" <#if viewall?exists>checked="checked"</#if> />${uiLabelMap.CommonAll}
+                    <input type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" <#if viewall?exists>checked="checked"</#if> />${uiLabelMap.CommonAll}
                     <input type="checkbox" name="viewcreated" value="Y" <#if viewcreated?exists>checked="checked"</#if> />${uiLabelMap.CommonCreated}
                     <input type="checkbox" name="viewprocessing" value="Y" <#if viewprocessing?exists>checked="checked"</#if> />${uiLabelMap.CommonProcessing}
                     <input type="checkbox" name="viewapproved" value="Y" <#if viewapproved?exists>checked="checked"</#if> />${uiLabelMap.CommonApproved}
