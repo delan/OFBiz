@@ -26,26 +26,22 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="findWebsiteContent" title="" type="single">
         <field name="noConditionFind"><hidden value="Y"/></field>
-        <field name="contentId"><text-find default-option="contains" ignore-case="true"/></field>
+        <field name="contentTypeId"><hidden value="DOCUMENT"/></field>
         <field name="contentName"><text-find default-option="contains" ignore-case="true"/></field>
         <field name="description"><text-find default-option="contains" ignore-case="true"/></field>
-        <field name="contentTypeId" position="1">
+        <!--field name="contentTypeId" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
-        </field>
-        <field name="statusId" position="2">
+        </field-->
+        <field name="statusId" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="CONTENT_STATUS"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="localeString">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="CountryCode" description="${countryName}[${countryCode}]" key-field-name="countryCode"/>
-            </drop-down>
-        </field>
+        <field name="localeString" position="2"><text size="3"></text></field>
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 		
@@ -55,26 +51,19 @@
         <actions>
             <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
                 <field-map field-name="inputFields" env-name="parameters"/>
-                <field-map field-name="entityName" value="ContentAssocOptViewFrom"/>
-                <field-map field-name="orderBy" value="contentIdStart"/>
+                <field-map field-name="entityName" value="Content"/>
+                <field-map field-name="orderBy" value="contentName"/>
             </service>
         </actions>
         
         <field name="contentId"><hidden/></field>
-        <field name="contentName" title="Name [id]" widget-style="tabletext">
-            <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
-                <sub-hyperlink target="editContent?contentId=${contentId}" description="[${contentId}]" link-style="buttontext"/>
-            </display-entity>
-        </field>
+        <field name="contentName" title="Name [id]" widget-style="tabletext"><hyperlink target="EditElectronicText?contentId=${contentId}" description="${contentName}"/></field>
         <field name="description"><display/></field>
         <field name="statusId"><display-entity entity-name="StatusItem"></display-entity></field>
         <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}[${countryCode}]"></display-entity></field>
-        <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field>
-        <field name="caContentAssocTypeId"><display-entity entity-name="ContentAssocType" key-field-name="contentAssocTypeId" description="${description}"/></field>
-        <field name="contentIdStart" title="related Id"><display-entity entity-name="Content" key-field-name="contentId" description="${contenName},${description}">
-            <sub-hyperlink target="editContent?contentId=${contentIdStart}" description="[${contentIdStart}]" link-style="buttontext"/>
-        </display-entity></field>
-        <field name="caFromDate"><display description="${bsh:caFromDate.toString().substring(0,10)}"/></field>
+        <field name="createdStamp"><display description="${bsh:createdStamp!=null?createdStamp.toString().substring(0,10):&quot; &quot;}"/></field>
+        <field name="lastModifiedDate"><display description="${bsh:lastModifiedDate!=null?lastModifiedDate.toString().substring(0,10):&quot; &quot;}"/></field>
+        <field name="lastModifiedByUserLogin" title="Modified By"><display /></field>
     </form>
 
     <form name="EditContent" target="updateContent" title="" type="single"
@@ -88,15 +77,16 @@
                 <field-map field-name="contentAssocTypeId" env-name="currentValue.caContentAssocTypeId"/>
             </entity-one>
         </actions>
-        <!--alt-target use-when="currentValue==null" target="createContent"/-->
-        <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
-        <field name="contentId"><hidden/></field>
+        <field name="dataResourceTypeId" use-when="currentValue==null"><hidden value="ELECTRONIC_TEXT"/></field>
         <field name="textData" use-when="currentValue==null"><hidden value="  "/></field>
+        <field name="contentId"><hidden/></field>
         <field name="contentName" position="1"><text/></field>
         <field name="description" position="2"><text/></field>
+        <field name="localeString" position="1"><text size="5"/></field>
         <field name="contentTypeId" use-when="currentValue==null"><hidden value="DOCUMENT"/></field>
-        <field name="contentTypeId" use-when="currentValue!=null" widget-style="tabletext">
-            <display-entity entity-name="ContentType" description="${description}"/></field>
+        <field name="contentTypeId" position="2" use-when="currentValue!=null" widget-style="tabletext">
+            <display-entity entity-name="ContentType" description="${description}"/>
+        </field>
         <field name="statusId" use-when="currentValue!=null" widget-style="selectBox">
             <drop-down allow-empty="false" current-description="${currentStatus.description}">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
@@ -105,7 +95,6 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="localeString"><text size="5"/></field>
         <field name="createButton" use-when="currentValue==null" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="updateButton" use-when="currentValue!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

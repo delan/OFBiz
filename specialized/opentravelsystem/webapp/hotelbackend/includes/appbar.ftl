@@ -35,22 +35,22 @@
 
 <#if requestAttributes.userLogin?has_content && userLogin.partyId != "admin">
 	<#assign displayApps = [
- 		{"title":"Product",				"url":"mainCatalog"}
-		,{"title":"Reservations",	"url":"findorders"}
-		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
-		,{"title":"Accounting",			"url":"mainAccounting"}
-		,{"title":"Website", 			"url":"findWebsiteContent"}
-		,{"title":"Logout", 			"url":"logout"}
+ 		 {"title":"Product",		"url":"mainCatalog",							"label":"opentravelsystemProductManagement"}
+		,{"title":"Reservations",	"url":"findorders",								"label":"opentravelsystemOrdersReservationsManagement"}
+		,{"title":"Parties",		"url":"findParties?statusId=PARTYREL-ACTIVE",	"label":"opentravelsystemPartiesManagement"}
+		,{"title":"Accounting",		"url":"mainAccounting",							"label":"opentravelsystemAccountingManagement"}
+		,{"title":"Website",		"url":"findWebsiteContent",						"label":"opentravelsystemWebsiteManagement"}
+		,{"title":"Logout",			"url":"logout", 								"label":"CommonLogout"}
 		]>
 <#elseif requestAttributes.userLogin?has_content && userLogin.partyId == "admin">
 	<#assign displayApps = [
- 		{"title":"Product",				"url":"mainCatalog"}
-		,{"title":"Reservations",	"url":"findorders"}
-		,{"title":"Parties",			"url":"findParties?statusId=PARTYREL-ACTIVE"}
-		,{"title":"Accounting",			"url":"mainAccounting"}
-		,{"title":"Website", 			"url":"findWebsiteContent"}
-		,{"title":"SysAdmin", 			"url":"sysAdminMain"}
-		,{"title":"Logout", 			"url":"logout"}
+ 		 {"title":"Produktbeheer",	"url":"mainCatalog",							"label":"opentravelsystemProductManagement"}
+		,{"title":"Orderbeheer",	"url":"findorders",								"label":"opentravelsystemOrdersReservationsManagement"}
+		,{"title":"Relatiebeheer",	"url":"findParties?statusId=PARTYREL-ACTIVE",	"label":"opentravelsystemPartiesManagement"}
+		,{"title":"Boekhouding",	"url":"mainAccounting",							"label":"opentravelsystemAccountingManagement"}
+		,{"title":"Websitebeheer", 	"url":"findWebsiteContent",						"label":"opentravelsystemWebsiteManagement"}
+		,{"title":"SystAdmin", 		"url":"sysAdminMain",							"label":"opentravelsystemSysAdmin"}
+		,{"title":"Logout", 		"url":"logout",									"label":"CommonLogout"}
 		]>
 </#if>
 
@@ -93,7 +93,7 @@ document.getElementById(tab).className= toclass;
           <td>
             <table height="21px" width="120px" border="0" cellspacing="0" cellpadding="0">
               <tr> 
-                 <td height="21px" onclick="window.location='${display.url}'"  style="cursor:pointer; cursor:hand" class="${class.tab}" id="${"uiLabelMap.${display.title}"?eval}" onMouseOver="ChangeClass('${"uiLabelMap.${display.title}"?eval}', '${class.tab_mouseover}');" onMouseOut="ChangeClass('${"uiLabelMap.${display.title}"?eval}', '${class.tab}');">${"uiLabelMap.${display.title}"?eval}</td>              
+                 <td height="21px" onclick="window.location='${display.url}'"  style="cursor:pointer; cursor:hand" class="${class.tab}" id="${"uiLabelMap.${display.title}"?eval}" onMouseOver="ChangeClass('${"uiLabelMap.${display.title}"?eval}', '${class.tab_mouseover}');" onMouseOut="ChangeClass('${"uiLabelMap.${display.title}"?eval}', '${class.tab}');">${"uiLabelMap.${display.label}"?eval}</td>              
               </tr>                          
             </table>
           </td>

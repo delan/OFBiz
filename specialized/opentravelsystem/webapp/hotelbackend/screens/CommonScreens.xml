@@ -43,7 +43,7 @@
                 <set field="productStoreId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
                 <set field="prodCatalogId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
                 <set field="organizationPartyId" from-field="parameters.userLogin.partyId" global="true" to-scope="user"/>
-                <set field="activeApp" value="hotelbackend" global="true"/>
+                <set field="activeApp" value="backend" global="true"/>
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
                 <entity-one entity-name="PartyGroup" value-name="partyGroup" use-cache="true">
                     <field-map field-name="partyId" value="${parameters.userLogin.partyId}"/>
@@ -180,7 +180,7 @@
                                     <if-empty field-name="parameters.popup"/>
                                 </condition>
                                 <widgets>
-                                    <label style="apptitle" text="Customers, Suppliers, Partners, Employees"/>
+                                    <label style="apptitle" text="${uiLabelMap.opentravelsystemPartiesTitle}"/>
                                     <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="PartyAppBar"/>
                                 </widgets>
                                 <fail-widgets>
@@ -660,7 +660,7 @@
                                 <not><if-empty field-name="currentValue.contentId"/></not>
                             </condition>
                             <widgets>
-                                <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${currentValue.contentName}, ${currentValue.description} [${uiLabelMap.CommonId}:${contentId}]  ${${extraFunctionName}}</label>
+                                <label style="head1">${uiLabelMap.${labelTitleProperty}} ${uiLabelMap.CommonFor}: ${currentValue.contentName}, ${currentValue.description} ${${extraFunctionName}}</label>
                             </widgets>
                         </section>
                         <section>

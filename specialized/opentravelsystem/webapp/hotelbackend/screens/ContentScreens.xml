@@ -106,7 +106,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditContentAssoc">
+    <!--screen name="EditContentAssoc">
         <section>
             <condition>
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
@@ -135,6 +135,6 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen-->
     
 </screens>
