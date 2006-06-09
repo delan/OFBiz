@@ -75,6 +75,7 @@
                 <set field="partyId" value="${parameters.partyId}"/>
                 <set field="partyIdFrom" value="${parameters.partyIdFrom}"/>
                 <set field="partyIdTo" value="${parameters.partyIdTo}"/>
+                <set field="communicationEventId" value="${parameters.communicationEventId}"/>
                 <set field="entityName" value="CommunicationEvent"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="ListPartyCommEvents?partyId=${partyId}"/>
             </actions>
@@ -95,7 +96,14 @@
                                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
-                                <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field-name="communicationEventId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <include-menu location="component://party/webapp/partymgr/communication/CommMenus.xml" name="CommEventTabBar"/>
+                                    </widgets>
+                                </section>
                                 <container><label style="head1" text="${uiLabelMap.PartyFoundCommunicationEvents}"/></container>
                                 <container><link style="buttontext" target="EditCommunicationEvent?partyId=${partyId}" text="${uiLabelMap.PartyNewCommunication}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListPartyCommEvents"/>
@@ -328,6 +336,7 @@
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <set field="parentCommEventId" from-field="parameters.parentCommEventId"/>
 
+                <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom" default-value="${userLogin.partyId}"/>
                 <set field="partyIdTo" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
                 <set field="contactMechIdFrom" from-field="parameters.contactMechIdFrom"/>
@@ -480,7 +489,14 @@
                 <decorator-screen name="CommonCommunicationEventDecorator">
                     <decorator-section name="body">
                         <container><label style="head1" text="${uiLabelMap.PartyCommWorkEfforts}"/></container>
-                        <container><link style="buttontext" target="AddCommEventWorkEffort?communicationEventId=${communicationEventId}&amp;partyId=${partyId}" text="${uiLabelMap.PartyNewCommWorkEffort}"/></container>
+                        <section>
+                            <condition>
+                                <if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/>
+                            </condition>
+                            <widgets>
+                                <container><link style="buttontext" target="AddCommEventWorkEffort?communicationEventId=${communicationEventId}&amp;partyId=${partyId}" text="${uiLabelMap.PartyNewCommWorkEffort}"/></container>
+                            </widgets>
+                        </section>
                         <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="ListCommWorkEfforts"/>
                     </decorator-section>
                 </decorator-screen>
@@ -494,6 +510,7 @@
                 <set field="tabButtonItem" value="PartyCommEvents"/>
                 <set field="subTabButtonItem" value="UpdateCommWorkEfforts"/>
 
+                <set field="partyId" from-field="parameters.partyId"/>
                 <set field="communicationEventId" from-field="parameters.communicationEventId"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-name="workEffort"/>
@@ -549,18 +566,15 @@
                                 <if-has-permission action="_VIEW" permission="PARTYMGR"/>
                             </condition>
                             <widgets>
+                                <container><label style="head1" text="${uiLabelMap.CommContent}"/></container>
                                 <section>
                                     <condition>
-                                        <not><if-empty field-name="partyId"/></not>
+                                        <if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/>
                                     </condition>
                                     <widgets>
-                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
+                                        <container><link style="buttontext" target="AddCommContent?communicationEventId=${communicationEventId}&amp;partyId=${partyId}" text="${uiLabelMap.AddCommContent}"/></container>
                                     </widgets>
                                 </section>
-                                <container><label style="head1" text="${uiLabelMap.CommContent}"/></container>
-                                <container>
-                                    <link style="buttontext" target="AddCommContent?communicationEventId=${communicationEventId}" text="${uiLabelMap.AddCommContent}"/>
-                                </container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="listCommContent"/>
                             </widgets>
                             <fail-widgets>
@@ -571,16 +585,16 @@
                 </decorator-screen>
             </widgets>
         </section>
-	</screen>
+    </screen>
 
-	<screen name="AddCommContent">
+    <screen name="AddCommContent">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
                 <set field="headerItem" value="comm"/>
                 <set field="tabButtonItem" value="PartyCommEvents"/>
                 <set field="subTabButtonItem" value="CommContent"/>
-                <set field="partyId" value="${parameters.partyId}"/>
+                <set field="partyId" from-field="parameters.partyId"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdTo" value="${parameters.partyIdTo}"/>
                 <set field="communicationEventId" value="${parameters.communicationEventId}"/>
@@ -594,14 +608,6 @@
                                 <if-has-permission action="_VIEW" permission="PARTYMGR"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field-name="partyId"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
-                                    </widgets>
-                                </section>
                                 <container><label style="head1" text="${uiLabelMap.PartyNewCommContent}"/></container>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="addCommContent"/>
                             </widgets>
@@ -614,7 +620,7 @@
             </widgets>
         </section>
     </screen>
-	<screen name="EditCommContent">
+    <screen name="EditCommContent">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
@@ -625,12 +631,12 @@
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdTo" value="${parameters.partyIdTo}"/>
                 <set field="communicationEventId" value="${parameters.communicationEventId}"/>
-				<entity-one entity-name="CommEventContentDataResource" value-name="commEventContentDataResource">
-					<field-map field-name="communicationEventId" env-name="parameters.communicationEventId"/>
-					<field-map field-name="contentId" env-name="parameters.contentId"/>
-					<field-map field-name="fromDate" env-name="parameters.fromDate"/>
-					<field-map field-name="drDataResourceId" env-name="parameters.dataResourceId"/>
-				</entity-one>
+                <entity-one entity-name="CommEventContentDataResource" value-name="commEventContentDataResource">
+                    <field-map field-name="communicationEventId" env-name="parameters.communicationEventId"/>
+                    <field-map field-name="contentId" env-name="parameters.contentId"/>
+                    <field-map field-name="fromDate" env-name="parameters.fromDate"/>
+                    <field-map field-name="drDataResourceId" env-name="parameters.dataResourceId"/>
+                </entity-one>
             </actions>
             <widgets>
                 <decorator-screen  name="CommonCommunicationEventDecorator">
@@ -650,36 +656,36 @@
                                     </widgets>
                                 </section>
                                 <container><label style="head1" text="${uiLabelMap.EditCommContent}"/></container>
-								<!--
+                                <!--
                                 <container><label style="head1" text="parameters: ${parameters}"/></container>
-                               <container><label style="head1" text="commEventContentDataResource: ${commEventContentDataResource}"/></container>
- 									-->
+                                <container><label style="head1" text="commEventContentDataResource: ${commEventContentDataResource}"/></container>
+                                -->
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="editCommContent"/>
-								<section>
-									<condition>
-										<if-regexp expr="text.*" field-name="commEventContentDataResource.drMimeTypeId" />
-									</condition>
-									<actions>
-										<entity-one entity-name="ElectronicText" value-name="electronicText">
-											<field-map field-name="dataResourceId" env-name="commEventContentDataResource.drDataResourceId"/>
-										</entity-one>
-									</actions>
-									<widgets>
-										<include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="editCommTextContent"/>
-									</widgets>
-								</section>
-								<section>
-									<condition>
-										<not>
-											<if-regexp expr="text.*" field-name="commEventContentDataResource.drMimeTypeId"/>
-										</not>
-									</condition>
-									<widgets>
-										<include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="uploadCommContent"/>
-										<label text="View Image" style="head1"/>
-										<content dataresource-id="${commEventContentDataResource.drDataResourceId}"/>
-									</widgets>
-								</section>
+                                <section>
+                                    <condition>
+                                        <if-regexp expr="text.*" field-name="commEventContentDataResource.drMimeTypeId" />
+                                    </condition>
+                                    <actions>
+                                        <entity-one entity-name="ElectronicText" value-name="electronicText">
+                                            <field-map field-name="dataResourceId" env-name="commEventContentDataResource.drDataResourceId"/>
+                                        </entity-one>
+                                    </actions>
+                                    <widgets>
+                                        <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="editCommTextContent"/>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <not>
+                                            <if-regexp expr="text.*" field-name="commEventContentDataResource.drMimeTypeId"/>
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="uploadCommContent"/>
+                                        <label text="View Image" style="head1"/>
+                                        <content dataresource-id="${commEventContentDataResource.drDataResourceId}"/>
+                                    </widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.PartyMgrViewPermissionError}</label>
