@@ -27,10 +27,10 @@
         </actions>
         <!--field name="statusId"><hidden value="PARTYREL-ACTIVE"/></field-->
         <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="partyId" title="Party Id" ><text-find default-option="contains" ignore-case="true"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}" ><text-find default-option="contains" ignore-case="true"/></field>
         <field name="groupName"><text-find default-option="contains" ignore-case="true"/></field>
         <field name="lastName" ><text-find default-option="contains" ignore-case="true"/></field>
-        <field name="partyRelationshipTypeId" title="Party Type">
+        <field name="partyRelationshipTypeId" title="${uiLabelMap.opentravelsystemPartyType}">
             <drop-down allow-empty="true">
                 <entity-options description="${partyRelationshipName}" entity-name="PartyRelationshipType">
                     <entity-order-by field-name="partyRelationshipName"/>
@@ -62,18 +62,18 @@
             </service>
         </actions>
         <!--auto-fields-entity entity-name="PartyRelationshipAndPartyDetail" default-field-type="display"/-->
-        <field name="partyId" widget-style="buttontext" >
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="buttontext" >
             <hyperlink description="${partyId}" target="editParty?partyId=${partyId}"/>
         </field>
         <field name="partyTypeId"><display-entity entity-name="PartyType" description="${description}"/></field>
-        <field name="partyRelationshipTypeId" title="Rel.Type"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
-        <field name="groupName" title="Name"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
+        <field name="partyRelationshipTypeId" title="${uiLabelMap.opentravelsystemPartyType}"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
+        <field name="groupName" title="${uiLabelMap.PartyName}"><display description="${groupName} ${lastName} ${firstName} ${middleName}"/></field>
         <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="financialHistory" title=" " widget-style="buttontext" >
             <hyperlink description="Fin.Hist" target="partyFinancialHistory?partyId=${partyId}" target-window="new"/>
         </field>
         <field name="Disable" title=" " widget-style="buttontext">
-            <hyperlink description="Delete" target-type="plain" target="javascript:confirmActionLink('You want to delete this party?','deleteParty?partyId=${partyId}&amp;statusId=PARTYREL-DELETED')"/>
+            <hyperlink description="${uiLabelMap.CommonDelete}" target-type="plain" target="javascript:confirmActionLink('You want to delete this party?','deleteParty?partyId=${partyId}&amp;statusId=PARTYREL-DELETED')"/>
         </field>
     </form>
     

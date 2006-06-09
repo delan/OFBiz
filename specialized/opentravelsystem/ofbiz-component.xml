@@ -25,7 +25,6 @@
     
     <!-- place the config directory on the classpath to access configuration files -->
     <classpath type="dir" location="config"/>
-    <classpath type="dir" location="dtd"/>
     <classpath type="dir" location="script"/>
     
     <!-- load single or multiple external libraries -->
@@ -39,20 +38,12 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/hotelfrontend/data/HotelDemoStore.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/HotelSimple/data/HotelSimple.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="webapp/newShop/data/ShopData.xml"/>
-    <!--entity-resource type="data" reader-name="demo" loader="main" location="webapp/anet/data/anet.xml"/-->
     
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 
     <!--webapp name="Root"  title="Root Page redirector from domainname to domainpath"  server="default-server"
         location="root"  mount-point="/"  app-bar-display="false"/--> <!-- see webapp/root/index.jsp for configuration -->
-    
-    <webapp name="hotelbackend"
-        title="Hotel demo site Admininstrator backend, the same for all frontends"
-        server="default-server"
-        location="webapp/hotelbackend"
-        mount-point="/hotelbackend"
-        app-bar-display="false"/>
     
     <webapp name="backend"
         title="Admininstrator backend, the same for all frontends"
