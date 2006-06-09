@@ -39,7 +39,7 @@
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/request/requestlist.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.WorkEffortMyRequestList}</label>
