@@ -60,7 +60,20 @@
         
         <now-timestamp-to-env env-name="newEntity.entryDate"/>
         
-        <create-value value-name="newEntity"/>    
+        <create-value value-name="newEntity"/>
+
+        <if-not-empty field-name="parameters.productId">
+            <make-value value-name="eventProduct" entity-name="CommunicationEventProduct"/>
+            <set from-field="parameters.productId" field="eventProduct.productId"/>
+            <set from-field="newEntity.communicationEventId" field="eventProduct.communicationEventId"/>
+            <create-value value-name="eventProduct"/>
+        </if-not-empty>
+        <if-not-empty field-name="parameters.orderId">
+            <make-value value-name="eventOrder" entity-name="CommunicationEventOrder"/>
+            <set from-field="parameters.orderId" field="eventOrder.orderId"/>
+            <set from-field="newEntity.communicationEventId" field="eventOrder.communicationEventId"/>
+            <create-value value-name="eventOrder"/>
+        </if-not-empty>
     </simple-method>
     <simple-method method-name="updateCommunicationEvent" short-description="Update a CommunicationEvent">
         <check-permission permission="PARTYMGR" action="_CME_UPDATE">
