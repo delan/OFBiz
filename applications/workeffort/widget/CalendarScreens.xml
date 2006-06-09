@@ -25,43 +25,6 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="CommonCalendarDecorator">
-        <section>
-            <actions>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
-                            </condition>
-                            <actions>
-                                <entity-condition entity-name="Facility" list-name="allFacilities">
-                                    <order-by field-name="facilityName"/>
-                                </entity-condition>
-                                <entity-condition entity-name="FixedAsset" list-name="allFixedAssets">
-                                    <order-by field-name="fixedAssetId"/>
-                                </entity-condition>
-                            </actions>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://workeffort/webapp/workeffort/calendar/CalendarTabBar.ftl"/></html>
-                                </platform-specific>
-                                <platform-specific>
-                                    <html><html-template location="component://workeffort/webapp/workeffort/calendar/eventsByForms.ftl"/></html>
-                                </platform-specific>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="CalendarDay">
         <section>
             <actions>
@@ -72,7 +35,7 @@
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/day.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCalendarDecorator">
+                <decorator-screen name="CommonCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/calendar/day.ftl"/></html>
@@ -92,7 +55,7 @@
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/week.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCalendarDecorator">
+                <decorator-screen name="CommonCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/calendar/week.ftl"/></html>
@@ -112,7 +75,7 @@
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/month.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCalendarDecorator">
+                <decorator-screen name="CommonCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/calendar/month.ftl"/></html>
@@ -132,7 +95,7 @@
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/upcoming.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCalendarDecorator">
+                <decorator-screen name="CommonCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/calendar/upcoming.ftl"/></html>

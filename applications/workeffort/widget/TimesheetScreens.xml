@@ -40,7 +40,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label text="${uiLabelMap.WorkEffortMyCurrentTimesheets}" style="head2"/></container>
                         <container>
@@ -119,7 +119,7 @@ under the License.
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTimesheetDecorator">
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -130,41 +130,6 @@ under the License.
                                 <container><link  text="${uiLabelMap.TimesheetCreate}" target="EditTimesheet" style="linktext"/></container>
                                 <include-form name="FindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
                                 <include-form name="ListFindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="head3">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="CommonTimesheetDecorator">
-        <section>
-            <actions>
-                <set field="headerItem" value="timesheet"/>
-                <set field="timesheetId" from-field="parameters.timesheetId"/>
-                <entity-one entity-name="Timesheet" value-name="timesheet"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field-name="timesheetId"/></not></condition>
-                                    <widgets>
-                                        <include-menu name="TimesheetTabBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
-                                        <container><label style="head1">${uiLabelMap.TimesheetTimesheetId}: ${timesheetId}</label></container>
-                                    </widgets>
-                                </section>
-                                
-                                <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.WorkEffortViewPermissionError}</label>
@@ -186,7 +151,7 @@ under the License.
                 <entity-one entity-name="Timesheet" value-name="timesheet"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTimesheetDecorator">
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -221,7 +186,7 @@ under the License.
                 <entity-one entity-name="Timesheet" value-name="timesheet"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTimesheetDecorator">
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleEditTimesheetRoles}</label></container>
                         <container><link  text="${uiLabelMap.TimesheetCreate}" target="EditTimesheet" style="linktext"/></container>
@@ -243,7 +208,7 @@ under the License.
                 <entity-one entity-name="Timesheet" value-name="timesheet"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonTimesheetDecorator">
+                <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container><label style="head1">${uiLabelMap.PageTitleEditTimesheetEntries}</label></container>
                         <container><link  text="${uiLabelMap.TimesheetCreate}" target="EditTimesheet" style="linktext"/></container>

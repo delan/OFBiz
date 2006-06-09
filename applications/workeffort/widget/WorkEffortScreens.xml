@@ -37,7 +37,7 @@
                 <service service-name="getWorkEffortAssignedTasks"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://workeffort/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
