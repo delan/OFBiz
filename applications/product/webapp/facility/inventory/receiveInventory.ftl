@@ -147,7 +147,7 @@
                 <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
                   SELECTED
                 </#if>
-              >${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+              >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
             </#list>
           </select>
         </td>
@@ -178,7 +178,7 @@
                 <#assign facility = productFacilityLocation.getRelatedOneCache("Facility")/>
                 <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation")?if_exists/>
                 <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists/>
-                <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</option>
+                <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.get("description",locale)})</#if>[${productFacilityLocation.locationSeqId}]</option>
               </#list>
               <option value="">${uiLabelMap.ProductNoLocation}</option>
             </select>
@@ -195,7 +195,7 @@
           <select name="rejectionId_o_0" size="1" class="selectBox">
             <option></option>
             <#list rejectReasons as nextRejection>
-              <option value="${nextRejection.rejectionId}">${nextRejection.description?default(nextRejection.rejectionId)}</option>
+              <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
             </#list>
           </select>
         </td>
@@ -262,7 +262,7 @@
               <tr>
                 <td width="5%" nowrap><input type="radio" name="shipmentId" value="${shipment.shipmentId}"></td>
                 <td width="5%" nowrap><div class="tabletext">${shipment.shipmentId}</div></td>
-                <td><div class="tabletext">${shipmentType.description?default(shipmentType.shipmentTypeId?default(""))}</div></td>
+                <td><div class="tabletext">${shipmentType.get("description",locale)?default(shipmentType.shipmentTypeId?default(""))}</div></td>
                 <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
                 <td><div class="tabletext">${(originFacility.facilityName)?if_exists} [${shipment.originFacilityId?if_exists}]</div></td>
                 <td><div class="tabletext">${(destinationFacility.facilityName)?if_exists} [${shipment.destinationFacilityId?if_exists}]</div></td>
@@ -356,7 +356,7 @@
                   <#else>
                     <td width="45%">
                       <div class="tabletext">
-                        <b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
+                        <b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
                         <input type="text" class="inputBox" size="12" name="productId_o_${rowCount}"/>
                         <a href="/catalog/control/EditProduct?externalLoginKey=${externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
                       </div>
@@ -374,7 +374,7 @@
                           <#assign facility = productFacilityLocation.getRelatedOneCache("Facility")/>
                           <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation")?if_exists/>
                           <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists/>
-                          <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</option>
+                          <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.get("description",locale)})</#if>[${productFacilityLocation.locationSeqId}]</option>
                         </#list>
                         <option value="">${uiLabelMap.ProductNoLocation}</option>
                       </select>
@@ -398,7 +398,7 @@
                        <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
                         SELECTED
                       </#if>
-                      >${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+                      >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                       </#list>
                     </select>
                   </td>
@@ -409,7 +409,7 @@
                     <select name="rejectionId_o_${rowCount}" size="1" class="selectBox">
                       <option></option>
                       <#list rejectReasons as nextRejection>
-                      <option value="${nextRejection.rejectionId}">${nextRejection.description?default(nextRejection.rejectionId)}</option>
+                      <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
                       </#list>
                     </select>
                   </td>

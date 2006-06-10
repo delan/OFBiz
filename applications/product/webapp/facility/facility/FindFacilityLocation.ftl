@@ -103,7 +103,7 @@
         <tr>
             <td><div class="tabletext"><a href="<@ofbizUrl>EditFacility?facilityId=${(location.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(location.facilityId)?if_exists}</a></div></td>
             <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">${(location.locationSeqId)?if_exists}</a></div></td>
-            <td><div class="tabletext">&nbsp;${(locationTypeEnum.description)?default(location.locationTypeEnumId?if_exists)}</div></td>
+            <td><div class="tabletext">&nbsp;${(locationTypeEnum.get("description",locale))?default(location.locationTypeEnumId?if_exists)}</div></td>
             <td><div class="tabletext">&nbsp;${(location.areaId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(location.aisleId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(location.sectionId)?if_exists}</div></td>

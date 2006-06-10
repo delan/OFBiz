@@ -35,7 +35,7 @@
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductShipmentType}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
-        <td width="80%" align="left"><span class="tabletext">${(shipmentType.description)?default(shipment.shipmentTypeId?if_exists)}</span></td>
+        <td width="80%" align="left"><span class="tabletext">${(shipmentType.get("description",locale))?default(shipment.shipmentTypeId?if_exists)}</span></td>
       </tr>
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductStatus}</span></td>
@@ -48,7 +48,7 @@
         <td width="80%" align="left"><span class="tabletext"><#if shipment.primaryOrderId?exists><a href="/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}">${shipment.primaryOrderId}</a></#if></span></td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Primary Ship Group Seq ID</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductPrimaryShipGroupSeqId}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${shipment.primaryShipGroupSeqId?if_exists}</span></td>
       </tr>
@@ -58,7 +58,7 @@
         <td width="80%" align="left">
           <span class="tabletext">
             <span class="tableheadtext">${uiLabelMap.CommonReady}:&nbsp;</span>${(shipment.estimatedReadyDate.toString())?if_exists}
-            <span class="tableheadtext">Ship:&nbsp;</span>${(shipment.estimatedShipDate.toString())?if_exists}
+            <span class="tableheadtext">${uiLabelMap.ProductEstimatedShipDate}:&nbsp;</span>${(shipment.estimatedShipDate.toString())?if_exists}
             <span class="tableheadtext">${uiLabelMap.ProductArrival}:&nbsp;</span>${(shipment.estimatedArrivalDate.toString())?if_exists}
           </span>
         </td>

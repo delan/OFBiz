@@ -28,6 +28,9 @@
             <actions>
                 <set field="headerItem" value="Content"/>
                 <set field="title" value="PageTitleFindContent"/>
+                <set field="titleProperty" value="PageTitleFindContent"/>
+                <set field="entityName" value="Content"/>
+                <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="30"/>
             </actions>
@@ -262,7 +265,8 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                <set field="title" value="Lookup Content"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupContent}"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>

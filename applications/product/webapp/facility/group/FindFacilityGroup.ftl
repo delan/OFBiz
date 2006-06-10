@@ -41,7 +41,7 @@
     <#assign facilityGroupType = facilityGroup.getRelatedOne("FacilityGroupType")?if_exists>
     <tr valign="middle">
       <td><div class='tabletext'>&nbsp;<a href='<@ofbizUrl>EditFacilityGroup?facilityGroupId=${facilityGroup.facilityGroupId?if_exists}</@ofbizUrl>' class="buttontext">${facilityGroup.facilityGroupName?if_exists} [${facilityGroup.facilityGroupId?if_exists}]</a></div></td>
-      <td><div class='tabletext'>&nbsp;${facilityGroupType.description?if_exists}</div></td>
+      <td><div class='tabletext'>&nbsp;${facilityGroupType.get("description",locale)?if_exists}</div></td>
       <td><div class='tabletext'>&nbsp;${facilityGroup.description?if_exists}</div></td>
       <td>
         <a href='<@ofbizUrl>EditFacilityGroup?facilityGroupId=${facilityGroup.facilityGroupId?if_exists}</@ofbizUrl>' class="buttontext">

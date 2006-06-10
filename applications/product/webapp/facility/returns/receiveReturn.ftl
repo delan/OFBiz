@@ -121,7 +121,7 @@
                   <#elseif orderItem?has_content>
                     <td width="45%">
                       <div class="tabletext">
-                        ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
+                        ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
                         <input type="text" class="inputBox" size="12" name="productId_o_${rowCount}">
                         <a href="/catalog/control/EditProduct?externalLoginKey=${externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
                       </div>
@@ -129,7 +129,7 @@
                   <#else>
                     <td width="45%">
                       <div class="tabletext">
-                        ${returnItem.returnItemSeqId}:&nbsp;${returnItem.description?if_exists}
+                        ${returnItem.returnItemSeqId}:&nbsp;${returnItem.get("description",locale)?if_exists}
                       </div>
                     </td>
                   </#if>
@@ -147,7 +147,7 @@
                           <#assign facility = productFacilityLocation.getRelatedOneCache("Facility")>
                           <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation")?if_exists>
                           <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
-                          <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</option>
+                          <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.get("description",locale)})</#if>[${productFacilityLocation.locationSeqId}]</option>
                         </#list>
                         <option value="">${uiLabelMap.ProductNoLocation}</option>
                       </select>
@@ -171,7 +171,7 @@
                          <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
                             SELECTED
                           </#if>
-                         >${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+                         >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                          </#list>
                       </select>
                   </td>                

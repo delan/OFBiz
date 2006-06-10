@@ -81,7 +81,7 @@
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <#if inventoryItemType?exists>
-                <div class="tabletext">${(inventoryItemType.description)?if_exists}</div>
+                <div class="tabletext">${(inventoryItemType.get("description",locale))?if_exists}</div>
             </#if>
             </td>
         </tr>
@@ -101,7 +101,7 @@
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <#if inventoryStatus?exists>
-                <div class="tabletext">${(inventoryStatus.description)?if_exists}</div>
+                <div class="tabletext">${(inventoryStatus.get("description",locale))?if_exists}</div>
             <#else>
                 <div class="tabletext">--</div>
             </#if>
@@ -148,7 +148,7 @@
         <select name="statusId" class="selectBox">
             <#if (inventoryTransfer.statusId)?exists>
                 <#assign curStatusItem = inventoryTransfer.getRelatedOneCache("StatusItem")>
-                <option value="${(inventoryTransfer.statusId)?if_exists}">${(curStatusItem.description)?if_exists}</option>
+                <option value="${(inventoryTransfer.statusId)?if_exists}">${(curStatusItem.get("description",locale))?if_exists}</option>
             </#if>
             <#list statusItems as statusItem>
             <option value="${(statusItem.statusId)?if_exists}">${(statusItem.get("description",locale))?if_exists}</option>

@@ -44,7 +44,7 @@
   <#assign facilityType = facility.getRelatedOne("FacilityType")?if_exists>
   <tr valign="middle">
     <td><div class='tabletext'>&nbsp;${facility.facilityName?if_exists} <a href='<@ofbizUrl>EditFacility?facilityId=${facility.facilityId?if_exists}</@ofbizUrl>' class="buttontext">${facility.facilityId?if_exists}</a></div></td>
-    <td><div class='tabletext'>&nbsp;${facilityType.description?if_exists}</div></td>
+    <td><div class='tabletext'>&nbsp;${facilityType.get("description",locale)?if_exists}</div></td>
     <td><div class='tabletext'>&nbsp;${facility.ownerPartyId?if_exists}</div></td>
     <td><div class='tabletext'>&nbsp;${facility.squareFootage?if_exists}</div></td>
     <td><div class='tabletext'>&nbsp;${facility.description?if_exists}</div></td>

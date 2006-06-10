@@ -1610,6 +1610,7 @@
     </entity>
     <entity entity-name="CustRequestResolution"
             package-name="org.ofbiz.order.request"
+            default-resource-name="OrderEntityLabels"
             title="Customer Request Resolution Entity">
       <field name="custRequestResolutionId" type="id-ne"></field>
       <field name="custRequestTypeId" type="id"></field>
@@ -2261,6 +2262,7 @@
     </entity>
     <entity entity-name="ReturnReason"
             package-name="org.ofbiz.order.return"
+            default-resource-name="OrderEntityLabels"
             title="Return Reason Entity">
         <field name="returnReasonId" type="id-ne"></field>
         <field name="description" type="description"></field>
@@ -2289,6 +2291,7 @@
     </entity>
     <entity entity-name="ReturnType"
             package-name="org.ofbiz.order.return"
+            default-resource-name="OrderEntityLabels"
             title="Return Type Entity">
         <field name="returnTypeId" type="id-ne"></field>
         <field name="description" type="description"></field>
@@ -2474,6 +2477,7 @@
     </entity>
     <entity entity-name="ShoppingListType"
             package-name="org.ofbiz.order.shoppinglist"
+            default-resource-name="OrderEntityLabels"
             title="Shopping List Type Entity">
       <field name="shoppingListTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>

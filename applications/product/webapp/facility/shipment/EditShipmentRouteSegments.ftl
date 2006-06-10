@@ -86,13 +86,13 @@
             </select>
             <select name="shipmentMethodTypeId" class="selectBox">
                 <#if shipmentMethodType?has_content>
-                    <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.description}</option>
+                    <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.get("description",locale)}</option>
                     <option value="${shipmentMethodType.shipmentMethodTypeId}">---</option>
                 <#else>
                     <option value="">&nbsp;</option>
                 </#if>
                 <#list shipmentMethodTypes as shipmentMethodTypeOption>
-                    <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.description}</option>
+                    <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.get("description",locale)}</option>
                 </#list>
             </select>
             <br/>
@@ -181,25 +181,25 @@
             <input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight?if_exists}" class="inputBox"/>
             <select name="billingWeightUomId" class="selectBox">
                 <#if billingWeightUom?has_content>
-                    <option value="${billingWeightUom.uomId}">${billingWeightUom.description} [${billingWeightUom.abbreviation}]</option>
+                    <option value="${billingWeightUom.uomId}">${billingWeightUom.get("description",locale)} [${billingWeightUom.abbreviation}]</option>
                     <option value="${billingWeightUom.uomId}">---</option>
                 <#else>
                     <option value="">&nbsp;</option>
                 </#if>
                 <#list weightUoms as weightUom>
-                    <option value="${weightUom.uomId}">${weightUom.description} [${weightUom.abbreviation}]</option>
+                    <option value="${weightUom.uomId}">${weightUom.get("description",locale)} [${weightUom.abbreviation}]</option>
                 </#list>
             </select>
             <br/>
             <select name="currencyUomId" class="selectBox">
                 <#if currencyUom?has_content>
-                    <option value="${currencyUom.uomId}">${currencyUom.description} [${currencyUom.uomId}]</option>
+                    <option value="${currencyUom.uomId}">${currencyUom.get("description",locale)} [${currencyUom.uomId}]</option>
                     <option value="${currencyUom.uomId}">---</option>
                 <#else>
                     <option value="">&nbsp;</option>
                 </#if>
                 <#list currencyUoms as altCurrencyUom>
-                    <option value="${altCurrencyUom.uomId}">${altCurrencyUom.description} [${altCurrencyUom.uomId}]</option>
+                    <option value="${altCurrencyUom.uomId}">${altCurrencyUom.get("description",locale)} [${altCurrencyUom.uomId}]</option>
                 </#list>
             </select>
             <br/>
@@ -273,7 +273,7 @@
             </select>
             <select name="shipmentMethodTypeId" class="selectBox">
                 <#list shipmentMethodTypes as shipmentMethodTypeOption>
-                    <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.description}</option>
+                    <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.get("description",locale)}</option>
                 </#list>
             </select>
             <br/>
@@ -317,14 +317,14 @@
             <select name="billingWeightUomId" class="selectBox">
                 <option value="">&nbsp;</option>
                 <#list weightUoms as weightUom>
-                    <option value="${weightUom.uomId}">${weightUom.description} [${weightUom.abbreviation}]</option>
+                    <option value="${weightUom.uomId}">${weightUom.get("description",locale)} [${weightUom.abbreviation}]</option>
                 </#list>
             </select>
             <br/>
             <select name="currencyUomId" class="selectBox">
                 <option value="">&nbsp;</option>
                 <#list currencyUoms as altCurrencyUom>
-                    <option value="${altCurrencyUom.uomId}">${altCurrencyUom.description} [${altCurrencyUom.uomId}]</option>
+                    <option value="${altCurrencyUom.uomId}">${altCurrencyUom.get("description",locale)} [${altCurrencyUom.uomId}]</option>
                 </#list>
             </select>
             <br/>

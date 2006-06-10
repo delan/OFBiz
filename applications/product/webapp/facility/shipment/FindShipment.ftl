@@ -71,12 +71,12 @@ function lookupShipments() {
                 <td>
                   <select name="shipmentTypeId" class="selectBox">
                     <#if currentShipmentType?has_content>
-                    <option value="${currentShipmentType.shipmentTypeId}">${currentShipmentType.description}</option>
+                    <option value="${currentShipmentType.shipmentTypeId}">${currentShipmentType.get("description",locale)}</option>
                     <option value="${currentShipmentType.shipmentTypeId}">---</option>
                     </#if>
                     <option value="">${uiLabelMap.ProductAnyShipmentType}</option>                
                     <#list shipmentTypes as shipmentType>
-                      <option value="${shipmentType.shipmentTypeId}">${shipmentType.description}</option>
+                      <option value="${shipmentType.shipmentTypeId}">${shipmentType.get("description",locale)}</option>
                     </#list>
                   </select>
                 </td>
@@ -119,17 +119,17 @@ function lookupShipments() {
                 <td>
                   <select name="statusId" class="selectBox"> 
                     <#if currentStatus?has_content>
-                    <option value="${currentStatus.statusId}">${currentStatus.description}</option>
+                    <option value="${currentStatus.statusId}">${currentStatus.get("description",locale)}</option>
                     <option value="${currentStatus.statusId}">---</option>
                     </#if>                                     
                     <option value="">${uiLabelMap.ProductSalesShipmentStatus}</option>                   
                     <#list shipmentStatuses as shipmentStatus>
-                      <option value="${shipmentStatus.statusId}">${shipmentStatus.description}</option>
+                      <option value="${shipmentStatus.statusId}">${shipmentStatus.get("description",locale)}</option>
                     </#list>
                     <option value="">---</option>
                     <option value="">${uiLabelMap.ProductPurchaseShipmentStatus}</option>                   
                     <#list purchaseShipmentStatuses as shipmentStatus>
-                      <option value="${shipmentStatus.statusId}">${shipmentStatus.description}</option>
+                      <option value="${shipmentStatus.statusId}">${shipmentStatus.get("description",locale)}</option>
                     </#list>
 
                   </select>
@@ -186,7 +186,7 @@ function lookupShipments() {
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
                 <#if (listSize > 0)>
-                  <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${listSize}</span>
+                  <span class="submenutextinfo">${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
                 </#if>
                 <#if (listSize > highIndex)>
                   <a href="<@ofbizUrl>FindShipment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}${paramList}&lookupFlag=Y</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonNext}</a>
@@ -202,7 +202,7 @@ function lookupShipments() {
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.ProductShipmentId}</div></td>
-          <td width="15%" align="left"><div class="tableheadtext">${uiLabelMap.ProductType}</div></td>
+          <td width="15%" align="left"><div class="tableheadtext">${uiLabelMap.ProductShipmentType}</div></td>
           <td width="10%" align="left"><div class="tableheadtext">${uiLabelMap.ProductStatus}</div></td>
           <td width="25%" align="left"><div class="tableheadtext">${uiLabelMap.ProductOriginFacility}</div></td>
           <td width="25%" align="left"><div class="tableheadtext">${uiLabelMap.ProductDestFacility}</div></td>
@@ -221,7 +221,7 @@ function lookupShipments() {
             <#assign shipmentType = shipment.getRelatedOneCache("ShipmentType")?if_exists>
             <tr class="${rowClass}">
               <td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${shipment.shipmentId}</a></td>
-              <td><div class="tabletext">${shipmentType.description?default(shipmentType.shipmentTypeId?default(""))}</div></td>
+              <td><div class="tabletext">${shipmentType.get("description",locale)?default(shipmentType.shipmentTypeId?default(""))}</div></td>
               <td><div class="tabletext">${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext">${(originFacility.facilityName)?if_exists} [${shipment.originFacilityId?if_exists}]</div></td>
               <td><div class="tabletext">${(destinationFacility.facilityName)?if_exists} [${shipment.destinationFacilityId?if_exists}]</div></td>

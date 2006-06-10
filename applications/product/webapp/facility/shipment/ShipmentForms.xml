@@ -31,8 +31,8 @@
         
         <auto-fields-service service-name="updateShipment"/>
         
-        <field use-when="shipment!=null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" tooltip="This cannot be changed without re-creating the Shipment"><display/></field>
-        <field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" tooltip="Could not find Shipment with ID [${shipmentId}]"><display description="" also-hidden="false"/></field>
+        <field use-when="shipment!=null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductShipment}"><display/></field>
+        <field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" tooltip="${uiLabelMap.ProductCouldNotFindProductShipmentWithId} [${shipmentId}]"><display description="" also-hidden="false"/></field>
         <field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId" title="${uiLabelMap.ProductShipmentId}" ><ignored/></field>
 
         <field name="shipmentTypeId" title="${uiLabelMap.ProductShipmentTypeId}" widget-style="selectBox">
@@ -101,10 +101,10 @@
         <field name="handlingInstructions" title="${uiLabelMap.ProductHandlingInstructions}"><text/></field>
          
         <field name="originContactMechId" title="${uiLabelMap.ProductOriginPostalAddressId}" 
-                tooltip="To: ${originPostalAddress.toName}, Attn: ${originPostalAddress.attnName}, ${originPostalAddress.address1}, ${originPostalAddress.address2}, ${originPostalAddress.city}, ${originPostalAddress.stateProvinceGeoId}, ${originPostalAddress.postalCode}, ${originPostalAddress.countryGeoId}" tooltip-style="tabletext">
+                tooltip="${uiLabelMap.CommonTo}: ${originPostalAddress.toName}, ${uiLabelMap.CommonAttn}: ${originPostalAddress.attnName}, ${originPostalAddress.address1}, ${originPostalAddress.address2}, ${originPostalAddress.city}, ${originPostalAddress.stateProvinceGeoId}, ${originPostalAddress.postalCode}, ${originPostalAddress.countryGeoId}" tooltip-style="tabletext">
         </field>
         <field name="destinationContactMechId" title="${uiLabelMap.ProductDestinationPostalAddressId}" 
-                tooltip="To: ${destinationPostalAddress.toName}, Attn: ${destinationPostalAddress.attnName}, ${destinationPostalAddress.address1}, ${destinationPostalAddress.address2}, ${destinationPostalAddress.city}, ${destinationPostalAddress.stateProvinceGeoId}, ${destinationPostalAddress.postalCode}, ${destinationPostalAddress.countryGeoId}" tooltip-style="tabletext">
+                tooltip="${uiLabelMap.CommonTo}: ${destinationPostalAddress.toName}, ${uiLabelMap.CommonAttn}: ${destinationPostalAddress.attnName}, ${destinationPostalAddress.address1}, ${destinationPostalAddress.address2}, ${destinationPostalAddress.city}, ${destinationPostalAddress.stateProvinceGeoId}, ${destinationPostalAddress.postalCode}, ${destinationPostalAddress.countryGeoId}" tooltip-style="tabletext">
         </field>
         <field name="originTelecomNumberId" title="${uiLabelMap.ProductOriginPhoneNumberId}" 
                 tooltip="${originTelecomNumber.countryCode}  ${originTelecomNumber.areaCode} ${originTelecomNumber.contactNumber}" tooltip-style="tabletext">

@@ -55,9 +55,9 @@
         <td>&nbsp;</td>
         <td width="74%">
         <select name="facilityGroupTypeId" size="1" class="selectBox">
-            <option selected value="${(facilityGroupType.facilityGroupTypeId)?if_exists}">${(facilityGroupType.description)?if_exists}</option>
+            <option selected value="${(facilityGroupType.facilityGroupTypeId)?if_exists}">${(facilityGroupType.get("description",locale))?if_exists}</option>
             <#list facilityGroupTypes as nextFacilityGroupType>
-            <option value="${(nextFacilityGroupType.facilityGroupTypeId)?if_exists}">${(nextFacilityGroupType.description)?if_exists}</option>
+            <option value="${(nextFacilityGroupType.facilityGroupTypeId)?if_exists}">${(nextFacilityGroupType.get("description",locale))?if_exists}</option>
             </#list>
         </select>
         </td>
