@@ -50,7 +50,7 @@
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <tr>
             <td align="right" valign="top" width="10%">
-              <div class="tabletext">&nbsp;<b>${contactMechMap.contactMechType.description}</b></div>
+              <div class="tabletext">&nbsp;<b>${contactMechMap.contactMechType.get("description",locale)}</b></div>
             </td>
             <td width="5">&nbsp;</td>
             <td align="left" valign="top" width="80%">
@@ -58,7 +58,7 @@
                   <#assign contactMechPurposeType = facilityContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                     <div class="tabletext">
                       <#if contactMechPurposeType?has_content>
-                        <b>${contactMechPurposeType.description}</b>
+                        <b>${contactMechPurposeType.get("description",locale)}</b>
                       <#else>
                         <b>${uiLabelMap.ProductPurposeTypeNotFoundWithId}: "${facilityContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>

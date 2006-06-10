@@ -50,13 +50,13 @@
         <td><span class="tabletext">${uiLabelMap.ProductWeightUnit}:</span>
             <select name="weightUomId" class="selectBox">
                 <#if weightUom?has_content>
-                    <option value="${weightUom.uomId}">${weightUom.description}</option>
+                    <option value="${weightUom.uomId}">${weightUom.get("description",locale)}</option>
                     <option value="${weightUom.uomId}">---</option>
                 <#else>
                     <option value="">&nbsp;</option>
                 </#if>
                 <#list weightUoms as weightUomOption>
-                    <option value="${weightUomOption.uomId}">${weightUomOption.description} [${weightUomOption.abbreviation}]</option>
+                    <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                 </#list>
             </select>
         </td>
@@ -142,7 +142,7 @@
         <td><span class="tabletext">${uiLabelMap.ProductWeightUnit} :</span>
             <select name="weightUomId" class="selectBox">
                 <#list weightUoms as weightUomOption>
-                    <option value="${weightUomOption.uomId}">${weightUomOption.description} [${weightUomOption.abbreviation}]</option>
+                    <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                 </#list>
             </select>
         </td>

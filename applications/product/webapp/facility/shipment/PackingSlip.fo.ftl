@@ -54,8 +54,8 @@
             </fo:block>
             <fo:block><fo:leader/></fo:block>
 
-            <fo:block font-size="14pt">Shipment #${shipmentId}</fo:block>
-            <fo:block font-size="12pt">Order #${shipment.primaryOrderId?default("N/A")} / ${shipment.primaryShipGroupSeqId?default("N/A")}</fo:block>
+            <fo:block font-size="14pt">${uiLabelMap.ProductShipmentId} #${shipmentId}</fo:block>
+            <fo:block font-size="12pt">${uiLabelMap.ProductOrderId} #${shipment.primaryOrderId?default("N/A")} / ${shipment.primaryShipGroupSeqId?default("N/A")}</fo:block>
             <fo:block><fo:leader/></fo:block>
 
             <fo:block space-after.optimum="10pt" font-size="10pt">

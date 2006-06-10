@@ -42,7 +42,7 @@
   <#assign roleType = facilityGroupRole.getRelatedOne("RoleType")?if_exists>
   <tr valign="middle">
     <td><a href="/partymgr/control/viewprofile?party_id=${facilityGroupRole.partyId}" class="buttontext">${facilityGroupRole.partyId}</a></td>    
-    <td><div class="tabletext">${roleType.description}</div></td>
+    <td><div class="tabletext">${roleType.get("description",locale)}</div></td>
     <td align="center">
       <a href="<@ofbizUrl>removePartyFromFacilityGroup?facilityGroupId=${facilityGroupRole.facilityGroupId}&partyId=${facilityGroupRole.partyId}&roleTypeId=${facilityGroupRole.roleTypeId}</@ofbizUrl>" class="buttontext">
       [${uiLabelMap.CommonDelete}]</a>
@@ -60,7 +60,7 @@
     ${uiLabelMap.PartyRoleType} :
     <select name="roleTypeId" class="selectBox"><option></option>
       <#list roles as role>
-        <option value="${role.roleTypeId}">${role.description}</option>
+        <option value="${role.roleTypeId}">${role.get("description",locale)}</option>
       </#list>
     </select>
     <input type="submit" value="${uiLabelMap.CommonAdd}">

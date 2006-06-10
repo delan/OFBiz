@@ -61,7 +61,7 @@
             <td>
                 <#if (transfer.statusId)?exists>
                     <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", transfer.statusId))>
-                    <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
+                    <div class="tabletext">&nbsp;${(transferStatus.get("description",locale))?if_exists}</div>
                 </#if>
             </td>
             <td align="center"><div class="tabletext"><a href="<@ofbizUrl>TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div></td>
@@ -95,7 +95,7 @@
             <td>
                 <#if (transfer.statusId)?exists>
                     <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", transfer.statusId))>
-                    <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
+                    <div class="tabletext">&nbsp;${(transferStatus.get("description",locale))?if_exists}</div>
                 </#if>
             </td>
             <td align="center"><div class="tabletext"><a href="<@ofbizUrl>TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div></td>

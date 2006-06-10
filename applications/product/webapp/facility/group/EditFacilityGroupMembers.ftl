@@ -26,7 +26,7 @@
  *@since      2.2
 -->
    
-    <div class="head1">${uiLabelMap.ProductFacilities} <span class="head2">for&nbsp;<#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityGroupId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductFacilities} <span class="head2">${uiLabelMap.CommonFor}&nbsp;<#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityGroupId?if_exists}]</span></div>
     <a href="<@ofbizUrl>EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
     <#if (activeOnly) >
         <a href="<@ofbizUrl>EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonActiveInactive}]</a>

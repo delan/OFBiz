@@ -68,11 +68,11 @@
                 <select name="locationTypeEnumId">
                     <#if (facilityLocation.locationTypeEnumId)?has_content>
                         <#assign locationTypeEnum = facilityLocation.getRelatedOneCache("TypeEnumeration")?if_exists>
-                        <option value="${facilityLocation.locationTypeEnumId}">${(locationTypeEnum.description)?default(facilityLocation.locationTypeEnumId)}</option>
+                        <option value="${facilityLocation.locationTypeEnumId}">${(locationTypeEnum.get("description",locale))?default(facilityLocation.locationTypeEnumId)}</option>
                         <option value="${facilityLocation.locationTypeEnumId}">----</option>
                     </#if>
                     <#list locationTypeEnums as locationTypeEnum>
-                        <option value="${locationTypeEnum.enumId}">${locationTypeEnum.description}</option>
+                        <option value="${locationTypeEnum.enumId}">${locationTypeEnum.get("description",locale)}</option>
                     </#list>
                 </select>
             </td>

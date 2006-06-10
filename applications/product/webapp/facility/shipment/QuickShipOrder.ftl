@@ -89,13 +89,13 @@ function setWeight(weight) {
                   <td width="1%" align="left" nowrap>
                     <select name="shipmentMethodTypeId" class="selectBox">
                       <#if shipmentMethodType?has_content>
-                        <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.description}</option>
+                        <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.get("description",locale)}</option>
                         <option value="${shipmentMethodType.shipmentMethodTypeId}">---</option>
                       <#else>
                         <option value="">&nbsp;</option>
                       </#if>
                       <#list shipmentMethodTypes as shipmentMethodTypeOption>
-                        <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.description}</option>
+                        <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.get("description",locale)}</option>
                       </#list>
                     </select>              
                   </td>
@@ -144,11 +144,11 @@ function setWeight(weight) {
                   <input type="text" class="inputBox" name="weight">&nbsp;
                   <select name="weightUomId" class="selectBox">
                     <#if weightUom?has_content>
-                      <option value="${weightUom.uomId}">${weightUom.description}</option>
+                      <option value="${weightUom.uomId}">${weightUom.get("description",locale)}</option>
                       <option value="${weightUom.uomId}">---</option>
                     </#if>                              
                     <#list weightUomList as weightUomOption>
-                      <option value="${weightUomOption.uomId}">${weightUomOption.description} [${weightUomOption.abbreviation}]</option>
+                      <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                     </#list>
                   </select>    
                 </td>

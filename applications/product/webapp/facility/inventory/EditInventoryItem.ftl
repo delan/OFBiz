@@ -58,11 +58,11 @@
         <td>
           <select name="inventoryItemTypeId" size="1" class="selectBox">
             <#if inventoryItemType?exists>
-                <option selected value="${inventoryItemType.inventoryItemTypeId}">${inventoryItemType.description}</option>
+                <option selected value="${inventoryItemType.inventoryItemTypeId}">${inventoryItemType.get("description",locale)}</option>
                 <option value="${inventoryItemType.inventoryItemTypeId}">----</option>
             </#if>
             <#list inventoryItemTypes as nextInventoryItemType>
-              <option value="${nextInventoryItemType.inventoryItemTypeId}">${nextInventoryItemType.description}</option>
+              <option value="${nextInventoryItemType.inventoryItemTypeId}">${nextInventoryItemType.get("description",locale)}</option>
             </#list>
           </select>
         </td>
@@ -73,7 +73,7 @@
         <td>
             <input type="text" name="productId" value="${inventoryItemData.productId?if_exists}" size="20" maxlength="20" class="inputBox">
             <#if (inventoryItem.productId)?has_content>
-                <a href="/catalog/control/EditProduct?productId=${inventoryItem.productId}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">[Edit&nbsp;Product&nbsp;${inventoryItem.productId}]</a>
+                <a href="/catalog/control/EditProduct?productId=${inventoryItem.productId}&externalLoginKey=${externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ProductProduct}&nbsp;${inventoryItem.productId}]</a>
             </#if>
         </td>
       </tr>
@@ -89,7 +89,7 @@
             <td>
               <select name="statusId" class="selectBox">
                   <#if (inventoryItem.statusId)?has_content>
-                      <option value="${inventoryItem.statusId}">${(curStatusItem.description)?default("[" + inventoryItem.statusId + "]")}</option>
+                      <option value="${inventoryItem.statusId}">${(curStatusItem.get("description",locale))?default("[" + inventoryItem.statusId + "]")}</option>
                       <option value="${inventoryItem.statusId}">----</option>
                   </#if>
                   <#if !tryEntity && requestParameters.statusId?has_content>

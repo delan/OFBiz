@@ -36,7 +36,7 @@
             </a>
         </span>
         ${uiLabelMap.ProductOrderShipGroupId} : <input type="text" class='inputBox' size="20" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
-        <input type="submit" value="Select" class="smallSubmit"/>
+        <input type="submit" value="${uiLabelMap.CommonSelect}" class="smallSubmit"/>
     </div>
 </form>
 
@@ -46,11 +46,11 @@
 </#if>
 <#if orderHeader?exists>
     <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId?if_exists != "SALES_SHIPMENT">
-        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, ${uiLabelMap.ProductNotSalesShipment}.</div>
+        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId?if_exists)}, ${uiLabelMap.ProductNotSalesShipment}.</div>
     <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && shipment.shipmentTypeId?if_exists != "PURCHASE_SHIPMENT">
-        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, ${uiLabelMap.ProductNotPurchaseShipment}.</div>
+        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId?if_exists)}, ${uiLabelMap.ProductNotPurchaseShipment}.</div>
     <#else>
-        <div class="head3">${uiLabelMap.ProductNoteOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
+        <div class="head3">${uiLabelMap.ProductNoteOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId?if_exists)}.</div>
     </#if>
     <#if shipment.shipmentTypeId?if_exists == "SALES_SHIPMENT">
         <div class="head3">${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
@@ -58,11 +58,11 @@
         <div class="head3">${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
     </#if>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
-        <div class="head3">${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
+        <div class="head3">${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId?if_exists)}.</div>
     <#elseif "ORDER_COMPLETED" == orderHeader.statusId>
-        <div class="head3">${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}, ${uiLabelMap.ProductNoItemsLeft}.</div>
+        <div class="head3">${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId?if_exists)}, ${uiLabelMap.ProductNoItemsLeft}.</div>
     <#else>
-        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</div>
+        <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId?if_exists)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</div>
     </#if>
 </#if>
 <#if orderItemDatas?exists>
@@ -76,7 +76,7 @@
     <input type="hidden" name="_useRowSubmit" value="Y">
     <table width="100%" cellpadding="2" cellspacing="0" border="1">
         <tr>
-            <td><div class="tableheadtext">${uiLabelMap.ProductOrderId}/Ship Group/${uiLabelMap.ProductOrderItem}</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductOrderId}/${uiLabelMap.ProductOrderShipGroupId}/${uiLabelMap.ProductOrderItem}</div></td>
             <td><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
             <#if isSalesOrder>
                 <td><div class="tableheadtext">${uiLabelMap.ProductItemsIssuedReserved}</div></td>

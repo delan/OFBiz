@@ -56,10 +56,10 @@
     <td>&nbsp;</td>
     <td width="74%">
       <select name="facilityTypeId" size="1" class='selectBox'>
-        <option selected value='${facilityType.facilityTypeId?if_exists}'>${facilityType.description?if_exists}</option>
+        <option selected value='${facilityType.facilityTypeId?if_exists}'>${facilityType.get("description",locale)?if_exists}</option>
         <option value='${facilityType.facilityTypeId?if_exists}'>----</option>
         <#list facilityTypes as nextFacilityType>
-          <option value='${nextFacilityType.facilityTypeId?if_exists}'>${nextFacilityType.description?if_exists}</option>
+          <option value='${nextFacilityType.facilityTypeId?if_exists}'>${nextFacilityType.get("description",locale)?if_exists}</option>
         </#list>
       </select>
     </td>
@@ -90,7 +90,7 @@
                <#if (facility.defaultWeightUomId?has_content) && (uom.uomId == facility.defaultWeightUomId)>
                SELECTED
                </#if>
-             >${uom.description?default(uom.uomId)}</option>
+             >${uom.get("description",locale)?default(uom.uomId)}</option>
           </#list>
       </select>
     </td>
@@ -105,7 +105,7 @@
                <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
                SELECTED
                </#if>
-             >${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+             >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
           </#list>
       </select>
     </td>

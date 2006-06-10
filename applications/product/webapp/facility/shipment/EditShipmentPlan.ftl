@@ -23,7 +23,7 @@
  *
 -->
 <#if shipment?exists>
-    <div class="head1">Shipment Plan</div>
+    <div class="head1">${uiLabelMap.ProductShipmentPlan}</div>
     ${findOrderItemsForm.renderFormString(context)}
     <br/>
     <#if addToShipmentPlanRows?has_content>
@@ -50,8 +50,8 @@
     <br/>
     </#if>
     ${listShipmentPlanForm.renderFormString(context)}
-    <div class="head2">Total weight: ${totWeight}</div>
-    <div class="head2">Total volume: ${totVolume}</div>
+    <div class="head2">${uiLabelMap.ProductShipmentTotalWeight}: ${totWeight}</div>
+    <div class="head2">${uiLabelMap.ProductShipmentTotalVolume}: ${totVolume}</div>
     ${shipmentPlanToOrderItemsForm.renderFormString(context)}
 <#else>
   <h3>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId?if_exists}]</h3>
