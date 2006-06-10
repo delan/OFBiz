@@ -60,11 +60,12 @@ andMap = UtilMisc.toMap("productCategoryId", request.getAttribute("productCatego
 andMap.put("prodCatalogId", currentCatalogId);
 andMap.put("checkViewAllow", Boolean.TRUE);
 catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", andMap);
-       
+
+productCategory = catResult.get("productCategory");
 context.put("productCategoryId", request.getAttribute("productCategoryId"));
 if (catResult != null) {
     context.put("productCategoryMembers", catResult.get("productCategoryMembers"));
-    context.put("productCategory", catResult.get("productCategory"));
+    context.put("productCategory", productCategory);
     context.put("viewIndex", catResult.get("viewIndex"));
     context.put("viewSize", catResult.get("viewSize"));
     context.put("lowIndex", catResult.get("lowIndex"));
@@ -101,3 +102,6 @@ if (members != null && members.size() > 0) {
         }        
     }    
 }
+
+CategoryContentWrapper categoryContentWrapper = new CategoryContentWrapper(productCategory, request);
+context.put("productContentWrapper", productContentWrapper);

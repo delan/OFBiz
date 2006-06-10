@@ -61,8 +61,6 @@ public class CategoryContentWrapper {
     protected Locale locale;
     protected String mimeTypeId;
 
-
-    
     public static CategoryContentWrapper makeCategoryContentWrapper(GenericValue productCategory, HttpServletRequest request) {
         return new CategoryContentWrapper(productCategory, request);
     }
@@ -155,4 +153,3 @@ public class CategoryContentWrapper {
         }
     }
 }
-

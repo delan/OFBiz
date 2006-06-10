@@ -27,7 +27,8 @@
 
 <#if productCategory?exists>
     <div class="head1">
-        ${productCategory.description?if_exists}
+        <div>${categoryContentWrapper.get("CATEGORY_NAME")?if_exists}</div>
+        <div>${categoryContentWrapper.get("DESCRIPTION")?if_exists}</div>
         <#if hasQuantities?exists>
           <form method="post" action="<@ofbizUrl>addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
             <input type='hidden' name='add_category_id' value='${productCategory.productCategoryId}'/>
@@ -41,13 +42,15 @@
         </#if>
         <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductSearchinCategory}</a>
     </div>
-  <#if productCategory.categoryImageUrl?exists || productCategory.longDescription?exists>
+  <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION")?if_exists/>
+  <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL")?if_exists/>
+  <#if categoryImageUrl?has_content || longDescription?has_content>
       <div class="tabletext">
-        <#if productCategory.categoryImageUrl?exists>
-          <img src='<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>' vspace='5' hspace='5' border='1' height='100' align='left'/>
+        <#if categoryImageUrl?has_content>
+          <img src='<@ofbizContentUrl>${categoryImageUrl}</@ofbizContentUrl>' vspace='5' hspace='5' border='1' height='100' align='left'/>
         </#if>
-        <#if productCategory.longDescription?exists>
-          ${productCategory.longDescription}
+        <#if longDescription?has_content>
+          ${longDescription}
         </#if>
       </div>
   </#if>
