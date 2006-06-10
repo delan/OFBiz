@@ -155,9 +155,12 @@
     <ProductCategoryType description="Cross Sell" hasTable="N" parentTypeId="" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
     <ProductCategoryType description="Tax" hasTable="N" parentTypeId="" productCategoryTypeId="TAX_CATEGORY"/>
     
+    <ProductCategoryContentType description="Category Name" hasTable="N" parentTypeId="" prodCatContentTypeId="CATEGORY_NAME"/>
     <ProductCategoryContentType description="Description" hasTable="N" parentTypeId="" prodCatContentTypeId="DESCRIPTION"/>
     <ProductCategoryContentType description="Description - Long" hasTable="N" parentTypeId="" prodCatContentTypeId="LONG_DESCRIPTION"/>
-
+    <ProductCategoryContentType description="Category Image URL" hasTable="N" parentTypeId="" prodCatContentTypeId="CATEGORY_IMAGE_URL"/>
+    <ProductCategoryContentType description="Footer" hasTable="N" parentTypeId="" prodCatContentTypeId="FOOTER"/>
+    
     <ProductContentType description="Online Access" hasTable="N" parentTypeId="" productContentTypeId="ONLINE_ACCESS"/>
     <ProductContentType description="Digital Download" hasTable="N" parentTypeId="" productContentTypeId="DIGITAL_DOWNLOAD"/>
     <ProductContentType description="Fulfillment Email" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EMAIL"/>

@@ -48,7 +48,6 @@ function insertNowTimestamp(field) {
             <td>${uiLabelMap.ProductUseDays}</td>
             <td>&nbsp;</td>
         </tr>
-      
           <#list categoryContentList as entry>
             <#assign categoryContent=entry.categoryContent/>
             <#assign prodCatContentType=categoryContent.getRelatedOneCache("ProductCategoryContentType")/>
@@ -65,7 +64,6 @@ function insertNowTimestamp(field) {
                 <td><a href="/content/control/EditContent?contentId=${categoryContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonEdit} ${uiLabelMap.Content} ${entry.content.contentId}]</td>
              </tr>
         </#list>
-      
         </table>
     
    <div class="head2">${uiLabelMap.ProductAddProductCategoryContentFromDate}</div>
@@ -126,7 +124,5 @@ function insertNowTimestamp(field) {
         </tr>
         </table>
         </form>
-
         <hr class="sepbar"/>
- 
    </#if> 
