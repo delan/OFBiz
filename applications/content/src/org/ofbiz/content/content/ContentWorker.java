@@ -912,7 +912,7 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
         return view;
     }
 
-    public static GenericValue getSubContentCache(GenericDelegator delegator, String contentId, String mapKey,  GenericValue userLogin, List assocTypes, Timestamp fromDate, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException {
+    public static GenericValue getSubContentCache(GenericDelegator delegator, String contentId, String mapKey, GenericValue userLogin, List assocTypes, Timestamp fromDate, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException {
         //GenericValue content = null;
         GenericValue view = null;
         if (contentId == null) {
@@ -922,8 +922,10 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
         Map results = null;
         List contentTypes = null;
         try {
-            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, mapKey, "From", fromDate, null, assocTypes, contentTypes, nullThruDatesOnly, contentAssocPredicateId);
-        } catch(MiniLangException e) {
+            // NOTE DEJ20060610: Changed "From" to "To" because it makes the most sense for sub-content renderings using a root-contentId and mapKey to determine the sub-contentId to have the ContentAssoc go from the root to the sub, ie try to determine the contentIdTo from the contentId and mapKey
+            // This shouldn't be changed from "To" to "From", but if desired could be parameterized to make this selectable in higher up calling methods
+            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, mapKey, "To", fromDate, null, assocTypes, contentTypes, nullThruDatesOnly, contentAssocPredicateId);
+        } catch (MiniLangException e) {
             throw new RuntimeException(e.getMessage());
         }
         List entityList = (List) results.get("entityList");
@@ -1068,8 +1070,10 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
 
     /** 
      */
-    public static Map renderSubContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, String mapKey,  GenericValue subContentDataResourceView, 
+    public static Map renderSubContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, String mapKey, GenericValue subContentDataResourceView, 
             Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate, Boolean nullThruDatesOnly) throws GeneralException, IOException {
+
+        //Debug.logInfo("in renderSubContentAsTextCache contentId=[" + contentId + "] mapKey=[" + mapKey + "]", module);
 
         Map results = new HashMap();
         //GenericValue content = null;
@@ -1081,6 +1085,8 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
                 throw new GeneralException(e.getMessage());
             }
         }
+        //Debug.logInfo("subContentDataResourceView=" + subContentDataResourceView, module);
+        
         results.put("view", subContentDataResourceView);
         if (subContentDataResourceView == null) {
             //throw new IOException("SubContentDataResourceView is null.");

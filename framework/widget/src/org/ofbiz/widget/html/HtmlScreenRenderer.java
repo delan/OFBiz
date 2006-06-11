@@ -17,7 +17,6 @@
  */
 package org.ofbiz.widget.html;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
@@ -33,15 +32,12 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
-import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.widget.WidgetContentWorker;
 import org.ofbiz.widget.screen.ModelScreenWidget;
 import org.ofbiz.widget.screen.ScreenStringRenderer;
@@ -389,7 +385,6 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         
     }
 
-
     public void renderSubContentBegin(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException {
 
         String editRequest = content.getEditRequest(context);
@@ -406,7 +401,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderSubContentBody(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException {
             Locale locale = Locale.getDefault();
-            Boolean nullThruDatesOnly = new Boolean(false);
+            //Boolean nullThruDatesOnly = new Boolean(false);
             String mimeTypeId = "text/html";
             String expandedContentId = content.getContentId(context);
             String expandedAssocName = content.getAssocName(context);
@@ -417,12 +412,14 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             GenericValue userLogin = null;
             if (request != null) {
                 HttpSession session = request.getSession();
-                userLogin = (GenericValue)session.getAttribute("userLogin");
+                userLogin = (GenericValue) session.getAttribute("userLogin");
             }
-                Debug.logInfo("expandedContentId:" + expandedContentId, module);
+            
+            //Debug.logInfo("expandedContentId=" + expandedContentId + ", expandedAssocName=" + expandedAssocName, module);
             try {
                 if (WidgetContentWorker.contentWorker != null) {
                     renderedContent = WidgetContentWorker.contentWorker.renderSubContentAsTextCacheExt(delegator, expandedContentId, expandedAssocName, null, context, locale, mimeTypeId, userLogin, fromDate);
+                    //Debug.logInfo("renderedContent=" + renderedContent, module);
                 } else {
                     Debug.logError("Not rendering content, not ContentWorker found.", module);
                 }
@@ -432,7 +429,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                         if (WidgetContentWorker.contentWorker != null) {
                             WidgetContentWorker.contentWorker.renderContentAsTextCacheExt(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                         } else {
-                            Debug.logError("Not rendering content, not ContentWorker found.", module);
+                            Debug.logError("Not rendering content, ContentWorker not found.", module);
                         }
                     }
                 } else {
@@ -502,7 +499,6 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             appendWhitespace(writer);
         }
     }
-
 
     public void appendWhitespace(Writer writer) throws IOException {
         // appending line ends for now, but this could be replaced with a simple space or something
