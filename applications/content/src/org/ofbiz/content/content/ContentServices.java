@@ -530,6 +530,7 @@ public class ContentServices {
     /**
      * Update a Content method. The work is done in this separate method so that complex services that need this functionality do not need to incur the
      * reflection performance penalty of calling a service.
+     * DEJ20060610: why is this being done? It's a bad design because the service call overhead is not very big, but not calling through the service engine breaks functionality possibilities like ECAs and such
      */
     public static Map updateContentMethod(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -563,12 +564,14 @@ public class ContentServices {
             Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
 
             // update status first to see if allowed
-            Map statusInMap = UtilMisc.toMap("contentId", context.get("contentId"), "statusId", context.get("statusId"),"userLogin", userLogin);
-            try {
-               dispatcher.runSync("setContentStatus", statusInMap);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Problem updating content Status", "ContentServices");
-                return ServiceUtil.returnError("Problem updating content Status: " + e);
+            if (UtilValidate.isNotEmpty((String) context.get("statusId"))) {
+                Map statusInMap = UtilMisc.toMap("contentId", context.get("contentId"), "statusId", context.get("statusId"),"userLogin", userLogin);
+                try {
+                   dispatcher.runSync("setContentStatus", statusInMap);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problem updating content Status", "ContentServices");
+                    return ServiceUtil.returnError("Problem updating content Status: " + e);
+                }
             }
             
             content.setNonPKFields(context);

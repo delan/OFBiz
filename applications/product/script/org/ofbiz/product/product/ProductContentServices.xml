@@ -97,12 +97,12 @@
     </simple-method>
 
     <simple-method method-name="createSimpleTextContentForProduct" short-description="Create Simple Text Content For Product">
-        <set-service-fields service-name="createProductContent" map-name="parameters" to-map-name="createProductContent"/>
-        <set-service-fields service-name="createSimpleTextContent" map-name="parameters" to-map-name="createSimpleText"/>
-        <call-service service-name="createSimpleTextContent" in-map-name="createSimpleText" break-on-error="true" >
-            <result-to-field result-name="contentId" map-name="createProductContent" />
+        <set-service-fields service-name="createProductContent" map-name="parameters" to-map-name="createProductContentMap"/>
+        <set-service-fields service-name="createSimpleTextContent" map-name="parameters" to-map-name="createSimpleTextMap"/>
+        <call-service service-name="createSimpleTextContent" in-map-name="createSimpleTextMap">
+            <result-to-field result-name="contentId" map-name="createProductContentMap"/>
         </call-service>
-        <call-service service-name="createProductContent" in-map-name="createProductContent"/>
+        <call-service service-name="createProductContent" in-map-name="createProductContentMap"/>
     </simple-method>
     <simple-method method-name="updateSimpleTextContentForProduct" short-description="Update Simple Text Content For Product">
         <set-service-fields service-name="updateProductContent" map-name="parameters" to-map-name="updateProductContent"/>
