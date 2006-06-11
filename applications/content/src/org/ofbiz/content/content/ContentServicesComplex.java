@@ -97,11 +97,11 @@ public class ContentServicesComplex {
         EntityExpr joinExpr = null;
         EntityExpr expr = null;
         String viewName = null;
-        if (mapKey != null ) {
+        if (mapKey != null) {
             EntityExpr mapKeyExpr = new EntityExpr("caMapKey", EntityOperator.EQUALS, mapKey);
             exprList.add(mapKeyExpr);
         }
-        if (direction != null && direction.equalsIgnoreCase("From") ) {
+        if (direction != null && direction.equalsIgnoreCase("From")) {
             joinExpr = new EntityExpr("caContentIdTo", EntityOperator.EQUALS, contentId);
             viewName = "ContentAssocDataResourceViewFrom";
         } else {
@@ -134,12 +134,12 @@ public class ContentServicesComplex {
             exprList.add(contentExprList);
         }
 
-        if (fromDate == null && fromDateStr != null ) {
-            fromDate = UtilDateTime.toTimestamp( fromDateStr );
-	}
-        if (thruDate == null && thruDateStr != null ) {
-            thruDate = UtilDateTime.toTimestamp( thruDateStr );
-	}
+        if (fromDate == null && fromDateStr != null) {
+            fromDate = UtilDateTime.toTimestamp(fromDateStr);
+        }
+        if (thruDate == null && thruDateStr != null) {
+            thruDate = UtilDateTime.toTimestamp(thruDateStr);
+        }
 
         if (fromDate != null) {
             EntityExpr fromExpr = new EntityExpr("caFromDate", EntityOperator.LESS_THAN, fromDate);
@@ -250,18 +250,18 @@ public class ContentServicesComplex {
     public static Map getAssocAndContentAndDataResourceCacheMethod(GenericDelegator delegator, String contentId, String mapKey, String direction, 
                           Timestamp fromDate, String fromDateStr, List assocTypes, List contentTypes, Boolean nullThruDatesOnly, String contentAssocPredicateId, String orderBy) throws GenericEntityException, MiniLangException {
 
-        List exprList = new ArrayList();
-        EntityExpr joinExpr = null;
-        EntityExpr expr = null;
+        //List exprList = new ArrayList();
+        //EntityExpr joinExpr = null;
+        //EntityExpr expr = null;
         String viewName = null;
         GenericValue contentAssoc = null;
         String contentFieldName = null;
-        if (direction != null && direction.equalsIgnoreCase("From") ) {
+        if (direction != null && direction.equalsIgnoreCase("From")) {
             contentFieldName = "contentIdTo";
         } else {
             contentFieldName = "contentId";
         }
-        if (direction != null && direction.equalsIgnoreCase("From") ) {
+        if (direction != null && direction.equalsIgnoreCase("From")) {
             viewName = "ContentAssocDataResourceViewFrom";
         } else {
             viewName = "ContentAssocDataResourceViewTo";
@@ -292,9 +292,9 @@ public class ContentServicesComplex {
         contentAssocsUnfiltered = delegator.findByAndCache("ContentAssoc", fieldMap, UtilMisc.toList("-fromDate"));
 
             //if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, contentAssocsUnfiltered:" + contentAssocsUnfiltered, module);
-        if (fromDate == null && fromDateStr != null ) {
-            fromDate = UtilDateTime.toTimestamp( fromDateStr );
-	}
+        if (fromDate == null && fromDateStr != null) {
+            fromDate = UtilDateTime.toTimestamp(fromDateStr);
+        }
         List contentAssocsDateFiltered2 = EntityUtil.filterByDate(contentAssocsUnfiltered, fromDate);
         List contentAssocsDateFiltered = EntityUtil.orderBy(contentAssocsDateFiltered2, UtilMisc.toList("sequenceNum", "fromDate DESC"));
 
@@ -314,7 +314,7 @@ public class ContentServicesComplex {
         }
 
         String assocRelationName = null;
-        if (direction != null && direction.equalsIgnoreCase("To") ) {
+        if (direction != null && direction.equalsIgnoreCase("To")) {
             assocRelationName = "ToContent";
         } else {
             assocRelationName = "FromContent";
@@ -352,7 +352,7 @@ public class ContentServicesComplex {
                 SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, contentAssocDataResourceView, new ArrayList(), locale);
             }
             //if (Debug.infoOn()) Debug.logInfo("contentAssocDataResourceView:" + contentAssocDataResourceView, module);
-            contentAssocDataResourceList.add(contentAssocDataResourceView );
+            contentAssocDataResourceList.add(contentAssocDataResourceView);
         }
 
         List orderByList = null;
@@ -362,7 +362,7 @@ public class ContentServicesComplex {
         }
         HashMap results = new HashMap();
         results.put("entityList", contentAssocDataResourceList);
-        if (contentAssocDataResourceList != null && contentAssocDataResourceList.size() > 0 ) {
+        if (contentAssocDataResourceList != null && contentAssocDataResourceList.size() > 0) {
             results.put("view", contentAssocDataResourceList.get(0));
         }
         return results;
@@ -377,7 +377,7 @@ public class ContentServicesComplex {
         String viewName = null;
         GenericValue contentAssoc = null;
         String contentFieldName = null;
-        if (direction != null && direction.equalsIgnoreCase("From") ) {
+        if (direction != null && direction.equalsIgnoreCase("From")) {
             viewName = "ContentAssocDataResourceViewFrom";
             contentFieldName = "contentIdTo";
             joinExpr = new EntityExpr("caContentIdTo", EntityOperator.EQUALS, contentId);

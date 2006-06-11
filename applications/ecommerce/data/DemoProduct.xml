@@ -135,7 +135,7 @@
     <Product productId="GZ-1005" productTypeId="FINISHED_GOOD" primaryProductCategoryId="102" productName=".NIT Gizmo" internalName=".NIT Gizmo" description="M$ .NIT gizmo" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin">
         <longDescription><![CDATA[This gizmo only works in certain areas and requires a lot of extra space to move around.<br/><br/>It is not recommended for mission critical applications or those with a low tolerance for pain and frustration.]]></longDescription>
     </Product>
-    <DataResource dataResourceId="GZ-1005-WARN" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataResourceName="GZ-1005 Warning"/>
+    <DataResource dataResourceId="GZ-1005-WARN" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataResourceName="GZ-1005 Warning" isPublic="Y"/>
     <ElectronicText dataResourceId="GZ-1005-WARN">
         <textData><![CDATA[<b>*** WARNING: this gizmo is known to crash quite often and may malfunction or cease to function due to malicious misuse of certain features ***</b>]]></textData>
     </ElectronicText>
