@@ -52,10 +52,10 @@
                                         </container>
                                         
                                         <container>
-                                            <link target="EditCategory" text="[${uiLabelMap.ProductNewCategory}]" style="buttontext"/>
-                                            <link target="createProductInCategoryStart?productCategoryId=${productCategoryId}" text="[${uiLabelMap.ProductCreateProductInCategory}]" style="buttontext"/>
-                                            <link target="advancedsearch?SEARCH_CATEGORY_ID=${productCategoryId}" text="[${uiLabelMap.ProductSearchinCategory}]" style="buttontext"/>
-                                            <link target="/ecommerce/control/category?category_id=${productCategoryId}" url-mode="plain" text="[${uiLabelMap.ProductCategoryPage}]" style="buttontext"/>
+                                            <link target="EditCategory" text="${uiLabelMap.ProductNewCategory}" style="buttontext"/>
+                                            <link target="createProductInCategoryStart?productCategoryId=${productCategoryId}" text="${uiLabelMap.ProductCreateProductInCategory}" style="buttontext"/>
+                                            <link target="advancedsearch?SEARCH_CATEGORY_ID=${productCategoryId}" text="${uiLabelMap.ProductSearchinCategory}" style="buttontext"/>
+                                            <link target="/ecommerce/control/category?category_id=${productCategoryId}" url-mode="plain" text="${uiLabelMap.ProductCategoryPage}" style="buttontext"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -113,12 +113,23 @@
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-name="productCategory"/>
+                <get-related-one value-name="productCategory" relation-name="ProductCategoryType" to-value-name="productCategoryType"/>
+                <set field="categoryContentOrderList[]" value="prodCatContentTypeId"/>
+                <get-related value-name="productCategory" relation-name="ProductCategoryContent" list-name="productCategoryContentList" order-by-list-name="categoryContentOrderList"/>
 
-                <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContent.bsh"/>
+                <entity-condition entity-name="ProductCategoryType" list-name="productCategoryTypes"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator">
                     <decorator-section name="body">
+                        <include-form name="UpdateCategoryContentAssoc" location="component://product/webapp/catalog/category/CategoryForms.xml"/>
+
+                        <container><label text="${uiLabelMap.ProductAddProductCategoryContentFromDate}" style="head2"/></container>
+                        <include-form name="PrepareAddCategoryContentAssoc" location="component://product/webapp/catalog/category/CategoryForms.xml"/>
+
+                        <container><label text="${uiLabelMap.ProductAddContentCategory}" style="head2"/></container>
+                        <include-form name="AddCategoryContentAssoc" location="component://product/webapp/catalog/category/CategoryForms.xml"/>
+
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
                         </platform-specific>
@@ -137,15 +148,22 @@
 
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-name="productCategory"/>
-
-                <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContentContent.bsh"/>
+                <entity-one entity-name="ProductCategoryContent" value-name="categoryContent"/>
+                <entity-one entity-name="Content" value-name="content"/>
+                <entity-one entity-name="ElectronicText" value-name="electronicText" auto-field-map="false">
+                    <field-map field-name="dataResourceId" env-name="content.dataResourceId"/>
+                </entity-one>
+                <set field="textDataMap.text" from-field="electronicText.textData"/>
+                <set field="textDataMap.textDataResourceId" from-field="content.dataResourceId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/category/EditCategoryContentContent.ftl"/></html>
-                        </platform-specific>
+                        <section>
+                            <condition><not><if-empty field-name="contentId"/></not></condition>
+                            <widgets><link target="/content/control/gotoContent?contentId=${contentId}" text="${uiLabelMap.ContentContent} ${uiLabelMap.CommonPage}" url-mode="inter-app" style="buttontext"/></widgets>
+                        </section>
+                        <include-form name="EditCategoryContentSimpleText" location="component://product/webapp/catalog/category/CategoryForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

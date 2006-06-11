@@ -26,62 +26,13 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<script language="JavaScript" type="text/javascript">
-function insertNowTimestamp(field) {
-  eval('document.categoryForm.' + field + '.value="${nowTimestamp?string}";');
-};
-
-</script>
-
-    <#if !(productCategory?exists)>
-        <h3>${uiLabelMap.ProductCouldNotFindProduct} "${productCategoryId}".</h3>
-    <#else>
-        <table border="1" cellpadding="2" cellspacing="0">
-        <tr class="tableheadtext">
-            <td>${uiLabelMap.CommonContent}</td>
-            <td>${uiLabelMap.CommonType}</td>
-            <td>${uiLabelMap.CommonFrom}</td>
-            <td>${uiLabelMap.CommonThru}</td>
-            <td>${uiLabelMap.ProductPurchaseFrom}</td>
-            <td>${uiLabelMap.ProductPurchaseThru}</td>
-            <td>${uiLabelMap.ProductUseCount}</td>
-            <td>${uiLabelMap.ProductUseDays}</td>
-            <td>&nbsp;</td>
-        </tr>
-          <#list categoryContentList as entry>
-            <#assign categoryContent=entry.categoryContent/>
-            <#assign prodCatContentType=categoryContent.getRelatedOneCache("ProductCategoryContentType")/>
-            <tr class="tabletext">
-                <td><a href="<@ofbizUrl>EditCategoryContentContent?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.get("description",locale)?default("[No description]")} [${entry.content.contentId}]</td>
-                <td>${prodCatContentType.get("description",locale)?default(categoryContent.prodCatContentTypeId)}</td>
-                <td>${categoryContent.fromDate?default("N/A")}</td>
-                <td>${categoryContent.thruDate?default("N/A")}</td>
-                <td>${categoryContent.purchaseFromDate?default("N/A")}</td>
-                <td>${categoryContent.purchaseThruDate?default("N/A")}</td>
-                <td>${categoryContent.useCountLimit?default("N/A")}</td>
-                <td>${categoryContent.useDaysLimit?default("N/A")}</td>
-                <td><a href="<@ofbizUrl>removeContentFromCategory?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
-                <td><a href="/content/control/EditContent?contentId=${categoryContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.CommonEdit} ${uiLabelMap.Content} ${entry.content.contentId}]</td>
-             </tr>
-        </#list>
-        </table>
     
-   <div class="head2">${uiLabelMap.ProductAddProductCategoryContentFromDate}</div>
-   
-        <#if productCategoryId?has_content && productCategory?has_content>
-           ${prepareAddCategoryContentWrapper.renderFormString()}  
-        </#if>
-        <div class="head2">${uiLabelMap.ProductAddContentCategory}</div>
-        <#if productCategoryId?has_content && productCategory?has_content>
-            ${addCategoryContentWrapper.renderFormString()}   
-        </#if>
+<hr class="sepbar"/>
 
-        <hr class="sepbar"/>
-        
-        <div class="head2">${uiLabelMap.ProductOverrideSimpleFields}</div>
-        <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" style="margin: 0;" name="categoryForm">
-        <table border="0" cellpadding="2" cellspacing="0">
-        <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
+<div class="head2">${uiLabelMap.ProductOverrideSimpleFields}</div>
+<form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" style="margin: 0;" name="categoryForm">
+<table border="0" cellpadding="2" cellspacing="0">
+<input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
     <tr>
     <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductProductCategoryType}</div></td>
     <td>&nbsp;</td>
@@ -117,12 +68,12 @@ function insertNowTimestamp(field) {
         <br/><span class="tabletext">${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
     </td>
   </tr>
-        <tr>
-            <td colspan="2">&nbsp;</td>
-            <td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"></td>
-            <td colspan="3">&nbsp;</td>
-        </tr>
-        </table>
-        </form>
-        <hr class="sepbar"/>
-   </#if> 
+
+<tr>
+    <td colspan="2">&nbsp;</td>
+    <td><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"></td>
+    <td colspan="3">&nbsp;</td>
+</tr>
+</table>
+</form>
+<hr class="sepbar"/>
