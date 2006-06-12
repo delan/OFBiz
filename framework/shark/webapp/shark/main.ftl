@@ -15,13 +15,14 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.
 -->
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td align="left" width="90%" >
-            <div class="boxhead">&nbsp;Shark Workflow Manager Main Page</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.SharkMainPage}</div>
           </td>        
         </tr>
       </table>

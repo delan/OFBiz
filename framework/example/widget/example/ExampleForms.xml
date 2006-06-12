@@ -162,7 +162,7 @@ under the License.
         <auto-fields-service service-name="createExampleFeatureAppl"/>
         
         <field name="exampleId"><hidden/></field>
-        <field name="exampleFeatureId"><lookup target-form-name="LookupExampleFeature"/></field>
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}"><lookup target-form-name="LookupExampleFeature"/></field>
         <field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ExampleFeatureApplType" description="${description}">

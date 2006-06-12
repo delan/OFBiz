@@ -24,15 +24,15 @@
  * @author Jacopo Cappellato (tiz@sastau.it)
 -->
 
-<div class="head1">XML Export from DataSource(s)</div>
+<div class="head1">${uiLabelMap.WebtoolsExportFromDataSource}</div>
 <div class="tabletext">
-    This page can be used to export data from the database. 
-    The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".
-    There will be one file for each Entity in the configured delegator for this webapp.
+    ${uiLabelMap.WebtoolsMessage1}. 
+    ${uiLabelMap.WebtoolsMessage2}.
+    ${uiLabelMap.WebtoolsMessage3}.
 </div>
 <hr>
     
-<div class="head2">Results:</div>
+<div class="head2">${uiLabelMap.WebtoolsResults}:</div>
 
 <#if results?has_content>
     <#list results as result>
@@ -42,10 +42,10 @@
 
 <hr>
 
-<div class="head2">Export:</div>
+<div class="head2">${uiLabelMap.WebtoolsExport}:</div>
 <form method="post" action="<@ofbizUrl>entityExportAll</@ofbizUrl>">
-    <div class="tabletext">Output Directory: <input type="text" class="inputBox" size="60" name="outpath" value="${outpath?if_exists}"></div>
-    <div class="tabletext">TX Timeout Seconds (for each entity): <input type="text" size="6" value="${txTimeout?default('7200')}" name="txTimeout"/></div>
+    <div class="tabletext">${uiLabelMap.WebtoolsOutputDirectory}: <input type="text" class="inputBox" size="60" name="outpath" value="${outpath?if_exists}"></div>
+    <div class="tabletext">${uiLabelMap.WebtoolsTimeoutSeconds}: <input type="text" size="6" value="${txTimeout?default('7200')}" name="txTimeout"/></div>
     <br/>
-    <input type="submit" value="Export">
+    <input type="submit" value="${uiLabelMap.WebtoolsExport}">
 </form>

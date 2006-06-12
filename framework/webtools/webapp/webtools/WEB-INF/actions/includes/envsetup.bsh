@@ -66,8 +66,8 @@ request.setAttribute("uiLabelMap", uiLabelMap);
 layoutSettings = new HashMap();
 request.setAttribute("layoutSettings", layoutSettings);
     
-layoutSettings.put("companyName", "OFBiz: Web Tools");
-layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
+layoutSettings.put("companyName", uiLabelMap.get("WebtoolsCompanyName"));
+layoutSettings.put("companySubtitle", uiLabelMap.get("WebtoolsCompanySubtitle"));
 layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
 layoutSettings.put("headerMiddleBackgroundUrl", null);
 layoutSettings.put("headerRightBackgroundUrl", null);
