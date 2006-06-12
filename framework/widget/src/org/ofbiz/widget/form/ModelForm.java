@@ -95,7 +95,6 @@ public class ModelForm {
     protected String paginateNextStyle;
     protected boolean separateColumns = false;
     protected boolean paginate = true;
-    protected boolean cssStyling = false;
     protected boolean useRowSubmit = false;
     protected FlexibleStringExpander targetWindowExdr;
     protected String defaultRequiredFieldStyle;
@@ -362,7 +361,6 @@ public class ModelForm {
         }
         
         this.paginate = "true".equals(formElement.getAttribute("paginate"));
-        this.cssStyling = "true".equals(formElement.getAttribute("css-styling"));
         this.skipStart = "true".equals(formElement.getAttribute("skip-start"));
         this.skipEnd = "true".equals(formElement.getAttribute("skip-end"));
         this.hideHeader = "true".equals(formElement.getAttribute("hide-header"));
@@ -1808,10 +1806,6 @@ public class ModelForm {
         return this.paginate;
     }
 
-    public boolean getCssStyling() {
-        return this.cssStyling;
-    }
-    
     public boolean getSkipStart() {
         return this.skipStart;
     }
