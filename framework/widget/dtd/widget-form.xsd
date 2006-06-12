@@ -61,6 +61,16 @@ under the License.
         </xs:attribute>
         <xs:attribute type="xs:string" name="target"/>
         <xs:attribute type="xs:string" name="target-window"/>
+        <xs:attribute name="target-type" default="intra-app">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="intra-app"/>
+                    <xs:enumeration value="inter-app"/>
+                    <xs:enumeration value="content"/>
+                    <xs:enumeration value="plain"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="title"/>
         <xs:attribute type="xs:string" name="tooltip"/>
         <xs:attribute type="xs:string" name="list-name">
@@ -85,6 +95,14 @@ under the License.
         <xs:attribute type="xs:string" name="default-widget-style"/>
         <xs:attribute type="xs:string" name="default-tooltip-style"/>
         <xs:attribute type="xs:string" name="default-required-field-style"/>
+        <xs:attribute name="paginate" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="paginate-target">
             <xs:annotation><xs:documentation>Target location for the [Previous] and [Next] buttons in a form with pagination. Accepts ${} notation.</xs:documentation></xs:annotation>
         </xs:attribute>
@@ -121,34 +139,8 @@ under the License.
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="view-size"/>
-        <xs:attribute name="paginate" default="true">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
         <xs:attribute type="xs:string" name="row-count"/>
         <xs:attribute name="use-row-submit" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="target-type" default="intra-app">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="intra-app"/>
-                    <xs:enumeration value="inter-app"/>
-                    <xs:enumeration value="content"/>
-                    <xs:enumeration value="plain"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="css-styling" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true"/>
@@ -186,12 +178,12 @@ under the License.
         <xs:attribute type="xs:string" name="even-row-style">
             <xs:annotation><xs:documentation>The even-row-style specifies the style to use in the table content even rows.</xs:documentation></xs:annotation>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="default-table-style">
-            <xs:annotation><xs:documentation>The default-table-style specifies the style to use in the table.</xs:documentation></xs:annotation>
-        </xs:attribute>
         <xs:attribute type="xs:string" name="header-row-style">
             <xs:annotation><xs:documentation>The header-row-style specifies the style to use in the header of table.</xs:documentation></xs:annotation>
         </xs:attribute>                
+        <xs:attribute type="xs:string" name="default-table-style">
+            <xs:annotation><xs:documentation>The default-table-style specifies the style to use in the table.</xs:documentation></xs:annotation>
+        </xs:attribute>
         <!-- not sure this is such a good idea
         <xs:attribute type="xs:string" name="hidden-values-map-name">
             <xs:annotation><xs:documentation>A map that contains hidden field name/value pairs. 
@@ -396,9 +388,6 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute type="xs:string" name="required-field-style">
-            <xs:annotation><xs:documentation>The name of a style (like a CSS class) to apply to the title of this field if required. Will default to form's default-required-field-style. If field is required, but required-field-style is empty, an '*' will be placed to the right of text, textarea and password fields.</xs:documentation></xs:annotation>
-        </xs:attribute>
         <xs:attribute name="required-field" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -406,6 +395,9 @@ under the License.
                     <xs:enumeration value="false"/>
                 </xs:restriction>
             </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="required-field-style">
+            <xs:annotation><xs:documentation>The name of a style (like a CSS class) to apply to the title of this field if required. Will default to form's default-required-field-style. If field is required, but required-field-style is empty, an '*' will be placed to the right of text, textarea and password fields.</xs:documentation></xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>
   <!-- ================== FIELD TYPES ==================== -->
