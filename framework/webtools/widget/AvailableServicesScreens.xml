@@ -29,6 +29,7 @@
     <screen name="AvailableServicesList">
         <section>
             <actions>
+                <set field="appButtonItem" value="service"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/availableservices.bsh"/>
             </actions>
             <widgets>

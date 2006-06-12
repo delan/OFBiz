@@ -487,7 +487,7 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="region"/>
+    <view-map name="main" type="screen" page="component://webtools/widget/CommonScreens.xml#main"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
     <view-map name="ping" type="ftl" page="/ping.ftl"/>
 
