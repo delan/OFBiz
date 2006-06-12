@@ -18,7 +18,7 @@
 -->
 
 <trees xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="../../../../framework/widget/dtd/widget-tree.xsd">
+ xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-tree.xsd">
 
     <tree name="MessageTree" root-node-name="node-root" 
         default-render-style="simple" default-wrap-style="responseTreeWrapper">
