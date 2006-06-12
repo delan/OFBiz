@@ -33,6 +33,12 @@ under the License.
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="webtools" global="true"/>
                 <set field="appheaderTemplate" value="component://webtools/webapp/webtools/includes/appheader.ftl" global="true"/>
+
+                <!-- can put this back in later once it is finished
+                <set field="applicationMenuLocation" value="component://webtools/widget/WebToolsMenus.xml" global="true"/>
+                <set field="applicationMenuName" value="WebtoolsAppBar" global="true"/>
+                <set field="applicationTitle" value="Webtools" global="true"/>
+                -->
             </actions>
             <widgets>
                 <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
@@ -40,6 +46,20 @@ under the License.
         </section>
     </screen>
 
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="appButtonItem" value="main"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://webtools/webapp/webtools/main.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="printStart">
         <section>
             <widgets>
