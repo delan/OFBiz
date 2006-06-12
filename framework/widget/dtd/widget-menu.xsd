@@ -276,6 +276,7 @@ under the License.
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="PlainString"/>
                     <xs:enumeration value="String"/>
+                    <xs:enumeration value="BigDecimal"/>
                     <xs:enumeration value="Double"/>
                     <xs:enumeration value="Float"/>
                     <xs:enumeration value="Long"/>
@@ -475,6 +476,7 @@ under the License.
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="PlainString"/>
                     <xs:enumeration value="String"/>
+                    <xs:enumeration value="BigDecimal"/>
                     <xs:enumeration value="Double"/>
                     <xs:enumeration value="Float"/>
                     <xs:enumeration value="Long"/>
@@ -515,6 +517,7 @@ under the License.
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="PlainString"/>
                     <xs:enumeration value="String"/>
+                    <xs:enumeration value="BigDecimal"/>
                     <xs:enumeration value="Double"/>
                     <xs:enumeration value="Float"/>
                     <xs:enumeration value="Long"/>
