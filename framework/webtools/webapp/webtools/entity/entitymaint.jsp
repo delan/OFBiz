@@ -25,11 +25,14 @@
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.model.*" %>
+<%@ page import="org.ofbiz.base.util.collections.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
+
+<% ResourceBundleMapWrapper uiLabelMap = (ResourceBundleMapWrapper)request.getAttribute("uiLabelMap"); %>
 
 <%
   ModelReader reader = delegator.getModelReader();
@@ -37,8 +40,7 @@
   TreeSet entities = new TreeSet(ec);
   Iterator classNamesIterator = entities.iterator();
 %>
-
-<h3 style='margin:0;'>Entity Data Maintenance</h3>
+<h3 style='margin:0;'><%=uiLabelMap.get("WebtoolsEntityDataMaintenance")%></h3>
 <%if (security.hasPermission("ENTITY_MAINT", session)) {%>
 
 <%

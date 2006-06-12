@@ -62,8 +62,8 @@ request.setAttribute("uiLabelMap", uiLabelMap);
 layoutSettings = new HashMap();
 request.setAttribute("layoutSettings", layoutSettings);
 
-layoutSettings.put("companyName", "OFBiz: Shark Workflow Manager");
-layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
+layoutSettings.put("companyName", uiLabelMap.get("SharkCompanyName"));
+layoutSettings.put("companySubtitle", uiLabelMap.get("SharkCompanySubtitle"));
 
 layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
 layoutSettings.put("headerMiddleBackgroundUrl", null);
@@ -74,6 +74,7 @@ request.setAttribute("checkLoginUrl", LoginWorker.makeLoginUrl(request, "checkLo
 externalLoginKey = LoginWorker.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 request.setAttribute("externalKeyParam", externalKeyParam);
+request.setAttribute("activeApp", "shark");
 
 List eventMessageList = (List) request.getAttribute("eventMessageList");
 if (eventMessageList == null) eventMessageList = new LinkedList();

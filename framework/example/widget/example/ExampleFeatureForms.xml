@@ -96,7 +96,7 @@ under the License.
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createExampleFeatureAppl"/>
         
-        <field name="exampleId">
+        <field name="exampleId" title="${uiLabelMap.ExampleExample}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Example" description="${exampleName} [${exampleId}]">
                     <entity-order-by field-name="exampleName"/>
@@ -119,7 +119,7 @@ under the License.
         target="LookupExampleFeature" title="" type="single">
         <auto-fields-entity entity-name="ExampleFeature" default-field-type="find"/>
         <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}"/> <!-- <text-find/> -->
-        <field name="featureSourceEnumId">
+        <field name="featureSourceEnumId" title="${uiLabelMap.ExampleFeatureSource}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="EXMPL_FEAT_SOURCE"/>
@@ -128,7 +128,7 @@ under the License.
             </drop-down>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"/>
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="LookupListExampleFeature" list-name="listIt" paginate-target="LookupExampleFeature" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">

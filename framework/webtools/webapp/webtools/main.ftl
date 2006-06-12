@@ -4,7 +4,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td align="left" width="90%" >
-            <div class="boxhead">&nbsp;Web Tools Main Page</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.WebtoolsMainPage}</div>
           </td>
           <td align="right" width="10%"><div class="lightbuttontextdisabled">${delegator.getDelegatorName()}</div></td>
         </tr>

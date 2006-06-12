@@ -34,8 +34,8 @@
     Map layoutSettings = new HashMap();
     request.setAttribute("layoutSettings", layoutSettings);
     
-    layoutSettings.put("companyName", "OFBiz: Core Web Tools");
-    layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
+    layoutSettings.put("companyName", uiLabelMap.get("WebtoolsCompanyName"));
+    layoutSettings.put("companySubtitle", uiLabelMap.get("WebtoolsCompanySubtitle"));
     layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
     layoutSettings.put("headerMiddleBackgroundUrl", null);
     layoutSettings.put("headerRightBackgroundUrl", null);
@@ -46,6 +46,7 @@
     String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
     request.setAttribute("externalKeyParam", externalKeyParam);
     request.setAttribute("externalLoginKey", externalLoginKey);
+	request.setAttribute("activeApp", "webtools");
 
     List eventMessageList = (List) request.getAttribute("eventMessageList");
     if (eventMessageList == null) eventMessageList = new LinkedList();

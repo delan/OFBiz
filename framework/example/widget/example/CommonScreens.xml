@@ -53,10 +53,10 @@ under the License.
                                 <section>
                                     <condition><if-empty field-name="userLogin"/></condition>
                                     <widgets>
-                                        <container><label style="tabletext" text="For something interesting make sure you are logged in, try username:admin, password:ofbiz."/></container>
+                                        <container><label style="tabletext" text="${uiLabelMap.ExampleMessage}"/></container>
                                     </widgets>
                                 </section>
-                                <container><label style="tabletext" text="Welcome to the Example application!"/></container>
+                                <container><label style="tabletext" text="${uiLabelMap.ExampleWelcome}"/></container>
                             </container>
                         </container>
                     </decorator-section>
