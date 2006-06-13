@@ -44,6 +44,7 @@ import javolution.util.FastMap;
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -482,7 +483,30 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                 set(name, isNullString ? null : Boolean.valueOf(value));
                 break;
 
-            case 10:
+            case 10: // BigDecimal
+                set(name, isNullString ? null : new BigDecimal(value));
+                break;
+
+            case 11: // Object
+                set(name, value);
+                break;
+
+            case 12: // java.sql.Blob
+                // TODO: any better way to handle Blob from String?
+                set(name, value);
+                break;
+
+            case 13: // java.sql.Clob
+                // TODO: any better way to handle Clob from String?
+                set(name, value);
+                break;
+
+            case 14: // java.util.Date
+                set(name, UtilDateTime.toDate(fieldType));
+                break;
+
+            case 15: // java.util.Collection
+                // TODO: how to convert from String to Collection? ie what should the default behavior be?
                 set(name, value);
                 break;
             }
