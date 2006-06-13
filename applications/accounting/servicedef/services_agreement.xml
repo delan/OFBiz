@@ -105,17 +105,20 @@
     </service>
     <service name="getCommissionForProduct" engine="java"
                 location="org.ofbiz.accounting.agreement.AgreementServices" invoke="getCommissionForProduct" auth="true">
-        <description>Get commission receiving parties and amounts for a product. Returns a List of Maps each containing &lt;br/&gt;
+        <description>Get commission receiving parties and amounts for a product. &lt;br/&gt;
+            amount input is for the entire quantity. &lt;br/&gt;&lt;br/&gt;
+            Returns a List of Maps each containing &lt;br/&gt;
             partyIdFrom     String  commission paying party &lt;br/&gt;
             partyIdTo       String  commission receiving party &lt;br/&gt;
-            amount          BigDecimal  Commission &lt;br/&gt;
+            commission      BigDecimal  Commission &lt;br/&gt;
             days            Long    term days &lt;br/&gt;
             currencyUomId   String  Currency &lt;br/&gt;
             productId       String  Product Id &lt;br/&gt;
             Will use the virtual product if no agreement is found for a variant product.  If no quantity is specified, defaults to one (1).
         </description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="price" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="invoiceItemTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="commissions" type="List" mode="OUT" optional="false"/>
     </service>
