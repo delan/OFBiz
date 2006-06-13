@@ -234,11 +234,16 @@ public class ShoppingCartHelper {
                 itemIter = null;
             }
 
+            String orderItemTypeId = null;
             if (itemIter != null && itemIter.hasNext()) {
                 while (itemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) itemIter.next();
+                    orderItemTypeId = orderItem.getString("orderItemTypeId");
+                    // do not store rental items
+                    if (orderItemTypeId.equals("RENTAL_ORDER_ITEM")) 
+                        continue;
                     // never read: int itemId = -1;
-                    if (orderItem.get("productId") != null && orderItem.get("quantity") != null && ("RENTAL_ORDER_ITEM").equals(orderItem.getString("orderItemTypeId"))) { // do not store rental items
+                    if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
                         double amount = 0.00;
                         if (orderItem.get("selectedAmount") != null) {
                             amount = orderItem.getDouble("selectedAmount").doubleValue();
