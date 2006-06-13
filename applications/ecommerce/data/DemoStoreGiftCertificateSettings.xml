@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 	<!-- sample settings for gift certificates.  DemoProduct.xml must be loaded -->
-	<ProductStoreFinActSetting productStoreId="9000" finAccountTypeId="GIFTCERT_ACCOUNT" requirePinCode="Y" 
+    <!-- Note: if you set require pin code to N, then you can set validate GC FinAcct to Y -->
+	<ProductStoreFinActSetting productStoreId="9000" finAccountTypeId="GIFTCERT_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y"
 		purchaseSurveyId="1000" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="30"/>
     
     <!-- service for purchasing gift certificate configured as a Content and to be associated with products -->
