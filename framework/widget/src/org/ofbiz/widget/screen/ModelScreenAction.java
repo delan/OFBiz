@@ -37,6 +37,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -148,6 +149,8 @@ public abstract class ModelScreenAction implements Serializable {
             // default to false
             boolean global = "true".equals(globalStr);
             
+            Locale locale = UtilMisc.ensureLocale(context.get("locale"));
+            
             Object newValue = null;
             if (this.fromScope != null && this.fromScope.equals("user")) {
                 if (!this.fromField.isEmpty()) {
@@ -181,7 +184,7 @@ public abstract class ModelScreenAction implements Serializable {
             
             if (UtilValidate.isNotEmpty(this.type)) {
                 try {
-                    newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, null);
+                    newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, locale);
                 } catch (GeneralException e) {
                     String errMsg = "Could not convert field value for the field: [" + this.field.getOriginalName() + "] to the [" + this.type + "] type for the value [" + newValue + "]: " + e.toString();
                     Debug.logError(e, errMsg, module);
