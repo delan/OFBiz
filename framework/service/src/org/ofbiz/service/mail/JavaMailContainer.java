@@ -67,6 +67,7 @@ public class JavaMailContainer implements Container {
     protected GenericValue userLogin = null;
     protected long timerDelay = 300000;
     protected Timer pollTimer = null;
+    protected boolean deleteMail = false;    // whether to delete emails after fetching them.
 
     protected String configFile = null;
     protected Map stores = null;
@@ -96,7 +97,12 @@ public class JavaMailContainer implements Container {
         ContainerConfig.Container cfg = ContainerConfig.getContainer("javamail-container", configFile);
         String dispatcherName = ContainerConfig.getPropertyValue(cfg, "dispatcher-name", "JavaMailDispatcher");
         String delegatorName = ContainerConfig.getPropertyValue(cfg, "delegator-name", "default");
-
+        if ("true".equals(ContainerConfig.getPropertyValue(cfg, "delete-mail", "false"))) {
+            this.deleteMail = true;
+        } else {
+            this.deleteMail = false;
+        }
+        
         this.delegator = GenericDelegator.getGenericDelegator(delegatorName);
         this.dispatcher = new GenericDispatcher(dispatcherName, delegator);
         this.timerDelay = (long) ContainerConfig.getPropertyValue(cfg, "poll-delay", 300000);
@@ -226,7 +232,7 @@ public class JavaMailContainer implements Container {
             }
         }
 
-        Debug.log("Update URL - " + protocol + "//" + userName + "@" + host + ":" + port + "!" + password + ";" + file, module);
+        Debug.logInfo("Update URL - " + protocol + "://" + userName + "@" + host + ":" + port + "!" + password + ";" + file, module);
         return new URLName(protocol, host, port, file, userName, password);
     }
 
@@ -312,8 +318,14 @@ public class JavaMailContainer implements Container {
                 // process each un-read message
                 if (!messages[i].isSet(Flags.Flag.SEEN)) {
                     this.processMessage(messages[i], session);
+                    Debug.logVerbose("Message from " + UtilMisc.toListArray(messages[i].getFrom()) + " with subject [" + messages[i].getSubject() + "]  has been processed." , module);
+                    messages[i].setFlag(Flags.Flag.SEEN, true);
+                    Debug.logVerbose("Message [" + messages[i].getSubject() + "] is marked seen", module);
                 }
-                messages[i].setFlag(Flags.Flag.DELETED, true);
+                if (deleteMail) {
+                    Debug.logVerbose("Message [" + messages[i].getSubject() + "] is being deleted", module);
+                    messages[i].setFlag(Flags.Flag.DELETED, true);
+                }
             }
 
             // expunge and close the folder
