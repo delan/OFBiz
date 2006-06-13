@@ -36,12 +36,16 @@ orderHeader = (GenericValue) parameters.get("orderHeader");
 orderId = parameters.get("orderId");
 invoice = (GenericValue) parameters.get("invoice");
 invoiceId = parameters.get("invoiceId");
+shipmentId = parameters.get("shipmentId");
 returnHeader = (GenericValue) parameters.get("returnHeader");
 returnId = parameters.get("returnId");
 nowTimestamp = UtilDateTime.nowTimestamp();
 
 if (orderHeader == null && orderId != null) {
     orderHeader = (GenericValue) delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+} else if (shipmentId != null) {
+    shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+    orderHeader = shipment.getRelatedOne("PrimaryOrderHeader");
 }
 
 if (invoice == null && invoiceId != null)	{

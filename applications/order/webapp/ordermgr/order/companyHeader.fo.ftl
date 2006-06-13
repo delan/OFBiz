@@ -23,12 +23,16 @@
            <fo:table-column column-width="4.5in"/>
            <fo:table-column column-width="2in"/>
             <fo:table-body>
-              <fo:table-row >
+              <fo:table-row>
                 <fo:table-cell>
-                   <fo:block>
-	            <#if logoImageUrl?has_content><fo:external-graphic src="${logoImageUrl}" overflow="hidden" height="80px"/></#if>
+                   <fo:block text-align="left">
+	            <#if logoImageUrl?has_content>
+                    <fo:external-graphic src="${logoImageUrl}" overflow="hidden" height="40px"/>
+                </#if>
                   </fo:block>
                 </fo:table-cell>
+              </fo:table-row>
+              <fo:table-row>
                 <fo:table-cell>
                   <fo:block>${companyName}</fo:block>
                   <#if postalAddress?exists>

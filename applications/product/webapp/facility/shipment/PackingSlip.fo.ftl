@@ -42,6 +42,9 @@
         <#assign carrier = (shipGroup.carrierPartyId)?default("N/A")>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+            <fo:block>
+                 ${screens.render("component://order/widget/ordermgr/OrderPrintForms.xml#CompanyLogo")}
+            </fo:block>
             <fo:block text-align="right">
                 <fo:instream-foreign-object>
                     <barcode:barcode xmlns:barcode="http://barcode4j.krysalis.org/ns"
