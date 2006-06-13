@@ -322,6 +322,7 @@
       <field name="termTypeId" type="id"></field>
       <field name="agreementId" type="id"></field>
       <field name="agreementItemSeqId" type="id"></field>
+      <field name="invoiceItemTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="termValue" type="currency-amount"></field>
@@ -336,6 +337,9 @@
       <relation type="one" fk-name="AGRMNT_TERM_AITM" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_TERM_IIT" rel-entity-name="InvoiceItemType">
+        <key-map field-name="invoiceItemTypeId"/>
       </relation>
     </entity>
     <entity entity-name="AgreementTermAttribute"
@@ -452,7 +456,9 @@
         <member-entity entity-alias="AG" entity-name="Agreement"/>
         <alias-all entity-alias="AGI"/>
         <alias-all entity-alias="AGPA"/>
-        <alias-all entity-alias="AG"/>
+        <alias-all entity-alias="AG">
+            <exclude field="productId"/>
+        </alias-all>
         <view-link entity-alias="AGI" rel-entity-alias="AGPA">
             <key-map field-name="agreementId"/>
             <key-map field-name="agreementItemSeqId"/>
@@ -472,7 +478,9 @@
         <member-entity entity-alias="AG" entity-name="Agreement"/>
         <alias-all entity-alias="AGI"/>
         <alias-all entity-alias="AGPA"/>
-        <alias-all entity-alias="AG"/>
+        <alias-all entity-alias="AG">
+            <exclude field="productId"/>
+        </alias-all>
         <view-link entity-alias="AGI" rel-entity-alias="AGPA">
             <key-map field-name="agreementId"/>
             <key-map field-name="agreementItemSeqId"/>
