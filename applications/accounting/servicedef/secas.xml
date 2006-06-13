@@ -30,6 +30,11 @@
     <eca service="createPaymentApplication" event="commit">
         <condition field-name="invoiceId" operator="is-not-empty"/>
         <action service="checkInvoicePaymentApplications" mode="sync"/>
+        <action service="createCommissionInvoices" mode="sync"/>
+    </eca>
+    <eca service="createCommissionInvoices" event="commit">
+        <condition field-name="invoicesCreated" operator="is-not-empty"/>
+        <action service="readyInvoices" mode="sync"/>
     </eca>
     <eca service="createPartyPostalAddress" event="commit">
         <condition field-name="paymentMethodId" operator="is-not-empty"/>

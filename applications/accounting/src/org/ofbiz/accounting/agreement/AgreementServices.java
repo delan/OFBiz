@@ -66,13 +66,14 @@ public class AgreementServices {
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters.
      *      productId   String      Product Id
-     *      price       BigDecimal  Price for entire quantity
+     *      invoiceItemTypeId   String      Invoice Type
+     *      amount      BigDecimal  Entire amount
      *      quantity    BigDecimal  Quantity
      * @return Map with the result of the service, the output parameters.
      *      commissions List        List of Maps each containing
      *              partyIdFrom     String  commission paying party
      *              partyIdTo       String  commission receiving party
-     *              amount          BigDecimal  Commission
+     *              commission      BigDecimal  Commission
      *              days            Long    term days
      *              currencyUomId   String  Currency
      *              productId       String  Product Id
@@ -91,14 +92,15 @@ public class AgreementServices {
         if (result.size() > 0)
             return result;
         try {
-            BigDecimal price = ((BigDecimal)context.get("price"));
+            BigDecimal amount = ((BigDecimal)context.get("amount"));
             BigDecimal quantity = (BigDecimal)context.get("quantity");
             quantity = quantity == null ? new BigDecimal("1") : quantity;
-            boolean negative = price.signum() < 0;
+            boolean negative = amount.signum() < 0;
             // Ensure that price and quantity are positive since the terms may not be linear.
-            price = price.abs();
+            amount = amount.abs();
             quantity = quantity.abs();
             String productId = (String) context.get("productId");
+            String invoiceItemTypeId = (String) context.get("invoiceItemTypeId");
             // Collect agreementItems applicable to this orderItem/returnItem
             // Use the view entity to reduce database access and cache to improve performance
             List agreementItems = delegator.findByAndCache("AgreementItemAndProductAppl", UtilMisc.toMap(
@@ -122,48 +124,51 @@ public class AgreementServices {
                 GenericValue agreementItem = (GenericValue) it.next();
                 List terms = delegator.findByAndCache("AgreementTerm", UtilMisc.toMap(
                         "agreementId", agreementItem.getString("agreementId"),
-                        "agreementItemSeqId", agreementItem.getString("agreementItemSeqId")));
-                BigDecimal commission = ZERO;
-                BigDecimal min = new BigDecimal("-1e12");   // Limit to 1 trillion commission
-                BigDecimal max = new BigDecimal("1e12");
-                long days = 0;
-                Iterator itt = terms.iterator();
-                while (itt.hasNext()) {
-                    GenericValue elem = (GenericValue) itt.next();
-                    String termTypeId = elem.getString("termTypeId");
-                    BigDecimal termValue = elem.getBigDecimal("termValue");
-                    if (termValue != null) {
-                        if (termTypeId.equals("FIN_COMM_FIXED")) {
-                            commission = commission.add(termValue.multiply(quantity));
-                        } else if (termTypeId.equals("FIN_COMM_VARIABLE")) {
-                            // if variable percentage commission, need to divide by 100, because 5% is stored as termValue of 5.0
-                            commission = commission.add(termValue.multiply(price).divide(new BigDecimal("100"), 12, rounding));
-                        } else if (termTypeId.equals("FIN_COMM_MIN")) {
-                            min = termValue.multiply(quantity);
-                        } else if (termTypeId.equals("FIN_COMM_MAX")) {
-                            max = termValue.multiply(quantity);
+                        "agreementItemSeqId", agreementItem.getString("agreementItemSeqId"),
+                        "invoiceItemTypeId", invoiceItemTypeId));
+                if (terms.size() > 0) {
+                    BigDecimal commission = ZERO;
+                    BigDecimal min = new BigDecimal("-1e12");   // Limit to 1 trillion commission
+                    BigDecimal max = new BigDecimal("1e12");
+                    long days = 0;
+                    Iterator itt = terms.iterator();
+                    while (itt.hasNext()) {
+                        GenericValue elem = (GenericValue) itt.next();
+                        String termTypeId = elem.getString("termTypeId");
+                        BigDecimal termValue = elem.getBigDecimal("termValue");
+                        if (termValue != null) {
+                            if (termTypeId.equals("FIN_COMM_FIXED")) {
+                                commission = commission.add(termValue.multiply(quantity));
+                            } else if (termTypeId.equals("FIN_COMM_VARIABLE")) {
+                                // if variable percentage commission, need to divide by 100, because 5% is stored as termValue of 5.0
+                                commission = commission.add(termValue.multiply(amount).divide(new BigDecimal("100"), 12, rounding));
+                            } else if (termTypeId.equals("FIN_COMM_MIN")) {
+                                min = termValue.multiply(quantity);
+                            } else if (termTypeId.equals("FIN_COMM_MAX")) {
+                                max = termValue.multiply(quantity);
+                            }
+                            // TODO: Add other type of terms and handling here
                         }
-                        // TODO: Add other type of terms and handling here
+                        Long termDays = elem.getLong("termDays");
+                        if (termDays != null) {
+                            days = Math.min(days, termDays.longValue());
+                        }
                     }
-                    Long termDays = elem.getLong("termDays");
-                    if (termDays != null) {
-                        days = Math.min(days, termDays.longValue());
-                    }
+                    if (commission.compareTo(min) < 0)
+                        commission = min;
+                    if (commission.compareTo(max) > 0)
+                        commission = max;
+                    commission = negative ? commission.negate() : commission;
+                    commission = commission.setScale(decimals, rounding);
+                    days = Math.max(0, days);
+                    commissions.add(UtilMisc.toMap(
+                            "partyIdFrom", agreementItem.getString("partyIdFrom"),
+                            "partyIdTo", agreementItem.getString("partyIdTo"),
+                            "commission", commission,
+                            "days", new Long(days),
+                            "currencyUomId", agreementItem.getString("currencyUomId"),
+                            "productId", productId));
                 }
-                if (commission.compareTo(min) < 0)
-                    commission = min;
-                if (commission.compareTo(max) > 0)
-                    commission = max;
-                commission = negative ? commission.negate() : commission;
-                commission = commission.setScale(decimals, rounding);
-                days = Math.max(0, days);
-                commissions.add(UtilMisc.toMap(
-                        "partyIdFrom", agreementItem.getString("partyIdFrom"),
-                        "partyIdTo", agreementItem.getString("partyIdTo"),
-                        "amount", commission,
-                        "days", new Long(days),
-                        "currencyUomId", agreementItem.getString("currencyUomId"),
-                        "productId", productId));
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);

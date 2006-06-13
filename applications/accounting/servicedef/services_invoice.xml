@@ -166,6 +166,25 @@ under the License.
         <attribute name="shipmentReceiptsToBill" type="List" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
     </service>
+    <service name="createCommissionInvoices" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createCommissionInvoices">
+        <description>
+            Create commission invoices from an order or return invoice. It
+            does not create any OrderItemBilling or ReturnItemBilling entities for partial commissions. Therefore, correct value
+            of the amountApplied needs to be supplied.
+        </description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="amountApplied" type="Double" mode="IN" optional="false"/>
+        <attribute name="invoicesCreated" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="readyInvoices" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="readyInvoices">
+        <description>
+            Sets status of each invoice in the list of invoices to INVOICE_READY.
+        </description>
+        <attribute name="invoicesCreated" type="List" mode="IN" optional="false"/>
+    </service>
     <service name="createInvoicesFromShipment" engine="java"
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoicesFromShipment">
         <description>
