@@ -3717,13 +3717,14 @@ public class OrderServices {
                 return ServiceUtil.returnError("Order #" + orderId + " was not found.");
             }
 
+            // by changing all the items to approved, the checkOrderItemStatus service will automatically set the order to approved.
             Map ctx = FastMap.newInstance();
-            ctx.put("statusId", "ORDER_APPROVED");
+            ctx.put("statusId", "ITEM_APPROVED");
             ctx.put("orderId", orderId);
             ctx.put("userLogin", userLogin);
             Map resp = null;
             try {
-                resp = dispatcher.runSync("changeOrderStatus", ctx);
+                resp = dispatcher.runSync("changeOrderItemStatus", ctx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError(e.getMessage());

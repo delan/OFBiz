@@ -215,7 +215,7 @@
 
     <service name="changeOrderItemStatus" engine="java" auth="true"
     		location="org.ofbiz.order.order.OrderServices" invoke="setItemStatus">
-    	<description>Change the status of an existing order item</description>
+    	<description>Change the status of an existing order item.  If no orderItemSeqId is specified, the status of all order items will be changed.</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>
     	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     	<attribute name="fromStatusId" type="String" mode="IN" optional="true"/>
@@ -278,7 +278,7 @@
 
     <service name="checkOrderItemStatus" engine="java"
     		location="org.ofbiz.order.order.OrderServices" invoke="checkItemStatus">
-    	<description>Check the status of all items and cancel/complete the order if we can</description>
+      <description>Check the status of all items and cancel/approve/complete the order if we can</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
 
