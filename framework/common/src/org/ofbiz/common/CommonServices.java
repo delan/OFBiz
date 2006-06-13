@@ -37,6 +37,7 @@ import java.util.TreeSet;
 
 import javax.transaction.xa.XAException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.Address;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -438,11 +439,19 @@ public class CommonServices {
         MimeMessageWrapper wrapper = (MimeMessageWrapper) context.get("messageWrapper");
         MimeMessage message = wrapper.getMessage();
         try {
-            Debug.log("To: " + message.getAllRecipients(), module);
-            Debug.log("From: " + message.getFrom(), module);
+            if (message.getAllRecipients() != null) {
+               Debug.log("To: " + UtilMisc.toListArray(message.getAllRecipients()), module);
+            }
+            if (message.getFrom() != null) {
+               Debug.log("From: " + UtilMisc.toListArray(message.getFrom()), module);
+            }
             Debug.log("Subject: " + message.getSubject(), module);
-            Debug.log("Sent: " + message.getSentDate().toString(), module);
-            Debug.log("Received: " + message.getReceivedDate().toString(), module);
+            if (message.getSentDate() != null) {
+                Debug.log("Sent: " + message.getSentDate().toString(), module);
+            }
+            if (message.getReceivedDate() != null) {
+                Debug.log("Received: " + message.getReceivedDate().toString(), module);
+            }
         } catch (Exception e) {
             Debug.logError(e, module);
         }
