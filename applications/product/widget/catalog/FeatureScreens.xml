@@ -202,19 +202,40 @@
     <screen name="EditFeatureGroupAppls">
         <section>
             <actions>
-                <set field="title" value="Edit Product Feature Categories"/>
-                <set field="titleProperty" value="PageTitleEditFeatureCategoryFeatures"/>
+                <set field="title" value="Product Feature Group Applications"/>
+                <set field="titleProperty" value="ProductEditFeatureGroupAppls"/>
                 <set field="headerItem" value="featurecats"/>
                 <set field="tabButtonItem" value="FeatureGroup"/>
-    
-                <script location="component://product/webapp/catalog/WEB-INF/actions/feature/EditFeatureGroupAppls.bsh"/>
+
+                <set field="productFeatureGroupId" from-field="parameters.productFeatureGroupId"/>
+                <set field="productFeatureCategoryId" from-field="parameters.productFeatureCategoryId"/>
+                <entity-and entity-name="ProductFeatureGroupAndAppl" list-name="productFeatureGroupAndAppls">
+                    <field-map field-name="productFeatureGroupId"/>
+                    <order-by field-name="sequenceNum"/>
+                </entity-and>
+                <entity-condition entity-name="ProductFeatureCategory" list-name="productFeatureCategories">
+                    <order-by field-name="description"/>
+                </entity-condition>
+                <entity-and entity-name="ProductFeature" list-name="productFeatures">
+                    <field-map field-name="productFeatureCategoryId"/>
+                </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFeatureDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/feature/EditFeatureGroupAppls.ftl"/></html>
-                        </platform-specific>
+                        <container>
+                            <label style="head1">${uiLabelMap.${titleProperty}}</label>
+                        </container>
+                        <include-form name="ListFeatureGroupAppls" location="component://product/webapp/catalog/feature/FeatureForms.xml"/>
+                        <container>
+                            <label style="head2">${uiLabelMap.ProductQuickApplyFeature}:</label>
+                        </container>
+                        <include-form name="QuickApplyFeatureToGroup" location="component://product/webapp/catalog/feature/FeatureForms.xml"/>
+                        <container>
+                            <label style="head2">${uiLabelMap.ProductApplyFeaturesFromCategory}:</label>
+                        </container>
+                        <include-form name="ApplyFeatureCategoryToGroup" location="component://product/webapp/catalog/feature/FeatureForms.xml"/>
+                        <include-form name="ApplyFeaturesFromCategoryToGroup" location="component://product/webapp/catalog/feature/FeatureForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

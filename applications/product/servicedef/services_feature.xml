@@ -178,6 +178,7 @@
         <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
     <service name="updateProductFeatureGroupAppl" engine="simple"
                 location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureGroupAppl" auth="true">
@@ -186,6 +187,7 @@
         <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
     <service name="removeProductFeatureGroupAppl" engine="simple"
                 location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="removeProductFeatureGroupAppl" auth="true">

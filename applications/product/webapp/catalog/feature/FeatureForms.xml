@@ -144,6 +144,64 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-
+    <form name="ListFeatureGroupAppls" type="multi" use-row-submit="false"
+            list-name="productFeatureGroupAndAppls" target="UpdateProductFeatureGroupAppl?productFeatureGroupId=${productFeatureGroupId}"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext" title="">
+        <field name="productFeatureGroupId"><hidden/></field>
+        <field name="fromDate"><hidden/></field>
+        <field name="productFeatureId" title="${uiLabelMap.CommonId}"><display/></field>
+        <field name="description" title="${uiLabelMap.ProductFeature}"><display/></field>
+        <field name="productFeatureTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="ProductFeatureType"/>
+        </field>
+        <field name="productFeatureCategoryId" title="${uiLabelMap.ProductFeatureCategory}">
+            <display-entity entity-name="ProductFeatureCategory"/>
+        </field>
+        <field name="sequenceNum"><text size="3"/></field>
+        <field name="removeFeatureGroupAppl" title="${uiLabelMap.CommonRemove}" widget-style="buttontext">
+            <hyperlink target="RemoveProductFeatureGroupAppl?productFeatureGroupId=${productFeatureGroupId}&amp;productFeatureId=${productFeatureId}&amp;fromDate=${fromDate}" description="[${uiLabelMap.CommonRemove}]"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+    <form name="QuickApplyFeatureToGroup" type="single" 
+            target="CreateProductFeatureGroupAppl"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" title="">
+        <field name="productFeatureGroupId"><hidden/></field>
+        <field name="productFeatureId" title="${uiLabelMap.ProductFeatureId}"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ApplyFeatureCategoryToGroup" type="single"
+            target="EditFeatureGroupAppls"
+            default-widget-style="inputBox" default-tooltip-style="tabletext" title="" default-title-style="tableheadtext">
+        <field name="productFeatureGroupId"><hidden/></field>
+        <field name="productFeatureCategoryId">
+            <drop-down>
+                <list-options key-name="productFeatureCategoryId" list-name="productFeatureCategories" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonContinue}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ApplyFeaturesFromCategoryToGroup" type="multi" use-row-submit="true"
+            list-name="productFeatures" target="ApplyFeaturesFromCategoryToGroup?productFeatureGroupId=${productFeatureGroupId}"
+            default-widget-style="tabletext" default-title-style="tableheadtext" default-tooltip-style="tabletext" title="">
+        <field name="productFeatureGroupId"><hidden/></field>
+        <field name="productFeatureId" title="${uiLabelMap.CommonId}"><display/></field>
+        <field name="productFeatureTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="ProductFeatureType"/>
+        </field>
+        <field name="description" title="${uiLabelMap.ProductFeature}"><display/></field>
+        <field name="idCode" title="${uiLabelMap.CommonIdCode}"><display/></field>
+        <field name="abbrev" title="${uiLabelMap.ProductAbbrev}"><display/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+          <submit/>
+        </field>
+    </form>
 </forms>
 
