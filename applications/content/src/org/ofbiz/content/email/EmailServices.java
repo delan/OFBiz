@@ -638,14 +638,12 @@ public class EmailServices {
     		commEventMap.put("partyIdTo", partyIdTo);
     		String subject = message.getSubject();
     		commEventMap.put("subject", subject);
-    		String [] dates = message.getHeader("Date");
-    		String sDate = null;
-    		Timestamp entryDate = null;
-    		if (dates != null && dates.length > 0 ) {
-    			sDate = dates[0];
-    		}
     		
 	    	commEventMap.put("entryDate", nowTimestamp);
+	    	
+	    	//Set sent and received dates
+	    	commEventMap.put("datetimeStarted", UtilDateTime.toTimestamp(message.getSentDate()));
+	    	commEventMap.put("datetimeEnded", UtilDateTime.toTimestamp(message.getReceivedDate()));
 
     		int contentIndex = -1;
 			Multipart multipart = null;
@@ -703,6 +701,10 @@ public class EmailServices {
     			int attachmentCount = EmailWorker.addAttachmentsToCommEvent(message, communicationEventId, contentIndex, dispatcher, userLogin);
     			if (Debug.infoOn()) Debug.logInfo(attachmentCount + " attachments added to CommunicationEvent:" + communicationEventId,module);
     		}
+    		
+    		Map results = ServiceUtil.returnSuccess();
+            results.put("communicationEventId", communicationEventId);
+    		return results;
         } catch (MessagingException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -716,7 +718,6 @@ public class EmailServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        return ServiceUtil.returnSuccess();
     }
 
 }
