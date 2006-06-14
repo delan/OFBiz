@@ -376,6 +376,18 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ShipmentReceiptAndItem"
+            package-name="org.ofbiz.shipment.shipment"
+            title="ShipmentReceipt And Inventory Item View Entity">
+      <member-entity entity-alias="SR" entity-name="ShipmentReceipt"/>
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <alias-all entity-alias="SR"/>
+      <alias entity-alias="II" name="facilityId"/>
+      <alias entity-alias="II" name="unitCost"/>
+      <view-link entity-alias="SR" rel-entity-alias="II">
+        <key-map field-name="inventoryItemId"/>
+      </view-link>
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.shipment.shipment -->

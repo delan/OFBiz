@@ -57,7 +57,6 @@
     </tr>
     <tr><td colspan="9"><hr class="sepbar"></td></tr>
     <#list receivedItems as item>
-      <#assign inventoryItem = item.getRelatedOne("InventoryItem")/>
       <tr>
         <td><div class="tabletext"><a href="<@ofbizUrl>ViewShipment?shipmentId=${item.shipmentId?if_exists}</@ofbizUrl>" class="buttontext">${item.shipmentId?if_exists}</a></div></td>
         <td><div class="tabletext">${item.receiptId}</div></td>
@@ -65,7 +64,7 @@
         <td><div class="tabletext"><a href="/ordermgr/control/orderview?orderId=${item.orderId}" class="buttontext">${item.orderId}</a></div></td>
         <td><div class="tabletext">${item.orderItemSeqId}</div></td>
         <td><div class="tabletext">${item.productId?default("Not Found")}</div></td>
-        <td><div class="tabletext">${inventoryItem.unitCost?default(0)?string("##0.00")}</td>
+        <td><div class="tabletext">${item.unitCost?default(0)?string("##0.00")}</td>
         <td><div class="tabletext">${item.quantityRejected?default(0)?string.number}</div></td>
         <td><div class="tabletext">${item.quantityAccepted?string.number}</div></td>
       </tr>

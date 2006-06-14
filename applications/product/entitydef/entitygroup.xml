@@ -275,6 +275,7 @@
     <entity-group group="org.ofbiz" entity="RejectionReason" />
     <entity-group group="org.ofbiz" entity="ShipmentReceipt" />
     <entity-group group="org.ofbiz" entity="ShipmentReceiptRole" />
+    <entity-group group="org.ofbiz" entity="ShipmentReceiptAndItem" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.shipment.shipment -->
