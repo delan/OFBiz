@@ -119,8 +119,12 @@
     </service>
     <service name="storeIncomingEmail" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="storeIncomingEmail" auth="true">
-        <description>Process incoming email. Try to determine partyIdFrom from email address.</description>
+        <description>
+            Process incoming email. Try to determine partyIdFrom from email address. datetimeStarted and datetimeEnded are the
+            sent and received dates respectively. partyIdTo is the logged-in user's partyId.
+        </description>
         <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="IN"/>
+        <attribute name="communicationEventId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="storeForwardedEmail" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="storeForwardedEmail" auth="true">
