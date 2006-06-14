@@ -120,8 +120,9 @@
     <service name="storeIncomingEmail" engine="java"
             location="org.ofbiz.content.email.EmailServices" invoke="storeIncomingEmail" auth="true">
         <description>
-            Process incoming email. Try to determine partyIdFrom from email address. datetimeStarted and datetimeEnded are the
-            sent and received dates respectively. partyIdTo is the logged-in user's partyId.
+            Process incoming email. Try to determine partyIdFrom from the first SendFrom email address. datetimeStarted and datetimeEnded are the
+            sent and received dates respectively, partyIdTo is from the first SendTo email address. If the parties are not found,
+            the email addresses are stored in CommunicationEvent.note
         </description>
         <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="IN"/>
         <attribute name="communicationEventId" type="String" mode="OUT" optional="false"/>
