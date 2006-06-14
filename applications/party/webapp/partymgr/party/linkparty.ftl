@@ -39,7 +39,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">Link Party</div>
+            <div class="boxhead">${uiLabelMap.PartyLink}</div>
           </td>
         </tr>
       </table>
@@ -55,15 +55,14 @@
             <td colspan="2" align="center">
               <div class="head1">
                 <font color="red">
-                    WARNING: This cannot be un-done, confirm you wish to link the two
-                    party records listed below.
+                    ${uiLabelMap.PartyLinkMessage1}
                 </font>
               </div>
             </td>
           </tr>
           <tr><td colspan="2">&nbsp;</td></tr>
           <tr>
-            <td align="right"><span class="tabletext">&nbsp;Link Party:&nbsp;</span></td>
+            <td align="right"><span class="tabletext">&nbsp;${uiLabelMap.PartyLink}:&nbsp;</span></td>
             <td>
               <input type="hidden" name="partyId" value="${partyFrom.partyId}"/>
               <span class="tabletext">
@@ -72,14 +71,14 @@
                   <#elseif groupFrom?has_content>
                     ${groupFrom.groupName}
                   <#else>
-                    [Unknown]
+                    [${uiLabelMap.PartyUnknown}]
                   </#if>
                   &nbsp;<b>[${partyFrom.partyId}]</b>
               </span>
             </td>
           </tr>
           <tr>
-            <td align="right"><span class="tabletext">&nbsp;To:&nbsp;</span></td>
+            <td align="right"><span class="tabletext">&nbsp;${uiLabelMap.CommonTo}:&nbsp;</span></td>
             <td>
               <input type="hidden" name="partyIdTo" value="${partyTo.partyId}"/>
               <span class="tabletext">
@@ -88,7 +87,7 @@
                   <#elseif groupTo?has_content>
                     ${groupTo.groupName}
                   <#else>
-                    [Unknown]
+                    [${uiLabelMap.PartyUnknown}]
                   </#if>
                   &nbsp;<b>[${partyTo.partyId}]</b>
               </span>
@@ -97,19 +96,19 @@
           <tr><td colspan="2">&nbsp;</td></tr>
           <tr>
             <td colspan="2" align="center">
-              <a href="javascript:document.linkparty.submit()" class="buttontext">Confirm</a>&nbsp;&nbsp;
+              <a href="javascript:document.linkparty.submit()" class="buttontext">${uiLabelMap.CommonConfirm}</a>&nbsp;&nbsp;
             </td>
         </tr>
         </form>
         <#else>
           <form name="linkpartycnf" method="post" action="<@ofbizUrl>linkparty</@ofbizUrl>">
           <tr>
-            <td><span class="tabletext">&nbsp;Link Party:&nbsp;</span></td>
+            <td><span class="tabletext">&nbsp;${uiLabelMap.PartyLink}:&nbsp;</span></td>
             <td><input type="text" class="inputBox" name="partyId" value="${partyId?if_exists}"></td>
-            <td><span class="tabletext">&nbsp;To:&nbsp;</span></td>
+            <td><span class="tabletext">&nbsp;${uiLabelMap.CommonTo}:&nbsp;</span></td>
             <td><input type="text" class="inputBox" name="partyIdTo" value="${partyIdTo?if_exists}"></td>
             <td>
-              <a href="javascript:document.linkpartycnf.submit()" class="buttontext">Link</a>&nbsp;&nbsp;
+              <a href="javascript:document.linkpartycnf.submit()" class="buttontext">${uiLabelMap.CommonLink}</a>&nbsp;&nbsp;
             </td>
           </tr>
           </form>

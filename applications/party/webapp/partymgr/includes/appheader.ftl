@@ -43,7 +43,7 @@
     <div class="col"><a href="<@ofbizUrl>createnew</@ofbizUrl>" class="${selectedLeftClassMap.create?default(unselectedLeftClassName)}">${uiLabelMap.CommonCreate}</a></div>
   </#if>
   <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
-    <div class="col"><a href="<@ofbizUrl>linkparty</@ofbizUrl>" class="${selectedLeftClassMap.link?default(unselectedLeftClassName)}">Link</a></div>
+    <div class="col"><a href="<@ofbizUrl>linkparty</@ofbizUrl>" class="${selectedLeftClassMap.link?default(unselectedLeftClassName)}">${uiLabelMap.PartyLink}</a></div>
   </#if>
   <div class="col"><a href="<@ofbizUrl>FindCommunicationEvents</@ofbizUrl>" class="${selectedLeftClassMap.comm?default(unselectedLeftClassName)}">${uiLabelMap.PartyCommunications}</a></div>
   <div class="col"><a href="<@ofbizUrl>showvisits</@ofbizUrl>" class="${selectedLeftClassMap.visits?default(unselectedLeftClassName)}">${uiLabelMap.PartyVisits}</a></div>
@@ -56,6 +56,6 @@
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
   </#if>
-  <div class="col-right"><a href="<@ofbizUrl>addressMatchMap</@ofbizUrl>" class="${selectedLeftClassMap.addrmap?default(unselectedLeftClassName)}">Addr MatchMap</a></div>
+  <div class="col-right"><a href="<@ofbizUrl>addressMatchMap</@ofbizUrl>" class="${selectedLeftClassMap.addrmap?default(unselectedLeftClassName)}">${uiLabelMap.PageTitleAddressMatchMap}</a></div>
   <div class="col-fill">&nbsp;</div>
 </div>

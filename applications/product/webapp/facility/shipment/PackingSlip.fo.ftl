@@ -69,13 +69,13 @@
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <fo:table-cell padding="2pt" background-color="#D4D0C8">
-                            <fo:block>Shipping Address</fo:block>
+                            <fo:block>${uiLabelMap.ProductShippingAddress}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8">
-                            <fo:block text-align="center">Shipping Method</fo:block>
+                            <fo:block text-align="center">${uiLabelMap.ProductShipmentMethod}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8">
-                            <fo:block text-align="right">Handling Instructions</fo:block>
+                            <fo:block text-align="right">${uiLabelMap.ProductHandlingInstructions}</fo:block>
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
@@ -84,9 +84,9 @@
                         <fo:table-cell padding="2pt">
                             <fo:block>
                                 <#if destinationPostalAddress?has_content>
-                                  <fo:block>To: ${destinationPostalAddress.toName?if_exists}</fo:block>
+                                  <fo:block>${uiLabelMap.CommonTo}: ${destinationPostalAddress.toName?if_exists}</fo:block>
                                   <#if destinationPostalAddress.attnName?has_content>
-                                    <fo:block>Attn: ${destinationPostalAddress.attnName?if_exists}</fo:block>
+                                    <fo:block>${uiLabelMap.CommonAttn}: ${destinationPostalAddress.attnName?if_exists}</fo:block>
                                   </#if>
                                   <fo:block>${destinationPostalAddress.address1?if_exists}</fo:block>
                                   <fo:block>${destinationPostalAddress.address2?if_exists}</fo:block>
@@ -120,9 +120,9 @@
                 <fo:table-column column-width="100pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8"><fo:block>Product</fo:block></fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8"><fo:block>Quantity Requested</fo:block></fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8"><fo:block>Quantity Shipped</fo:block></fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8"><fo:block>${uiLabelMap.ProductProduct}</fo:block></fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8"><fo:block>${uiLabelMap.ProductQuantityRequested}</fo:block></fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8"><fo:block>${uiLabelMap.ProductQuantityShipped}</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>

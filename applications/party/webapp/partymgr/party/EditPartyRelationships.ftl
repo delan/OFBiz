@@ -47,15 +47,15 @@
                 <td><div class="tabletext">
                     ${uiLabelMap.PartyParty} <b>${partyRelationship.partyIdTo}</b>
                     <#if "_NA_" != partyRelationship.roleTypeIdTo>
-                        ${uiLabelMap.PartyRole} <b>${roleTypeTo.description}</b>
+                        ${uiLabelMap.PartyRole} <b>${roleTypeTo.get("description",locale)}</b>
                     </#if>
-                    ${uiLabelMap.CommonIsA} <b>${(partyRelationshipType.partyRelationshipName)?default("NA")}</b>
+                    ${uiLabelMap.CommonIsA} <b>${(partyRelationshipType.get("partyRelationshipName",locale))?default("${uiLabelMap.CommonNA}")}</b>
                     ${uiLabelMap.CommonOf} ${uiLabelMap.PartyParty} <b>${partyRelationship.partyIdFrom}</b>
                     <#if "_NA_" != partyRelationship.roleTypeIdFrom>
-                        ${uiLabelMap.PartyRole} <b>${roleTypeFrom.description}</b>
+                        ${uiLabelMap.PartyRole} <b>${roleTypeFrom.get("description",locale)}</b>
                     </#if>
                     <#if partyRelationship.securityGroupId?exists>
-                    ${uiLabelMap.CommonAnd} ${uiLabelMap.PartyRelationSecurity} <b>${partyRelationship.getRelatedOne("SecurityGroup").get("description")}</b>
+                    ${uiLabelMap.CommonAnd} ${uiLabelMap.PartyRelationSecurity} <b>${partyRelationship.getRelatedOne("SecurityGroup").get("description",locale)}</b>
                     </#if>
                 </div></td>
                 <td><div class="tabletext">&nbsp;${partyRelationship.fromDate}</div></td>
@@ -104,26 +104,26 @@
             ${uiLabelMap.PartyPartyInTheRoleOf}
             <select name="roleTypeIdTo" class="selectBox">
               <#list roleTypes as roleType>
-                <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
+                <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.get("description",locale)}<#-- [${roleType.roleTypeId}]--></option>
               </#list>
             </select>
             ${uiLabelMap.CommonIsA}
             <select name="partyRelationshipTypeId" class="selectBox">
               <#list relateTypes as relateType>
-                <option value="${relateType.partyRelationshipTypeId}">${relateType.partyRelationshipName}<#-- [${relateType.partyRelationshipTypeId}]--></option>
+                <option value="${relateType.partyRelationshipTypeId}">${relateType.get("partyRelationshipName",locale)}<#-- [${relateType.partyRelationshipTypeId}]--></option>
               </#list>
             </select>
             ${uiLabelMap.PartyPartyOfTheRoleParty}
             <select name="roleTypeIdFrom" class="selectBox">
               <#list roleTypes as roleType>
-                <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
+                <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.get("description",locale)}<#-- [${roleType.roleTypeId}]--></option>
               </#list>
             </select>
             <#-- set security group specific to this party relationship -->
             <br/>${uiLabelMap.CommonAnd} ${uiLabelMap.PartyRelationSecurity} 
             <select name="securityGroupId" class="selectBox">
               <#list securityGroups as securityGroup>
-                <option value="${securityGroup.groupId}">${securityGroup.description}</option>
+                <option value="${securityGroup.groupId}">${securityGroup.get("description",locale)}</option>
               </#list>
             </select><br/>
             ${uiLabelMap.CommonFrom} <input type="text" size="24" name="fromDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipTo.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
@@ -142,13 +142,13 @@
               ${uiLabelMap.PartyPartyCurrentInTheRoleOf}
             <select name="roleTypeIdTo" class="selectBox">
               <#list roleTypes as roleType>
-                <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
+                <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.get("description",locale)}<#-- [${roleType.roleTypeId}]--></option>
               </#list>
             </select>
             ${uiLabelMap.CommonIsA}
             <select name="partyRelationshipTypeId" class="selectBox">
               <#list relateTypes as relateType>
-                <option value="${relateType.partyRelationshipTypeId}">${relateType.partyRelationshipName}<#-- [${relateType.partyRelationshipTypeId}]--></option>
+                <option value="${relateType.partyRelationshipTypeId}">${relateType.get("partyRelationshipName",locale)}<#-- [${relateType.partyRelationshipTypeId}]--></option>
               </#list>
             </select>
             ${uiLabelMap.PartyPartyWithId}
@@ -157,13 +157,13 @@
             ${uiLabelMap.PartyPartyInTheRoleOf}
             <select name="roleTypeIdFrom" class="selectBox">
               <#list roleTypes as roleType>
-                <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.description}<#-- [${roleType.roleTypeId}]--></option>
+                <option <#if "_NA_" == roleType.roleTypeId>selected="selected"</#if> value="${roleType.roleTypeId}">${roleType.get("description",locale)}<#-- [${roleType.roleTypeId}]--></option>
               </#list>
             </select>
             <br/>${uiLabelMap.CommonAnd} ${uiLabelMap.PartyRelationSecurity}
             <select name="securityGroupId" class="selectBox">
               <#list securityGroups as securityGroup>
-                <option value="${securityGroup.groupId}">${securityGroup.description}</option>
+                <option value="${securityGroup.groupId}">${securityGroup.get("description",locale)}</option>
               </#list>
             </select><br/>
             ${uiLabelMap.CommonFrom} <input type="text" size="24" name="fromDate" class="inputBox"/><a href="javascript:call_cal(document.addPartyRelationshipFrom.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>

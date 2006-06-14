@@ -32,10 +32,10 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">Address Match Map</div>
+            <div class="boxhead">${uiLabelMap.PageTitleAddressMatchMap}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>findAddressMatch</@ofbizUrl>" class="submenutextright">Find Matches</a>
+            <a href="<@ofbizUrl>findAddressMatch</@ofbizUrl>" class="submenutextright">${uiLabelMap.PageTitleFindMatches}</a>
           </td>
         </tr>
       </table>
@@ -47,14 +47,14 @@
       <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <form name="addaddrmap" method="post" action="<@ofbizUrl>createAddressMatchMap</@ofbizUrl>">
           <tr>
-            <td><span class="tabletext">&nbsp;Match Key:&nbsp;</span></td>
+            <td><span class="tabletext">&nbsp;${uiLabelMap.PartyAddressMatchKey}:&nbsp;</span></td>
             <td><input type="text" class="inputBox" name="mapKey"></td>
-            <td><span class="tabletext">&nbsp;Match Value:&nbsp;</span></td>
+            <td><span class="tabletext">&nbsp;${uiLabelMap.PartyAddressMatchValue}:&nbsp;</span></td>
             <td><input type="text" class="inputBox" name="mapValue"></td>
-            <td><span class="tabletext">&nbsp;Seq:&nbsp;</span></td>
+            <td><span class="tabletext">&nbsp;${uiLabelMap.CommonSequence}:&nbsp;</span></td>
             <td><input type="text" class="inputBox" size="5" name="sequenceNum" value="0"></td>
             <td>
-              <a href="javascript:document.addaddrmap.submit()" class="buttontext">Create</a>&nbsp;&nbsp;
+              <a href="javascript:document.addaddrmap.submit()" class="buttontext">${uiLabelMap.CommonCreate}</a>&nbsp;&nbsp;
             </td>
           </tr>
         </form>
@@ -63,8 +63,8 @@
           <tr>
             <td colspan="5" align="center">
               <input type="file" name="uploadedFile" size="14" class="inputBox"/>
-              <input type="submit" value="Upload CSV" class="smallSubmit"/>
-              <div class="tabletext">Format: key,value,sequence (sequence is optional)</span>
+              <input type="submit" value="${uiLabelMap.CommonUpload} CSV" class="smallSubmit"/>
+              <div class="tabletext">${uiLabelMap.PartyAddressMatchMessage1}</span>
             </td>
           </tr>
         </form>
@@ -74,11 +74,11 @@
             <td colspan="5">
               <table border="0" cellspacing="5" cellpadding="5">
                   <tr>
-                    <td><div class="tableheadtext">Key</td>
+                    <td><div class="tableheadtext">${uiLabelMap.PartyAddressMatchKey}</td>
                     <td><div class="tableheadtext">=></td>
-                    <td><div class="tableheadtext">Value</td>
+                    <td><div class="tableheadtext">${uiLabelMap.PartyAddressMatchValue}</td>
                     <td>&nbsp;</td>
-                    <td><a href="<@ofbizUrl>clearAddressMatchMap</@ofbizUrl>" class="buttontext">Clear All</a></td>
+                    <td><a href="<@ofbizUrl>clearAddressMatchMap</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClear} ${uiLabelMap.CommonAll}</a></td>
                   </tr>
                   <tr><td colspan="5"><hr class="sepbar"/></td></tr>
                 <#list addressMatchMaps as map>
@@ -87,7 +87,7 @@
                     <td><div class="tabletext">=></td>
                     <td><div class="tabletext">${map.mapValue}</td>
                     <td><div class="tabletext">[${map.sequenceNum?if_exists}]</td>
-                    <td><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&mapValue=${map.mapValue}</@ofbizUrl>" class="buttontext">Delete</a></td>
+                    <td><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&mapValue=${map.mapValue}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></td>
                   </tr>
                 </#list>
               </table>

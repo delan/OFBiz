@@ -28,7 +28,7 @@
       <p class="head1">${uiLabelMap.AccountingAddNewEftAccount}</p>
       <form method="post" action='<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
     <#else>
-      <p class="head1">${uiLabelMap.PageTitleEditEFTAccount}</p>
+      <p class="head1">${uiLabelMap.PageTitleEditEftAccount}</p>
       <form method="post" action='<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>' name="editeftaccountform" style='margin: 0;'>
         <input type="hidden" name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
@@ -104,7 +104,7 @@
               <#list curPartyContactMechPurposes as curPartyContactMechPurpose> 
                 <#assign curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                 <div class="tabletext">
-                  <b>${curContactMechPurposeType.description?if_exists}</b>
+                  <b>${curContactMechPurposeType.get("description",locale)?if_exists}</b>
                   <#if curPartyContactMechPurpose.thruDate?exists>
                     (${uiLabelMap.CommonExpire}:${curPartyContactMechPurpose.thruDate.toString()})
                   </#if>
@@ -149,7 +149,7 @@
                 <#list partyContactMechPurposes as partyContactMechPurpose>
                     <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                     <div class="tabletext">
-                      <b>${contactMechPurposeType.description?if_exists}</b>
+                      <b>${contactMechPurposeType.get("description",locale)?if_exists}</b>
                       <#if partyContactMechPurpose.thruDate?exists>(${uiLabelMap.CommonExpire}:${partyContactMechPurpose.thruDate})</#if>
                     </div>
                 </#list>

@@ -624,6 +624,7 @@
     </view-entity>
     <entity entity-name="CommunicationEventPrpTyp"
             package-name="org.ofbiz.party.communication"
+            default-resource-name="PartyEntityLabels"
             title="Communication Event Purpose Type Entity">
       <field name="communicationEventPrpTypId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -1652,6 +1653,7 @@
     </entity>
     <entity entity-name="PartyRelationshipType"
             package-name="org.ofbiz.party.party"
+            default-resource-name="PartyEntityLabels"
             title="Party Relationship Type Entity">
       <field name="partyRelationshipTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
