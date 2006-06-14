@@ -227,6 +227,7 @@
     </entity>
     <entity entity-name="ContactListType"
             package-name="org.ofbiz.marketing.contact"
+            default-resource-name="MarketingEntityLabels"
             title="Contact List Type Entity">
       <field name="contactListTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -418,6 +419,7 @@
     </entity>
     <entity entity-name="TrackingCodeType"
             package-name="org.ofbiz.marketing.tracking"
+            default-resource-name="MarketingEntityLabels"
             title="Tracking Code Type Entity">
       <field name="trackingCodeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>

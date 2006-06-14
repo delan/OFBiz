@@ -38,8 +38,8 @@
         <field name="fromDate"><display/></field>
         <field name="statusHistory" widget-style="selectBox">
             <drop-down>
-                <option key="" description="-- Status History --"/>
-                <entity-options entity-name="ContactListPartyAndStatus" key-field-name="statusId" description="${statusDate} ${description} [by: ${setByUserLoginId}] [code: ${optInVerifyCode}]">
+                <option key="" description="-- ${uiLabelMap.CommonStatusHistory} --"/>
+                <entity-options entity-name="ContactListPartyAndStatus" key-field-name="statusId" description="${statusDate} ${description} [${uiLabelMap.CommonBy}: ${setByUserLoginId}] [${uiLabelMap.FormFieldTitle_optInVerifyCode}: ${optInVerifyCode}]">
                     <entity-constraint name="partyId" operator="equals" env-name="partyId"/>
                     <entity-constraint name="contactListId" operator="equals" env-name="contactListId"/>
                     <entity-constraint name="fromDate" operator="equals" env-name="fromDate"/>
@@ -101,7 +101,7 @@
             <entity-condition entity-name="ContactList"/>
         </actions>
         
-        <field name="contactListId"  widget-style="buttontext" title="contactListId">
+        <field name="contactListId"  widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${contactListId}" target="javascript:set_value('${contactListId}')"/>
         </field>
         <field name="contactListName"><display/></field>

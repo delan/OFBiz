@@ -52,7 +52,7 @@
               <tr>
                 <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>${uiLabelMap.PartyRole}</b></div></td>
                 <td width="5">&nbsp;</td>
-                <td align="left" valign="top" width="70%"><div class="tabletext">${userRole.description} [${userRole.roleTypeId}]</div></td>
+                <td align="left" valign="top" width="70%"><div class="tabletext">${userRole.get("description",locale)} [${userRole.roleTypeId}]</div></td>
                 <#if hasDeletePermission>
                 <td align="right" valign="top" width="20%">
                   <a href="<@ofbizUrl>deleterole?partyId=${partyId}&roleTypeId=${userRole.roleTypeId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>&nbsp;
@@ -83,7 +83,7 @@
           <td>
             <select name="roleTypeId" class="selectBox">
               <#list roles as role>
-                <option value="${role.roleTypeId}">${role.description}</option>
+                <option value="${role.roleTypeId}">${role.get("description",locale)}</option>
               </#list>
             </select>
           </td>

@@ -58,7 +58,14 @@
     <screen name="OrderCompleteNotice">
         <section>
             <actions>
-                <set field="title" value="Order Complete Notice"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleOrderCompleteNotice}"/>
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
             </actions>

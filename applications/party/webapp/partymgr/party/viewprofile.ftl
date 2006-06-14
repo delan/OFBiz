@@ -113,7 +113,7 @@
     </#if>
   </table>
 <#elseif lookupGroup?has_content>
-    <div class="tabletext">${lookupGroup.groupName} (${(lookupPartyType.description)?if_exists})</div>
+    <div class="tabletext">${lookupGroup.groupName} (${(lookupPartyType.get("description",locale))?if_exists})</div>
 <#else>
     <div class="tabletext">${uiLabelMap.PartyInformationNotFound}</div>
 </#if>
@@ -169,7 +169,7 @@
           <tr><td colspan="7"><hr class="sepbar"></td></tr>
           <tr>
             <td align="right" valign="top" width="10%">
-              <div class="tabletext">&nbsp;<b>${contactMechMap.contactMechType.description}</b></div>
+              <div class="tabletext">&nbsp;<b>${contactMechMap.contactMechType.get("description",locale)}</b></div>
             </td>
             <td width="5">&nbsp;</td>
             <td align="left" valign="top" width="80%">
@@ -177,7 +177,7 @@
                   <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                     <div class="tabletext">
                       <#if contactMechPurposeType?has_content>
-                        <b>${contactMechPurposeType.description}</b>
+                        <b>${contactMechPurposeType.get("description",locale)}</b>
                       <#else>
                         <b>${uiLabelMap.PartyMechPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>
@@ -407,7 +407,7 @@
     </div>
     <div class="screenlet-body">
         <div class="tabletext">
-            <b>${uiLabelMap.PartyAvsString}:</b>&nbsp;${(avsOverride.avsDeclineString)?default("Global")}
+            <b>${uiLabelMap.PartyAvsString}:</b>&nbsp;${(avsOverride.avsDeclineString)?default("${uiLabelMap.CommonGlobal}")}
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
                 <a href="<@ofbizUrl>editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
                 <#if avsOverride?exists>

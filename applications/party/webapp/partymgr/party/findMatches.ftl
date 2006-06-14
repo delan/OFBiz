@@ -32,10 +32,10 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">Address Matches</div>
+            <div class="boxhead">${uiLabelMap.PageTitleAddressMatches}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>addressMatchMap</@ofbizUrl>" class="submenutextright">Match Map</a>
+            <a href="<@ofbizUrl>addressMatchMap</@ofbizUrl>" class="submenutextright">${uiLabelMap.PageTitleAddressMatchMap}</a>
           </td>
         </tr>
       </table>
@@ -80,19 +80,19 @@
                   <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
                   <option value="${currentStateGeo.geoId}">---</option>
                 </#if>
-                <option value="ANY">Any State/Province</option>
+                <option value="ANY">${uiLabelMap.CommonAny} ${uiLabelMap.CommonStateProvince}</option>
                 ${screens.render("component://common/widget/CommonScreens.xml#states")}
               </select>
             </td>
           </tr>
           <tr>
-            <td width="25%" align="right"><div class="tableheadtext">Postal Code :</div></td>
+            <td width="25%" align="right"><div class="tableheadtext">${uiLabelMap.PartyZipCode} :</div></td>
             <td width="5%">&nbsp;</td>
             <td><input type="text" class="inputBox" name="postalCode" value="${parameters.postalCode?if_exists}"/>*</td>
           </tr>
           <tr>
             <td colspan="2">&nbsp;</td>
-            <td><input type="submit" value="Find Matches" class="smallSubmit"></td>
+            <td><input type="submit" value="${uiLabelMap.PageTitleFindMatches}" class="smallSubmit"></td>
           </tr>
         </form>
         <tr><td colspan="5">&nbsp;</td></tr>
@@ -104,17 +104,17 @@
               <table border="0" cellspacing="5" cellpadding="5" width="100%">
                   <tr>
                     <td align="center" colspan="7">
-                      <div class="tabletext"><font color="blue"><b>Matching:</b> ${lastName} / ${firstName} @ ${addressString}</font></div>
+                      <div class="tabletext"><font color="blue"><b>${uiLabelMap.PartyAddressMatching}:</b> ${lastName} / ${firstName} @ ${addressString}</font></div>
                     </td>
                   </tr>
                   <tr>
-                    <td><div class="tableheadtext">Last Name</td>
-                    <td><div class="tableheadtext">First Name</td>
-                    <td><div class="tableheadtext">Address1</td>
-                    <td><div class="tableheadtext">Address2</td>
-                    <td><div class="tableheadtext">City</td>
-                    <td><div class="tableheadtext">Postal Code</td>
-                    <td><div class="tableheadtext">Party ID</td>
+                    <td><div class="tableheadtext">${uiLabelMap.PartyLastName}</td>
+                    <td><div class="tableheadtext">${uiLabelMap.PartyFirstName}</td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonAddress1}</td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonAddress2}</td>
+                    <td><div class="tableheadtext">${uiLabelMap.CommonCity}</td>
+                    <td><div class="tableheadtext">${uiLabelMap.PartyZipCode}</td>
+                    <td><div class="tableheadtext">${uiLabelMap.PartyPartyId}</td>
                   </tr>
                 <#if matches?has_content>
                   <#list matches as match>
@@ -137,7 +137,7 @@
                     </tr>
                   </#list>
                 <#else>
-                  <tr><td align="center" colspan="7"><div class="tabletext">No records match.</div></td></tr>
+                  <tr><td align="center" colspan="7"><div class="tabletext">${uiLabelMap.PartyNoMatch}</div></td></tr>
                 </#if>
               </table>
             </td>

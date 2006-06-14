@@ -112,11 +112,11 @@
                     <td>
                       <select name="shoppingListTypeId" class="selectBox" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
                       	<#if shoppingListType?exists>
-                          <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.description?default(shoppingListType.shoppingListTypeId)}</option>
+                          <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
                           <option value="${shoppingListType.shoppingListTypeId}">--</option>
                         </#if>
                         <#list shoppingListTypes as shoppingListType>
-                          <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.description?default(shoppingListType.shoppingListTypeId)}</option>
+                          <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
                         </#list>
                       </select>
                     </td>

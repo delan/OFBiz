@@ -32,7 +32,7 @@
         <menu-item name="viewroles" title="${uiLabelMap.PartyRoles}">
             <link target="viewroles?partyId=${partyId}"/>
         </menu-item>
-        <menu-item name="linkparty" title="Link Party">
+        <menu-item name="linkparty" title="${uiLabelMap.PartyLink}">
             <link target="linkparty?partyId=${partyId}"/>
         </menu-item>
         <menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">

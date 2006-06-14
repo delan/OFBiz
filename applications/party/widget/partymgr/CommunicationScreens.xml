@@ -566,13 +566,13 @@
                                 <if-has-permission action="_VIEW" permission="PARTYMGR"/>
                             </condition>
                             <widgets>
-                                <container><label style="head1" text="${uiLabelMap.CommContent}"/></container>
+                                <container><label style="head1" text="${uiLabelMap.PartyCommContent}"/></container>
                                 <section>
                                     <condition>
                                         <if-compare field-name="okayToUpdate" operator="equals" type="Boolean" value="true"/>
                                     </condition>
                                     <widgets>
-                                        <container><link style="buttontext" target="AddCommContent?communicationEventId=${communicationEventId}&amp;partyId=${partyId}" text="${uiLabelMap.AddCommContent}"/></container>
+                                        <container><link style="buttontext" target="AddCommContent?communicationEventId=${communicationEventId}&amp;partyId=${partyId}" text="${uiLabelMap.PartyAddCommContent}"/></container>
                                     </widgets>
                                 </section>
                                 <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="listCommContent"/>
@@ -655,7 +655,7 @@
                                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                                     </widgets>
                                 </section>
-                                <container><label style="head1" text="${uiLabelMap.EditCommContent}"/></container>
+                                <container><label style="head1" text="${uiLabelMap.PageTitleEditCommContent}"/></container>
                                 <!--
                                 <container><label style="head1" text="parameters: ${parameters}"/></container>
                                 <container><label style="head1" text="commEventContentDataResource: ${commEventContentDataResource}"/></container>
@@ -682,7 +682,7 @@
                                     </condition>
                                     <widgets>
                                         <include-form location="component://party/webapp/partymgr/communication/CommForms.xml" name="uploadCommContent"/>
-                                        <label text="View Image" style="head1"/>
+                                        <label text="${uiLabelMap.PartyViewImage}" style="head1"/>
                                         <content dataresource-id="${commEventContentDataResource.drDataResourceId}"/>
                                     </widgets>
                                 </section>

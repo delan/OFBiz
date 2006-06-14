@@ -73,14 +73,14 @@
 <td>
 <ul>
 <#list invoiceTypes as invoiceType>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${invoiceType.description} ${uiLabelMap.AccountingInvoices}</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${invoiceType.get("description",locale)} ${uiLabelMap.AccountingInvoices}</a></li>
 </#list>
 </ul>
 </td>
 <td>
 <ul>
 <#list invoiceStatus as status>
-<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${status.description} ${uiLabelMap.AccountingInvoices}</a></li>
+<li><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${status.get("description",locale)} ${uiLabelMap.AccountingInvoices}</a></li>
 </#list>
 </ul>
 </td>
@@ -117,7 +117,7 @@
 <td>
 <ul>
 <#list paymentStatus as status>
-<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${status.description} ${uiLabelMap.AccountingPayments}</a></li>
+<li><a href="<@ofbizUrl>findPayments?lookupFlag=Y&statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.CommonShow} ${status.get("description",locale)} ${uiLabelMap.AccountingPayments}</a></li>
 </#list>
 </ul>
 </td>

@@ -52,7 +52,7 @@
         </fo:table-cell>
         <fo:table-cell padding="2pt" background-color="${rowColor}">
             <#list picklistBinInfoList as picklistBinInfo>
-                <fo:block>${picklistBinInfo.quantity} to #${picklistBinInfo.picklistBin.binLocationNumber}</fo:block>
+                <fo:block>${picklistBinInfo.quantity} ${uiLabelMap.CommonTo} #${picklistBinInfo.picklistBin.binLocationNumber}</fo:block>
             </#list>
         </fo:table-cell>
     </fo:table-row>
@@ -130,9 +130,9 @@
     <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
     <#if picklistInfo?has_content>
-        <fo:block font-size="12pt">Picklist ${picklistInfo.picklist.picklistId} in Facility ${picklistInfo.facility.facilityName} <fo:inline font-size="8pt">[${picklistInfo.facility.facilityId}]</fo:inline></fo:block>
+        <fo:block font-size="12pt">${uiLabelMap.ProductPickList} ${picklistInfo.picklist.picklistId} ${uiLabelMap.CommonIn} ${uiLabelMap.ProductFacility} ${picklistInfo.facility.facilityName} <fo:inline font-size="8pt">[${picklistInfo.facility.facilityId}]</fo:inline></fo:block>
         <#if picklistInfo.shipmentMethodType?has_content>
-            <fo:block font-size="10pt">for Shipment Method Type ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}</fo:block>
+            <fo:block font-size="10pt">${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentMethodType} ${picklistInfo.shipmentMethodType.description?default(picklistInfo.shipmentMethodType.shipmentMethodTypeId)}</fo:block>
         </#if>
         <fo:block><fo:leader/></fo:block>
     </#if>
@@ -148,7 +148,7 @@
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductLocation}</fo:block></fo:table-cell>
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductProductId}</fo:block></fo:table-cell>
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductToPick}</fo:block></fo:table-cell>
-                <fo:table-cell border-bottom="thin solid grey"><fo:block>Quantity to Bin#</fo:block></fo:table-cell>
+                <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductQuantityToBin}#</fo:block></fo:table-cell>
 
               <#-- Not display details here, just the summary info for the bins
                 <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.OrderOrderItems}</fo:block></fo:table-cell>
@@ -214,7 +214,7 @@
             </fo:block>
             <fo:block><fo:leader/></fo:block>
 
-            <fo:block font-size="14pt">Bin ${picklistBin.binLocationNumber} to Pack, Order ID: ${picklistBinInfo.primaryOrderHeader.orderId}, Ship Group ID: ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</fo:block>
+            <fo:block font-size="14pt">${uiLabelMap.ProductBinNumber} ${picklistBin.binLocationNumber} ${uiLabelMap.ProductToPack}, ${uiLabelMap.ProductOrderId}: ${picklistBinInfo.primaryOrderHeader.orderId}, ${uiLabelMap.ProductOrderShipGroupId}: ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</fo:block>
             <fo:block><fo:leader/></fo:block>
 
             <fo:block space-after.optimum="10pt" font-size="10pt">
@@ -255,7 +255,7 @@
                                 <#if orderItemShipGrpInvRes?has_content>
                                     <fo:block>${orderItemShipGrpInvRes.inventoryItemId}:${orderItemShipGrpInvRes.quantity}:${orderItemShipGrpInvRes.quantityNotAvailable?if_exists}</fo:block>
                                 <#else>
-                                    <fo:block>No Inventory Reservation Information Available</fo:block>
+                                    <fo:block>${uiLabelMap.ProductNoInventoryReservation}</fo:block>
                                 </#if>
                             </fo:table-cell>
                         </fo:table-row>

@@ -40,8 +40,8 @@
 
                 <#-- Picklist -->
                 <div class="tabletext">
-                    <b>Picklist</b> <span class="head2">${picklist.picklistId}</span>
-                    <b>date</b> ${picklist.picklistDate}
+                    <b>${uiLabelMap.ProductPickList}</b> <span class="head2">${picklist.picklistId}</span>
+                    <b>${uiLabelMap.CommonDate}</b> ${picklist.picklistDate}
                     <form method="post" action="<@ofbizUrl>updatePicklist</@ofbizUrl>" style="display: inline;">
                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                         <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
@@ -49,12 +49,12 @@
                             <option value="${picklistInfo.statusItem.statusId}" selected>${picklistInfo.statusItem.get("description",locale)}</option>
                             <option value="${picklistInfo.statusItem.statusId}">---</option>
                             <#list picklistInfo.statusValidChangeToDetailList as statusValidChangeToDetail>
-                                <option value="${statusValidChangeToDetail.statusIdTo}">${statusValidChangeToDetail.description} (${statusValidChangeToDetail.transitionName})</option>
+                                <option value="${statusValidChangeToDetail.statusIdTo}">${statusValidChangeToDetail.get("description",locale)} (${statusValidChangeToDetail.transitionName})</option>
                             </#list>
                         </select>
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
                     </form>
-                    <b>created/modified by</b> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
+                    <b>${uiLabelMap.ProductCreatedByUserLogin}/${uiLabelMap.ProductLastModifiedByUserLogin}</b> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
                     <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="buttontext">[${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}]</a>
                 </div>
                 <#if picklistInfo.shipmentMethodType?has_content>
@@ -67,9 +67,9 @@
                 <#list picklistInfo.picklistRoleInfoList?if_exists as picklistRoleInfo>
                     <div class="tabletext" style="margin-left: 15px;">
                         <b>${uiLabelMap.PartyParty}</b> ${picklistRoleInfo.partyNameView.firstName?if_exists} ${picklistRoleInfo.partyNameView.middleName?if_exists} ${picklistRoleInfo.partyNameView.lastName?if_exists} ${picklistRoleInfo.partyNameView.groupName?if_exists}
-                        <b>${uiLabelMap.PartyRole}</b> ${picklistRoleInfo.roleType.description}
+                        <b>${uiLabelMap.PartyRole}</b> ${picklistRoleInfo.roleType.get("description",locale)}
                         <b>${uiLabelMap.CommonFrom}</b> ${picklistRoleInfo.picklistRole.fromDate}
-                        <#if picklistRoleInfo.picklistRole.thruDate?exists><b>thru</b> ${picklistRoleInfo.picklistRole.thruDate}</#if>
+                        <#if picklistRoleInfo.picklistRole.thruDate?exists><b>${uiLabelMap.CommonThru}</b> ${picklistRoleInfo.picklistRole.thruDate}</#if>
                     </div>
                 </#list>
                 <div class="tabletext" style="margin-left: 15px;">
@@ -91,7 +91,7 @@
                 <#list picklistInfo.picklistStatusHistoryInfoList?if_exists as picklistStatusHistoryInfo>
                     <div class="tabletext" style="margin-left: 15px;">
                         <b>${uiLabelMap.CommonStatus}</b> ${uiLabelMap.CommonChange} ${uiLabelMap.CommonFrom} ${picklistStatusHistoryInfo.statusItem.get("description",locale)}
-                        ${uiLabelMap.CommonTo} ${picklistStatusHistoryInfo.statusItemTo.description}
+                        ${uiLabelMap.CommonTo} ${picklistStatusHistoryInfo.statusItemTo.get("description",locale)}
                         ${uiLabelMap.CommonOn} ${picklistStatusHistoryInfo.picklistStatusHistory.changeDate}
                         ${uiLabelMap.CommonBy} ${picklistStatusHistoryInfo.picklistStatusHistory.changeUserLoginId}
                     </div>
@@ -115,7 +115,7 @@
                             <select name="picklistId" class="smallSelect">
                                 <#list picklistActiveList as picklistActive>
                                     <#assign picklistActiveStatusItem = picklistActive.getRelatedOneCache("StatusItem")>
-                                    <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.description}]</option>
+                                    <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.get("description",locale)}]</option>
                                 </#list>
                             </select>
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
