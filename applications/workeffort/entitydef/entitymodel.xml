@@ -68,6 +68,7 @@
     </entity>
     <entity entity-name="RateType"
             package-name="org.ofbiz.workeffort.timesheet"
+            default-resource-name="WorkEffortEntityLabels"
             title="Rate Type Entity">
       <field name="rateTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
