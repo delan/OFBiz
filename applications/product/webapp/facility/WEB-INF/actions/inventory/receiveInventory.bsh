@@ -56,7 +56,7 @@ if (productId != null) {
 
 shipments = null;
 if (purchaseOrder != null && shipmentId == null) {
-    issuances = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("orderId", purchaseOrderId));    
+    issuances = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("orderId", purchaseOrderId));
     if (issuances != null) {
         shipments = new TreeSet();
         issueIter = issuances.iterator();
@@ -64,7 +64,8 @@ if (purchaseOrder != null && shipmentId == null) {
             issuance = issueIter.next();
             shipment = issuance.getRelatedOne("Shipment");
             if (!"SHIPMENT_DELIVERED".equals(shipment.getString("statusId")) &&
-                !"SHIPMENT_CANCELLED".equals(shipment.getString("statusId"))) {
+                !"SHIPMENT_CANCELLED".equals(shipment.getString("statusId")) &&
+                (shipment.getString("destinationFacilityId") == null || facilityId.equals(shipment.getString("destinationFacilityId")))) {
                 shipments.add(shipment);
             }
         }        
@@ -171,7 +172,7 @@ if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
 
 receivedItems = null;
 if (purchaseOrder != null) {
-    receivedItems = delegator.findByAnd("ShipmentReceipt", UtilMisc.toMap("orderId", purchaseOrderId));
+    receivedItems = delegator.findByAnd("ShipmentReceiptAndItem", UtilMisc.toMap("orderId", purchaseOrderId, "facilityId", facilityId));
     context.put("receivedItems", receivedItems);
 }
 
