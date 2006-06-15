@@ -638,7 +638,7 @@ public class InvoiceServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         List invoicesCreated = FastList.newInstance();
-        // Determine order or return
+        
         String invoiceIdIn = (String) context.get("invoiceId");
         String invoiceItemSeqIdIn = (String) context.get("invoiceItemSeqId");
         BigDecimal amountTotal = InvoiceWorker.getInvoiceTotalBd(delegator, invoiceIdIn);
@@ -649,13 +649,15 @@ public class InvoiceServices {
             Map inMap = UtilMisc.toMap("invoiceId", invoiceIdIn);
             GenericValue invoice = delegator.findByPrimaryKey("Invoice", inMap);
             String invoiceTypeId = invoice.getString("invoiceTypeId");
+           
+            // Determine sales or return
             boolean isReturn = false;
             if ("SALES_INVOICE".equals(invoiceTypeId)) {
                 isReturn = false;
             } else if ("CUST_RTN_INVOICE".equals(invoiceTypeId)) {
                 isReturn = true;
             } else {
-                Debug.logVerbose("This type of invoice has no commission; returning success", module);
+                Debug.logWarning("This type of invoice has no commission; returning success", module);
                 return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource,"AccountingInvoiceCommissionInvalid",locale));
             }
             
@@ -688,6 +690,9 @@ public class InvoiceServices {
                     if (ServiceUtil.isError(outMap)) {
                         return outMap;
                     }
+                    
+                    // build a Map of partyIds (both to and from) in a commission and the amounts
+                    // Note that getCommissionForProduct returns a List of Maps with a lot values.  See services.xml definition for reference.
                     List itemComms = (List) outMap.get("commissions");
                     if (itemComms != null && itemComms.size() > 0) {
                         Iterator it = itemComms.iterator();
