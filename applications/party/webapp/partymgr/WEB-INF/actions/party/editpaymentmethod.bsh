@@ -33,6 +33,9 @@ import org.ofbiz.securityext.login.*;
 import org.ofbiz.webapp.control.*;
 
 partyId = parameters.get("partyId");
+if (partyId == null) {
+    partyId = parameters.get("party_id");
+}
 context.put("partyId", partyId);
 
 // payment info
