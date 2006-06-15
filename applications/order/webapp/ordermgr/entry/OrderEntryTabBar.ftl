@@ -32,6 +32,7 @@
         <a href="<@ofbizUrl>emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderClearOrder}</a>
         <#if (shoppingCart.size() > 0)>
             <a href="javascript:document.cartform.submit()" class="submenutext">${uiLabelMap.OrderRecalculateOrder}</a>
+            <a href="javascript:removeSelected();" class="submenutext">${uiLabelMap.OrderRemoveSelected}</a>
             <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
                 <a href="<@ofbizUrl>finalizeOrder?finalizeMode=purchase&finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a>
             <#else>
@@ -41,6 +42,7 @@
             </#if>
         <#else>
             <span class="submenutextdisabled">${uiLabelMap.OrderRecalculateOrder}</span>
+            <span class="submenutextdisabled">${uiLabelMap.OrderRemoveSelected}</span>
             <span class="submenutextdisabled">${uiLabelMap.OrderQuickFinalizeOrder}</span>
             <span class="submenutextdisabled">${uiLabelMap.OrderFinalizeOrderDefault}</span>
             <span class="submenutextrightdisabled">${uiLabelMap.OrderFinalizeOrder}</span>
