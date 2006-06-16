@@ -60,7 +60,6 @@ public class CCPaymentServices {
 
 
     public static Map ccAuth(DispatchContext dctx, Map context) {
-
         Document authRequestDoc = buildPrimaryTxRequest(context, "PreAuth", (Double) context.get("processAmount"),
                 (String) context.get("orderId"));
 
@@ -71,7 +70,7 @@ public class CCPaymentServices {
             return ServiceUtil.returnError(cce.getMessage());
         }
 
-        if (getMessageListMaxSev(authResponseDoc) > 4) {
+        if (getMessageListMaxSev(authResponseDoc) > 4) {  // 5 and higher, process error from HSBC
             Map result = ServiceUtil.returnSuccess();
             result.put("authResult", new Boolean(false));
             result.put("processAmount", new Double(0.00));
@@ -87,10 +86,13 @@ public class CCPaymentServices {
     }
 
     public static Map ccCredit(DispatchContext dctx, Map context) {
+        String action = new String("Credit");
+        if (context.get("pbOrder") != null) {
+            action = new String("Auth");  // required for periodic billing....
+        }
 
-        Document creditRequestDoc = buildPrimaryTxRequest(context, "Credit", (Double) context.get("creditAmount"),
+        Document creditRequestDoc = buildPrimaryTxRequest(context, action, (Double) context.get("creditAmount"),
                 (String) context.get("referenceCode"));
-
         Document creditResponseDoc = null;
         try {
             creditResponseDoc = sendRequest(creditRequestDoc, (String) context.get("paymentConfig"));
@@ -265,6 +267,101 @@ public class CCPaymentServices {
         return processReAuthResponse(reauthResponseDoc);
 
     }
+    
+    public static Map ccReport(DispatchContext dctx, Map context) {
+        
+        // configuration file
+        String paymentConfig = (String) context.get("paymentConfig");
+        if (UtilValidate.isEmpty(paymentConfig)) {
+            paymentConfig = "payment.properties";
+        }
+        
+        // orderId
+        String orderId = (String) context.get("orderId");
+        if (UtilValidate.isEmpty(orderId)) {
+            return ServiceUtil.returnError("orderId is required......");
+        }
+        
+        
+        // EngineDocList
+        Document requestDocument = UtilXml.makeEmptyXmlDocument("EngineDocList");
+        Element engineDocListElement = requestDocument.getDocumentElement();
+        UtilXml.addChildElementValue(engineDocListElement, "DocVersion", "1.0", requestDocument);
+
+        // EngineDocList.EngineDoc
+        Element engineDocElement = UtilXml.addChildElement(engineDocListElement, "EngineDoc", requestDocument);
+        UtilXml.addChildElementValue(engineDocElement, "ContentType", "ReportDoc", requestDocument);
+
+        String sourceId = UtilProperties.getPropertyValue(paymentConfig, "payment.clearcommerce.sourceId");
+        if (UtilValidate.isNotEmpty(sourceId)) {
+            UtilXml.addChildElementValue(engineDocElement, "SourceId", sourceId, requestDocument);
+        }
+
+        String groupId = UtilProperties.getPropertyValue(paymentConfig, "payment.clearcommerce.groupId");
+        if (UtilValidate.isNotEmpty(groupId)) {
+            UtilXml.addChildElementValue(engineDocElement, "GroupId", groupId, requestDocument);
+        }
+        else
+            UtilXml.addChildElementValue(engineDocElement, "GroupId", orderId, requestDocument);
+            
+
+        // EngineDocList.EngineDoc.User
+        Element userElement = UtilXml.addChildElement(engineDocElement, "User", requestDocument);
+        UtilXml.addChildElementValue(userElement, "Name",
+                UtilProperties.getPropertyValue(paymentConfig, "payment.clearcommerce.username", ""), requestDocument);
+        UtilXml.addChildElementValue(userElement, "Password",
+                UtilProperties.getPropertyValue(paymentConfig, "payment.clearcommerce.password", ""), requestDocument);
+        UtilXml.addChildElementValue(userElement, "Alias",
+                UtilProperties.getPropertyValue(paymentConfig, "payment.clearcommerce.alias", ""), requestDocument);
+
+        String effectiveAlias = UtilProperties.getPropertyValue(paymentConfig, "payment.clearcommerce.effectiveAlias");
+        if (UtilValidate.isNotEmpty(effectiveAlias)) {
+            UtilXml.addChildElementValue(userElement, "EffectiveAlias", effectiveAlias, requestDocument);
+        }
+
+        // EngineDocList.EngineDoc.Instructions
+        Element instructionsElement = UtilXml.addChildElement(engineDocElement, "Instructions", requestDocument);
+        Element routingListDocElement = UtilXml.addChildElement(instructionsElement, "RoutingList", requestDocument);
+        Element routingDocElement = UtilXml.addChildElement(routingListDocElement, "Routing", requestDocument);
+        UtilXml.addChildElementValue(routingDocElement,"name","CcxReports", requestDocument);
+
+        // EngineDocList.EngineDoc.ReportDoc
+        Element reportDocElement = UtilXml.addChildElement(engineDocElement, "ReportDoc",requestDocument);
+        Element compList = UtilXml.addChildElement(reportDocElement, "CompList",requestDocument);
+        Element comp = UtilXml.addChildElement(compList, "Comp",requestDocument);
+        UtilXml.addChildElementValue(comp,"Name","CcxReports",requestDocument);
+        // EngineDocList.EngineDoc.ReportDoc.ReportActionList
+        Element actionList = UtilXml.addChildElement(comp, "ReportActionList",requestDocument);
+        Element action = UtilXml.addChildElement(actionList, "ReportAction",requestDocument);
+        UtilXml.addChildElementValue(action,"ReportName","CCE_OrderDetail",requestDocument);  
+        Element start = UtilXml.addChildElementValue(action,"Start","1",requestDocument);
+        start.setAttribute("DataType", "S32");
+        Element count = UtilXml.addChildElementValue(action,"Count","10",requestDocument);
+        count.setAttribute("DataType", "S32");
+        // EngineDocList.EngineDoc.ReportDoc.ReportActionList.ReportAction.ValueList
+        Element valueList = UtilXml.addChildElement(action, "ValueList",requestDocument);
+        Element value = UtilXml.addChildElement(valueList, "Value",requestDocument);
+        String clientIdConfig = UtilProperties.getPropertyValue(paymentConfig, "payment.clearcommerce.clientId");
+        if (UtilValidate.isNotEmpty(clientIdConfig)) {
+            Element clientId = UtilXml.addChildElementValue(value,"ClientId", clientIdConfig, requestDocument);
+            clientId.setAttribute("DataType", "S32");
+        }
+        UtilXml.addChildElementValue(value,"OrderId", orderId, requestDocument);
+        
+        Debug.set(Debug.VERBOSE, true);
+        Document reportResponseDoc = null;
+        try {
+            reportResponseDoc = sendRequest(requestDocument, (String) context.get("paymentConfig"));
+        } catch (ClearCommerceException cce) {
+            return ServiceUtil.returnError(cce.getMessage());
+        }
+        Debug.set(Debug.VERBOSE, true);
+    
+        Map result = ServiceUtil.returnSuccess();
+        
+        return result;
+    }
+
 
     private static Map processAuthResponse(Document responseDocument) {
 
@@ -596,6 +693,25 @@ public class CCPaymentServices {
 
         // TODO: determine if adding OrderItemList is worthwhile - JFE 2004.02.14
 
+        Map pbOrder = (Map) context.get("pbOrder");
+        if (pbOrder != null) {
+            if (Debug.verboseOn()) Debug.logInfo("pbOrder Map not empty:" + pbOrder.toString(),module);
+            Element pbOrderElement =  UtilXml.addChildElement(orderFormDocElement, "PbOrder", requestDocument); // periodic billing order
+            UtilXml.addChildElementValue(pbOrderElement, "OrderFrequencyCycle", (String) pbOrder.get("OrderFrequencyCycle"), requestDocument);
+            Element interval = UtilXml.addChildElementValue(pbOrderElement, "OrderFrequencyInterval", (String) pbOrder.get("OrderFrequencyInterval"), requestDocument);
+            interval.setAttribute("DataType", "S32");
+            Element total = UtilXml.addChildElementValue(pbOrderElement, "TotalNumberPayments", (String) pbOrder.get("TotalNumberPayments"), requestDocument);
+            total.setAttribute("DataType", "S32");
+        }
+        else if  (context.get("OrderFrequencyCycle") != null && context.get("OrderFrequencyInterval") != null && context.get("TotalNumberPayments") != null) {
+            Element pbOrderElement =  UtilXml.addChildElement(orderFormDocElement, "PbOrder", requestDocument); // periodic billing order
+            UtilXml.addChildElementValue(pbOrderElement, "OrderFrequencyCycle", (String) context.get("OrderFrequencyCycle"), requestDocument);
+            Element interval = UtilXml.addChildElementValue(pbOrderElement, "OrderFrequencyInterval", (String) pbOrder.get("OrderFrequencyInterval"), requestDocument);
+            interval.setAttribute("DataType", "S32");
+            Element total = UtilXml.addChildElementValue(pbOrderElement, "TotalNumberPayments", (String) pbOrder.get("TotalNumberPayments"), requestDocument);
+            total.setAttribute("DataType", "S32");
+        }
+        
         return requestDocument;
     }
 
@@ -750,11 +866,9 @@ public class CCPaymentServices {
     }
 
     private static Document sendRequest(Document requestDocument, String paymentConfig) throws ClearCommerceException {
-
         if (UtilValidate.isEmpty(paymentConfig)) {
             paymentConfig = "payment.properties";
         }
-
         String serverURL = UtilProperties.getPropertyValue(paymentConfig, "payment.clearcommerce.serverURL");
         if (UtilValidate.isEmpty(serverURL)) {
             throw new ClearCommerceException("Missing server URL; check your ClearCommerce configuration");
@@ -795,10 +909,10 @@ public class CCPaymentServices {
             throw new ClearCommerceException("ClearCommerce connection problem", hce);
         }
 
-        // Note: if Debug.verboseOn(), HttpClient will log this...
-        //if (Debug.verboseOn()) {
-        //    Debug.logVerbose("ClearCommerce response: " + response, module);
-        //}
+        // Note: if Debug.verboseOn(), HttpClient will log this...set on with:         Debug.set(Debug.VERBOSE, true);
+       // if (Debug.verboseOn()) {
+       //    Debug.logVerbose("ClearCommerce response: " + response, module);
+       // }
 
         Document responseDocument = null;
         try {
@@ -810,7 +924,9 @@ public class CCPaymentServices {
         } catch (IOException ioe) {
             throw new ClearCommerceException("Error reading response Document from a String: " + ioe.getMessage());
         }
-
+        if (Debug.verboseOn()) Debug.logVerbose("Result severity from clearCommerce:" + getMessageListMaxSev(responseDocument), module);
+        if (Debug.verboseOn() && getMessageListMaxSev(responseDocument) > 4)
+                Debug.logVerbose("Returned messages:" + getMessageList(responseDocument),module);
         return responseDocument;
     }
 
