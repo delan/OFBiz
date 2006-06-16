@@ -120,7 +120,11 @@ if (orderHeader != null) {
         context.put("carrierPartyId", shipGroup.getString("carrierPartyId"));
         context.put("shipmentMethodTypeId", shipGroup.getString("shipmentMethodTypeId"));
         shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipGroup.getString("shipmentMethodTypeId")));
-        context.put("shipMethDescription", shipmentMethodType.getString("description"));
+        if (shipmentMethodType != null) {
+            context.put("shipMethDescription", shipmentMethodType.getString("description"));
+        } else {
+            context.put("shipMethDescription", "N/A");
+        }
         context.put("shippingInstructions", shipGroup.getString("shippingInstructions"));
         context.put("maySplit", shipGroup.getString("maySplit"));
         context.put("giftMessage", shipGroup.getString("giftMessage"));
