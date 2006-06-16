@@ -2809,7 +2809,7 @@ public class OrderServices {
 
         // add in the new product
         try {
-            ShoppingCartItem item = ShoppingCartItem.makeItem(null, productId, 0.00, quantity.doubleValue(), null, null, null, dispatcher, cart);
+            ShoppingCartItem item = ShoppingCartItem.makeItem(null, productId, null, quantity.doubleValue(), null, null, null, null, null, null, null, null, null, null, null, null, dispatcher, cart, null, null);
             if (basePrice != null&&overridePrice!=null) {
                 item.setBasePrice(basePrice.doubleValue());
                 // special hack to make sure we re-calc the promos after a price change
@@ -3281,7 +3281,7 @@ public class OrderServices {
         Locale locale = (Locale) context.get("locale");
         ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "9000", "webStore", locale, "USD");
         try {
-            cart.addOrIncreaseItem("GZ-1005", 1, null, null, "DemoCatalog", dctx.getDispatcher());
+            cart.addOrIncreaseItem("GZ-1005", null, 1, null, null, null, null, null, null, null, "DemoCatalog", null, null, null, dctx.getDispatcher());
             } catch (CartItemModifyException e) {
             Debug.logError(e, module);
         } catch (ItemNotFoundException e) {

@@ -24,6 +24,7 @@
  */
 package org.ofbiz.order.shoppingcart;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -277,9 +278,10 @@ public class ShoppingCartServices {
                 if (amount == null) {
                     amount = new Double(0);
                 }
-                Double quantity = OrderReadHelper.getOrderItemQuantity(item);
-                if (quantity == null) {
-                    quantity = new Double(0);
+                double quantityDbl = 0;
+                BigDecimal quantity = OrderReadHelper.getOrderItemQuantityBd(item);
+                if (quantity != null) {
+                    quantityDbl = quantity.doubleValue();
                 }
                 int itemIndex = -1;
                 if (item.get("productId") == null) {
@@ -288,7 +290,7 @@ public class ShoppingCartServices {
                     String desc = item.getString("itemDescription");
                     try {
                         // TODO: passing in null now for itemGroupNumber, but should reproduce from OrderItemGroup records
-                        itemIndex = cart.addNonProductItem(itemType, desc, null, 0.00, quantity.doubleValue(), null, null, null, dispatcher);
+                        itemIndex = cart.addNonProductItem(itemType, desc, null, null, quantity.doubleValue(), null, null, null, dispatcher);
                     } catch (CartItemModifyException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
@@ -298,7 +300,7 @@ public class ShoppingCartServices {
                     String prodCatalogId = item.getString("prodCatalogId");
                     String productId = item.getString("productId");
                     try {
-                        itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), null, null, prodCatalogId, dispatcher);
+                        itemIndex = cart.addItemToEnd(productId, amount, quantityDbl, null, null, null, prodCatalogId, item.getString("orderItemTypeId"), dispatcher, null, null);
                     } catch (ItemNotFoundException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
@@ -542,7 +544,7 @@ public class ShoppingCartServices {
                     String desc = item.getString("comments");
                     try {
                         // note that passing in null for itemGroupNumber as there is no real grouping concept in the quotes right now
-                        itemIndex = cart.addNonProductItem(null, desc, null, 0.00, quantity.doubleValue(), null, null, null, dispatcher);
+                        itemIndex = cart.addNonProductItem(null, desc, null, null, quantity.doubleValue(), null, null, null, dispatcher);
                     } catch (CartItemModifyException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
@@ -551,7 +553,7 @@ public class ShoppingCartServices {
                     // product item
                     String productId = item.getString("productId");
                     try {
-                        itemIndex = cart.addItemToEnd(productId, amount.doubleValue(), quantity.doubleValue(), quoteUnitPrice.doubleValue(), null, null, null, dispatcher, !applyQuoteAdjustments, (quoteUnitPrice.doubleValue() == 0));
+                        itemIndex = cart.addItemToEnd(productId, amount, quantity.doubleValue(), quoteUnitPrice, null, null, null, null, dispatcher, new Boolean(!applyQuoteAdjustments), new Boolean(quoteUnitPrice.doubleValue() == 0));
                     } catch (ItemNotFoundException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());
@@ -686,7 +688,7 @@ public class ShoppingCartServices {
                     // product item
                     String productId = item.getString("productId");
                     try {
-                        itemIndex = cart.addItemToEnd(productId, 0.0, quantity.doubleValue(), null, new HashMap(), null, dispatcher);
+                        itemIndex = cart.addItemToEnd(productId, null, quantity.doubleValue(), null, null, null, null, null, dispatcher, Boolean.TRUE, Boolean.TRUE);
                     } catch (ItemNotFoundException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.getMessage());

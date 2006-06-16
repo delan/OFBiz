@@ -133,155 +133,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     private List featuresForSupplier = new LinkedList();
 
     /**
-     * Makes a ShoppingCartItem and adds it to the cart.
-     * NOTE: This method will get the product entity and check to make sure it can be purchased.
-     *
-     * @param cartLocation The location to place this item; null will place at the end
-     * @param productId The primary key of the product being added
-     * @param quantity The quantity to add
-     * @param additionalProductFeatureAndAppls Product feature/appls map
-     * @param attributes All unique attributes for this item (NOT features)
-     * @param prodCatalogId The catalog this item was added from
-     * @param dispatcher LocalDispatcher object for doing promotions, etc
-     * @param cart The parent shopping cart object this item will belong to
-     * @return a new ShoppingCartItem object
-     * @throws CartItemModifyException
-     */
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
-        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, dispatcher, cart);
-    }
-
-    /**
-     * Makes a ShoppingCartItem and adds it to the cart.
-     * NOTE: This method will get the product entity and check to make sure it can be purchased.
-     *
-     * @param cartLocation The location to place this item; null will place at the end
-     * @param productId The primary key of the product being added
-     * @param selectedAmount ?
-     * @param quantity The quantity to add
-     * @param additionalProductFeatureAndAppls Product feature/appls map
-     * @param attributes All unique attributes for this item (NOT features)
-     * @param prodCatalogId The catalog this item was added from
-     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
-     * @param dispatcher LocalDispatcher object for doing promotions, etc
-     * @param cart The parent shopping cart object this item will belong to
-     * @return a new ShoppingCartItem object
-     * @throws CartItemModifyException
-     */
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
-        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, null, 0.00, 0.00, null, null, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart);
-    }
-
-    /**
-     * Makes a ShoppingCartItem and adds it to the cart.
-     * NOTE: This method will get the product entity and check to make sure it can be purchased.
-     *
-     * @param cartLocation The location to place this item; null will place at the end
-     * @param productId The primary key of the product being added
-     * @param selectedAmount ?
-     * @param quantity The quantity to add
-     * @param additionalProductFeatureAndAppls Product feature/appls map
-     * @param attributes All unique attributes for this item (NOT features)
-     * @param prodCatalogId The catalog this item was added from
-     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
-     * @param dispatcher LocalDispatcher object for doing promotions, etc
-     * @param cart The parent shopping cart object this item will belong to
-     * @return a new ShoppingCartItem object
-     * @throws CartItemModifyException
-     */
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException, ItemNotFoundException {
-        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, null, 0.00, 0.00, null, null, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, triggerExternalOps);
-    }
-
-    /**
-     * Makes a ShoppingCartItem and adds it to the cart.
-     * NOTE: This method will get the product entity and check to make sure it can be purchased.
-     *
-     * @param cartLocation The location to place this item; null will place at the end
-     * @param productId The primary key of the product being added
-     * @param selectedAmount ?
-     * @param quantity The quantity to add
-     * @param reservStart start of the reservation
-     * @param reservLength length of the reservation
-     * @param reservPersons nbr of persons taking advantage of the reservation
-     * @param shipBeforeDate The date to ship the order by
-     * @param shipAfterDate Wait until this date to ship
-     * @param additionalProductFeatureAndAppls Product feature/appls map
-     * @param attributes All unique attributes for this item (NOT features)
-     * @param prodCatalogId The catalog this item was added from
-     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
-     * @param dispatcher LocalDispatcher object for doing promotions, etc
-     * @param cart The parent shopping cart object this item will belong to
-     * @return a new ShoppingCartItem object
-     * @throws CartItemModifyException
-     */
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
-        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, true);
-    }
-
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException, ItemNotFoundException {
-        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, 0.00, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, null, dispatcher, cart, triggerExternalOps, true);
-    }
-    /**
-     * Makes a ShoppingCartItem and adds it to the cart.
-     * NOTE: This method will get the product entity and check to make sure it can be purchased.
-     *
-     * @param cartLocation The location to place this item; null will place at the end
-     * @param productId The primary key of the product being added
-     * @param selectedAmount ?
-     * @param quantity The quantity to add
-     * @param reservStart start of the reservation
-     * @param reservLength length of the reservation
-     * @param reservPersons nbr of persons taking advantage of the reservation
-     * @param shipBeforeDate The date to ship the order by
-     * @param shipAfterDate Wait until this date to ship
-     * @param additionalProductFeatureAndAppls Product feature/appls map
-     * @param attributes All unique attributes for this item (NOT features)
-     * @param prodCatalogId The catalog this item was added from
-     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
-     * @param dispatcher LocalDispatcher object for doing promotions, etc
-     * @param cart The parent shopping cart object this item will belong to
-     * @return a new ShoppingCartItem object
-     * @throws CartItemModifyException
-     */
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, double unitPrice, 
-            Timestamp reservStart, double reservLength, double reservPersons, Timestamp shipBeforeDate, Timestamp shipAfterDate, 
-            Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, 
-            ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps, boolean triggerProductPrice) 
-            throws CartItemModifyException, ItemNotFoundException {
-        GenericDelegator delegator = cart.getDelegator();
-        GenericValue product = null;
-    
-        try {
-            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-    
-            // first see if there is a purchase allow category and if this product is in it or not
-            String purchaseProductCategoryId = CatalogWorker.getCatalogPurchaseAllowCategoryId(delegator, prodCatalogId);
-            if (product != null && purchaseProductCategoryId != null) {
-                if (!CategoryWorker.isProductInCategory(delegator, product.getString("productId"), purchaseProductCategoryId)) {
-                    // a Purchase allow productCategoryId was found, but the product is not in the category, axe it...
-                    product = null;
-                }
-            }
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString(), module);
-            product = null;
-        }
-    
-        if (product == null) {
-            Map messageMap = UtilMisc.toMap("productId", productId );
-    
-            String excMsg = UtilProperties.getMessage(resource, "item.product_not_found",
-                                          messageMap , cart.getLocale() );
-    
-            Debug.logWarning(excMsg, module);
-            throw new ItemNotFoundException(excMsg);
-        }
-    
-        return makeItem(cartLocation, product, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemGroup, dispatcher, cart, triggerExternalOps, triggerProductPrice);
-    }
-
-    /**
      * Makes a ShoppingCartItem for a purchase order item and adds it to the cart.
      * NOTE: This method will get the product entity and check to make sure it can be purchased.
      *
@@ -300,8 +151,8 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    public static ShoppingCartItem makePurchaseOrderItem(Integer cartLocation, String productId, double selectedAmount, double quantity, 
-            Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, ShoppingCart.ShoppingCartItemGroup itemGroup, 
+    public static ShoppingCartItem makePurchaseOrderItem(Integer cartLocation, String productId, Double selectedAmountDbl, double quantity, 
+            Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, 
             LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate) 
                 throws CartItemModifyException, ItemNotFoundException {
         GenericDelegator delegator = cart.getDelegator();
@@ -323,7 +174,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             Debug.logWarning(excMsg, module);
             throw new ItemNotFoundException(excMsg);
         }
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemGroup);
+        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup);
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -354,8 +205,8 @@ public class ShoppingCartItem implements java.io.Serializable {
             cart.addItem(cartLocation.intValue(), newItem);
         }
 
-        if (selectedAmount > 0) {
-            newItem.setSelectedAmount(selectedAmount);
+        if (selectedAmountDbl != null) {
+            newItem.setSelectedAmount(selectedAmountDbl.doubleValue());
         }
         
         // set the ship before/after dates.  this needs to happen before setQuantity because setQuantity causes the ship group's dates to be
@@ -383,45 +234,71 @@ public class ShoppingCartItem implements java.io.Serializable {
         return newItem;
 
     }
-    /**
-     * Makes a ShoppingCartItem and adds it to the cart.
-     * WARNING: This method does not check if the product is in a purchase category.
-     *
-     * @param cartLocation The location to place this item; null will place at the end
-     * @param product The product entity relating to the product being added
-     * @param quantity The quantity to add
-     * @param additionalProductFeatureAndAppls Product feature/appls map
-     * @param attributes All unique attributes for this item (NOT features)
-     * @param prodCatalogId The catalog this item was added from
-     * @param dispatcher LocalDispatcher object for doing promotions, etc
-     * @param cart The parent shopping cart object this item will belong to
-     * @param triggerExternalOps Indicates if we should run external operations (promotions, auto-save, etc)
-     * @return a new ShoppingCartItem object
-     * @throws CartItemModifyException
-     */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
-        return ShoppingCartItem.makeItem(cartLocation, product, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, dispatcher, cart, triggerExternalOps);
-    }
 
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
-     * WARNING: This method does not check if the product is in a purchase category.
+     * NOTE: This method will get the product entity and check to make sure it can be purchased.
      *
      * @param cartLocation The location to place this item; null will place at the end
-     * @param product The product entity relating to the product being added
-     * @param quantity The quantity to add
-     * @param additionalProductFeatureAndAppls Product feature/appls map
-     * @param attributes All unique attributes for this item (NOT features)
-     * @param prodCatalogId The catalog this item was added from
-     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
-     * @param dispatcher LocalDispatcher object for doing promotions, etc
-     * @param cart The parent shopping cart object this item will belong to
-     * @param triggerExternalOps Indicates if we should run external operations (promotions, auto-save, etc)
+     * @param productId The primary key of the product being added
+     * @param selectedAmountDbl Optional. Defaults to 0.0. If a selectedAmount is needed (complements the quantity value), pass it in here.
+     * @param quantity Required. The quantity to add.
+     * @param unitPriceDbl Optional. Defaults to 0.0, which causes calculation of price.
+     * @param reservStart Optional. The start of the reservation.
+     * @param reservLengthDbl Optional. The length of the reservation.
+     * @param reservPersonsDbl Optional. The number of persons taking advantage of the reservation.
+     * @param shipBeforeDate Optional. The date to ship the order by.
+     * @param shipAfterDate Optional. Wait until this date to ship.
+     * @param additionalProductFeatureAndAppls Optional. Product feature/appls map.
+     * @param attributes Optional. All unique attributes for this item (NOT features).
+     * @param prodCatalogId Optional, but strongly recommended. The catalog this item was added from.
+     * @param configWrapper Optional. The product configuration wrapper (null if the product is not configurable).
+     * @param itemType Optional. Specifies the type of cart item, corresponds to an OrderItemType and should be a valid orderItemTypeId.
+     * @param itemGroup Optional. Specifies which item group in the cart this should belong to, if item groups are needed/desired.
+     * @param dispatcher Required (for price calculation, promos, etc). LocalDispatcher object for doing promotions, etc.
+     * @param cart Required. The parent shopping cart object this item will belong to.
+     * @param triggerExternalOpsBool Optional. Defaults to true. Trigger external operations (like promotions and such)?
+     * @param triggerPriceRulesBool Optional. Defaults to true. Trigger the price rules to calculate the price for this item?
+     * 
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
-        return ShoppingCartItem.makeItem(cartLocation, product, selectedAmount, quantity, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, triggerExternalOps);
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, Double selectedAmountDbl, double quantity, Double unitPriceDbl, 
+            Timestamp reservStart, Double reservLengthDbl, Double reservPersonsDbl, Timestamp shipBeforeDate, Timestamp shipAfterDate, 
+            Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, 
+            String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool) 
+            throws CartItemModifyException, ItemNotFoundException {
+        GenericDelegator delegator = cart.getDelegator();
+        GenericValue product = null;
+        
+        try {
+            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+    
+            // first see if there is a purchase allow category and if this product is in it or not
+            String purchaseProductCategoryId = CatalogWorker.getCatalogPurchaseAllowCategoryId(delegator, prodCatalogId);
+            if (product != null && purchaseProductCategoryId != null) {
+                if (!CategoryWorker.isProductInCategory(delegator, product.getString("productId"), purchaseProductCategoryId)) {
+                    // a Purchase allow productCategoryId was found, but the product is not in the category, axe it...
+                    product = null;
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.toString(), module);
+            product = null;
+        }
+    
+        if (product == null) {
+            Map messageMap = UtilMisc.toMap("productId", productId );
+            String excMsg = UtilProperties.getMessage(resource, "item.product_not_found", messageMap , cart.getLocale() );
+    
+            Debug.logWarning(excMsg, module);
+            throw new ItemNotFoundException(excMsg);
+        }
+    
+        return makeItem(cartLocation, product, selectedAmountDbl, quantity, unitPriceDbl, 
+                reservStart, reservLengthDbl, reservPersonsDbl, shipBeforeDate, shipAfterDate, 
+                additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, 
+                itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool, triggerPriceRulesBool);
     }
 
     /**
@@ -431,30 +308,43 @@ public class ShoppingCartItem implements java.io.Serializable {
      *
      * @param cartLocation The location to place this item; null will place at the end
      * @param product The product entity relating to the product being added
-     * @param quantity The quantity to add
-     * @param reservStart the start of the reservation
-     * @param reservLength the reservation length
-     * @param reservPersons the number of persons using the reservation
-     * @param shipBeforeDate The date to ship the order by
-     * @param shipAfterDate Wait until this date to ship
-     * @param additionalProductFeatureAndAppls Product feature/appls map
-     * @param attributes All unique attributes for this item (NOT features)
-     * @param prodCatalogId The catalog this item was added from
-     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
-     * @param dispatcher LocalDispatcher object for doing promotions, etc
-     * @param cart The parent shopping cart object this item will belong to
-     * @param triggerExternalOps Indicates if we should run external operations (promotions, auto-save, etc)
+     * @param selectedAmountDbl Optional. Defaults to 0.0. If a selectedAmount is needed (complements the quantity value), pass it in here.
+     * @param quantity Required. The quantity to add.
+     * @param unitPriceDbl Optional. Defaults to 0.0, which causes calculation of price.
+     * @param reservStart Optional. The start of the reservation.
+     * @param reservLengthDbl Optional. The length of the reservation.
+     * @param reservPersonsDbl Optional. The number of persons taking advantage of the reservation.
+     * @param shipBeforeDate Optional. The date to ship the order by.
+     * @param shipAfterDate Optional. Wait until this date to ship.
+     * @param additionalProductFeatureAndAppls Optional. Product feature/appls map.
+     * @param attributes Optional. All unique attributes for this item (NOT features).
+     * @param prodCatalogId Optional, but strongly recommended. The catalog this item was added from.
+     * @param configWrapper Optional. The product configuration wrapper (null if the product is not configurable).
+     * @param itemType Optional. Specifies the type of cart item, corresponds to an OrderItemType and should be a valid orderItemTypeId.
+     * @param itemGroup Optional. Specifies which item group in the cart this should belong to, if item groups are needed/desired.
+     * @param dispatcher Required (for price calculation, promos, etc). LocalDispatcher object for doing promotions, etc.
+     * @param cart Required. The parent shopping cart object this item will belong to.
+     * @param triggerExternalOpsBool Optional. Defaults to true. Trigger external operations (like promotions and such)?
+     * @param triggerPriceRulesBool Optional. Defaults to true. Trigger the price rules to calculate the price for this item?
+     * 
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    //public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, 
-            double quantity, double unitPrice, Timestamp reservStart, double reservLength, double reservPersons, 
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, Double selectedAmountDbl, 
+            double quantity, Double unitPriceDbl, Timestamp reservStart, Double reservLengthDbl, Double reservPersonsDbl, 
             Timestamp shipBeforeDate, Timestamp shipAfterDate, Map additionalProductFeatureAndAppls, Map attributes, 
-            String prodCatalogId, ProductConfigWrapper configWrapper, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, 
-            ShoppingCart cart, boolean triggerExternalOps, boolean triggerPriceRules) throws CartItemModifyException {
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemGroup);
-        
+            String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, 
+            ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool) throws CartItemModifyException {
+
+        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup);
+
+        double selectedAmount = selectedAmountDbl == null ? 0.0 : selectedAmountDbl.doubleValue();
+        double unitPrice = unitPriceDbl == null ? 0.0 : unitPriceDbl.doubleValue();
+        double reservLength = reservLengthDbl == null ? 0.0 : reservLengthDbl.doubleValue();
+        double reservPersons = reservPersonsDbl == null ? 0.0 : reservPersonsDbl.doubleValue();
+        boolean triggerPriceRules = triggerPriceRulesBool == null ? true : triggerPriceRulesBool.booleanValue();
+        boolean triggerExternalOps = triggerExternalOpsBool == null ? true : triggerExternalOpsBool.booleanValue();
+    
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
             String excMsg = "Tried to add the Virtual Product " + product.getString("productName") +
@@ -573,20 +463,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         return newItem;
     }
 
-    // Calls makeItem(...) setting a default value, 0.00, for the selectedAmount
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, 
-            Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, 
-            ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
-        return makeItem(cartLocation, product, 0.00, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart, triggerExternalOps);
-    }
-
-    // Calls makeItem(...) setting a default value, 0.00, for unitPrice and setting the triggerProductPrice to true;
-    // in this way, the prices and price rules are automatically set by the updatePrice(...) method
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, 
-            Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, 
-            String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
-        return makeItem(cartLocation, product, selectedAmount, quantity, 0.0, reservStart, reservLength, reservPersons, null, null, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, null, dispatcher, cart, triggerExternalOps, true);
-    }
     /**
      * Makes a non-product ShoppingCartItem and adds it to the cart.
      * NOTE: This is only for non-product items; items without a product entity (work items, bulk items, etc)
@@ -607,8 +483,9 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, String itemType, String itemDescription, String productCategoryId, 
-            double basePrice, double selectedAmount, double quantity, Map attributes, String prodCatalogId, ShoppingCart.ShoppingCartItemGroup itemGroup, 
-            LocalDispatcher dispatcher, ShoppingCart cart, boolean triggerExternalOps) throws CartItemModifyException {
+            Double basePrice, Double selectedAmount, double quantity, Map attributes, String prodCatalogId, ShoppingCart.ShoppingCartItemGroup itemGroup, 
+            LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool) throws CartItemModifyException {
+
         GenericDelegator delegator = cart.getDelegator();
         ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId, cart.getLocale(), itemGroup);
 
@@ -618,6 +495,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         } else {
             cart.addItem(cartLocation.intValue(), newItem);
         }
+        
+        boolean triggerExternalOps = triggerExternalOpsBool == null ? true : triggerExternalOpsBool.booleanValue();
 
         try {
             newItem.setQuantity(quantity, dispatcher, cart, triggerExternalOps);
@@ -626,8 +505,8 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw e;
         }
 
-        if (selectedAmount > 0) {
-            newItem.setSelectedAmount(selectedAmount);
+        if (selectedAmount != null) {
+            newItem.setSelectedAmount(selectedAmount.doubleValue());
         }
         return newItem;
     }
@@ -684,8 +563,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected ShoppingCartItem() {}
 
     /** Creates new ShoppingCartItem object. */
-    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, Locale locale, ShoppingCart.ShoppingCartItemGroup itemGroup) {
-        this(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, locale, itemGroup);
+    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, Locale locale, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup) {
+        this(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, locale, itemType, itemGroup);
          if (product != null) {
             String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", this.locale);
             // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
@@ -705,13 +584,17 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** Creates new ShoppingCartItem object. */
-    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, Locale locale, ShoppingCart.ShoppingCartItemGroup itemGroup) {
+    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, Locale locale, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup) {
         this._product = product;
         this.productId = _product.getString("productId");
-        if (_product.getString("productTypeId").equals("ASSET_USAGE")) {
-            this.itemType = "RENTAL_ORDER_ITEM";  // will create additional workeffort/asset usage records
+        if (UtilValidate.isEmpty(itemType)) {
+            if (_product.getString("productTypeId").equals("ASSET_USAGE")) {
+                this.itemType = "RENTAL_ORDER_ITEM";  // will create additional workeffort/asset usage records
+            } else {
+                this.itemType = "PRODUCT_ORDER_ITEM";
+            }
         } else {
-            this.itemType = "PRODUCT_ORDER_ITEM";
+            this.itemType = itemType;
         }
         this.itemGroup = itemGroup;
         this.prodCatalogId = prodCatalogId;
@@ -724,14 +607,16 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** Creates new ShopingCartItem object. */
-    protected ShoppingCartItem(GenericDelegator delegator, String itemTypeId, String description, String categoryId, double basePrice, Map attributes, String prodCatalogId, Locale locale, ShoppingCart.ShoppingCartItemGroup itemGroup) {
+    protected ShoppingCartItem(GenericDelegator delegator, String itemTypeId, String description, String categoryId, Double basePrice, Map attributes, String prodCatalogId, Locale locale, ShoppingCart.ShoppingCartItemGroup itemGroup) {
         this.delegator = delegator;
         this.itemType = itemTypeId;
         this.itemGroup = itemGroup;
         this.itemDescription = description;
         this.productCategoryId = categoryId;
-        this.setBasePrice(basePrice);
-        this.setDisplayPrice(basePrice);
+        if (basePrice != null) {
+            this.setBasePrice(basePrice.doubleValue());
+            this.setDisplayPrice(basePrice.doubleValue());
+        }
         this.attributes = attributes;
         this.prodCatalogId = prodCatalogId;
         this.delegatorName = delegator.getDelegatorName();
@@ -1270,6 +1155,16 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.itemType;
     }
 
+    /** Returns the item type. */
+    public GenericValue getItemTypeGenericValue() {
+        try {
+            return this.getDelegator().findByPrimaryKeyCache("OrderItemType", UtilMisc.toMap("orderItemTypeId", this.itemType));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting ShippingCartItem's OrderItemType", module);
+            return null;
+        }
+    }
+
     /** Sets the item group. */
     public void setItemGroup(ShoppingCart.ShoppingCartItemGroup itemGroup) {
         this.itemGroup = itemGroup;
@@ -1677,7 +1572,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** calculates for a reservation the percentage/100 extra for more than 1 person. */
     // similar code at editShoppingList.bsh
     public double getRentalAdjustment() {
-        if (!this.itemType.equals("RENTAL_ORDER_ITEM")) {
+        if (!"RENTAL_ORDER_ITEM".equals(this.itemType)) {
             // not a rental item?
             return 1;
         }
@@ -1938,31 +1833,33 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Compares the specified object with this cart item. */
     public boolean equals(ShoppingCartItem item) {
         if (item == null) return false;
-        return this.equals(item.getProductId(), item.additionalProductFeatureAndAppls, item.attributes, item.prodCatalogId, item.selectedAmount, item.getItemGroup(), item.getIsPromo());
+        return this.equals(item.getProductId(), item.additionalProductFeatureAndAppls, item.attributes, item.prodCatalogId, item.selectedAmount, item.getItemType(), item.getItemGroup(), item.getIsPromo());
     }
 
     /** Compares the specified object with this cart item. Defaults isPromo to false. Default to no itemGroup. */
     public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount) {
-        return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, null, false);
+        return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, null, null, false);
     }
 
     /** Compares the specified object with this cart item. Defaults isPromo to false. */
-    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, ShoppingCart.ShoppingCartItemGroup itemGroup, double selectedAmount) {
-        return equals(productId, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, configWrapper, itemGroup, false);
+    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, double selectedAmount) {
+        return equals(productId, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, configWrapper, itemType, itemGroup, false);
     }
 
     /** Compares the specified object with this cart item including rental data. Defaults isPromo to false. */
-    public boolean equals(String productId, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, ShoppingCart.ShoppingCartItemGroup itemGroup, double selectedAmount) {
-        return equals(productId, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, configWrapper, itemGroup, false);
+    public boolean equals(String productId, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, double selectedAmount) {
+        return equals(productId, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, configWrapper, itemType, itemGroup, false);
     }
 
     /** Compares the specified object with this cart item. Defaults isPromo to false. */
-    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, ShoppingCart.ShoppingCartItemGroup itemGroup, boolean isPromo) {
-        return equals(productId, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, null, itemGroup, isPromo);
+    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, boolean isPromo) {
+        return equals(productId, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, null, itemType, itemGroup, isPromo);
     }
 
     /** Compares the specified object with this cart item. */
-    public boolean equals(String productId, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, ProductConfigWrapper configWrapper, ShoppingCart.ShoppingCartItemGroup itemGroup, boolean isPromo) {
+    public boolean equals(String productId, Timestamp reservStart, double reservLength, double reservPersons, 
+            Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, 
+            ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, boolean isPromo) {
         if (this.productId == null || productId == null) {
             // all non-product items are unique
             return false;
@@ -2017,6 +1914,10 @@ public class ShoppingCartItem implements java.io.Serializable {
             return false;
         }
         
+        if (itemType != null && !itemType.equals(this.itemType)) {
+            return false;
+        }
+
         if (itemGroup != null && !itemGroup.equals(this.itemGroup)) {
             return false;
         }

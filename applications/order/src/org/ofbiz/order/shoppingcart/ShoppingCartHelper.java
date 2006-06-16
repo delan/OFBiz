@@ -96,14 +96,14 @@ public class ShoppingCartHelper {
     /** Event to add an item to the shopping cart. */
     public Map addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, String productId,
             String productCategoryId, String itemType, String itemDescription, 
-            double price, double amount, double quantity, 
-            java.sql.Timestamp reservStart, double reservLength, double reservPersons, 
+            Double price, Double amount, double quantity, 
+            java.sql.Timestamp reservStart, Double reservLength, Double reservPersons, 
             java.sql.Timestamp shipBeforeDate, java.sql.Timestamp shipAfterDate,
             ProductConfigWrapper configWrapper, String itemGroupNumber, Map context) {
         Map result = null;
         Map attributes = null;
         // price sanity check
-        if (productId == null && price < 0) {
+        if (productId == null && price != null && price.doubleValue() < 0) {
             String errMsg = UtilProperties.getMessage(resource, "cart.price_not_positive_number", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
@@ -117,8 +117,8 @@ public class ShoppingCartHelper {
         }
 
         // amount sanity check
-        if (amount < 0) {
-            amount = 0;
+        if (amount != null && amount.doubleValue() < 0) {
+            amount = null;
         }
 
         // check desiredDeliveryDate syntax and remove if empty
@@ -173,7 +173,7 @@ public class ShoppingCartHelper {
                 Debug.logError(e, "Unable to lookup product : " + productId, module);
             }
             if (product == null || product.get("requireAmount") == null || "N".equals(product.getString("requireAmount"))) {
-                amount = 0;
+                amount = null;
             }
         }
 
@@ -182,7 +182,7 @@ public class ShoppingCartHelper {
             int itemId = -1;
             if (productId != null) {
                 itemId = cart.addOrIncreaseItem(productId, amount, quantity, reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate,
-                        null, attributes, catalogId, configWrapper, itemGroupNumber, dispatcher);
+                        null, attributes, catalogId, configWrapper, itemType, itemGroupNumber, dispatcher);
             } else {
                 itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, itemGroupNumber, dispatcher);
             }
@@ -244,14 +244,10 @@ public class ShoppingCartHelper {
                         continue;
                     // never read: int itemId = -1;
                     if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
-                        double amount = 0.00;
-                        if (orderItem.get("selectedAmount") != null) {
-                            amount = orderItem.getDouble("selectedAmount").doubleValue();
-                        }
+                        Double amount = orderItem.getDouble("selectedAmount");
                         try {
-                            this.cart.addOrIncreaseItem(orderItem.getString("productId"),
-                                    amount, orderItem.getDouble("quantity").doubleValue(),
-                                    null, null, catalogId, itemGroupNumber, dispatcher);
+                            this.cart.addOrIncreaseItem(orderItem.getString("productId"), amount, orderItem.getDouble("quantity").doubleValue(),
+                                    null, null, null, null, null, null, null, catalogId, null, orderItemTypeId, itemGroupNumber, dispatcher);
                             noItems = false;
                         } catch (CartItemModifyException e) {
                             errorMsgs.add(e.getMessage());
@@ -285,13 +281,11 @@ public class ShoppingCartHelper {
                     }
                     if (orderItem != null) {
                         if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
-                            double amount = 0.00;
-                            if (orderItem.get("selectedAmount") != null) {
-                                amount = orderItem.getDouble("selectedAmount").doubleValue();
-                            }
+                            Double amount = orderItem.getDouble("selectedAmount");
                             try {
                                 this.cart.addOrIncreaseItem(orderItem.getString("productId"), amount,
-                                        orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, itemGroupNumber, dispatcher);
+                                        orderItem.getDouble("quantity").doubleValue(), null, null, null, null, null, null, null, 
+                                        catalogId, null, orderItem.getString("orderItemTypeId"), itemGroupNumber, dispatcher);
                                 noItems = false;
                             } catch (CartItemModifyException e) {
                                 errorMsgs.add(e.getMessage());
@@ -380,7 +374,7 @@ public class ShoppingCartHelper {
                 if (quantity > 0.0) {
                     try {
                         if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "] in Item Group [" + itemGroupNumber + "]", module);
-                        this.cart.addOrIncreaseItem(productId, 0.0, quantity, null, null, catalogId, itemGroupNumberToUse, dispatcher);
+                        this.cart.addOrIncreaseItem(productId, null, quantity, null, null, null, null, null, null, null, catalogId, null, null, itemGroupNumberToUse, dispatcher);
                     } catch (CartItemModifyException e) {
                         return ServiceUtil.returnError(e.getMessage());
                     } catch (ItemNotFoundException e) {
@@ -459,7 +453,7 @@ public class ShoppingCartHelper {
                         }
                         try {
                             if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart requirement [" + quantity + "] of [" + productId + "]", module);
-                            int index = this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, itemGroupNumber, dispatcher);
+                            int index = this.cart.addOrIncreaseItem(productId, null, quantity, null, null, null, null, null, null, null, catalogId, null, null, itemGroupNumber, dispatcher);
                             ShoppingCartItem sci = (ShoppingCartItem)this.cart.items().get(index);
                             sci.setRequirementId(requirementId);
                         } catch (CartItemModifyException e) {
@@ -522,7 +516,8 @@ public class ShoppingCartHelper {
             if (quantity != null && quantity.doubleValue() > 0.0) {
                 try {
                     this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), 
-                            0.00, quantity.doubleValue(), null, null, catalogId, itemGroupNumber, dispatcher);
+                            null, quantity.doubleValue(), null, null, null, null, null, null, null, 
+                            catalogId, null, null, itemGroupNumber, dispatcher);
                     totalQuantity += quantity.doubleValue();
                 } catch (CartItemModifyException e) {
                     errorMsgs.add(e.getMessage());
@@ -663,6 +658,10 @@ public class ShoppingCartHelper {
                             if (quantString.length() == 10)
                                 quantString += " 00:00:00.000";
                             item.setShipAfterDate(Timestamp.valueOf(quantString));
+                        }
+                    } else if (parameterName.startsWith("itemType")) {
+                        if (item != null && quantString.length() > 0) {
+                            item.setItemType(quantString);
                         }
                     } else {
                         quantity = nf.parse(quantString).doubleValue();
