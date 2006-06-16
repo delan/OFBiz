@@ -103,7 +103,7 @@ public class CCServicesTest extends TestCase {
     /*
      * Check the authorisation
      */
-    public void qtestAuth() throws Exception{
+    public void testAuth() throws Exception{
         Debug.logInfo("=====[testAuth] starting....", module);
         try {
             Map serviceInput = UtilMisc.toMap(
@@ -137,7 +137,7 @@ public class CCServicesTest extends TestCase {
     /*
      * Check the credit action: to deduct a certain amount of a credit card.
      */
-    public void qtestCredit() throws Exception{
+    public void testCredit() throws Exception{
         Debug.logInfo("=====[testCCredit] starting....", module);
         try {
             Map serviceMap = UtilMisc.toMap(
@@ -168,7 +168,7 @@ public class CCServicesTest extends TestCase {
     /*
      * Test Purchase subscription
      */
-    public void qtestPurchaseSubscription() throws Exception {
+    public void testPurchaseSubscription() throws Exception {
         Debug.logInfo("=====[testPurchaseSubscription] starting....", module);
         try {
             
@@ -201,7 +201,7 @@ public class CCServicesTest extends TestCase {
     /*
      * Test Free subscription
      */
-    public void qtestFreeSubscription() throws Exception {
+    public void testFreeSubscription() throws Exception {
         
             // not communicate with CC.
     }
