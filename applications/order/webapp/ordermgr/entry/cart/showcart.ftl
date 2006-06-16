@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2006 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -161,6 +161,21 @@ function quicklookup(element) {
                     </div>
                   </td>
                 </tr>
+                <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+                <tr>
+                  <td align="right"><div class="tableheadtext">${uiLabelMap.OrderOrderItemType} :</div></td>
+                  <td>
+                    <div class="tabletext">
+                      <select name="add_item_type" class="selectBox">
+                        <option value="">&nbsp;</option>
+                        <#list purchaseOrderItemTypeList as orderItemType>
+                        <option value="${orderItemType.orderItemTypeId}">${orderItemType.description}</option>
+                        </#list>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                </#if>
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.CommonComment} :</div></td>
                   <td>
@@ -185,7 +200,7 @@ function quicklookup(element) {
           <td>
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
                 <div class="tableheadtext">
-                    ${uiLabelMap.ProductItem}:&nbsp;${uiLabelMap.ProductType}:&nbsp;<select name="add_item_type" class="selectBox"><option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option></select>
+                    ${uiLabelMap.CommonOrderItemType}:&nbsp;<select name="add_item_type" class="selectBox"><option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option></select>
                     ${uiLabelMap.ProductProductCategory}:&nbsp;<select name="add_category_id" class="selectBox">
                       <option></option>
                       <#list productCategoryList as productCategory>
@@ -309,7 +324,7 @@ function quicklookup(element) {
                     <input size="60" class="inputBox" type="text" name="description_${cartLineIndex}" value="${cartLine.getName()?default("")}"/><br/>
                     <i>${cartLine.getDescription()?if_exists}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
-                      <#-- only applies to sales orders, not purchase orders
+                      <#-- only applies to sales orders, not purchase orders -->
                       <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                       <#assign itemProduct = cartLine.getProduct()>
                       <#assign isStoreInventoryNotRequiredAndNotAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequiredAndAvailable(request, itemProduct, cartLine.getQuantity(), false, false)>
@@ -377,9 +392,32 @@ function quicklookup(element) {
                 </td>
               </tr>
             </#if>
+            <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+              <#assign currentOrderItemType = cartLine.getItemTypeGenericValue()?if_exists/>
+                <tr>
+                  <td align="left">
+                    <div class="tabletext">
+                      ${uiLabelMap.OrderOrderItemType}:
+                      <select name="itemType_${cartLineIndex}" class="selectBox">
+                        <#if currentOrderItemType?has_content>
+                        <option value="${currentOrderItemType.orderItemTypeId}">${currentOrderItemType.description}</option>
+                        <option value="${currentOrderItemType.orderItemTypeId}">---</option>
+                        </#if>
+                        <option value="">&nbsp;</option>
+                        <#list purchaseOrderItemTypeList as orderItemType>
+                        <option value="${orderItemType.orderItemTypeId}">${orderItemType.description}</option>
+                        </#list>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+            </#if>
+            
             <#-- ship before/after date -->
             <tr>
-              <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+              <td colspan="2">
+               <table border="0" cellpadding="0" cellspacing="0" width="100%">
+               <tr>
                 <td align="left">
                   <div class="tabletext">${uiLabelMap.OrderShipAfterDate}
                     <input type="text" class="inputBox" size="20" maxlength="30" name="shipAfterDate_${cartLineIndex}" 
@@ -395,7 +433,9 @@ function quicklookup(element) {
                     <a href="javascript:call_cal(document.cartform.shipBeforeDate_${cartLineIndex},'${shoppingCart.getShipBeforeDate()?default("")}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}"/></a>
                   </div>
                 </td>
-              </tr></table></td>
+               </tr>
+               </table>
+              </td>
             </tr>
           </table>
 

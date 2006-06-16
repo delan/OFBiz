@@ -283,10 +283,11 @@ public class ShoppingListEvents {
                 // TODO: add code to check for survey response requirement
                 
                 // i cannot get the addOrDecrease function to accept a null reservStart field: i get a null pointer exception a null constant works....
-                if (reservStart == null)
-                    cart.addOrIncreaseItem(productId, quantity.doubleValue(), null,0,0, null, attributes, prodCatalogId, dispatcher);
-                else
-                    cart.addOrIncreaseItem(productId, quantity.doubleValue(), reservStart, reservLength.doubleValue(), reservPersons.doubleValue(), null, attributes, prodCatalogId, dispatcher);
+                if (reservStart == null) {
+                    cart.addOrIncreaseItem(productId, null, quantity.doubleValue(), null, null, null, null, null, null, attributes, prodCatalogId, null, null, null, dispatcher);
+                } else {
+                    cart.addOrIncreaseItem(productId, null, quantity.doubleValue(), reservStart, reservLength, reservPersons, null, null, null, attributes, prodCatalogId, null, null, null, dispatcher);
+                }
                 Map messageMap = UtilMisc.toMap("productId", productId);
                 errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.added_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg + "\n");

@@ -424,12 +424,16 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, 
+    public int addOrIncreaseItem(String productId, Double selectedAmountDbl, double quantity, Timestamp reservStart, Double reservLengthDbl, Double reservPersonsDbl, 
             Timestamp shipBeforeDate, Timestamp shipAfterDate, Map features, Map attributes, String prodCatalogId, 
-            ProductConfigWrapper configWrapper, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+            ProductConfigWrapper configWrapper, String itemType, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         if (isReadOnlyCart()) {
            throw new CartItemModifyException("Cart items cannot be changed");
         }
+        
+        double selectedAmount = selectedAmountDbl == null ? 0.0 : selectedAmountDbl.doubleValue();
+        double reservLength = reservLengthDbl == null ? 0.0 : reservLengthDbl.doubleValue();
+        double reservPersons = reservPersonsDbl == null ? 0.0 : reservPersonsDbl.doubleValue();
         
         ShoppingCart.ShoppingCartItemGroup itemGroup = this.getItemGroupByNumber(itemGroupNumber);
         GenericValue supplierProduct = null;
@@ -437,7 +441,8 @@ public class ShoppingCart implements Serializable {
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
 
-            if (sci.equals(productId, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, itemGroup, selectedAmount)) {
+            
+            if (sci.equals(productId, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, itemType, itemGroup, selectedAmount)) {
                 double newQuantity = sci.getQuantity() + quantity;
 
                 if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity, module);
@@ -460,36 +465,25 @@ public class ShoppingCart implements Serializable {
             //GenericValue productSupplier = null;
             supplierProduct = getSupplierProduct(productId, quantity, dispatcher);
             if (supplierProduct != null || "_NA_".equals(this.getPartyId())) {
-                 return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, itemGroup, dispatcher, this, supplierProduct, shipBeforeDate, shipAfterDate));
+                 return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmountDbl, quantity, features, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, this, supplierProduct, shipBeforeDate, shipAfterDate));
             } else {
                 throw new CartItemModifyException("SupplierProduct not found");
             }
         } else {
-            return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, 0.0, 
-                    reservStart, reservLength, reservPersons, shipBeforeDate, shipAfterDate, 
-                    features, attributes, prodCatalogId, configWrapper, itemGroup, dispatcher, this, true, true));
+            return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmountDbl, quantity, null, 
+                    reservStart, reservLengthDbl, reservPersonsDbl, shipBeforeDate, shipAfterDate, 
+                    features, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, this, Boolean.TRUE, Boolean.TRUE));
         }
-    }
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, null, null, features, attributes, prodCatalogId, null, itemGroupNumber, dispatcher);
-    }
-    public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, null, null, features, attributes, prodCatalogId, null, null, dispatcher);
-    }
-    public int addOrIncreaseItem(String productId, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, reservStart, reservLength, reservPersons, null, null, features, attributes, prodCatalogId, null, null, dispatcher);
-    }
-    public int addOrIncreaseItem(String productId, double quantity, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, quantity, null, null, null, dispatcher);
     }
 
     /** Add a non-product item to the shopping cart.
      * @return the new item index
      * @throws CartItemModifyException
      */
-    public int addNonProductItem(String itemType, String description, String categoryId, double price, double quantity, Map attributes, String prodCatalogId, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public int addNonProductItem(String itemType, String description, String categoryId, Double price, double quantity, 
+            Map attributes, String prodCatalogId, String itemGroupNumber, LocalDispatcher dispatcher) throws CartItemModifyException {
         ShoppingCart.ShoppingCartItemGroup itemGroup = this.getItemGroupByNumber(itemGroupNumber);
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), itemType, description, categoryId, price, 0.00, quantity, attributes, prodCatalogId, itemGroup, dispatcher, this, true));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), itemType, description, categoryId, price, null, quantity, attributes, prodCatalogId, itemGroup, dispatcher, this, Boolean.TRUE));
     }
 
     /** Add an item to the shopping cart. */
@@ -506,18 +500,8 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItemToEnd(String productId, double amount, double quantity,  HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, boolean triggerExternalOps) throws CartItemModifyException, ItemNotFoundException {
-        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, features, attributes, prodCatalogId, null, dispatcher, this, triggerExternalOps));
-    }
-
-    /** Add an item to the shopping cart. */
-    public int addItemToEnd(String productId, double amount, double quantity, double unitPrice, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, boolean triggerExternalOps, boolean triggerPriceRules) throws CartItemModifyException, ItemNotFoundException {
-        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, unitPrice, null, 0.00, 0.00, null, null, features, attributes, prodCatalogId, null, null, dispatcher, this, triggerExternalOps, triggerPriceRules));
-    }
-
-    /** Add an item to the shopping cart. */
-    public int addItemToEnd(String productId, double amount, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, features, attributes, prodCatalogId, dispatcher, this));
+    public int addItemToEnd(String productId, Double amount, double quantity, Double unitPrice, HashMap features, HashMap attributes, String prodCatalogId, String itemType, LocalDispatcher dispatcher, Boolean triggerExternalOps, Boolean triggerPriceRules) throws CartItemModifyException, ItemNotFoundException {
+        return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, unitPrice, null, null, null, null, null, features, attributes, prodCatalogId, null, itemType, null, dispatcher, this, triggerExternalOps, triggerPriceRules));
     }
 
     /** Add an item to the shopping cart. */

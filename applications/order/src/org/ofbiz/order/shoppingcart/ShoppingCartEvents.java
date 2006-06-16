@@ -125,7 +125,7 @@ public class ShoppingCartEvents {
         String itemDescription = null;
         String productCategoryId = null;
         String priceStr = null;
-        double price = 0.00;
+        Double price = null;
         String quantityStr = null;
         double quantity = 0;
         String reservStartStr = null;
@@ -133,9 +133,9 @@ public class ShoppingCartEvents {
         java.sql.Timestamp reservStart = null;
         java.sql.Timestamp reservEnd = null;
         String reservLengthStr = null;
-        double reservLength = 0;
+        Double reservLength = null;
         String reservPersonsStr = null;
-        double reservPersons = 0;
+        Double reservPersons = null;
         String shipBeforeStr = null;
         String shipBeforeDateStr = null;
         String shipAfterDateStr = null;
@@ -263,7 +263,7 @@ public class ShoppingCartEvents {
             }
 
             if (reservStart != null && reservEnd != null)	{
-            	reservLength = UtilDateTime.getInterval(reservStart,reservEnd)/86400000;
+            	reservLength = new Double(UtilDateTime.getInterval(reservStart,reservEnd)/86400000);
             }
 
 
@@ -272,11 +272,11 @@ public class ShoppingCartEvents {
                 reservLengthStr = (String) paramMap.remove("reservLength");
                 // parse the reservation Length
                 try {
-                    reservLength = nf.parse(reservLengthStr).doubleValue();
+                    reservLength = new Double(nf.parse(reservLengthStr).doubleValue());
                 } catch (Exception e) {
                     Debug.logWarning(e,"Problems parsing reservation length string: "
                                     + reservLengthStr, module);
-                    reservLength = 1;
+                    reservLength = new Double(1);
                     request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderReservationLengthShouldBeAPositiveNumber", locale));
                     return "error";
                 }
@@ -286,10 +286,10 @@ public class ShoppingCartEvents {
                 reservPersonsStr = (String) paramMap.remove("reservPersons");
                 // parse the number of persons
                 try {
-                    reservPersons = nf.parse(reservPersonsStr).doubleValue();
+                    reservPersons = new Double(nf.parse(reservPersonsStr).doubleValue());
                 } catch (Exception e) {
                     Debug.logWarning(e,"Problems parsing reservation number of persons string: " + reservPersonsStr, module);
-                    reservPersons = 1;
+                    reservPersons = new Double(1);
                     request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource_error,"OrderNumberOfPersonsShouldBeOneOrLarger", locale));
                     return "error";
                 }
@@ -308,10 +308,10 @@ public class ShoppingCartEvents {
 
         // parse the price
         try {
-            price = nf.parse(priceStr).doubleValue();
+            price = new Double(nf.parse(priceStr).doubleValue());
         } catch (Exception e) {
             Debug.logWarning(e, "Problems parsing price string: " + priceStr, module);
-            price = 0.00;
+            price = null;
         }
 
         // parse the quantity
@@ -331,13 +331,13 @@ public class ShoppingCartEvents {
         }
 
         // parse the amount
-        double amount = 0.00;
+        Double amount = null;
         if (selectedAmountStr != null && selectedAmountStr.length() > 0) {
             try {
-                amount = nf.parse(selectedAmountStr).doubleValue();
+                amount = new Double(nf.parse(selectedAmountStr).doubleValue());
             } catch (Exception e) {
                 Debug.logWarning(e, "Problem parsing amount string: " + selectedAmountStr, module);
-                amount = 0.00;
+                amount = null;
             }
         }
 
@@ -1304,13 +1304,13 @@ public class ShoppingCartEvents {
                 }
 
                 // parse the amount
-                double amount = 0.00;
+                Double amount = null;
                 if (selectedAmountStr != null && selectedAmountStr.length() > 0) {
                     try {
-                        amount = NumberFormat.getNumberInstance().parse(selectedAmountStr).doubleValue();
+                        amount = new Double(NumberFormat.getNumberInstance().parse(selectedAmountStr).doubleValue());
                     } catch (Exception e) {
                         Debug.logWarning(e, "Problem parsing amount string: " + selectedAmountStr, module);
-                        amount = 0.00;
+                        amount = null;
                     }
                 }
 
@@ -1324,7 +1324,7 @@ public class ShoppingCartEvents {
                     Debug.logInfo("Attempting to add to cart with productId = " + productId + ", categoryId = " + productCategoryId +
                             " and quantity = " + quantity, module);
                     result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-                            "", "", 0.00, amount, quantity, null, 0.00, 0.00, null, null, null, itemGroupNumber, itemAttributes);
+                            null, "", null, amount, quantity, null, null, null, null, null, null, itemGroupNumber, itemAttributes);
                     // no values for itemType, itemDescription, price, and paramMap (a context for adding attributes)
                     controlDirective = processResult(result, request);
                     if (controlDirective.equals(ERROR)){    // if the add to cart failed, then get out of this loop right away
