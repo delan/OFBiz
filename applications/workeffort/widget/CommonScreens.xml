@@ -31,8 +31,8 @@ under the License.
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.WorkEffortCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.WorkEffortCompanySubtitle" global="true"/>
                 <set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.jpg" global="true"/>
-                <set field="layoutSettings.styleSheets[]" value="/images/maincss.css" global="true"/>
-                <set field="layoutSettings.styleSheets[]" value="/images/tabstyles.css" global="true"/>
+                <!-- The WorkEffort component's screens need the calendarstyles.css stylesheet to render the calendar pages:
+                     it is added to the list of default stylesheet (layoutSettings.styleSheets) defined in the GlobalDecorator -->
                 <set field="layoutSettings.styleSheets[]" value="/images/calendarstyles.css" global="true"/>
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->

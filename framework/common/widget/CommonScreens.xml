@@ -61,6 +61,12 @@ under the License.
     <!-- Global decorator for General Screens/Pages -->
     <screen name="GlobalDecorator">
         <section>
+            <actions>
+                <!-- The two default (global) stylesheets are added to the list
+                     of stylesheets to the first and second position -->
+                <set field="layoutSettings.styleSheets[+0]" value="/images/maincss.css" global="true"/>
+                <set field="layoutSettings.styleSheets[+1]" value="/images/tabstyles.css" global="true"/>
+            </actions>
             <widgets>
                 <!-- render header -->
                 <platform-specific><html><html-template location="component://common/webcommon/includes/header.ftl"/></html></platform-specific>

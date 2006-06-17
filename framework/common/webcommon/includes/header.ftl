@@ -46,10 +46,6 @@ under the License.
         <link rel="stylesheet" href="<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>" type="text/css"/>
         <link rel="stylesheet" href="<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>" type="text/css"/>
     </#if>
-    <#if layoutSettings.extraStyleSheet?exists>
-      <#-- Component-specified style sheet -->
-      <link rel="stylesheet" href="${layoutSettings.extraStyleSheet}" type="text/css"/>
-    </#if>
     ${layoutSettings.extraHead?if_exists}
 </head>
 
