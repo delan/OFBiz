@@ -704,6 +704,20 @@
                     <create-value value-name="newTempValue"/>
                 </iterate>
             </if-not-empty>
+            <if-not-empty field-name="parameters.duplicateLocations">
+                <if-not-empty field-name="parameters.removeBefore">
+                    <find-by-and entity-name="ProductFacilityLocation" map-name="productVariantContext" list-name="foundVariantValues"/>
+                    <iterate entry-name="foundVariantValue" list-name="foundVariantValues">
+                        <remove-value value-name="foundVariantValue"/>
+                    </iterate>
+                </if-not-empty>
+                <find-by-and entity-name="ProductFacilityLocation" map-name="productFindContext" list-name="foundValues"/>
+                <iterate list-name="foundValues" entry-name="foundValue">
+                    <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                    <set from-field="newProduct.productIdTo" field="newTempValue.productId"/>
+                    <create-value value-name="newTempValue"/>
+                </iterate>
+            </if-not-empty>
         </iterate>
     </simple-method>
 

@@ -71,6 +71,7 @@
                 ${uiLabelMap.ProductCategoryMembers}&nbsp;<input type="checkbox" class="checkBox" name="duplicateCategoryMembers" value="Y" checked="checked"/>
                 ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" class="checkBox" name="duplicateAttributes" value="Y" checked="checked"/>
                 ${uiLabelMap.ProductFacilities}&nbsp;<input type="checkbox" class="checkBox" name="duplicateFacilities" value="Y" checked="checked"/>
+                ${uiLabelMap.ProductLocations}&nbsp;<input type="checkbox" class="checkBox" name="duplicateLocations" value="Y" checked="checked"/>
             </div>
             <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGo}"/>
         </form>
