@@ -550,6 +550,20 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="supplierPrefOrderId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="SupplierPrefOrder" key-field-name="supplierPrefOrderId" description="${description}">
+                    <entity-order-by field-name="supplierPrefOrderId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="supplierRatingTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="SupplierRatingType" key-field-name="supplierRatingTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="quantityUomId" title="${uiLabelMap.ProductQuantityUomId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomType" key-field-name="uomTypeId" description="${description}">
@@ -574,7 +588,6 @@
             default-table-style="boxoutside" even-row-style="viewManyTR2" odd-row-style="viewManyTR1"
             header-row-style="boxtop">
         <!--<auto-fields-service service-name="updateSupplierProduct"/>-->
-
         <field name="partyId" title="${uiLabelMap.ProductSupplier}" widget-style="tabletext"
             header-link="EditProductSuppliers?productId=${productId}&amp;orderBy=partyId" header-link-style="buttontext">
             <display-entity entity-name="PartyNameView" also-hidden="true" description="${firstName} ${middleName} ${lastName} ${groupName}">
