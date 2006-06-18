@@ -23,11 +23,6 @@
 
 <service-group xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-group.xsd">
-    <group name="createWorkEffortAndAssoc" send-mode="all"  >
-        <service name="createWorkEffort" mode="sync" result-to-context="true"/>
-        <service name="assignAssocWorkEffortId" mode="sync" result-to-context="true"/>
-        <service name="createWorkEffortAssoc" mode="sync"/>
-    </group>
     
     <group name="updateWorkEffortAndAssoc" send-mode="all"  >
         <service name="updateWorkEffort" mode="sync" />

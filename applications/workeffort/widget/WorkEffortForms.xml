@@ -230,7 +230,7 @@
     <form name="AddWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" 
             default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  
             target="createWorkEffortAndAssoc" title="" type="single">
-        <field name="workEffortId"><hidden/></field>
+        <!--  <field name="workEffortId"><hidden/></field> -->
         <field name="workEffortIdTo"><text/></field>
         <field name="workEffortIdFrom"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="workEffortAssocTypeId">
