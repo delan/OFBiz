@@ -511,6 +511,31 @@
         <set from-field="parameters.workEffortId" field="newWorkEffortNote.workEffortId"/>
         <create-value value-name="newWorkEffortNote"/>
     </simple-method>
+    
+    <simple-method method-name="createWorkEffortAndAssoc" short-description="Create a WorkEffort and association">
+        <if-empty field-name="parameters.fromDate">
+            <now-timestamp-to-env env-name="parameters.fromDate"/>
+        <else>
+            <entity-one entity-name="WorkEffortAssoc" value-name="lookedUpValue"/>
+        </else>
+        </if-empty>        
+        <if-not-empty field-name="lookedUpValue">
+            <add-error><fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortAssocIdAlreadyExist"/></add-error>
+            <check-errors/>
+        <else>
+            <if-empty field-name="parameters.workEffortIdFrom">
+                <set-service-fields service-name="createWorkEffort"  map-name="parameters" to-map-name="createWorkeEffortParams"/>
+                <call-service in-map-name="createWorkeEffortParams" service-name="createWorkEffort">
+                    <result-to-result result-name="workEffortId"/>
+                    <result-to-field result-name="workEffortId" field-name="workEffortIdFrom"/>
+                </call-service>
+                <field-to-field field-name="workEffortIdFrom" to-field-name="workEffortIdFrom" to-map-name="parameters"/>
+            </if-empty>
+            <set-service-fields service-name="createWorkEffortAssoc"  map-name="parameters" to-map-name="createWorkEffortAssocParams"/>
+            <call-service in-map-name="createWorkEffortAssocParams" service-name="createWorkEffortAssoc" />
+        </else>
+        </if-not-empty>        
+    </simple-method>
 
     <simple-method method-name="createWorkEffortAssoc" short-description="Create a WorkEffort association">
         <if-empty field-name="parameters.fromDate">
@@ -587,20 +612,7 @@
         </else>
         </if-not-empty>
     </simple-method>
-    <simple-method  method-name="assignAssocWorkEffortId" short-description="Assign workEffortId to empty workEffortIdTo/From">
-        <if-empty field-name="workEffortId" map-name="parameters">
-            <add-error><fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortIdEmpty"/></add-error>
-            <check-errors/>
-        </if-empty>
-        <if-empty field-name="parameters.workEffortIdTo">
-            <field-to-result field-name="parameters.workEffortId" result-name="workEffortIdTo"/>
-        <else>
-            <if-empty field-name="parameters.workEffortIdFrom">
-                <field-to-result field-name="parameters.workEffortId" result-name="workEffortIdFrom"/>
-            </if-empty>
-        </else>
-        </if-empty>
-    </simple-method>
+
     <!-- CustRequest workeffort -->
     <simple-method method-name="createWorkEffortRequest" short-description="Create a CustRequestWorkEffort">
         <make-value entity-name="CustRequestWorkEffort" value-name="lookupMap"/>
