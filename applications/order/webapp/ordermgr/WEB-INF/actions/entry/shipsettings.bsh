@@ -61,6 +61,10 @@ if ("SALES_ORDER".equals(cart.getOrderType())) {
     }
     String storeId = cart.getProductStoreId();
     GenericValue store = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", storeId));
-    List facilityContactMechValueMaps = ContactMechWorker.getFacilityContactMechValueMaps(delegator, store.getString("inventoryFacilityId"), false, null);
-    context.put("shippingContactMechListF", facilityContactMechValueMaps);
+    GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", store.getString("inventoryFacilityId")));
+    context.put("facility", facility);
+    if (facility != null) {
+        List facilityContactMechValueMaps = ContactMechWorker.getFacilityContactMechValueMaps(delegator, facility.getString("facilityId"), false, null);
+        context.put("facilityContactMechList", facilityContactMechValueMaps);
+    }
 }

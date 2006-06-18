@@ -45,17 +45,22 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <#if shippingContactMechListF?has_content>
+            <#if facility?exists>
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="finalizeMode" value="ship">
-
+                <tr>
+                  <td colspan="4">
+                    <div class="tableheadtext">${uiLabelMap.FacilityFacility}: ${facility.facilityName?if_exists} [${facility.facilityId}]</div>
+                  </td>
+                </tr>
                 <tr><td colspan="4"><hr class='sepbar'></td></tr>
 
                 <#-- company postal addresses -->
                 
                 <#assign i = 0>
-                <#list shippingContactMechListF as shippingContactMech>
+                <#if facilityContactMechList?has_content>
+                <#list facilityContactMechList as shippingContactMech>
                   <#if shippingContactMech.postalAddress?exists>
                   <#assign shippingAddress = shippingContactMech.postalAddress>
                   <tr>
@@ -76,7 +81,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&contactMechId=${shippingAddress.contactMechId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></div>
+                      <div class="tabletext"><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&contactMechId=${shippingAddress.contactMechId}" target="_blank" class="buttontext">${uiLabelMap.CommonUpdate}</a></div>
                     </td>
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -85,6 +90,15 @@
                   </#if>
                   <#assign i = i + 1>
                 </#list>
+                <#else>
+                  <tr>
+                    <td colspan="4">
+                      <div class="tabletext">
+                        ${uiLabelMap.CommonNoContactInformationOnFile}:
+                        <a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS" target="_blank" class="buttontext">${uiLabelMap.CommonNew}</a>
+                      </div>
+                    </td>
+                </#if>
               </form>
             </table>
             <#else>
