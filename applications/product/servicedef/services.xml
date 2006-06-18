@@ -96,6 +96,7 @@
         <attribute name="duplicateCategoryMembers" type="String" mode="IN" optional="true"/>
         <attribute name="duplicateAttributes" type="String" mode="IN" optional="true"/>
         <attribute name="duplicateFacilities" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateLocations" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="quickAddVariant" engine="java"
