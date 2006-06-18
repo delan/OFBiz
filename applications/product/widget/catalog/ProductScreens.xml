@@ -563,6 +563,8 @@
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD" />
 
                 <set field="productId" from-field="parameters.productId"/>
+                <set field="minimumOrderQuantity" from-field="parameters.minimumOrderQuantity" type="Double"/>
+
                 <set field="orderBy" from-field="parameters.orderBy" default-value="partyId"/>
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="SupplierProduct" list-name="productSuppliers">
@@ -677,7 +679,8 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditProductAssocExperimental">
+    <!--
+    <screen name="EditProductAssoc">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductAssociations"/>
@@ -705,6 +708,7 @@
             </widgets>
         </section>
     </screen>
+    -->
     <screen name="createVirtualWithVariantsForm">
         <section>
             <actions>
