@@ -35,6 +35,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
@@ -595,6 +596,58 @@ public class EmailServices {
     	return result;
     }
     
+    /*
+     * Calls findPartyFromEmailAddress service and returns a List of the results for the array of addresses 
+     */
+    private static List buildListOfPartyInfoFromEmailAddresses(Address [] addresses, GenericValue userLogin, LocalDispatcher dispatcher) throws GenericServiceException
+    {
+        InternetAddress emailAddress = null;
+        Address addr = null;
+        Map map = null;
+        Map result = null;
+        List tempResults = new ArrayList();
+        
+        if (addresses != null) {
+            for (int i = 0; i < addresses.length; i++) {
+                addr = addresses[i];
+                if (addr instanceof InternetAddress) {
+                    emailAddress = (InternetAddress)addr;
+                    
+                    if (!UtilValidate.isEmpty(emailAddress)) {
+                        map = new HashMap();
+                        map.put("address", emailAddress.getAddress());
+                        map.put("personal", emailAddress.getPersonal());
+                        map.put("userLogin", userLogin);
+                        result = dispatcher.runSync("findPartyFromEmailAddress", map);
+                        
+                        tempResults.add(result);
+                    }
+                }    
+            }
+        }
+        
+        return tempResults;
+    }   
+    
+    /*
+     * Helper method to retrieve a combined list of party information from to, cc, and bcc email addresses
+     */
+    private static List getListOfParyInfoFromEmailAddresses(Address [] addressesTo, Address [] addressesCC, Address [] addressesBCC, GenericValue userLogin, LocalDispatcher dispatcher) throws GenericServiceException
+    {        
+        List allResults = new ArrayList();
+        
+        //Get Party Info for To email addresses
+        allResults.addAll(buildListOfPartyInfoFromEmailAddresses(addressesTo, userLogin, dispatcher));        
+        
+        //Get Party Info for CC email addresses
+        allResults.addAll(buildListOfPartyInfoFromEmailAddresses(addressesCC, userLogin, dispatcher));
+        
+        //Get Party Info for BCC email addresses
+        allResults.addAll(buildListOfPartyInfoFromEmailAddresses(addressesBCC, userLogin, dispatcher));
+        
+        return allResults;
+    }
+    
     /**
      * This service is the main one for processing incoming emails.
      * 
@@ -644,14 +697,23 @@ public class EmailServices {
             contentType = contentTypeRaw.substring(0, idx);
             Address [] addressesFrom = message.getFrom();
             Address [] addressesTo = message.getRecipients(MimeMessage.RecipientType.TO);
+            Address [] addressesCC = message.getRecipients(MimeMessage.RecipientType.CC);
+            Address [] addressesBCC = message.getRecipients(MimeMessage.RecipientType.BCC);            
         	        	
             result = getParyInfoFromEmailAddress(addressesFrom, userLogin, dispatcher);
             partyIdFrom = (String)result.get("partyId");
             contactMechIdFrom = (String)result.get("contactMechId");
             
-            result = getParyInfoFromEmailAddress(addressesTo, userLogin, dispatcher);
-            partyIdTo = (String)result.get("partyId");
-            contactMechIdTo = (String)result.get("contactMechId");
+            List allResults = getListOfParyInfoFromEmailAddresses(addressesTo, addressesCC, addressesBCC, userLogin, dispatcher);
+            Iterator itr = allResults.iterator();
+            
+            //Get the first address from the list - this is the partyIdTo field of the CommunicationEvent
+            if ((allResults != null) && (allResults.size() > 0)) {
+                Map firstAddressTo = (Map) itr.next();
+                
+                partyIdTo = (String)firstAddressTo.get("partyId");
+                contactMechIdTo = (String)firstAddressTo.get("contactMechId");
+            }           
             
             Map commEventMap = new HashMap();
     	    commEventMap.put("communicationEventTypeId", "AUTO_EMAIL_COMM");
@@ -729,6 +791,13 @@ public class EmailServices {
     			int attachmentCount = EmailWorker.addAttachmentsToCommEvent(message, communicationEventId, contentIndex, dispatcher, userLogin);
     			if (Debug.infoOn()) Debug.logInfo(attachmentCount + " attachments added to CommunicationEvent:" + communicationEventId,module);
     		}
+            
+            //For all other addresses create a CommunicationEventRole
+            while (itr.hasNext()) {
+                Map address = (Map) itr.next();
+                Map input = UtilMisc.toMap("communicationEventId", communicationEventId, "partyId", (String)address.get("partyId"), "roleTypeId", "_NA_", "userLogin", userLogin, "contactMechId", (String)address.get("contactMechId"));
+                dispatcher.runSync("createCommunicationEventRole", input);
+            }
     		
     		Map results = ServiceUtil.returnSuccess();
             results.put("communicationEventId", communicationEventId);
