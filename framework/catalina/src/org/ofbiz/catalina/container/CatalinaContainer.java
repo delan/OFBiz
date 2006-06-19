@@ -405,21 +405,21 @@ public class CatalinaContainer implements Container {
 
         String mgrClassName = ContainerConfig.getPropertyValue(clusterProps, "manager-class", "org.apache.catalina.cluster.session.DeltaManager");
         //int debug = ContainerConfig.getPropertyValue(clusterProps, "debug", 0);
-        boolean expireSession = ContainerConfig.getPropertyValue(clusterProps, "expire-session", false);
-        boolean useDirty = ContainerConfig.getPropertyValue(clusterProps, "use-dirty", true);
+        // removed since 5.5.9? boolean expireSession = ContainerConfig.getPropertyValue(clusterProps, "expire-session", false);
+        // removed since 5.5.9? boolean useDirty = ContainerConfig.getPropertyValue(clusterProps, "use-dirty", true);
 
         SimpleTcpCluster cluster = new SimpleTcpCluster();
         cluster.setClusterName(clusterProps.name);
         cluster.setManagerClassName(mgrClassName);
         //cluster.setDebug(debug);
-        cluster.setExpireSessionsOnShutdown(expireSession);
-        cluster.setUseDirtyFlag(useDirty);
+        // removed since 5.5.9? cluster.setExpireSessionsOnShutdown(expireSession);
+        // removed since 5.5.9? cluster.setUseDirtyFlag(useDirty);
 
         cluster.setClusterReceiver(listener);
         cluster.setClusterSender(trans);
         cluster.setMembershipService(mcast);
         cluster.addValve(clusterValve);
-        cluster.setPrintToScreen(true);
+        // removed since 5.5.9? cluster.setPrintToScreen(true);
 
         // set the cluster to the host
         host.setCluster(cluster);
