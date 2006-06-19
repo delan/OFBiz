@@ -1194,4 +1194,35 @@ public class UtilValidate {
         if (sl.indexOf("p0 #") != -1) return false;
         return true;
     }
+
+    public static boolean isValidUpc(String upc) {
+        if (upc == null || upc.length() != 12) {
+            throw new IllegalArgumentException("Invalid UPC length; must be 12 characters");
+        }
+
+        char csum = upc.charAt(11);
+        char calcSum = calcUpcChecksum(upc);
+        return csum == calcSum;
+    }
+
+    public static char calcUpcChecksum(String upc) {
+        if (upc != null && upc.length() == 12) {
+            upc = upc.substring(0, 11);
+        }
+        if (upc == null || upc.length() != 11) {
+            throw new IllegalArgumentException("Illegal size of UPC; must be 11 characters");
+        }
+        int oddsum = 0;
+        int evensum = 0;
+        for (int i = upc.length() - 1; i >= 0; i--) {
+            if ((upc.length() - i) % 2 == 0) {
+                evensum += Character.digit(upc.charAt(i), 10);
+            } else {
+                oddsum += Character.digit(upc.charAt(i), 10);
+            }
+        }
+        int check = 10 - ((evensum + 3 * oddsum) % 10);
+        if (check >= 10) check = 0;
+        return Character.forDigit(check, 10);
+    }
 }

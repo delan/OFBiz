@@ -266,6 +266,21 @@ public class HttpClient {
         return con.getContentEncoding();
     }
 
+    public int getResponseCode() throws HttpClientException {
+        if (con == null) {
+            throw new HttpClientException("Connection not yet established");
+        }
+        if (!(con instanceof HttpURLConnection)) {
+            throw new HttpClientException("Connection is not HTTP; no response code");
+        }
+
+        try {
+            return ((HttpURLConnection) con).getResponseCode();
+        } catch (IOException e) {
+            throw new HttpClientException(e.getMessage(), e);
+        }
+    }
+
     private String sendHttpRequest(String method) throws HttpClientException {
         InputStream in = sendHttpRequestStream(method);
         if (in == null) return null;
@@ -406,5 +421,17 @@ public class HttpClient {
         }
 
         return in;
+    }
+
+
+    public static String getUrlContent(String url) throws HttpClientException {
+        HttpClient client = new HttpClient(url);
+        return client.get();
+    }
+
+    public static int checkHttpRequest(String url) throws HttpClientException {
+        HttpClient client = new HttpClient(url);
+        client.get();
+        return client.getResponseCode();
     }
 }

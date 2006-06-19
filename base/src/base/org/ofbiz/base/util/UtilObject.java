@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.InputStream;
 
 /**
  * UtilObject
@@ -38,6 +39,36 @@ import java.io.ObjectOutputStream;
 public class UtilObject {
 
     public static final String module = UtilObject.class.getName();
+
+    public static byte[] getBytes(InputStream is) {
+        byte[] buffer = new byte[4 * 1024];
+        ByteArrayOutputStream bos = null;
+        byte[] data = null;
+        try {
+            bos = new ByteArrayOutputStream();
+            
+            int numBytesRead;
+            while ((numBytesRead = is.read(buffer)) != -1) {
+                bos.write(buffer, 0, numBytesRead);
+            }
+            data = bos.toByteArray();
+        } catch (IOException e) {
+            Debug.logError(e, module);
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+                if (bos != null) {
+                    bos.close();
+                }
+            } catch (IOException e) {
+                Debug.logError(e, module);
+            }
+        }
+
+        return data;
+    }
 
     /** Serialize an object to a byte array */
     public static byte[] getBytes(Object obj) {
@@ -67,10 +98,10 @@ public class UtilObject {
 
         return data;
     }
-    
+
     public static long getByteCount(Object obj) {
         OutputStreamByteCount osbc = null;
-        ObjectOutputStream oos = null;        
+        ObjectOutputStream oos = null;
         try {
             osbc = new OutputStreamByteCount();
             oos = new ObjectOutputStream(osbc);
@@ -96,7 +127,7 @@ public class UtilObject {
             return 0;
         }
     }
-    
+
     /** Deserialize a byte array back to an object */
     public static Object getObject(byte[] bytes) {
         ByteArrayInputStream bis = null;
