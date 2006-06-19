@@ -162,16 +162,14 @@
             </actions>
             <widgets> 
                 <label text=" ${workEffort.workEffortName} - ${workEffort.description}" style="tabletext"/>
-                <link target="EditWorkEffort?workEffortId=${workEffort.workEffortId}" text="[${workEffort.workEffortId}]" style="linktext"/>
-                <link target="AddWorkEffortAndAssoc?workEffortIdTo=${workEffort.workEffortId}" text="${uiLabelMap.WorkEffortAddChild}" style="linktext"></link>
+                <link target="EditWorkEffort?workEffortId=${workEffort.workEffortId}" text="${workEffort.workEffortId}" style="buttontext"/>
+                <link target="AddWorkEffortAndAssoc?workEffortIdFrom=${workEffort.workEffortId}" text="${uiLabelMap.WorkEffortAddChild}" style="buttontext"></link>
                 <section>
                     <condition>
-                        <not>
-                            <if-empty field-name="workEffortAssoc"/>
-                        </not>
+                        <not><if-empty field-name="workEffortAssoc"/></not>
                     </condition>
                     <widgets>
-                        <link target="EditWorkEffortAndAssoc?workEffortIdFrom=${workEffortAssoc.workEffortIdFrom}&amp;workEffortIdTo=${workEffortAssoc.workEffortIdTo}&amp;workEffortAssocTypeId=${workEffortAssoc.workEffortAssocTypeId}&amp;fromDate=${workEffortAssoc.fromDate}&amp;DONE_PAGE=${donePage}" text="Edit" style="linktext"></link>
+                        <link target="EditWorkEffortAndAssoc?workEffortIdFrom=${workEffortAssoc.workEffortIdFrom}&amp;workEffortIdTo=${workEffortAssoc.workEffortIdTo}&amp;workEffortAssocTypeId=${workEffortAssoc.workEffortAssocTypeId}&amp;fromDate=${workEffortAssoc.fromDate}&amp;DONE_PAGE=${donePage}" text="Edit" style="buttontext"></link>
                     </widgets>
                 </section>
             </widgets>
@@ -196,14 +194,17 @@
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffort"/>
 
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
-                <set field="workEffortIdTo" from-field="parameters.workEffortIdTo"/>
+                <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
                 <set field="workEffortAssocTypeId" value=""/>
                 <set field="fromDate" from-field="nowTimestamp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="head1">${uiLabelMap.PageTitleAddWorkEffort}</label>
+                        <container>
+                            <label style="head1">${uiLabelMap.PageTitleAddWorkEffort}</label>
+                            <label style="tabletext">(associated from parent to child)</label>
+                        </container>
                         <include-form name="AddWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -220,7 +221,7 @@
                 <set field="donePage" from-field="parameters.DONE_PAGE"/>
                 <set field="workEffortIdTo" from-field="parameters.workEffortIdTo"/>
                 <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
-                <set field="workEffortId" from-field="parameters.workEffortIdFrom" default-value="${parameters.workEffortId}"/>
+                <set field="workEffortId" from-field="parameters.workEffortIdTo" default-value="${parameters.workEffortId}"/>
                 <set field="workEffortAssocTypeId" from-field="parameters.workEffortAssocTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
                 <entity-one entity-name="WorkEffort" value-name="workEffort"/>
