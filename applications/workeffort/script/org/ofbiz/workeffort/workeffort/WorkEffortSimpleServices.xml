@@ -523,16 +523,16 @@
             <add-error><fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortAssocIdAlreadyExist"/></add-error>
             <check-errors/>
         <else>
-            <if-empty field-name="parameters.workEffortIdFrom">
-                <set-service-fields service-name="createWorkEffort"  map-name="parameters" to-map-name="createWorkeEffortParams"/>
+            <if-empty field-name="parameters.workEffortIdTo">
+                <set-service-fields service-name="createWorkEffort" map-name="parameters" to-map-name="createWorkeEffortParams"/>
                 <call-service in-map-name="createWorkeEffortParams" service-name="createWorkEffort">
                     <result-to-result result-name="workEffortId"/>
-                    <result-to-field result-name="workEffortId" field-name="workEffortIdFrom"/>
+                    <result-to-field result-name="workEffortId" field-name="workEffortIdTo"/>
                 </call-service>
-                <field-to-field field-name="workEffortIdFrom" to-field-name="workEffortIdFrom" to-map-name="parameters"/>
+                <set field="parameters.workEffortIdTo" from-field="workEffortIdTo"/>
             </if-empty>
             <set-service-fields service-name="createWorkEffortAssoc"  map-name="parameters" to-map-name="createWorkEffortAssocParams"/>
-            <call-service in-map-name="createWorkEffortAssocParams" service-name="createWorkEffortAssoc" />
+            <call-service in-map-name="createWorkEffortAssocParams" service-name="createWorkEffortAssoc"/>
         </else>
         </if-not-empty>        
     </simple-method>

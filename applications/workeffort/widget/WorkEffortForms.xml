@@ -230,9 +230,9 @@
     <form name="AddWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" 
             default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  
             target="createWorkEffortAndAssoc" title="" type="single">
-        <!--  <field name="workEffortId"><hidden/></field> -->
-        <field name="workEffortIdTo"><text/></field>
-        <field name="workEffortIdFrom"><lookup target-form-name="LookupWorkEffort"/></field>
+        <field name="workEffortId"><hidden value=""/></field>
+        <field name="workEffortIdFrom" widget-style="tabletext"><display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName} [${workEffortId}]"/></field>
+        <field name="workEffortIdTo"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="workEffortAssocTypeId">
             <drop-down>
                 <entity-options entity-name="WorkEffortAssocType" description="${description}">
@@ -244,42 +244,46 @@
         <field name="fromDate"><date-time/></field>
         <field name="thruDate"><date-time/></field>
         <sort-order>
-            <sort-field name="workEffortIdTo"/>
+            <sort-field name="workEffortIdFrom"/>
             <sort-field name="workEffortAssocTypeId"/>
             <sort-field name="sequenceNum"/>
             <sort-field name="fromDate"/>
             <sort-field name="thruDate"/>
-            <banner left-text-style="tabletext" left-text="${uiLabelMap.WorkEffortBanner1}"/>
-            <sort-field name="workEffortIdFrom"/>
-            <banner left-text-style="tabletext" left-text="${uiLabelMap.WorkEffortBanner2}"/>
+            <banner left-text-style="tabletext" left-text="${uiLabelMap.WorkEffortBannerAddWorkEffortAndAssoc1}"/>
+            <sort-field name="workEffortIdTo"/>
+            <banner left-text-style="tabletext" left-text="${uiLabelMap.WorkEffortBannerAddWorkEffortAndAssoc2}"/>
             <sort-field name="workEffortName"/>
             <sort-field name="description"/>
         </sort-order>
     </form>
   
     <form name="EditWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" target="updateWorkEffortAndAssoc" title="" type="single"
-        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"  >
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <alt-target target="createWorkEffortAndAssoc" use-when="workEffortAssoc==null"/>
-        <field name="workEffortIdTo" field-name="workEffortIdTo" map-name="workEffortAssoc"><display/></field>
-        <field name="editToLink" title="" widget-style="buttontext" position="2">
-            <hyperlink also-hidden="false" description="Edit" target="EditWorkEffort?workEffortId=${workEffortIdTo}"/>
+        <field name="workEffortIdFrom" map-name="workEffortAssoc" widget-style="tabletext">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}">
+                <sub-hyperlink description="${workEffortIdFrom}" target="EditWorkEffort?workEffortId=${workEffortIdFrom}" link-style="buttontext"/>
+            </display-entity>
         </field>
-        <field name="workEffortIdFrom" field-name="workEffortIdTo" map-name="workEffortAssoc"><display/></field>
+        <field name="workEffortIdTo" map-name="workEffortAssoc" widget-style="tabletext">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}">
+                <sub-hyperlink description="${workEffortIdTo}" target="EditWorkEffort?workEffortId=${workEffortIdTo}" link-style="buttontext"/>
+            </display-entity>
+        </field>
         <field name="workEffortId"><hidden/></field>
-        <field name="workEffortAssocTypeId" field-name="workEffortAssocTypeId" map-name="workEffortAssoc">
-            <display-entity entity-name="WorkEffortAssocType" />
+        <field name="workEffortAssocTypeId" map-name="workEffortAssoc" widget-style="tabletext">
+            <display-entity entity-name="WorkEffortAssocType"/>
         </field>
         <field name="sequenceNum"  field-name="sequenceNum" map-name="workEffortAssoc"><text/></field>
         <field name="fromDate"  field-name="fromDate" map-name="workEffortAssoc"><display/></field>
         <field name="thruDate"  field-name="thruDate" map-name="workEffortAssoc"><date-time/></field>
         <sort-order>
-            <sort-field name="workEffortIdTo"/>
-            <sort-field name="editToLink"/>
+            <sort-field name="workEffortIdFrom"/>
             <sort-field name="workEffortAssocTypeId"/>
             <sort-field name="fromDate"/>
             <sort-field name="sequenceNum"/>
             <sort-field name="thruDate"/>
-            <sort-field name="workEffortIdFrom"/>
+            <sort-field name="workEffortIdTo"/>
             <sort-field name="workEffortName"/>
             <sort-field name="description"/>
         </sort-order>
