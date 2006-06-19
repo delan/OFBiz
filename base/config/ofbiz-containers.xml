@@ -106,8 +106,6 @@ under the License.
                 </property>
                 <property name="manager-class" value="org.apache.catalina.cluster.session.DeltaManager"/>
                 <property name="debug" value="5"/>
-                <property name="expire-session" value="false"/>
-                <property name="use-dirty" value="true"/>
                 <property name="replication-mode=" value="pooled"/>
                 <property name="tcp-listen-host" value="auto"/>
                 <property name="tcp-listen-port" value="4001"/>
