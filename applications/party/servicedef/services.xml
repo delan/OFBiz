@@ -617,6 +617,7 @@
             location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="createCommunicationEventRole" auth="true">
         <description>Create a Communication Event Role</description>
         <auto-attributes entity-name="CommunicationEventRole" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="CommunicationEventRole" include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="removeCommunicationEventRole" engine="simple"
             location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="removeCommunicationEventRole" auth="true">
