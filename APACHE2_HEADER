@@ -34,7 +34,7 @@ For Java and BSH Files:
  */
 
 =====================================================================
-For XML Files:
+For XML Files (or HTML files without the ?xml line):
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 $Id: $
