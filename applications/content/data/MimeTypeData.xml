@@ -32,6 +32,7 @@
 
     <!-- image mime types -->
     <MimeType mimeTypeId="image/jpeg" description="JPEG/JPG Image"/>
+    <MimeType mimeTypeId="image/pjpeg" description="Progressive JPEG/JPG Image"/>
     <MimeType mimeTypeId="image/gif" description="GIF Image"/>
     <MimeType mimeTypeId="image/tiff" description="TIFF Image"/>
     <MimeType mimeTypeId="image/png" description="PNG Image"/>
