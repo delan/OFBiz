@@ -57,7 +57,7 @@ under the License.
                 <#if billingAddress.address2?exists>
                     <fo:block>${billingAddress.address2}</fo:block>
                 </#if>
-                <fo:block>${billingAddress.postalCode?if_exists} ${billingAddress.city?if_exists}</fo:block>
+                <fo:block>${billingAddress.city?if_exists} ${billingAddress.stateProvinceGeoId?if_exists} ${billingAddress.postalCode?if_exists}</fo:block>
             <#else>
                 <fo:block>${uiLabelMap.AccountingNoGenBilAddressFound}${billingParty.partyId}</fo:block>
             </#if>
