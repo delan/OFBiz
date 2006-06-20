@@ -80,6 +80,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -677,6 +678,7 @@ public class EmailServices {
      */
     public static Map storeIncomingEmail(DispatchContext dctx, Map context) {
     	
+        GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         MimeMessageWrapper wrapper = (MimeMessageWrapper) context.get("messageWrapper");
         MimeMessage message = wrapper.getMessage();
@@ -795,7 +797,15 @@ public class EmailServices {
             //For all other addresses create a CommunicationEventRole
             while (itr.hasNext()) {
                 Map address = (Map) itr.next();
-                Map input = UtilMisc.toMap("communicationEventId", communicationEventId, "partyId", (String)address.get("partyId"), "roleTypeId", "_NA_", "userLogin", userLogin, "contactMechId", (String)address.get("contactMechId"));
+                String partyId = (String)address.get("partyId");
+                
+                // It's not clear what the "role" of this communication event should be, so we'll just put _NA_
+                //Check if "_NA_" role exists for the partyId. If not, then first associate that role with the partyId
+                GenericValue partyRole = delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "_NA_"));
+                if (partyRole == null) {
+                    dispatcher.runSync("createPartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "_NA_", "userLogin", userLogin));
+                }
+                Map input = UtilMisc.toMap("communicationEventId", communicationEventId, "partyId", partyId, "roleTypeId", "_NA_", "userLogin", userLogin, "contactMechId", (String)address.get("contactMechId"));
                 dispatcher.runSync("createCommunicationEventRole", input);
             }
     		
@@ -816,5 +826,4 @@ public class EmailServices {
             return ServiceUtil.returnError(e.getMessage());
         }
     }
-
 }
