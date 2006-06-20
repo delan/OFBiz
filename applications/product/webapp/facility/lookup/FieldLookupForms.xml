@@ -56,4 +56,43 @@
         <field name="facilityName"><display/></field>
         <field name="facilityTypeId"><display/></field>
     </form>
+    <form name="lookupFacilityLocation" target="LookupFacilityLocation" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="FacilityLocation" default-field-type="find"/>
+        <field name="facilityId" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Facility" description="${facilityName}" key-field-name="facilityId">
+                    <entity-order-by field-name="facilityName"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="locationTypeEnumId" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="FACLOC_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupFacilityLocation" list-name="listIt" paginate-target="LookupFacilityLocation" title="" type="list" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-name="listIt">
+                <field-map field-name="inputFields" env-name="parameters"/>
+                <field-map field-name="entityName" value="FacilityLocation"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="FacilityLocation" default-field-type="display"/>
+        <field name="locationSeqId" title="" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${locationSeqId}" target="javascript:set_value('${locationSeqId}')"/>
+        </field>
+        <field name="facilityId"><hidden/></field>
+        <field name="locationTypeEnumId">
+            <display-entity entity-name="Enumeration" description="${description}" key-field-name="enumId"/>
+        </field>
+    </form>
+
 </forms>
