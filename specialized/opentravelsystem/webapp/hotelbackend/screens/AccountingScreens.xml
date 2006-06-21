@@ -86,8 +86,6 @@
     <screen name="reports">
         <section>
             <actions>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="page.appTabButtonItem" value="Reservations"/>
                 <set field="page.headerItem" value="Reports"/>
                 <set field="title" value="Accounting Report Options"/>
             </actions>

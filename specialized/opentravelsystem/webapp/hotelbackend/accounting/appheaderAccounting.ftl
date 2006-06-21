@@ -38,14 +38,15 @@
   <a href="<@ofbizUrl>mainAccounting</@ofbizUrl>" class="${selectedTabClassMap.main?default(unselectedTabClassName)}">${uiLabelMap.CommonMain}</a>
   <a href="<@ofbizUrl>findInvoices</@ofbizUrl>" class="${selectedTabClassMap.invoices?default(unselectedTabClassName)}">${uiLabelMap.AccountingInvoicesMenu}</a> 
   <a href="<@ofbizUrl>findPayments</@ofbizUrl>" class="${selectedTabClassMap.payments?default(unselectedTabClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a> 
+  <a href="<@ofbizUrl>AccountingReports</@ofbizUrl>" class="${selectedTabClassMap.Reports?default(unselectedTabClassName)}">Reports</a> 
   <!--div class="col"><a href="<@ofbizUrl>ListGlAccountOrganization</@ofbizUrl>" class="${selectedTabClassMap.Ledger?default(unselectedTabClassName)}">Gen.Ledger</a>-->
   <!--div class="col"><a href="<@ofbizUrl>DataExchange</@ofbizUrl>" class="${selectedTabClassMap.DataExchange?default(unselectedTabClassName)}">Bank Upload</a>-->
   <a href="<@ofbizUrl>Utilities</@ofbizUrl>" class="${selectedTabClassMap.Utilities?default(unselectedTabClassName)}">${uiLabelMap.opentravelsystemUtilities}</a>
   <!--div class="col"><a href="<@ofbizUrl>AdminMain</@ofbizUrl>" class="${selectedTabClassMap.Setup?default(unselectedTabClassName)}">Setup</a>-->
-  <#if userLogin?has_content>
+  <#--if userLogin?has_content>
     <a href="<@ofbizUrl>logout</@ofbizUrl>" class="${selectedTabClassMap.logout?default(unselectedTabClassName)}">${uiLabelMap.CommonLogout}</a>
   <#else>
     <a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedTabClassMap.login?default(unselectedTabClassName)}'>${uiLabelMap.CommonLogin}</a>
-  </#if>
+  </#if-->
 </div>
 </#if>

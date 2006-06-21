@@ -10,7 +10,7 @@
     <SecurityGroup groupId="OPENTRAVELSYSTEM_R" description="read accesss to all the opentravelsystem data of shops/hotels"/>
     <SecurityGroupPermission groupId="OPENTRAVELSYSTEM_R" permissionId="OPENTRAVELSYSTEM_R"/>
     <UserLoginSecurityGroup userLoginId="admin" groupId="OPENTRAVELSYSTEM" fromDate="2005-11-30 10:57:12.826"/>
-    <UserLoginSecurityGroup userLoginId="demoadmin" groupId="OPENTRAVELSYSTEM_R" fromDate="2005-11-30 10:57:12.826"/>
+    <!--UserLoginSecurityGroup userLoginId="demoadmin" groupId="OPENTRAVELSYSTEM_R" fromDate="2005-11-30 10:57:12.826"/-->
     
     <!-- party manager data -->
     <StatusType statusTypeId="PARTY-RELATION" hasTable="N" description="Party relation status"/>
