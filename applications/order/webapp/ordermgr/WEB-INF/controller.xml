@@ -470,6 +470,7 @@
         <response name="success" type="view" value="advancedsearch"/>
     </request-map>
     <request-map uri="keywordsearch">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="checkDoKeywordOverride"/>
         <response name="success" type="view" value="keywordsearch"/>
         <response name="none" type="none" value=""/>
