@@ -37,6 +37,7 @@
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <!--set field="domainName" value="${bsh:s=parameters.get(&quot;_SERVER_ROOT_URL_&quot;).substring(8);i=s.indexOf(&quot;:&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/-->

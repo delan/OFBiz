@@ -59,7 +59,7 @@ import org.apache.commons.fileupload.FileItem;
  * @author     <a href="mailto:support@opentravelsystem.org">Hans Bakker</a> 
  * @version    $Rev$
  */
-public class importDataBw {
+public class importDataGc {
 	
 	static boolean debug = true;	// to show error messages or not.....
 	
@@ -193,9 +193,13 @@ public class importDataBw {
                     "userLogin",userLogin,
                     "fromDate",nowTimestamp,
                     "parentProductCategoryId",browseCategoryId);
-			
+			Map productFeatureApplication = UtilMisc.toMap( // connection to feature
+                    "userLogin",userLogin,
+                    "fromDate",nowTimestamp);
 			int infoItemNr = 0;
 			String infoItem = null;
+            boolean variant = false;
+            boolean virtual = false;
 			// parse line from file
 			while ((infoItem=getToken()) != null && infoItemNr != 12 ) {
 				if (debug) Debug.logInfo("Token read: " + infoItem, module);
@@ -242,30 +246,31 @@ public class importDataBw {
                     product.put("smallImageUrl","/".concat(organizationPartyId).concat("/html/images/products/").concat(infoItem).concat(".jpg"));
                     product.put("largeImageUrl", "/".concat(prefix).concat("/html/images/").concat(infoItem).concat(".jpg"));
                     product.put("smallImageUrl","/".concat(prefix).concat("/html/images/").concat(infoItem).concat(".jpg"));
+                    productFeatureApplication.put("productId", prefix.concat(infoItem));  // not prefixed by service
 					break;
 				case 5: //description					
 					product.put("description", infoItem);
 					break;
-                case 6: // coordinate 1
+                case 6: // feature 1
                     sub3CategoryMember.put("comments",infoItem);
                     break;
-                case 7: // coordinate 2
+                case 7: // featuretype1
                     String comments = (String) sub3CategoryMember.get("comments");
                     sub3CategoryMember.put("comments",comments.concat(",").concat(infoItem));
                     break;
-                case 8: // coordinate 3sub3CategoryMember.put("productId",prefix.conca
+                case 8: // feature 2
                     comments = (String) sub3CategoryMember.get("comments");
                     sub3CategoryMember.put("comments",comments.concat(",").concat(infoItem));
                     break;
-                case 9: // coordinate 4
+                case 9: // feature type2
                     comments = (String) sub3CategoryMember.get("comments");
                     sub3CategoryMember.put("comments",comments.concat(",").concat(infoItem));
                     break;
-                case 10: //comments
-                    if (infoItem.length() > 0)
-                        product.put("comments", infoItem);
+                case 10: //fearure 3
                     break;
-                case 11: //price
+                case 11: //fearure type 3
+                    break;
+                case 12: //price
                     if (infoItem.length() > 0) {
                         productPrice.put("price", new Double(Double.parseDouble(infoItem)));
                     	productPrice.put("productPriceTypeId", "DEFAULT_PRICE");
@@ -276,6 +281,14 @@ public class importDataBw {
                         productPrice.put("price", null);
                     }
 					break;
+                case 13: // virtual (Y/N)
+                    if (infoItem.length() > 0 && infoItem.equals("Y")) virtual = true;  else virtual = false;
+                    if (virtual) product.put("isVirtual","Y"); else product.put("isVirtual","N"); 
+                    break;
+                case 14: // variant (Y/N)
+                    if (infoItem.length() > 0 && infoItem.equals("Y")) variant = true;
+                    else variant = false;
+                    break;
 				}
 			}
 
@@ -325,11 +338,15 @@ public class importDataBw {
                     results = dispatcher.runSync("createProductCategory",sub3Category);                                 // add category
                     categoryNbr++;
                     results = dispatcher.runSync("addProductCategoryToCategory",productCategoryRollup3); // link to higherlevel category
-                    
-                    if(prExist != null) { // new category but existing product
-                        results = dispatcher.runSync("addProductToCategory",sub3CategoryMember);
+
+                    	if(prExist != null) { // new category but existing product
+                    		results = dispatcher.runSync("addProductToCategory",sub3CategoryMember);
+                    	}
+
+                    if(prExist != null) { // new category but existing product so create the link
+                        results = dispatcher.runSync("addProductToCategory",sub3CategoryMember);                
                     }
-                    
+
                 }
                 // update comments when category already exists
                 if (cat3MemExist != null)  {
