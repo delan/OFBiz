@@ -37,9 +37,8 @@
     <div class="head1">${uiLabelMap.ProductPackOrder}<span class='head2'>&nbsp;in&nbsp;${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <#if shipmentId?has_content>
       <div class="tabletext">
-        ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} #${shipmentId}
-        &nbsp;
-        ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} #${shipmentId}
+        ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr} 
+        ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="buttontext">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">${shipmentId}</a>
       </div>
     </#if>
     <div>&nbsp;</div>
@@ -209,7 +208,7 @@
                 <#assign orderItemQuantity = orderItem.quantity>
               </#if>
               <tr>
-                <td><input type="checkbox" name="sel_${orderItem.orderItemSeqId}" value="Y"/></td>
+                <td><input type="checkbox" name="sel_${orderItem.orderItemSeqId}" value="Y" checked/></td>
                 <td><div class="tabletext">${orderItem.orderItemSeqId}</td>
                 <td><div class="tabletext">${orderItem.productId?default("N/A")}</td>
                 <td><div class="tabletext">${orderItem.itemDescription?if_exists}</td>
