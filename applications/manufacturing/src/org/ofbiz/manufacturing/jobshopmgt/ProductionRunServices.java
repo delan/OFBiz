@@ -1848,6 +1848,67 @@ public class ProductionRunServices {
         return result;
     }
 
+    public static Map createProductionRunForMktgPkg(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        Timestamp now = UtilDateTime.nowTimestamp();
+        List msgResult = new LinkedList();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        // Mandatory input fields
+        String facilityId = (String)context.get("facilityId");
+        String orderId = (String)context.get("orderId");
+        String orderItemSeqId = (String)context.get("orderItemSeqId");
+        
+        GenericValue orderItem = null;
+        try {
+            orderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError("Error creating a production run for marketing package for order [" + orderId + " " + orderItemSeqId + "]: " + e.getMessage());
+        }
+        if (orderItem == null) {
+            return ServiceUtil.returnError("Error creating a production run for marketing package for order [" + orderId + " " + orderItemSeqId + "]: order item not found.");
+        }
+        Map serviceContext = new HashMap();
+        serviceContext.put("productId", orderItem.getString("productId"));
+        serviceContext.put("pRQuantity", orderItem.getDouble("quantity"));
+        serviceContext.put("startDate", UtilDateTime.nowTimestamp());
+        serviceContext.put("facilityId", facilityId);
+        //serviceContext.put("workEffortName", "");
+        serviceContext.put("userLogin", userLogin);
+        Map resultService = null;
+        try {
+            resultService = dispatcher.runSync("createProductionRun", serviceContext);
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotCreated", locale));
+        }
+        String productionRunId = (String)resultService.get("productionRunId");
+        result.put("productionRunId", productionRunId);
+
+        try {
+            delegator.create("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId, "orderId", orderId, "orderItemSeqId", orderItemSeqId));
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError("Error creating a production run for marketing package for order [" + orderId + " " + orderItemSeqId + "]: " + e.getMessage());
+        }
+        try {
+            serviceContext.clear();
+            serviceContext.put("productionRunId", productionRunId);
+            serviceContext.put("statusId", "PRUN_COMPLETED");
+            serviceContext.put("userLogin", userLogin);
+            resultService = dispatcher.runSync("quickChangeProductionRunStatus", serviceContext);
+            serviceContext.clear();
+            serviceContext.put("workEffortId", productionRunId);
+            serviceContext.put("userLogin", userLogin);
+            resultService = dispatcher.runSync("productionRunProduce", serviceContext);
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotCreated", locale));
+        }
+        
+        result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunCreated", UtilMisc.toMap("productionRunId", productionRunId), locale));
+        return result;
+    }
+
     public static Map createProductionRunsForOrder(DispatchContext dctx, Map context) {
 
         Map result = new HashMap();

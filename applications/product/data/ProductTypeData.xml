@@ -365,6 +365,7 @@
     <ProductType description="Digital Good" isPhysical="N" isDigital="Y" hasTable="N" parentTypeId="GOOD" productTypeId="DIGITAL_GOOD"/>
     <ProductType description="Finished/Digital Good" isPhysical="Y" isDigital="Y" hasTable="N" parentTypeId="GOOD" productTypeId="FINDIG_GOOD"/>
     <ProductType description="Configurable Good" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="GOOD" productTypeId="AGGREGATED"/>
+    <ProductType description="Marketing Package" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="GOOD" productTypeId="MARKETING_PKG_AUTO"/>
     <ProductType description="Work In Process" isPhysical="Y" isDigital="N" hasTable="N" parentTypeId="GOOD" productTypeId="WIP"/>
 
     <EnumerationType description="Product Requirement Method" enumTypeId="PROD_REQ_METHOD" hasTable="N" parentTypeId=""/>

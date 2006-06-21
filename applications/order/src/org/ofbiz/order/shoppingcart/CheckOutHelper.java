@@ -589,6 +589,16 @@ public class CheckOutHelper {
                         if (ServiceUtil.isError(prunResult)) {
                             Debug.logError(ServiceUtil.getErrorMessage(prunResult) + " for input:" + inputMap, module);
                         }
+                    } else if ("MARKETING_PKG_AUTO".equals(product.getString("productTypeId"))) {
+                        Map inputMap = new HashMap();
+                        inputMap.put("facilityId", productStore.getString("inventoryFacilityId"));
+                        inputMap.put("orderId", orderId);
+                        inputMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
+                        inputMap.put("userLogin", userLogin);
+                        Map prunResult = dispatcher.runSync("createProductionRunForMktgPkg", inputMap);
+                        if (ServiceUtil.isError(prunResult)) {
+                            Debug.logError(ServiceUtil.getErrorMessage(prunResult) + " for input:" + inputMap, module);
+                        }
                     }
                 } catch (Exception e) {
                     String service = e.getMessage();

@@ -240,6 +240,14 @@ under the License.
         <attribute mode="IN" name="orderItemSeqId" optional="true" type="String"/>
         <attribute mode="OUT" name="productionRunId" optional="false" type="String"/>
     </service>
+    <service name="createProductionRunForMktgPkg" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="createProductionRunForMktgPkg" auth="true">
+        <description>Creates a production run for a marketing package.</description>
+        <attribute mode="IN" name="orderId" optional="false" type="String"/>
+        <attribute mode="IN" name="orderItemSeqId" optional="false" type="String"/>
+        <attribute mode="IN" name="facilityId" optional="false" type="String"/>
+        <attribute mode="OUT" name="productionRunId" optional="true" type="String"/>
+    </service>
     <service name="getWorkEffortCosts" engine="java"
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="getWorkEffortCosts" auth="true">
         <description>Retrieve the costs of a work effort (production run task).</description>
