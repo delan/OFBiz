@@ -43,7 +43,7 @@
     </div>
   </td>
   <td align="right" valign="middle" width="5%">
-    <div class="<#if price.isSale>salePrice<#else>normalPrice</#if>">
+    <div class="<#if price.isSale?exists && price.isSale>salePrice<#else>normalPrice</#if>">
       <b><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></b>
     </div>
   </td>                                 
