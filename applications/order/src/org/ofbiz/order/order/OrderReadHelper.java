@@ -471,6 +471,32 @@ public class OrderReadHelper {
         return null;
     }
 
+    public Timestamp getEarliestShipByDate() {
+        try {
+            List groups = orderHeader.getRelated("OrderItemShipGroup", UtilMisc.toList("shipByDate"));
+            if (groups.size() > 0) {
+                GenericValue group = (GenericValue) groups.get(0);
+                return group.getTimestamp("shipByDate");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return null;
+    }
+
+    public Timestamp getLatestShipAfterDate() {
+        try {
+            List groups = orderHeader.getRelated("OrderItemShipGroup", UtilMisc.toList("shipAfterDate DESC"));
+            if (groups.size() > 0) {
+                GenericValue group = (GenericValue) groups.get(0);
+                return group.getTimestamp("shipAfterDate");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return null;
+    }
+
     public String getCurrentStatusString() {
         GenericValue statusItem = null;
         try {
