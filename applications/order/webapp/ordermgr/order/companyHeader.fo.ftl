@@ -39,7 +39,7 @@
                   <#if postalAddress?has_content>
                     <fo:block>${postalAddress.address1?if_exists}</fo:block>
                     <#if postalAddress.address2?has_content><fo:block>${postalAddress.address2?if_exists}</fo:block></#if>
-                    <fo:block>${postalAddress.city?if_exists}, ${postalAddress.stateProvinceGeoId?if_exists} ${postalAddress.postalCode?if_exists}, ${countryName?if_exists}</fo:block>
+                    <fo:block>${postalAddress.city?if_exists}, ${stateProvinceAbbrv?if_exists} ${postalAddress.postalCode?if_exists}, ${countryName?if_exists}</fo:block>
                   </#if>
                   
 				  <#else>

@@ -101,7 +101,15 @@ if (addresses != null && addresses.size() > 0) {
     address = delegator.findByPrimaryKey("PostalAddress",UtilMisc.toMap("contactMechId",selAddresses.iterator().next().getString("contactMechId")));
 }
 if (address != null)	{
-	context.put("countryName",delegator.findByPrimaryKey("Geo",UtilMisc.toMap("geoId",address.getString("countryGeoId"))).getString("geoName"));
+   // get the country name and state/province abbreviation
+   country = address.getRelatedOneCache("CountryGeo");
+   if (country != null) {
+      context.put("countryName", country.getString("geoName"));
+   }
+   stateProvince = address.getRelatedOneCache("StateProvinceGeo");
+   if (stateProvince != null) {
+       context.put("stateProvinceAbbr", stateProvince.getString("abbreviation"));
+   }
 }
 context.put("postalAddress", address);
 
