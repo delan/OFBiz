@@ -181,10 +181,12 @@ public class InventoryServices {
                     newItem.refresh();
                     newItem.set("statusId", "INV_BEING_TRANSFERED");
                     newItem.store();
+                    results.put("inventoryItemId", newItem.get("inventoryItemId"));
               } else {
                     inventoryItem.refresh();
                     inventoryItem.set("statusId", "INV_BEING_TRANSFERED");
                     inventoryItem.store();
+                    results.put("inventoryItemId", inventoryItem.get("inventoryItemId"));
               }
             }
                                     
