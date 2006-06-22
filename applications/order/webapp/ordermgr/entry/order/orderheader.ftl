@@ -35,9 +35,22 @@
 
 <div class="screenlet">
     <div class="screenlet-body">
-        <#-- shipping address -->
-          <table width="100%" border="0" cellpadding="1">
-            <#if (orderForParty?exists)>
+         <table width="100%" border="0" cellpadding="1">
+           <#-- order name -->
+           <#if (orderName?exists)>
+             <tr>
+               <td align="right" valign="top" width="15%">
+                 <span class="tabletext">&nbsp;<b>${uiLabelMap.OrderOrderName}</b> </span>
+               </td>
+               <td width="5">&nbsp;</td>
+               <td align="left" valign="top" width="80%" class="tabletext">
+                 ${orderName}
+               </td>
+            </tr>
+            <tr><td colspan="7"><hr class="sepbar"/></td></tr>
+          </#if>
+          <#-- order for party -->
+           <#if (orderForParty?exists)>
              <tr>
                <td align="right" valign="top" width="15%">
                  <span class="tabletext">&nbsp;<b>${uiLabelMap.OrderOrderFor}</b> </span>
@@ -49,6 +62,7 @@
             </tr>
             <tr><td colspan="7"><hr class="sepbar"/></td></tr>
           </#if>
+        <#-- shipping address -->
             <#if shippingAddress?has_content>
               <tr>
                 <td align="right" valign="top" width="15%">

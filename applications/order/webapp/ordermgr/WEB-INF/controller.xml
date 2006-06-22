@@ -341,6 +341,13 @@
         <response name="success" type="request" value="orderentry"/>
         <response name="error" type="request" value="orderagreements"/>
     </request-map>
+    <request-map uri="setOrderName">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderName"/>
+        <response name="success" type="request" value="orderentry"/>
+        <response name="error" type="request" value="orderentry"/>
+    </request-map>
+
     <request-map uri="additem">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
@@ -1258,7 +1265,7 @@
     <view-map name="ordertasklist" type="screen" page="component://order/widget/ordermgr/OrderTaskScreens.xml#OrderTaskList"/>
     <view-map name="viewimage" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#ViewImage"/>
 
-    <view-map name="survey" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#survey"/>
+    <view-map name="survey" type="screen" page="component://order/widget/ordermgr/setOrderCurrencyAgreementShipDatesCartScreens.xml#survey"/>
     <view-map name="showcart" type="screen" page="component://order/widget/ordermgr/OrderEntryCartScreens.xml#ShowCart"/>
     <view-map name="checkinits" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#CheckInits"/>
     <view-map name="orderagreements" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#OrderAgreements"/>

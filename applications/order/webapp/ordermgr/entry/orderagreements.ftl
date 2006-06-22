@@ -60,6 +60,17 @@
 
       <tr>
         <td>&nbsp;</td>
+        <td align='right' valign='middle' class='tableheadtext' nowrap>
+           ${uiLabelMap.OrderOrderName}
+        </td>
+        <td>&nbsp;</td>
+        <td align='left'>
+          <input type='text' size='60' maxlength='100' name='orderName'/>
+        </td>
+      </tr>
+
+      <tr>
+        <td>&nbsp;</td>
         <td align='right' valign='middle' nowrap>
           <div class='tableheadtext'>
             <#if agreements?exists>${uiLabelMap.OrderSelectCurrencyOr}
@@ -109,7 +120,7 @@
           </a>
         </td>
       </tr>
-
+      
       <tr><td colspan="4">&nbsp;</td></tr>
       <tr><td colspan="3">&nbsp;</td><td align="left"><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSelect}">
 

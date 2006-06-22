@@ -409,6 +409,7 @@ public class OrderServices {
         Map orderHeaderMap = UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
                 "orderDate", orderDate, "entryDate", nowTimestamp,
                 "statusId", initialStatus, "billingAccountId", billingAccountId);
+        orderHeaderMap.put("orderName", context.get("orderName"));
         if (isImmediatelyFulfilled) {
             // also flag this order as needing inventory issuance so that when it is set to complete it will be issued immediately (needsInventoryIssuance = Y)
             orderHeaderMap.put("needsInventoryIssuance", "Y");

@@ -53,6 +53,15 @@
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="2" cellspacing="0">
+              <tr valign="top">
+                <td class="tabletext"><b>${uiLabelMap.OrderOrderName}</b>:</td> 
+                <td class="tabletext">
+                  <form method="post" action="setOrderName" name="setCartOrderNameForm">
+                    <input type="text" name="orderName" size="20" maxlength="200" value="${shoppingCart.getOrderName()}"/>
+                    <input type="submit" value="${uiLabelMap.CommonSet}" class="smallSubmit"/>
+                  </form>
+                </td>
+              </tr>
                 <tr>
                   <td><div class="tabletext"><b>${uiLabelMap.Party}</b>:</div></td>
                   <td>

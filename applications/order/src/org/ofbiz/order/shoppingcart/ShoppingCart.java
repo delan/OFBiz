@@ -83,6 +83,7 @@ public class ShoppingCart implements Serializable {
 
     private String poNumber = null;
     private String orderId = null;
+    private String orderName = null;
     private String firstAttemptOrderId = null;
     private String externalId = null;
     private String internalCode = null;
@@ -174,6 +175,7 @@ public class ShoppingCart implements Serializable {
         this.productStoreId = cart.getProductStoreId();
         this.poNumber = cart.getPoNumber();
         this.orderId = cart.getOrderId();
+        this.orderName = "Copy of " + cart.getOrderName();
         this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
         this.billingAccountId = cart.getBillingAccountId();
         this.agreementId = cart.getAgreementId();
@@ -331,6 +333,14 @@ public class ShoppingCart implements Serializable {
         this.locale = locale;
     }
 
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+    
+    public String getOrderName() {
+        return orderName;
+    }
+    
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
@@ -3289,6 +3299,7 @@ public class ShoppingCart implements Serializable {
         Map result = new HashMap();
 
         result.put("orderTypeId", this.getOrderType());
+        result.put("orderName", this.getOrderName());
         result.put("externalId", this.getExternalId());
         result.put("orderDate", this.getOrderDate());
         result.put("internalCode", this.getInternalCode());
