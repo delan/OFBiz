@@ -136,7 +136,7 @@
     </form>
 
     <form name="LookupBulkAddProducts" type="multi" use-row-submit="true" list-name="productList" title=""
-            target="BulkAddProducts"  default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            target="BulkAddProducts"  paginate-target="LookupBulkAddProducts" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="productId"  title="${uiLabelMap.ProductProductId}" widget-style="buttontext">
             <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems?productId=${productId}" target-type="inter-app"/>
         </field>
