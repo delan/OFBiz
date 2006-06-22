@@ -153,6 +153,7 @@ under the License.
                             <li>Screen Widget
                                 <ol>
                                     <li>Screen Definitions</li>
+                                    <li>ofbiz/framework/widget/dtd/widget-screen.xsd</li>
                                     <li>component://&lt;component-name&gt;/widgets/**/*Screens.xml</li>
                                     <li>Screen -> Section</li>
                                     <li>Section -> Actions</li>
@@ -166,6 +167,7 @@ under the License.
                             <li>Form Widget
                                 <ol>
                                     <li>Form Definitions</li>
+                                    <li>ofbiz/framework/widget/dtd/widget-form.xsd</li>
                                     <li>component://&lt;component-name&gt;/widgets/**/*Forms.xml</li>
                                     <li>Form Element</li>
                                     <li>Form Actions</li>
@@ -177,6 +179,7 @@ under the License.
                             <li>Menu Widget
                                 <ol>
                                     <li>Menu Definitions</li>
+                                    <li>ofbiz/framework/widget/dtd/widget-menu.xsd</li>
                                     <li>component://&lt;component-name&gt;/widgets/**/*Menus.xml</li>
                                     <li>Menu Items</li>
                                 </ol>
@@ -184,6 +187,7 @@ under the License.
                             <li>Tree Widget
                                 <ol>
                                     <li>Tree Definitions</li>
+                                    <li>ofbiz/framework/widget/dtd/widget-tree.xsd</li>
                                     <li>component://&lt;component-name&gt;/widgets/**/*Trees.xml</li>
                                     <li>Tree Nodes</li>
                                 </ol>
@@ -233,7 +237,9 @@ under the License.
                             <li>Just as in Screen Widget use BeanShell for data preparation and FreeMarker for temapltes</li>
                         </ol>
                     </li>
-                    <li>Region Based Views - Servlet/JSP Templates <ol>
+                    <li>Region Based Views - Servlet/JSP Templates
+                        <ol>
+                            <li>ofbiz/framework/webapp/dtd/regions.xsd</li>
                             <li>Region Framework
                                 <ol>
                                     <li>Defining Template Based Regions</li>
@@ -258,6 +264,8 @@ under the License.
             </li>
             <li>MiniLang
                 <ol>
+                    <li>ofbiz/framework/minilang/dtd/simple-methods.xsd</li>
+                    <li>*Services.xml, *SimpleMethods.xml, et cetera</li>
                     <li>simple-map-processor
                         <ol>
                             <li>General Concept</li>
@@ -309,6 +317,7 @@ under the License.
                     </li>
                     <li>Configuration
                         <ol>
+                            <li>ofbiz/framework/entity/dtd/entity-config.xsd</li>
                             <li>ofbiz/framework/entity/config/entityengine.xml</li>
                             <li>Transaction (JTA) Setup</li>
                             <li>Delegators</li>
@@ -317,9 +326,16 @@ under the License.
                             <li>Distributed Cache Clearing</li>
                         </ol>
                     </li>
-                    <li>Entity Groups &amp; Delegation</li>
+                    <li>Entity Groups &amp; Delegation
+                        <ol>
+                            <li>ofbiz/framework/entity/dtd/entitygroup.xsd</li>
+                            <li>entitydef/entitygroups*.xml</li>
+                        </ol>
+                    </li>
                     <li>Entity Definitions
                         <ol>
+                            <li>ofbiz/framework/entity/dtd/entitymodel.xsd</li>
+                            <li>entitydef/entitymodel*.xml</li>
                             <li>Entities</li>
                             <li>Fields</li>
                             <li>Primary Keys</li>
@@ -377,6 +393,8 @@ under the License.
                     <li>Overview of GenericHelper Interface</li>
                     <li>Entity ECA (Event-Condition-Action) Rules
                         <ol>
+                            <li>ofbiz/framework/entity/dtd/entity-eca.xsd</li>
+                            <li>entitydef/eecas*.xml</li>
                             <li>When to Use an Entity ECA: Data Maintenance, not Business Processes</li>
                             <li>Defining Entity ECAs</li>
                             <li>Limitations</li>
@@ -430,6 +448,8 @@ under the License.
                     </li>
                     <li>Advanced Service Definitions
                         <ol>
+                            <li>ofbiz/framework/service/dtd/services.xsd</li>
+                            <li>servicedef/services*.xml</li>
                             <li>Parameters and Validation</li>
                             <li>Interface Services</li>
                             <li>Service Authentication</li>
@@ -472,6 +492,7 @@ under the License.
                     <li>Service Groups
                         <ol>
                             <li>ofbiz/framework/service/dtd/service-group.xsd</li>
+                            <li>servicedef/groups*.xml</li>
                             <li>Defining Groups
                                 <ol>
                                     <li>Groups</li>
@@ -483,6 +504,7 @@ under the License.
                     <li>Service Event-Condition-Action (ECA) Rules
                         <ol>
                             <li>ofbiz/framework/service/dtd/service-eca.xsd</li>
+                            <li>servicedef/secas*.xml</li>
                             <li>Defining ECA Rules
                                 <ol>
                                     <li>Events</li>
@@ -497,6 +519,21 @@ under the License.
                             <li>JNDI &amp; RMI Basics</li>
                             <li>rmi-dispatcher Container (in ofbiz-containers.xml)</li>
                             <li>ExampleRemoteClient.java</li>
+                        </ol>
+                    </li>
+                    <li>Service Mail-Condition-Action (MCA) Rules
+                        <ol>
+                            <li>ofbiz/framework/service/dtd/service-mca.xsd</li>
+                            <li>servicedef/smcas*.xml</li>
+                            <li>Mail Client Setup (ofbiz-containers.xml)</li>
+                            <li>Defining MCA Rules
+                                <ol>
+                                    <li>Field Conditions</li>
+                                    <li>Header Conditions</li>
+                                    <li>Service Conditions</li>
+                                    <li>Actions</li>
+                                </ol>
+                            </li>
                         </ol>
                     </li>
                 </ol>
