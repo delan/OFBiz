@@ -56,7 +56,8 @@ if (orderHeader != null) {
     } else {
         context.put("orderForParty", orderReadHelper.getBillToParty());
     }
-    
+   
+    context.put("orderName", orderReadHelper.getOrderName());  // a direct get on OrderHeader should also work
     context.put("orderHeader", orderHeader);
     context.put("currencyUomId", orderHeader.get("currencyUom"));
     context.put("localOrderReadHelper", orderReadHelper);

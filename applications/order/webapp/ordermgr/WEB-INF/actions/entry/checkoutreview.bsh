@@ -147,6 +147,9 @@ taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderS
 context.put("orderTaxTotal", taxAmount);   
 context.put("orderGrandTotal", OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments));
               
+orderName = cart.getOrderName();
+context.put("orderName", orderName);
+
 orderPartyId = cart.getPartyId();
 if (orderPartyId != null) {
     partyMap = PartyWorker.getPartyOtherValues(request, orderPartyId, "orderParty", "orderPerson", "orderPartyGroup");

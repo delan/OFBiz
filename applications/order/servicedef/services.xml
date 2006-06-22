@@ -98,7 +98,7 @@
         <attribute name="billFromVendorPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="shipFromVendorPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="supplierAgentPartyId" type="String" mode="IN" optional="true"/>
-
+        <attribute name="orderName" type="String" mode="IN" optional="true"/>
         <attribute name="visitId" type="String" mode="IN" optional="true"/>
         <attribute name="affiliateId" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>

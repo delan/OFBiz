@@ -50,6 +50,20 @@
             </div>
             <div class="screenlet-body">
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
+                    <#-- order name -->
+                    <#if orderHeader.orderName?has_content>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderOrderName}</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <div class="tabletext">${orderHeader.orderName}</div> 
+                      </td>  
+                    </tr>    
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    </#if>   
+                    <#-- order status history -->
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderStatusHistory}</b></div>

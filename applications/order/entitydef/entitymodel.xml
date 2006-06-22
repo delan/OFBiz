@@ -310,6 +310,7 @@
             title="Order Header Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderTypeId" type="id"></field>
+      <field name="orderName" type="name"></field>
       <field name="externalId" type="id"></field>
       <field name="salesChannelEnumId" type="id"></field>
       <field name="orderDate" type="date-time"></field>

@@ -868,6 +868,17 @@ public class ShoppingCartEvents {
         }
         return "success";
     }
+    
+    /**
+     * set the order name of the cart based on request.  right now will always return "success"
+     *
+     */
+    public static String setOrderName(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        String orderName = (String) request.getParameter("orderName");
+        cart.setOrderName(orderName);
+        return "success";
+    }
 
     /** Add order term **/
     public static String addOrderTerm(HttpServletRequest request, HttpServletResponse response) {
@@ -1349,6 +1360,7 @@ public class ShoppingCartEvents {
         String currencyUomId = (String) request.getParameter("currencyUomId");
         String shipBeforeDateStr = (String) request.getParameter("shipBeforeDate");
         String shipAfterDateStr = (String) request.getParameter("shipAfterDate");
+        String orderName = (String) request.getParameter("orderName");
         Map result = null;
 
         // set the agreement if specified otherwise set the currency
@@ -1362,6 +1374,9 @@ public class ShoppingCartEvents {
             return "error";
         }
 
+        // set the order name
+        cart.setOrderName(orderName);
+        
         // set the default ship before and after dates if supplied
         try {
             if (UtilValidate.isNotEmpty(shipBeforeDateStr)) {

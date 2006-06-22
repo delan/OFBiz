@@ -161,6 +161,10 @@ public class OrderReadHelper {
         return orderHeader.getString("currencyUom");
     }
 
+    public String getOrderName() {
+        return orderHeader.getString("orderName");
+    }
+    
     public List getAdjustments() {
         if (adjustments == null) {
             try {
