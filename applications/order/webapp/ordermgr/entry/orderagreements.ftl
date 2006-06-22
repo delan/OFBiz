@@ -65,7 +65,7 @@
         </td>
         <td>&nbsp;</td>
         <td align='left'>
-          <input type='text' size='60' maxlength='100' name='orderName'/>
+          <input type='text' class="inputBox" size='60' maxlength='100' name='orderName'/>
         </td>
       </tr>
 
