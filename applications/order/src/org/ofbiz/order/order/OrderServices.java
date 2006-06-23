@@ -187,6 +187,7 @@ public class OrderServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "items.none", locale));
         }
 
+        // all this marketing pkg auto stuff is deprecated in favor of MARKETING_PKG_AUTO productTypeId and a BOM of MANUF_COMPONENT assocs
         // these need to be retrieved now because they might be needed for exploding MARKETING_PKG_AUTO
         List orderAdjustments = (List) context.get("orderAdjustments");
         List orderItemShipGroupInfo = (List) context.get("orderItemShipGroupInfo");
@@ -3376,7 +3377,8 @@ public class OrderServices {
     }
 
 
-    /**
+    
+    /** deprecated
      * Explodes MARKET_PKG_AUTO item by replacing it with the underlying items (productIdTo in ProductAssoc.)
      * Also pro-rates the adjustments (sales tax, promotions, etc.) among the underlying items.
      * If there is a price difference between the MARKET_PKG_AUTO parent item and the sum of the underlying items,
@@ -3394,6 +3396,7 @@ public class OrderServices {
     public static void explodeMarketingPkgAutoItem(List orderItems, List orderAdjustments, List orderItemShipGroupInfo, List orderItemPriceInfo, String orderTypeId,
         GenericDelegator delegator, LocalDispatcher dispatcher, Locale locale) throws Exception {
 
+        Debug.logWarning("explodeMarketingPkgAutoItem is deprecated and will be removed.  Use productTypeId=MARKETING_PKG_AUTO and assocTypeId=MANUF_COMPONENT instead!", module);
         List newOrderItems = new ArrayList();
         List newOrderAdjustments = new ArrayList();
         List newOrderItemShipGroupInfo = new ArrayList();
