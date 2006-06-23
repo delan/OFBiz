@@ -131,9 +131,9 @@ public class ProductPromoWorker {
                                 // evaluate the party related conditions; so we don't show the promo if it doesn't apply.
                                 if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
                                     condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
-                                } else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId"))) {
+                                } else if ("PPIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId"))) {
                                     condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
-                                } else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId"))) {
+                                } else if ("PPIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId"))) {
                                     condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
                                 } else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId"))) {
                                     condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
@@ -937,7 +937,7 @@ public class ProductPromoWorker {
             } else {
                 compareBase = new Integer(1);
             }
-        } else if ("PRIP_PARTY_GRP_MEM".equals(inputParamEnumId)) {
+        } else if ("PPIP_PARTY_GRP_MEM".equals(inputParamEnumId)) {
             if (UtilValidate.isEmpty(partyId)) {
                 compareBase = new Integer(1);
             } else {
@@ -957,7 +957,7 @@ public class ProductPromoWorker {
                     }
                 }
             }
-        } else if ("PRIP_PARTY_CLASS".equals(inputParamEnumId)) {
+        } else if ("PPIP_PARTY_CLASS".equals(inputParamEnumId)) {
             if (UtilValidate.isEmpty(partyId)) {
                 compareBase = new Integer(1);
             } else {
