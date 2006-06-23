@@ -1113,9 +1113,9 @@ public class ModelForm {
         // set low and high index
         getListLimits(context, obj);
 
-        int listSize = ((Integer) context.get("listSize")).intValue();
-        int viewIndex = ((Integer) context.get("viewIndex")).intValue();
-        int viewSize = ((Integer) context.get("viewSize")).intValue();
+        //int listSize = ((Integer) context.get("listSize")).intValue();
+        //int viewIndex = ((Integer) context.get("viewIndex")).intValue();
+        //int viewSize = ((Integer) context.get("viewSize")).intValue();
         int lowIndex = ((Integer) context.get("lowIndex")).intValue();
         int highIndex = ((Integer) context.get("highIndex")).intValue();
         
