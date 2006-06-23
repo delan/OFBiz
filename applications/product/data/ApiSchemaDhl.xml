@@ -41,7 +41,7 @@
       <Receiver> 
           <Address>
             <#if (action == "GenerateLabel")>
-                <CompanyName>${companyName}</CompanyName>  <!-- CDATA -->
+                <CompanyName>${companyName?if_exists}</CompanyName>  <!-- CDATA -->
                 <SuiteDepartmentName>${suiteDepartmentName?if_exists}</SuiteDepartmentName> <!-- CDATA -->
                 <Street>${street}</Street> <!-- CDATA -->
                 <StreetLine2>${streetLine2?if_exists}</StreetLine2> <!-- CDATA -->
