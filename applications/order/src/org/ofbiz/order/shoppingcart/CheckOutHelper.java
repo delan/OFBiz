@@ -573,6 +573,9 @@ public class CheckOutHelper {
             String productId = orderItem.getString("productId");
             if (productId != null) {
                 try {
+                    // do something tricky here: run as a different user 
+                    // that can actually create and run a production run
+                    GenericValue permUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "system"));
                     GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
                     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
                     if ("AGGREGATED".equals(product.getString("productTypeId"))) {
@@ -583,7 +586,7 @@ public class CheckOutHelper {
                         inputMap.put("orderId", orderId);
                         inputMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                         inputMap.put("quantity", orderItem.getDouble("quantity"));
-                        inputMap.put("userLogin", userLogin);
+                        inputMap.put("userLogin", permUserLogin);
                         
                         Map prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
                         if (ServiceUtil.isError(prunResult)) {
@@ -594,7 +597,7 @@ public class CheckOutHelper {
                         inputMap.put("facilityId", productStore.getString("inventoryFacilityId"));
                         inputMap.put("orderId", orderId);
                         inputMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
-                        inputMap.put("userLogin", userLogin);
+                        inputMap.put("userLogin", permUserLogin);
                         Map prunResult = dispatcher.runSync("createProductionRunForMktgPkg", inputMap);
                         if (ServiceUtil.isError(prunResult)) {
                             Debug.logError(ServiceUtil.getErrorMessage(prunResult) + " for input:" + inputMap, module);
