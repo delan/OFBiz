@@ -30,7 +30,7 @@
     <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacilityLocation}]</a>
         
-    <form action="<@ofbizUrl>FindFacilityLocation</@ofbizUrl>" method="GET" style="margin: 0;">
+    <form action="<@ofbizUrl>FindFacilityLocation</@ofbizUrl>" method="GET" style="margin: 0;" name="findFacilityLocation">
         <table border="0" cellpadding="2" cellspacing="0">
         <#if !(facilityId?exists)>
             <tr>
@@ -44,7 +44,14 @@
         <tr>
             <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductLocationSeqId}</div></td>
             <td>&nbsp;</td>
-            <td width="74%"><input type="text" class="inputBox" name="locationSeqId" value="" size="19" maxlength="20"></td>
+            <td width="74%">
+                <input type="text" class="inputBox" name="locationSeqId" value="" size="19" maxlength="20">
+                <span class="tabletext">
+                    <a href="javascript:call_fieldlookup2(document.findFacilityLocation.locationSeqId,'LookupFacilityLocation<#if (facilityId?exists)>?facilityId=${facilityId}</#if>');">
+                        <img src="/images/fieldlookup.gif" width="15" height="14" border="0" alt="Click here For Field Lookup"/>
+                    </a>
+                </span>
+            </td>
         </tr>
         <tr>
         <tr>

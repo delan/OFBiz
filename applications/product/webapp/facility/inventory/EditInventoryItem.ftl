@@ -158,9 +158,19 @@
           </#if>
           <#if inventoryItem?exists>
             <input type="text" size="20" maxsize="20" name="locationSeqId" value="${inventoryItem.locationSeqId?if_exists}" class="inputBox"/>
+            <span class="tabletext">
+                <a href="javascript:call_fieldlookup2(document.inventoryItemForm.locationSeqId,'LookupFacilityLocation<#if (facilityId?exists)>?facilityId=${facilityId}</#if>');">
+                    <img src="/images/fieldlookup.gif" width="15" height="14" border="0" alt="Click here For Field Lookup"/>
+                </a>
+            </span>
             &nbsp;<a href="<@ofbizUrl>FindFacilityLocation?facilityId=${facilityId?if_exists}&inventoryItemId=${inventoryItemId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductFindLocation}]</a>
           <#else>
             <input type="text" size="20" maxsize="20" name="locationSeqId" value="${locationSeqId?if_exists}" class="inputBox">
+            <span class="tabletext">
+                <a href="javascript:call_fieldlookup2(document.inventoryItemForm.locationSeqId,'LookupFacilityLocation<#if (facilityId?exists)>?facilityId=${facilityId}</#if>');">
+                    <img src="/images/fieldlookup.gif" width="15" height="14" border="0" alt="Click here For Field Lookup"/>
+                </a>
+            </span>
           </#if>
         </td>
       </tr>
