@@ -1,28 +1,19 @@
 <#--
- *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included 
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author     David E. Jones (jonesde@ofbiz.org)
- *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Rev$
- *@since      2.2
+$Id$
+
+Copyright 2001-2006 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
 -->
 
 <#if productId?exists && product?exists>
@@ -70,6 +61,11 @@
                 </#list>
             </select>
             ${uiLabelMap.ProductLocationSeqId}:&nbsp;<input type="text" size="10" name="locationSeqId" class="inputBox"/>
+            <span class="tabletext">
+              <a href="javascript:call_fieldlookup2(document.createProductFacilityLocationForm.locationSeqId,'LookupFacilityLocation');">
+                <img src="/images/fieldlookup.gif" width="15" height="14" border="0" alt="Click here For Field Lookup"/>
+              </a>
+            </span>
             ${uiLabelMap.ProductMinimumStock}:&nbsp;<input type="text" size="10" name="minimumStock" class="inputBox"/>
             ${uiLabelMap.ProductMoveQuantity}:&nbsp;<input type="text" size="10" name="moveQuantity" class="inputBox"/>
             <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;"/>

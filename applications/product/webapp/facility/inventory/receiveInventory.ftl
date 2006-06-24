@@ -183,6 +183,11 @@
             </select>
           <#else>
             <input type="text" name="locationSeqId_o_0" size="20" maxlength="20" class="inputBox"/>
+            <span class="tabletext">
+                <a href="javascript:call_fieldlookup2(document.selectAllForm.locationSeqId_o_0,'LookupFacilityLocation<#if parameters.facilityId?exists>?facilityId=${facilityId}</#if>');">
+                    <img src="/images/fieldlookup.gif" width="15" height="14" border="0" alt="Click here For Field Lookup"/>
+                </a>
+            </span>
           </#if>
         </td>
       </tr>
@@ -379,6 +384,11 @@
                       </select>
                     <#else>
                       <input type="text" class="inputBox" name="locationSeqId_o_${rowCount}" size="12"/>
+                      <span class="tabletext">
+                          <a href="javascript:call_fieldlookup2(document.selectAllForm.locationSeqId_o_${rowCount},'LookupFacilityLocation<#if parameters.facilityId?exists>?facilityId=${facilityId}</#if>');">
+                              <img src="/images/fieldlookup.gif" width="15" height="14" border="0" alt="Click here For Field Lookup"/>
+                          </a>
+                      </span>
                     </#if>
                   </td>
                   <td align="right">
