@@ -194,6 +194,7 @@ public class OrderServices {
         List orderItemPriceInfo = (List) context.get("orderItemPriceInfos");
 
         // explode items which are MARKETINGG_PKG_AUTO
+        /*
         if (!orderTypeId.equals("PURCHASE_ORDER")) {
             try {
                 explodeMarketingPkgAutoItem(orderItems, orderAdjustments, orderItemShipGroupInfo, orderItemPriceInfo, orderTypeId, delegator, dispatcher, locale);
@@ -202,7 +203,7 @@ public class OrderServices {
                return ServiceUtil.returnError("Error on exploding marketing_pkg_auto item.[" + e.toString() + "]");
             }
         }
-
+        */
         // check inventory and other things for each item
         List errorMessages = FastList.newInstance();
         Map normalizedItemQuantities = FastMap.newInstance();
