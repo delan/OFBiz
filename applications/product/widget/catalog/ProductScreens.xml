@@ -423,11 +423,24 @@
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/product/EditProductInventoryItems.ftl"/></html>
-                        </platform-specific>
-                        <container><label style="head1">${uiLabelMap.ProductOutstandingPurchaseOrders}</label></container>
-                        <include-form name="OutstandingPurchaseOrders" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <section>
+                            <condition>
+                                <if-compare field-name="product.isVirtual" operator="equals" type="String" value="Y"/>
+                            </condition>
+                            <widgets>
+                                <container><label style="head2">${uiLabelMap.ProductVariantProductInventorySummary}</label></container>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/product/EditVirtualProductInventory.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/product/EditProductInventoryItems.ftl"/></html>
+                                </platform-specific>
+                                <container><label style="head1">${uiLabelMap.ProductOutstandingPurchaseOrders}</label></container>
+                                <include-form name="OutstandingPurchaseOrders" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
