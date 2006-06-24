@@ -3682,6 +3682,9 @@
       <relation type="one" fk-name="SUPPL_PROD_CUOM" title="Currency" rel-entity-name="Uom">
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
+      <relation type="one" fk-name="SUPPL_PROD_QUOM" title="Quantity" rel-entity-name="Uom">
+        <key-map field-name="quantityUomId" rel-field-name="uomId"/>
+      </relation>
     </entity>
     <entity entity-name="SupplierProductFeature" 
             package-name="org.ofbiz.product.supplier"
