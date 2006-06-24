@@ -17,22 +17,22 @@ under the License.
 -->
 <table border="1" cellpadding="2" cellspacing="0">
     <tr>
-        <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>
             <#list featureTypeIds as featureTypeId>
                 <#assign featureType = delegator.findByPrimaryKey("ProductFeatureType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", featureTypeId))>
-                <td><div class="tabletext"><b>${featureType.description}</b></div></td>
+                <td><div class="tableheadtext">${featureType.description}</div></td>
             </#list>
-        <td><div class="tabletext"><b>${uiLabelMap.ProductQoh}</b></div></td>
-        <td><div class="tabletext"><b>${uiLabelMap.ProductAtp}</b></div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductQoh}</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductAtp}</div></td>
     </tr>
     <#list variantInventorySummaries as variantSummary>
     <tr>
         <td><a href="/catalog/control/EditProductInventoryItems?productId=${variantSummary.productId}" class="buttontext">${variantSummary.productId}</a></td>
             <#list featureTypeIds as featureTypeId>
-                <td><div class="tabletext"><b>${variantSummary[featureTypeId].description}</b></div></td>
+                <td><div class="tabletext">${variantSummary[featureTypeId].description}</div></td>
             </#list>
-        <td><div class="tabletext">${variantSummary.quantityOnHandTotal}</b></div></td>
-        <td><div class="tabletext">${variantSummary.availableToPromiseTotal}</b></div></td>
+        <td><div class="tabletext">${variantSummary.quantityOnHandTotal}</div></td>
+        <td><div class="tabletext">${variantSummary.availableToPromiseTotal}</div></td>
     </tr>
     </#list>
 </table>
