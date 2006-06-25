@@ -677,7 +677,8 @@ public class ProductServices {
         String productId = (String) context.get("productId");
         String variantProductId = (String) context.get("productVariantId");
         String productFeatureIds = (String) context.get("productFeatureIds");
-        
+        Long prodAssocSeqNum = (Long) context.get("sequenceNum");
+
         try {
             // read the product, duplicate it with the given id
             GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
@@ -708,7 +709,6 @@ public class ProductServices {
                 //update entry
                 variantProduct.store();
             }
-            GenericValue variantProductAssoc = null;
             if (variantProductExists) {
                 // Since the variant product is already a variant, first of all we remove the old features
                 // and the associations of type PRODUCT_VARIANT: a given product can be a variant of only one product.
@@ -718,9 +718,13 @@ public class ProductServices {
                                                                            "productFeatureApplTypeId", "STANDARD_FEATURE"));
             }
             // add an association from productId to variantProductId of the PRODUCT_VARIANT
-            GenericValue productAssoc = delegator.makeValue("ProductAssoc",
-                                                            UtilMisc.toMap("productId", productId, "productIdTo", variantProductId,
-                                                                           "productAssocTypeId", "PRODUCT_VARIANT", "fromDate", UtilDateTime.nowTimestamp()));
+            Map productAssocMap = UtilMisc.toMap("productId", productId, "productIdTo", variantProductId,
+                                                 "productAssocTypeId", "PRODUCT_VARIANT",
+                                                 "fromDate", UtilDateTime.nowTimestamp());
+            if (prodAssocSeqNum != null) {
+                productAssocMap.put("sequenceNum", prodAssocSeqNum);
+            }
+            GenericValue productAssoc = delegator.makeValue("ProductAssoc", productAssocMap);
             productAssoc.create();
 
             // add the selected standard features to the new product given the productFeatureIds

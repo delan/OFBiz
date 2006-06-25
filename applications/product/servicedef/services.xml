@@ -105,6 +105,7 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productFeatureIds" type="String" mode="IN" optional="false"/>
         <attribute name="productVariantId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
 
     <service name="quickCreateVirtualWithVariants" engine="java"
