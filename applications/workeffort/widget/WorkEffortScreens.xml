@@ -138,9 +138,7 @@
                 <set field="titleProperty" value="PageTitleListWorkEfforts"/>
                 <set field="tabButtonItem" value="WorkEffortAssocs"/>
                 <set field="labelTitleProperty" value="PageTitleListWorkEfforts"/>
-
-                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
-                <set field="trail" from-field="parameters.trail"/>
+                <set field="trail" from-field="parameters.trail" default-value="${parameters.workEffortId}"/>
                 <set field="workEffortId" from-field="parameters.trail"/>
             </actions>
             <widgets>
@@ -159,17 +157,17 @@
             <actions>
                 <set field="workEffortId" from-field="workEffortIdFrom" default-value="${workEffort.workEffortId}"/>
                 <entity-one entity-name="WorkEffort" value-name="workEffort"/>
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="ChildWorkEfforts?workEffortId=${workEffort.workEffortId}"/>
             </actions>
             <widgets> 
                 <label text=" ${workEffort.workEffortName} - ${workEffort.description}" style="tabletext"/>
                 <link target="EditWorkEffort?workEffortId=${workEffort.workEffortId}" text="${workEffort.workEffortId}" style="buttontext"/>
                 <link target="AddWorkEffortAndAssoc?workEffortIdFrom=${workEffort.workEffortId}" text="${uiLabelMap.WorkEffortAddChild}" style="buttontext"></link>
                 <section>
-                    <condition>
-                        <not><if-empty field-name="workEffortAssoc"/></not>
-                    </condition>
+                    <condition><not><if-empty field-name="workEffortAssoc"/></not></condition>
                     <widgets>
-                        <link target="EditWorkEffortAndAssoc?workEffortIdFrom=${workEffortAssoc.workEffortIdFrom}&amp;workEffortIdTo=${workEffortAssoc.workEffortIdTo}&amp;workEffortAssocTypeId=${workEffortAssoc.workEffortAssocTypeId}&amp;fromDate=${workEffortAssoc.fromDate}&amp;DONE_PAGE=${donePage}" text="Edit" style="buttontext"></link>
+                        <link target="EditWorkEffortAssoc?workEffortIdFrom=${workEffortAssoc.workEffortIdFrom}&amp;workEffortIdTo=${workEffortAssoc.workEffortIdTo}&amp;workEffortAssocTypeId=${workEffortAssoc.workEffortAssocTypeId}&amp;fromDate=${workEffortAssoc.fromDate}&amp;DONE_PAGE=${donePage}" text="Edit Assoc" style="buttontext"></link>
+                        <link target="EditWorkEffortAndAssoc?workEffortIdFrom=${workEffortAssoc.workEffortIdFrom}&amp;workEffortIdTo=${workEffortAssoc.workEffortIdTo}&amp;workEffortAssocTypeId=${workEffortAssoc.workEffortAssocTypeId}&amp;fromDate=${workEffortAssoc.fromDate}&amp;DONE_PAGE=${donePage}" text="Edit Assoc Detail" style="buttontext"></link>
                     </widgets>
                 </section>
             </widgets>
@@ -233,6 +231,30 @@
                     <decorator-section name="body">
                         <label style="head1">${uiLabelMap.PageTitleEditWorkEffort}</label>
                         <include-form name="EditWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditWorkEffortAssoc">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditWorkEffortAssoc"/>
+                <set field="tabButtonItem" value="WorkEffort"/>
+                <set field="labelTitleProperty" value="PageTitleEditWorkEffortAssoc"/>
+                <set field="workEffortIdTo" from-field="parameters.workEffortIdTo"/>
+                <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
+                <set field="workEffortAssocTypeId" from-field="parameters.workEffortAssocTypeId"/>
+                <set field="fromDate" from-field="parameters.fromDate"/>
+                <entity-one entity-name="WorkEffortAssoc" value-name="workEffortAssoc"/>
+                <set field="donePage" value="ChildWorkEfforts?workEffortId=${workEffortIdFrom}&amp;trail=${workEffortIdFrom}" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="head1">${uiLabelMap.PageTitleEditWorkEffortAssoc}</label>
+                        <include-form name="EditWorkEffortAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

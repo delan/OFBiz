@@ -256,6 +256,29 @@
             <sort-field name="description"/>
         </sort-order>
     </form>
+
+    <form name="EditWorkEffortAssoc" target="updateWorkEffortAssoc" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <alt-target target="createWorkEffortAssoc" use-when="workEffortAssoc==null"/>
+        <field name="workEffortIdFrom" map-name="workEffortAssoc" widget-style="tabletext">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}">
+                <sub-hyperlink description="${workEffortIdFrom}" target="EditWorkEffort?workEffortId=${workEffortIdFrom}" link-style="buttontext"/>
+            </display-entity>
+        </field>
+        <field name="workEffortIdTo" map-name="workEffortAssoc" widget-style="tabletext">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}">
+                <sub-hyperlink description="${workEffortIdTo}" target="EditWorkEffort?workEffortId=${workEffortIdTo}" link-style="buttontext"/>
+            </display-entity>
+        </field>
+        <field name="workEffortAssocTypeId" map-name="workEffortAssoc" widget-style="tabletext">
+            <display-entity entity-name="WorkEffortAssocType"/>
+        </field>
+        <field name="sequenceNum"  field-name="sequenceNum" map-name="workEffortAssoc"><text/></field>
+        <field name="fromDate"  field-name="fromDate" map-name="workEffortAssoc"><display/></field>
+        <field name="thruDate"  field-name="thruDate" map-name="workEffortAssoc"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
+        <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+    </form>
   
     <form name="EditWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" target="updateWorkEffortAndAssoc" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
