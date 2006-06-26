@@ -582,6 +582,7 @@
     </entity>
     <entity entity-name="FixedAssetType"
             package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
             title="Fixed Asset Type Entity">
       <field name="fixedAssetTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -812,7 +813,7 @@
     </entity>
     <entity entity-name="InvoiceItemType"
             package-name="org.ofbiz.accounting.invoice"
-            title="Invoice Item Type Entity" default-resource-name="CommonEntityLabels">
+            title="Invoice Item Type Entity" default-resource-name="AccountingEntityLabels">
       <field name="invoiceItemTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1294,6 +1295,7 @@
     </entity>
     <entity entity-name="GlAccountClass"
             package-name="org.ofbiz.accounting.ledger"
+            default-resource-name="AccountingEntityLabels"
             title="General Ledger Account Class Entity">
       <field name="glAccountClassId" type="id-ne"></field>
       <field name="parentClassId" type="id-ne"></field>
