@@ -82,11 +82,12 @@ function clickAll(e) {
                     <td><div class="tabletext"><b>${featureType}</b></div></td>
                 </#list>
                 <td><div class="tabletext"><b>${uiLabelMap.ProductNewProductCreate} !</b></div></td>
+                <td><div class="tabletext"><b>${uiLabelMap.ProductSequenceNum}</b></div></td>
                 <td><div class="tabletext"><b>${uiLabelMap.ProductExistingVariant} :</b></div></td>
                 <td><div class="tabletext"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:clickAll(this);"></div></td>
             </tr>
         
-
+            <#assign defaultSequenceNum = 10>
             <#list featureCombinationInfos as featureCombinationInfo>
                 <#assign curProductFeatureAndAppls = featureCombinationInfo.curProductFeatureAndAppls>
                 <#assign existingVariantProductIds = featureCombinationInfo.existingVariantProductIds>
@@ -103,6 +104,9 @@ function clickAll(e) {
                     <td>
                         <input type="text" size="20" maxlength="20" name="productVariantId_o_${rowCount}" value=""/>
                     </td>
+                    <td align="right">
+                        <input type"text" size="5" maxlength="10" name="sequenceNum_o_${rowCount}" value="${defaultSequenceNum}"/>
+                    </td>
                     <td>
                         <div class="tabletext">&nbsp;
                         <#list existingVariantProductIds as existingVariantProductId>
@@ -115,10 +119,11 @@ function clickAll(e) {
                             </td>
 
                 </tr>
+                <#assign defaultSequenceNum = defaultSequenceNum + 10>
                 <#assign rowCount = rowCount + 1>
             </#list>
 <tr>
-<#assign columns = featureTypes.size() + 3>
+<#assign columns = featureTypes.size() + 4>
 <td colspan="${columns}" align="center">
 <input type="hidden" name="_rowCount" value="${rowCount}">
 <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCreate}"/>
