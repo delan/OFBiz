@@ -3478,6 +3478,10 @@ public class ShoppingCart implements Serializable {
         public Timestamp shipBeforeDate = null;
         public Timestamp shipAfterDate = null;
 
+        public String getContactMechId() { return contactMechId; }
+        public String getCarrierPartyId() { return carrierPartyId; }
+        public String getShipmentMethodTypeId() { return shipmentMethodTypeId; }
+
         public List makeItemShipGroupAndAssoc(GenericDelegator delegator, ShoppingCart cart, long groupIndex) {
             String shipGroupSeqId = UtilFormatOut.formatPaddedNumber(groupIndex, 5);
             List values = new LinkedList();
