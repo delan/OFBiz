@@ -364,7 +364,7 @@ public class DataServices {
                 
             }
             String textData = (String) context.get("textData");
-            if (Debug.infoOn()) Debug.logInfo("in updateElectronicText, textData:" + textData, module);
+            if (Debug.verboseOn()) Debug.logVerbose("in updateElectronicText, textData:" + textData, module);
                 try {
                     electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
                     if (electronicText != null) {
