@@ -62,27 +62,6 @@
             </tr>
             <tr><td colspan="7"><hr class="sepbar"/></td></tr>
           </#if>
-        <#-- shipping address -->
-            <#if shippingAddress?has_content>
-              <tr>
-                <td align="right" valign="top" width="15%">
-                  <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderDestination}</b></div>
-                </td>
-                <td width="5">&nbsp;</td>
-                <td align="left" valign="top" width="80%">
-                  <div class="tabletext">
-                    <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br/></#if>
-                    <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${shippingAddress.attnName}<br/></#if>
-                    ${shippingAddress.address1}<br/>
-                    <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br/></#if>                            
-                    ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
-                    ${shippingAddress.postalCode?if_exists}<br/>
-                    ${shippingAddress.countryGeoId?if_exists}
-                  </div>
-                </td>
-              </tr>
-              <tr><td colspan="7"><hr class="sepbar"/></td></tr>
-            </#if>
             <#if orderTerms?has_content>
               <tr>
                 <td align="right" valign="top" width="15%">
@@ -110,22 +89,6 @@
                        <#assign index=index+1/>
                      </#list>
                 </table>
-              </td>
-            </tr>
-            <tr><td colspan="7"><hr class="sepbar"/></td></tr>
-          </#if>
-          <#if orderType != "PURCHASE_ORDER">
-            <tr>
-              <td align="right" valign="top" width="15%">
-                <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonMethod}</b></div>
-              </td>
-              <td width="5">&nbsp;</td>
-              <td align="left" valign="top" width="80%">
-                <div class="tabletext">
-                  <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
-                  ${shipMethDescription?if_exists}
-                  <#if shippingAccount?exists><br/>${uiLabelMap.OrderUseAccount}: ${shippingAccount}</#if>
-                </div>
               </td>
             </tr>
             <tr><td colspan="7"><hr class="sepbar"/></td></tr>

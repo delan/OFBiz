@@ -222,6 +222,9 @@
                             <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheader.ftl"/></html>
                         </platform-specific>
                       <platform-specific>
+                          <html><html-template location="component://order/webapp/ordermgr/entry/order/shipGroupConfirmSummary.ftl"/></html>
+                      </platform-specific>
+                      <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/entry/order/orderitems.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
