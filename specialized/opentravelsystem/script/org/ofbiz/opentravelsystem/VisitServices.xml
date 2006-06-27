@@ -62,7 +62,9 @@
     
     <!-- make a list of total visits, unique visits en pageviews per day -->
     <simple-method method-name="ListVisitOverview" short-description="Number of Visits">
+        <set field="searchPrefix" from-field="parameters.userLogin.partyId" default-value=""/>
         <entity-condition entity-name="Visit" list-name="AllVisitsList">
+            <condition-expr field-name="webappName" operator="equals" value="${searchPrefix}"/>
             <order-by field-name="fromDate"/> 
         </entity-condition>       
         <set field="uniqueIp.clientIpAddress" value="0000-00"/>
