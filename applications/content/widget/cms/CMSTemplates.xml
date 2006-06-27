@@ -6,7 +6,7 @@
 <screen name="ContentOnly">
   <section>
     <widgets>
-      <sub-content content-id="${contentId}" assoc-name="MAIN" 
+      <sub-content content-id="${contentId}" map-key="MAIN" 
         enable-edit-name="enableEdit"
        edit-request="EditAddSubContent?MASTER_contentId=${MASTER_contentId}&amp;MASTER_caContentIdTo=${MASTER_caContentIdTo}&amp;MASTER_caContentAssocTypeId=${MASTER_caContentAssocTypeId}&amp;MASTER_caFromDate=${MASTER_caFromDate}&amp;MASTER_drDataResourceId=${MASTER_drDataResourceId}&amp;caContentIdTo=${caContentIdTo}"/>
     </widgets>
@@ -17,11 +17,11 @@
   <section>
     <widgets>
       <container style="floatleft">
-            <sub-content content-id="${contentId}" assoc-name="AUX" 
+            <sub-content content-id="${contentId}" map-key="AUX" 
         enable-edit-name="enableEdit"
        edit-request="EditAddSubContent?MASTER_contentId=${MASTER_contentId}&amp;MASTER_caContentIdTo=${MASTER_caContentIdTo}&amp;MASTER_caContentAssocTypeId=${MASTER_caContentAssocTypeId}&amp;MASTER_caFromDate=${MASTER_caFromDate}&amp;MASTER_drDataResourceId=${MASTER_drDataResourceId}&amp;caContentIdTo=${caContentIdTo}"/>
       </container>
-      <sub-content content-id="${contentId}" assoc-name="MAIN" 
+      <sub-content content-id="${contentId}" map-key="MAIN" 
         enable-edit-name="enableEdit"
        edit-request="EditAddSubContent?MASTER_contentId=${MASTER_contentId}&amp;MASTER_caContentIdTo=${MASTER_caContentIdTo}&amp;MASTER_caContentAssocTypeId=${MASTER_caContentAssocTypeId}&amp;MASTER_caFromDate=${MASTER_caFromDate}&amp;MASTER_drDataResourceId=${MASTER_drDataResourceId}&amp;caContentIdTo=${caContentIdTo}"/>
     </widgets>
@@ -32,11 +32,11 @@
   <section>
     <widgets>
       <container style="topcentered">
-        <sub-content content-id="${contentId}" assoc-name="AUX" 
+        <sub-content content-id="${contentId}" map-key="AUX" 
         enable-edit-name="enableEdit"
        edit-request="EditAddSubContent?MASTER_contentId=${MASTER_contentId}&amp;MASTER_caContentIdTo=${MASTER_caContentIdTo}&amp;MASTER_caContentAssocTypeId=${MASTER_caContentAssocTypeId}&amp;MASTER_caFromDate=${MASTER_caFromDate}&amp;MASTER_drDataResourceId=${MASTER_drDataResourceId}&amp;caContentIdTo=${caContentIdTo}"/>
       </container>
-      <sub-content content-id="${contentId}" assoc-name="MAIN" 
+      <sub-content content-id="${contentId}" map-key="MAIN" 
         enable-edit-name="enableEdit"
        edit-request="EditAddSubContent?MASTER_contentId=${MASTER_contentId}&amp;MASTER_caContentIdTo=${MASTER_caContentIdTo}&amp;MASTER_caContentAssocTypeId=${MASTER_caContentAssocTypeId}&amp;MASTER_caFromDate=${MASTER_caFromDate}&amp;MASTER_drDataResourceId=${MASTER_drDataResourceId}&amp;caContentIdTo=${caContentIdTo}"/>
     </widgets>

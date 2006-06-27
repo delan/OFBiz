@@ -404,7 +404,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             //Boolean nullThruDatesOnly = new Boolean(false);
             String mimeTypeId = "text/html";
             String expandedContentId = content.getContentId(context);
-            String expandedAssocName = content.getAssocName(context);
+            String expandedMapKey = content.getMapKey(context);
             String renderedContent = null;
             GenericDelegator delegator = (GenericDelegator) context.get("delegator");
             Timestamp fromDate = UtilDateTime.nowTimestamp();
@@ -418,7 +418,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             //Debug.logInfo("expandedContentId=" + expandedContentId + ", expandedAssocName=" + expandedAssocName, module);
             try {
                 if (WidgetContentWorker.contentWorker != null) {
-                    renderedContent = WidgetContentWorker.contentWorker.renderSubContentAsTextCacheExt(delegator, expandedContentId, expandedAssocName, null, context, locale, mimeTypeId, userLogin, fromDate);
+                    renderedContent = WidgetContentWorker.contentWorker.renderSubContentAsTextCacheExt(delegator, expandedContentId, expandedMapKey, null, context, locale, mimeTypeId, userLogin, fromDate);
                     //Debug.logInfo("renderedContent=" + renderedContent, module);
                 } else {
                     Debug.logError("Not rendering content, not ContentWorker found.", module);
@@ -459,7 +459,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
         String enableEditName = content.getEnableEditName(context);
         String enableEditValue = (String)context.get(enableEditName);
         String expandedContentId = content.getContentId(context);
-        String expandedAssocName = content.getAssocName(context);
+        String expandedMapKey = content.getMapKey(context);
         Map params = (Map)context.get("parameters");
         if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
             editMode += " Image";
@@ -471,8 +471,8 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                 if (editRequest.indexOf("?") < 0)  editRequest += "?";
                 else editRequest += "&amp;";
                 editRequest += "contentId=" + expandedContentId;
-                if (UtilValidate.isNotEmpty(expandedAssocName)) {
-                    editRequest += "&amp;assocName=" + expandedAssocName;
+                if (UtilValidate.isNotEmpty(expandedMapKey)) {
+                    editRequest += "&amp;mapKey=" + expandedMapKey;
                 }
                 HttpSession session = request.getSession();
                 GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");

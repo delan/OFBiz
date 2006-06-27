@@ -89,7 +89,7 @@
                       -->
                       <label text="&lt;br/&gt;" />
                       <container style="blogtext">
-                        <sub-content assoc-name="SUMMARY" content-id="${blog.contentId}"></sub-content>
+                        <sub-content map-key="SUMMARY" content-id="${blog.contentId}"></sub-content>
                       </container>
                       </container>
                     </widgets>

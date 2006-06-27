@@ -6,7 +6,7 @@
 <screen name="ContentOnly">
   <section>
     <widgets>
-      <sub-content content-id="${contentId}" assoc-name="MAIN" 
+      <sub-content content-id="${contentId}" map-key="MAIN" 
         enable-edit-name="enableEdit"
         edit-request="EditBlogText?contentContentId=${parameters.contentContentId}&amp;contentContentIdTo=${parameters.contentContentIdTo}&amp;contentDataResourceId=${parameters.contentDataResourceId}&amp;contentContentAssocTypeId=${parameters.contentContentAssocTypeId}&amp;contentFromDate=${parameters.contentFromDate}"/>
     </widgets>
@@ -17,11 +17,11 @@
   <section>
     <widgets>
       <container style="floatleft">
-            <sub-content content-id="${contentId}" assoc-name="IMAGE" 
+            <sub-content content-id="${contentId}" map-key="IMAGE" 
         enable-edit-name="enableEdit"
         edit-request="EditBlogImage?contentContentId=${parameters.contentContentId}&amp;contentContentIdTo=${parameters.contentContentIdTo}&amp;contentDataResourceId=${parameters.contentDataResourceId}&amp;contentContentAssocTypeId=${parameters.contentContentAssocTypeId}&amp;contentFromDate=${parameters.contentFromDate}"/>
       </container>
-      <sub-content content-id="${contentId}" assoc-name="MAIN" 
+      <sub-content content-id="${contentId}" map-key="MAIN" 
         enable-edit-name="enableEdit"
         edit-request="EditBlogText?contentContentId=${parameters.contentContentId}&amp;contentContentIdTo=${parameters.contentContentIdTo}&amp;contentDataResourceId=${parameters.contentDataResourceId}&amp;contentContentAssocTypeId=${parameters.contentContentAssocTypeId}&amp;contentFromDate=${parameters.contentFromDate}"/>
     </widgets>
@@ -32,13 +32,13 @@
   <section>
     <widgets>
       <container style="topcentered">
-        <sub-content content-id="${contentId}" assoc-name="IMAGE" 
+        <sub-content content-id="${contentId}" map-key="IMAGE" 
         enable-edit-name="enableEdit"
         edit-request="EditBlogImage?contentContentId=${parameters.contentContentId}&amp;contentContentIdTo=${parameters.contentContentIdTo}&amp;contentDataResourceId=${parameters.contentDataResourceId}&amp;contentContentAssocTypeId=${parameters.contentContentAssocTypeId}&amp;contentFromDate=${parameters.contentFromDate}"/>
       </container>
       <label text="&lt;p/&gt;"/>
       <label text="&lt;br/&gt;"/>
-      <sub-content content-id="${contentId}" assoc-name="MAIN" 
+      <sub-content content-id="${contentId}" map-key="MAIN" 
         enable-edit-name="enableEdit"
         edit-request="EditBlogText?contentContentId=${parameters.contentContentId}&amp;contentContentIdTo=${parameters.contentContentIdTo}&amp;contentDataResourceId=${parameters.contentDataResourceId}&amp;contentContentAssocTypeId=${parameters.contentContentAssocTypeId}&amp;contentFromDate=${parameters.contentFromDate}"/>
     </widgets>
