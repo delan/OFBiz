@@ -1,0 +1,165 @@
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    
+    <!-- ================================================================ -->
+    <!-- Opentravelsystem Statistic Services -->
+    <!-- ================================================================ -->
+    
+    <!-- make a list of unique referrers en count how many referrals they generated -->
+    <simple-method method-name="listReferrers" short-description="-Show Unique Referrers" >         
+        <set field="searchPrefix" from-field="parameters.userLogin.partyId" default-value=""/>
+        <entity-condition entity-name="Visit" list-name="AllReferrerList">
+            <condition-list>
+                <condition-expr field-name="initialReferrer" operator="like" value="http%"/>
+                <condition-expr field-name="webappName" operator="equals" value="${searchPrefix}"/>
+            </condition-list>
+            <order-by field-name="initialReferrer"/>
+        </entity-condition>
+        
+        <set field="UniqueReferrer.initialReferrer" value="0000-00"/>
+        <iterate entry-name="IterateReferrers" list-name="AllReferrerList">
+            
+            <!-- set root domain to check if referrer is an external link -->
+            <set field="parameters.referrerRootUrl" from-field="IterateReferrers.initialReferrer"/>
+            <set field="checkHttps" from-field="IterateReferrers.initialReferrer"/>   
+            <call-bsh><![CDATA[parameters.put("https", checkHttps.substring(4,5))]]></call-bsh> 
+            <if-compare field-name="parameters.https" value="s" operator="equals">
+                <set field="referrerDomain" value="${bsh:s=parameters.get(&quot;referrerRootUrl&quot;).substring(8);i=s.indexOf(&quot;:&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>                                 
+                <else>
+                    <set field="referrerDomain" value="${bsh:s=parameters.get(&quot;referrerRootUrl&quot;).substring(7);i=s.indexOf(&quot;:&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>                   
+                </else>
+            </if-compare>  
+            <set field="serverDomain" value="${bsh:s=parameters.get(&quot;_SERVER_ROOT_URL_&quot;).substring(8);i=s.indexOf(&quot;:&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>
+            
+            <if-empty field-name="UniqueReferrer.count">
+                <set field="UniqueReferrer.count" value="0"/>
+            </if-empty> 
+            <calculate field-name="UniqueReferrer.count">
+                <number value="1"/>
+                <calcop operator="add" field-name="UniqueReferrer.count"></calcop>
+            </calculate>           
+            <set field="current.initialReferrer" from-field="IterateReferrers.initialReferrer"/>
+            <set field="noReferrers.initialReferrer" value="No Referrers" />
+            <set field="noReferrers.count" value="0" />
+            <!-- store in list if changed however not the first line-->
+            <if-compare-field field-name="referrerDomain" operator="not-equals" to-field-name="serverDomain">
+                <if-compare-field field-name="UniqueReferrer.initialReferrer" operator="not-equals" to-field-name="current.initialReferrer">
+                    <if-compare field-name="UniqueReferrer.initialReferrer" operator="not-equals" value="0000-00">
+                        <field-to-list field-name="UniqueReferrer" list-name="referrerList"/>
+                        <clear-field field-name="UniqueReferrer"/>  
+                    </if-compare>
+                </if-compare-field>
+            </if-compare-field>   
+            <set field="UniqueReferrer.initialReferrer" from-field="current.initialReferrer"/> 
+        </iterate>  
+        <field-to-result field-name="referrerList" result-name="referrerList"/>
+        <order-map-list list-name="referrerList">
+            <order-by field-name="count DESC"/>
+        </order-map-list>
+    </simple-method>
+    <!-- -->
+    
+    
+    <!-- make a list of total visits, unique visits en pageviews per day -->
+    <simple-method method-name="ListVisitOverview" short-description="Number of Visits">
+        <entity-condition entity-name="Visit" list-name="AllVisitsList">
+            <order-by field-name="fromDate"/> 
+        </entity-condition>       
+        <set field="uniqueIp.clientIpAddress" value="0000-00"/>
+        <set field="current.dayNr" value="0000-00-00"/>
+        <set field="TotalMap.dayNr" value="0000-00-00"/>
+        
+        <iterate entry-name="IterateVisits" list-name="AllVisitsList">
+            <if-empty field-name="TotalMap.TotalCount">
+                <set field="TotalMap.TotalCount" value="0"/>
+            </if-empty>   
+            <calculate field-name="TotalMap.TotalCount">
+                <number value="1"/>
+                <calcop operator="add" field-name="TotalMap.TotalCount"></calcop>
+            </calculate> 
+            
+            <set field="fromDate" from-field="IterateVisits.fromDate"/>
+            <call-bsh><![CDATA[current.put("dayNr",fromDate.toString().substring(0,10))]]></call-bsh> 
+            
+            <!-- make a list per day sorted by unique visitors -->
+            <set field="current.clientIpAddress" from-field="IterateVisits.clientIpAddress"/>
+            <if-compare-field field-name="uniqueIp.clientIpAddress" operator="not-equals" to-field-name="current.clientIpAddress">
+                <if-compare field-name="uniqueIp.clientIpAddress" operator="not-equals" value="0000-00">
+                    <field-to-list field-name="uniqueIp" list-name="UniqueVisitsList"/>
+                    <clear-field field-name="uniqueIp"/>     
+                </if-compare>
+            </if-compare-field>
+            
+            <!-- store maps in list if changed however not the first line-->
+            <if-compare-field field-name="TotalMap.dayNr" operator="not-equals" to-field-name="current.dayNr">
+                <if-compare field-name="TotalMap.dayNr" operator="not-equals" value="0000-00-00">   
+                    <!-- Unique Visits -->
+                    <if-not-empty field-name="UniqueVisitsList">
+                        <order-map-list list-name="UniqueVisitsList">
+                            <order-by field-name="clientIpAddress"/>
+                        </order-map-list> 
+                        <set field="subMap.clientIpAddress" from-field="0000-00"/>    
+                        <iterate entry-name="IterateUniqueVisits" list-name="UniqueVisitsList"> 
+                            <set field="subCurrent.clientIpAddress" from-field="IterateUniqueVisits.clientIpAddress"/>
+                            <if-compare-field field-name="subMap.clientIpAddress" operator="not-equals" to-field-name="subCurrent.clientIpAddress">       
+                                <if-empty field-name="TotalMap.UniqueCount">
+                                    <set field="TotalMap.UniqueCount" value="0"/>
+                                </if-empty>
+                                <calculate field-name="TotalMap.UniqueCount">
+                                    <number value="1"/>
+                                    <calcop operator="add" field-name="TotalMap.UniqueCount"></calcop>
+                                </calculate>  
+                            </if-compare-field>
+                            <set field="subMap.clientIpAddress" from-field="subCurrent.clientIpAddress"/>
+                        </iterate>  
+                    </if-not-empty>
+                    <if-empty field-name="TotalMap.UniqueCount">
+                        <set field="TotalMap.UniqueCount" value="1"/>
+                    </if-empty>
+                    <field-to-list field-name="TotalMap" list-name="visitOverviewList"/>
+                    <clear-field field-name="UniqueVisitsList"/>
+                    <clear-field field-name="TotalMap"/>
+                    <clear-field field-name="subMap"/> 
+                </if-compare>
+            </if-compare-field> 
+            <set field="TotalMap.dayNr" from-field="current.dayNr"/> 
+            <set field="uniqueIp.clientIpAddress" from-field="current.clientIpAddress"/> 
+        </iterate>
+        <field-to-result field-name="visitOverviewList" result-name="visitOverviewList"/>
+        
+        <!--
+            
+            <entity-and entity-name="ServerHit" list-name="ServerHitList">
+            <field-map field-name="hitStartDateTime"/>
+            </entity-and>
+            
+            <set field="current.ServerHitdayNr" value="0000-00-00"/>
+            <set field="HitMap.ServerHitdayNr" value="0000-00-00"/>
+            
+            <iterate entry-name="IterateServerHit" list-name="ServerHitList">  
+            <if-empty field-name="HitMap.ServerHitCount">  
+            <set field="HitMap.ServerHitCount" value="0"/>
+            </if-empty>     
+            <calculate field-name="HitMap.ServerHitCount">
+            <number value="1"/>
+            <calcop operator="add" field-name="HitMap.ServerHitCount"></calcop>
+            </calculate> 
+            
+            
+            <set field="hitStartDateTime" from-field="IterateServerHit.hitStartDateTime"/>
+            <call-bsh><![CDATA[current.put("ServerHitdayNr",hitStartDateTime.toString().substring(0,10))]]></call-bsh> 
+            
+            
+            <if-compare-field field-name="HitMap.ServerHitdayNr" operator="not-equals" to-field-name="current.ServerHitdayNr">
+            <if-compare field-name="HitMap.ServerHitdayNr" operator="not-equals" value="0000-00-00">   
+            <field-to-list field-name="HitMap" list-name="visitOverviewList"/>
+            <log level="always" message="###${HitMap.ServerHitCount}"></log>
+            <clear-field field-name="HitMap"/>
+            </if-compare>
+            </if-compare-field>  
+            <set field="HitMap.ServerHitdayNr" from-field="current.ServerHitdayNr"/>  
+            </iterate>
+        -->
+    </simple-method>
+    <!-- -->
+</simple-methods>

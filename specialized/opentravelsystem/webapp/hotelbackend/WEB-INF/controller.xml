@@ -531,7 +531,12 @@
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     
-    <request-map uri="showvisits"><security https="true" auth="true"/><response name="success" type="view" value="showvisits"/></request-map>
+    <request-map uri="showvisits"><security https="true" auth="true"/><response name="success" type="view" value="showvisits"/></request-map>   
+    <request-map uri="referrers">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="referrers"/>
+        <response name="error" type="view" value="referrers"/>
+    </request-map> 
     <request-map uri="visitdetail"><security https="true" auth="true"/><response name="success" type="view" value="visitdetail"/></request-map>
     
     <!-- communication event requests -->
@@ -3293,8 +3298,10 @@
     <view-map name="FindPartyClassificationGroups" type="screen" page="component://party/widget/partymgr/PartyClassificationScreens.xml#FindPartyClassificationGroups"/>
     <view-map name="EditPartyClassificationGroup" type="screen" page="component://party/widget/partymgr/PartyClassificationScreens.xml#EditPartyClassificationGroup"/>
         
-    <view-map name="showvisits" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#showvisits"/>
-    <view-map name="visitdetail" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#visitdetail"/>
+    <view-map name="showvisits" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/VisitScreens.xml#showvisits"/>
+    <view-map name="referrers" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/VisitScreens.xml#referrers"/>
+    <view-map name="visitdetail" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/VisitScreens.xml#visitdetail"/>
+
     <view-map name="findordersCust" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findordersCust"/>
     <!-- communication events -->
     <view-map name="PendingCommunications" type="screen" page="component://party/widget/partymgr/CommunicationScreens.xml#PendingCommunications"/>

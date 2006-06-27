@@ -209,4 +209,38 @@
         <field position="2" name="totalToBeReceived" title="To be received from: ${parameters.partyId}"><display/></field>
     </form>
     
+    <form name="visitList" type="list" list-name="visitList" paginate="true" paginate-index-field="VIEW_INDEX" paginate-next-label="Next" paginate-previous-label="Prev" paginate-size-field="VIEW_SIZE" 
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="visitId" widget-style="buttontext" header-link="showvisits?sort=visitId&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton"><hyperlink target="visitdetail?visitId=${visitId}&amp;selected=${parameters.selected}" description="${visitId}"/></field>
+        <field name="visitorId" title="visitorId" header-link="showvisits?sort=visitorId&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton"><display/></field>
+        <field name="partyId" widget-style="buttontext" header-link="showvisits?sort=partyId&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton"><hyperlink target="viewprofile?partyId=${partyId}" description="${partyId}"/></field>
+        <field name="userLoginId" title="userLoginId" header-link="showvisits?sort=userLoginId&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton"><display/></field>
+        <field name="-userCreated" title="userCreated" header-link="showvisits?sort=userCreated&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton"><display/></field>
+        <field name="webappName" title="webappName" header-link="showvisits?sort=webappName&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton"><display/></field>
+        <field name="clientIpAddress" title="clientIpAddress" header-link="showvisits?sort=clientIpAddres&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton"><display/></field>
+        <field name="fromDate" title="fromDate" header-link="showvisits?sort=fromDate&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton" ><display/></field>
+        <field name="thruDate"  title="thruDate" header-link="showvisits?sort=thruDate&amp;showAll=${parameters.showAll}&amp;selected=${parameters.selected}" header-link-style="tableheadbutton"><display/></field>
+    </form>  
+ 
+    <form name="visitOverviews" type="list" list-name="visitOverviewList" title="Visit Overview" 
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        
+        <actions>
+            <service service-name="otsVisitOverviewList" result-map-list-name="visitOverviewList"/>
+        </actions>
+        <field name="dayNr" title="Day"><display/></field>
+        <field name="TotalCount" title="Total Visits"><display/></field>
+        <field name="UniqueCount" title="Unique Visits"><display/></field>
+        <!-- TO DO: pageviews 
+        <field name="ServerHitCount" title="Pageviews"><display/></field>-->
+   </form>  
+       
+    <form name="Referrers" type="list" list-name="referrerList" title="List Referrers"  
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">       
+        <actions>
+           <service service-name="otsReferrers" result-map-list-name="referrerList"/>
+        </actions>
+        <field name="count" title="Referrals"><display/></field>
+        <field name="initialReferrer" title="initialReferrer" header-link="referrer?sort=initialReferrer" header-link-style="tableheadbutton"><display/></field>
+  </form>  
 </forms>
