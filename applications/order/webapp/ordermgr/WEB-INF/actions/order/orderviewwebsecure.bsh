@@ -29,6 +29,8 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.collections.*;
 import org.ofbiz.order.order.*;
 
+orderHeader = context.get("orderHeader");
+
 if (orderHeader != null) {
     // set hasPermission, must always exist if the orderHeader != null
     // hasPermission if: has ORDERMGR_VIEW, ORDERMGR_ROLE_VIEW & associated with order, or is associated in the SUPPLIER_AGENT role
