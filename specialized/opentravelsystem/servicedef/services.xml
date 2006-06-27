@@ -627,6 +627,7 @@
     <service name="otsReferrers" engine="simple" 
         location="org/ofbiz/opentravelsystem/VisitServices.xml" invoke="listReferrers" auth="true">
         <description>Show referrers by number of referrals</description>
+        <attribute name="_SERVER_ROOT_URL_" type="String" mode="IN" optional="true"></attribute>
         <attribute name="referrerList" type="List" mode="OUT" optional="true"/>
     </service>
     
