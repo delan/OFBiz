@@ -116,7 +116,7 @@ under the License.
         <attribute name="rootDirectory" type="String" mode="IN" optional="false"/>
         <attribute name="delimiter" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="importDelimitedEntityFile" engine="java" auth="true" transaction-timout="14400" require-new-transaction="true"
+    <service name="importDelimitedEntityFile" engine="java" auth="true" transaction-timeout="14400" require-new-transaction="true"
             location="org.ofbiz.entityext.data.EntityDataServices" invoke="importDelimitedFile">
         <description>Import delimited file</description>
         <attribute name="file" type="java.io.File" mode="IN" optional="false"/>
@@ -180,11 +180,11 @@ under the License.
     </service>
 
     <service name="cleanSyncRemoveInfo" engine="java"
-            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true" transaction-timout="600">
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true" transaction-timeout="600">
         <description>Clean EntitySyncRemove Info - Generally should be run asynchronously after each sync run, or periodically run on a schedule</description>
     </service>
     <service name="resetEntitySyncStatusToNotStarted" engine="simple"
-            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="resetEntitySyncStatusToNotStarted" auth="true" transaction-timout="600">
+            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="resetEntitySyncStatusToNotStarted" auth="true" transaction-timeout="600">
         <description>Generally run manually to reset the status of an EntitySync when it has "crashed". Update a EntitySync, set the Status to ESR_NOT_STARTED, but ONLY if running (ie in ESR_RUNNING)</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
     </service>
@@ -206,7 +206,7 @@ under the License.
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="storeEntitySyncData" engine="java" location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="storeEntitySyncData"
-    	    export="true" auth="true" require-new-transaction="true" transaction-timout="900">
+    	    export="true" auth="true" require-new-transaction="true" transaction-timeout="900">
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
         <attribute name="valuesToCreate" type="List" mode="IN" optional="false"/>

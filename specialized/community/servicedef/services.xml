@@ -7,7 +7,7 @@
     <version>1.0</version>
 
     <service name="persistBlogAll" engine="java" location="org.ofbiz.community.CommunityServices" invoke="persistBlogAll"
-         auth="true"  transaction-timout="72000">
+         auth="true"  transaction-timeout="72000">
         <implements service="persistContentAndAssoc"/>
         <attribute type="String" mode="IN" name="summaryData" optional="true"/>
         <attribute type="String" mode="IN" name="drMimeTypeId_TEXT" optional="true"/>

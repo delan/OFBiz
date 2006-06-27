@@ -80,7 +80,7 @@ under the License.
         <attribute mode="IN" name="costComponentTypePrefix" optional="false" type="String"/>
         <attribute mode="OUT" name="totalCost" type="Double"/>
     </service>
-    <service name="calculateAllProductsCosts" engine="simple" auth="true" transaction-timout="7200"
+    <service name="calculateAllProductsCosts" engine="simple" auth="true" transaction-timeout="7200"
                 location="org/ofbiz/product/cost/CostServices.xml" invoke="calculateAllProductsCosts">
         <description>Calculates estimated costs for all the products</description>
         <attribute mode="IN" name="currencyUomId" optional="false" type="String"/>

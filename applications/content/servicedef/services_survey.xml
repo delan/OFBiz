@@ -280,7 +280,7 @@
         <attribute name="surveyId" type="String" mode="INOUT" optional="true"/>
     </service>
 
-    <service name="buildSurveyResponseFromPdf" engine="java"  transaction-timout="72000"
+    <service name="buildSurveyResponseFromPdf" engine="java"  transaction-timeout="72000"
             location="org.ofbiz.content.survey.PdfSurveyServices" invoke="buildSurveyResponseFromPdf" auth="false">
         <description>Create a Survey and related entities from AcroForm</description>
         <attribute name="pdfFileNameIn" type="String" mode="IN" optional="true" />
@@ -329,14 +329,14 @@
 
     <!-- 
         <service name="persistSurveyContent" engine="java"
-        transaction-timout="72000" 
+        transaction-timeout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="persistSurveyContent" auth="true">
         <implements service="createSurveyResponse"/>
         
         </service>
         
         <service name="persistSurveyContentWithRevision" engine="java"
-        transaction-timout="72000" 
+        transaction-timeout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="persistSurveyContentWithRevision" auth="true">
         <implements service="persistSurveyContent"/>
         <attribute mode="IN" name="masterRevisionContentId" optional="false" type="String"/>
