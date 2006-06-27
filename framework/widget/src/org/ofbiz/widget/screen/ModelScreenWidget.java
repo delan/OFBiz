@@ -941,7 +941,7 @@ public abstract class ModelScreenWidget implements Serializable {
 
     public static class SubContent extends ModelScreenWidget {
         protected FlexibleStringExpander contentId;
-        protected FlexibleStringExpander assocName;
+        protected FlexibleStringExpander mapKey;
         protected FlexibleStringExpander editRequest;
         protected FlexibleStringExpander editContainerStyle;
         protected FlexibleStringExpander enableEditName;
@@ -952,12 +952,11 @@ public abstract class ModelScreenWidget implements Serializable {
 
             // put the text attribute first, then the pcdata under the element, if both are there of course
             this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
-            this.assocName = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("assoc-name")));
+            this.mapKey = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("map-key"), subContentElement.getAttribute("assoc-name")));
             this.editRequest = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("edit-request")));
             this.editContainerStyle = new FlexibleStringExpander(subContentElement.getAttribute("edit-container-style"));
             this.enableEditName = new FlexibleStringExpander(subContentElement.getAttribute("enable-edit-name"));
             this.xmlEscape = "true".equals(subContentElement.getAttribute("xml-escape"));
-
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
@@ -976,8 +975,8 @@ public abstract class ModelScreenWidget implements Serializable {
             return this.contentId.expandString(context);
         }
         
-        public String getAssocName(Map context) {
-            return this.assocName.expandString(context);
+        public String getMapKey(Map context) {
+            return this.mapKey.expandString(context);
         }
         
         public String getEditRequest(Map context) {
@@ -998,7 +997,7 @@ public abstract class ModelScreenWidget implements Serializable {
 
         public String rawString() {
             // may want to expand this a bit more
-            return "<sub-content content-id=\"" + this.contentId.getOriginal() + "\" assoc-name=\"" + this.assocName.getOriginal() + "\" xml-escape=\"" + this.xmlEscape + "\"/>";
+            return "<sub-content content-id=\"" + this.contentId.getOriginal() + "\" map-key=\"" + this.mapKey.getOriginal() + "\" xml-escape=\"" + this.xmlEscape + "\"/>";
         }
     }
 
