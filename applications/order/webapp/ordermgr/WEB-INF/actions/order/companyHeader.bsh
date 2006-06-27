@@ -62,8 +62,18 @@ partyId = null;
 
 if (orderHeader != null) {
     GenericValue productStore = (GenericValue) orderHeader.getRelatedOne("ProductStore");
-    if (orderHeader.getString("orderTypeId").equals("SALES_ORDER") && productStore != null && productStore.get("payToPartyId") != null) {
-        partyId = productStore.getString("payToPartyId");
+    if (orderHeader.getString("orderTypeId").equals("SALES_ORDER")) {
+        GenericValue billFromVendor = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "BILL_FROM_VENDOR")));
+        if (billFromVendor != null) {
+            partyId = billFromVendor.getString("partyId");
+        } else if (productStore != null && productStore.get("payToPartyId") != null) {
+            partyId = productStore.getString("payToPartyId");
+        }
+    } else if (orderHeader.getString("orderTypeId").equals("PURCHASE_ORDER")) {
+        GenericValue billToCustomer = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER")));
+        if (billToCustomer != null) {
+            partyId = billToCustomer.getString("partyId");
+        }
     }
 } else if (invoice != null) {
     if (invoice.get("invoiceTypeId").equals("SALES_INVOICE") && invoice.get("partyIdFrom") != null) {
