@@ -257,9 +257,26 @@
         </sort-order>
     </form>
 
+    <form name="AddWorkEffortAssoc" default-title-style="tableheadtext" default-tooltip-style="tabletext" 
+        default-widget-style="inputBox" target="createWorkEffortAssoc" title="" type="single">
+        <field name="workEffortIdFrom" widget-style="tabletext"><display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName} [${workEffortId}]"/></field>
+        <field name="workEffortIdTo"><lookup target-form-name="LookupWorkEffort"/></field>
+        <field name="workEffortAssocTypeId">
+            <drop-down>
+                <entity-options entity-name="WorkEffortAssocType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="sequenceNum"><text/></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
+        <field name="cancelLink" title="" widget-style="buttontext"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+    </form>
+
     <form name="EditWorkEffortAssoc" target="updateWorkEffortAssoc" title="" type="single"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
-        <alt-target target="createWorkEffortAssoc" use-when="workEffortAssoc==null"/>
         <field name="workEffortIdFrom" map-name="workEffortAssoc" widget-style="tabletext">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}">
                 <sub-hyperlink description="${workEffortIdFrom}" target="EditWorkEffort?workEffortId=${workEffortIdFrom}" link-style="buttontext"/>
