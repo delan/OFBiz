@@ -321,7 +321,7 @@ public class ModelServiceReader implements Serializable {
         service.maxRetry = maxRetry;
         
         // get the timeout and convert to int
-        String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transaction-timout"));
+        String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transaction-timeout"), serviceElement.getAttribute("transaction-timout"));
         int timeout = 0;
         if (!UtilValidate.isEmpty(timeoutStr)) {
             try {
