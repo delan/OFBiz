@@ -65,7 +65,7 @@
     </service>
     
     <service name="getPartyContactMechValueMaps" engine="java"
-            transaction-timout="7200"
+            transaction-timeout="7200"
             location="org.ofbiz.party.contact.ContactMechServices" invoke="getPartyContactMechValueMaps" auth="true">
         <description>Get Contact Mechs associated with party</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>

@@ -343,7 +343,7 @@
         <description>Check an order for digital items and invoice/capture + fulfill the items</description>
         <attribute name="orderId" type="String" mode="IN"/>
     </service>
-   <service name="fulfillDigitalItems" engine="java" require-new-transaction="true" transaction-timout="300"
+   <service name="fulfillDigitalItems" engine="java" require-new-transaction="true" transaction-timeout="300"
        location="org.ofbiz.order.order.OrderServices" invoke="fulfillDigitalItems">
        <description>Order Fulfillment</description>
        <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -450,11 +450,11 @@
         <attribute name="orderIdList" type="List" mode="IN" optional="false"/>
     </service>
 
-    <service name="massPickOrders" engine="java" transaction-timout="300"
+    <service name="massPickOrders" engine="java" transaction-timeout="300"
             location="org.ofbiz.order.order.OrderServices" invoke="massPickOrders" auth="true">
         <implements service="massOrderChangeInterface"/>
     </service>
-    <service name="massChangeOrderApproved" engine="java" transaction-timout="300"
+    <service name="massChangeOrderApproved" engine="java" transaction-timeout="300"
             location="org.ofbiz.order.order.OrderServices" invoke="massChangeApproved" auth="true">
         <implements service="massOrderChangeInterface"/>
     </service>

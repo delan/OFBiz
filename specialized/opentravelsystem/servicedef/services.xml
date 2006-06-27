@@ -278,7 +278,7 @@
         <override name="contentTypeId" optional="false"/>
     </service>
     <service name="createContentOfbiz" default-entity-name="Content" engine="java"
-        location="org.ofbiz.content.content.ContentServices" invoke="createContent" transaction-timout="72000" auth="true" >
+        location="org.ofbiz.content.content.ContentServices" invoke="createContent" transaction-timeout="72000" auth="true" >
         <description>Create a Content</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
