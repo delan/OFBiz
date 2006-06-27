@@ -230,6 +230,7 @@ public class importDataBw {
                     productCategoryRollup3.put("parentProductCategoryId", sub2CategoryId);
                     sub3CategoryMember.put("productCategoryId", prefix.concat(infoItem));
                     sub3Category.put("categoryImageUrl", "/".concat(organizationPartyId).concat("/html/images/categories/category/").concat(infoItem).concat(".jpg"));
+                    sub3Category.put("linkOneImageUrl", "/".concat(organizationPartyId).concat("/html/images/categories/categoryThumbs/").concat(infoItem).concat(".jpg"));
                     break;
                 case 4: // product number
 					product.put("productId", infoItem); // prefixed by service

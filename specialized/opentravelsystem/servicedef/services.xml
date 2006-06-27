@@ -624,5 +624,16 @@
         <attribute name="queryStringMap" type="java.util.Map" mode="OUT" optional="true"/>
     </service>
     
+    <service name="otsReferrers" engine="simple" 
+        location="org/ofbiz/opentravelsystem/VisitServices.xml" invoke="listReferrers" auth="true">
+        <description>Show referrers by number of referrals</description>
+        <attribute name="referrerList" type="List" mode="OUT" optional="true"/>
+    </service>
     
+    <service name="otsVisitOverviewList" engine="simple" 
+        location="org/ofbiz/opentravelsystem/VisitServices.xml" invoke="ListVisitOverview" auth="true">
+        <description>Show total and unique visits per day</description>
+        <attribute name="visitOverviewList" type="List" mode="OUT" optional="true"/>
+    </service>    
+
 </services>

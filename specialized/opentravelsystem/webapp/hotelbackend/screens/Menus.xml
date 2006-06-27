@@ -23,6 +23,7 @@
         default-title-style="appButton" default-tooltip-style="tabletext" default-widget-style="appButton" 
         menu-container-style="appContainer" orientation="horizontal" type="simple">
         <menu-item name="content" title="Content"><link target="findWebsiteContent"/></menu-item>
+        <menu-item name="statistics" title="Statistics"><link target="showvisits"/></menu-item>       
         <menu-item name="help" title="Help" widget-style="appButtonRight">
             <link target="javascript:popUp('help?app=${appTabButtonItem}&amp;function=${headerItem}&amp;tab=${tabButtonItem}','help',450,600)" url-mode="plain"/>
         </menu-item>
@@ -199,5 +200,16 @@
             </condition>
             <link target="EditProductAssetUsage?productId=${productId}"/>
         </menu-item>       
+    </menu>
+    
+    <menu name="StatisticsTabBar" default-menu-item-name="showvisits" default-selected-style="tabButtonSelected" 
+        default-title-style="tabButton" default-tooltip-style="tabletext" default-widget-style="tabButton" 
+        orientation="horizontal" type="simple">
+        <menu-item name="showvisits" title="Visits">
+            <link target="showvisits"/>
+        </menu-item>              
+        <menu-item name="referrers" title="Referrers">
+            <link target="referrers"/>
+        </menu-item>
     </menu>
 </menus>
