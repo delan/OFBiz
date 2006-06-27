@@ -20,11 +20,9 @@
   xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
   
   <simple-method method-name="createSubscription" short-description="create a Subscription">
-    <!-- temporary disabled pending solution with security
     <set value="_CREATE" field="securityAction"/>
-    <check-permission permission="CONTENT" action="${securityAction}"><fail-property resource="ContentUiLabels" property="SubscriptionPermissionError"/></check-permission>
+    <check-permission permission="CONTENTMGR" action="${securityAction}"><fail-property resource="ContentUiLabels" property="SubscriptionPermissionError"/></check-permission>
     <check-errors/>
-    -->
     <make-value entity-name="Subscription" value-name="newEntity"/>
     <if-empty field-name="parameters.subscriptionId">
       <sequenced-id-to-env sequence-name="Subscription" env-name="newEntity.subscriptionId"/> <!-- get the next sequenced ID -->
@@ -39,7 +37,7 @@
   
   <simple-method method-name="updateSubscription" short-description="update a Subscription">
     <set value="_UPDATE" field="securityAction"/>
-    <check-permission permission="CONTENT" action="${securityAction}"><fail-property resource="ContentUiLabels" property="SubscriptionPermissionError"/></check-permission>
+    <check-permission permission="CONTENTMGR" action="${securityAction}"><fail-property resource="ContentUiLabels" property="SubscriptionPermissionError"/></check-permission>
     <check-errors/>
     <entity-one entity-name="Subscription" value-name="lookedUpValue"/>
     <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
@@ -47,11 +45,9 @@
   </simple-method>
 
   <simple-method method-name="isSubscribed" short-description="check if a party has a subscription">
-    <!--
     <set value="_READ" field="securityAction"/>
-    <check-permission permission="CONTENT" action="${securityAction}"><fail-property resource="ContentUiLabels" property="SubscriptionPermissionError"/></check-permission>
+    <check-permission permission="CONTENTMGR" action="${securityAction}"><fail-property resource="ContentUiLabels" property="SubscriptionPermissionError"/></check-permission>
     <check-errors/>
-    -->
     <set field="pfInput.inputFields" from-field="parameters"/>
     <set field="pfInput.entityName" value="Subscription"/>
     <if-empty field-name="parameters.filterByDate">
