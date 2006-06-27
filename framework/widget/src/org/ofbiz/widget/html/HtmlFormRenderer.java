@@ -2247,7 +2247,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
             FlexibleStringExpander target = new FlexibleStringExpander(modelFormField.getHeaderLink());         
             String fullTarget = target.expandString(context);
             targetBuffer.append(fullTarget);
-            makeHyperlinkString(buffer, modelFormField.getHeaderLinkStyle(), HyperlinkField.DEFAULT_TARGET_TYPE, targetBuffer.toString(), titleText, null);
+            String targetType = HyperlinkField.DEFAULT_TARGET_TYPE;
+            if (UtilValidate.isNotEmpty(targetBuffer.toString()) && targetBuffer.toString().toLowerCase().startsWith("javascript:")) {
+            	targetType="plain";
+            }
+            makeHyperlinkString(buffer, modelFormField.getHeaderLinkStyle(), targetType, targetBuffer.toString(), titleText, null);
         } else {
              buffer.append(titleText);
         }
