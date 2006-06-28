@@ -810,6 +810,7 @@
                        <#if orderHeader.orderTypeId == "SALES_ORDER">
                          <a href="<@ofbizUrl>quickShipOrder?${paramString}</@ofbizUrl>" class="buttontext">${uiLabelMap.OrderQuickShipEntireOrder}</a>
                        <#else> <#-- PURCHASE_ORDER -->
+                         <#if facilities?has_content>
                          <form action="/facility/control/quickShipPurchaseOrder" method="POST">
                            <input type="hidden" name="initialSelected" value="Y"/>
                            <input type="hidden" name="orderId" value="${orderId}"/>
@@ -822,6 +823,9 @@
                            </select>
                            <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}">
                          </form>
+                         <#else>
+                           ${uiLabelMap.ProductErrorNoFacilityAvailable}
+                         </#if>
                        </#if>
                      </div>
                    </td>
@@ -841,8 +845,9 @@
                        <div class="tabletext"><a href="/facility/control/PackOrder?facilityId=${storeFacilityId?if_exists}&orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.OrderPackShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a></div>
                        <div class="tabletext"><a href="/facility/control/createShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&statusId=SHIPMENT_INPUT&originFacilityId=${storeFacilityId}&externalLoginKey=${externalLoginKey}" class="buttontext">${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a></div>
                      <#else>
+                       <div class="tabletext">
+                       <#if facilities?has_content>
                        <form action="/facility/control/createShipment" method="GET">
-                         <div class="tabletext">
                            <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                            <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                            <input type="hidden" name="shipmentTypeId" value="PURCHASE_SHIPMENT"/>
@@ -856,8 +861,11 @@
                            <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]">
                          </div>
                        </form>
+                       <#else>
+                         ${uiLabelMap.ProductErrorNoFacilityAvailable}
+                       </#if>
+                       </div>
                      </#if>
-
                    </td>
                  </tr>
 
