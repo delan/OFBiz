@@ -102,7 +102,7 @@ if (purchaseOrder != null) {
     }
 }
 // convert the unit prices to that of the facility owner's currency
-if (purchaseOrder != null) {
+if (purchaseOrder != null && facility != null) {
     owner = facility.getRelatedOne("OwnerParty");
     acctgPref = null;
     if (owner != null) acctgPref = owner.getRelatedOne("PartyAcctgPreference");

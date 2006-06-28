@@ -57,11 +57,21 @@
                                 <if-has-permission permission="FACILITY" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://product/webapp/facility/facility/FacilityTabBar.ftl"/></html>
-                                </platform-specific>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field-name="facility"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html><html-template location="component://product/webapp/facility/facility/FacilityTabBar.ftl"/></html>
+                                        </platform-specific>
 
-                                <decorator-section-include name="body"/>
+                                        <decorator-section-include name="body"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="head3">${uiLabelMap.ProductFacilityNotFound}: [${facilityId}]</label>
+                                    </fail-widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
