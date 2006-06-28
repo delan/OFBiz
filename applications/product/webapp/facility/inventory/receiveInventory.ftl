@@ -239,7 +239,7 @@
   </form>
 
 <#-- Select Shipment Screen -->
-<#elseif requestParameters.initialSelected?exists && !requestParameters.shipmentId?exists && shipments?has_content>
+<#elseif requestParameters.initialSelected?exists && !requestParameters.shipmentId?exists>
   <form method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>" name="selectAllForm" style="margin: 0;">
     <#-- general request fields -->
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}"/>
