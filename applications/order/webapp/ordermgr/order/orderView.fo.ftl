@@ -104,6 +104,20 @@ ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${posta
                 </fo:table-cell>
                 </#if>
              </#list>
+             <#if orderHeader.getString("orderTypeId") == "PURCHASE_ORDER">
+             <#if supplierGeneralContactMechValueMap?exists>
+               <#assign contactMech = supplierGeneralContactMechValueMap.contactMech>
+               <fo:table-cell>
+                 <fo:block white-space-collapse="false">
+<fo:block font-weight="bold">${uiLabelMap.ProductSupplier}:</fo:block><#assign postalAddress = supplierGeneralContactMechValueMap.postalAddress><#if postalAddress?has_content><#if postalAddress.toName?has_content>${postalAddress.toName}</#if><#if postalAddress.attnName?has_content>
+${postalAddress.attnName}</#if>
+${postalAddress.address1}<#if postalAddress.address2?has_content>
+${postalAddress.address2}</#if>
+${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if></#if><#if postalAddress.postalCode?has_content>${postalAddress.postalCode}</#if>
+</fo:block>
+               </fo:table-cell>
+             </#if>
+             </#if>
             </fo:table-row>
          </fo:table-body>
        </fo:table>

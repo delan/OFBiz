@@ -209,6 +209,33 @@ if (orderHeader != null) {
     cmvm = ContactMechWorker.getOrderContactMechValueMaps(delegator, orderId);
     context.put("orderContactMechValueMaps", cmvm);
 
+    if ("PURCHASE_ORDER".equals(orderType)) {
+        // for purchase orders, we need also the supplier's postal address
+        GenericValue supplier = orderReadHelper.getBillFromParty();
+        if (supplier != null) {
+            List supplierContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, supplier.getString("partyId"), false, "POSTAL_ADDRESS");
+            context.put("supplierContactMechValueMaps", supplierContactMechValueMaps);
+            Iterator supplierContactMechValueMapsIt = supplierContactMechValueMaps.iterator();
+            while (supplierContactMechValueMapsIt.hasNext()) {
+                Map supplierContactMechValueMap = (Map)supplierContactMechValueMapsIt.next();
+                List contactMechPurposes = supplierContactMechValueMap.get("partyContactMechPurposes");
+                Iterator contactMechPurposesIt = contactMechPurposes.iterator();
+                while (contactMechPurposesIt.hasNext()) {
+                    GenericValue contactMechPurpose = (GenericValue)contactMechPurposesIt.next();
+                    if (contactMechPurpose.getString("contactMechPurposeTypeId").equals("GENERAL_LOCATION")) {
+                        context.put("supplierGeneralContactMechValueMap", supplierContactMechValueMap);
+                    } else if (contactMechPurpose.getString("contactMechPurposeTypeId").equals("SHIPPING_LOCATION")) {
+                        context.put("supplierShippingContactMechValueMap", supplierContactMechValueMap);
+                    } else if (contactMechPurpose.getString("contactMechPurposeTypeId").equals("BILLING_LOCATION")) {
+                        context.put("supplierBillingContactMechValueMap", supplierContactMechValueMap);
+                    } else if (contactMechPurpose.getString("contactMechPurposeTypeId").equals("PAYMENT_LOCATION")) {
+                        context.put("supplierPaymentContactMechValueMap", supplierContactMechValueMap);
+                    }
+                }
+            }
+        }
+    }
+
     // see if an approved order with all items completed exists
     context.put("setOrderCompleteOption", false);
     if ("ORDER_APPROVED".equals(orderHeader.getString("statusId"))) {
