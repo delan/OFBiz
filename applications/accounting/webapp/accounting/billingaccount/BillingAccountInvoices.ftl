@@ -32,7 +32,7 @@
   <tr>
     <td><div class="tableheadtext">${uiLabelMap.AccountingInvoice} #</div></td>
     <td><div class="tableheadtext">${uiLabelMap.AccountingInvoiceDate}</div></td>
-    <td><div class="tableheadtext">${uiLabelMap.AccountingDueDate}</div><td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingDueDate}</div></td>
     <td align="right"><div class="tableheadtext">${uiLabelMap.CommonTotal}</div></td>
     <td>&nbsp;</td>
   </tr> 
