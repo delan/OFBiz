@@ -273,7 +273,7 @@ under the License.
        <field name="total" widget-area-style="tabletextright" widget-style="tabletext" use-when="uomId==null"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence "tabletext" -->
        <field name="uomId"><hidden/></field>
        <field name="taxableFlag"><hidden/></field>
-       <field name="updateButton" widget-style="buttontext" ><submit button-type="text-link"/></field>
+       <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" ><submit button-type="text-link"/></field>
        <field name="removeButton" title="" widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem?invoiceId=${invoiceId}&amp;invoiceItemSeqId=${invoiceItemSeqId}"/>
        </field>
@@ -325,10 +325,10 @@ under the License.
             <option key="N" description="No"/>
         </drop-down>
         </field>
-        <field name="addButton" widget-style="smallSubmit" use-when="invoiceItem==null">
+        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem==null">
             <submit button-type="button"/>
         </field>
-        <field name="updateButton" widget-style="smallSubmit" use-when="invoiceItem!=null">
+        <field name="updateButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem!=null">
             <submit button-type="button"/>
         </field>
     </form>
@@ -439,6 +439,6 @@ under the License.
         <field name="emailAddressCc" entry-name="ccEmailAddress" parameter-name="sendCc"><text/></field>
         <field name="subject"><text default-value="Please find attached invoice."/></field>
         <field name="bodyText"><textarea/></field>
-        <field name="submitButton" title="Submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

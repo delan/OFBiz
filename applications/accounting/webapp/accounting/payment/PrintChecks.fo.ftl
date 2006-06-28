@@ -40,7 +40,7 @@ by hand from a real template using a ruler.
       <fo:block padding="20pt">${uiLabelMap.AccountingPrintChecksPermissionError}</fo:block>
       <#else>
       <#if payments.size() == 0>
-        <fo:block padding="20pt">Sorry, no payments were selected.</fo:block>
+        <fo:block padding="20pt">${uiLabelMap.AccountingPaymentCheckMessage1}</fo:block>
       </#if>
 
       <#list payments as payment>
@@ -103,23 +103,23 @@ by hand from a real template using a ruler.
             </fo:table-row>
             <fo:table-row>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold">Date</fo:block>
+                <fo:block font-weight="bold">${uiLabelMap.CommonDate}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold">Type</fo:block>
+                <fo:block font-weight="bold">${uiLabelMap.CommonType}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold">Reference</fo:block>
+                <fo:block font-weight="bold">${uiLabelMap.AccountingReferenceNumber}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt"><fo:block/></fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold" text-align="right">Original Amt.</fo:block>
+                <fo:block font-weight="bold" text-align="right">${uiLabelMap.AccountingPaymentOriginalAmount}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold" text-align="right">Balance Due</fo:block>
+                <fo:block font-weight="bold" text-align="right">${uiLabelMap.AccountingBalanceDue}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold" text-align="right">Payment</fo:block>
+                <fo:block font-weight="bold" text-align="right">${uiLabelMap.AccountingPayment}</fo:block>
               </fo:table-cell>
             </fo:table-row>
           </fo:table-header>
@@ -132,7 +132,7 @@ by hand from a real template using a ruler.
                 <fo:block>${payment.effectiveDate?date?string.short}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block><#if invoice?exists>Invoice</#if></fo:block>
+                <fo:block><#if invoice?exists>${uiLabelMap.AccountingInvoice}</#if></fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
                 <fo:block>
@@ -151,7 +151,7 @@ by hand from a real template using a ruler.
 
             <fo:table-row>
               <fo:table-cell padding="3pt" number-columns-spanned="6">
-                <fo:block text-align="end">Check Amount</fo:block>
+                <fo:block text-align="end">${uiLabelMap.AccountingCheckAmount}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
                 <fo:block text-align="end">${payment.getBigDecimal("amount").setScale(decimals, rounding).toString()}</fo:block>
@@ -183,23 +183,23 @@ by hand from a real template using a ruler.
             </fo:table-row>
             <fo:table-row>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold">Date</fo:block>
+                <fo:block font-weight="bold">${uiLabelMap.CommonDate}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold">Type</fo:block>
+                <fo:block font-weight="bold">${uiLabelMap.CommonType}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold">Reference</fo:block>
+                <fo:block font-weight="bold">${uiLabelMap.AccountingReferenceNumber}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt"><fo:block/></fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold" text-align="right">Original Amt.</fo:block>
+                <fo:block font-weight="bold" text-align="right">${uiLabelMap.AccountingPaymentOriginalAmount}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold" text-align="right">Balance Due</fo:block>
+                <fo:block font-weight="bold" text-align="right">${uiLabelMap.AccountingBalanceDue}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block font-weight="bold" text-align="right">Payment</fo:block>
+                <fo:block font-weight="bold" text-align="right">${uiLabelMap.AccountingPayment}</fo:block>
               </fo:table-cell>
             </fo:table-row>
           </fo:table-header>
@@ -212,7 +212,7 @@ by hand from a real template using a ruler.
                 <fo:block>${payment.effectiveDate?date?string.short}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
-                <fo:block><#if invoice?exists>Invoice</#if></fo:block>
+                <fo:block><#if invoice?exists>${uiLabelMap.AccountingInvoice}</#if></fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
                 <fo:block>
@@ -231,7 +231,7 @@ by hand from a real template using a ruler.
 
             <fo:table-row>
               <fo:table-cell padding="3pt" number-columns-spanned="6">
-                <fo:block text-align="end">Check Amount</fo:block>
+                <fo:block text-align="end">${uiLabelMap.AccountingCheckAmount}</fo:block>
               </fo:table-cell>
               <fo:table-cell padding="3pt">
                 <fo:block text-align="end">${payment.getBigDecimal("amount").setScale(decimals, rounding).toString()}</fo:block>

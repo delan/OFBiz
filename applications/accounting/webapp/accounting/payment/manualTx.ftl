@@ -70,12 +70,12 @@
         <td width="5">&nbsp;</td>
         <td width='74%'>
           <#if currentTx?has_content>
-            <div class="tabletext">${currentTx.description}</div>
+            <div class="tabletext">${currentTx.get("description",locale)}</div>
             <input type="hidden" name="transactionType" value="${currentTx.enumId}">
           <#else>
             <select name="transactionType" class="selectBox" onchange="javascript:document.manualTxForm.submit();">
               <#list paymentSettings as setting>
-                <option value="${setting.enumId}">${setting.description}</option>
+                <option value="${setting.enumId}">${setting.get("description",locale)}</option>
               </#list>
             </select>
           </#if>

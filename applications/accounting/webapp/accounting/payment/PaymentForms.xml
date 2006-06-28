@@ -20,7 +20,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="../../../../../framework/widget/dtd/widget-form.xsd">
 
-    <form name="FindPayments" type="single" target="findPayments" title="Find and list payments"
+    <form name="FindPayments" type="single" target="findPayments" 
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="noConditionFind"><hidden value="Y"/></field> 
         <field name="paymentId"><text-find default-option="contains" ignore-case="true"/></field>
@@ -47,7 +47,7 @@
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment"
-        title="Payment List"  default-title-style="tableheadtext" list-name="listIt"
+          default-title-style="tableheadtext" list-name="listIt"
         default-widget-style="tabletext" default-tooltip-style="tabletext"
         paginate-target="/findPayments" paginate="true">
         <actions>
@@ -77,7 +77,7 @@
     </form>
 
     <form name="EditPayment" type="single"
-        target="updatePayment" title="Edit Payment Header" default-map-name="payment"
+        target="updatePayment" default-map-name="payment"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="payment==null" target="createPayment"/>
         <field name="paymentId"><hidden/></field>
@@ -139,7 +139,7 @@
     
     <form name="editPaymentApplicationsInv" default-title-style="tableheadtext" default-entity-name="PaymentApplication"
         default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="paymentApplicationsInv"
-        target="updatePaymentApplication" title="List payment Applications" type="list" separate-columns="false">
+        target="updatePaymentApplication"  type="list" separate-columns="false">
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
         <field name="invoiceId"><lookup target-form-name="LookupInvoice"></lookup></field>
@@ -160,7 +160,7 @@
     </form>
     <form name="editPaymentApplicationsPay" default-title-style="tableheadtext" default-entity-name="PaymentApplication"
         default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="paymentApplicationsPay"
-        target="updatePaymentApplication" title="List payment Applications" type="list" separate-columns="false">
+        target="updatePaymentApplication" type="list" separate-columns="false">
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
         <field name="toPaymentId"><lookup target-form-name="LookupPayment"></lookup></field>
@@ -173,7 +173,7 @@
     </form>
     <form name="editPaymentApplicationsBil" default-title-style="tableheadtext" default-entity-name="PaymentApplication"
         default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="paymentApplicationsBil"
-        target="updatePaymentApplication" title="List payment Applications" type="list" separate-columns="false">
+        target="updatePaymentApplication"  type="list" separate-columns="false">
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
         <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
@@ -186,7 +186,7 @@
     </form>
     <form name="editPaymentApplicationsTax" default-title-style="tableheadtext" default-entity-name="PaymentApplication"
         default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="paymentApplicationsTax"
-        target="updatePaymentApplication" title="List payment Applications" type="list" separate-columns="false">
+        target="updatePaymentApplication"  type="list" separate-columns="false">
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
         <field name="taxAuthGeoId">
@@ -258,7 +258,7 @@
         </field>
     </form>
 
-    <form name="paymentHeader" type="single" title="Payment header information" default-map-name="payment"
+    <form name="paymentHeader" type="single" default-map-name="payment"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <service service-name="getPartyNameForDate" result-map-name="partyNameResultFrom">
@@ -291,7 +291,7 @@
         <field name="overrideGlAccountId" position="2"><display/></field>
     </form>
                 
-    <form name="paymentApplications" type="list" title="Payment Applications" list-name="paymentApplications"
+    <form name="paymentApplications" type="list" list-name="paymentApplications"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="PaymentApplication">
@@ -314,7 +314,7 @@
         <field name="amountApplied"><display type="currency" currency="${payment.currencyUomId}"/></field>
     </form>
 
-    <form name="AcctgTransAndEntries" type="list" title="Accounting Transactions" list-name="AcctgTransAndEntries"
+    <form name="AcctgTransAndEntries" type="list" list-name="AcctgTransAndEntries"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="AcctgTransAndEntries">
