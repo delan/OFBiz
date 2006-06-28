@@ -340,56 +340,63 @@
       <field name="formula" type="long-varchar"></field>
       <prim-key field="depreciationMethodId"/>
     </entity>
-    <entity entity-name="FixedAsset"
-            package-name="org.ofbiz.accounting.fixedasset"
-            title="Fixed Asset Entity">
-      <field name="fixedAssetId" type="id-ne"></field>
-      <field name="fixedAssetTypeId" type="id"></field>
-      <field name="parentFixedAssetId" type="id-ne"></field>
-      <field name="instanceOfProductId" type="id"></field>
-      <field name="classEnumId" type="id"></field>
-      <field name="partyId" type="id"></field>
-      <field name="roleTypeId" type="id"></field>
-      <field name="uomId" type="id"></field>
-      <field name="fixedAssetName" type="name"></field>
-      <field name="dateAcquired" type="date-time"></field>
-      <field name="dateLastServiced" type="date-time"></field>
-      <field name="dateNextService" type="date-time"></field>
-      <field name="productionCapacity" type="floating-point"></field>
-      <field name="calendarId" type="id-ne"></field>
-      <field name="serialNumber" type="long-varchar"></field>
-      <prim-key field="fixedAssetId"/>
-      <relation type="one" fk-name="FIXEDAST_TYPE" rel-entity-name="FixedAssetType">
-        <key-map field-name="fixedAssetTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FixedAssetTypeAttr">
-        <key-map field-name="fixedAssetTypeId"/>
-      </relation>
-      <relation type="one" fk-name="FIXEDAST_PAR" title="Parent" rel-entity-name="FixedAsset">
-        <key-map field-name="parentFixedAssetId" rel-field-name="fixedAssetId"/>
-      </relation>
-      <relation type="one" fk-name="FIXEDAST_IOPROD" title="InstanceOf" rel-entity-name="Product">
-        <key-map field-name="instanceOfProductId" rel-field-name="productId"/>
-      </relation>
-      <relation type="one" fk-name="FIXEDAST_CLSENM" title="Class" rel-entity-name="Enumeration">
-        <key-map field-name="classEnumId" rel-field-name="enumId"/>
-      </relation>
-      <relation type="one" fk-name="FIXEDAST_PARTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="FIXEDAST_ROLETYP" rel-entity-name="RoleType">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="one" fk-name="FIXEDAST_UOM" rel-entity-name="Uom">
-        <key-map field-name="uomId"/>
-      </relation>
-      <relation type="one" fk-name="FIXEDAST_CALENDAR" rel-entity-name="TechDataCalendar">
-        <key-map field-name="calendarId"/>
-      </relation>
+    <entity entity-name="FixedAsset" package-name="org.ofbiz.accounting.fixedasset" title="Fixed Asset Entity">
+        <field name="fixedAssetId" type="id-ne"></field>
+        <field name="fixedAssetTypeId" type="id"></field>
+        <field name="parentFixedAssetId" type="id-ne"></field>
+        <field name="instanceOfProductId" type="id"></field>
+        <field name="classEnumId" type="id"></field>
+        <field name="partyId" type="id"></field>
+        <field name="roleTypeId" type="id"></field>
+        <field name="uomId" type="id"></field>
+        <field name="fixedAssetName" type="name"></field>
+        <field name="dateAcquired" type="date-time"></field>
+        <field name="dateLastServiced" type="date-time"></field>
+        <field name="dateNextService" type="date-time"></field>
+        <field name="productionCapacity" type="floating-point"></field>
+        <field name="calendarId" type="id-ne"></field>
+        <field name="serialNumber" type="long-varchar"></field>
+        <field name="locatedAtFacilityId" type="id"></field>
+        <field name="locatedAtLocationSeqId" type="id"></field>
+        <prim-key field="fixedAssetId"/>
+        <relation type="one" fk-name="FIXEDAST_TYPE" rel-entity-name="FixedAssetType">
+            <key-map field-name="fixedAssetTypeId"/>
+        </relation>
+        <relation type="many" rel-entity-name="FixedAssetTypeAttr">
+            <key-map field-name="fixedAssetTypeId"/>
+        </relation>
+        <relation type="one" fk-name="FIXEDAST_PAR" title="Parent" rel-entity-name="FixedAsset">
+            <key-map field-name="parentFixedAssetId" rel-field-name="fixedAssetId"/>
+        </relation>
+        <relation type="one" fk-name="FIXEDAST_IOPROD" title="InstanceOf" rel-entity-name="Product">
+            <key-map field-name="instanceOfProductId" rel-field-name="productId"/>
+        </relation>
+        <relation type="one" fk-name="FIXEDAST_CLSENM" title="Class" rel-entity-name="Enumeration">
+            <key-map field-name="classEnumId" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="FIXEDAST_PARTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="FIXEDAST_ROLETYP" rel-entity-name="RoleType">
+            <key-map field-name="roleTypeId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="PartyRole">
+            <key-map field-name="partyId"/>
+            <key-map field-name="roleTypeId"/>
+        </relation>
+        <relation type="one" fk-name="FIXEDAST_UOM" rel-entity-name="Uom">
+            <key-map field-name="uomId"/>
+        </relation>
+        <relation type="one" fk-name="FIXEDAST_CALENDAR" rel-entity-name="TechDataCalendar">
+            <key-map field-name="calendarId"/>
+        </relation>
+        <relation type="one" fk-name="FIXEDAST_FAC" title="LocatedAt" rel-entity-name="Facility">
+            <key-map field-name="locatedAtFacilityId" rel-field-name="facilityId"/>
+        </relation>
+        <relation type="one-nofk" title="LocatedAt" rel-entity-name="FacilityLocation">
+            <key-map field-name="locatedAtFacilityId" rel-field-name="facilityId"/>
+            <key-map field-name="locatedAtLocationSeqId" rel-field-name="locationSeqId"/>
+        </relation>
     </entity>
     <entity entity-name="FixedAssetAttribute"
             package-name="org.ofbiz.accounting.fixedasset"
