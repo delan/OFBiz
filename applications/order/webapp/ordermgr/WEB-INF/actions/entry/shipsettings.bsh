@@ -30,6 +30,9 @@ import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 
+import javolution.util.FastMap;
+import javolution.util.FastList;
+
 delegator = request.getAttribute("delegator");
 cart = session.getAttribute("shoppingCart");
 orderPartyId = cart.getPartyId();
@@ -59,12 +62,20 @@ if ("SALES_ORDER".equals(cart.getOrderType())) {
            context.put("orderPerson", orderPerson);
          }
     }
-    String storeId = cart.getProductStoreId();
-    GenericValue store = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", storeId));
-    GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", store.getString("inventoryFacilityId")));
-    context.put("facility", facility);
-    if (facility != null) {
-        List facilityContactMechValueMaps = ContactMechWorker.getFacilityContactMechValueMaps(delegator, facility.getString("facilityId"), false, null);
-        context.put("facilityContactMechList", facilityContactMechValueMaps);
+
+    String companyId = cart.getBillToCustomerPartyId();
+    if (companyId != null) {
+        List facilityMaps = FastList.newInstance();
+        List facilities = delegator.findByAndCache("Facility", UtilMisc.toMap("ownerPartyId", companyId));
+        Iterator facilitiesIt = facilities.iterator();
+        while (facilitiesIt.hasNext()) {
+            Map facilityMap = FastMap.newInstance();
+            GenericValue facility = (GenericValue)facilitiesIt.next();
+            List facilityContactMechValueMaps = ContactMechWorker.getFacilityContactMechValueMaps(delegator, facility.getString("facilityId"), false, null);
+            facilityMap.put("facilityContactMechList", facilityContactMechValueMaps);
+            facilityMap.put("facility", facility);
+            facilityMaps.add(facilityMap);
+        }
+        context.put("facilityMaps", facilityMaps);
     }
 }
