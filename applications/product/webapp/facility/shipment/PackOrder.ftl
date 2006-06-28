@@ -33,7 +33,13 @@
         <#assign showInput = "Y">
     </#if>
 
-
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="simple-right-half">
+            <a href="<@ofbizUrl>PacklistManage?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductPacklistManage}</a>
+        </div>
+        <div class="boxhead">${uiLabelMap.ProductPacklistManage}</div>
+    </div>
     <div class="head1">${uiLabelMap.ProductPackOrder}<span class='head2'>&nbsp;in&nbsp;${facility.facilityName?if_exists} [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     <#if shipmentId?has_content>
       <div class="tabletext">
@@ -55,7 +61,7 @@
             <span class="tabletext">/</span>
             <input type="text" class="inputBox" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?if_exists}"/
           </td>
-          <td><div class="tabletext">${uiLabelMap.ProductHideGrid}:&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked</#if>></div></td>
+          <td><div class="tabletext">${uiLabelMap.ProductHideGrid}:&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if>></div></td>
           <td><div class='tabletext'>&nbsp;</div></td>
         </tr>
         <tr>
@@ -208,7 +214,7 @@
                 <#assign orderItemQuantity = orderItem.quantity>
               </#if>
               <tr>
-                <td><input type="checkbox" name="sel_${orderItem.orderItemSeqId}" value="Y" checked/></td>
+                <td><input type="checkbox" name="sel_${orderItem.orderItemSeqId}" value="Y" checked=""/></td>
                 <td><div class="tabletext">${orderItem.orderItemSeqId}</td>
                 <td><div class="tabletext">${orderItem.productId?default("N/A")}</td>
                 <td><div class="tabletext">${orderItem.itemDescription?if_exists}</td>
@@ -325,3 +331,4 @@
 <#else>
   <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>
+</div>
