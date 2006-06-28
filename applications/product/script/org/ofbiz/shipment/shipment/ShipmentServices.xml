@@ -645,6 +645,35 @@
         </if>
     </simple-method>
 
+    <simple-method method-name="balanceItemIssuancesForShipment" short-description="Release the purchase order's items assigned to the shipment but not actually received">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <alt-permission permission="FACILITY" action="_UPDATE"/>
+            <fail-message message="Security Error: to run balanceItemIssuancesForShipment you must have the FACILITY_CREATE, FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <entity-one entity-name="Shipment" value-name="shipment"/>
+        <get-related value-name="shipment" relation-name="ItemIssuance" list-name="issuances"/>
+        <iterate list-name="issuances" entry-name="issuance">
+            <entity-and entity-name="ShipmentReceipt" list-name="receipts">
+                <field-map field-name="shipmentId" env-name="shipment.shipmentId"/>
+                <field-map field-name="orderId" env-name="issuance.orderId"/>
+                <field-map field-name="orderItemSeqId" env-name="issuance.orderItemSeqId"/>
+            </entity-and>
+            <iterate list-name="receipts" entry-name="receipt">
+                <calculate field-name="issuanceQuantity" type="Double">
+                    <calcop field-name="receipt.quantityAccepted" operator="add">
+                        <calcop field-name="receipt.quantityRejected" operator="get"/>
+                        <calcop field-name="issuanceQuantity" operator="get"/>
+                    </calcop>
+                </calculate>
+            </iterate>
+            <set field="issuance.quantity" from-field="issuanceQuantity"/>
+            <store-value value-name="issuance"/>
+            <clear-field field-name="issuanceQuantity"/>
+        </iterate>
+    </simple-method>
+
     <!-- ShipmentItem services -->
     <simple-method method-name="createShipmentItem" short-description="Create ShipmentItem">
         <check-permission permission="FACILITY" action="_CREATE">

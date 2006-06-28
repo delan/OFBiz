@@ -33,6 +33,7 @@ under the License.
         <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
         <condition field-name="statusId" operator="equals" value="PURCH_SHIP_RECEIVED"/>
         <condition field-name="shipmentTypeId" operator="equals" value="PURCHASE_SHIPMENT"/>
+        <action service="balanceItemIssuancesForShipment" mode="sync"/>
         <action service="createInvoicesFromShipment" mode="sync"/>
     </eca>
 
