@@ -868,6 +868,8 @@
     <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
     <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
     <request-map uri="LookupBillingAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupBillingAccount"/></request-map>
+    <request-map uri="LookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="LookupFacility"/></request-map>
+    <request-map uri="LookupFacilityLocation"><security auth="true" https="true"/><response name="success" type="view" value="LookupFacilityLocation"/></request-map>
     
     <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
 
@@ -1289,6 +1291,8 @@
     <view-map name="EditFixedAssetMaintMeters" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetMaintMeters"/>
     <view-map name="LookupWorkEffort" type="screen" page="component://workeffort/widget/LookupScreens.xml#LookupWorkEffort" />
     <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader" />
-   	
+    <view-map name="LookupFacility" type="screen" page="component://product/widget/facility/LookupScreens.xml#LookupFacility"/>
+    <view-map name="LookupFacilityLocation" type="screen" page="component://product/widget/facility/LookupScreens.xml#LookupFacilityLocation"/>
+    
     <!-- end of view mappings -->
 </site-conf>
