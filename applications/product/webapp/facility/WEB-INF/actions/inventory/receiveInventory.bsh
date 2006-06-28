@@ -63,7 +63,7 @@ if (purchaseOrder != null && shipmentId == null) {
         while (issueIter.hasNext()) {
             issuance = issueIter.next();
             shipment = issuance.getRelatedOne("Shipment");
-            if (!"SHIPMENT_DELIVERED".equals(shipment.getString("statusId")) &&
+            if (!"PURCH_SHIP_RECEIVED".equals(shipment.getString("statusId")) &&
                 !"SHIPMENT_CANCELLED".equals(shipment.getString("statusId")) &&
                 (shipment.getString("destinationFacilityId") == null || facilityId.equals(shipment.getString("destinationFacilityId")))) {
                 shipments.add(shipment);
