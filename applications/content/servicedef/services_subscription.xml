@@ -40,9 +40,16 @@
         location="org/ofbiz/content/SubscriptionServices.xml" invoke="isSubscribed">
         <description>check if a particular party has at this moment a subscription</description>
         <auto-attributes include="all" mode="IN" optional="true"/>
-        <attribute name="filterByDate" type="String" mode="IN"/>
+        <attribute name="filterByDate" type="String" mode="IN" optional="true"/><!-- default is "Y" -->
         <attribute name="isSubscribed" type="Boolean" mode="OUT"/>
+        <attribute name="subscriptionId" type="String" mode="OUT" optional="true"/>
         <override name="partyId" optional="false" mode="IN"/>
     </service>
     
+    <service name="getSubscriptionEnt" default-entity-name="Subscription" auth="true" engine="simple"
+        location="org/ofbiz/content/SubscriptionServices.xml" invoke="getSubscription">
+        <description>Retrieve a single Subscription Entity Record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <attribute name="subscription" type="GenericValue" mode="OUT" optional="true"/>
+    </service>
 </services>        
