@@ -158,6 +158,15 @@
         <description>Send Shipment Scheduled Notification</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="balanceItemIssuancesForShipment" engine="simple"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="balanceItemIssuancesForShipment" auth="true">
+        <description>
+            Release the purchase order's items assigned to the shipment but not 
+            actually received; it is invoked as a seca when the purchase shipment
+            is marked as 'received'
+        </description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- ShipmentItem Services -->
     <service name="createShipmentItem" default-entity-name="ShipmentItem" engine="simple"
