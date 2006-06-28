@@ -45,10 +45,15 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <#if facility?exists>
+            
+            <#if facilityMaps?exists>
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="finalizeMode" value="ship">
+                <#assign i = 0>
+                <#list facilityMaps as facilityMap>
+                <#assign facility = facilityMap.facility>
+                <#assign facilityContactMechList = facilityMap.facilityContactMechList>
                 <tr>
                   <td colspan="4">
                     <div class="tableheadtext">${uiLabelMap.FacilityFacility}: ${facility.facilityName?if_exists} [${facility.facilityId}]</div>
@@ -58,7 +63,6 @@
 
                 <#-- company postal addresses -->
                 
-                <#assign i = 0>
                 <#if facilityContactMechList?has_content>
                 <#list facilityContactMechList as shippingContactMech>
                   <#if shippingContactMech.postalAddress?exists>
@@ -99,6 +103,7 @@
                       </div>
                     </td>
                 </#if>
+                </#list>
               </form>
             </table>
             <#else>
