@@ -198,7 +198,7 @@ under the License.
                                         <include-form name="listPaymentsNotApplied" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
                                     </widgets>
                                 </section>
-                                <container><label style="head1">Apply this payment to:</label></container>
+                                <container><label style="head1">${uiLabelMap.AccountingApplyPaymentoTo}:</label></container>
                                 <include-form name="addPaymentApplication" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
                             </widgets>
                         </section>
@@ -214,7 +214,7 @@ under the License.
                 <set field="titleProperty" value="PageTitlePaymentOverview"/>
                 <set field="tabButtonItem" value="paymentOverview"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
-                <set field="labelTitleProperty" value=" Payment Overview"/>
+                <set field="labelTitleProperty" value="PageTitlePaymentOverview"/>
                 <entity-one entity-name="Payment" value-name="payment"/>
                 <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentAppliedBd(payment).toString()}"/>
                 <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotAppliedBd(payment).toString()}"/>
@@ -233,7 +233,7 @@ under the License.
                                     <include-form name="paymentHeader" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
                                 </container>
                                 <container>
-                                    <label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${payment.currencyUomId})}, open: ${notAppliedAmount?currency(${payment.currencyUomId})}"/>
+                                    <label style="head1" text="${uiLabelMap.AccountingPaymentsApplied}: ${appliedAmount?currency(${payment.currencyUomId})}, ${uiLabelMap.AccountingOpenPayments}: ${notAppliedAmount?currency(${payment.currencyUomId})}"/>
                                     <link target="editPaymentApplications?paymentId=${paymentId}" text="${uiLabelMap.CommonUpdate}" style="buttontext"/>
                                     <include-form name="paymentApplications" location="component://accounting/webapp/accounting/payment/PaymentForms.xml"/>
                                 </container>
@@ -314,6 +314,7 @@ under the License.
                 <!-- pass in paymentId to print one check, otherwise use multi form input -->
                 <set field="paymentId" from-field="parameters.paymentId" />
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/printChecks.bsh"/>
             </actions>
             <widgets>

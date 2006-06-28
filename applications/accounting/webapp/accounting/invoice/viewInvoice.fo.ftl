@@ -69,7 +69,7 @@ under the License.
                     <fo:table-body>
                     <fo:table-row>
                       <fo:table-cell>
-                         <fo:block number-columns-spanned="2" font-weight="bold" wrap-option="no-wrap">${invoice.getRelatedOne("InvoiceType").get("description")}</fo:block>
+                         <fo:block number-columns-spanned="2" font-weight="bold" wrap-option="no-wrap">${invoice.getRelatedOne("InvoiceType").get("description",locale)}</fo:block>
                       </fo:table-cell>
                     </fo:table-row>
                     
@@ -93,7 +93,7 @@ under the License.
 
                     <!--fo:table-row>
                       <fo:table-cell><fo:block>${uiLabelMap.CommonStatus}</fo:block></fo:table-cell>
-                      <fo:table-cell><fo:block font-weight="bold">${invoiceStatus.description}</fo:block></fo:table-cell>
+                      <fo:table-cell><fo:block font-weight="bold">${invoiceStatus.get("description",locale)}</fo:block></fo:table-cell>
                     </fo:table-row-->
                   </fo:table-body>
                 </fo:table>
@@ -133,7 +133,7 @@ under the License.
        <#-- this part is the footer.  Use it for standard boilerplate text. -->
        <fo:static-content flow-name="xsl-region-after">
        <#-- displays page number.  "theEnd" is an id of a fo:block at the very end -->    
-           <fo:block font-size="10pt" text-align="center">Page <fo:page-number/> of <fo:page-number-citation ref-id="theEnd"/></fo:block>
+           <fo:block font-size="10pt" text-align="center">${uiLabelMap.CommonPage} <fo:page-number/> ${uiLabelMap.CommonOf} <fo:page-number-citation ref-id="theEnd"/></fo:block>
            <fo:block font-size="10pt"/>
            <fo:block font-size="8pt" text-align="center">Powered by OFBiz at www.ofbiz.org</fo:block>
        </fo:static-content>
@@ -191,10 +191,10 @@ under the License.
                     </#if>
                     <#if invoiceItem.description?has_content>
                         <#assign description=invoiceItem.description>
-                    <#elseif taxRate?exists & taxRate.description?has_content>
-                        <#assign description=taxRate.description>
-                    <#elseif itemType.description?has_content>
-                        <#assign description=itemType.description>
+                    <#elseif taxRate?exists & taxRate.get("description",locale)?has_content>
+                        <#assign description=taxRate.get("description",locale)>
+                    <#elseif itemType.get("description",locale)?has_content>
+                        <#assign description=itemType.get("description",locale)>
                     </#if>
                     
                     <#if newShipmentId?exists & newShipmentId != currentShipmentId>
@@ -205,7 +205,7 @@ under the License.
                         </fo:table-row>
                         <fo:table-row height="14px">
                            <fo:table-cell number-columns-spanned="6">
-                                <fo:block font-weight="bold"> Shipment: ${newShipmentId} </fo:block>
+                                <fo:block font-weight="bold"> ${uiLabelMap.ProductShipmentId}: ${newShipmentId} </fo:block>
                            </fo:table-cell>
                         </fo:table-row>
                         <#assign currentShipmentId = newShipmentId>

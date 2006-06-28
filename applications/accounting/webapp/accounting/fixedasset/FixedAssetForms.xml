@@ -23,7 +23,7 @@ under the License.
     <form name="ListFixedAssets" type="list"  list-name="fixedAssets" 
          default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
 
-        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="linktext">
+        <field name="fixedAssetId" widget-style="linktext">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset?fixedAssetId=${fixedAssetId}"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}">
@@ -44,11 +44,11 @@ under the License.
         <alt-target use-when="fixedAsset==null" target="createFixedAsset"/>
         <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
  
-        <field use-when="fixedAsset!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}" widget-style="tabletext"><display/></field>
-        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text size="20" maxlength="20"/></field>
-        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
+        <field use-when="fixedAsset!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonNotModifRecreat}" widget-style="tabletext"><display/></field>
+        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId"><text size="20" maxlength="20"/></field>
+        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
 
-        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}" widget-style="selectBox">
+        <field name="fixedAssetTypeId" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="FixedAssetType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -87,7 +87,7 @@ under the License.
                 </entity-options> 
             </drop-down>
         </field>
-        <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParent}"><lookup target-form-name="LookupFixedAsset"/></field>
+        <field name="parentFixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -138,7 +138,7 @@ under the License.
     <form name="listFixedAssetCalendar" type="list"  default-required-field-style="calendar" list-name="weeks"  target="updateFixedAssetProductCalendar"
             default-title-style="calendarHeader" default-title-area-style="calendarHeader" default-widget-style="calendarContent" default-tooltip-style="tabletext">
 
-        <field name="week" title="${uiLabelMap.Common${month}} ${year}" widget-area-style="calendarWeek" widget-style="calendarWeek"><display description="Week ${week}"/></field>
+        <field name="week" title="${uiLabelMap.Common${month}} ${year}" widget-area-style="calendarWeek" widget-style="calendarWeek"><display description="${uiLabelMap.CommonWeek} ${week}"/></field>
         <field name="Monday" title="" widget-style="calendarDayNumber"><display/></field>
         <field name="MondayData" title="${uiLabelMap.CommonMonday}"><display/></field>
         <field name="Tuesday" title="" widget-style="calendarDayNumber"><display/></field>
@@ -208,14 +208,14 @@ under the License.
     <form name="ListFixedAssets" type="list"  list-name="fixedAssets" 
          default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
 
-        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="linktext">
+        <field name="fixedAssetId" widget-style="linktext">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset?fixedAssetId=${fixedAssetId}"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}">
             <display/>
         </field>
-        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedTypeId}"><display-entity entity-name="FixedAssetType"/></field>
-        <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParentId}">
+        <field name="fixedAssetTypeId"><display-entity entity-name="FixedAssetType"/></field>
+        <field name="parentFixedAssetId">
             <display-entity entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}">
                 <sub-hyperlink target="EditFixedAsset?fixedAssetId=${parentFixedAssetId}" description="${parentFixedAssetId}" link-style="buttontext"/>
             </display-entity>

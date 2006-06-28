@@ -26,12 +26,12 @@ under the License.
     <screen name="InvoicePDF">
         <section>
             <actions>
-                <set field="title" value="Invoice"/>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/editInvoice.bsh"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="Invoice"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/editInvoice.bsh"/>                
             </actions>
             <widgets>
                 <platform-specific>
