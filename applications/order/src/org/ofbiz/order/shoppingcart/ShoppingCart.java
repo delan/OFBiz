@@ -117,6 +117,9 @@ public class ShoppingCart implements Serializable {
     private Map contactMechIdsMap = new HashMap();
     private Map orderAttributes = new HashMap();
     private Map attributes = new HashMap(); // user defined attributes
+    // Lists of internal/public notes: when the order is stored they are transformed into OrderHeaderNotes
+    private List internalOrderNotes = FastList.newInstance(); // internal notes
+    private List orderNotes = FastList.newInstance(); // public notes (printed on documents etc.)
 
     /** contains a list of partyId for each roleTypeId (key) */
     private Map additionalPartyRole = new HashMap();
@@ -1196,6 +1199,8 @@ public class ShoppingCart implements Serializable {
         this.clearPayments();
         this.shipInfo.clear();
         this.contactMechIdsMap.clear();
+        this.internalOrderNotes.clear();
+        this.orderNotes.clear();
 
         // clear the additionalPartyRole Map
         Iterator it = this.additionalPartyRole.entrySet().iterator();
@@ -2119,6 +2124,26 @@ public class ShoppingCart implements Serializable {
 
     public GenericValue getShippingAddress() {
         return this.getShippingAddress(0);
+    }
+
+    // ----------------------------------------
+    // internal/public notes
+    // ----------------------------------------
+
+    public List getInternalOrderNotes() {
+        return this.internalOrderNotes;
+    }
+    
+    public List getOrderNotes() {
+        return this.orderNotes;
+    }
+
+    public void addInternalOrderNote(String note) {
+        this.internalOrderNotes.add(note);
+    }
+
+    public void addOrderNote(String note) {
+        this.orderNotes.add(note);
     }
 
     // Preset with default values some of the checkout options to get a quicker checkout process.
@@ -3321,6 +3346,8 @@ public class ShoppingCart implements Serializable {
         result.put("orderItemSurveyResponses", this.makeAllOrderItemSurveyResponses());
         result.put("orderAdditionalPartyRoleMap", this.getAdditionalPartyRoleMap());
         result.put("orderItemAssociations", this.makeAllOrderItemAssociations());
+        result.put("orderInternalNotes", this.getInternalOrderNotes());
+        result.put("orderNotes", this.getOrderNotes());
 
         result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
         result.put("currencyUom", this.getCurrency());

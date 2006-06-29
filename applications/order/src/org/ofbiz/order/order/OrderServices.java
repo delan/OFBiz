@@ -548,6 +548,50 @@ public class OrderServices {
             }
         }
 
+        // create the order internal notes
+        List orderInternalNotes = (List) context.get("orderInternalNotes");
+        if (orderInternalNotes != null && orderInternalNotes.size() > 0) {
+            Iterator orderInternalNotesIt = orderInternalNotes.iterator();
+            while (orderInternalNotesIt.hasNext()) {
+                String orderInternalNote = (String) orderInternalNotesIt.next();
+                try {
+                    Map noteOutputMap = dispatcher.runSync("createOrderNote", UtilMisc.toMap("orderId", orderId, 
+                                                                                             "internalNote", "Y",
+                                                                                             "note", orderInternalNote,
+                                                                                             "userLogin", userLogin));
+                    if (ServiceUtil.isError(noteOutputMap)) {
+                        return ServiceUtil.returnError("Error creating internal notes while creating order", null, null, noteOutputMap);
+                    }
+                } catch (GenericServiceException e) {
+                    String errMsg = "Error creating internal notes while creating order: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            }
+        }
+
+        // create the order public notes
+        List orderNotes = (List) context.get("orderNotes");
+        if (orderNotes != null && orderNotes.size() > 0) {
+            Iterator orderNotesIt = orderNotes.iterator();
+            while (orderNotesIt.hasNext()) {
+                String orderNote = (String) orderNotesIt.next();
+                try {
+                    Map noteOutputMap = dispatcher.runSync("createOrderNote", UtilMisc.toMap("orderId", orderId,
+                                                                                             "internalNote", "N",
+                                                                                             "note", orderNote,
+                                                                                             "userLogin", userLogin));
+                    if (ServiceUtil.isError(noteOutputMap)) {
+                        return ServiceUtil.returnError("Error creating notes while creating order", null, null, noteOutputMap);
+                    }
+                } catch (GenericServiceException e) {
+                    String errMsg = "Error creating notes while creating order: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            }
+        }
+
         // create the workeffort records
         // and connect them with the orderitem over the WorkOrderItemFulfillment
         // create also the techData calendars to keep track of availability of the fixed asset.
