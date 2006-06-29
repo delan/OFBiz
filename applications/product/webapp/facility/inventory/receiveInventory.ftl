@@ -315,6 +315,9 @@
         <tr>
           <td>
             <div class="head3">${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</div>
+            <#if shipment?has_content>
+            <div class="head3">${uiLabelMap.ProductShipmentId} #${shipment.shipmentId}</div>
+            </#if>
           </td>
           <td align="right">
             <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
