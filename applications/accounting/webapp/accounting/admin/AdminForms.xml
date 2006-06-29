@@ -205,7 +205,7 @@
             </drop-down>
         </field>
         <field name="conversionFactor" title="Conversion Factor"><text/></field>
-        <field name="submit" title="Updated Exchange Rate"><submit/></field>
+        <field name="submitButton" title="Updated Exchange Rate"><submit/></field>
     </form>
 
     <!-- forms for Sales invoice Itemtypes to GLAccount number -->
