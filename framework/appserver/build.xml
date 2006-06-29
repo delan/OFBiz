@@ -42,8 +42,8 @@
 
     <target name="classpath">
         <path id="local.class.path">
-            <fileset dir="../../base/lib" includes="*.jar"/>
-            <fileset dir="../../base/build/lib" includes="*.jar"/>
+            <fileset dir="../base/lib" includes="*.jar"/>
+            <fileset dir="../base/build/lib" includes="*.jar"/>
             <fileset dir="../webapp/lib" includes="*.jar"/>
             <fileset dir="../webapp/build/lib" includes="*.jar"/>
         </path>

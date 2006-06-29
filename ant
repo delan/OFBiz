@@ -7,6 +7,6 @@ else
   JAVA=java
 fi
 
-$JAVA -jar base/lib/ant-launcher.jar $*
+$JAVA -jar framework/base/lib/ant-launcher.jar $*
 exit 0
 

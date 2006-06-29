@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry excluding="org/ofbiz/base/util/OfbizJsBsfEngine.java" kind="src" path="base/src/base"/>
 	<classpathentry kind="src" path="framework/testtools/src"/>
+	<classpathentry kind="src" path="framework/base/src/base"/>
+	<classpathentry kind="src" path="framework/base/src/start"/>
 	<classpathentry kind="src" path="framework/geronimo/src"/>
 	<classpathentry excluding="org/ofbiz/accounting/thirdparty/clearcommerce/**|org/ofbiz/accounting/thirdparty/cybersource/**|org/ofbiz/accounting/thirdparty/verisign/**|org/ofbiz/accounting/thirdparty/worldpay/**" kind="src" path="applications/accounting/src"/>
 	<classpathentry excluding="org/ofbiz/content/openoffice/|org/ofbiz/content/report/" kind="src" path="applications/content/src"/>
@@ -32,33 +33,6 @@
 	<classpathentry kind="src" path="framework/webtools/src"/>
 	<classpathentry kind="src" path="framework/widget/src"/>
 	<classpathentry kind="src" path="framework/workflow/src"/>
-	<classpathentry kind="src" path="base/src/start"/>
-	<classpathentry kind="lib" path="base/lib/scripting/bsh.jar"/>
-	<classpathentry kind="lib" path="base/lib/scripting/bsf.jar"/>
-	<classpathentry kind="lib" path="base/lib/scripting/oro.jar"/>
-	<classpathentry kind="lib" path="base/lib/junit.jar"/>
-	<classpathentry kind="lib" path="base/lib/log4j.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-vfs-providers.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-vfs.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-pool.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-modeler.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-logging.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-el.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-discovery.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-dbcp.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-collections.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-cli.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-beanutils.jar"/>
-	<classpathentry kind="lib" path="base/lib/junitperf.jar"/>
-	<classpathentry kind="lib" path="base/lib/freemarker.jar"/>
-	<classpathentry kind="lib" path="base/lib/avalon-util-exception-1.0.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/resolver.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-fileupload.jar"/>
-	<classpathentry kind="lib" path="base/lib/jdbm.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-primitives.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-codec.jar"/>
-	<classpathentry kind="lib" path="base/lib/jakarta-regexp.jar"/>
-	<classpathentry kind="lib" path="base/lib/httpunit.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/velocity-dep-1.3.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/velocity-1.3.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/MinML2.jar"/>
@@ -74,14 +48,12 @@
 	<classpathentry kind="lib" path="framework/jetty/lib/org.mortbay.jetty.jar"/>
 	<classpathentry kind="lib" path="framework/jetty/lib/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="framework/jetty/lib/jasper-compiler.jar"/>
-	<classpathentry kind="lib" path="framework/jetty/lib/ant.jar"/>
 	<classpathentry kind="lib" path="framework/guiapp/lib/XuiCoreSwing_v2_0_5_jdk1_4.jar"/>
 	<classpathentry kind="lib" path="applications/pos/lib/looks-1.2.2.jar"/>
 	<classpathentry kind="lib" path="applications/pos/lib/jpos18-controls.jar"/>
 	<classpathentry kind="lib" path="applications/pos/lib/jcl.jar"/>
 	<classpathentry kind="lib" path="applications/content/lib/poi.jar"/>
 	<classpathentry kind="lib" path="applications/content/lib/lucene.jar"/>
-	<classpathentry kind="lib" path="base/lib/Tidy.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-util.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-http.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/tomcat-coyote.jar"/>
@@ -90,35 +62,62 @@
 	<classpathentry kind="lib" path="framework/catalina/lib/catalina.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/jmx.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/catalina-cluster.jar"/>
-	<classpathentry kind="lib" path="base/lib/javolution.jar"/>
-	<classpathentry kind="lib" path="base/lib/avalon-framework-4.1.5.jar"/>
-	<classpathentry kind="lib" path="base/lib/scripting/jython-nooro.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/barcode4j-fop-ext-0.20.5-complete.jar"/>
-	<classpathentry kind="lib" path="base/lib/icu4j_3_4.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-digester-1.7.jar"/>
 	<classpathentry kind="lib" path="framework/webapp/lib/itext-1.3.6.jar"/>
-	<classpathentry kind="lib" path="base/lib/ant-launcher.jar"/>
-	<classpathentry kind="lib" path="base/lib/ant.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-lang-2.1.jar"/>
-	<classpathentry kind="lib" path="base/lib/commons/commons-net-1.4.1.jar"/>
 	<classpathentry kind="lib" path="framework/geronimo/lib/geronimo-transaction-1.0.jar"/>
 	<classpathentry kind="lib" path="framework/geronimo/lib/jencks-1.1.3.jar"/>
 	<classpathentry kind="lib" path="framework/entity/lib/oswego-concurrent.jar"/>
 	<classpathentry kind="lib" path="framework/entity/lib/ofbiz-minerva.jar"/>
-	<classpathentry kind="lib" path="base/lib/xmlParserAPIs-2.2.1.jar"/>
-	<classpathentry kind="lib" path="base/lib/xercesImpl-2.6.2.jar"/>
-	<classpathentry kind="lib" path="base/lib/mx4j-remote-3.0.1.jar"/>
-	<classpathentry kind="lib" path="base/lib/mx4j-3.0.1.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-servlet_2.4_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-saaj_1.1_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-qname_1.1_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-jsp_2.0_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-jms_1.1_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-jaxrpc_1.1_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-jaxr_1.0_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-j2ee-connector_1.5_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-activation_1.0.2_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/j2eespecs/geronimo-jta_1.0.1B_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="base/lib/mail.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/xmlParserAPIs-2.2.1.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/xercesImpl-2.6.2.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/Tidy.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/resolver.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/mx4j-remote-3.0.1.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/mx4j-3.0.1.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/mail.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/log4j.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/junitperf.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/junit.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/jdbm.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/javolution.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/jakarta-regexp.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/icu4j_3_4.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/httpunit.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/freemarker.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/avalon-util-exception-1.0.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/avalon-framework-4.1.5.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/ant-launcher.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/ant.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-vfs-providers.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-vfs.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-primitives.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-pool.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-net-1.4.1.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-modeler.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-logging.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-lang-2.1.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-el.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-discovery.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-digester-1.7.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-dbcp.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-collections.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-codec.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-cli.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-servlet_2.4_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-saaj_1.1_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-qname_1.1_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-jta_1.0.1B_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-jsp_2.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-jms_1.1_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-jaxrpc_1.1_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-jaxr_1.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-j2ee-connector_1.5_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/j2eespecs/geronimo-activation_1.0.2_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/scripting/oro.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/scripting/jython-nooro.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/scripting/bsh.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/scripting/bsf.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
