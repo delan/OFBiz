@@ -50,7 +50,7 @@
     <tr>
       <td><div class="tabletext">${(termType.get("description",locale))?if_exists}</div></td>
       <td><div class="tabletext">${term.termValue?if_exists}</div></td>
-      <td><div class="tabletext"><#if uom?has_content>${uom.description?if_exists}<#else>&nbsp;</#if></div></td>
+      <td><div class="tabletext"><#if uom?has_content>${uom.get("description",locale)?if_exists}<#else>&nbsp;</#if></div></td>
       <td align="right">  
         <a href="<@ofbizUrl>EditBillingAccountTerms?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>&nbsp;
         <a href="<@ofbizUrl>removeBillingAccountTerm?billingAccountId=${term.billingAccountId}&billingAccountTermId=${term.billingAccountTermId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a> 
@@ -91,7 +91,7 @@
         <select class="selectBox" name="uomId">
           <option></option>
           <#list uoms as uom>
-          <option value="${uom.uomId}" <#if termData?has_content && termData.uomId?default("") == uom.uomId>SELECTED</#if>>${uom.description?if_exists}</option>
+          <option value="${uom.uomId}" <#if termData?has_content && termData.uomId?default("") == uom.uomId>SELECTED</#if>>${uom.get("description",locale)?if_exists}</option>
           </#list>
         </select>
       </td>

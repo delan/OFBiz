@@ -329,7 +329,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productMaintSeqId" title="Product Maintenance" tooltip="Only use if applicable, can use Maintenance Type instead">
+        <field name="productMaintSeqId"  tooltip="${uiLabelMap.AccountingFixedAssetMaintMessage2}">
             <drop-down allow-empty="true" >
                 <entity-options description="${maintName}" entity-name="ProductMaint">
                     <entity-constraint name="productId" operator="equals" value="${fixedAsset.instanceOfProductId}"/>
@@ -337,7 +337,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productMaintTypeId" title="${uiLabelMap.AccountingFixedAssetMaintType}" tooltip="If the Product Maintenance is specified, this will be set/reset automatically">
+        <field name="productMaintTypeId" title="${uiLabelMap.AccountingFixedAssetMaintType}" tooltip="${uiLabelMap.AccountingFixedAssetMaintMessage1}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ProductMaintType">
                     <entity-order-by field-name="productMaintTypeId"/>

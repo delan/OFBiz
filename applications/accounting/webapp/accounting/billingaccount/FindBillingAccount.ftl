@@ -50,7 +50,7 @@
       <tr>
         <td><div class="tabletext">${billingAccount.billingAccountId}</div></td>
         <td><div class="tabletext"><@ofbizCurrency amount=billingAccount.accountLimit isoCode=billingAccount.accountCurrencyUomId/></div></td>
-        <td><div class="tabletext">${roleType.description}</div></td>
+        <td><div class="tabletext">${roleType.get("description",locale)}</div></td>
         <td align="right">
           <a href="<@ofbizUrl>EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
         </td>

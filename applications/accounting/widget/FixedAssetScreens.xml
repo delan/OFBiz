@@ -228,9 +228,9 @@ under the License.
     <screen name="ListFixedAssetMaints">
         <section>
             <actions>
-                <set field="titleProperty" value="List Fixed Asset Maintenance"/>
+                <set field="titleProperty" value="PageTitleListFixedAssetMaints"/>
                 <set field="tabButtonItem" value="ListFixedAssetMaints"/>
-                <set field="labelTitleProperty" value="List Fixed Asset Maintenance"/>
+                <set field="labelTitleProperty" value="PageTitleListFixedAssetMaints"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
@@ -248,9 +248,9 @@ under the License.
     <screen name="EditFixedAssetMaint">
         <section>
             <actions>
-                <set field="titleProperty" value="Edit Fixed Asset Maintenance"/>
+                <set field="titleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="tabButtonItem" value="ListFixedAssetMaints"/>
-                <set field="labelTitleProperty" value="Edit Fixed Asset Maintenance"/>
+                <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
@@ -271,9 +271,9 @@ under the License.
     <screen name="EditFixedAssetMaintMeters">
         <section>
             <actions>
-                <set field="titleProperty" value="Edit Fixed Asset MaintMeter"/>
+                <set field="titleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="tabButtonItem" value="ListFixedAssetMaints"/>
-                <set field="labelTitleProperty" value="Edit Fixed Asset MaintMeter"/>
+                <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
