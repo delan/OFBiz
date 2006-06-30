@@ -26,6 +26,17 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
 
+    <screen name="CommonRequestDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="ListRequests">
         <section>
             <actions>
@@ -73,14 +84,9 @@
 
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonRequestDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestInfo.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
-                        </platform-specific>
+                        <include-screen name="ViewRequestTemplate" location="component://order/widget/ordermgr/RequestScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -107,12 +107,7 @@
                             <link target="request" text="${uiLabelMap.OrderNewRequest}" style="buttontext"/>
                             <link target="createQuoteFromCustRequest?custRequestId=${custRequestId}" text="${uiLabelMap.OrderNewQuote}" style="buttontext"/>
                         </container>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestInfo.ftl"/></html>
-                        </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
-                        </platform-specific>
+                        <include-screen name="ViewRequestTemplate" location="component://order/widget/ordermgr/RequestScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -404,6 +399,68 @@
                         <include-form name="AddCustRequestItemWorkEffort" location="component://order/webapp/ordermgr/request/RequestForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ViewRequestTemplate">
+        <section>
+            <condition>
+                <not><if-empty field-name="custRequest"/></not>
+            </condition>
+            <widgets>
+                <include-screen name="ViewRequestInfo"/>
+                <include-screen name="ViewRequestItemInfo"/>
+            </widgets>
+            <fail-widgets>
+                <label style="head3">${uiLabelMap.OrderErrorRequestNotFound}</label>
+            </fail-widgets>
+        </section>
+    </screen>
+    <screen name="ViewRequestInfo">
+        <section>
+            <widgets>
+                <include-screen name="requestInfo"/>
+                <include-screen name="requestDate"/>
+                <include-screen name="requestRoles"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="requestInfo">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/request/requestInfo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="requestDate">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/request/requestDate.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="requestRoles">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/request/requestRoles.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ViewRequestItemInfo">
+        <section>
+            <condition>
+                <not><if-empty field-name="requestItems"/></not>
+            </condition>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
