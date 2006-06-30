@@ -56,6 +56,11 @@ public class PaymentWorker {
         pageContext.setAttribute(paymentMethodValueMapsAttr, paymentMethodValueMaps);
     }
 
+    // to be able to use in minilanguage where boolean cannot be used
+    public static List getPartyPaymentMethodValueMaps(GenericDelegator delegator, String partyId) {
+        return(getPartyPaymentMethodValueMaps(delegator, partyId, false)); 
+    }
+    
     public static List getPartyPaymentMethodValueMaps(GenericDelegator delegator, String partyId, boolean showOld) {
         List paymentMethodValueMaps = new LinkedList();
         try {
