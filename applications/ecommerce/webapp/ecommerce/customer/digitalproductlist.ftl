@@ -21,7 +21,7 @@ under the License.
         <div class="boxhead">${uiLabelMap.PageTitleDigitalProductList}</div>
     </div>
     <div class="screenlet-body">
-       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="buttontext">New Digital Product</a></div>
+       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
         <table width="100%" cellpadding="1" cellspacing="0" border="0">
           <tr>
             <td width="30%">
@@ -52,7 +52,7 @@ under the License.
             </tr>
           </#list>
           <#if !supplierProductList?has_content>
-            <tr><td colspan="5"><div class="head3">No Digital Products Found</div></td></tr>
+            <tr><td colspan="5"><div class="head3">${uiLabelMap.EcommerceNoDigitalProductsFound}</div></td></tr>
           </#if>
         </table>
     </div>
@@ -60,9 +60,9 @@ under the License.
 
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">Digital Product Purchase History and Commission</div>
+        <div class="boxhead">${uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission}</div>
     </div>
     <div class="screenlet-body">
-       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="buttontext">New Digital Product</a></div>
+       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
     </div>
 </div>

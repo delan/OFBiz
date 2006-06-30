@@ -69,7 +69,7 @@
                     </td>
                     <td width="10">&nbsp;</td>
                     <td>
-                        <div class="tabletext">${type.description?if_exists}</div>
+                        <div class="tabletext">${type.get("description",locale)?if_exists}</div>
                     </td>
                     <td width="10">&nbsp;</td>
                     <td>
@@ -81,7 +81,7 @@
                     </td>
                     <td width="10">&nbsp;</td>
                     <td>
-                        <div class="tabletext">${status.description}</div>
+                        <div class="tabletext">${status.get("description",locale)}</div>
                     </td>
                     <td width="10">&nbsp;</td>
                     <td>

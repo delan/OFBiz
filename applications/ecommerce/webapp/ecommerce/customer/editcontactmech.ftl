@@ -39,7 +39,7 @@
           <td width="74%">
             <select name="preContactMechTypeId" class='selectBox'>
               <#list contactMechTypes as contactMechType>
-                <option value='${contactMechType.contactMechTypeId}'>${contactMechType.description}</option>
+                <option value='${contactMechType.contactMechTypeId}'>${contactMechType.get("description",locale)}</option>
               </#list>
             </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonCreate}]</a>
           </td>
@@ -60,7 +60,7 @@
         <input type='hidden' name='DONE_PAGE' value='${donePage}'>
         <input type='hidden' name='contactMechTypeId' value='${contactMechTypeId}'>
         <#if contactMechPurposeType?exists>
-            <div class="tabletext">(${uiLabelMap.PartyNewContactHavePurpose} <b>"${contactMechPurposeType.description?if_exists}"</b>)</div>
+            <div class="tabletext">(${uiLabelMap.PartyNewContactHavePurpose} <b>"${contactMechPurposeType.get("description",locale)?if_exists}"</b>)</div>
         </#if>
         <#if cmNewPurposeTypeId?has_content><input type='hidden' name='contactMechPurposeTypeId' value='${cmNewPurposeTypeId}'></#if>
         <#if preContactMechTypeId?has_content><input type='hidden' name='preContactMechTypeId' value='${preContactMechTypeId}'></#if>
@@ -81,7 +81,7 @@
                   <td bgcolor='white'>
                     <div class="tabletext">&nbsp;
                       <#if contactMechPurposeType?exists>
-                        <b>${contactMechPurposeType.description}</b>
+                        <b>${contactMechPurposeType.get("description",locale)}</b>
                       <#else>
                         <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>
@@ -98,7 +98,7 @@
                     <select name='contactMechPurposeTypeId' class='selectBox'>
                       <option></option>
                       <#list purposeTypes as contactMechPurposeType>
-                        <OPTION value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.description}</OPTION>
+                        <OPTION value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</OPTION>
                       </#list>
                     </select>
                   </td>
@@ -206,7 +206,7 @@
     </tr>
   <#else>
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">${contactMechType.description?if_exists}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${contactMechType.get("description",locale)?if_exists}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class='inputBox' size="60" maxlength="255" name="infoString" value="${contactMechData.infoString?if_exists}">

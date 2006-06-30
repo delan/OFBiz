@@ -81,17 +81,17 @@ under the License.
                                 <if-empty field-name="parameters.threadView"/>
                             </condition>
                             <widgets>
-                                <label style="head1" text="Message list for forum: ${forum.description}"/>
-                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}&amp;VIEW_INDEX=${parameters.VIEW_INDEX}" text="New message"/>
-                                <link style="buttontext" target="showforum?threadView=yes&amp;forumId=${parameters.forumId}" text="Thread View"/>
+                                <label style="head1" text="${uiLabelMap.EcommerceMessageListForForum} ${forum.description}"/>
+                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}&amp;VIEW_INDEX=${parameters.VIEW_INDEX}" text="${uiLabelMap.PageTitleNewMessage}"/>
+                                <link style="buttontext" target="showforum?threadView=yes&amp;forumId=${parameters.forumId}" text="${uiLabelMap.EcommerceThreadView}"/>
                                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/forumPaging.ftl"/></html></platform-specific>
                                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/showforum.ftl"/></html></platform-specific>
                                 <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/forum/forumPaging.ftl"/></html></platform-specific>
                             </widgets>
                             <fail-widgets>
-                                <label style="head1" text="Thread list for forum: ${forum.description}"/>
-                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}&amp;VIEW_INDEX=${parameters.VIEW_INDEX}" text="New message"/>
-                                <link style="buttontext" target="showforum?forumId=${parameters.forumId}" text="List View"/>
+                                <label style="head1" text="${uiLabelMap.EcommerceMessageListForForum} ${forum.description}"/>
+                                <link style="buttontext" target="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${parameters.forumId}&amp;threadView=${parameters.threadView?if_exists}&amp;VIEW_INDEX=${parameters.VIEW_INDEX}" text="${uiLabelMap.PageTitleNewMessage}"/>
+                                <link style="buttontext" target="showforum?forumId=${parameters.forumId}" text="${uiLabelMap.EcommerceListView}"/>
                                 <include-tree name="MessageTree" location="component://content/widget/forum/ForumTrees.xml" /> 
                             </fail-widgets>
                         </section>

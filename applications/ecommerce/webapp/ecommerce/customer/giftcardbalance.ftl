@@ -26,7 +26,7 @@
 
 <div class="head1">${uiLabelMap.AccountingGiftCardBalance}</div>
 <br/>
-<div class="tabletext">${uiLabelMap.Enter your gift card number and PIN to check the balance}</div>
+<div class="tabletext">${uiLabelMap.AccountingEnterGiftCardNumber}</div>
 <br/>
 
 <br/>
@@ -65,7 +65,7 @@
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
-      <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="Check Balance"></td>
+      <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceCheckBalance}"></td>
     </tr>
   </form>
 </table>
