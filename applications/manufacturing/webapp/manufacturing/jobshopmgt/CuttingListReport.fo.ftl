@@ -33,8 +33,8 @@ under the License.
 <#if cuttingList?has_content>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-            <fo:block font-size="16pt">Cutting List</fo:block>
-            <fo:block font-size="12pt">Shipment Plan: ${shipmentId} Delivery date: ${shipment.estimatedShipDate?if_exists}</fo:block>
+            <fo:block font-size="16pt">${uiLabelMap.ManufacturingCuttingList}</fo:block>
+            <fo:block font-size="12pt">${uiLabelMap.ProductShipmentPlan}: ${shipmentId} ${uiLabelMap.ManufacturingDeliveryDate}: ${shipment.estimatedShipDate?if_exists}</fo:block>
             <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table>
                 <fo:table-column column-width="60pt"/>
@@ -44,11 +44,11 @@ under the License.
                 <fo:table-column column-width="180pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Width</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Height</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Quantity</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>ProductId</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Description</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductWidth}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductHeight}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductQuantity}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductProduct}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductDescription}</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
@@ -103,7 +103,7 @@ under the License.
     <fo:page-sequence master-reference="main">
     <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
         <fo:block font-size="14pt">
-            No Data Available.
+            ${uiLabelMap.ManufacturingNoDataAvailable}
         </fo:block>
     </fo:flow>
     </fo:page-sequence>

@@ -46,12 +46,12 @@ function lookupBom() {
             <#if productAssocTypeId?has_content>
                 <#assign curAssocType = delegator.findByPrimaryKey("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId))>
                 <#if curAssocType?exists>
-                    <option selected value="${(curAssocType.productAssocTypeId)?if_exists}">${(curAssocType.description)?if_exists}</option>
+                    <option selected value="${(curAssocType.productAssocTypeId)?if_exists}">${(curAssocType.get("description",locale))?if_exists}</option>
                     <option value="${(curAssocType.productAssocTypeId)?if_exists}"></option>
                 </#if>
             </#if>
             <#list assocTypes as assocType>
-                <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.description)?if_exists}</option>
+                <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.get("description",locale))?if_exists}</option>
             </#list>
             </select>
             </td>
@@ -93,12 +93,12 @@ function lookupBom() {
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findByPrimaryKey("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId))>
                     <#if curAssocType?exists>
-                        <option selected value="${(curAssocType.productAssocTypeId)?if_exists}">${(curAssocType.description)?if_exists}</option>
+                        <option selected value="${(curAssocType.productAssocTypeId)?if_exists}">${(curAssocType.get("description",locale))?if_exists}</option>
                         <option value="${(curAssocType.productAssocTypeId)?if_exists}"></option>
                     </#if>
                 </#if>
                 <#list assocTypes as assocType>
-                    <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.description)?if_exists}</option>
+                    <option value="${(assocType.productAssocTypeId)?if_exists}">${(assocType.get("description",locale))?if_exists}</option>
                 </#list>
                 </select>
             </td>
@@ -126,7 +126,7 @@ function lookupBom() {
                 <div class="tabletext">
                     <input type="text" class="inputBox" name="fromDate" size="25" maxlength="40" value=""/>
                     <a href="javascript:call_cal(document.editProductAssocForm.fromDate,'${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"/></a>
-                    (Will be set to now if empty)
+                    (${uiLabelMap.ManufacturingWillBeSetToNow})
                 </div>
             </td>
             </tr>
@@ -151,7 +151,7 @@ function lookupBom() {
         <tr>
             <td align="right"><div class='tableheadtext'>${uiLabelMap.ManufacturingBomType}:</div></td>
             <td>&nbsp;</td>
-            <td><b><#if curProductAssocType?exists>${(curProductAssocType.description)?if_exists}<#else> ${productAssocTypeId?if_exists}</#if></b></td>
+            <td><b><#if curProductAssocType?exists>${(curProductAssocType.get("description",locale))?if_exists}<#else> ${productAssocTypeId?if_exists}</#if></b></td>
         </tr>
         <tr>
             <td align="right"><div class='tableheadtext'>${uiLabelMap.CommonFromDate}:</div></td>
@@ -210,7 +210,7 @@ function lookupBom() {
                 <#assign selectedFormula = (request.getParameter("estimateCalcMethod"))?if_exists>
             </#if>
             <#list formulae as formula>
-                <option value="${formula.customMethodId}" <#if selectedFormula = formula.customMethodId>selected</#if>>${formula.description?if_exists}</option>
+                <option value="${formula.customMethodId}" <#if selectedFormula = formula.customMethodId>selected</#if>>${formula.get("description",locale)?if_exists}</option>
             </#list>
             </select>
         </td>

@@ -22,8 +22,8 @@ under the License.
             target="ApproveRequirements" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="hideSearch"><hidden value="Y"/></field>
-        <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><text-find/></field>
-        <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
+        <field name="requirementId"><text-find/></field>
+        <field name="requirementTypeId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RequirementType" description="${description}"/>
             </drop-down>
@@ -32,8 +32,8 @@ under the License.
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
-        <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><date-find type="date"/></field>
-        <field name="requiredByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><date-find type="date"/></field>
+        <field name="requirementStartDate"><date-find type="date"/></field>
+        <field name="requiredByDate"><date-find type="date"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -49,17 +49,17 @@ under the License.
                 <field-map field-name="entityName" env-name="entityName"/>
             </service>
         </actions>
-        <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}" widget-style="buttontext">
+        <field name="requirementId" widget-style="buttontext">
             <hyperlink target-type="inter-app" also-hidden="true" description="${requirementId}" target="/ordermgr/control/EditRequirement?requirementId=${requirementId}"/>
         </field>
-        <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
+        <field name="requirementTypeId">
             <display-entity entity-name="RequirementType" also-hidden="true"/>
         </field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
-        <field name="requirementStartDate" title="${uiLabelMap.ManufacturingRequirementStartDate}"><display/></field>
-        <field name="requiredByDate" title="${uiLabelMap.ManufacturingRequirementByDate}"><display/></field>
+        <field name="requirementStartDate"><display/></field>
+        <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">

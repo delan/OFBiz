@@ -35,7 +35,7 @@ under the License.
     <#list techDataCalendars as techDataCalendar>
       <tr>
         <td><div class="tabletext">${techDataCalendar.calendarId}</div></td>
-        <td><div class="tabletext">${techDataCalendar.description?if_exists}</div></td>
+        <td><div class="tabletext">${techDataCalendar.get("description",locale)?if_exists}</div></td>
         <td><div class="tabletext">${techDataCalendar.calendarWeekId?if_exists}</div></td>
         <td align="right">
           <a href="<@ofbizUrl>EditCalendar?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonEdit}</a>
