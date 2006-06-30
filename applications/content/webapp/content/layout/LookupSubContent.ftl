@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 
-<div class="head1">Find ${page.getProperty("entityName")}</div>
+<div class="head1">${uiLabelMap.CommonFind} ${page.getProperty("entityName")}</div>
 <br/>
 ${mruWrapper.renderFormString()}
 <br/>

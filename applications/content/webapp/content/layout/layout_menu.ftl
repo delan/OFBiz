@@ -23,11 +23,11 @@
 <a href="<@ofbizUrl>FindLayout</@ofbizUrl>" class="${selectedClassMap.FindLayout?default(unselectedClassName)}">${uiLabelMap.CommonFind}</a>
 <a href="<@ofbizUrl>EditLayout</@ofbizUrl>" class="${layoutClass}">${uiLabelMap.ContentLayout}</a>
 <!--
-<a href="<@ofbizUrl>EditLayoutContent</@ofbizUrl>" class="${selectedClassMap.EditLayoutContent?default(unselectedClassName)}">SubContent</a>
-<a href="<@ofbizUrl>EditLayoutText</@ofbizUrl>" class="${selectedClassMap.EditLayoutText?default(unselectedClassName)}">Text</a>
-<a href="<@ofbizUrl>EditLayoutHtml</@ofbizUrl>" class="${selectedClassMap.EditLayoutHtml?default(unselectedClassName)}">Html</a>
-<a href="<@ofbizUrl>EditLayoutImage</@ofbizUrl>" class="${selectedClassMap.EditLayoutImage?default(unselectedClassName)}">Image</a>
-<a href="<@ofbizUrl>EditLayoutUrl</@ofbizUrl>" class="${selectedClassMap.EditLayoutUrl?default(unselectedClassName)}">Url</a>
-<a href="<@ofbizUrl>EditLayoutFile</@ofbizUrl>" class="${selectedClassMap.EditLayoutFile?default(unselectedClassName)}">File</a>
+<a href="<@ofbizUrl>EditLayoutContent</@ofbizUrl>" class="${selectedClassMap.EditLayoutContent?default(unselectedClassName)}">${uiLabelMap.ContentSubContent}</a>
+<a href="<@ofbizUrl>EditLayoutText</@ofbizUrl>" class="${selectedClassMap.EditLayoutText?default(unselectedClassName)}">${uiLabelMap.ContentText}</a>
+<a href="<@ofbizUrl>EditLayoutHtml</@ofbizUrl>" class="${selectedClassMap.EditLayoutHtml?default(unselectedClassName)}">${uiLabelMap.ContentHtml}</a>
+<a href="<@ofbizUrl>EditLayoutImage</@ofbizUrl>" class="${selectedClassMap.EditLayoutImage?default(unselectedClassName)}">${uiLabelMap.ContentImage}</a>
+<a href="<@ofbizUrl>EditLayoutUrl</@ofbizUrl>" class="${selectedClassMap.EditLayoutUrl?default(unselectedClassName)}">${uiLabelMap.ContentUrl}</a>
+<a href="<@ofbizUrl>EditLayoutFile</@ofbizUrl>" class="${selectedClassMap.EditLayoutFile?default(unselectedClassName)}">${uiLabelMap.ContentFile}</a>
 -->
 </div>

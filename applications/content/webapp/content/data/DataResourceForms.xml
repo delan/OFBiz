@@ -239,9 +239,9 @@
     <form name="ImageUpload" target="uploadImage" title="" type="upload"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <field name="dataResourceId"><display/></field>
-        <field name="objectInfo" title="Image File Name"><display description="${currentValue.objectInfo}"/></field>
+        <field name="objectInfo"><display description="${currentValue.objectInfo}"/></field>
         <field name="imageData" entity-name="ImageDataResource"><file/></field>
-        <field name="submitButton" title="Upload" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <!-- DataResourceAttribute forms -->
     <form name="AddDataResourceAttribute" 

@@ -44,7 +44,7 @@
         </field>
         <field name="localeString" position="2">
             <drop-down allow-empty="true">
-                <entity-options entity-name="CountryCode" description="${countryName}[${countryCode}]" key-field-name="countryCode"/>
+                <entity-options entity-name="CountryCode" description="${countryName} [${countryCode}]" key-field-name="countryCode"/>
             </drop-down>
         </field>
         <field name="createdByUserLogin" position="1"><lookup target-form-name="LookupPerson"/></field>
@@ -66,7 +66,7 @@
           </service>
         </actions>
         <field name="dataResourceId"><hidden/></field>
-        <field name="dataResourceName" title="Name [id]" widget-style="tabletext">
+        <field name="dataResourceName" widget-style="tabletext">
             <display-entity entity-name="DataResource" description="${dataResourceName}" key-field-name="dataResourceId">
                 <sub-hyperlink target="editDataResource?dataResourceId=${dataResourceId}" description="[${dataResourceId}]" link-style="buttontext"/>
             </display-entity>
@@ -154,8 +154,8 @@
                 <entity-options description="${description}" entity-name="CharacterSet" key-field-name="characterSetId"/>
             </drop-down>
         </field>
-        <field name="createButton" use-when="currentValue==null" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="updateButton" use-when="currentValue!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="createButton" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" use-when="currentValue!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <!--form name="DataResourceMaster" target="createDataResource" title="" type="single" default-map-name="currentValue"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">

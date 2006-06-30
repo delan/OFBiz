@@ -35,7 +35,7 @@
                         <container><link target="editDataResource" text="${uiLabelMap.CommonCreateNew}" style="buttontext"/></container>
                         <label style="head1" text="${uiLabelMap.PageTitleFindDataResource}"/>
                         <include-form name="FindDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
-                        <label style="head1" text="Data Resource List"></label>
+                        <label style="head1" text="${uiLabelMap.PageTitleListDataResource}"></label>
                         <include-form name="ListDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -48,7 +48,8 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
-                <set field="title" value="Lookup Data Resource"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupDataResource}"/>                
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
             </actions>
@@ -69,6 +70,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditDataResource"/>
                 <set field="headerItem" value="DataResource"/>
                 <set field="tabButtonItem" value="editDataResource"/>
                 <set field="dataResourceId" from-field="parameters.dataResourceId"/>
@@ -108,6 +110,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleUploadImageDataResource"/>			
                 <set field="headerItem" value="DataResource"/>
                 <set field="tabButtonItem" value="uploadImage"/>
                 <entity-one entity-name="DataResource" value-name="currentValue">
@@ -147,6 +150,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleAddDataResourceText"/>	
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="adddataresourcetext"/>
             </actions>
@@ -165,6 +169,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleAddDataResourceUrl"/>	
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="adddataresourceurl"/>
             </actions>
@@ -184,6 +189,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleAddDataResourceUpload"/>	
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="adddataresourceupload"/>
             </actions>
@@ -202,6 +208,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditDataResourceText"/>	
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="editdataresourcetext"/>
             </actions>
@@ -220,6 +227,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditDataResourceUrl"/>	
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="editdataresourceurl"/>
             </actions>
@@ -238,6 +246,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditDataResourceUpload"/>	
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="editdataresourceupload"/>
             </actions>
@@ -256,6 +265,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditElectronicText"/>	
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="editelectronictext"/>
                 <set field="tabButtonItem" value="editElectronicText"/>
@@ -278,6 +288,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditDataResourceAttribute"/>
                 <set field="headerItem" value="DataResource"/>
                 <set field="tabButtonItem" value="editDataResourceAttribute"/>
                 <entity-one entity-name="DataResource" value-name="currentValue">
@@ -300,6 +311,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditDataResourceRole"/>
                 <set field="headerItem" value="DataResource"/>
                 <set field="tabButtonItem" value="editDataResourceRole"/>
                 <entity-one entity-name="DataResource" value-name="currentValue">
@@ -322,6 +334,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditDataResourceProductFeatures"/>
                 <set field="headerItem" value="DataResource"/>
                 <set field="tabButtonItem" value="editDataResourceProductFeatures"/>
                 <entity-one entity-name="DataResource" value-name="currentValue">
@@ -344,6 +357,7 @@
                 <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
             </condition>
             <actions>
+                <set field="titleProperty" value="PageTitleEditHtmlText"/>
                 <set field="headerItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="edithtmltext"/>
                 <set field="tabButtonItem" value="editHtmlText"/>

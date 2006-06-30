@@ -75,43 +75,43 @@
     </menu>
     <menu name="dataresource">
         
-        <menu-item name="editDataResource" title="Data Resource" >
+        <menu-item name="editDataResource" title="${uiLabelMap.ContentDataResource}" >
             <condition>
                 <not><if-empty field-name="currentValue.dataResourceId"/></not>
             </condition>
             <link target="editDataResource?dataResourceId=${parameters.dataResourceId}"/>
         </menu-item>
-        <menu-item name="editElectronicText" title="Text" >
+        <menu-item name="editElectronicText" title="${uiLabelMap.ContentDataResourceText}" >
             <condition>
                 <not><if-empty field-name="currentValue.dataResourceId"/></not>
             </condition>
             <link target="EditElectronicText?dataResourceId=${parameters.dataResourceId}"/>
         </menu-item>
-        <menu-item name="editHtmlText" title="Html" >
+        <menu-item name="editHtmlText" title="${uiLabelMap.ContentDataResourceHtml}" >
             <condition>
                 <not><if-empty field-name="currentValue.dataResourceId"/></not>
             </condition>
             <link target="EditHtmlText?dataResourceId=${parameters.dataResourceId}"/>
         </menu-item>
-        <menu-item name="uploadImage" title="Image" >
+        <menu-item name="uploadImage" title="${uiLabelMap.ContentDataResourceImage}" >
             <condition>
                 <not><if-empty field-name="currentValue.dataResourceId"/></not>
             </condition>
             <link target="UploadImage?dataResourceId=${parameters.dataResourceId}"/>
         </menu-item>
-        <menu-item name="editDataResourceAttribute" title="Attribute" >
+        <menu-item name="editDataResourceAttribute" title="${uiLabelMap.ContentDataResourceAttribute}" >
             <condition>
                 <not><if-empty field-name="currentValue.dataResourceId"/></not>
             </condition>
             <link target="EditDataResourceAttribute?dataResourceId=${parameters.dataResourceId}"/>
         </menu-item>
-        <menu-item name="editDataResourceRole" title="Role" >
+        <menu-item name="editDataResourceRole" title="${uiLabelMap.ContentDataResourceRole}" >
             <condition>
                 <not><if-empty field-name="currentValue.dataResourceId"/></not>
             </condition>
             <link target="EditDataResourceRole?dataResourceId=${parameters.dataResourceId}"/>
         </menu-item>
-        <menu-item name="editDataResourceProductFeatures" title="Product Features" >
+        <menu-item name="editDataResourceProductFeatures" title="${uiLabelMap.ContentDataResourceProductFeatures}" >
             <condition>
                 <not><if-empty field-name="currentValue.dataResourceId"/></not>
             </condition>

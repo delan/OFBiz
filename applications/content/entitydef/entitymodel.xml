@@ -73,7 +73,7 @@
       </relation>
     </entity>
     <entity entity-name="CommContentAssocType"
-            package-name="org.ofbiz.content.commevent"
+            package-name="org.ofbiz.content.commevent"			
             title="CommunicationEvent Content Association Type Entity">
       <field name="commContentAssocTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -338,6 +338,7 @@
     </entity>
     <entity entity-name="ContentAssocType"
             package-name="org.ofbiz.content.content"
+            default-resource-name="ContentEntityLabels"
             title="Content Association Type Entity">
       <field name="contentAssocTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -488,6 +489,7 @@
     </entity>
     <entity entity-name="ContentOperation"
             package-name="org.ofbiz.content.content"
+            default-resource-name="ContentEntityLabels"
             title="Content Operation Entity">
       <field name="contentOperationId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -538,6 +540,7 @@
     </entity>
     <entity entity-name="ContentPurposeType"
             package-name="org.ofbiz.content.content"
+            default-resource-name="ContentEntityLabels"
             title="Content Purpose Type Entity">
       <field name="contentPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -606,6 +609,7 @@
     </entity>
     <entity entity-name="ContentType"
             package-name="org.ofbiz.content.content"
+            default-resource-name="ContentEntityLabels"
             title="Content Type Entity">
       <field name="contentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -685,6 +689,7 @@
     </entity>
     <entity entity-name="DataCategory"
             package-name="org.ofbiz.content.data"
+            default-resource-name="ContentEntityLabels"
             title="Data Category Entity">
       <field name="dataCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
@@ -873,6 +878,7 @@
     </entity>
     <entity entity-name="DataResourceType"
             package-name="org.ofbiz.content.data"
+            default-resource-name="ContentEntityLabels"
             title="Data Object Type Entity">
       <field name="dataResourceTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -902,6 +908,7 @@
     </entity>
     <entity entity-name="DataTemplateType"
             package-name="org.ofbiz.content.data"
+            default-resource-name="ContentEntityLabels"
             title="Data Template Type Entity">
       <field name="dataTemplateTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -940,6 +947,7 @@
     </entity>
     <entity entity-name="MetaDataPredicate"
             package-name="org.ofbiz.content.data"
+            default-resource-name="ContentEntityLabels"
             title="Data Meta-Data Predicate Entity">
       <field name="metaDataPredicateId" type="id-ne"></field>
       <field name="description" type="description"></field>
@@ -947,6 +955,7 @@
     </entity>
     <entity entity-name="MimeType"
             package-name="org.ofbiz.content.data"
+            default-resource-name="ContentEntityLabels"
             title="Mime Type Entity">
       <field name="mimeTypeId" type="id-long-ne"></field>
       <field name="description" type="description"></field>
@@ -1417,6 +1426,7 @@
     </entity>
     <entity entity-name="SurveyQuestionType"
             package-name="org.ofbiz.content.survey"
+            default-resource-name="ContentEntityLabels"
             title="Survey Question Type Entity">
       <field name="surveyQuestionTypeId" type="id-ne"/>
       <field name="description" type="description"/>

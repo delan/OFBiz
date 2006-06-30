@@ -42,9 +42,9 @@
 
             <#-- standard questions -->
             <td align='right' nowrap>
-              <#assign answerString = "answers">
+              <#assign answerString = "${uiLabelMap.ContentAnswers}">
               <#if (results._total?default(0) == 1)>
-                <#assign answerString = "answer">
+                <#assign answerString = "${uiLabelMap.ContentAnswer}">
               </#if>
               <div class="tabletext">${question.question?if_exists} (${results._total?default(0)?string.number} ${answerString})</div>
               <#if question.hint?has_content>
@@ -58,10 +58,10 @@
               <#if question.surveyQuestionTypeId == "BOOLEAN">
                 <#assign selectedOption = (answer.booleanResponse)?default("Y")>
                 <div class="tabletext">
-                  <nobr>Y&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]</nobr>
+                  <nobr>${uiLabelMap.CommonY}&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]</nobr>
                 </div>
                 <div class="tabletext">
-                  <nobr>N&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]</nobr>
+                  <nobr>${uiLabelMap.CommonN}&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]</nobr>
                 </div>
               <#elseif question.surveyQuestionTypeId == "OPTION">
                 <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
