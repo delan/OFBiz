@@ -102,7 +102,7 @@
         <td valign="middle">
           <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
-              <option value="">- ${uiLabelMap.CommonAny} -</option>
+              <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("${uiLabelMap.ProductNoDescription}")} [${productFeature.productFeatureId}]</option>
               </#list>
@@ -118,7 +118,7 @@
       <td valign="middle">
         <div class="tabletext">
           <select name="SEARCH_SUPPLIER_ID" class="selectBox">
-            <option value="">- ${uiLabelMap.CommonAny} -</option>
+            <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
             <#list supplerPartyRoleAndPartyDetails as supplerPartyRoleAndPartyDetail>
               <option value="${supplerPartyRoleAndPartyDetail.partyId}">${supplerPartyRoleAndPartyDetail.groupName?if_exists} ${supplerPartyRoleAndPartyDetail.firstName?if_exists} ${supplerPartyRoleAndPartyDetail.lastName?if_exists} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
             </#list>
@@ -153,7 +153,7 @@
     <#if searchConstraintStrings?has_content>
       <tr>
         <td align="right" valign="top">
-          <div class="tabletext">Last Search:</div>
+          <div class="tabletext">${uiLabelMap.ProductLastSearch}</div>
         </td>
         <td valign="top">
             <#list searchConstraintStrings as searchConstraintString>
