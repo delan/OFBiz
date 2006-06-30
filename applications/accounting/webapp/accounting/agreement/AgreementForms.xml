@@ -278,10 +278,10 @@
         <auto-fields-entity entity-name="AgreementPromoAppl" default-field-type="edit"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field use-when="agreementPromoAppl!=null" name="productPromoId" title="${uiLabelMap.ProductPromoId}">
+        <field use-when="agreementPromoAppl!=null" name="productPromoId" title="${uiLabelMap.FormFieldTitle_productPromoId}">
             <display-entity entity-name="ProductPromo" key-field-name="productPromoId" description="${promoName}"/>
         </field>
-        <field name="productPromoId" use-when="agreementPromoAppl==null" title="${uiLabelMap.ProductPromoId}">
+        <field name="productPromoId" use-when="agreementPromoAppl==null">
             <drop-down allow-empty="true">
                 <entity-options description="${promoName}" entity-name="ProductPromo" key-field-name="productPromoId"/>
             </drop-down>

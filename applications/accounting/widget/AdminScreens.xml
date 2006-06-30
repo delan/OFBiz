@@ -23,9 +23,10 @@
     <screen name="ListCompanies">
         <section>
             <actions>
-                <set field="title" value="Available Internal Organizations"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="AccountingAvailableInternalOrganizations"/>
                 <set field="headerItem" value="companies"/>
-                <set field="labelTitleProperty" value="Internal Organizations"/>
+                <set field="labelTitleProperty" value="${uiLabelMap.AccountingAvailableInternalOrganizations}"/>
                 <entity-condition entity-name="PartyRole" list-name="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
@@ -42,8 +43,10 @@
 
     <screen name="TimePeriods">
         <section>
-            <actions>
-                <set field="labelTitleProperty" value="Time Periods"/>
+            <actions>				
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="TimePeriod"/>
+                <set field="labelTitleProperty" value="${uiLabelMap.TimePeriod}"/>
                 <set field="tabButtonItem" value="TimePeriods"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <entity-condition entity-name="CustomTimePeriod" list-name="openTimePeriods">
@@ -77,8 +80,10 @@
     
     <screen name="PartyAcctgPreference">
         <section>
-            <actions>
-                <set field="labelTitleProperty" value="Accounting Preferences"/>
+            <actions>			
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="AccountingPreference"/>
+                <set field="labelTitleProperty" value="${uiLabelMap.AccountingPreference}"/>
                 <set field="tabButtonItem" value="PartyAcctgPreference"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="partyId" from-field="parameters.organizationPartyId"/>
@@ -96,9 +101,10 @@
     <screen name="ListUnpostedAcctgTrans">
         <section>
             <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="tabButtonItem" value="ListUnpostedAcctgTrans"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
-                <set field="labelTitleProperty" value="Un-posted Accounting Transactions"/>
+                <set field="labelTitleProperty" value="${uiLabelMap.PageTitleUnpostedTransactions}"/>
                 <set field="partyId" from-field="parameters.organizationPartyId"/>
                 <entity-condition entity-name="AcctgTrans" list-name="transactions">
                     <condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
@@ -119,7 +125,9 @@
     <screen name="ViewFXConversions">
         <section>
             <actions>
-                <set field="labelTitleProperty" value="Foreign Exchange Rates"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="AccountingFX"/>
+                <set field="labelTitleProperty" value="${uiLabelMap.AccountingFX}"/>
                 <set field="tabButtonItem" value="ViewFXConversions"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
                 <!-- TODO: If UomConversionDated is ever used for another type of conversion besides currencies or if some currencies are
@@ -145,7 +153,9 @@
     <screen name="GlAccountSalInvoice">
         <section>
             <actions>
-                <set field="title" value="GL Account Assignments"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="AccountingGlAccountAssignments"/>
+                <set field="labelTitleProperty" value="${uiLabelMap.AccountingGlAccountAssignments}"/>
                 <set field="tabButtonItem" value="GlAccountAssignment"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" />
             </actions>
@@ -153,9 +163,9 @@
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <container><label style="head1">Sales Invoice type to Revenue GL Account Number assignmentlist</label></container>
+                            <container><label style="head1">${uiLabelMap.AccountingSalesInvoiceToRevenue}</label></container>
                             <include-form name="ListSalInvoiceItemTypeGlAssignments" location="component://accounting/webapp/accounting/admin/AdminForms.xml"/>
-                            <container><label style="head1">Assign Sales Invoice type to Revenue GL Account Number</label></container>
+                            <container><label style="head1">${uiLabelMap.AccountingAssignSalesInvoiceToRevenue}</label></container>
                             <include-form name="AddSalInvoiceItemTypeGlAssignment" location="component://accounting/webapp/accounting/admin/AdminForms.xml"/>
                         </container>
                     </decorator-section>
@@ -167,6 +177,7 @@
     <screen name="GlAccountPurInvoice">
         <section>
             <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="tabButtonItem" value="GlAccountAssignment"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" />
             </actions>
@@ -189,6 +200,7 @@
     <screen name="GlAccountTypePaymentType">
         <section>
             <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="tabButtonItem" value="GlAccountAssignment"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" />
             </actions>
@@ -209,6 +221,7 @@
     <screen name="GlAccountNrPaymentMethod">
         <section>
             <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="tabButtonItem" value="GlAccountAssignment"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" />
             </actions>
@@ -254,7 +267,8 @@
     <screen name="ListChecksToPrint">
         <section>
             <actions>
-                <set field="title" value="Checks to Print"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="AccountingPrintChecks"/>
                 <set field="tabButtonItem" value="ChecksTabButton"/>
                 <set field="checksTabButtonItem" value="PrintChecksTabButton"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" />
@@ -293,6 +307,7 @@
     <screen name="ListChecksToSend">
         <section>
             <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="Mark Checks Sent"/>
                 <set field="tabButtonItem" value="ChecksTabButton"/>
                 <set field="checksTabButtonItem" value="SendChecksTabButton"/>

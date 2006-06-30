@@ -43,7 +43,7 @@
         <#assign paymentMethodType = payment.getRelatedOne("PaymentMethodType")>
         <tr>
             <td><div class="tabletext">${payment.paymentId?if_exists}</div></td>
-            <td><div class="tabletext">${paymentMethodType.description?default(uiLabelMap.CommonNA)}</div></td>  
+            <td><div class="tabletext">${paymentMethodType.get("description",locale)?default(uiLabelMap.CommonNA)}</div></td>  
             <td><div class="tabletext">${payment.invoiceId?default(uiLabelMap.CommonNA)}</div></td>
             <td><div class="tabletext">${payment.invoiceItemSeqId?default(uiLabelMap.CommonNA)}</div></td>
             <td><div class="tabletext">${payment.effectiveDate?string}</div></td>

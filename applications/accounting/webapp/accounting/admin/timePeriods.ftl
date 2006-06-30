@@ -33,7 +33,7 @@ function submitViewBalance(form) {
 </script>
 
 <#if closedTimePeriods?has_content>
-<p>The following time periods have been closed:
+<p>${uiLabelMap.TimePeriodMessage2}:
 <ul type="circle">
 <#list closedTimePeriods as timePeriod>
 <li>${timePeriod.periodName?if_exists} ${timePeriod.periodNum?string("####")} (${timePeriod.fromDate} - ${timePeriod.thruDate})
@@ -41,7 +41,7 @@ function submitViewBalance(form) {
 </ul></p>
 <p>
 <#else>
-<p>There are currently no closed time periods.</p>
+<p>${uiLabelMap.TimePeriodMessage1}</p>
 </#if>
 
 </div>

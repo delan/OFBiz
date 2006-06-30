@@ -59,7 +59,7 @@
         </field>
         <field name="roleTypeId" parameter-name="roleTypeId" widget-style="selectBox">
             <drop-down>
-                <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${roleTypeId}">
+                <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
                     <entity-order-by field-name="roleTypeId"/>
                 </entity-options>
             </drop-down>
@@ -163,8 +163,8 @@
         <alt-target use-when="glAccount==null" target="createGlAccount"/>
         <auto-fields-service service-name="updateGlAccount" map-name=""/>
         
-        <field use-when="glAccount!=null" name="glAccountId" tooltip="This cannot be changed without re-creating the GL Account."><display/></field>
-        <field use-when="glAccount==null&amp;&amp;glAccountId!=null" name="glAccountId" tooltip="Could not find GlAccount with ID [${glAccountId}]"><text size="20" maxlength="20"/></field>
+        <field use-when="glAccount!=null" name="glAccountId" tooltip="${uiLabelMap.AccountingNotModificationRecrationGlAccount}"><display/></field>
+        <field use-when="glAccount==null&amp;&amp;glAccountId!=null" name="glAccountId" tooltip="${uiLabelMap.AccountingCouldNotFindGlAccount} [${glAccountId}]"><text size="20" maxlength="20"/></field>
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
         <field use-when="glAccount==null&amp;&amp;glAccountId==null" name="glAccountId"><text size="20" maxlength="20"/></field>
 
@@ -211,10 +211,10 @@
     <!-- this is used to list AcctgTransEntries and can be called either by using an acctgTransId or a glAccountId -->
     <form name="ListAcctgTransEntries" type="list" list-name="entries"  default-entity-name="AcctgTransEntry"  
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="tabletext">
-        <field name="acctgTransId" title="Acctg Trans">
+        <field name="acctgTransId">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries?acctgTransId=${acctgTransId}"/>
         </field>
-        <field name="acctgTransEntrySeqId" title="Seq Id"><display/></field>     
+        <field name="acctgTransEntrySeqId"><display/></field>     
         <field name="glAccountId">
             <display-entity entity-name="GlAccount" description="${accountName}">
                 <sub-hyperlink target="ListGlAccountEntries?glAccountId=${glAccountId}" description="[${glAccountId}]" link-style="tabletext"/>
@@ -223,13 +223,13 @@
         <field name="description"><display/></field>
         <field name="voucherRef"><display/></field>
         <field name="partyId"><display/></field>
-        <field name="organizationPartyId" title="Organization"><display/></field>
+        <field name="organizationPartyId"><display/></field>
         <field name="productId"><display/></field>
         <field name="debitCreditFlag"><display/></field>
         <field name="amount"><display/></field>
-        <field name="reconcileStatusId" title="Reconciled?"><display/></field>
-        <field name="settlementTermId" title="Settlement"><display/></field>
-        <field name="isSummary" title="Summary?"><display/></field>
+        <field name="reconcileStatusId"><display/></field>
+        <field name="settlementTermId"><display/></field>
+        <field name="isSummary"><display/></field>
     </form>
 
     <form name="GlAccountsNavForm" type="single" target="" title="GL Accounts" default-map-name="journal"

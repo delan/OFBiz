@@ -23,8 +23,8 @@
     <form name="ListCompanies" type="list" title="Internal Organizations" default-widget-style="linktext"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" list-name="parties">
         <field name="partyId" title="${uiLabelMap.AccountingCompanies}" widget-style="tabletext"><display-entity entity-name="PartyGroup" description="${groupName}"/></field>
-        <field name="admin" title="Admin"><hyperlink target="AdminMain?organizationPartyId=${partyId}" description="Admin"/></field>
-        <field name="accounts" title="Accounts"><hyperlink target="ListGlAccountOrganization?organizationPartyId=${partyId}" description="Accounts"/></field>
+        <field name="admin" title="${uiLabelMap.AccountingAdmin}"><hyperlink target="AdminMain?organizationPartyId=${partyId}" description="${uiLabelMap.AccountingAdmin}"/></field>
+        <field name="accounts" title="${uiLabelMap.AccountingAccounts}"><hyperlink target="ListGlAccountOrganization?organizationPartyId=${partyId}" description="${uiLabelMap.AccountingAccounts}"/></field>
     </form>
     
     <form name="PartyAcctgPreference" type="single" target="createPartyAcctgPreference"
@@ -33,22 +33,22 @@
         <auto-fields-service service-name="createPartyAcctgPreference"/>
         <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
         <!-- the partyId is always displayed -->
-        <field name="partyId" title="Organization Party Id"><display/></field>
+        <field name="partyId" title="${uiLabelMap.AccountingOrganizationPartyId}"><display/></field>
         <!-- if there is no partyAcctgPreference yet, then we show drop-downs for the fields and a submit button -->
         <field name="fiscalYearStartMonth" use-when="partyAcctgPreference==null">
             <drop-down>
-                <option key="1" description="01-Jan"/>
-                <option key="2" description="02-Feb"/>
-                <option key="3" description="03-Mar"/>
-                <option key="4" description="04-Apr"/>
-                <option key="5" description="05-May"/>
-                <option key="6" description="06-Jun"/>
-                <option key="7" description="07-Jul"/>
-                <option key="8" description="08-Aug"/>
-                <option key="9" description="09-Sep"/>
-                <option key="10" description="10-Oct"/>
-                <option key="11" description="11-Nov"/>
-                <option key="12" description="12-Dec"/>
+                <option key="1" description="${uiLabelMap.AccountingFiscalMonth01}"/>
+                <option key="2" description="${uiLabelMap.AccountingFiscalMonth02}"/>
+                <option key="3" description="${uiLabelMap.AccountingFiscalMonth03}"/>
+                <option key="4" description="${uiLabelMap.AccountingFiscalMonth04}"/>
+                <option key="5" description="${uiLabelMap.AccountingFiscalMonth05}"/>
+                <option key="6" description="${uiLabelMap.AccountingFiscalMonth06}"/>
+                <option key="7" description="${uiLabelMap.AccountingFiscalMonth07}"/>
+                <option key="8" description="${uiLabelMap.AccountingFiscalMonth08}"/>
+                <option key="9" description="${uiLabelMap.AccountingFiscalMonth09}"/>
+                <option key="10" description="${uiLabelMap.AccountingFiscalMonth10}"/>
+                <option key="11" description="${uiLabelMap.AccountingFiscalMonth11}"/>
+                <option key="12" description="${uiLabelMap.AccountingFiscalMonth12}"/>
             </drop-down>
         </field>
         <field name="fiscalYearStartDay" use-when="partyAcctgPreference==null">
@@ -63,7 +63,7 @@
             </drop-down>
         </field>
         
-        <field name="taxFormId" title="Tax Form for Organization" use-when="partyAcctgPreference==null">
+        <field name="taxFormId" use-when="partyAcctgPreference==null">
             <drop-down>
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="TAX_FORMS"/>
@@ -71,7 +71,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="cogsMethodId" title="Cost Of Goods Sold (COGS) Method" use-when="partyAcctgPreference==null">
+        <field name="cogsMethodId" use-when="partyAcctgPreference==null">
             <drop-down>
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="COGS_METHODS"/>
@@ -79,7 +79,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="baseCurrencyUomId" title="Base Currency" use-when="partyAcctgPreference==null">
+        <field name="baseCurrencyUomId" use-when="partyAcctgPreference==null">
             <drop-down no-current-selected-key="USD">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -88,7 +88,7 @@
             </drop-down>
         </field>
         <field name="invoiceIdPrefix" use-when="partyAcctgPreference==null"><text maxlength="10" size="5"/></field>
-        <field name="invoiceSequenceEnumId" title="Invoice Sequence" use-when="partyAcctgPreference==null">
+        <field name="invoiceSequenceEnumId" use-when="partyAcctgPreference==null">
             <drop-down>
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="INVOICE_SEQMD"/>
@@ -103,7 +103,7 @@
         </field>
 
         <field name="quoteIdPrefix" use-when="partyAcctgPreference==null"><text maxlength="10" size="5"/></field>
-        <field name="quoteSequenceEnumId" title="Quote Sequence" use-when="partyAcctgPreference==null">
+        <field name="quoteSequenceEnumId" use-when="partyAcctgPreference==null">
             <drop-down>
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="QUOTE_SEQMD"/>
@@ -112,7 +112,7 @@
             </drop-down>
         </field>
         <field name="orderIdPrefix" use-when="partyAcctgPreference==null"><text maxlength="10" size="5"/></field>
-        <field name="orderSequenceEnumId" title="Order Sequence" use-when="partyAcctgPreference==null">
+        <field name="orderSequenceEnumId" use-when="partyAcctgPreference==null">
             <drop-down>
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="ORDER_SEQMD"/>
@@ -120,22 +120,22 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submit" title="Create" use-when="partyAcctgPreference==null"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonCreate}" use-when="partyAcctgPreference==null"><submit/></field>
         
         <!-- otherwise, we just display the fields.  there is no submit button because we shouldn't try to create it again and don't support an update option right now-->
         <field name="fiscalYearStartMonth" use-when="partyAcctgPreference!=null"><display/></field>
         <field name="fiscalYearStartDay" use-when="partyAcctgPreference!=null"><display/></field>
-        <field name="taxFormId" title="Tax Form for Organization" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
-        <field name="cogsMethodId" title="Cost Of Goods Sold (COGS) Method" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
-        <field name="baseCurrencyUomId" title="Base Currency" use-when="partyAcctgPreference!=null"><display/></field>
+        <field name="taxFormId" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
+        <field name="cogsMethodId" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
+        <field name="baseCurrencyUomId" use-when="partyAcctgPreference!=null"><display/></field>
         <field name="invoiceIdPrefix" use-when="partyAcctgPreference!=null"><display/></field>
-        <field name="invoiceSequenceEnumId" title="Invoice Sequence" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
+        <field name="invoiceSequenceEnumId" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
         <field name="useInvoiceIdForReturns" use-when="partyAcctgPreference!=null"><display/></field>
 
-        <field name="quoteSequenceEnumId" title="Quote Sequence" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
+        <field name="quoteSequenceEnumId" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
         <field name="quoteIdPrefix" use-when="partyAcctgPreference!=null"><display/></field>
         <field name="lastQuoteNumber" use-when="partyAcctgPreference!=null"><display/></field>
-        <field name="orderSequenceEnumId" title="Order Sequence" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
+        <field name="orderSequenceEnumId" use-when="partyAcctgPreference!=null"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
         <field name="orderIdPrefix" use-when="partyAcctgPreference!=null"><display/></field>
         <field name="lastOrderNumber" use-when="partyAcctgPreference!=null"><display/></field>
         <!-- 
@@ -157,8 +157,8 @@
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries?acctgTransId=${acctgTransId}"/> 
         </field>                
         <field name="transactionDate"><display/></field>                
-        <field name="acctgTransTypeId" title="Type"><display-entity entity-name="AcctgTransType" description="${description}"/></field>
-        <field name="glFiscalTypeId" title="Type"><display-entity entity-name="GlFiscalType" description="${description}"/></field>
+        <field name="acctgTransTypeId"><display-entity entity-name="AcctgTransType" description="${description}"/></field>
+        <field name="glFiscalTypeId"><display-entity entity-name="GlFiscalType" description="${description}"/></field>
         <field name="invoiceId" use-when="invoiceId!=null" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${invoiceId}" target="editInvoice?invoiceId=${invoiceId}"/> 
         </field>
@@ -168,27 +168,27 @@
         </field>
         <field name="paymentId" use-when="paymentId==null"><display/></field>
         <field name="partyId"><display/></field>                
-        <field name="post" title="Post Transaction" widget-style="buttontext">
-            <hyperlink description="Post Transaction" target="postAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}" also-hidden="false"/> 
+        <field name="post" title="${uiLabelMap.AccountingPostTransaction}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.AccountingPostTransaction}" target="postAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}" also-hidden="false"/> 
         </field>              
     </form>
     
      
     <!-- forms for managing FX rates -->
-    <form name="ListConversions" type="list" title="Foreign Exchange Conversion Rates" default-widget-style="tabletext"
+    <form name="ListConversions" type="list" default-widget-style="tabletext"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" list-name="conversions">
-        <field name="uomId" title="From Currency"><display/></field>
-        <field name="uomIdTo" title="To Currency"><display/></field>
-        <field name="conversionFactor" title="Rate"><display/></field>
-        <field name="fromDate" title="From"><display/></field>
-        <field name="thruDate" title="Thru"><display/></field>
+        <field name="uomId" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonCurrency}"><display/></field>
+        <field name="uomIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonCurrency}"><display/></field>
+        <field name="conversionFactor"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
     </form>
     
-    <form name="updateFXConversion" type="single" title="Update Exchange Rate" target="updateFXConversion"
+    <form name="updateFXConversion" type="single" target="updateFXConversion"
         default-service-name="updateFXConversion"
         default-widget-style="tabletext" default-title-style="tableheadtext">
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="uomId" title="From Currency">
+        <field name="uomId" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonCurrency}">
             <drop-down no-current-selected-key="USD">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -196,7 +196,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="uomIdTo" title="To Currency">
+        <field name="uomIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonCurrency}">
             <drop-down no-current-selected-key="USD">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -204,12 +204,12 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="conversionFactor" title="Conversion Factor"><text/></field>
-        <field name="submitButton" title="Updated Exchange Rate"><submit/></field>
+        <field name="conversionFactor"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.AccountingUpdateFX}"><submit/></field>
     </form>
 
     <!-- forms for Sales invoice Itemtypes to GLAccount number -->
-    <form name="ListSalInvoiceItemTypeGlAssignments" type="list" title="Invoice Item types to GL account mapping" default-widget-style="tabletext"
+    <form name="ListSalInvoiceItemTypeGlAssignments" type="list" default-widget-style="tabletext"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" list-name="invoiceItemTypes" >
         <actions>
             <script location="component://accounting/webapp/accounting/WEB-INF/actions/admin/listInvoiceItemTypesGlAccount.bsh"/>
@@ -222,11 +222,11 @@
         <field name="activeGlDescription"><display/></field>
         <field name="remove" title=""><hyperlink target="removeSalInvoiceItemTypeGlAssignment?organizationPartyId=${organizationPartyId}&amp;invoiceItemTypeId=${invoiceItemTypeId}" description="${remove}"/></field>
     </form>
-    <form name="AddSalInvoiceItemTypeGlAssignment" type="single" title="Add GL to Invoice Itemtype for a certain organisation" target="addSalInvoiceItemTypeGlAssignment"
+    <form name="AddSalInvoiceItemTypeGlAssignment" type="single" target="addSalInvoiceItemTypeGlAssignment"
         default-widget-style="tabletext" default-title-style="tableheadtext">
         <auto-fields-service service-name="addInvoiceItemTypeGlAssignment"/>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="invoiceItemTypeId" title="Sales Invoice Item Type">
+        <field name="invoiceItemTypeId">
             <drop-down allow-empty="false" >
                 <entity-options description="${description}" entity-name="InvoiceItemType">
                     <entity-constraint name="invoiceItemTypeId" operator="like" value="INV_%"/>
@@ -234,7 +234,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glAccountId" title="Override Revenue Gl Account Id">
+        <field name="glAccountId" title="${uiLabelMap.AccountingOverrideRevenueGlAccountId}">
             <drop-down>
                 <entity-options entity-name="GlAccountOrganizationAndClass" description="${accountName}[${glAccountId}]">
                     <entity-constraint name="organizationPartyId" operator="equals" value="${organizationPartyId}"/>
@@ -244,11 +244,11 @@
             </drop-down>
         </field>
         
-        <field name="submit" title="Save"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonSave}"><submit/></field>
     </form>
     
     <!-- forms for Purchase invoice Itemtypes to GLAccount number -->
-    <form name="ListPurInvoiceItemTypeGlAssignments" type="list" title="Invoice Item types to GL account mapping" default-widget-style="tabletext"
+    <form name="ListPurInvoiceItemTypeGlAssignments" type="list" default-widget-style="tabletext"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" list-name="purinvoiceItemTypes" default-map-name="iTypes" >
         <actions>
             <script location="component://accounting/webapp/accounting/WEB-INF/actions/admin/listPurInvoiceItemTypesGlAccount.bsh"/>
@@ -261,7 +261,7 @@
         <field name="activeGlDescription"><display/></field>
         <field name="remove" title=""><hyperlink target="removePurInvoiceItemTypeGlAssignment?organizationPartyId=${organizationPartyId}&amp;invoiceItemTypeId=${invoiceItemTypeId}" description="${remove}"/></field>
     </form>
-    <form name="AddPurInvoiceItemTypeGlAssignment" type="single" title="Add GL to Invoice Itemtype for a certain organisation" target="addPurInvoiceItemTypeGlAssignment"
+    <form name="AddPurInvoiceItemTypeGlAssignment" type="single" target="addPurInvoiceItemTypeGlAssignment"
         default-widget-style="tabletext" default-title-style="tableheadtext">
         <auto-fields-service service-name="addInvoiceItemTypeGlAssignment"/>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
@@ -283,11 +283,11 @@
             </drop-down>
         </field>
         
-        <field name="submit" title="Save"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonSave}"><submit/></field>
     </form>
     
     <!-- forms for payment types to GLAccount type -->
-    <form name="ListPaymentTypeGlAssignments" type="list" title="Payment types to GL account mapping" default-widget-style="tabletext"
+    <form name="ListPaymentTypeGlAssignments" type="list" default-widget-style="tabletext"
         default-title-style="tableheadtext" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="PaymentGlAccountTypeMap">
@@ -302,7 +302,7 @@
         <field name="remove" title=""><hyperlink target="removePaymentTypeGlAssignment?organizationPartyId=${organizationPartyId}&amp;paymentTypeId=${paymentTypeId}" description="Remove"/></field>
     </form>
     
-    <form name="AddPaymentTypeGlAssignment" type="single" title="Add GL to payment type" target="addPaymentTypeGlAssignment"
+    <form name="AddPaymentTypeGlAssignment" type="single" target="addPaymentTypeGlAssignment"
         default-widget-style="tabletext" default-title-style="tableheadtext">
         <auto-fields-service service-name="addPaymentTypeGlAssignment"/>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
@@ -321,10 +321,10 @@
             </drop-down>
         </field>
         
-        <field name="submit" title="Save"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonSave}"><submit/></field>
     </form>
     <!-- forms for payment method Type to GLAccounts -->
-    <form name="ListPaymentMethodTypeGlAssignments" type="list" title="Payment method types to GL account mapping" default-widget-style="tabletext"
+    <form name="ListPaymentMethodTypeGlAssignments" type="list" default-widget-style="tabletext"
         default-title-style="tableheadtext" default-tooltip-style="tabletext">
         <actions>
             <entity-condition entity-name="PaymentMethodTypeGlAccount">
@@ -339,7 +339,7 @@
         <field name="remove" title=""><hyperlink target="removePaymentMethodTypeGlAssignment?organizationPartyId=${organizationPartyId}&amp;paymentMethodTypeId=${paymentMethodTypeId}" description="Remove"/></field>
     </form>
     
-    <form name="AddPaymentMethodTypeGlAssignment" type="single" title="Add GL Account to payment method type" target="addPaymentMethodTypeGlAssignment"
+    <form name="AddPaymentMethodTypeGlAssignment" type="single" target="addPaymentMethodTypeGlAssignment"
         default-widget-style="tabletext" default-title-style="tableheadtext">
         <auto-fields-service service-name="addPaymentMethodTypeGlAssignment"/>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
@@ -359,10 +359,10 @@
             </drop-down>
         </field>
         
-        <field name="submit" title="Save"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonSave}"><submit/></field>
     </form>
 
-    <form name="ListChecksToPrint" type="multi" list-name="payments" title="List Checks to Print" target="printChecks" 
+    <form name="ListChecksToPrint" type="multi" list-name="payments" target="printChecks" 
         default-widget-style="tabletext" default-title-style="tableheadtext" separate-columns="true">
         <field name="paymentId">
             <hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/>
@@ -377,7 +377,7 @@
             <submit/>
         </field>
     </form>
-    <form name="ListChecksToSend" type="multi" use-row-submit="true" list-name="payments" title="List Checks to Send" 
+    <form name="ListChecksToSend" type="multi" use-row-submit="true" list-name="payments"  
         target="quickSendPayment?organizationPartyId=${organizationPartyId}" 
         default-widget-style="tabletext" default-title-style="tableheadtext" separate-columns="true">
         <field name="paymentId"><hidden/></field>

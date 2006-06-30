@@ -200,7 +200,7 @@
     <screen name="ListGlAccountEntries">
         <section>
             <actions>
-                <set field="title" value="View GL Account Entries"/>
+                <set field="titleProperty" value="PageTitleViewGlAccountEntries"/>
                 <set field="tabButtonItem" value="ListGlAccountOrganization"/>
                 <set field="glAccountId" from-field="requestParameters.glAccountId"/>
                 <entity-and entity-name="AcctgTransEntry" list-name="entries">
@@ -223,7 +223,7 @@
     <screen name="ListAcctgTransEntries">
         <section>
             <actions>
-                <set field="title" value="View Accounting Transaction"/>
+                <set field="titleProperty" value="PageTitleViewAccountingTransaction"/>
                 <set field="headerItem" value="chartofaccounts"/>
                 <set field="acctgTransId" from-field="requestParameters.acctgTransId"/>
                 <entity-and entity-name="AcctgTransEntry" list-name="entries">
@@ -249,8 +249,7 @@
     <screen name="AddGlAccount">
         <section>
             <actions>
-                <set field="title" value="Add Gl Account"/>
-                <set field="titleProperty" value=""/>
+                <set field="titleProperty" value="PageTitleAddGlAccount"/>                
                 <set field="tabButtonItem" value=""/>
                 <set field="labelTitleProperty" value=""/>
             </actions>
@@ -298,7 +297,7 @@
                 </entity-one>
             </actions>
             <widgets>
-                <label text="Account Name: ${currentValue.accountName}"/>
+                <label text="${uiLabelMap.FormFieldTitle_accountName}: ${currentValue.accountName}"/>
             </widgets>
         </section>
     </screen>
