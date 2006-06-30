@@ -175,7 +175,17 @@ public class InvoiceServices {
                 invoiceType = "PURCHASE_INVOICE";
             }
 
+            // Make an order read helper from the order
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
+
+            // get the product store
+            GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orh.getProductStoreId()));
+
+            // get the shipping adjustment mode (Y = Pro-Rate; N = First-Invoice)
+            String prorateShipping = productStore.getString("prorateShipping");
+            if (prorateShipping == null) {
+                prorateShipping = "Y";
+            }
 
             // get the billing parties
             String billToCustomerPartyId = orh.getBillToParty().getString("partyId");
@@ -295,9 +305,6 @@ public class InvoiceServices {
 
             // get a list of the payment method types
             //DEJ20050705 doesn't appear to be used: List paymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
-
-            // get the product store
-            GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orh.getProductStoreId()));
 
             // create the bill-from (or pay-to) contact mech as the primary PAYMENT_LOCATION of the party from the store
             GenericValue payToAddress = null;
@@ -487,12 +494,6 @@ public class InvoiceServices {
                 }
             }
 
-            // get the shipping adjustment mode (Y = Pro-Rate; N = First-Invoice)
-            String prorateShipping = productStore.getString("prorateShipping");
-            if (prorateShipping == null) {
-                prorateShipping = "Y";
-            }
-
             // create header adjustments as line items -- always to tax/shipping last
             List shipAdjustments = new ArrayList();
             List taxAdjustments = new ArrayList();
@@ -532,8 +533,9 @@ public class InvoiceServices {
                         // this is the first invoice; bill it all now
                         BigDecimal adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, invoiceItemSeqId, toStore, 
                                 new BigDecimal("1"), new BigDecimal("1"), totalItemsInOrder, decimals, rounding);
-                        // should shipping effect the tax pro-rate?
-                        invoiceSubTotal = invoiceSubTotal.add(adjAmount).setScale(decimals, rounding); // here we do
+                        // should shipping effect the tax pro-rate? here we do, and we also update order sub total for this adjustment's value
+                        invoiceSubTotal = invoiceSubTotal.add(adjAmount).setScale(decimals, rounding);
+                        orderSubTotal = orderSubTotal.add(adj.getBigDecimal("amount")).setScale(decimals, rounding);
 
                         // increment the counter
                         invoiceItemSeqNum++;
@@ -543,8 +545,9 @@ public class InvoiceServices {
                     // pro-rate the shipping amount based on shippable information
                     BigDecimal adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, invoiceItemSeqId, toStore, 
                             shippableAmount, invoiceShipProRateAmount, invoiceQuantity, decimals, rounding);
-                    // should shipping effect the tax pro-rate?
-                    invoiceSubTotal = invoiceSubTotal.add(adjAmount).setScale(decimals, rounding); // here we do
+                    // should shipping effect the tax pro-rate? here we do, and we also update order sub total for this adjustment's value
+                    invoiceSubTotal = invoiceSubTotal.add(adjAmount).setScale(decimals, rounding);
+                    orderSubTotal = orderSubTotal.add(adj.getBigDecimal("amount")).setScale(decimals, rounding);
 
                     // increment the counter
                     invoiceItemSeqNum++;
@@ -1452,6 +1455,10 @@ public class InvoiceServices {
                 invoiceItem.set("quantity", new Double(1));
                 invoiceItem.set("amount", new Double(amount.doubleValue()));
                 invoiceItem.set("description", adj.get("description"));
+                invoiceItem.set("taxAuthPartyId", adj.get("taxAuthPartyId"));
+                invoiceItem.set("overrideGlAccountId", adj.get("overrideGlAccountId"));
+                invoiceItem.set("taxAuthGeoId", adj.get("taxAuthGeoId"));
+                invoiceItem.set("taxAuthorityRateSeqId", adj.get("taxAuthorityRateSeqId"));
                 toStore.add(invoiceItem);
             }
             amount.setScale(decimals, rounding);
@@ -1460,7 +1467,8 @@ public class InvoiceServices {
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("adjAmount: " + adjAmount + ", divisor: " + divisor + ", multiplier: " + multiplier + 
-                ", invoiceTypeId: " + invoiceTypeId + ", invoiceId: " + invoiceId + ", itemSeqId: " + invoiceItemSeqId + ", adj: " + adj, module);
+                ", invoiceTypeId: " + invoiceTypeId + ", invoiceId: " + invoiceId + ", itemSeqId: " + invoiceItemSeqId + 
+                ", decimals: " + decimals + ", rounding: " + rounding + ", adj: " + adj, module);
         }
         return adjAmount;
     }
