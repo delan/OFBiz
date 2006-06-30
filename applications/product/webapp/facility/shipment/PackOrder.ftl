@@ -87,8 +87,7 @@
 
     <#if showInput != "N" && orderHeader?exists && orderHeader?has_content>
       <hr class="sepbar"/>
-      <div class='head2'>${uiLabelMap.ProductOrderId} #${orderId} / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</div>
-      <div class="tableheadtext">${packingSession.getPrimaryOrderId()?default("N/A")} / ${packingSession.getPrimaryShipGroupSeqId()?default("N/A")}</div>
+      <div class='head2'>${uiLabelMap.ProductOrderId} #<a href="/ordermgr/control/orderview?orderId=${orderId}" class="buttontext">${orderId}</a> / ${uiLabelMap.ProductOrderShipGroupId} #${shipGroupSeqId}</div>
       <div>&nbsp;</div>
       <#if orderItemShipGroup?has_content>
         <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress")>
