@@ -47,15 +47,15 @@
         </field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}*" position="1">
             <drop-down>
-                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[General] ${description}">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[${uiLabelMap.WorkEffortGeneral}] ${description}">
                     <entity-constraint name="statusTypeId" value="CALENDAR_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
-                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[Task] ${description}">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[${uiLabelMap.WorkEffortTask}] ${description}">
                     <entity-constraint name="statusTypeId" value="TASK_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
-                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[Event] ${description}">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="[${uiLabelMap.WorkEffortEvent}] ${description}">
                     <entity-constraint name="statusTypeId" value="EVENT_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
@@ -65,8 +65,8 @@
         
         <field name="priority" position="1">
             <drop-down allow-empty="true">
-                <option key="1" description="1 (High)"/><option key="2"/><option key="3"/><option key="4"/><option key="5"/>
-                <option key="6"/><option key="7"/><option key="8"/><option key="9" description="9 (Low)"/>
+                <option key="1" description="1 (${uiLabelMap.WorkEffortPriorityHigh})"/><option key="2"/><option key="3"/><option key="4"/><option key="5"/>
+                <option key="6"/><option key="7"/><option key="8"/><option key="9" description="9 (${uiLabelMap.WorkEffortPriorityLow})"/>
             </drop-down>
         </field>
         <field name="scopeEnumId" position="2">

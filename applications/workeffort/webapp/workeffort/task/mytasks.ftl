@@ -59,7 +59,7 @@
                   <tr>
                     <td><div class="tabletext">${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                     <td><div class="tabletext">${workEffort.priority?if_exists}</div></td>
-                    <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
+                    <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).get("description",locale))?if_exists}</div></td>
                     <td><A class="linktext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
                     <td align="right" width="1%"><A class="buttontext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortId}</a></div></td>
                   </tr>
@@ -83,7 +83,7 @@
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortPriority}</b></div></td>
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortActivityStatus}</b></div></td>
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortMyStatus}</b></div></td>
-                      <#-- <td><div class="tabletext"><b>Party&nbsp;ID</b></div></td> -->
+                      <#-- <td><div class="tabletext"><b>${uiLabelMap.PartyPartyId}</b></div></td> -->
                       <td><div class="tabletext"><b>${uiLabelMap.PartyRoleId}</b></div></td>
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortActivityName}</b></div></td>
                       <td align="right"><div class="tabletext"><b>${uiLabelMap.CommonEdit}</b></div></td>
@@ -93,8 +93,8 @@
                       <tr>
                         <td><div class="tabletext">${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class="tabletext">${workEffort.priority?if_exists}</div></td>
-                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
-                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
+                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).get("description",locale))?if_exists}</div></td>
+                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).get("description",locale))?if_exists}</div></td>
                         <#-- <td><div class="tabletext">${workEffort.partyId}</div></td> -->
                         <td><div class="tabletext">${workEffort.roleTypeId}</div></td>
                         <td><A class="linktext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
@@ -121,7 +121,7 @@
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortPriority}</b></div></td>
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortActivityStatus}</b></div></td>
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortMyStatus}</b></div></td>
-                      <#-- <td><div class="tabletext"><b>Party&nbsp;ID</b></div></td> -->
+                      <#-- <td><div class="tabletext"><b>${uiLabelMap.PartyPartyId}</b></div></td> -->
                       <td><div class="tabletext"><b>${uiLabelMap.PartyRoleId}</b></div></td>
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortActivityName}</b></div></td>
                       <td align="right"><div class="tabletext"><b>${uiLabelMap.CommonEdit}</b></div></td>
@@ -131,8 +131,8 @@
                       <tr>
                         <td><div class="tabletext">${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class="tabletext">${workEffort.priority?if_exists}</div></td>
-                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
-                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
+                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).get("description",locale))?if_exists}</div></td>
+                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).get("description",locale))?if_exists}</div></td>
                         <#-- <td><div class="tabletext">${workEffort.partyId}</div></td> -->
                         <td><div class="tabletext">${workEffort.roleTypeId}</div></td>
                         <td><A class="buttontext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">${workEffort.workEffortName}</a></div></td>
@@ -160,7 +160,7 @@
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortActivityStatus}</b></div></td>
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortMyStatus}</b></div></td>
                       <td><div class="tabletext"><b>${uiLabelMap.PartyGroupPartyId}</b></div></td>
-                      <#-- <td><div class="tabletext"><b>Role&nbsp;ID</b></div></td> -->
+                      <#-- <td><div class="tabletext"><b>${uiLabelMap.PartyRoleId}</b></div></td> -->
                       <td><div class="tabletext"><b>${uiLabelMap.WorkEffortActivityName}</b></div></td>
                       <td align="right"><div class="tabletext"><b>${uiLabelMap.CommonEdit}</b></div></td>
                     </tr>
@@ -169,8 +169,8 @@
                       <tr>
                         <td><div class="tabletext">${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class="tabletext">${workEffort.priority?if_exists}</div></td>
-                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
-                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
+                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).get("description",locale))?if_exists}</div></td>
+                        <td><div class="tabletext">${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).get("description",locale))?if_exists}</div></td>
                         <td><div class="tabletext">${workEffort.groupPartyId}</div></td>
                         <#-- <td><div class="tabletext">${workEffort.roleTypeId}</div></td> -->
                         <td><A class="buttontext" href="<@ofbizUrl>WorkEffortSummary?workEffortId=${workEffort.workEffortId}</@ofbizUrl>">

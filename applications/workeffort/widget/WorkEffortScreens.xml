@@ -202,7 +202,7 @@
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.PageTitleAddWorkEffort}</label>
-                            <label style="tabletext">(associated from parent to child)</label>
+                            <label style="tabletext">${uiLabelMap.WorkEffortAssociatedFromParentToChild}</label>
                         </container>
                         <include-form name="AddWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
