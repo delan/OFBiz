@@ -1566,7 +1566,9 @@ public class OrderReadHelper {
 
             BigDecimal quantityNotReturned = itemQuantity.subtract(quantityReturned);
 
-            BigDecimal factorNotReturned = quantityNotReturned.divide(itemQuantity, scale, rounding);
+            // pro-rated factor (quantity not returned / total items ordered), which shouldn't be rounded to 2 decimals
+            BigDecimal factorNotReturned = quantityNotReturned.divide(itemQuantity, 100, rounding);
+
             BigDecimal subTotalNotReturned = itemSubTotal.multiply(factorNotReturned).setScale(scale, rounding);
 
             // calculate tax and shipping adjustments for each item, add to accumulators
@@ -1582,7 +1584,8 @@ public class OrderReadHelper {
         BigDecimal orderItemsSubTotal = this.getOrderItemsSubTotalBd();
         BigDecimal orderFactorNotReturned = ZERO;
         if (orderItemsSubTotal.signum() != 0) {
-            orderFactorNotReturned = totalSubTotalNotReturned.divide(orderItemsSubTotal, scale, rounding);
+            // pro-rated factor (subtotal not returned / item subtotal), which shouldn't be rounded to 2 decimals
+            orderFactorNotReturned = totalSubTotalNotReturned.divide(orderItemsSubTotal, 100, rounding);
         }
         BigDecimal orderTaxNotReturned = this.getHeaderTaxTotalBd().multiply(orderFactorNotReturned).setScale(scale, rounding);
         BigDecimal orderShippingNotReturned = this.getShippingTotalBd().multiply(orderFactorNotReturned).setScale(scale, rounding);
@@ -2074,7 +2077,9 @@ public class OrderReadHelper {
         BigDecimal adjustment = ZERO;
 
         if (orderAdjustment.get("amount") != null) {
-            adjustment = adjustment.add(orderAdjustment.getBigDecimal("amount"));
+            // round amount to best precision (taxCalcScale) because db value of 0.825 is pulled as 0.8249999...
+            BigDecimal amount = orderAdjustment.getBigDecimal("amount").setScale(taxCalcScale, taxRounding); 
+            adjustment = adjustment.add(amount);
         }
         return adjustment.setScale(scale, rounding);
     }
