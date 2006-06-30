@@ -80,6 +80,7 @@ under the License.
 
     <entity entity-name="TechDataCalendar"
             package-name="org.ofbiz.manufacturing.techdata"
+            default-resource-name="ManufacturingEntityLabels"
             title="Calendar entity"
             author="Olivier Heintz">
       <description>Used to defined the availability of the machines, this entity define the Id and the week definition.
@@ -130,6 +131,7 @@ under the License.
     </entity>
     <entity entity-name="TechDataCalendarWeek"
             package-name="org.ofbiz.manufacturing.techdata"
+            default-resource-name="ManufacturingEntityLabels"
             title="Week definition entity"
             author="Olivier Heintz">
       <description>Used to defined the week definition disponibility for machine</description>
@@ -180,6 +182,7 @@ under the License.
     </entity>
     <entity entity-name="InventoryEventPlannedType"
             package-name="org.ofbiz.manufacturing.mrp"
+            default-resource-name="ManufacturingEntityLabels"
             title="Inventory  event Planned type"
             author="Olivier Heintz">
       <description>Used to describe the InventoryEventPlanned and give the information if it's an in or out event</description>

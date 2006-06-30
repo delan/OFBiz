@@ -101,8 +101,8 @@ under the License.
         </field>
         <field name="ruleOperator">
             <drop-down>
-                <option key="OR"/>
-                <option key="AND"/>
+                <option key="OR" description="${uiLabelMap.CommonOr}"/>
+                <option key="AND" description="${uiLabelMap.CommonAnd}"/>
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">

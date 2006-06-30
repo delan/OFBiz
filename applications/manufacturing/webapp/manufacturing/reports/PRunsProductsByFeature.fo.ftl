@@ -92,7 +92,7 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell>
                             <fo:block line-height="13pt" space-before.optimum="1.5pt" space-after.optimum="1.5pt" keep-together="always" text-align="end">
-                                <fo:inline font-size="10pt"><#if featureType?exists>${featureType.description?if_exists}: </#if></fo:inline>
+                                <fo:inline font-size="10pt"><#if featureType?exists>${featureType.get("description",locale)?if_exists}: </#if></fo:inline>
                                 <fo:inline font-weight="bold" font-size="10pt"><#if feature.productFeature?exists>${feature.productFeature.description?if_exists}</#if></fo:inline>
                             </fo:block>
                         </fo:table-cell>

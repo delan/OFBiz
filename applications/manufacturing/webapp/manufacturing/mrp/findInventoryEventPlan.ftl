@@ -161,7 +161,7 @@ document.lookupinventory.productId.focus();
             <#assign productTmp = product>
             <#assign inventoryEventPlannedType = inven.getRelatedOne("InventoryEventPlannedType")>
             <tr class="${rowClass}">
-              <td><div class='tabletext'>${inventoryEventPlannedType.description}</div></td>
+              <td><div class='tabletext'>${inventoryEventPlannedType.get("description",locale)}</div></td>
               <td><div class='tabletext'>${inven.getString("eventDate")}</div></td>
               <td>&nbsp</td>
               <td><div class='tabletext'align="right"> ${inven.getString("eventQuantity")}</div></td>
