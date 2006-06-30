@@ -36,7 +36,7 @@
   <td align="left" valign="middle" width="5%">
     <div class="tabletext">
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-        ${uiLabelMap.CommonList}:<@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
+        ${uiLabelMap.ProductListPrice}:<@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
       <#else>
         &nbsp;
       </#if>

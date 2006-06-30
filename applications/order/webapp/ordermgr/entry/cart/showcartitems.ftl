@@ -159,12 +159,12 @@
                       ${uiLabelMap.OrderOrderItemType}:
                       <select name="itemType_${cartLineIndex}" class="selectBox">
                         <#if currentOrderItemType?has_content>
-                        <option value="${currentOrderItemType.orderItemTypeId}">${currentOrderItemType.description}</option>
+                        <option value="${currentOrderItemType.orderItemTypeId}">${currentOrderItemType.get("description",locale)}</option>
                         <option value="${currentOrderItemType.orderItemTypeId}">---</option>
                         </#if>
                         <option value="">&nbsp;</option>
                         <#list purchaseOrderItemTypeList as orderItemType>
-                        <option value="${orderItemType.orderItemTypeId}">${orderItemType.description}</option>
+                        <option value="${orderItemType.orderItemTypeId}">${orderItemType.get("description",locale)}</option>
                         </#list>
                       </select>
                     </div>
@@ -266,7 +266,7 @@
               <tr>
                 <td colspan="4" nowrap align="right">
                   <div class="tabletext">
-                    <i>Adjustment</i> - ${adjustmentType.description?if_exists}
+                    <i>Adjustment</i> - ${adjustmentType.get("description",locale)?if_exists}
                     <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a></#if>:
                   </div>
                 </td>

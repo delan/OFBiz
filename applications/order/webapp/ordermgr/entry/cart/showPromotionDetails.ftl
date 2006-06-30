@@ -47,27 +47,27 @@
             <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
             <div class="tabletext">
                 -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
-                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
+                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(${uiLabelMap.EcommerceIncludeSubCategories})</#if>
             </div>
           </#list>
         </#if>
         <#if productPromoCategoryExcludeList?has_content>
-          <div class="tabletext">unless they are in these categories:</div>
+          <div class="tabletext">${uiLabelMap.EcommerceEcludeCategories}</div>
           <#list productPromoCategoryExcludeList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
             <div class="tabletext">
                 -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
-                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
+                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(${uiLabelMap.EcommerceIncludeSubCategories})</#if>
             </div>
           </#list>
         </#if>
         <#if productPromoCategoryAlwaysList?has_content>
-          <div class="tabletext">but will stll be included if they are in these categories:</div>
+          <div class="tabletext">${uiLabelMap.EcommerceAlwaysList}</div>
           <#list productPromoCategoryAlwaysList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
             <div class="tabletext">
                 -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
-                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
+                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(${uiLabelMap.EcommerceIncludeSubCategories})</#if>
             </div>
           </#list>
         </#if>
