@@ -34,11 +34,11 @@
         <menu-item name="CMS" title="${uiLabelMap.ContentCMS}"><link target="CMSContentFind"/></menu-item>
         <menu-item name="CompDoc" title="${uiLabelMap.ContentCompDoc}"><link target="FindCompDoc"/></menu-item>
         
-        <menu-item name="Logout" title="Logout" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
+        <menu-item name="Logout" title="${uiLabelMap.CommonLogout}" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
             <condition><not><if-empty field-name="userLogin"/></not></condition>
             <link target="logout"/>
         </menu-item>
-        <menu-item name="Login" title="Login" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
+        <menu-item name="Login" title="${uiLabelMap.CommonLogin}" align-style="col-right" widget-style="headerButtonRight" selected-style="headerButtonRightSelected">
             <condition><if-empty field-name="userLogin"/></condition>
             <link target="${checkLoginUrl}"/>
         </menu-item>
@@ -56,28 +56,28 @@
         selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         
-        <menu-item name="content" title="Content" >
+        <menu-item name="content" title="${uiLabelMap.ContentContent}">
             <condition>
                 <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
             <link target="EditContent?contentId=${parameters.contentId}"/>
         </menu-item>
         
-        <menu-item name="association" title="Association" >
+        <menu-item name="association" title="${uiLabelMap.ContentAssociation}">
             <condition>
                 <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
             <link target="EditContentAssoc?contentId=${parameters.contentId}"/>
         </menu-item>
         
-        <menu-item name="role" title="Role" >
+        <menu-item name="role" title="${uiLabelMap.FormFieldTitle_roles}" >
             <condition>
                 <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
             <link target="EditContentRole?contentId=${parameters.contentId}"/>
         </menu-item>
         
-        <menu-item name="purpose" title="Purpose" >
+        <menu-item name="purpose" title="${uiLabelMap.FormFieldTitle_purposes}" >
             <condition>
                 <not>
                     <if-empty field-name="currentValue.contentId" />
@@ -86,14 +86,14 @@
             <link target="EditContentPurpose?contentId=${contentId}"/>
         </menu-item>
         
-        <menu-item name="attribute" title="Attribute" >
+        <menu-item name="attribute" title="${uiLabelMap.ContentAttribute}" >
             <condition>
                 <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
             <link target="EditContentAttribute?contentId=${contentId}"/>
         </menu-item>
         
-        <menu-item name="metaData" title="Metadata" >
+        <menu-item name="metaData" title="${uiLabelMap.ContentMetadata}" >
             <condition>
                 <not><if-empty field-name="currentValue.contentId"/></not>
             </condition>
@@ -119,7 +119,7 @@
             </condition>
             <link target="EditContent"/>
         </menu-item>
-        <menu-item name="NewContentAssoc" title="${uiLabelMap.CommonCreateNew} Assoc">
+        <menu-item name="NewContentAssoc" title="${uiLabelMap.CommonCreateNew} ${uiLabelMap.ContentAssociation}">
             <condition>
                 <if-compare field-name="tabButtonItem" operator="equals" value="association"/>
             </condition>

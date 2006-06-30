@@ -60,7 +60,7 @@
         <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}">
         <tr valign="middle">
           <td><div class="tabletext">${surveyQuestionAndAppl.surveyQuestionId}</div></td>
-          <td><div class="tabletext">${questionType.description}</div></td>
+          <td><div class="tabletext">${questionType.get("description",locale)}</div></td>
           <td><div class="tabletext">${(questionCat.description)?if_exists}</div></td>
           <td><div class="tabletext">${surveyQuestionAndAppl.description?if_exists}</div></td>
           <td><input type="text" name="question" size="30" class="inputBox" value="${surveyQuestionAndAppl.question?if_exists?html}">
@@ -154,7 +154,7 @@
           <tr valign="middle">
             <td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${question.surveyQuestionId}&surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="buttontext">${question.surveyQuestionId}</a></td>
             <td><div class="tabletext">${question.description?if_exists}</div></td>
-            <td><div class="tabletext">${questionType.description}</div></td>
+            <td><div class="tabletext">${questionType.get("description",locale)}</div></td>
             <td><div class="tabletext">${question.question?if_exists}</div></td>
           <td>
             <select class="selectBox" name="surveyPageId">

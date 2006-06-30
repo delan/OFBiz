@@ -185,7 +185,7 @@ under the License.
             </drop-down>
         </field>
                 
-        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="CreateSurveyQuestion" type="single" 
         target="createSurveyQuestion" title="" default-map-name="surveyQuestion"

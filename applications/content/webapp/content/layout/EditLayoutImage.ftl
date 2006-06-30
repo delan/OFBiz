@@ -9,5 +9,5 @@ ${singleWrapper.renderFormString()}
     <img src="<@ofbizUrl>img?imgId=${drDataResourceId}</@ofbizUrl>" />
 -->
 </#if>
-<p/><div class="head1">Other Layouts that use this subcontent</div>
+<p/><div class="head1">${uiLabelMap.ContentOtherLayout}</div>
 ${listWrapper.renderFormString()}

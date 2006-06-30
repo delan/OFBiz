@@ -228,7 +228,7 @@
 		</field>
         <field name="objectInfo" title="Image File Name"><display/></field>
         <field name="imageData" map-name="ImageDataResource"><file/></field>
-        <field name="submitButton" title="Upload" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <!-- DataResourceAttribute forms -->
     <form name="AddDataResourceAttribute" 
@@ -328,7 +328,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductFeature" list-name="entityList" paginate-target="LookupProductFeature" title="" type="list"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display">
