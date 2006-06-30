@@ -105,15 +105,11 @@ public class InvoiceServices {
 
     // set some BigDecimal properties
     private static BigDecimal ZERO = new BigDecimal("0");
-    private static int decimals = -1;
-    private static int rounding = -1;
-    static {
-        decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-        rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
+    private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+    private static int taxDecimals = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
+    private static int taxRounding = UtilNumber.getBigDecimalScale("salestax.rounding");
 
-        // set zero to the proper scale
-        if (decimals != -1) ZERO.setScale(decimals);
-    }
     public static final String resource = "AccountingUiLabels";
 
     /* Service to create an invoice for an order */
@@ -560,7 +556,7 @@ public class InvoiceServices {
             while (taxAdjIter.hasNext()) {
                 GenericValue adj = (GenericValue) taxAdjIter.next();
                 BigDecimal adjAmount = calcHeaderAdj(delegator, adj, invoiceType, invoiceId, invoiceItemSeqId, toStore, 
-                        orderSubTotal, invoiceSubTotal, invoiceQuantity, decimals, rounding);
+                        orderSubTotal, invoiceSubTotal, invoiceQuantity, taxDecimals, taxRounding);
                 // this doesn't really effect anything; but just for our totals
                 invoiceSubTotal = invoiceSubTotal.add(adjAmount).setScale(decimals, rounding);
             }
