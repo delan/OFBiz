@@ -1941,6 +1941,7 @@
     </entity>
     <entity entity-name="WorkReqFulfType"
             package-name="org.ofbiz.order.requirement"
+            default-resource-name="OrderEntityLabels"
             title="Work Requirement Fulfillment Type Entity">
       <field name="workReqFulfTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
