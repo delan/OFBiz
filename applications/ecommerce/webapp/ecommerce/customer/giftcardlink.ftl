@@ -68,7 +68,7 @@
       <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
-      <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="Link Cards"></td>
+      <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceLinkCards}"></td>
     </tr>
   </table>
 </form>

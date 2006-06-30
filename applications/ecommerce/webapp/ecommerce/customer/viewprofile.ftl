@@ -138,7 +138,7 @@
           <tr><td colspan="7"><hr class="sepbar"/></td></tr>
           <tr>
             <td align="right" valign="top" width="10%">
-              <div class="tabletext">&nbsp;<b>${contactMechType.description}</b></div>
+              <div class="tabletext">&nbsp;<b>${contactMechType.get("description",locale)}</b></div>
             </td>
             <td width="5">&nbsp;</td>
             <td align="left" valign="top" width="80%">
@@ -146,7 +146,7 @@
                   <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                     <div class="tabletext">
                       <#if contactMechPurposeType?exists>
-                        <b>${contactMechPurposeType.description}</b>
+                        <b>${contactMechPurposeType.get("description",locale)}</b>
                         <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
                           <span class="buttontextdisabled">${uiLabelMap.EcommerceIsDefault}</span>
                         <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
@@ -392,7 +392,7 @@
               <tr>
                 <td width="5%">&nbsp;</td>
                 <td width="1">
-                  <div class="tabletext"><nobr><#if shipMeth.partyId != "_NA_">${shipMeth.partyId?if_exists}&nbsp;</#if>${shipMeth.description?if_exists}</nobr></div>
+                  <div class="tabletext"><nobr><#if shipMeth.partyId != "_NA_">${shipMeth.partyId?if_exists}&nbsp;</#if>${shipMeth.get("description",locale)?if_exists}</nobr></div>
                 </td>
                 <td><input type="radio" name="defaultShipMeth" value="${shippingMethod}" <#if profiledefs.defaultShipMeth?default("") == shippingMethod>checked</#if>></td>
               </tr>
@@ -421,9 +421,9 @@
               <tr>
                 <td><a href="<@ofbizUrl>img/${content.contentName}?imgId=${content.dataResourceId}</@ofbizUrl>" class="buttontext">${content.contentId}</a>
                 <td><div class="tabletext">${content.contentName?if_exists}</div></td>
-                <td><div class="tabletext">${(contentType.description)?if_exists}</div></td>
+                <td><div class="tabletext">${(contentType.get("description",locale))?if_exists}</div></td>
                 <td><div class="tabletext">${(mimeType.description)?if_exists}</div></td>
-                <td><div class="tabletext">${(status.description)?if_exists}</div></td>
+                <td><div class="tabletext">${(status.get("description",locale))?if_exists}</div></td>
                 <td><div class="tabletext">${contentRole.fromDate?if_exists}</div></td>
                 <td align="right">
                   <a href="<@ofbizUrl>img/${content.contentName}?imgId=${content.dataResourceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
@@ -472,10 +472,10 @@
             <tr><td colspan="6"><hr class="sepbar"/></td></tr>
             <tr>
               <td width="15%"><div class="tabletext"><b>${contactList.contactListName?if_exists}</b><#if contactList.description?has_content>&nbsp;-&nbsp;${contactList.description}</#if></div></td>
-              <#-- <td width="15%"><div class="tabletext">${contactListType.description?if_exists}</div></td> -->
+              <#-- <td width="15%"><div class="tabletext">${contactListType.get("description",locale)?if_exists}</div></td> -->
               <td width="15%"><div class="tabletext">${contactListParty.fromDate?if_exists}</div></td>
               <td width="15%"><div class="tabletext">${contactListParty.thruDate?if_exists}</div></td>
-              <td width="15%"><div class="tabletext">${(statusItem.description)?if_exists}</div></td>
+              <td width="15%"><div class="tabletext">${(statusItem.get("description",locale))?if_exists}</div></td>
               <td width="5">&nbsp;</td>
               <td width="20%" nowrap>
               <#if (contactListParty.statusId?if_exists == "CLPT_ACCEPTED")>
@@ -506,7 +506,7 @@
               <#list publicContactLists as publicContactList>
                 <#-- <#assign publicContactListType = publicContactList.getRelatedOneCache("ContactListType")> -->
                 <#assign publicContactMechType = publicContactList.getRelatedOneCache("ContactMechType")?if_exists>
-                <option value="${publicContactList.contactListId}">${publicContactList.contactListName?if_exists} <#-- ${publicContactListType.description} --> <#if publicContactMechType?has_content>[${publicContactMechType.description}]</#if></option>
+                <option value="${publicContactList.contactListId}">${publicContactList.contactListName?if_exists} <#-- ${publicContactListType.get("description",locale)} --> <#if publicContactMechType?has_content>[${publicContactMechType.get("description",locale)}]</#if></option>
               </#list>
             </select>
             <select name="preferredContactMechId" class="selectBox">

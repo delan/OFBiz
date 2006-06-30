@@ -24,7 +24,7 @@ under the License.
   		<#if (result.resultData)?exists>
 			<div class="tableheadtext">
 				${uiLabelMap.CommonTitle}: ${result.resultData.content.description?if_exists} ${uiLabelMap.CommonBy}:${result.resultData.content.createdByUserLogin} ${uiLabelMap.CommonAt}: ${result.resultData.content.createdDate.toString().substring(0,16)}
-				<a href="addForumMessage?forumId=${parameters.forumId}&forumMessageIdTo=${result.resultData.content.contentId}&threadView=${parameters.threadView?if_exists}" class="buttontext">Reply</a>
+				<a href="addForumMessage?forumId=${parameters.forumId}&forumMessageIdTo=${result.resultData.content.contentId}&threadView=${parameters.threadView?if_exists}" class="buttontext">${uiLabelMap.PartyReply}</a>
 			</div>
 			<div class="tabletext">
 				<#if result.resultData.electronicText?exists>

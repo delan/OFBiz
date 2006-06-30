@@ -24,36 +24,36 @@ under the License.
     </div>
     <div class="screenlet-body">
 <#if !supplierProduct?has_content && parameters.productId?has_content>
-  <div><h3>Sorry, it appears that the specified product ID [${parameters.productId}] does not belong to you.</h3></div>
+  <div><h3>${uiLabelMap.EcommerceMessage1} [${parameters.productId}] ${uiLabelMap.EcommerceMessage2}</h3></div>
 <#else>
 
     <#if !supplierProduct?exists>
-      <p class="head1">Add New Digital Product</p>
+      <p class="head1">${uiLabelMap.EcommerceAddNewDigitalProduct}</p>
       <form method="post" action="<@ofbizUrl>createCustomerDigitalDownloadProduct</@ofbizUrl>" name="editdigitaluploadform" style="margin: 0;">
         <input type="hidden" name="productStoreId" value="${productStore.productStoreId}">
     <#else>
-      <p class="head1">Update Digital Product</p>
+      <p class="head1">${uiLabelMap.EcommerceUpdateDigitalProduct}</p>
       <form method="post" action="<@ofbizUrl>updateCustomerDigitalDownloadProduct</@ofbizUrl>" name="editdigitaluploadform" style="margin: 0;">
         <input type="hidden" name="productId" value="${parameters.productId}">
         <input type="hidden" name="currencyUomId" value="${parameters.currencyUomId}">
         <input type="hidden" name="minimumOrderQuantity" value="${parameters.minimumOrderQuantity}">
         <input type="hidden" name="availableFromDate" value="${parameters.availableFromDate}">
     </#if>
-    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="buttontext">Back to List</a>
+    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonBackToList}</a>
 
     <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">Product Name</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.ProductProductName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="productName" value="${(product.productName)?if_exists}"/>*</td>
     </tr>
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">Description</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.ProductDescription}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="description" value="${(product.description)?if_exists}"/></td>
     </tr>
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">Price</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.ProductPrice}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" class="inputBox" size="30" maxlength="60" name="price" value="${(productPrice.price)?if_exists}"/>*</td>
     </tr>
@@ -71,18 +71,18 @@ under the License.
 <#if supplierProduct?has_content>
 <div class="screenlet">
     <div class="screenlet-header">
-        <div class="boxhead">Digital Product Files</div>
+        <div class="boxhead">${uiLabelMap.EcommerceDigitalProductFiles}</div>
     </div>
     <div class="screenlet-body">
         <#list productContentAndInfoList as productContentAndInfo>
             <div class="tabletext">
-              ${productContentAndInfo.contentName} (since: ${productContentAndInfo.fromDate})
-              <a href="<@ofbizUrl>removeCustomerDigitalDownloadProductFile?contentId=${productContentAndInfo.contentId}&amp;productContentTypeId=${productContentAndInfo.productContentTypeId}&amp;fromDate=${productContentAndInfo.fromDate}&amp;productId=${parameters.productId}&amp;currencyUomId=${parameters.currencyUomId}&amp;minimumOrderQuantity=${parameters.minimumOrderQuantity}&amp;availableFromDate=${parameters.availableFromDate}</@ofbizUrl>" class="buttontext">Remove</a>
+              ${productContentAndInfo.contentName} (${uiLabelMap.CommonSince}: ${productContentAndInfo.fromDate})
+              <a href="<@ofbizUrl>removeCustomerDigitalDownloadProductFile?contentId=${productContentAndInfo.contentId}&amp;productContentTypeId=${productContentAndInfo.productContentTypeId}&amp;fromDate=${productContentAndInfo.fromDate}&amp;productId=${parameters.productId}&amp;currencyUomId=${parameters.currencyUomId}&amp;minimumOrderQuantity=${parameters.minimumOrderQuantity}&amp;availableFromDate=${parameters.availableFromDate}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonRemove}</a>
             </div>
         </#list>
     
         <div><hr class="sepbar"/></div>
-        <div class="tableheadtext">Add From My Files</div>
+        <div class="tableheadtext">${uiLabelMap.EcommerceDigitalAddFromMyFiles}</div>
         <div>
         <form method="post" action="<@ofbizUrl>addCustomerDigitalDownloadProductFile</@ofbizUrl>" name="adddigitaluploadfile" style="margin: 0;">
           <input type="hidden" name="productId" value="${parameters.productId}">
@@ -97,7 +97,7 @@ under the License.
           <a href="javascript:document.adddigitaluploadfile.submit()" class="buttontext">${uiLabelMap.CommonAdd}</a>
         </form>
         </div>
-    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="buttontext">Back to List</a>
+    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonBackToList}</a>
     </div>
 </div>
 </#if>

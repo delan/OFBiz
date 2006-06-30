@@ -108,7 +108,7 @@ function toggleBillingAccount(box) {
                </#if>
              </table>
             <#-- Party Tax Info -->
-            <div class="tableheadtext">&nbsp;Tax IDs &amp; Exemptions</div>
+            <div class="tableheadtext">&nbsp;${uiLabelMap.PartyTaxIdentification}</div>
             ${screens.render("component://ecommerce/widget/CustomerScreens.xml#customertaxinfo")}
         </div>
     </div>

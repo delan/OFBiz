@@ -96,11 +96,11 @@
                 <td>
                   <select name="shoppingListTypeId" class="selectBox">
                       <#if shoppingListType?exists>
-                      <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.description?default(shoppingListType.shoppingListTypeId)}</option>
+                      <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
                       <option value="${shoppingListType.shoppingListTypeId}">--</option>
                     </#if>
                     <#list shoppingListTypes as shoppingListType>
-                      <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.description?default(shoppingListType.shoppingListTypeId)}</option>
+                      <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
                     </#list>
                   </select>
                 </td>
@@ -302,12 +302,12 @@
                         <tr>
                           <td><div class="tableheadtext">${uiLabelMap.OrderLastOrderedDate}</div></td>
                           <td><div class="tableheadtext">:</div></td>
-                          <td><div class="tabletext">${lastOrderedString?default("Not Yet Ordered")}</div></td>
+                          <td><div class="tabletext">${lastOrderedString?default("${uiLabelMap.OrderNotYetOrdered}")}</div></td>
                         </tr>
                         <tr>
                           <td><div class="tableheadtext">${uiLabelMap.OrderEstimateNextOrderDate}</div></td>
                           <td><div class="tableheadtext">:</div></td>
-                          <td><div class="tabletext">${nextTimeString?default("Not Yet Known")}</div></td>
+                          <td><div class="tabletext">${nextTimeString?default("${uiLabelMap.EcommerceNotYetKnown}")}</div></td>
                         </tr>
                       </table>
                     </div>
@@ -528,6 +528,6 @@
 
     <#else>
         <#-- shoppingList was found, but belongs to a different party -->
-        <div class="head2">${uiLabelMap.EcommerceShoppingListError} ID ${shoppingList.shoppingListId}) ${uiLabelMap.EcommerceListDoesNotBelong}.</div>
+        <div class="head2">${uiLabelMap.EcommerceShoppingListError} ${uiLabelMap.CommonId} ${shoppingList.shoppingListId}) ${uiLabelMap.EcommerceListDoesNotBelong}.</div>
     </#if>
 </#if>

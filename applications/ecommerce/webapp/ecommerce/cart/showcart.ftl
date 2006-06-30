@@ -335,7 +335,7 @@ function setAlternateGwp(field) {
               <tr>
                 <td colspan="5" nowrap align="right">
                     <div class="tabletext">
-                        <i>${uiLabelMap.EcommerceAdjustment}</i> - ${adjustmentType.description?if_exists}
+                        <i>${uiLabelMap.EcommerceAdjustment}</i> - ${adjustmentType.get("description",locale)?if_exists}
                         <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDetails}</a></#if>:
                     </div>
                 </td>

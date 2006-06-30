@@ -23,8 +23,8 @@
       </td>
       <td align="right" valign="middle">
         <div class="tabletext">
-          All <input type="radio" name="any_or_all" value="all" checked>
-          Any <input type="radio" name="any_or_all" value="any">
+          ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked>
+          ${uiLabelMap.CommonAny} <input type="radio" name="any_or_all" value="any">
         </div>
       </td>
     </tr>
@@ -34,12 +34,12 @@
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <tr>
         <td align="right" valign="middle">
-          <div class="tabletext">${(productFeatureType.description)?if_exists}:</div>
+          <div class="tabletext">${(productFeatureType.get("description",locale))?if_exists}:</div>
         </td>
         <td valign="middle">
           <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
-              <option value="">- ${uiLabelMap.CommonAny} -</option>
+              <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
@@ -69,7 +69,7 @@
 &nbsp;</td>
 <td>&nbsp;</td>
 <td width="80%" align="left" colspan="4">
-<input type="submit" class="smallSubmit" name="submitButton" value="Query"/>
+<input type="submit" class="smallSubmit" name="submitButton" value="${uiLabelMap.CommonQuery}"/>
 </td>
 
 </tr>

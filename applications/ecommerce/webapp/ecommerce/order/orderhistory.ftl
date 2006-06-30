@@ -71,7 +71,7 @@
               </td>
               <td width="10">&nbsp;</td>
               <td>
-                <div class="tabletext">${status.description}</div>
+                <div class="tabletext">${status.get("description",locale)}</div>
               </td>
               <td width="10">&nbsp;</td>
               <td align="right">

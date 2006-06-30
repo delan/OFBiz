@@ -166,7 +166,7 @@ ${uiLabelMap.EcommerceLoggedToPost}
                   <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
                 <#if 0 < listSz>
-                  <span class="submenutextinfo">${lowIdxShow} - ${highIdx?if_exists} of ${listSz?if_exists}</span>
+                  <span class="submenutextinfo">${lowIdxShow} - ${highIdx?if_exists} ${uiLabelMap.CommonOf} ${listSz?if_exists}</span>
                 </#if>
                 <#if highIdx?if_exists?number < listSz?if_exists?number>
                   <a href="${requestURL}?${queryString?if_exists}&viewSz=${viewSz?if_exists}&viewIdx=${viewIdx?if_exists?number+1}" class="submenutextright">${uiLabelMap.CommonNext}</a>

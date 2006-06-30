@@ -95,14 +95,14 @@
                   <td>
                     <select name="returnReasonId_o_${rowCount}" class="selectBox">
                       <#list returnReasons as reason>
-                        <option value="${reason.returnReasonId}">${reason.description?default(reason.returnReasonId)}</option>
+                        <option value="${reason.returnReasonId}">${reason.get("description",locale)?default(reason.returnReasonId)}</option>
                       </#list>
                     </select>
                   </td>
                   <td>
                     <select name="returnTypeId_o_${rowCount}" class="selectBox">
                       <#list returnTypes as type>
-                        <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
+                        <option value="${type.returnTypeId}">${type.get("description",locale)?default(type.returnTypeId)}</option>
                       </#list>
                     </select>
                   </td>

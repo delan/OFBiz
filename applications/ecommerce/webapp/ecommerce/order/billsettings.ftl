@@ -210,7 +210,7 @@ function shipBillAddr() {
                 *</td>
               </tr>
               <#--<tr>
-                <td width="26%" align="right" valign=middle><div class="tabletext">Card Security Code</div></td>
+                <td width="26%" align="right" valign=middle><div class="tabletext">${uiLabelMap.AccountingCardSecurityCode}</div></td>
                 <td width="5">&nbsp;</td>
                 <td width="74%">
                   <input type="text" size="5" maxlength="10" name="cardSecurityCode" value="">
@@ -397,7 +397,7 @@ function shipBillAddr() {
               </#if>
               <tr>
                 <td align="center" colspan="2">
-                  <input type="submit" class="smallsubmit" value="Continue">
+                  <input type="submit" class="smallsubmit" value="${uiLabelMap.CommonContinue}">
                 </td>
               </tr>
             </table>
