@@ -1,7 +1,7 @@
 <!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <!-- Copyright 2004-2006 The Apache Software Foundation -->
 <#--
-$Id$
+$Id: main.ftl 7426 2006-04-26 23:35:58Z jonesde $
 
 Copyright 2004-2006 The Apache Software Foundation
 

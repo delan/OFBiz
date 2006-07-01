@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: IcsPaymentServices.java 7412 2006-04-25 14:09:08Z jacopo $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

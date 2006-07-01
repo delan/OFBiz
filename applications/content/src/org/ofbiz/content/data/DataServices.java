@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: DataServices.java 7869 2006-06-27 03:10:11Z hansbak $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ServiceMultiEventHandler.java 6583 2006-01-25 20:24:44Z jonesde $
  *
  * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *

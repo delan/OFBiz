@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ShipmentEvents.java 5631 2005-09-02 21:38:26Z sichen $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

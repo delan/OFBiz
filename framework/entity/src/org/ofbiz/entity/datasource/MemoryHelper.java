@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: MemoryHelper.java 7607 2006-05-15 21:01:39Z jaz $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

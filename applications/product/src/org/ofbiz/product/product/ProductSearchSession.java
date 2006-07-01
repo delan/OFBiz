@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProductSearchSession.java 7440 2006-04-27 14:40:12Z jonesde $
  *
  *  Copyright (c) 2002-2004 The Open For Business Project (www.ofbiz.org)
  * 

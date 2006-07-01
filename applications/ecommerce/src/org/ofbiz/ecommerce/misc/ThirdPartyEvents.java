@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ThirdPartyEvents.java 5460 2005-08-05 18:10:06Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

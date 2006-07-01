@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: StatusServices.java 5719 2005-09-13 01:57:32Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

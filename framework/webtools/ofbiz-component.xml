@@ -20,7 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id$
+ *  $Id: ofbiz-component.xml 6210 2005-11-29 09:44:42Z jonesde $
 -->
 
 <ofbiz-component name="webtools"

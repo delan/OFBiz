@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CategoryWorker.java 7503 2006-05-03 14:56:05Z jonesde $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

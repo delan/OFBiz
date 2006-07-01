@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EventFactory.java 6236 2005-12-02 10:48:53Z jonesde $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *

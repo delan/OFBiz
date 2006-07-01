@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: BillingAccountWorker.java 7369 2006-04-21 19:11:10Z jacopo $
  *
  *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *

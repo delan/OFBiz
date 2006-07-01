@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: UtilFormatOut.java 7099 2006-03-28 23:02:54Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /* 
- * $Id$
+ * $Id: ModelServiceReader.java 7866 2006-06-27 01:24:04Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EntityFinderUtil.java 6047 2005-10-31 13:18:56Z jonesde $
  *
  *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *

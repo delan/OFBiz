@@ -1,5 +1,5 @@
 /*
- * $Id: $
+ * $Id: PosDialog.java 7566 2006-05-12 17:13:05Z les7arts $
  *
  * Copyright 2001-2006 The Apache Software Foundation
  * 

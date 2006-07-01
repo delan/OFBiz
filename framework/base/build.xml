@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Base Build Script.
- *  $Id$
+ *  $Id: build.xml 7719 2006-05-31 05:52:58Z jonesde $
 -->
 
 <project name="OFBiz - Base" default="jar" basedir=".">

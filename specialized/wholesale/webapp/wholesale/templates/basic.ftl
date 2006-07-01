@@ -1,1 +1,0 @@
-${pages.get(page.path)}

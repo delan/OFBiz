@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: TaxwareUTL.java 6081 2005-11-06 04:16:40Z jonesde $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *

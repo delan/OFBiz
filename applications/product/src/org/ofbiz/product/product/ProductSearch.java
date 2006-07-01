@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProductSearch.java 7404 2006-04-25 10:46:09Z jacopo $
  *
  *  Copyright (c) 2003-2005 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a

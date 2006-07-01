@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PartyServices.java 7610 2006-05-15 22:49:15Z jaz $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *

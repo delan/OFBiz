@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: SecurityConfigUtil.java 5462 2005-08-05 18:35:48Z jonesde $
  *
  *  Copyright (c) 2002 The Open For Business Project and repected authors.
  *  Permission is hereby granted, free of charge, to any person obtaining a

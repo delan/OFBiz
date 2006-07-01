@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Components
- *  $Id$
+ *  $Id: component-load.xml 7669 2006-05-25 05:23:21Z jonesde $
 -->
 
 <component-loader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 

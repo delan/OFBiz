@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ContentManagementServices.java 7689 2006-05-29 07:31:32Z hansbak $
  *
  *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *

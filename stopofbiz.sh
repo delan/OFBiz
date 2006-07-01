@@ -1,6 +1,6 @@
 #!/bin/sh
 ####
-# $Id$
+# $Id: stopofbiz.sh 5952 2005-10-13 09:52:25Z jonesde $
 # ofbiz.admin.key and ofbiz.admin.port must match that which OFBIZ was started with
 ####
 

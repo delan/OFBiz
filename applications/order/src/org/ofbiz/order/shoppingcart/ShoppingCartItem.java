@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ShoppingCartItem.java 7806 2006-06-16 09:29:55Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

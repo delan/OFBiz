@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ByteWrapper.java 6447 2005-12-30 08:46:53Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

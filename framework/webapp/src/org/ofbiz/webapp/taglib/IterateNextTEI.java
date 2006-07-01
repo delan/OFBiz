@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: IterateNextTEI.java 5462 2005-08-05 18:35:48Z jonesde $
  *
  * <p><b>Title:</b> IterateNextTEI.java
  * <p><b>Description:</b> Extra-Info class for the IterateNextTag.

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: UtilXml.java 7721 2006-05-31 07:04:18Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

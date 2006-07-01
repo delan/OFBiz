@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: GenericXaResource.java 6778 2006-02-20 05:13:55Z jonesde $
  *
  * Copyright 2001-2006 The Apache Software Foundation
  * 

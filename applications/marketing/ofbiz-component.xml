@@ -20,7 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id$
+ *  $Id: ofbiz-component.xml 5710 2005-09-12 15:52:27Z jonesde $
 -->
 
 <ofbiz-component name="marketing"

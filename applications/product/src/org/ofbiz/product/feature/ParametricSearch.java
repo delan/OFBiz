@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ParametricSearch.java 7431 2006-04-27 08:44:26Z jonesde $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a

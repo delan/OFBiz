@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ContentWorker.java 7770 2006-06-11 08:22:15Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

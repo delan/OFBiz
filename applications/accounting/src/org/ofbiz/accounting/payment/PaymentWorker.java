@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PaymentWorker.java 7907 2006-06-30 09:47:39Z hansbak $
  *
  * Copyright 2003-2006 The Apache Software Foundation
  * 

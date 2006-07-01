@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Leon Torres (leon@opensourcestrategies.com)
- *@version    $Rev: $
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign unselectedClassName = "buttontext">

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ByConditionFinder.java 6197 2005-11-26 06:07:08Z jonesde $
  *
  *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *

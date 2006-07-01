@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: BaseUnitTests.java 5462 2005-08-05 18:35:48Z jonesde $
  *
  */
 package org.ofbiz.base.test;

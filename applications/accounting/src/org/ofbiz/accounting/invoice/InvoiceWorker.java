@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: InvoiceWorker.java 7412 2006-04-25 14:09:08Z jacopo $
  *
  * Copyright 2003-2006 The Apache Software Foundation
  * 

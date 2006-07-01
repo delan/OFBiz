@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: InventoryServices.java 7845 2006-06-22 18:58:33Z sichen $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

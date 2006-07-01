@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CatalinaContainer.java 7817 2006-06-19 05:51:51Z jonesde $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: VisitHandler.java 7678 2006-05-25 19:35:47Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

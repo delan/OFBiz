@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: GeoWorker.java 6190 2005-11-24 10:16:14Z jonesde $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

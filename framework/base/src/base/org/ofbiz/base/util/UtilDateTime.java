@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: UtilDateTime.java 6520 2006-01-17 17:02:40Z jaz $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

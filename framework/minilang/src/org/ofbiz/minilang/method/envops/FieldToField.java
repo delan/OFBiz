@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: FieldToField.java 5824 2005-09-25 23:18:16Z jonesde $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

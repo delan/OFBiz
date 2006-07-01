@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ElseIf.java 5606 2005-08-29 16:30:08Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

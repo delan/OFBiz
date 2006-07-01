@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: LocalDispatcher.java 7709 2006-05-30 21:45:33Z jaz $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

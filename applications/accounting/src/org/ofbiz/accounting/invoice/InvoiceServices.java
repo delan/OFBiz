@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: InvoiceServices.java 7918 2006-06-30 23:40:54Z sichen $
  *
  * Copyright 2003-2006 The Apache Software Foundation
  * 

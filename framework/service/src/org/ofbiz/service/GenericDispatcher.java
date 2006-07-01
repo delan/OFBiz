@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: GenericDispatcher.java 7284 2006-04-12 18:39:42Z jaz $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProductFeatureServices.java 5867 2005-09-30 16:34:06Z sichen $
  *
  *  Copyright (c) 2004 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ModelField.java 6327 2005-12-14 18:56:54Z jaz $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

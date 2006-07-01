@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: UtilProperties.java 7383 2006-04-23 09:49:32Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: Debug.java 7602 2006-05-15 20:56:04Z jaz $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: IteratorTEI.java 5462 2005-08-05 18:35:48Z jonesde $
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *

@@ -66,7 +66,7 @@ import com.lowagie.text.pdf.PdfWriter;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Rev: 5462 $
+ * @version $Rev$
  * @since 3.2
  */
 

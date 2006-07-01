@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: FileUtil.java 7217 2006-04-06 18:55:22Z jaz $
  *
  * Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *

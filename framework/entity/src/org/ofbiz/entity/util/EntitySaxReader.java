@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EntitySaxReader.java 6257 2005-12-06 18:04:10Z jaz $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

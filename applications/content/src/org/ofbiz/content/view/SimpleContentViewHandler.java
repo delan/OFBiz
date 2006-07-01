@@ -58,7 +58,7 @@ import org.ofbiz.base.util.GeneralException;
  * This handler will use JPublish to generate the XSL-FO
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev: 5462 $
+ * @version    $Rev$
  * @since      3.0
  */
 public class SimpleContentViewHandler implements ViewHandler {

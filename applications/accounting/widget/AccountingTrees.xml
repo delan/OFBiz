@@ -20,7 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id$
+ *  $Id: AccountingTrees.xml 7414 2006-04-25 14:11:48Z jacopo $
 -->
 
 <trees xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 

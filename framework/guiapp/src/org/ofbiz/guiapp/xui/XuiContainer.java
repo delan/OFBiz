@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: XuiContainer.java 7215 2006-04-06 14:42:02Z les7arts $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *

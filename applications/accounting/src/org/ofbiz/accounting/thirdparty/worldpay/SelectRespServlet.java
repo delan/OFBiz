@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: SelectRespServlet.java 6642 2006-02-01 02:29:51Z sichen $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

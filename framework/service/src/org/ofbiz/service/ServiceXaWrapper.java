@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ServiceXaWrapper.java 7284 2006-04-12 18:39:42Z jaz $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

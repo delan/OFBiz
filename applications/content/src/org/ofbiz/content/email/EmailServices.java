@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EmailServices.java 7829 2006-06-20 20:51:02Z sichen $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

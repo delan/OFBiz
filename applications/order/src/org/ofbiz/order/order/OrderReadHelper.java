@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: OrderReadHelper.java 7909 2006-06-30 21:35:13Z sichen $
  *
  *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *

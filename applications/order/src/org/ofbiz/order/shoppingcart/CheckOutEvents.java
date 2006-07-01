@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CheckOutEvents.java 7561 2006-05-11 12:12:44Z jacopo $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

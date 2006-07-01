@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PartyRoleServices.java 6412 2005-12-22 19:26:15Z sichen $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

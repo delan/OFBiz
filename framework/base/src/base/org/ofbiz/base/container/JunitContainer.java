@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: JunitContainer.java 7551 2006-05-10 00:08:10Z jonesde $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *

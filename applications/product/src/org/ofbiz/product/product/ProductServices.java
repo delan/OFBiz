@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProductServices.java 7861 2006-06-25 09:26:27Z jacopo $
  *
  *  Copyright (c) 2002-2004 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a

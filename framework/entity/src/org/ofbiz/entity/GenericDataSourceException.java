@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: GenericDataSourceException.java 5462 2005-08-05 18:35:48Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

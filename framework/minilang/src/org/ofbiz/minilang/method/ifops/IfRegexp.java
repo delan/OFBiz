@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: IfRegexp.java 6237 2005-12-02 10:49:47Z jonesde $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: Convert.java 6009 2005-10-24 06:44:29Z jonesde $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

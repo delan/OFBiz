@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PartyWorker.java 7613 2006-05-16 00:39:14Z jaz $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

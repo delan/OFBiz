@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: SSLServerSocketFactory.java 6301 2005-12-12 12:46:44Z jonesde $
  *
  * Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *

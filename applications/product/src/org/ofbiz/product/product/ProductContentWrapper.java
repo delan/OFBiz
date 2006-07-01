@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProductContentWrapper.java 5467 2005-08-06 08:11:15Z jonesde $
  *
  *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *

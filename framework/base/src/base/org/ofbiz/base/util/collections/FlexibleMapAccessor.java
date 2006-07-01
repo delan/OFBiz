@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: FlexibleMapAccessor.java 5720 2005-09-13 03:10:59Z jonesde $
  *
  *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *

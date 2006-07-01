@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: DatasourceInfo.java 5759 2005-09-17 04:45:42Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

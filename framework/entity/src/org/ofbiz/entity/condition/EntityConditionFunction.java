@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EntityConditionFunction.java 5831 2005-09-26 06:52:24Z jonesde $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *

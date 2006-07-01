@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PriceServices.java 7544 2006-05-08 15:23:53Z jaz $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

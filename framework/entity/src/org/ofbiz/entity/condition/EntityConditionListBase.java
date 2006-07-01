@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EntityConditionListBase.java 5831 2005-09-26 06:52:24Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

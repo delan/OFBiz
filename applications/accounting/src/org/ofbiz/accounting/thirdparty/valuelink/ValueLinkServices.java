@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ValueLinkServices.java 6148 2005-11-20 17:50:38Z jaz $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

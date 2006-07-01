@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org -->
 <#--
-$Id$
+$Id: header.ftl 7808 2006-06-17 22:18:53Z jonesde $
 
 Copyright 2001-2006 The Apache Software Foundation
 

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: DatabaseUtil.java 6984 2006-03-11 16:15:13Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

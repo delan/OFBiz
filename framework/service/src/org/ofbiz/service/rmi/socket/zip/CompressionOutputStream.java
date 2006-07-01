@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CompressionOutputStream.java 5462 2005-08-05 18:35:48Z jonesde $
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *

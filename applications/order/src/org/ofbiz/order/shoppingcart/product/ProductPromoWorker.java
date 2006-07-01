@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProductPromoWorker.java 7850 2006-06-23 07:24:50Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
