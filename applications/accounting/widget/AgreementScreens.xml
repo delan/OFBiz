@@ -373,4 +373,59 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ListAgreementItemParties">
+        <section>
+            <actions>
+                <set field="title" value="List Agreement Item Parties"/>
+                <set field="titleProperty" value="PageTitleListAgreementItemParties"/>
+                <set field="headerItem" value="agreement"/>
+                <set field="tabButtonItem" value="ListAgreementItemParties"/>
+
+                <entity-one entity-name="Agreement" value-name="agreement" auto-field-map="true"/>
+                <entity-one entity-name="AgreementItem" value-name="agreementItem"/>
+                <entity-and entity-name="AgreementPartyApplic" list-name="agreementParties">
+                    <field-map env-name="agreement.agreementId" field-name="agreementId"/>
+                    <field-map env-name="agreementItem.agreementItemSeqId" field-name="agreementItemSeqId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAgreementDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="EditAgreementItemParty?agreementId=${agreement.agreementId}&amp;agreementItemSeqId=${agreementItem.agreementItemSeqId}" text="${uiLabelMap.CommonNew}" style="buttontext"/>
+                        </container>
+                        <include-form name="ListAgreementItemParties" location="component://accounting/webapp/accounting/agreement/AgreementForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditAgreementItemParty">
+        <section>
+            <actions>
+                <set field="title" value="Edit Agreement Item Party"/>
+                <set field="titleProperty" value="PageTitleEditAgreementItemParty"/>
+                <set field="headerItem" value="agreement"/>
+                <set field="tabButtonItem" value="ListAgreementItemParties"/>
+                
+                <set field="agreementId" from-field="parameters.agreementId"/>
+                <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+
+                <entity-one entity-name="Agreement" value-name="agreement" auto-field-map="true"/>
+                <entity-one entity-name="AgreementItem" value-name="agreementItem"/>
+                <entity-one entity-name="AgreementPartyApplic" value-name="agreementPartyApplic" auto-field-map="true"/>
+           </actions>
+            <widgets>
+                <decorator-screen name="CommonAgreementDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <link target="EditAgreementItemParty?agreementId=${agreement.agreementId}&amp;agreementItemSeqId=${agreementItem.agreementItemSeqId}" text="${uiLabelMap.CommonNew}" style="buttontext"/>
+                        </container>
+                        <include-form name="EditAgreementItemParty" location="component://accounting/webapp/accounting/agreement/AgreementForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
