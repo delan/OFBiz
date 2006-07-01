@@ -40,6 +40,7 @@
         <a href="<@ofbizUrl>ListAgreementPromoAppls?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementPromoAppls?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementPromoAppls}</a>
         <a href="<@ofbizUrl>ListAgreementItemTerms?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementItemTerms?default(unselectedClassName)}">${uiLabelMap.AccountingAgreementItemTerms}</a>
         <a href="<@ofbizUrl>ListAgreementItemProducts?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementItemProducts?default(unselectedClassName)}">${uiLabelMap.ProductProducts}</a>
+        <a href="<@ofbizUrl>ListAgreementItemParties?agreementId=${agreementItem.agreementId}&agreementItemSeqId=${agreementItem.agreementItemSeqId}</@ofbizUrl>" class="${selectedClassMap.ListAgreementItemParties?default(unselectedClassName)}">${uiLabelMap.Party}</a>
     </div>
 </#if>
 

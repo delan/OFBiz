@@ -141,4 +141,23 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <!-- AgreementPartyApplic  -->
+    <service name="createAgreementPartyApplic" default-entity-name="AgreementPartyApplic" engine="simple"
+                location="org/ofbiz/accounting/agreement/AgreementServices.xml" invoke="createAgreementPartyApplic" auth="true">
+        <description>Create an AgreementPartyApplic</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateAgreementPartyApplic" default-entity-name="AgreementPartyApplic" engine="simple"
+                location="org/ofbiz/accounting/agreement/AgreementServices.xml" invoke="updateAgreementPartyApplic" auth="true">
+        <description>Update an AgreementPartyApplic</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeAgreementPartyApplic" default-entity-name="AgreementPartyApplic" engine="simple"
+                location="org/ofbiz/accounting/agreement/AgreementServices.xml" invoke="removeAgreementPartyApplic" auth="true">
+        <description>Remove an AgreementPartyApplic</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
 </services>

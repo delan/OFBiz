@@ -293,4 +293,35 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="ListAgreementItemParties" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext" list-name="agreementParties"
+            target="" paginate-target="ListAgreementItemParties" title="" type="list">
+        <auto-fields-entity entity-name="AgreementPartyApplic" default-field-type="display"/>
+        <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
+        <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
+        <field name="partyId" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${partyId}" target="EditAgreementItemParty?partyId=${partyId}&amp;agreementId=${agreementId}&amp;agreementItemSeqId=${agreementItemSeqId}"/>
+        </field>
+        <field name="partyName" entry-name="partyId">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
+        </field>
+        <field name="deleteLink" title="" widget-style="buttontext">
+            <hyperlink target="removeAgreementItemParty?partyId=${partyId}&amp;agreementId=${agreementId}&amp;agreementItemSeqId=${agreementItemSeqId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="EditAgreementItemParty" type="single"
+            target="updateAgreementItemParty" title="" default-map-name="agreementPartyApplic"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="agreementPartyApplic==null" target="createAgreementItemParty"/>
+        <auto-fields-entity entity-name="AgreementPartyApplic" default-field-type="edit"/>
+        <field name="agreementId"><hidden/></field>
+        <field name="agreementItemSeqId"><hidden/></field>
+        <field name="partyId" use-when="agreementPartyApplic==null">
+            <lookup target-form-name="LookupPartyName"/>
+        </field>
+        <field name="partyId" use-when="agreementPartyApplic!=null"><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>

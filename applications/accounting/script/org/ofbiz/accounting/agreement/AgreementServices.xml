@@ -269,5 +269,45 @@
         <remove-value value-name="agreementProductAppl"/>
         <check-errors/>
     </simple-method>
-  
+
+    <!-- create a new AgreementPartyApplic -->
+    <simple-method method-name="createAgreementPartyApplic" short-description="Create an AgreementPartyApplic">
+        <check-permission permission="ACCOUNTING" action="_CREATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createAgreementPartyApplic you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_CREATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="AgreementPartyApplic"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- update an existing AgreementPartyApplic -->
+    <simple-method method-name="updateAgreementPartyApplic" short-description="Update an existing AgreementPartyApplic">
+        <check-permission permission="ACCOUNTING" action="_UPDATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run updateAgreementPartyApplic you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="AgreementPartyApplic" value-name="agreementPartyApplic" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="agreementPartyApplic"/>
+        <store-value value-name="agreementPartyApplic"/>
+        <check-errors/>
+    </simple-method>
+
+    <!-- remove an existing AgreementPartyApplic -->
+    <simple-method method-name="removeAgreementPartyApplic" short-description="Remove an existing AgreementPartyApplic">
+        <check-permission permission="ACCOUNTING" action="_UPDATE">
+            <alt-permission permission="ACCOUNTING_ROLE" action="_UPDATE"/>
+            <fail-message message="Security Error: to run removeAgreementPartyApplic you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission, or the limited ACCOUNTING_ROLE_UPDATE permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="AgreementPartyApplic" value-name="agreementPartyApplic" auto-field-map="true"/>
+        <check-errors/>
+        <remove-value value-name="agreementPartyApplic"/>
+        <check-errors/>
+    </simple-method>
 </simple-methods>
