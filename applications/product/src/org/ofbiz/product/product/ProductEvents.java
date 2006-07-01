@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProductEvents.java 6367 2005-12-19 05:41:37Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project (www.ofbiz.org)
  * 

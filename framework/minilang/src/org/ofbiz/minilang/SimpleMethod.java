@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: SimpleMethod.java 6248 2005-12-06 00:08:52Z jaz $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

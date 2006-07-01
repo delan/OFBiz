@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: NamingServiceContainer.java 7673 2006-05-25 13:04:42Z jaz $
  *
  * Copyright 2001-2006 The Apache Software Foundation
  *

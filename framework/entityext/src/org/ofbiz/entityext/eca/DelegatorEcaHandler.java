@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: DelegatorEcaHandler.java 7425 2006-04-26 23:04:59Z jonesde $
  *
  * Copyright 2003-2006 The Apache Software Foundation
  * 

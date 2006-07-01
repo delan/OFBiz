@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EntityTestSuite.java 6132 2005-11-16 22:36:54Z sichen $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

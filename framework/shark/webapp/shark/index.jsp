@@ -1,5 +1,5 @@
 <%--
-$Id$
+$Id: index.jsp 7426 2006-04-26 23:35:58Z jonesde $
 
 Copyright 2001-2006 The Apache Software Foundation
 

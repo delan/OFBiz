@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: UpsServices.java 7404 2006-04-25 10:46:09Z jacopo $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

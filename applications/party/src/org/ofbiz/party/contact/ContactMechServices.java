@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ContactMechServices.java 7526 2006-05-05 18:49:59Z sichen $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ModelScreenAction.java 7780 2006-06-13 08:30:09Z jonesde $
  *
  * Copyright 2003-2006 The Apache Software Foundation
  * 

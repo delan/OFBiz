@@ -20,7 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id$
+ *  $Id: CommunicationScreens.xml 7790 2006-06-14 12:22:06Z jacopo $
 -->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
     <screen name="PendingCommunications">

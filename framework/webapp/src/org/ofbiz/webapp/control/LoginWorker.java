@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: LoginWorker.java 6011 2005-10-24 21:57:50Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

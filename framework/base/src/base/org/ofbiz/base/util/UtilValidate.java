@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: UtilValidate.java 7822 2006-06-19 23:44:35Z jaz $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

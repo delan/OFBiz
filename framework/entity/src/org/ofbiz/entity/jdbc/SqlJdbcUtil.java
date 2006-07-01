@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: SqlJdbcUtil.java 6095 2005-11-09 01:38:54Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

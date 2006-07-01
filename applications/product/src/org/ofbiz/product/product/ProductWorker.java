@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProductWorker.java 7404 2006-04-25 10:46:09Z jacopo $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

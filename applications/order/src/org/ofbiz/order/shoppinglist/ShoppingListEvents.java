@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ShoppingListEvents.java 7806 2006-06-16 09:29:55Z jonesde $
  *
  *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *

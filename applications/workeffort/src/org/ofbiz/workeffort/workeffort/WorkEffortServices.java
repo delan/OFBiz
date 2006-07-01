@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: WorkEffortServices.java 7732 2006-06-02 00:07:03Z sichen $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *

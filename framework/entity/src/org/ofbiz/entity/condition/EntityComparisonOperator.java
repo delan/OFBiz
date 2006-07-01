@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EntityComparisonOperator.java 6155 2005-11-21 07:30:52Z jonesde $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PayPalEvents.java 7611 2006-05-15 23:40:18Z jaz $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

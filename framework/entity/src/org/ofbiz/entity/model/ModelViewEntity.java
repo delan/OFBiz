@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ModelViewEntity.java 6685 2006-02-06 10:30:53Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

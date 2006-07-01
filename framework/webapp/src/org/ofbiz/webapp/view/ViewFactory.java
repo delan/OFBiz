@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ViewFactory.java 6610 2006-01-29 10:00:13Z jonesde $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *

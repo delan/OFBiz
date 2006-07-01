@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: DataResourceWorker.java 7125 2006-03-30 10:19:10Z byersa $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

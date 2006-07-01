@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: GenericDAO.java 7607 2006-05-15 21:01:39Z jaz $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

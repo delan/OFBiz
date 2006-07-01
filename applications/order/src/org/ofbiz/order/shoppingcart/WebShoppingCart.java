@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: WebShoppingCart.java 7478 2006-05-02 11:15:01Z jonesde $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ContactMechWorker.java 6379 2005-12-19 17:31:44Z jaz $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

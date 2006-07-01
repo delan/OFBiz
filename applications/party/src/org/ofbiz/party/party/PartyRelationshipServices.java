@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PartyRelationshipServices.java 6449 2005-12-30 16:18:57Z sichen $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

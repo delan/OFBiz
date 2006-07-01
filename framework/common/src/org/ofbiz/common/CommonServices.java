@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CommonServices.java 7788 2006-06-13 18:26:15Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id$
+ *  $Id: build.xml 7900 2006-06-29 05:03:20Z jonesde $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">

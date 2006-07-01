@@ -21,7 +21,7 @@
     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     *  This is the DTD for the Open For Business Entity Engine configuration XML file.
-    *  $Id$
+    *  $Id: entity-config.xsd 5759 2005-09-17 04:45:42Z jonesde $
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <!-- ====================== Root Element ======================= -->

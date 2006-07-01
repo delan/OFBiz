@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: GenericEntity.java 7779 2006-06-13 07:55:48Z jonesde $
  *
  *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: DialogCallback.java 7568 2006-05-12 19:00:15Z les7arts $
  *
  * Copyright 2001-2006 The Apache Software Foundation
  * 

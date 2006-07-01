@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: KeywordSearch.java 5540 2005-08-13 20:48:15Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a

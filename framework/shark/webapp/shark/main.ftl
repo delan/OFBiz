@@ -1,5 +1,5 @@
 <#--
-$Id$
+$Id: main.ftl 7773 2006-06-12 08:41:23Z jonesde $
 
 Copyright 2004-2006 The Apache Software Foundation
 

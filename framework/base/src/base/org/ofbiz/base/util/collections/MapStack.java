@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: MapStack.java 7614 2006-05-16 01:32:07Z jonesde $
  *
  *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *

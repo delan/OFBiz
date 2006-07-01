@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ComponentConfig.java 7551 2006-05-10 00:08:10Z jonesde $
  *
  * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *

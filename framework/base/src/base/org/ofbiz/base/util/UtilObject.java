@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: UtilObject.java 7822 2006-06-19 23:44:35Z jaz $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *

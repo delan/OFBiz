@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: FlexibleServletAccessor.java 5720 2005-09-13 03:10:59Z jonesde $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: RequestHandler.java 7487 2006-05-02 17:27:38Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

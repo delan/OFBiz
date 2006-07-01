@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: XuiSession.java 6011 2005-10-24 21:57:50Z jonesde $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *

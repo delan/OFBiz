@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ShipmentServices.java 7017 2006-03-19 07:49:12Z jacopo $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

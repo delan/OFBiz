@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: Calculate.java 7043 2006-03-22 08:11:05Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EntityFieldValue.java 5687 2005-09-10 01:10:15Z jonesde $
  *
  *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *

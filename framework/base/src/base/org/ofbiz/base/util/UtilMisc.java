@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: UtilMisc.java 7455 2006-04-30 19:01:55Z jonesde $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

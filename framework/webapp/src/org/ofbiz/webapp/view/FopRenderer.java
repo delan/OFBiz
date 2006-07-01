@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: FopRenderer.java 6535 2006-01-22 03:53:59Z jaz $
  *
  * Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *

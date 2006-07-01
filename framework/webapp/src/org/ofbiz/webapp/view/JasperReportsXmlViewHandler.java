@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: JasperReportsXmlViewHandler.java 5966 2005-10-15 05:15:04Z jonesde $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *

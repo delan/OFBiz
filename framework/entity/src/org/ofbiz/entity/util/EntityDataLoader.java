@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: EntityDataLoader.java 6614 2006-01-30 20:19:11Z jaz $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

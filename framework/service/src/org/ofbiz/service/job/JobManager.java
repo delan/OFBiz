@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: JobManager.java 7604 2006-05-15 20:59:03Z jaz $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

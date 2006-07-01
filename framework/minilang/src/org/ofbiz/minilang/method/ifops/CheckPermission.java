@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CheckPermission.java 6201 2005-11-28 12:24:44Z jonesde $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CheckOutHelper.java 7847 2006-06-23 05:57:49Z jacopo $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

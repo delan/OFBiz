@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PosTransaction.java 7806 2006-06-16 09:29:55Z jonesde $
  *
  * Copyright 2001-2006 The Apache Software Foundation
  * 

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: GeneralException.java 6419 2005-12-23 17:18:49Z jaz $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

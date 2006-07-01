@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: XaPoolConnectionFactory.java 6609 2006-01-29 09:50:01Z jonesde $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *

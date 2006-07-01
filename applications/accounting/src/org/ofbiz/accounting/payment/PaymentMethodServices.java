@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: PaymentMethodServices.java 7722 2006-05-31 08:59:28Z hansbak $
  *
  *  Copyright (c) 2001-2006 The Open For Business Project - www.ofbiz.org
  *

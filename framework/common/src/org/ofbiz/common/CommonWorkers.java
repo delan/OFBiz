@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CommonWorkers.java 6538 2006-01-23 01:47:50Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

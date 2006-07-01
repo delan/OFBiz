@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ModelService.java 6582 2006-01-25 20:23:59Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

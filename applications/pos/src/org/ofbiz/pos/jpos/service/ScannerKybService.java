@@ -1,5 +1,5 @@
 /*
- * $Id: $
+ * $Id: ScannerKybService.java 7565 2006-05-12 15:44:41Z les7arts $
  *
  * Copyright 2001-2006 The Apache Software Foundation
  * 

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: FindServices.java 7617 2006-05-16 04:07:06Z jonesde $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ContentServices.java 7769 2006-06-11 06:28:05Z jonesde $
  *
  * Copyright 2001-2006 The Apache Software Foundation
  * 

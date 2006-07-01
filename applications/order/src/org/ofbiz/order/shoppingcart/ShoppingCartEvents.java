@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ShoppingCartEvents.java 7843 2006-06-22 16:41:26Z sichen $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *

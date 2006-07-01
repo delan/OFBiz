@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ModelScreenWidget.java 7870 2006-06-27 05:41:26Z jonesde $
  *
  * Copyright 2003-2006 The Apache Software Foundation
  * 

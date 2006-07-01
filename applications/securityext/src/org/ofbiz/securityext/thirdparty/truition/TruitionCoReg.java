@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: TruitionCoReg.java 5586 2005-08-25 13:47:38Z jaz $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

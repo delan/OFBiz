@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: GiftCertificateServices.java 7486 2006-05-02 16:27:31Z sichen $
  *
  * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

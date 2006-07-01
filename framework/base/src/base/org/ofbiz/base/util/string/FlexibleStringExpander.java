@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: FlexibleStringExpander.java 7406 2006-04-25 11:07:19Z jonesde $
  *
  * Copyright 2001-2006 The Apache Software Foundation
  * 

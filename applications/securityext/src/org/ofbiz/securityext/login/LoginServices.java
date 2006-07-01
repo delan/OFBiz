@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: LoginServices.java 7402 2006-04-25 10:14:57Z jacopo $
  *
  *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *

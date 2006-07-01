@@ -1,6 +1,6 @@
 #!/bin/sh
 ####
-# $Id$
+# $Id: startofbiz.sh 7923 2006-07-01 17:37:19Z jonesde $
 ####
 
 # shutdown settings

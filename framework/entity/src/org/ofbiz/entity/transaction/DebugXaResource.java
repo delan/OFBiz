@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: DebugXaResource.java 6778 2006-02-20 05:13:55Z jonesde $
  *
  * Copyright 2004-2006 The Apache Software Foundation
  * 

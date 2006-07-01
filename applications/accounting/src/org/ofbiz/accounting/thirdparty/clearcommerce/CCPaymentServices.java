@@ -1,5 +1,5 @@
 /*
- *  $Id$
+ *  $Id: CCPaymentServices.java 7804 2006-06-16 04:37:21Z hansbak $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
