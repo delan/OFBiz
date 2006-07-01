@@ -409,7 +409,9 @@
             </condition>
             <widgets>
                 <include-screen name="ViewRequestInfo"/>
-                <include-screen name="ViewRequestItemInfo"/>
+                <container style="leftclear">
+                    <include-screen name="ViewRequestItemInfo"/>
+                </container>
             </widgets>
             <fail-widgets>
                 <label style="head3">${uiLabelMap.OrderErrorRequestNotFound}</label>
@@ -419,9 +421,13 @@
     <screen name="ViewRequestInfo">
         <section>
             <widgets>
-                <include-screen name="requestInfo"/>
-                <include-screen name="requestDate"/>
-                <include-screen name="requestRoles"/>
+                <container style="lefthalf">
+                    <include-screen name="requestInfo"/>
+                </container>
+                <container style="righthalf">
+                    <include-screen name="requestDate"/>
+                    <include-screen name="requestRoles"/>
+                </container>
             </widgets>
         </section>
     </screen>
