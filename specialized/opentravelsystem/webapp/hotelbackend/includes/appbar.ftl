@@ -78,7 +78,7 @@ document.getElementById(tab).className= toclass;
 <#assign thisAppOpt = page.appTabButtonItem?default("void")>
 
 <table class="appbar" width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#FFFFFF"> 
+  <tr> 
    <td class="appbarleft">&nbsp;</td>   
     <td height="21px" width="100%">
 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">                      
