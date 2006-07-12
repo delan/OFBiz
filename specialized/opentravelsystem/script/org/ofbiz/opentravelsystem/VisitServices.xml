@@ -5,9 +5,103 @@
     <!-- Opentravelsystem Statistic Services -->
     <!-- ================================================================ -->
     
-    <!-- make a list of unique referrers en count how many referrals they generated -->
-    <simple-method method-name="listReferrers" short-description="-Show Unique Referrers" >         
-        <set field="searchPrefix" from-field="parameters.userLogin.partyId" default-value=""/>
+    <!-- make a list of used queries in search engines from referrals -->
+    <!-- TO DO: order list by count --> 
+    <simple-method method-name="listSearchQueries" short-description="-Show Unique Referrers">      
+        <set field="searchPrefix" from-field="parameters.userLogin.partyId"/>
+        <entity-condition entity-name="Visit" list-name="AllQueriesList">
+            <condition-list>
+                <condition-expr field-name="initialReferrer" operator="like" value="http%"/>
+                <condition-expr field-name="webappName" operator="equals" value="${searchPrefix}"/>
+            </condition-list>
+            <order-by field-name="initialReferrer"/>
+        </entity-condition>       
+        <set field="current.query" value="0000-00"/> 
+        <set field="UniqueQuery.query" value="0000-00"/>
+        <iterate entry-name="IterateQueries" list-name="AllQueriesList">                                         
+            <set field="initialReferrerLongUrl" from-field="IterateQueries.initialReferrer"/>
+            <call-bsh><![CDATA[
+                if (initialReferrerLongUrl.lastIndexOf("/") != -1) {
+                tempUrl = initialReferrerLongUrl.substring(initialReferrerLongUrl.lastIndexOf("q=") + 2);
+                query = tempUrl.substring(0, tempUrl.indexOf("&")+1);               
+                }
+                current.put("query", query);
+            ]]></call-bsh>
+            <if-compare-field field-name="UniqueQuery.query" operator="not-equals" to-field-name="current.query">
+                <if-compare field-name="UniqueQuery.query" operator="not-equals" value="0000-00">
+                    <if-not-empty field-name="UniqueQuery.query">
+                        <field-to-list field-name="UniqueQuery" list-name="QueryList"/>
+                        <clear-field field-name="UniqueQuery"/>  
+                    </if-not-empty>   
+                </if-compare>
+            </if-compare-field>
+            <set field="UniqueQuery.query" from-field="current.query"/> 
+        </iterate>  
+        <if-not-empty field-name="QueryList">
+            <order-map-list list-name="QueryList">
+                <order-by field-name="query"/>
+            </order-map-list> 
+        </if-not-empty>           
+        <set field="sortedUniqueQuery.query" value="0000-00"/>
+        <iterate entry-name="IterateSortedQueries" list-name="QueryList">
+            <if-empty field-name="sortedUniqueQuery.count">
+                <set field="sortedUniqueQuery.count" value="0"/>
+            </if-empty> 
+            <calculate field-name="sortedUniqueQuery.count">
+                <number value="1"/>
+                <calcop operator="add" field-name="sortedUniqueQuery.count"></calcop>
+            </calculate> 
+            <set field="currentSorted.query" from-field="IterateSortedQueries.query"/>
+            <if-compare-field field-name="sortedUniqueQuery.query" operator="not-equals" to-field-name="currentSorted.query">
+                <if-compare field-name="sortedUniqueQuery.query" operator="not-equals" value="0000-00">   
+                    <field-to-list field-name="sortedUniqueQuery" list-name="searchQueryList"/>
+                    <clear-field field-name="sortedUniqueQuery"/>  
+                </if-compare>
+            </if-compare-field> 
+            <if-compare field-name="sortedUniqueQuery.query" operator="equals" value="0000-00"><clear-field field-name="sortedUniqueQuery.count"/></if-compare>   
+            <set field="sortedUniqueQuery.query" from-field="currentSorted.query"/>           
+        </iterate>
+        
+        <!-- get the unique queries from the last record and count them -->
+        <entity-condition entity-name="Visit" list-name="lastSortedQueryList">
+            <condition-list>
+                <condition-expr field-name="initialReferrer" operator="like" value="%${sortedUniqueQuery.query}%"/>
+                <condition-expr field-name="webappName" operator="equals" value="${searchPrefix}"/>
+            </condition-list>
+            <order-by field-name="initialReferrer"/>
+        </entity-condition>
+
+        <iterate entry-name="IterateLastSortedQuery" list-name="lastSortedQueryList">
+            <set field="initialReferrerLongUrl" from-field="IterateLastSortedQuery.initialReferrer"/>
+            <call-bsh><![CDATA[
+                if (initialReferrerLongUrl.lastIndexOf("/") != -1) {
+                lastTempUrl = initialReferrerLongUrl.substring(initialReferrerLongUrl.lastIndexOf("q=") + 2);
+                lastquery = lastTempUrl.substring(0, lastTempUrl.indexOf("&")+1);               
+                }
+                current.put("lastquery", lastquery);
+            ]]></call-bsh>
+            <set field="lastSortedUniqueQuery.query" from-field="current.lastquery"/> 
+            <if-empty field-name="lastSortedUniqueQuery.count">
+                <set field="lastSortedUniqueQuery.count" value="0"/>
+            </if-empty> 
+            <calculate field-name="lastSortedUniqueQuery.count">
+                <number value="1"/>
+                <calcop operator="add" field-name="lastSortedUniqueQuery.count"></calcop>
+            </calculate>  
+        </iterate>    
+        <field-to-list field-name="lastSortedUniqueQuery" list-name="searchQueryList"/>   
+        <order-map-list list-name="searchQueryList">
+            <order-by field-name="count"/><!-- DESC doesn't seem to work here -->
+        </order-map-list>
+        <field-to-result field-name="searchQueryList" result-name="searchQueryList"/>
+    </simple-method>   
+   
+   
+    <!-- make a list of unique referrers en count how many referrals they generated -->   
+    <!-- TO DO: - order list by count -->   
+    <simple-method method-name="listReferrers" short-description="-Show Unique Referrers"> 
+        <set field="root" from-field="parameters._SERVER_ROOT_URL_"/>        
+        <set field="searchPrefix" from-field="parameters.userLogin.partyId"/>
         <entity-condition entity-name="Visit" list-name="AllReferrerList">
             <condition-list>
                 <condition-expr field-name="initialReferrer" operator="like" value="http%"/>
@@ -15,7 +109,7 @@
             </condition-list>
             <order-by field-name="initialReferrer"/>
         </entity-condition>
-        
+
         <set field="UniqueReferrer.initialReferrer" value="0000-00"/>
         <iterate entry-name="IterateReferrers" list-name="AllReferrerList">
             
@@ -24,13 +118,13 @@
             <set field="checkHttps" from-field="IterateReferrers.initialReferrer"/>   
             <call-bsh><![CDATA[parameters.put("https", checkHttps.substring(4,5))]]></call-bsh> 
             <if-compare field-name="parameters.https" value="s" operator="equals">
-                <set field="referrerDomain" value="${bsh:s=parameters.get(&quot;referrerRootUrl&quot;).substring(8);i=s.indexOf(&quot;:&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>                                 
+                <set field="referrerDomain" value="${bsh:s=parameters.get(&quot;referrerRootUrl&quot;).substring(8);i=s.indexOf(&quot;/&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>                                 
                 <else>
-                    <set field="referrerDomain" value="${bsh:s=parameters.get(&quot;referrerRootUrl&quot;).substring(7);i=s.indexOf(&quot;:&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>                   
+                    <set field="referrerDomain" value="${bsh:s=parameters.get(&quot;referrerRootUrl&quot;).substring(7);i=s.indexOf(&quot;/&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>                   
                 </else>
             </if-compare>  
             <set field="serverDomain" value="${bsh:s=parameters.get(&quot;_SERVER_ROOT_URL_&quot;).substring(8);i=s.indexOf(&quot;:&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>
-            
+
             <if-empty field-name="UniqueReferrer.count">
                 <set field="UniqueReferrer.count" value="0"/>
             </if-empty> 
@@ -38,29 +132,56 @@
                 <number value="1"/>
                 <calcop operator="add" field-name="UniqueReferrer.count"></calcop>
             </calculate>           
-            <set field="current.initialReferrer" from-field="IterateReferrers.initialReferrer"/>
-            <set field="noReferrers.initialReferrer" value="No Referrers" />
-            <set field="noReferrers.count" value="0" />
+           
+            <!-- shorten URL -->
+            <set field="current.initialReferrer" value="${bsh:s=IterateReferrers.get(&quot;initialReferrer&quot;).substring(7);i=s.indexOf(&quot;/&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>                                 
+            <log level="always" message="##${current.initialReferrer}"></log>
             <!-- store in list if changed however not the first line-->
             <if-compare-field field-name="referrerDomain" operator="not-equals" to-field-name="serverDomain">
                 <if-compare-field field-name="UniqueReferrer.initialReferrer" operator="not-equals" to-field-name="current.initialReferrer">
-                    <if-compare field-name="UniqueReferrer.initialReferrer" operator="not-equals" value="0000-00">
+                    <if-compare field-name="UniqueReferrer.initialReferrer" operator="not-equals" value="0000-00">   
                         <field-to-list field-name="UniqueReferrer" list-name="referrerList"/>
                         <clear-field field-name="UniqueReferrer"/>  
                     </if-compare>
                 </if-compare-field>
-            </if-compare-field>   
+            </if-compare-field>  
+            <if-compare field-name="UniqueReferrer.initialReferrer" operator="equals" value="0000-00"><clear-field field-name="UniqueReferrer.count"/></if-compare>   
             <set field="UniqueReferrer.initialReferrer" from-field="current.initialReferrer"/> 
         </iterate>  
-        <field-to-result field-name="referrerList" result-name="referrerList"/>
+        
+        <!-- get the referrer(s) from the last record and count them -->     
+        <entity-condition entity-name="Visit" list-name="LastReferrerList">
+            <condition-list>
+                <condition-expr field-name="initialReferrer" operator="like" value="%${UniqueReferrer.initialReferrer}%"/>
+                <condition-expr field-name="webappName" operator="equals" value="${searchPrefix}"/>
+            </condition-list>
+            <order-by field-name="initialReferrer"/>
+        </entity-condition> 
+        <iterate entry-name="IterateLastReferrer" list-name="LastReferrerList">
+            <set field="LastUniqueReferrer.initialReferrer" value="${bsh:s=IterateLastReferrer.get(&quot;initialReferrer&quot;).substring(7);i=s.indexOf(&quot;/&quot;);if(i==-1)i=s.indexOf(&quot;/&quot;);if(i!=-1)return(s.substring(0,i));}"/>                                 
+            <if-empty field-name="LastUniqueReferrer.count">
+            <set field="LastUniqueReferrer.count" value="0"/>
+            </if-empty>
+            <calculate field-name="LastUniqueReferrer.count">
+                <number value="1"/>
+                <calcop operator="add" field-name="LastUniqueReferrer.count"></calcop>
+            </calculate>  
+        </iterate>    
+        <field-to-list field-name="LastUniqueReferrer" list-name="referrerList"/>
         <order-map-list list-name="referrerList">
-            <order-by field-name="count DESC"/>
+            <order-by field-name="count"/><!-- DESC doesn't seem to work here -->
         </order-map-list>
+        <field-to-result field-name="referrerList" result-name="referrerList"/>
     </simple-method>
-    <!-- -->
     
     
     <!-- make a list of total visits, unique visits en pageviews per day -->
+    <!-- 
+        TO DO: 
+        - unique visits are now checked by IP address, should be done differently
+        - fix the problem that the last day on the list doesn't show
+        - add pageviews from table ServerHitCount 
+    -->
     <simple-method method-name="ListVisitOverview" short-description="Number of Visits">
         <set field="searchPrefix" from-field="parameters.userLogin.partyId" default-value=""/>
         <entity-condition entity-name="Visit" list-name="AllVisitsList">
@@ -128,40 +249,5 @@
             <set field="uniqueIp.clientIpAddress" from-field="current.clientIpAddress"/> 
         </iterate>
         <field-to-result field-name="visitOverviewList" result-name="visitOverviewList"/>
-        
-        <!--
-            
-            <entity-and entity-name="ServerHit" list-name="ServerHitList">
-            <field-map field-name="hitStartDateTime"/>
-            </entity-and>
-            
-            <set field="current.ServerHitdayNr" value="0000-00-00"/>
-            <set field="HitMap.ServerHitdayNr" value="0000-00-00"/>
-            
-            <iterate entry-name="IterateServerHit" list-name="ServerHitList">  
-            <if-empty field-name="HitMap.ServerHitCount">  
-            <set field="HitMap.ServerHitCount" value="0"/>
-            </if-empty>     
-            <calculate field-name="HitMap.ServerHitCount">
-            <number value="1"/>
-            <calcop operator="add" field-name="HitMap.ServerHitCount"></calcop>
-            </calculate> 
-            
-            
-            <set field="hitStartDateTime" from-field="IterateServerHit.hitStartDateTime"/>
-            <call-bsh><![CDATA[current.put("ServerHitdayNr",hitStartDateTime.toString().substring(0,10))]]></call-bsh> 
-            
-            
-            <if-compare-field field-name="HitMap.ServerHitdayNr" operator="not-equals" to-field-name="current.ServerHitdayNr">
-            <if-compare field-name="HitMap.ServerHitdayNr" operator="not-equals" value="0000-00-00">   
-            <field-to-list field-name="HitMap" list-name="visitOverviewList"/>
-            <log level="always" message="###${HitMap.ServerHitCount}"></log>
-            <clear-field field-name="HitMap"/>
-            </if-compare>
-            </if-compare-field>  
-            <set field="HitMap.ServerHitdayNr" from-field="current.ServerHitdayNr"/>  
-            </iterate>
-        -->
     </simple-method>
-    <!-- -->
 </simple-methods>

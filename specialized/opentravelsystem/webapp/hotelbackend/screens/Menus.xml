@@ -211,5 +211,8 @@
         <menu-item name="referrers" title="Referrers">
             <link target="referrers"/>
         </menu-item>
+        <menu-item name="searchqueries" title="Search Queries">
+            <link target="searchqueries"/>
+        </menu-item>
     </menu>
 </menus>

@@ -629,8 +629,15 @@
         <description>Show referrers by number of referrals</description>
         <attribute name="_SERVER_ROOT_URL_" type="String" mode="IN" optional="true"></attribute>
         <attribute name="referrerList" type="List" mode="OUT" optional="true"/>
+        <attribute name="searchQueryList" type="List" mode="OUT" optional="true"/>
     </service>
     
+    <service name="otsQueries" engine="simple" 
+        location="org/ofbiz/opentravelsystem/VisitServices.xml" invoke="listSearchQueries" auth="true">
+        <description>Show used search queries</description>
+        <attribute name="searchQueryList" type="List" mode="OUT" optional="true"/>
+    </service>
+        
     <service name="otsVisitOverviewList" engine="simple" 
         location="org/ofbiz/opentravelsystem/VisitServices.xml" invoke="ListVisitOverview" auth="true">
         <description>Show total and unique visits per day</description>

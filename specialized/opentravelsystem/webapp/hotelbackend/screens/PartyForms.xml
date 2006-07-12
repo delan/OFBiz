@@ -231,8 +231,6 @@
         <field name="dayNr" title="Day"><display/></field>
         <field name="TotalCount" title="Total Visits"><display/></field>
         <field name="UniqueCount" title="Unique Visits"><display/></field>
-        <!-- TO DO: pageviews 
-        <field name="ServerHitCount" title="Pageviews"><display/></field>-->
    </form>  
        
     <form name="Referrers" type="list" list-name="referrerList" title="List Referrers"  
@@ -241,6 +239,15 @@
            <service service-name="otsReferrers" result-map-list-name="referrerList"/>
         </actions>
         <field name="count" title="Referrals"><display/></field>
-        <field name="initialReferrer" title="initialReferrer" header-link="referrer?sort=initialReferrer" header-link-style="tableheadbutton"><display/></field>
-  </form>  
+        <field name="initialReferrer" title="Referrer"><display/></field>
+    </form>  
+    
+    <form name="searchQueries" type="list" list-name="searchQueryList" title="List Search Queries"  
+        default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">       
+        <actions>
+            <service service-name="otsQueries" result-map-list-name="searchQueryList"/>
+        </actions>
+        <field name="count" title="Searched"><display/></field>
+        <field name="query" title="Search Queries"><display/></field>
+    </form> 
 </forms>

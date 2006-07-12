@@ -38,6 +38,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_VIEW"/>
                             </condition>
                             <widgets>   
+                                <label style="head1" text="Total and unique visits per day"/>
                                 <include-form name="visitOverviews" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>                             
                             </widgets>
                             <fail-widgets>
@@ -57,7 +58,7 @@
                 <set field="headerItem" value="visits"/>
                 <set field="tabButtonItem" value="referrers"/>
                 <set field="parameters.sort" from-field="parameters.sort"  default-value="visitId"/>                
-                <set field="_SERVER_ROOT_URL_" value="parameters._SERVER_ROOT_URL_"/>
+                <set field="_SERVER_ROOT_URL_" from-field="parameters._SERVER_ROOT_URL_"/>
             </actions>
             <widgets>
                 <decorator-screen name="commonStatisticsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -68,6 +69,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
+                                <label style="head1" text="Where did your visitors come from?"/>
                                 <include-form name="Referrers" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>                             
                             </widgets>
                             <fail-widgets>
@@ -79,7 +81,36 @@
             </widgets>
         </section>
     </screen>
-           
+    <screen name="searchqueries">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleVisitDetail"/>
+                <set field="headerItem" value="visits"/>
+                <set field="tabButtonItem" value="searchqueries"/>
+                <set field="parameters.sort" from-field="parameters.sort"  default-value="visitId"/>                
+                <set field="_SERVER_ROOT_URL_" from-field="parameters._SERVER_ROOT_URL_"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="commonStatisticsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <label style="head1" text="What search queries did visitors use in the search engines?"/>
+                                <include-form name="searchQueries" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>                             
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="visitdetail">
         <section>
             <actions>

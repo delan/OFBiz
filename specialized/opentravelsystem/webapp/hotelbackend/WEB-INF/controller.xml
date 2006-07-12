@@ -538,7 +538,8 @@
         <response name="error" type="view" value="referrers"/>
     </request-map> 
     <request-map uri="visitdetail"><security https="true" auth="true"/><response name="success" type="view" value="visitdetail"/></request-map>
-    
+    <request-map uri="searchqueries"><security https="true" auth="true"/><response name="success" type="view" value="searchqueries"/></request-map>
+        
     <!-- communication event requests -->
     <request-map uri="FindCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="FindCommunicationEvents"/></request-map>
     <request-map uri="PendingCommunications"><security https="true" auth="true"/><response name="success" type="view" value="PendingCommunications"/></request-map>
@@ -3297,7 +3298,8 @@
     <view-map name="EditPartyClassificationGroupParties" type="screen" page="component://party/widget/partymgr/PartyClassificationScreens.xml#EditPartyClassificationGroupParties"/>
     <view-map name="FindPartyClassificationGroups" type="screen" page="component://party/widget/partymgr/PartyClassificationScreens.xml#FindPartyClassificationGroups"/>
     <view-map name="EditPartyClassificationGroup" type="screen" page="component://party/widget/partymgr/PartyClassificationScreens.xml#EditPartyClassificationGroup"/>
-        
+  
+    <view-map name="searchqueries" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/VisitScreens.xml#searchqueries"/>      
     <view-map name="showvisits" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/VisitScreens.xml#showvisits"/>
     <view-map name="referrers" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/VisitScreens.xml#referrers"/>
     <view-map name="visitdetail" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/VisitScreens.xml#visitdetail"/>

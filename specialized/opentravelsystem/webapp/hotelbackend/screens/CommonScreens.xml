@@ -690,11 +690,6 @@
                 <decorator-screen name="commonWebsiteDecorator">
                     <decorator-section name="body">
                         <include-menu name="StatisticsTabBar" location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml"/>
-                        <section>
-                            <widgets>
-                                <label style="head1" text="Titel?"/>
-                            </widgets>
-                        </section>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
