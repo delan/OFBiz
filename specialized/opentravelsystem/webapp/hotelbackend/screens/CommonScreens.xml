@@ -104,7 +104,7 @@
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
                         
-                        <container style="centerarea">
+                        <container style="centerareaProduct">
                             <section>
                                 <condition><not><if-empty field-name="userLogin"/></not></condition>
                                 <widgets>
@@ -144,7 +144,7 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <container style="centerarea">
+                        <container style="centerareaWebsite">
                             <label style="apptitle" text="Website text pages."/>
                             <include-menu location="component://opentravelsystem/webapp/hotelbackend/screens/Menus.xml" name="WebsiteAppBar"/>
                             <container style="contentarea">
@@ -175,7 +175,7 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <container style="centerarea">
+                        <container style="centerareaParties">
                             <section>
                                 <condition>
                                     <if-empty field-name="parameters.popup"/>
@@ -233,7 +233,7 @@
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <container style="centerarea">
+                        <container style="centerareaSysAdmin">
                             <section>
                                 <condition>
                                     <if-empty field-name="parameters.popup"/>
@@ -382,7 +382,7 @@
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
                         
-                        <container style="centerarea">
+                        <container style="centerareaReservations">
                             <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/order/appheaderReservations.ftl"/></html></platform-specific>
                             <container style="contentarea">
                                 <container style="${MainColumnStyle}">
@@ -409,7 +409,7 @@
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
                         
-                        <container style="centerarea">
+                        <container style="centerareaAccounting">
                             <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/accounting/appheaderAccounting.ftl"/></html></platform-specific>
                             <container style="contentarea">
                                 <container style="${MainColumnStyle}">

@@ -639,15 +639,18 @@
     </simple-method>
     
     <simple-method method-name="createCommunicationEvent" short-description="Create an CommunicationEvent">
-        <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
-            <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
-        </entity-one>
-        <if-not-empty field-name="partyAcctgPreference">
-            <check-permission permission="OPENTRAVELSYSTEM" action="_RW">
-                <alt-permission permission="${parameters.userLogin.partyId}" action="_RW"/>
-                <fail-message message="Security Error: to update you need RW access to &quot;${parameters.partyId}&quot; in the &quot;OPENTRAVELSYSTEM&quot;"/>
-            </check-permission>        
-            <check-errors/>
+        <if-not-empty field-name="parameters.userLogin.partyId"><!-- when executed by 'system', the partyId is empty -->
+            <set field="pref.partyId" from-field="parameters.userLogin.partyId"/>
+            <!-- take party belonging to 'to' address -->
+            <else>
+                <set field="pref.partyId" from-field="parameters.partyIdTo"/>
+            </else>
+        </if-not-empty>
+        <if-not-empty field-name="pref.partyId">
+            <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
+                <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
+            </entity-one>
+            <if-not-empty field-name="partyAcctgPreference">
             <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}CommunicationEvent" env-name="nextCommunicationEventId"/>
             <set field="parameters.communicationEventId" value="${partyAcctgPreference.invoiceIdPrefix}${nextCommunicationEventId}"/>
         </if-not-empty>

@@ -44,12 +44,12 @@
 		]>
 <#elseif requestAttributes.userLogin?has_content && userLogin.partyId == "admin">
 	<#assign displayApps = [
- 		 {"title":"Produktbeheer",	"url":"mainCatalog",							"label":"opentravelsystemProductManagement"}
-		,{"title":"Orderbeheer",	"url":"findorders",								"label":"opentravelsystemOrdersReservationsManagement"}
-		,{"title":"Relatiebeheer",	"url":"findParties?statusId=PARTYREL-ACTIVE",	"label":"opentravelsystemPartiesManagement"}
-		,{"title":"Boekhouding",	"url":"mainAccounting",							"label":"opentravelsystemAccountingManagement"}
-		,{"title":"Websitebeheer", 	"url":"findWebsiteContent",						"label":"opentravelsystemWebsiteManagement"}
-		,{"title":"SystAdmin", 		"url":"sysAdminMain",							"label":"opentravelsystemSysAdmin"}
+ 		 {"title":"Product",	"url":"mainCatalog",							"label":"opentravelsystemProductManagement"}
+		,{"title":"Reservations",	"url":"findorders",								"label":"opentravelsystemOrdersReservationsManagement"}
+		,{"title":"Parties",	"url":"findParties?statusId=PARTYREL-ACTIVE",	"label":"opentravelsystemPartiesManagement"}
+		,{"title":"Accounting",	"url":"mainAccounting",							"label":"opentravelsystemAccountingManagement"}
+		,{"title":"Website", 	"url":"findWebsiteContent",						"label":"opentravelsystemWebsiteManagement"}
+		,{"title":"SysAdmin", 		"url":"sysAdminMain",							"label":"opentravelsystemSysAdmin"}
 		,{"title":"Logout", 		"url":"logout",									"label":"CommonLogout"}
 		]>
 </#if>
@@ -64,16 +64,6 @@ document.getElementById(tab).className= toclass;
 
 </script>
 
-<#assign unselectedClass = { 
-"tab" : "tabdown", 
-"tab_mouseover" : "tabdown_mouseover",
-"link" : "tablink"}>
-
-<#assign selectedClass = { 
-"tab" : "tabup",
-"tab_mouseover" : "tabup_mouseover", 
-"link" : "tablinkselected"}>
-
 <#if !appTabButtonItem?has_content><#assign appTabButtonItem = page.appTabButtonItem?default("void")></#if>
 <#assign thisAppOpt = page.appTabButtonItem?default("void")>
 
@@ -85,13 +75,22 @@ document.getElementById(tab).className= toclass;
         <tr>
           <#if displayApps?has_content>	
           <#list displayApps as display>
+          <#assign unselectedClass = { 
+			"tab" :"tabdown", 
+			"tab_mouseover" : "tabup"+display.title,
+			"link" : "tablink"}>
+			
+			<#assign selectedClass = { 
+			"tab" : "tabup"+display.title,
+			"tab_mouseover" : "tabup"+display.title, 
+			"link" : "tablinkselected"}>
           <#if thisAppOpt == display.title>
             <#assign class = selectedClass>
           <#else>
             <#assign class = unselectedClass>
           </#if>  
           <td>
-            <table height="21px" width="120px" border="0" cellspacing="0" cellpadding="0">
+            <table height="21px" width="120px" border="0" class="tabarea" cellspacing="0" cellpadding="0">
               <tr> 
                  <td height="21px" onclick="window.location='${display.url}'"  style="cursor:pointer; cursor:hand" class="${class.tab}" id="${"uiLabelMap.${display.title}"?eval}" onMouseOver="ChangeClass('${"uiLabelMap.${display.title}"?eval}', '${class.tab_mouseover}');" onMouseOut="ChangeClass('${"uiLabelMap.${display.title}"?eval}', '${class.tab}');">${"uiLabelMap.${display.label}"?eval}</td>              
               </tr>                          

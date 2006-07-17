@@ -12,48 +12,46 @@ border: #888888 solid 1px;
 
 
 /* Main Appbar*/
-.tabdown {
+.tabarea {
 font-family: Arial, Helvetica, sans-serif;
-background-image:  url(/backend/html/images/tab.gif);
 font-size: 9pt;
 font-weight: bold;
 text-align: center;
 vertical-align: middle;
-border-bottom: 1px solid #070872;
 color: #070872;
 }
 
-.tabdown_mouseover {
-font-family: Arial, Helvetica, sans-serif;
-background-image: url(/backend/html/images/tabSelected.gif);
-font-size: 9pt;
-color:#a91930;
-font-weight: bold;
-text-align: center;
-vertical-align: middle;
+.tabdown {
+background-image:  url(/backend/html/images/tab.gif);
 border-bottom: 1px solid #070872;
 }
 
-.tabup {
-padding-top:1px;
-font-family: Arial, Helvetica, sans-serif;
-background-image: url(/backend/html/images/tabSelected.gif);
-font-size: 10pt;
+.tabupProduct {
+background-image: url(/backend/html/images/tabProduct.gif);
 color:#a91930;
-font-weight: bold;
-text-align: center;
-vertical-align: middle;
-border-bottom: 1px solid #f9f4a2;
 }
-
-.tabup_mouseover {
-font-family: Arial, Helvetica, sans-serif;
-background-image: url(/backend/html/images/tabSelected.gif);
-font-size: 9pt;
-font-weight: bold;
-text-align: center;
-vertical-align: middle;
-border-bottom: 1px solid #f9f4a2;
+.tabupParties {
+background-image: url(/backend/html/images/tabParties.gif);
+color:#a91930;
+}
+.tabupReservations {
+background-image: url(/backend/html/images/tabReservations.gif);
+color:#a91930;
+}
+.tabupAccounting {
+background-image: url(/backend/html/images/tabAccounting.gif);
+color:#a91930;
+}
+.tabupWebsite {
+background-image: url(/backend/html/images/tabWebsite.gif);
+color:#a91930;
+}
+.tabupSysAdmin {
+background-image: url(/backend/html/images/tabSysAdmin.gif);
+color:#a91930;
+}
+.tabupLogout {
+background-image: url(/backend/html/images/tab.gif);
 color:#a91930;
 }
 
@@ -88,6 +86,48 @@ padding:10px;
 background-color: #f9f4a2;
 }
 
+DIV.centerareaProduct {
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+border-bottom: 1px solid #070872;
+padding:10px;
+background-color:#f9f4a2;
+}
+DIV.centerareaWebsite {
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+border-bottom: 1px solid #070872;
+padding:10px;
+background-color:#c9c9ff;
+}
+DIV.centerareaParties {
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+border-bottom: 1px solid #070872;
+padding:10px;
+background-color:#80b9ed;
+}
+DIV.centerareaAccounting {
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+border-bottom: 1px solid #070872;
+padding:10px;
+background-color:#90b082;
+}
+DIV.centerareaReservations {
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+border-bottom: 1px solid #070872;
+padding:10px;
+background-color:#e8b079;
+}
+DIV.centerareaSysAdmin {
+border-left: 1px solid #070872;
+border-right: 1px solid #070872;
+border-bottom: 1px solid #070872;
+padding:10px;
+background-color:#9f9ae8;
+}
 DIV.contentarea {
 background-color: #FFFFFF;
 border-left: solid #070872 1px;
@@ -150,8 +190,7 @@ border: solid #070872 1px;
 /* AppHeaders */
 .apptitle {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-letter-spacing:2px;
-background-color: #f9f4a2;	
+letter-spacing:2px;	
 font-size: 10pt;
 font-weight: bold;
 color: #a91930;	
@@ -162,7 +201,6 @@ text-align: right;
 }
 
 .appContainer {  
-background-color: #f9f4a2;
 padding-top: 4px;
 width:100%;
 }
