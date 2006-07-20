@@ -648,13 +648,14 @@
         </if-not-empty>
         <if-not-empty field-name="pref.partyId">
             <entity-one entity-name="PartyAcctgPreference" value-name="partyAcctgPreference" auto-field-map="false" use-cache="true">
-                <field-map field-name="partyId" env-name="parameters.userLogin.partyId"/>
+                <field-map field-name="partyId" env-name="pref.partyId"/>
             </entity-one>
             <if-not-empty field-name="partyAcctgPreference">
-            <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}CommunicationEvent" env-name="nextCommunicationEventId"/>
-            <set field="parameters.communicationEventId" value="${partyAcctgPreference.invoiceIdPrefix}${nextCommunicationEventId}"/>
+                <sequenced-id-to-env sequence-name="${partyAcctgPreference.invoiceIdPrefix}CommunicationEvent" env-name="nextCommunicationEventId"/>
+                <set field="parameters.communicationEventId" value="${partyAcctgPreference.invoiceIdPrefix}${nextCommunicationEventId}"/>
+            </if-not-empty>
         </if-not-empty>
-        <!-- call original ofbiz service with preset communicationEventId -->
+        <!-- call original ofbiz service with preset communicationEventId when a valid party....-->
         <set-service-fields service-name="createCommunicationEventOfbiz" map-name="parameters" to-map-name="createCommunicationEvent"/>
         <call-service service-name="createCommunicationEventOfbiz" in-map-name="createCommunicationEvent">
             <result-to-result result-name="communicationEventId" service-result-name="communicationEventId"/>
