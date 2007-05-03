@@ -28,7 +28,7 @@ class PoolGCThread extends Thread {
     }
 
     public void run() {
-        boolean trace = true;
+        boolean trace = log.isDebugEnabled();
         while (true) {
             // Don't do anything while there's nothing to do
             waitForPools();
@@ -45,6 +45,7 @@ class PoolGCThread extends Thread {
                 try {
                     sleep(delay);
                 } catch (InterruptedException ignored) {
+                    log.trace(ignored);
                 }
             }
 
@@ -79,7 +80,7 @@ class PoolGCThread extends Thread {
     }
 
     private synchronized void runGC() {
-        boolean trace = true;
+        boolean trace = log.isDebugEnabled();
 
         if (trace)
             log.debug("GC thread running GC");

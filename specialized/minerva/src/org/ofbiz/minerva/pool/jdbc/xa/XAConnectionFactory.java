@@ -91,7 +91,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 if (pool.isInvalidateOnError()) {
                     pool.markObjectAsInvalid(evt.getSource());
                 }
-//                closeConnection(evt, XAResource.TMFAIL);
+                // closeConnection(evt, XAResource.TMFAIL);
             }
 
             public void connectionClosed(ConnectionEvent evt) {
@@ -105,7 +105,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 } catch (IllegalArgumentException e) {
                     return; // Removed twice somehow?
                 }
-                Transaction trans = null;
+                Transaction trans;
                 try {
                     if (tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                         trans = tm.getTransaction();
@@ -432,6 +432,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
         try {
             con.close();
         } catch (SQLException e) {
+            log.trace(e);
         }
     }
 
@@ -444,10 +445,12 @@ public class XAConnectionFactory extends PoolObjectFactory {
         try {
             if (tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                 Transaction trans = tm.getTransaction();
-                //System.out.println("isUniqueRequest returning conn: " + wrapperTx.get(trans) + "  attached to tx: " + trans);
+                if (log.isTraceEnabled())
+                    log.trace("isUniqueRequest returning conn: " + wrapperTx.get(trans) + "  attached to tx: " + trans);
                 return wrapperTx.get(trans);
             }
         } catch (Exception e) {
+            log.trace(e);
         }
         return null;
     }

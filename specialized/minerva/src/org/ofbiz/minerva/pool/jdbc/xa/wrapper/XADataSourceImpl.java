@@ -166,6 +166,8 @@ public class XADataSourceImpl implements XADataSource {
             try {
                 driver = (Driver) Class.forName(driverName, true, Thread.currentThread().getContextClassLoader()).newInstance();
                 DriverManager.registerDriver(driver);
+                if (log.isTraceEnabled())
+                    log.trace("loaded and registered driver: " + driverName);
             } catch (ClassNotFoundException e) {
                 log.warn("unable to load driver", e);
             } catch (InstantiationException e) {
@@ -194,7 +196,6 @@ public class XADataSourceImpl implements XADataSource {
         else
             con = DriverManager.getConnection(url);
 
-
         try {
             con.setAutoCommit(false);
         } catch (SQLException e) {
@@ -205,8 +206,8 @@ public class XADataSourceImpl implements XADataSource {
         XAConnectionImpl xacon = new XAConnectionImpl(con, res, saveStackTrace);
         res.setXAConnection(xacon);
 
-
-        log.debug("created new Connection(" + con.getClass().getName() + ") with XAResource " + res.getClass().getName() + " and XAConnection " + xacon.getClass().getName() + ".");
+        if (log.isDebugEnabled())
+            log.debug("created new Connection(" + con.getClass().getName() + ") with XAResource " + res.getClass().getName() + " and XAConnection " + xacon.getClass().getName() + ".");
 
         return xacon;
     }
@@ -225,8 +226,7 @@ public class XADataSourceImpl implements XADataSource {
         try {
             con.setAutoCommit(false);
         } catch (SQLException e) {
-            if (logWriter != null)
-                logWriter.println("XADataSource unable to disable auto-commit on " + con.getClass().getName());
+            log.warn("Unable to disable auto-commit on " + con.getClass().getName());
         }
 
         XAResourceImpl res = new XAResourceImpl(con);
@@ -236,8 +236,8 @@ public class XADataSourceImpl implements XADataSource {
         xacon.setUser(user);
         xacon.setPassword(password);
 
-        log.debug(" created new Connection (" + con.getClass().getName() + ") with XAResource " + res.getClass().getName() + " and XAConnection with userid and password " + xacon.getClass().getName());
-
+        if (log.isDebugEnabled())
+            log.debug(" created new Connection (" + con.getClass().getName() + ") with XAResource " + res.getClass().getName() + " and XAConnection with userid and password " + xacon.getClass().getName());
 
         return xacon;
     }

@@ -77,6 +77,7 @@ public class XAClientConnection implements ConnectionWrapper {
                 baos.close();
                 stackTrace = baos.toString();
             } catch (Exception ex) {
+                log.trace(ex);
             }
         }
     }
@@ -272,6 +273,7 @@ public class XAClientConnection implements ConnectionWrapper {
             try {
                 ((Statement) it.next()).close();
             } catch (SQLException e) {
+                log.warn("SQLException : ", e);
             }
         shutdown();
     }

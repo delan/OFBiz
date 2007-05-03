@@ -68,6 +68,7 @@ public class XAPoolDriver implements Driver {
      */
     public Connection connect(String url, Properties props) throws java.sql.SQLException {
         if (url.startsWith(URL_START)) {
+            if (log.isTraceEnabled()) log.trace("connecting to url: " + url);
             return getXAConnection(url.substring(URL_START.length()));
         }
         return null;  // No SQL Exception here!
@@ -77,10 +78,15 @@ public class XAPoolDriver implements Driver {
         Connection con = null;
         try {
             DataSource source = XAPoolDataSource.getDataSource(name);
-            if (source != null)
+            if (source != null) {
                 con = source.getConnection();
+                if (log.isTraceEnabled())
+                    log.trace("received datasource from XAPoolDataSource:" + con.toString());
+            } else {
+                log.trace("no connection from XAPoolDataSource");
+            }
         } catch (Exception e) {
-            log.error("Can't get DataSource from XAPool", e);
+            log.error("Can't get DataSource from XA Connection Pool", e);
         }
         return con;
     }

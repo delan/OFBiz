@@ -634,28 +634,31 @@ public class ObjectPool implements PoolEventListener {
                         throw e;
                     }
                 } // end of if ()
+
                 if (rec == null) {
                     permits.release();
                     String message = "Pool is broken, did not find or create an object";
                     log.error(message);
                     throw new RuntimeException(message);
                 } // end of if ()
-                Object ob = rec.getObject();
 
+                Object ob = rec.getObject();
                 result = factory.prepareObject(ob);
                 if (result != ob) rec.setClientObject(result);
                 if (result instanceof PooledObject)
                     ((PooledObject) result).addPoolEventListener(this);
 
-                log.trace("Pool " + this + " gave out object: " + result);
+                if (log.isTraceEnabled()) log.trace("Pool " + this + " gave out object: " + result);
                 return result;
             }//end of permits
             else {
                 //we timed out
+                log.trace("No ManagedConnections Available! (throwing RE)");
                 throw new RuntimeException("No ManagedConnections Available!");
             } // end of else
         }//try
         catch (RuntimeException e) {
+            log.trace("caught RuntimeException", e);
             throw e;
         } // end of catch
         catch (InterruptedException ie) {
@@ -663,7 +666,7 @@ public class ObjectPool implements PoolEventListener {
             throw new RuntimeException("Interrupted while requesting permit!");
         } // end of try-catch
         catch (Exception e) {
-            log.trace("problem getting connection from pool", e);
+            log.trace("problem getting connection from pool (throwing RE)", e);
             throw new RuntimeException("problem getting connection from pool " + e.getMessage());
         } // end of catch
     }
@@ -681,19 +684,26 @@ public class ObjectPool implements PoolEventListener {
      */
     public void setLastUsed(Object object) {
         if (!trackLastUsed) return;
-        Object ob = null;
+        Object ob;
         try {
             ob = factory.translateObject(object);
         } catch (Exception e) {
+            if (log.isTraceEnabled()) log.trace("Pool " + getName() + " does not recognize object for last used time (throwing IAE): " + object, e);
             throw new IllegalArgumentException("Pool " + getName() + " does not recognize object for last used time: " + object);
         }
+
         ObjectRecord rec = ob == null ? null : (ObjectRecord) objects.get(ob);
-        if (rec == null)
+        if (rec == null) {
+            if (log.isTraceEnabled()) log.trace("Pool " + getName() + " does not recognize object for last used time (throwing IAE): " + object);
             throw new IllegalArgumentException("Pool " + getName() + " does not recognize object for last used time: " + object);
-        if (rec.isInUse())
+        }
+
+        if (rec.isInUse()) {
             rec.setLastUsed();
-        else
+        } else {
+            log.trace("Cannot set last updated time for an object that's not in use! (throwing IAE)");
             throw new IllegalStateException("Cannot set last updated time for an object that's not in use!");
+        }
     }
 
     /**
@@ -707,8 +717,11 @@ public class ObjectPool implements PoolEventListener {
      *               returned by getObject
      */
     public void markObjectAsInvalid(Object object) {
-        if (deadObjects == null)
+        if (deadObjects == null) {
+            log.trace("Tried to use pool before it was Initialized or after it was ShutDown!");
             throw new IllegalStateException("Tried to use pool before it was Initialized or after it was ShutDown!");
+        }
+
         deadObjects.add(object); //a synchronized set
 
     }
@@ -722,18 +735,19 @@ public class ObjectPool implements PoolEventListener {
      *    Occurs when the object is not in this pool.
      */
     public void releaseObject(Object object) {
-
-        log.trace("Pool " + this + " object released: " + object);
-
-        Object pooled = null;
+        if (log.isTraceEnabled()) log.trace("Pool " + this + " object released: " + object);
+        Object pooled;
         try {
             factory.returnObject(object);//do this first
             pooled = factory.translateObject(object);
         } catch (Exception e) {
+            log.trace(e);
             return;        // We can't release it if the factory can't recognize it
         }
+
         if (pooled == null) // We can't release it if the factory can't recognize it
             return;
+
         boolean removed = false;
         synchronized (objects) {
             ObjectRecord rec = (ObjectRecord) objects.get(pooled);
@@ -745,12 +759,13 @@ public class ObjectPool implements PoolEventListener {
             removed = deadObjects.remove(object);
             rec.setInUse(false);
             if (removed) {
-                log.trace("Object was dead: " + object);
+                if (log.isTraceEnabled()) log.trace("Object was dead: " + object);
                 objects.remove(pooled);
                 rec.close();
             } // end of if ()
 
         }//end of synch on objects
+
         if (removed) {
             try {
                 factory.deleteObject(pooled);
@@ -765,9 +780,9 @@ public class ObjectPool implements PoolEventListener {
         }
 
         if (removed)
-            log.debug("Pool " + this + " destroyed object " + object + ".");
+            if (log.isDebugEnabled()) log.debug("Pool " + this + " destroyed object " + object + ".");
         else
-            log.debug("Pool " + this + " returned object " + object + " to the pool.");
+            if (log.isDebugEnabled()) log.debug("Pool " + this + " returned object " + object + " to the pool.");
 
         permits.release();
         /*
@@ -831,8 +846,7 @@ public class ObjectPool implements PoolEventListener {
     long getNextGCMillis(long now) {
         long t = lastGC + gcIntervalMillis - now;
 
-        log.trace("getNextGCMillis(): returning " + t);
-
+        if (log.isTraceEnabled()) log.trace("getNextGCMillis(): returning " + t);
         if (!runGC)
             return Long.MAX_VALUE;
 
@@ -844,16 +858,12 @@ public class ObjectPool implements PoolEventListener {
         long now;
         now = System.currentTimeMillis();
 
-        log.trace("isTimeToGC(): " + (now >= lastGC + Math.round((float) gcIntervalMillis * 0.9f)));
-
+        if (log.isTraceEnabled()) log.trace("isTimeToGC(): " + (now >= lastGC + Math.round((float) gcIntervalMillis * 0.9f)));
         return now >= lastGC + Math.round((float) gcIntervalMillis * 0.9f);
-
     }
 
     void runGCandShrink() {
-
-        log.trace("runGCandShrink(): runGC = " + runGC + "; idleTimeout = " + idleTimeout);
-
+        if (log.isTraceEnabled()) log.trace("runGCandShrink(): runGC = " + runGC + "; idleTimeout = " + idleTimeout);
         if (runGC || idleTimeout) {
             HashSet objsCopy;
             synchronized (objects) {
@@ -882,6 +892,7 @@ public class ObjectPool implements PoolEventListener {
                 int max = Math.round(eligible.size() * maxIdleShrinkPercent);
                 if (max == 0 && eligible.size() > 0) max = 1;
                 int count = 0;
+
                 // Attempt to remove that many objects
                 it = eligible.iterator();
                 while (it.hasNext()) {
@@ -910,8 +921,11 @@ public class ObjectPool implements PoolEventListener {
 
                         */
                     } catch (ConcurrentModificationException e) {
+                        log.trace(e);
                     }
                 }
+
+                if (log.isTraceEnabled()) log.trace("removed [" + count + "] objects from the pool");
             }
         }
         lastGC = System.currentTimeMillis();
@@ -937,10 +951,11 @@ public class ObjectPool implements PoolEventListener {
      *          pool unlocked.
      */
     private ObjectRecord createNewObject(Object parameters) {
-        Object ob = null;
+        Object ob;
         try {
             ob = factory.createObject(parameters);
         } catch (Exception ex) {
+            log.trace(ex);
             throw new RuntimeException("Could not create connection");
         }
         if (ob != null) { // if factory can create object
@@ -950,6 +965,7 @@ public class ObjectPool implements PoolEventListener {
             }
             return rec;
         } else {
+            log.trace("could not create new object!");
             throw new RuntimeException("could not create new object!");
         }
     }
@@ -966,9 +982,7 @@ public class ObjectPool implements PoolEventListener {
         for (Iterator i = newMCs.iterator(); i.hasNext();) {
             releaseObject(i.next());
         } // end of for ()
-
     }
-
 }
 
 class BeanFactory extends PoolObjectFactory {

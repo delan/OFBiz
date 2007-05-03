@@ -24,6 +24,7 @@ import org.ofbiz.minerva.pool.PoolEventListener;
 import org.ofbiz.minerva.pool.PooledObject;
 import org.ofbiz.minerva.pool.cache.LeastRecentlyUsedCache;
 import org.ofbiz.minerva.pool.cache.ObjectCache;
+import org.apache.log4j.Logger;
 
 /**
  * Wrapper for database connections in a pool.  Handles closing appropriately.
@@ -46,6 +47,7 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
     private Vector listeners;
     private int preparedStatementCacheSize = 0;
     private ObjectCache preparedStatementCache;
+    private Logger log = Logger.getLogger(ConnectionInPool.class);
 
     /**
      * Creates a new connection wrapper.
@@ -181,6 +183,7 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
                 try {
                     ups.close();
                 } catch (SQLException e) {
+                    log.trace("SQLException: ", e);
                 }
             }
 /*
@@ -211,6 +214,7 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
             try {
                 ((Statement) it.next()).close();
             } catch (SQLException e) {
+                log.trace("SQLException: ", e);
             }
         if (!con.getAutoCommit())
             con.rollback();

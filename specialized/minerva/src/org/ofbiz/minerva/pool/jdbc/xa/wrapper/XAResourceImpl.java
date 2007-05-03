@@ -87,11 +87,12 @@ public class XAResourceImpl implements XAResource {
      *     differs depending on the exact situation.
      */
     public void commit(Xid id, boolean twoPhase) throws XAException {
-        // System.out.println("commit: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
+        if (log.isTraceEnabled()) log.trace("commit: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
+
         if (active && !twoPhase) // End was not called!
-            System.err.println("WARNING: Connection not closed before transaction commit.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
-        if (current == null || !id.equals(current)) // wrong Xid
-        {
+            log.warn("WARNING: Connection not closed before transaction commit.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
+
+        if (current == null || !id.equals(current)) { // wrong Xid
             throwXAException(XAException.XAER_NOTA);
         }
 
@@ -113,6 +114,7 @@ public class XAResourceImpl implements XAResource {
                     throwXAException(XAException.XA_RBROLLBACK);
                 }
             } catch (SQLException e2) {
+                log.debug(e2);
             }
             if (twoPhase) {
                 throwXAException(XAException.XA_HEURRB); // no 2PC!
@@ -136,9 +138,8 @@ public class XAResourceImpl implements XAResource {
      *     transaction ID is wrong.
      */
     public void end(Xid id, int flags) throws XAException {
-        //System.out.println("end: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
-        if (!active) // End was called twice!
-        {
+        if (log.isTraceEnabled()) log.trace("end: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
+        if (!active) { // End was called twice!
             throwXAException(XAException.XAER_PROTO);
         }
         if (current == null || !id.equals(current)) {
@@ -162,7 +163,7 @@ public class XAResourceImpl implements XAResource {
         current = null;
         xaCon.transactionFailed();
         if (active) // End was not called!
-            System.err.println("WARNING: Connection not closed before transaction forget.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
+            log.warn("WARNING: Connection not closed before transaction forget.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
     }
 
     /**
@@ -190,11 +191,11 @@ public class XAResourceImpl implements XAResource {
      *     transaction ID is wrong, or the connection was set to Auto-Commit.
      */
     public int prepare(Xid id) throws XAException {
-        //System.out.println("prepare: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
+        if (log.isTraceEnabled()) log.trace("prepare: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
         if (active) // End was not called!
-            System.err.println("WARNING: Connection not closed before transaction commit.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
-        if (current == null || !id.equals(current)) // wrong Xid
-        {
+            log.warn("WARNING: Connection not closed before transaction commit.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
+
+        if (current == null || !id.equals(current)) { // wrong Xid
             throwXAException(XAException.XAER_NOTA);
         }
 
@@ -231,9 +232,9 @@ public class XAResourceImpl implements XAResource {
      *     differs depending on the exact situation.
      */
     public void rollback(Xid id) throws XAException {
-        //System.out.println("rollback: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
+        if (log.isTraceEnabled()) log.trace("rollback: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
         if (active) // End was not called!
-            log.error("WARNING: Connection not closed before transaction rollback. Connection will not participate in any future transactions. Are you sure you want to be doing this?");
+            log.warn("WARNING: Connection not closed before transaction rollback. Connection will not participate in any future transactions. Are you sure you want to be doing this?");
         if (current == null || !id.equals(current)) { // wrong Xid
             throwXAException(XAException.XAER_NOTA);
         }
@@ -282,7 +283,7 @@ public class XAResourceImpl implements XAResource {
      *     transaction ID is wrong, or the instance has already been closed.
      */
     public void start(Xid id, int flags) throws XAException {
-        //System.out.println("start: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
+        if (log.isTraceEnabled()) log.trace("start: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
         if (active) {// Start was called twice!
             if (current != null && id.equals(current)) {
                 throwXAException(XAException.XAER_DUPID);
@@ -303,11 +304,17 @@ public class XAResourceImpl implements XAResource {
 
     protected void throwXAException(int code) throws XAException {
         xaCon.setConnectionError(new SQLException("XAException occured with code: " + code));
+        if (log.isTraceEnabled()) {
+            log.trace("(XAException) - SQLException code: " + code);
+        }
         throw new XAException(code);
     }
 
     protected void throwXAException(String msg) throws XAException {
         xaCon.setConnectionError(new SQLException("XAException occured: " + msg));
+        if (log.isTraceEnabled()) {
+            log.trace("(XAException) - SQLException msg: " + msg);
+        }
         throw new XAException(msg);
     }
 }

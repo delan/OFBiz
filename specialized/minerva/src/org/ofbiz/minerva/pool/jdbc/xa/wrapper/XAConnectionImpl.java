@@ -17,6 +17,7 @@ import org.ofbiz.minerva.pool.PoolEventListener;
 import org.ofbiz.minerva.pool.PooledObject;
 import org.ofbiz.minerva.pool.cache.ObjectCache;
 import org.ofbiz.minerva.pool.jdbc.ConnectionInPool;
+import org.apache.log4j.Logger;
 
 /**
  * A transaction wrapper around a java.sql.Connection.  This provides access to
@@ -65,6 +66,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
     /** The JDBC password used to open an underlying connection */
     private String password;
     private boolean saveStackTrace;
+    private Logger log = Logger.getLogger(XAConnectionImpl.class);
 
     /**
      * Creates a new transactional wrapper.
@@ -124,7 +126,9 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
         try {
             con.close();
         } catch (SQLException e) {
+            log.trace(e);
         }
+
         ObjectCache cache = (ObjectCache) ConnectionInPool.psCaches.remove(con);
         if (cache != null)
             cache.close();
@@ -189,7 +193,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
             } catch (RuntimeException ex) {
                 // there can be thrown an induced exception,
                 // but we must report to client the original one, right?
-                ex.printStackTrace();
+                log.error(ex);
             }
         }
     }
@@ -202,7 +206,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * false.
      */
     public void rollback() throws SQLException {
-        if (con.getAutoCommit() == false)
+        if (!con.getAutoCommit())
             con.rollback();
     }
 
@@ -221,13 +225,13 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
             throw new IllegalArgumentException();
     }
 
-    public Connection getConnection() {
-        XAClientConnection xaCon;
-        synchronized (clientConnections) {
-            xaCon = new XAClientConnection(this, con, saveStackTrace);
-            xaCon.setPSCacheSize(preparedStatementCacheSize);
-            clientConnections.add(xaCon);
-        }
+    public synchronized Connection getConnection() {
+        XAClientConnection xaCon = new XAClientConnection(this, con, saveStackTrace);
+        xaCon.setPSCacheSize(preparedStatementCacheSize);
+        clientConnections.add(xaCon);
+
+        if (log.isTraceEnabled())
+            log.trace("new XAClientConnection created; added to clientConnections size: " + clientConnections.size());
         return xaCon;
     }
 
@@ -289,6 +293,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
             try {
                 client.forcedClose();
             } catch (SQLException ignored) {
+                log.debug("unable for force connection to close", ignored);
             }
         }
         clientConnections.clear();

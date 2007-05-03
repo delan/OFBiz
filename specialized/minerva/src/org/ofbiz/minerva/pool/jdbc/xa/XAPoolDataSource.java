@@ -85,7 +85,8 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
      * call initialize before you try to use it.
      */
     public XAPoolDataSource() {
-        log.debug("Creating XA Pool");
+        log.info("Creating Minerva XA Connection Pool");
+
         pool = new ObjectPool();
         factory = new XAConnectionFactory();
         log.debug("Created factory");
@@ -348,7 +349,7 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
     public Connection getConnection() throws java.sql.SQLException {
         if (!initialized) initialize();
 
-        log.debug("Getting a Connection");
+        log.trace("Getting a Connection");
         String user = factory.getUser();
         String password = factory.getPassword();
         String[] params = {user, password};
@@ -365,7 +366,7 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
     public Connection getConnection(String user, String password) throws java.sql.SQLException {
         if (!initialized) initialize();
 
-        log.debug("Getting a connection for user " + user + " with password " + password);
+        if (log.isTraceEnabled()) log.trace("Getting a connection for user " + user + " with password " + password);
         String[] params = {user, password};
         XAConnection xaConn = (XAConnection) pool.getObject(params);
         return xaConn.getConnection();
