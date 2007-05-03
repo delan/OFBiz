@@ -43,8 +43,8 @@
     <target name="classpath">
         <path id="local.class.path">
             <fileset dir="${lib.dir}" includes="*.jar"/>
-            <fileset dir="../../base/lib" includes="*.jar"/>
-            <fileset dir="../../base/build/lib" includes="*.jar"/>
+            <fileset dir="../base/lib" includes="*.jar"/>
+            <fileset dir="../base/build/lib" includes="*.jar"/>
         </path>
     </target>
 
@@ -93,6 +93,9 @@
 
     <target name="jar" depends="classes">
         <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>
+        <copy todir="../entity/lib">
+            <fileset dir="build/lib" includes="*.jar"/>
+        </copy>
     </target>
 
     <!-- ================================================================== -->

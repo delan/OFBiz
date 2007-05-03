@@ -611,11 +611,11 @@ public class ObjectPool implements PoolEventListener {
                     for (Iterator it = objects.values().iterator(); it.hasNext();) {
                         rec = (ObjectRecord) it.next();
                         if (null != rec && !rec.isInUse() && factory.checkValidObject(rec.getObject(), parameters)) {
-                            log.info("Handing out from pool object: " + rec.getObject());
+                            log.trace("Handing out from pool object: " + rec.getObject());
                             try {
                                 rec.setInUse(true);
                             } catch (ConcurrentModificationException e) {
-                                log.info("Conflict trying to set rec. in use flag:" + rec.getObject());
+                                log.trace("Conflict trying to set rec. in use flag:" + rec.getObject());
                                 // That's OK, just go on and try another object
                                 continue;//shouldn't happen now.
                             }
@@ -647,7 +647,7 @@ public class ObjectPool implements PoolEventListener {
                 if (result instanceof PooledObject)
                     ((PooledObject) result).addPoolEventListener(this);
 
-                log.debug("Pool " + this + " gave out object: " + result);
+                log.trace("Pool " + this + " gave out object: " + result);
                 return result;
             }//end of permits
             else {
@@ -659,11 +659,11 @@ public class ObjectPool implements PoolEventListener {
             throw e;
         } // end of catch
         catch (InterruptedException ie) {
-            log.info("Interrupted while requesting permit!", new Exception("stacktrace"));
+            log.trace("Interrupted while requesting permit!", new Exception("stacktrace"));
             throw new RuntimeException("Interrupted while requesting permit!");
         } // end of try-catch
         catch (Exception e) {
-            log.info("problem getting connection from pool", e);
+            log.trace("problem getting connection from pool", e);
             throw new RuntimeException("problem getting connection from pool " + e.getMessage());
         } // end of catch
     }
@@ -723,7 +723,7 @@ public class ObjectPool implements PoolEventListener {
      */
     public void releaseObject(Object object) {
 
-        log.debug("Pool " + this + " object released: " + object);
+        log.trace("Pool " + this + " object released: " + object);
 
         Object pooled = null;
         try {
@@ -745,7 +745,7 @@ public class ObjectPool implements PoolEventListener {
             removed = deadObjects.remove(object);
             rec.setInUse(false);
             if (removed) {
-                log.debug("Object was dead: " + object);
+                log.trace("Object was dead: " + object);
                 objects.remove(pooled);
                 rec.close();
             } // end of if ()
@@ -831,7 +831,7 @@ public class ObjectPool implements PoolEventListener {
     long getNextGCMillis(long now) {
         long t = lastGC + gcIntervalMillis - now;
 
-        log.debug("getNextGCMillis(): returning " + t);
+        log.trace("getNextGCMillis(): returning " + t);
 
         if (!runGC)
             return Long.MAX_VALUE;
@@ -844,7 +844,7 @@ public class ObjectPool implements PoolEventListener {
         long now;
         now = System.currentTimeMillis();
 
-        log.debug("isTimeToGC(): " + (now >= lastGC + Math.round((float) gcIntervalMillis * 0.9f)));
+        log.trace("isTimeToGC(): " + (now >= lastGC + Math.round((float) gcIntervalMillis * 0.9f)));
 
         return now >= lastGC + Math.round((float) gcIntervalMillis * 0.9f);
 
@@ -852,7 +852,7 @@ public class ObjectPool implements PoolEventListener {
 
     void runGCandShrink() {
 
-        log.debug("runGCandShrink(): runGC = " + runGC + "; idleTimeout = " + idleTimeout);
+        log.trace("runGCandShrink(): runGC = " + runGC + "; idleTimeout = " + idleTimeout);
 
         if (runGC || idleTimeout) {
             HashSet objsCopy;
