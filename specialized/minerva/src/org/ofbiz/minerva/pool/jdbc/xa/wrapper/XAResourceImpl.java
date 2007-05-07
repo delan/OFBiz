@@ -6,6 +6,7 @@ package org.ofbiz.minerva.pool.jdbc.xa.wrapper;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
+import javax.sql.XAConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -28,7 +29,7 @@ import org.apache.log4j.Logger;
 public class XAResourceImpl implements XAResource {
 
     private Connection con;
-    private XAConnectionImpl xaCon;
+    private XAConnectionExt xaCon;
     private Xid current;
     private boolean active = false;
     private int timeout_ignored = 0;
@@ -49,13 +50,17 @@ public class XAResourceImpl implements XAResource {
      * @throws java.lang.IllegalStateException
      *    Occurs when this is called more than once.
      */
-    void setXAConnection(XAConnectionImpl xaCon) {
-        if (this.xaCon != null)
+    public void setXAConnection(XAConnectionExt xaCon, boolean force) {
+        if (this.xaCon != null && !force)
             throw new IllegalStateException();
         this.xaCon = xaCon;
     }
 
-    public XAConnectionImpl getXAConnection() {
+    public void setXAConnection(XAConnectionExt xaCon) {
+        setXAConnection(xaCon, false);
+    }
+
+    public XAConnection getXAConnection() {
         return xaCon;
     }
 

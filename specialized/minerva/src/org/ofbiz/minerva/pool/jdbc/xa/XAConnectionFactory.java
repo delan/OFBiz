@@ -20,10 +20,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.ofbiz.minerva.pool.ObjectPool;
 import org.ofbiz.minerva.pool.PoolObjectFactory;
-import org.ofbiz.minerva.pool.jdbc.xa.wrapper.TransactionListener;
-import org.ofbiz.minerva.pool.jdbc.xa.wrapper.XAConnectionImpl;
-import org.ofbiz.minerva.pool.jdbc.xa.wrapper.XADataSourceImpl;
-import org.ofbiz.minerva.pool.jdbc.xa.wrapper.XAResourceImpl;
+import org.ofbiz.minerva.pool.jdbc.xa.wrapper.*;
 
 /**
  * Object factory for JDBC 2.0 standard extension XAConnections.  You pool the
@@ -124,19 +121,20 @@ public class XAConnectionFactory extends PoolObjectFactory {
                     throw new RuntimeException("Unable to deregister with TransactionManager: " + e);
                 }
 
-                if (!(con instanceof XAConnectionImpl)) {
+                if (!(con instanceof XAConnectionExt)) {
                     // Real XAConnection -> not associated w/ transaction
                     pool.releaseObject(con);
                 } else {
-                    XAConnectionImpl xaCon = (XAConnectionImpl) con;
-                    if (!((XAResourceImpl) xaCon.getXAResource()).isTransaction()) {
+                    XAConnectionExt cext = (XAConnectionExt) con;
+                    XAResourceImpl res = cext.getXAResourceImpl();
+                    if (!res.isTransaction()) {
                         // Wrapper - we can only release it if there's no current transaction
                         // Can't just check TM because con may have been committed but left open
                         //   so if there's a current transaction it may not apply to the con.
                         if (trace)
-                            log.debug("XAConnectionImpl: " + xaCon + " has no current tx!");
+                            log.debug("XAConnectionExt: " + con + " has no current tx!");
                         try {
-                            xaCon.rollback();
+                            cext.rollback();
                         } catch (SQLException e) {
                             pool.markObjectAsInvalid(con);
                         }
@@ -149,7 +147,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
             }
         };
         transListener = new TransactionListener() {
-            public void transactionFinished(XAConnectionImpl con) {
+            public void transactionFinished(XAConnectionExt con) {
                 con.clearTransactionListener();
                 Object tx = wrapperTx.remove(con);
                 //System.out.println("removing con: " + con + "from wrapperTx, tx: " + tx);
@@ -171,7 +169,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 pool.releaseObject(con);
             }
 
-            public void transactionFailed(XAConnectionImpl con) {
+            public void transactionFailed(XAConnectionExt con) {
                 con.clearTransactionListener();
                 Object tx = wrapperTx.remove(con);
                 if (tx != null)
@@ -404,12 +402,12 @@ public class XAConnectionFactory extends PoolObjectFactory {
             throw new RuntimeException("Unable to register with TransactionManager: " + e);
         }
 
-        if (con instanceof XAConnectionImpl) {
-            ((XAConnectionImpl) con).setTransactionListener(transListener);
-            ((XAConnectionImpl) con).setPSCacheSize(psCacheSize);
+        if (con instanceof XAConnectionExt) {
+            ((XAConnectionExt) con).setTransactionListener(transListener);
+            ((XAConnectionExt) con).setPSCacheSize(psCacheSize);
             if (transactionIsolation != DEFAULT_ISOLATION) {
                 try {
-                    ((XAConnectionImpl) con).setTransactionIsolation(transactionIsolation);
+                    ((XAConnectionExt) con).setTransactionIsolation(transactionIsolation);
                 } catch (SQLException sex) {
                     throw new RuntimeException("Unable to setTransactionIsolation: " + sex.getMessage());
                 }
@@ -461,8 +459,8 @@ public class XAConnectionFactory extends PoolObjectFactory {
      */
     public boolean checkValidObject(Object source, Object parameters) {
         boolean validObject = true;
-        if (parameters != null && source instanceof XAConnectionImpl) {
-            XAConnectionImpl con = (XAConnectionImpl) source;
+        if (parameters != null && source instanceof XAConnectionExt) {
+            XAConnectionExt con = (XAConnectionExt) source;
             String credentials[] = (String[]) parameters;
             if (credentials.length == 2) {
                 String user = con.getUser();

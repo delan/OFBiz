@@ -14,11 +14,11 @@ public interface TransactionListener {
     /**
      * Indicates that the transaction this instance was part of has finished.
      */
-    public void transactionFinished(XAConnectionImpl con);
+    public void transactionFinished(XAConnectionExt con);
 
     /**
      * Indicates that the transaction this instance was part of has finished,
      * and there was a fatal error.  Any pooled resources should be recycled.
      */
-    public void transactionFailed(XAConnectionImpl con);
+    public void transactionFailed(XAConnectionExt con);
 }

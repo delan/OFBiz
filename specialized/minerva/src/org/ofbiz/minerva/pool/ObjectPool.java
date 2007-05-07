@@ -3,9 +3,6 @@
  */
 package org.ofbiz.minerva.pool;
 
-
-import EDU.oswego.cs.dl.util.concurrent.FIFOSemaphore;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,6 +12,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -66,11 +65,11 @@ public class ObjectPool implements PoolEventListener {
     private long gcIntervalMillis = 120000l; // shrink & gc every 2 minutes
     private long lastGC = System.currentTimeMillis();
     private boolean blocking = true;
-    private int blockingTimeout = 10000;//Integer.MAX_VALUE;//this is silly
+    private int blockingTimeout = 30000; // 30ms of blocking
     private boolean trackLastUsed = false;
     private boolean invalidateOnError = false;
 
-    private FIFOSemaphore permits;
+    private Semaphore permits;
     private boolean initialized = false;
 
     /**
@@ -526,7 +525,7 @@ public class ObjectPool implements PoolEventListener {
         if (initialized)
             throw new IllegalStateException("Cannot initialize more than once!");
         initialized = true;
-        permits = new FIFOSemaphore(maxSize);
+        permits = new Semaphore(maxSize);
         factory.poolStarted(this);
         lastGC = System.currentTimeMillis();
         //fill pool to min size
@@ -596,6 +595,7 @@ public class ObjectPool implements PoolEventListener {
      * @see #setBlocking
      */
     public Object getObject(Object parameters) {
+        if (log.isTraceEnabled()) log.trace("getObject() called for pool: " + this);
         if (objects == null)
             throw new IllegalStateException("Tried to use pool before it was Initialized or after it was ShutDown!");
 
@@ -605,7 +605,8 @@ public class ObjectPool implements PoolEventListener {
                             // share local connections within a managed tx.
 
         try {
-            if (permits.attempt(blockingTimeout)) {
+            // if not blocking only try for 1 ms; otherwise try until the blocking timeout occurs
+            if (permits.tryAcquire(blocking ? blockingTimeout : 1, TimeUnit.MILLISECONDS)) {
                 ObjectRecord rec = null;
                 synchronized (objects) {
                     for (Iterator it = objects.values().iterator(); it.hasNext();) {
@@ -652,8 +653,7 @@ public class ObjectPool implements PoolEventListener {
                 return result;
             }//end of permits
             else {
-                //we timed out
-                log.trace("No ManagedConnections Available! (throwing RE)");
+                // we timed out or are not blocking
                 throw new RuntimeException("No ManagedConnections Available!");
             } // end of else
         }//try
@@ -735,7 +735,7 @@ public class ObjectPool implements PoolEventListener {
      *    Occurs when the object is not in this pool.
      */
     public void releaseObject(Object object) {
-        if (log.isTraceEnabled()) log.trace("Pool " + this + " object released: " + object);
+        if (log.isTraceEnabled()) log.trace("Pool " + this + " object being released: " + object);
         Object pooled;
         try {
             factory.returnObject(object);//do this first
@@ -785,6 +785,7 @@ public class ObjectPool implements PoolEventListener {
             if (log.isDebugEnabled()) log.debug("Pool " + this + " returned object " + object + " to the pool.");
 
         permits.release();
+        if (log.isTraceEnabled()) log.trace("Pool " + this + " release complete");
         /*
         if(blocking)
         {

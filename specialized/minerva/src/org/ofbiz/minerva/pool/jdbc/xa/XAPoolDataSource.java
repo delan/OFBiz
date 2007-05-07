@@ -30,6 +30,7 @@ import java.util.Hashtable;
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.Log4jLoggerWriter;
 import org.ofbiz.minerva.pool.ObjectPool;
+import org.ofbiz.minerva.pool.jdbc.spy.SpyDataSource;
 
 /**
  * DataSource for transactional JDBC pools.  This handles configuration
@@ -75,9 +76,8 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
     private transient PrintWriter logWriter;
     private transient int timeout;
     private transient boolean initialized = false;
-    //Unused cruft.
     private transient String jndiName;
-    //what is actually used to bind in jndi by XADataSourceLoader.
+    private boolean spy = false;
     private String name;
 
     /**
@@ -86,13 +86,17 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
      */
     public XAPoolDataSource() {
         log.info("Creating Minerva XA Connection Pool");
-
         pool = new ObjectPool();
+        
         factory = new XAConnectionFactory();
         log.debug("Created factory");
 
         XAPoolDriver.instance();
         log.debug("got driver instance");
+
+        // spy flag -Dofbiz.minerva.spy=true
+        spy = "true".equalsIgnoreCase(System.getProperty("ofbiz.minerva.spy"));
+        log.debug("Spy enabled: " + spy);
     }
 
     // Unique properties
@@ -124,7 +128,11 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
 
     // XA properties
     public void setDataSource(XADataSource ds) {
-        factory.setDataSource(ds);
+        if (spy) {
+            factory.setDataSource(new SpyDataSource(factory, ds));
+        } else {
+            factory.setDataSource(ds);
+        }
     }
 
     public XADataSource getDataSource() {

@@ -26,15 +26,15 @@ import org.apache.log4j.Logger;
  */
 public class XADataSourceImpl implements XADataSource {
 
-    private String url;
-    private String user;
-    private String password;
-    private String driverName;
-    private Driver driver;
-    private Properties properties;
-    private int loginTimeout;
-    private PrintWriter logWriter;
-    private boolean saveStackTrace;
+    protected String url;
+    protected String user;
+    protected String password;
+    protected String driverName;
+    protected Driver driver;
+    protected Properties properties;
+    protected int loginTimeout;
+    protected PrintWriter logWriter;
+    protected boolean saveStackTrace;
     private static Logger log = Logger.getLogger(XADataSourceImpl.class);
 
     /**
@@ -161,7 +161,7 @@ public class XADataSourceImpl implements XADataSource {
         loginTimeout = timeout;
     }
 
-    private void loadDriver() throws SQLException {
+    protected void loadDriver() throws SQLException {
         if (driver == null) {
             try {
                 driver = (Driver) Class.forName(driverName, true, Thread.currentThread().getContextClassLoader()).newInstance();

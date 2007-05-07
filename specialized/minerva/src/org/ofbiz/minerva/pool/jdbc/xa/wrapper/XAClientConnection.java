@@ -47,7 +47,7 @@ public class XAClientConnection implements ConnectionWrapper {
     private Connection con;
     private HashSet statements;
     private Vector listeners;
-    private XAConnectionImpl xaCon;
+    private XAConnectionExt xaCon;
     private int preparedStatementCacheSize = 0;
     private ObjectCache preparedStatementCache;
     private String stackTrace = null;
@@ -58,7 +58,7 @@ public class XAClientConnection implements ConnectionWrapper {
      * @param xaCon The handler for all the transactional details.
      * @param con The "real" database connection to wrap.
      */
-    public XAClientConnection(XAConnectionImpl xaCon, Connection con, boolean saveStackTrace) {
+    public XAClientConnection(XAConnectionExt xaCon, Connection con, boolean saveStackTrace) {
         this.con = con;
         this.xaCon = xaCon;
         preparedStatementCache = (ObjectCache) ConnectionInPool.psCaches.get(con);
@@ -265,7 +265,8 @@ public class XAClientConnection implements ConnectionWrapper {
 
     public void forcedClose() throws SQLException {
         if (stackTrace != null)
-            System.err.println("A forced close because a non-closed connection:\n" + stackTrace);
+            log.warn("A forced close because a non-closed connection:\n" + stackTrace);
+
         if (con == null) throw new SQLException(CLOSED);
         Collection copy = (Collection) statements.clone();
         Iterator it = copy.iterator();

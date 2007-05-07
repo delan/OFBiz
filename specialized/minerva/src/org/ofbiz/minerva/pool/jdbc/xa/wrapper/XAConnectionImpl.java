@@ -5,7 +5,6 @@ package org.ofbiz.minerva.pool.jdbc.xa.wrapper;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
-import javax.sql.XAConnection;
 import javax.transaction.xa.XAResource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -51,14 +50,11 @@ import org.apache.log4j.Logger;
  * REVISIONS:
  * 20010703 bill added code for transaction isolation
  */
-public class XAConnectionImpl implements XAConnection, PooledObject {
+public class XAConnectionImpl implements XAConnectionExt, PooledObject {
 
     private final static String CLOSED = "Connection has been closed!";
     private Connection con;
     private XAResourceImpl resource;
-    private Vector listeners, poolListeners;
-    private ArrayList clientConnections;
-    private TransactionListener transListener;
     private int preparedStatementCacheSize = 0;
     private int clientConnectionCount = 0;
     /** The JDBC user name used to open an underlying connection */
@@ -67,6 +63,10 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
     private String password;
     private boolean saveStackTrace;
     private Logger log = Logger.getLogger(XAConnectionImpl.class);
+
+    private Vector listeners, poolListeners;
+    private ArrayList clientConnections;
+    private TransactionListener transListener;
 
     /**
      * Creates a new transactional wrapper.
@@ -143,19 +143,15 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * If there is currently a transaction, this object should not be closed or
      * returned to a pool.  If not, it can be closed or returned immediately.
      */
-    public void clientConnectionClosed(XAClientConnection clientCon) {
-        synchronized(clientConnections) {
-            clientConnections.remove(clientCon);
-        }
+    public synchronized void clientConnectionClosed(XAClientConnection clientCon) {
+        clientConnections.remove(clientCon);
+
         if (clientConnections.size() > 0)
             return;  // Only take action if the last connection referring to this is closed
 
-        boolean trans = resource.isTransaction(); // could be committed directly on notification?  Seems unlikely, but let's not rule it out.
         Vector local = (Vector) listeners.clone();
         for (int i = local.size() - 1; i >= 0; i--)
             ((ConnectionEventListener) local.elementAt(i)).connectionClosed(new ConnectionEvent(this));
-//        if(!trans)
-//            transactionFinished();
     }
 
     /**
@@ -210,6 +206,10 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
             con.rollback();
     }
 
+    public XAResourceImpl getXAResourceImpl() {
+        return resource;
+    }
+
     // ---- Implementation of javax.sql.XAConnection ----
 
     public XAResource getXAResource() {
@@ -248,7 +248,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
     /**
      * Dispatches an event to the pool event listeners.
      */
-    void firePoolEvent(PoolEvent evt) {
+    public void firePoolEvent(PoolEvent evt) {
         Vector local = (Vector) poolListeners.clone();
         for (int i = local.size() - 1; i >= 0; i--)
             if (evt.getType() == PoolEvent.OBJECT_CLOSED)
