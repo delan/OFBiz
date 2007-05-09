@@ -57,7 +57,7 @@ public class ObjectPool implements PoolEventListener {
     private long gcIntervalMillis = 120000l; // shrink & gc every 2 minutes
     private long lastGC = System.currentTimeMillis();
     private boolean blocking = true;
-    private int blockingTimeout = 60000; // 60s of blocking
+    private int blockingTimeout = 30000; // 30s of blocking
     private boolean trackLastUsed = false;
     private boolean invalidateOnError = false;
 
