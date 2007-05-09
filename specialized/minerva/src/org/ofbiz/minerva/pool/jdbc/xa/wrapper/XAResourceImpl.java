@@ -75,6 +75,14 @@ public class XAResourceImpl implements XAResource {
     }
 
     /**
+     * Gets the current XID 
+     *
+     */
+    public Xid getCurrent() {
+        return current;
+    }
+
+    /**
      * Closes this instance permanently.
      */
     public void close() {

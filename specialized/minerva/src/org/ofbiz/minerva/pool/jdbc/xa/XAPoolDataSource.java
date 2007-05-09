@@ -358,8 +358,13 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
         String user = factory.getUser();
         String password = factory.getPassword();
         String[] params = {user, password};
-        XAConnection xaConn = (XAConnection) pool.getObject(params);
-        return xaConn.getConnection();
+
+        try {
+            XAConnection xaConn = (XAConnection) pool.getObject(params);
+            return xaConn.getConnection();
+        } catch (RuntimeException e) {
+            throw new java.sql.SQLException(e.getMessage());
+        }
     }
 
     /**
@@ -373,8 +378,13 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
 
         if (log.isTraceEnabled()) log.trace("Getting a connection for user " + user + " with password " + password);
         String[] params = {user, password};
-        XAConnection xaConn = (XAConnection) pool.getObject(params);
-        return xaConn.getConnection();
+
+        try {
+            XAConnection xaConn = (XAConnection) pool.getObject(params);
+            return xaConn.getConnection();
+        } catch (RuntimeException e) {
+            throw new java.sql.SQLException(e.getMessage());
+        }        
     }
 
     /**

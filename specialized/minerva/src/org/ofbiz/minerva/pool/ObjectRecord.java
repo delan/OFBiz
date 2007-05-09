@@ -3,6 +3,9 @@
  */
 package org.ofbiz.minerva.pool;
 
+import org.ofbiz.minerva.pool.jdbc.xa.wrapper.XAConnectionExt;
+
+import javax.transaction.xa.Xid;
 import java.util.Date;
 import java.util.ConcurrentModificationException;
 
@@ -15,9 +18,9 @@ public class ObjectRecord {
 
     private long created;
     private long lastUsed;
+    private Thread thread;
     private Object object;
     private Object clientObject;
-    private Thread thread;
     private boolean inUse;
 
     /**
@@ -26,18 +29,48 @@ public class ObjectRecord {
      * creator by another thread.
      */
     public ObjectRecord(Object ob) {
-        this(ob, true, Thread.currentThread());
+        this(ob, true);
     }
 
     /**
      * Created a new record for the specified pooled object.  Sets the initial
      * state to in use or not.
      */
-    public ObjectRecord(Object ob, boolean inUse, Thread thread) {
+    public ObjectRecord(Object ob, boolean inUse) {
         created = lastUsed = System.currentTimeMillis();
+        thread = Thread.currentThread();
         object = ob;
-        this.inUse = inUse;
-        this.thread = thread;
+        this.inUse = inUse;        
+    }
+
+    /**
+     * Gets the transaction used with this connection
+     */
+    public int getTransactionTimeout() {
+        int timeout = -1;
+        if (object instanceof XAConnectionExt) {
+            try {
+                timeout = ((XAConnectionExt) object).getXAResource().getTransactionTimeout();
+            } catch (Throwable e) {
+                // do nothing
+            }
+        }
+        return timeout;
+    }
+
+    /**
+     * Gets the current transaction XID     
+     */
+    public Xid getCurrentXid() {
+        Xid xid = null;
+        if (object instanceof XAConnectionExt) {
+            try {
+                xid = ((XAConnectionExt) object).getXAResourceImpl().getCurrent();
+            } catch (Throwable e) {
+                // do nothing
+            }
+        }
+        return xid;
     }
 
     /**

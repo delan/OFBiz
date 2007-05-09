@@ -57,7 +57,7 @@ public class ObjectPool implements PoolEventListener {
     private long gcIntervalMillis = 120000l; // shrink & gc every 2 minutes
     private long lastGC = System.currentTimeMillis();
     private boolean blocking = true;
-    private int blockingTimeout = 30000; // 30ms of blocking
+    private int blockingTimeout = 60000; // 60s of blocking
     private boolean trackLastUsed = false;
     private boolean invalidateOnError = false;
 
@@ -610,11 +610,11 @@ public class ObjectPool implements PoolEventListener {
                             } catch (ConcurrentModificationException e) {
                                 log.trace("Conflict trying to set rec. in use flag:" + rec.getObject());
                                 // That's OK, just go on and try another object
-                                continue;//shouldn't happen now.
+                                continue; //shouldn't happen now.
                             }
                             break;
                         }
-                        rec = null;//not found
+                        rec = null; //not found
                     }
                 }//synch on objects
 
@@ -622,7 +622,7 @@ public class ObjectPool implements PoolEventListener {
                     try {
                         rec = createNewObject(parameters);
                     } catch (Exception e) {
-                        log.error("Exception in creating new object for pool", e);
+                        log.fatal("Exception in creating new object for pool", e);
                         permits.release();
                         throw e;
                     }
@@ -648,18 +648,17 @@ public class ObjectPool implements PoolEventListener {
                 // we timed out or are not blocking
                 throw new RuntimeException("No ManagedConnections Available!");
             } // end of else
-        }//try
+        } //try
         catch (RuntimeException e) {
-            log.warn(this.displayPoolData());
-            log.trace("caught RuntimeException", e);
+            log.fatal("fatal pool error : " + this.displayPoolData(), e);            
             throw e;
         } // end of catch
         catch (InterruptedException ie) {
-            log.trace("Interrupted while requesting permit!", new Exception("stacktrace"));
+            log.fatal("interrupted while requesting permit : " + this.displayPoolData(), ie);
             throw new RuntimeException("Interrupted while requesting permit!");
         } // end of try-catch
         catch (Exception e) {
-            log.trace("problem getting connection from pool (throwing RE)", e);
+            log.fatal("problem getting connection from pool : " + this.displayPoolData(), e);
             throw new RuntimeException("problem getting connection from pool " + e.getMessage());
         } // end of catch
     }
