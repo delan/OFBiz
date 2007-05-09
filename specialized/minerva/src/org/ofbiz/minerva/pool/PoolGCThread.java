@@ -114,6 +114,11 @@ class PoolGCThread extends Thread {
 
         pools.remove(pool);
     }
+
+    public void finalize() throws Throwable {
+        super.finalize();
+        log.trace("GC thread finalize() called; ending");
+    }
 }
 
 /*

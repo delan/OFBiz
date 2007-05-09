@@ -174,7 +174,7 @@ public class ObjectRecord {
         buf.append(object.toString());
         buf.append(" : created : [").append(created);
         buf.append("] : last used : [").append(lastUsed);
-        buf.append("] : thread : [").append(thread.getName());
+        buf.append("] : thread : [").append((thread != null ? thread.getName() : ""));
         buf.append("] : in use : [").append(inUse);
         buf.append("]");
 
