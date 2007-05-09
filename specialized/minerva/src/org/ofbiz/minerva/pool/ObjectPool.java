@@ -3,15 +3,7 @@
  */
 package org.ofbiz.minerva.pool;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -57,8 +49,8 @@ public class ObjectPool implements PoolEventListener {
     private final Set deadObjects = Collections.synchronizedSet(new HashSet());
     private int minSize = 0;
     private int maxSize = 0;
-    private boolean idleTimeout = false;
-    private boolean runGC = false;
+    private boolean idleTimeout = true;
+    private boolean runGC = true;
     private float maxIdleShrinkPercent = 1.0f; // don't replace idle connections that timeout
     private long idleTimeoutMillis = 1800000l; // must be idle in pool for 30 minutes
     private long gcMinIdleMillis = 1200000l; // must be unused by client for 20 minutes
@@ -658,6 +650,7 @@ public class ObjectPool implements PoolEventListener {
             } // end of else
         }//try
         catch (RuntimeException e) {
+            log.warn(this.displayPoolData());
             log.trace("caught RuntimeException", e);
             throw e;
         } // end of catch
@@ -816,6 +809,40 @@ public class ObjectPool implements PoolEventListener {
         return poolName + " [" + getUsedCount() + "/" + (objects == null ? 0 : objects.size()) + "/" + (maxSize == 0 ? "Unlimited" : Integer.toString(maxSize)) + "]";
     }
 
+    /**
+     * Gets the ObjectRecord objects for the current items in the pool
+     * @param inUse 0 for both; 1 for in use only; -1 for only those not in use
+     * @return
+     */
+    public Set<ObjectRecord> getPooledObjects(int inUse) {
+        Set<ObjectRecord> pooledObjs;
+        synchronized(objects) {
+            pooledObjs = new HashSet(objects.values());
+        }
+
+        if (inUse != 0) {
+            for (ObjectRecord rec : pooledObjs) {
+                if ((inUse == 1 && !rec.isInUse()) || (inUse == -1 && rec.isInUse()))
+                    pooledObjs.remove(rec);
+            }
+        }
+        return pooledObjs;
+    }
+
+    public String displayPoolData() {
+        Set<ObjectRecord> objs = this.getPooledObjects(0);
+
+        String sep = System.getProperty("line.separator");
+        StringBuffer buf = new StringBuffer();
+        buf.append("Pool Data ").append(this.toString());
+        buf.append(" ").append(objs.size()).append(sep);
+
+        for (ObjectRecord rec : objs) {
+            buf.append("    ---- ").append(rec).append(sep);
+        }
+
+        return buf.toString();
+    }
 
     // ---- PoolEventListener Implementation ----
 

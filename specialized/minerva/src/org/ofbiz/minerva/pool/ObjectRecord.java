@@ -11,12 +11,13 @@ import java.util.ConcurrentModificationException;
  *
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
-class ObjectRecord {
+public class ObjectRecord {
 
     private long created;
     private long lastUsed;
     private Object object;
     private Object clientObject;
+    private Thread thread;
     private boolean inUse;
 
     /**
@@ -25,17 +26,18 @@ class ObjectRecord {
      * creator by another thread.
      */
     public ObjectRecord(Object ob) {
-        this(ob, true);
+        this(ob, true, Thread.currentThread());
     }
 
     /**
      * Created a new record for the specified pooled object.  Sets the initial
      * state to in use or not.
      */
-    public ObjectRecord(Object ob, boolean inUse) {
+    public ObjectRecord(Object ob, boolean inUse, Thread thread) {
         created = lastUsed = System.currentTimeMillis();
         object = ob;
         this.inUse = inUse;
+        this.thread = thread;
     }
 
     /**
@@ -119,5 +121,24 @@ class ObjectRecord {
         clientObject = null;
         created = lastUsed = Long.MAX_VALUE;
         inUse = true;
+    }
+
+    /**
+     * Gets the thread currently associated with this object     
+     */
+    public Thread getThread() {
+        return this.thread;
+    }
+    
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        buf.append(object.toString());
+        buf.append(" : created : [").append(created);
+        buf.append("] : last used : [").append(lastUsed);
+        buf.append("] : thread : [").append(thread.getName());
+        buf.append("] : in use : [").append(inUse);
+        buf.append("]");
+
+        return buf.toString();
     }
 }

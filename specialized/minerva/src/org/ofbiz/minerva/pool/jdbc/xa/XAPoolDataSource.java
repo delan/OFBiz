@@ -22,10 +22,7 @@ import java.io.ObjectStreamException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.sql.Connection;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.Log4jLoggerWriter;
@@ -447,6 +444,19 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
             throw new InvalidObjectException("problem finding correct datasource instance" + e);
         } // end of try-catch
 
+    }
+
+    /**
+     * Returns the ObjectRecords from held by the pool
+     * @param inUse 0 for both; 1 for in use only; -1 for only those not in use
+     * @return
+     */
+    public Set getPooledObjectRecords(int inUse) {
+        return pool.getPooledObjects(inUse);
+    }
+
+    public String getPoolDataString() {
+        return pool.toString();
     }
 }
 

@@ -88,8 +88,10 @@ class PoolGCThread extends Thread {
         for (Iterator it = pools.iterator(); it.hasNext();) {
             ObjectPool pool = (ObjectPool) it.next();
 
-            if (trace)
+            if (trace) {
                 log.debug("GC Thread pool: " + pool.getName() + ", isTimeToGC(): " + pool.isTimeToGC());
+                log.debug(pool.displayPoolData());
+            }
 
             if (pool.isTimeToGC())
                 pool.runGCandShrink();
