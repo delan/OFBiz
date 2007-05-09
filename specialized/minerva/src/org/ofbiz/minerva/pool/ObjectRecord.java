@@ -38,9 +38,10 @@ public class ObjectRecord {
      */
     public ObjectRecord(Object ob, boolean inUse) {
         created = lastUsed = System.currentTimeMillis();
-        thread = Thread.currentThread();
         object = ob;
-        this.inUse = inUse;        
+        this.inUse = inUse;
+        if (inUse)
+            thread = Thread.currentThread();
     }
 
     /**
@@ -114,7 +115,12 @@ public class ObjectRecord {
             throw new ConcurrentModificationException();
         this.inUse = inUse;
         lastUsed = System.currentTimeMillis();
-        if (!inUse) clientObject = null;
+        if (!inUse) {
+            clientObject = null;
+            thread = null;
+        } else {
+            thread = Thread.currentThread();
+        }
     }
 
     /**
